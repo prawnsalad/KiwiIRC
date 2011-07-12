@@ -1,0 +1,174 @@
+body, html {
+	height: 100%; margin:0px;
+	font-size:14px;
+}
+
+
+
+
+
+/* Style resets */
+#kiwi * {
+	padding:0px; margin:0px;
+}
+#kiwi ul { list-style:none; }
+
+#kiwi #login a {
+	color: #8D9713;
+	text-decoration:none;
+}
+
+
+/* The main app container */
+#kiwi {
+	overflow:hidden;
+	position:relative; 
+	height:100%;
+	font-family:monospace; font-size:1em;
+	background:#EBEBEB;
+}
+#kiwi.small_kiwi .userlist { right:-100px; }
+#kiwi.small_kiwi .messages { right:10px; }
+
+
+#kiwi .windowlist {
+	/*height: 65px;*/
+	background-color:#1B1B1B;
+	font-size:0.9em;
+}
+#kiwi .windowlist ul {
+	overflow: hidden;
+	margin-right: 200px;
+	white-space: nowrap;
+	display:block;
+	/*height: 35px;*/
+}
+#kiwi .windowlist ul li {
+	float: left;
+	list-style: inline;
+	padding:5px;
+	margin:3px;
+	border: 1px solid #333;
+	background-color: #eee;
+	display: inline;
+	line-height: 1.4em;
+	vertical-align: middle;
+	
+	position:relative;
+	
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-khtml-border-radius:5px;
+	behavior: url(border-radius.htc);
+}
+#kiwi .windowlist .active { padding-right:23px; }
+#kiwi .windowlist .highlight {
+	background-color: #990000;
+	font-weight: bold;
+}
+#kiwi .windowlist .activity { font-weight: bold; background-color: #009900; }
+
+#kiwi .windowlist ul li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
+/*#kiwi .windowlist ul li a {
+	margin:3px;
+	border: 1px solid #333;
+	background-color: #eee;
+	display: inline;
+}*/
+
+#kiwi .poweredby { float:right; margin:8px 15px; cursor:pointer; color:#EBEBEB; font-family: arial;}
+
+
+#kiwi .userlist {
+	position: absolute;
+	width: 100px;
+	top:92px; right:0px;
+	bottom: 55px;
+	margin: 5px;
+	overflow-y:auto;
+}
+#kiwi .userlist ul { display: none; }
+#kiwi .userlist ul.active { display:block; }
+#kiwi .userlist ul li { padding:1px 2px; cursor:pointer; }
+#kiwi .userlist ul li:hover { background-color:#FAF7D3; }
+#kiwi .userlist ul li a.nick { display:block; }
+
+#kiwi .userlist ul li .userbox { margin:0px 5px 5px 5px; font-size:.9em; }
+#kiwi .userlist ul li .userbox a { display:block; text-decoration:none; border-bottom: 1px dashed #aaa; }
+
+#kiwi .cur_topic {
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:.85em;
+	line-height:18px; vertical-align:middle;
+	height:18px;
+	text-align:center;
+	white-space: nowrap; overflow: hidden;
+	padding: 3px 5px;
+	border-bottom:3px solid #1B1B1B;
+	
+}
+
+#kiwi .messages {
+	position: absolute;
+	top:92px; left:0px;
+	right: 110px; bottom:30px;
+	overflow-y:scroll;
+	overflow-x:wrap;
+	border:none;
+	display: none;
+}
+#kiwi .messages a {
+	text-decoration:none;
+}
+#kiwi .messages.active { display:block; }
+
+#kiwi .messages .msg { border-bottom: 1px solid #CCC; padding:1px; font-size:0.9em; }
+#kiwi .messages .msg .time { width:6em; float:left; color:#777; }
+#kiwi .messages .msg .nick { width:7em; text-align:right; float:left; font-family:arial; font-size:12px; }
+#kiwi .messages .msg .text { margin-left:15em; white-space:pre-wrap; word-wrap:break-word;  }
+
+#kiwi .messages .msg.action .nick { display:none; }
+#kiwi .messages .msg.action .text { margin-left:9em; }
+#kiwi .messages .msg.status .nick { display:none; }
+#kiwi .messages .msg.status .text { color:#990000; margin-left:9em; font-weight:bold; }
+#kiwi .messages .msg.topic .nick { display:none; }
+#kiwi .messages .msg.topic .text { color:#009900; margin-left:9em; font-style: italic; }
+/*#kiwi .messages .msg.motd .nick { display:none; }*/
+#kiwi .messages .msg.motd { border:none; }
+#kiwi .messages .msg.motd .text { color:#666; }
+#kiwi .messages .msg.whois .nick { font-weight:normal; }
+#kiwi .messages .msg.whois .text { margin-left:18em; padding-left:1em; border-left:1px dashed #999; }
+
+
+
+#kiwi .control {
+	position: absolute;
+	bottom:0px; left: 0px;
+	/*height:55px;*/
+	/*padding: 3px;*/
+	width: 100%;
+	background-color:#1B1B1B;
+}
+#kiwi .control .msginput {
+	background-color:#fff; margin:3px;
+	position:relative;
+	
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-khtml-border-radius:5px;
+	behavior: url(border-radius.htc);
+}
+#kiwi .control .nick { text-align: right; width:11em; float:left; padding:2px; }
+#kiwi .control .nick a { text-decoration:none; }
+#kiwi .control input {
+	border:none;
+	width:70%; display:block;
+	margin-left:12em;
+	padding: 2px 0px;
+}
+#kiwi .control .plugins { margin:3px; margin-top:7px; }
+#kiwi .control .plugins ul li {
+	display:inline; font-size:0.8em; margin-left:1em;
+}

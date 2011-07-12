@@ -1,0 +1,114 @@
+/*
+	####################
+		Common
+	####################
+*/
+#kiwi .link { cursor:pointer; color:blue; }
+#kiwi .newnick {
+	bottom:40px;
+	left:20px;
+}
+
+
+#kiwi .plugins a { cursor:pointer; color:#EBEBEB; font-family:verdana; }
+#kiwi .plugin_file { left:20px; }
+
+#kiwi .plugin_file .list select { width:150px; height:200px; }
+#kiwi .plugin_file .list button { float:right; }
+
+
+
+
+
+
+
+#kiwi .connectwindow {
+	background:#1b1b1b;
+	color: #D4D4D4;
+	z-index:50;
+	position:absolute;
+	top:0px; bottom:0px;
+	width:100%; height:100%;
+}
+#kiwi h1.logo { display:block; width:264px; height:90px; text-indent:-1000px; margin:70px auto 100px; background:url(../img/logo.png) no-repeat; }
+#kiwi #login { width:665px; margin:0px auto; }
+#kiwi #login ul { list-style:none; }
+#kiwi #login ul li { overflow:hidden; margin-bottom:10px; }
+#kiwi #login ul li label { float:left; text-align:right; padding-right:.5em; }
+#kiwi #login input { border:none; }
+#kiwi #login .more { border-top: 1px dotted #888888; }
+#kiwi #login .more_link {
+	font-size:12px;
+	position:relative;
+	top:-16px;
+	background: url(../img/more.png) no-repeat right 5px;
+	padding-right: 12px;
+	color:#888;
+}
+
+#kiwi #login .content.top {
+	width:470px;
+	margin:30px auto 60px;
+}
+#kiwi #login .content.top ul { font-size:20px; }
+#kiwi #login .content.top label { width:40%; }
+#kiwi #login .content.top input {
+	width:240px; padding:.2em .5em;
+	font-size:.8em; text-align:center;
+	background:#D4D4D4;
+	border-radius:8px; -moz-border-radius:8px;
+}
+#kiwi #login .content.top a { display:block; text-align:right; font-size:22px; margin-top:30px; }
+
+#kiwi #login .content.bottom { width:350px; margin:30px auto; display:none; }
+#kiwi #login .content.bottom ul { font-size:18px; }
+#kiwi #login .content.bottom label { width:25%; }
+#kiwi #login .content.bottom input { width:216px; font-size:.8em; no-repeat; padding:.2em .5em; background:#D4D4D4; border-radius:8px; -moz-border-radius:8px; }
+#kiwi #login .content.bottom a { display:block; text-align:right; font-size:16px; margin-top:30px; }
+
+
+
+
+#kiwi .about {
+	top: 100px;
+	left: 200px;
+	width: 400px;
+	z-index: 1;
+	display: none;
+}
+#kiwi .about button { float:right; }
+
+#kiwi .box {
+	min-width:150px;
+	background: url(../img/trans_back.png) repeat;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-khtml-border-radius:5px;
+	padding:7px;
+	
+	/*background-color: #819463;
+	padding: 10px;*/
+	position:absolute;
+	
+	/*
+	box-shadow: 0px 0px 20px #555;
+	-webkit-box-shadow: 0px 0px 20px #555;
+	-moz-box-shadow: 0px 0px 20px #555;
+	filter: progid:DXImageTransform.Microsoft.dropShadow(color=#555, offX=0, offY=0, positive=true);
+	
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	*/
+}
+
+.box .boxarea {
+	padding:15px !important;
+	background-color:#D4D4D4;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	-khtml-border-radius:3px;
+	overflow:hidden;
+}
