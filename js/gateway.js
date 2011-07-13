@@ -8,9 +8,10 @@ var gateway = {
 	channel_prefix: '#',
 	network_name: '',
 	user_prefixes: [],
+    socket: null,
 
 	
-	connect: function(s_host, s_port, s_ssl, callback){
+	/*connect: function(s_host, s_port, s_ssl, callback){
 		var data = {
 			method: 'connect',
 			args: {
@@ -23,12 +24,14 @@ var gateway = {
 		
 		//$.post('poll.php', data, callback, 'json');
 		gateway.sendData(data, callback);
-	},
+	},*/
+	connect: function(host,port,ssl,callback) {
+        socket.emit('irc connect', this.nick, host, port, ssl, function() { console.log('callback'); callback});
+    },
 	
 	
 	
-	
-	start: function(){
+	/*start: function(){
 		if(typeof WebSocket != "undefined"){
 			//alert("Starting websocket support..");
 			gateway.socket();
@@ -36,10 +39,35 @@ var gateway = {
 			//alert("Starting polling support..");
 			gateway.poll();
 		}
+	},*/
+	start: function() {
+        socket = io.connect('http://192.168.1.127:7777/');
+        socket.on('connection',function() {
+            gateway.sendData = function(data,callback) {
+                socket.send({sid:this.session_id,data:$.toJSON(data)},function(){console.log('callbacl'); callback});
+            }
+            socket.on('message', function(msg) {
+			    gateway.buffer += msg;
+			
+			    if(gateway.buffer.indexOf("\n") > 0){
+				    var msgs = gateway.buffer.split("\n");
+				    for(var i=0; i<msgs.length; i++){
+					    if(msgs[i].substring(msgs[i].length-1) != "}"){
+						    gateway.buffer = msgs[i];
+						    continue;
+					    }
+					
+					    cmd = (msgs[i].charCodeAt(0) == 0) ? msgs[i].substring(1) : msgs[i];
+					    console.log(cmd.charCodeAt(0)+"-"+cmd+"-"+cmd.charCodeAt(cmd.length-1));
+					    obj = eval("("+cmd+")");
+					    gateway.parse(obj);
+				    }
+			    }
+		    });
+        });
 	},
-	
-	
-	poll: function(){
+
+	/*poll: function(){
 		if(this.session_id == null){
 			gateway.sendData = function(data, callback){
 				data = {
@@ -78,7 +106,7 @@ var gateway = {
 	socket: function(){
 		gateway.buffer = "";
 		
-		gateway.conn = new WebSocket("ws://p1.kiwiirc.com:7777/client");
+		gateway.conn = new WebSocket("ws://127.0.0.1:7777/client");
 		
 		gateway.sendData = function(data, callback){
 			gateway.conn.send($.toJSON(data));
@@ -105,7 +133,7 @@ var gateway = {
 			}
 		}
 		//gateway.conn.onclose = function(evt) { alert("Conn closed"); }
-	},
+	},*/
 	
 	
 	
