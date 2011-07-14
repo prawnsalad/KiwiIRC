@@ -1,3 +1,5 @@
+/*jslint regexp: true, confusion: true, undef: false, node: true, sloppy: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
+
 var tls = require('tls'),
     net = require('net'),
     http = require('http'),
@@ -174,7 +176,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
 };
 
 //setup websocket listener
-var io = ws.listen(7777);
+var io = ws.listen(7777, {secure: true});
 io.sockets.on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
         var ircSocket, i;
@@ -209,41 +211,51 @@ io.sockets.on('connection', function (websocket) {
     });
     websocket.on('message', function (msg, callback) {
         var args;
-        msg.data = JSON.parse(msg.data);
-        args = msg.data.args;
-        switch (msg.data.method) {
-        case 'msg':
-            if ((args.target) && (args.msg)) {
-                websocket.ircSocket.write('PRIVMSG ' + args.target + ' :' + args.msg + '\r\n');
+        try {
+            msg.data = JSON.parse(msg.data);
+            args = msg.data.args;
+            switch (msg.data.method) {
+            case 'msg':
+                if ((args.target) && (args.msg)) {
+                    websocket.ircSocket.write('PRIVMSG ' + args.target + ' :' + args.msg + '\r\n');
+                }
+                break;
+	        case 'action':
+                if ((args.target) && (args.msg)) {
+                    websocket.ircSocket.write('PRIVMSG ' + args.target + ' :ACTION ' + args.msg + '\r\n');
+                }
+                break;
+	        case 'raw':
+                websocket.ircSocket.write(args.data + '\r\n');
+                break;
+	        case 'join':
+                if (args.channel) {
+                    _.each(args.channel.split(","), function (chan) {
+                        websocket.ircSocket.write('JOIN ' + chan + '\r\n');
+                    });
+                }
+                break;
+	        case 'quit':
+                websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
+                websocket.sentQUIT = true;
+                websocket.ircSocket.destroySoon();
+                websocket.disconnect();
+                break;
+            default:
             }
-            break;
-	    case 'action':
-            if ((args.target) && (args.msg)) {
-                websocket.ircSocket.write('PRIVMSG ' + args.target + ' :ACTION ' + args.msg + '\r\n');
+            if ((callback) && (typeof (callback) === 'function')) {
+                callback();
             }
-            break;
-	    case 'raw':
-            websocket.ircSocket.write(args.data + '\r\n');
-            break;
-	    case 'join':
-            if (args.channel) {
-                _.each(args.channel.split(","), function (chan) {
-                    websocket.ircSocket.write('JOIN ' + chan + '\r\n');
-                });
-            }
-            break;
-	    case 'quit':
-            websocket.ircSocket.end('QUIT :' + args.msg + '\r\n');
-            websocket.ircSocket.destroySoon();
-            websocket.disconnect();
-            break;
-        default:
+        } catch (e) {
+            console.log("Caught error: " + e);
         }
-        if ((callback) && (typeof (callback) === 'function')) {
-            callback();
+    });
+    websocket.on('disconnect', function () {
+        if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
+            websocket.ircSocket.end('QUIT :KiwiIRC\r\n');
+            websocket.sentQUIT = true;
+            websocket.ircSocket.destroySoon();
         }
     });
 });
-
-
 

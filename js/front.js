@@ -199,7 +199,10 @@ var front = {
 				//front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
 				front.cur_channel.addMsg(null, ' ', '* ' + gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
 				break;
-				
+			case '/quit':
+                gateway.quit(msg.split(" ",2)[1]);
+                break;
+
 			default:
 				//front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
 				gateway.raw(msg.substring(1));
