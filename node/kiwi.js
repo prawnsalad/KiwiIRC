@@ -5,16 +5,21 @@ var tls = require('tls'),
     _ = require('./underscore.min.js');
 
 var ircNumerics = {
-    RPL_WHOISUSER:      311,
-	RPL_WHOISSERVER:    312,
-	RPL_WHOISOPERATOR:  313,
-	RPL_WHOISIDLE:      317,
-	RPL_ENDOFWHOIS:     318,
-	RPL_WHOISCHANNELS:  319,
-    RPL_NAMEREPLY:      353,
-    RPL_ENDOFNAMES:     366,
-    RPL_MOTD:           372,
-	RPL_WHOISMODES:     379
+    RPL_WELCOME:        '001',
+    RPL_ISUPPORT:       '005',
+    RPL_WHOISUSER:      '311',
+    RPL_WHOISSERVER:    '312',
+    RPL_WHOISOPERATOR:  '313',
+    RPL_WHOISIDLE:      '317',
+    RPL_ENDOFWHOIS:     '318',
+    RPL_WHOISCHANNELS:  '319',
+    RPL_TOPIC:          '332',
+    RPL_NAMEREPLY:      '353',
+    RPL_ENDOFNAMES:     '366',
+    RPL_MOTD:           '372',
+    RPL_WHOISMODES:     '379',
+    ERR_NOSUCHNICK:     '401',
+    ERR_LINKCHANNEL:    '470'
 };
 
 
@@ -36,16 +41,16 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case 'PING':
             ircSocket.write('PONG ' + msg.trailing + '\r\n');
             break;
-        case '001':
+        case ircNumerics.RPL_WELCOME:
             websocket.emit('message', {event: 'connect', connected: true, host: null});
             break;
-        case '005':
+        case ircNumerics.RPL_ISUPPORT:
             opts = msg.params.split(" ");
             options = [];
             for (i = 0; i < opts.length; i++) {
                 opt = opts[i].split("=", 2);
                 opt[0] = opt[0].toUpperCase();
-                ircSocket.ircServer.options[opt[0]] = opt[1] || true;
+                ircSocket.IRC.options[opt[0]] = opt[1] || true;
                 if (_.include(['NETWORK', 'PREFIX', 'CHANTYPES'], opt[0])) {
                     if (opt[0] === 'PREFIX') {
                         regex = /\(([^)]*)\)(.*)/;
@@ -78,27 +83,89 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             nick = params[0];
             chan = params[2];
             users = msg.trailing.split(" ");
-            prefixes = _.values(ircSocket.ircServer.options.PREFIX);
+            prefixes = _.values(ircSocket.IRC.options.PREFIX);
+            nicklist = {};
+            i = 0;
             _.each(users, function (user) {
                 if (_.include(prefix, user.charAt(0))) {
                     prefix = user.charAt(0);
                     user = user.substring(1);
                     nicklist[user] = prefix;
+                } else {
+                    nicklist[user] = '';
                 }
-                if (i >= 50) {
+                if (i++ >= 50) {
                     websocket.emit('message', {event: 'userlist', server: '', "users": nicklist, channel: chan});
                     nicklist = {};
                     i = 0;
                 }
-                i++;
             });
-            if (nicklist.length > 0) {
+            if (i > 0) {
                 websocket.emit('message', {event: 'userlist', server: '', "users": nicklist, channel: chan});
+            } else {
+                console.log("oops");
             }
             break;
-        case RPL_ENDOFNAMES:
-            chan = msg.params.split(" ")[1];
-            websocket.emit('message', {event: 'userlist_end', server: '', channel: chan});
+        case ircNumerics.RPL_ENDOFNAMES:
+            websocket.emit('message', {event: 'userlist_end', server: '', channel: msg.params.split(" ")[1]});
+            break;
+        case ircNumerics.ERR_LINKCHANNEL:
+            params = msg.params.split(" "); 
+            websocket.emit('message', {event: 'channel_redirect', from: params[1], to: params[2]});
+            break;
+        case ircNumerics.ERR_NOSUCHNICK:
+			//TODO: shit
+			break;
+        case 'JOIN':
+            websocket.emit('message', {event: 'join', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.trailing});
+            if (msg.nick === ircSocket.IRC.nick) {
+                ircSocket.write('NAMES ' + msg.trailing + '\r\n');
+            }
+            break;
+        case 'PART':
+            websocket.emit('message', {event: 'part', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), message: msg.trailing});
+            break;
+        case 'KICK':
+            params = msg.params.split(" ");
+            websocket.emit('message', {event: 'kick', kicked: params[1], nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: params[0].trim(), message: msg.trailing});
+            break;
+        case 'QUIT':
+            websocket.emit('message', {event: 'quit', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, message: msg.trailing});
+            break;
+        case 'NOTICE':
+            websocket.emit('message', {event: 'notice', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
+            break;
+        case 'NICK':
+            websocket.emit('message', {event: 'nick', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, newnick: msg.trailing});
+            break;
+        case 'TOPIC':
+            websocket.emit('message', {event: 'topic', nick: msg.nick, channel: msg.params, topic: msg.trailing});
+            break;
+        case ircNumerics.RPL_TOPIC:
+            websocket.emit('message', {event: 'topic', nick: '', channel: msg.params.split(" ")[1], topic: msg.trailing});
+            break;
+        case 'MODE':
+            opts = msg.params.split(" ");
+            params = {event: 'mode', nick: msg.nick};
+            switch (opts.length) {
+            case 1:
+                params.effected_nick = opts[0];
+                params.mode = msg.trailing;
+                break;
+            case 2:
+                params.channel = opts[0];
+                params.mode = opts[1];
+                break;
+            default:
+                params.channel = opts[0];
+                params.mode = opts[1];
+                params.effected_nick = opts[2];
+                break;
+            }
+            websocket.emit('message', params);
+            break;
+        case 'PRIVMSG':
+            websocket.emit('message', {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
             break;
         }
     } else {
@@ -118,18 +185,20 @@ io.sockets.on('connection', function (websocket) {
             ircSocket = tls.connect(port, host);
         }
         ircSocket.setEncoding('ascii');
-        ircSocket.ircServer = {options: {}};
+        ircSocket.IRC = {options: {}};
+        websocket.ircSocket = ircSocket;
         
         ircSocket.on('data', function (data) {
             data = data.split("\r\n");            
             for (i = 0; i < data.length; i++) {
                 if (data[i]) {
-                    console.log(data[i] + '\r\n');
+                    console.log("->" + data[i]);
                     parseIRCMessage(websocket, ircSocket, data[i]);
                 }
             }
         });
         
+        ircSocket.IRC.nick = nick;
         // Send the login data
         ircSocket.write('NICK ' + nick + '\r\n');
         ircSocket.write('USER ' + nick + '_kiwi 0 0 :' + nick + '\r\n');
@@ -139,7 +208,37 @@ io.sockets.on('connection', function (websocket) {
         }
     });
     websocket.on('message', function (msg, callback) {
-        console.log(msg);
+        var args;
+        msg.data = JSON.parse(msg.data);
+        args = msg.data.args;
+        switch (msg.data.method) {
+        case 'msg':
+            if ((args.target) && (args.msg)) {
+                websocket.ircSocket.write('PRIVMSG ' + args.target + ' :' + args.msg + '\r\n');
+            }
+            break;
+	    case 'action':
+            if ((args.target) && (args.msg)) {
+                websocket.ircSocket.write('PRIVMSG ' + args.target + ' :ACTION ' + args.msg + '\r\n');
+            }
+            break;
+	    case 'raw':
+            websocket.ircSocket.write(args.data + '\r\n');
+            break;
+	    case 'join':
+            if (args.channel) {
+                _.each(args.channel.split(","), function (chan) {
+                    websocket.ircSocket.write('JOIN ' + chan + '\r\n');
+                });
+            }
+            break;
+	    case 'quit':
+            websocket.ircSocket.end('QUIT :' + args.msg + '\r\n');
+            websocket.ircSocket.destroySoon();
+            websocket.disconnect();
+            break;
+        default:
+        }
         if ((callback) && (typeof (callback) === 'function')) {
             callback();
         }
