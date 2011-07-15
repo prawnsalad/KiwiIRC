@@ -4,7 +4,8 @@ var tls = require('tls'),
     net = require('net'),
     http = require('http'),
     ws = require('socket.io'),
-    _ = require('./underscore.min.js');
+    _ = require('./lib/underscore.min.js'),
+    starttls = require('./lib/starttls.js');
 
 var ircNumerics = {
     RPL_WELCOME:        '001',
@@ -21,12 +22,14 @@ var ircNumerics = {
     RPL_MOTD:           '372',
     RPL_WHOISMODES:     '379',
     ERR_NOSUCHNICK:     '401',
-    ERR_LINKCHANNEL:    '470'
+    ERR_LINKCHANNEL:    '470',
+    RPL_STARTTLS:       '670'
 };
 
 
 var parseIRCMessage = function (websocket, ircSocket, data) {
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist;
+    /*global ircSocketDataHandler */
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps, IRC, listeners, ssl_socket;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@([a-z0-9\.\-:]+)) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     msg = regex.exec(data);
     if (msg) {
@@ -44,6 +47,11 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             ircSocket.write('PONG ' + msg.trailing + '\r\n');
             break;
         case ircNumerics.RPL_WELCOME:
+            if (ircSocket.IRC.CAP.negotiating) {
+                ircSocket.IRC.CAP.negotiating = false;
+                ircSocket.IRC.CAP.enabled = [];
+                ircSocket.IRC.CAP.requested = [];
+            }
             websocket.emit('message', {event: 'connect', connected: true, host: null});
             break;
         case ircNumerics.RPL_ISUPPORT:
@@ -169,9 +177,81 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case 'PRIVMSG':
             websocket.emit('message', {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
             break;
+        case 'CAP':
+            caps = [];
+            options = msg.trailing.split(" ");
+            switch (_.first(msg.params.split(" "))) {
+            case 'LS':
+                opts = '';
+                _.each(_.intersect(caps, options), function (cap) {
+                    if (opts !== '') {
+                        opts += " ";
+                    }
+                    opts += cap;
+                    ircSocket.IRC.CAP.requested.push(cap);
+                });
+                if (opts.length > 0) {
+                    ircSocket.write('CAP REQ :' + opts + '\r\n');
+                } else {
+                    ircSocket.write('CAP END\r\n');
+                }
+                // TLS is special
+                /*if (_.include(options, 'tls')) {
+                    ircSocket.write('STARTTLS\r\n');
+                    ircSocket.IRC.CAP.requested.push('tls');
+                }*/
+                break;
+            case 'ACK':
+                _.each(options, function (cap) {
+                    ircSocket.IRC.CAP.enabled.push(cap);
+                });
+                if (_.last(msg.params.split(" ")) !== '*') {
+                    ircSocket.IRC.CAP.requested = [];
+                    ircSocket.IRC.CAP.negotiating = false;
+                    ircSocket.write('CAP END\r\n');
+                }
+                break;
+            case 'NAK':
+                ircSocket.IRC.CAP.requested = [];
+                ircSocket.IRC.CAP.negotiating = false;
+                ircSocket.write('CAP END\r\n');
+                break;
+            }
+            break;
+        /*case ircNumerics.RPL_STARTTLS:
+            try {
+                IRC = ircSocket.IRC;
+                listeners = ircSocket.listeners('data');
+                ircSocket.removeAllListeners('data');
+                ssl_socket = starttls(ircSocket, {}, function () {
+                    ssl_socket.on("data", function (data) {
+                        ircSocketDataHandler(data, websocket, ssl_socket);
+                    });
+                    ircSocket = ssl_socket;
+                    ircSocket.IRC = IRC;
+                    _.each(listeners, function (listener) {
+                        ircSocket.addListener('data', listener);
+                    });
+                });
+                //console.log(ircSocket);
+            } catch (e) {
+                console.log(e);
+            }
+            break;*/
         }
     } else {
         console.log("Unknown command.\r\n");
+    }
+};
+
+var ircSocketDataHandler = function (data, websocket, ircSocket) {
+    var i;
+    data = data.split("\r\n");            
+    for (i = 0; i < data.length; i++) {
+        if (data[i]) {
+            console.log("->" + data[i]);
+            parseIRCMessage(websocket, ircSocket, data[i]);
+        }
     }
 };
 
@@ -179,7 +259,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
 var io = ws.listen(7777, {secure: true});
 io.sockets.on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
-        var ircSocket, i;
+        var ircSocket;
         //setup IRC connection
         if (!ssl) {
             ircSocket = net.createConnection(port, host);
@@ -187,21 +267,16 @@ io.sockets.on('connection', function (websocket) {
             ircSocket = tls.connect(port, host);
         }
         ircSocket.setEncoding('ascii');
-        ircSocket.IRC = {options: {}};
+        ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}};
         websocket.ircSocket = ircSocket;
         
         ircSocket.on('data', function (data) {
-            data = data.split("\r\n");            
-            for (i = 0; i < data.length; i++) {
-                if (data[i]) {
-                    console.log("->" + data[i]);
-                    parseIRCMessage(websocket, ircSocket, data[i]);
-                }
-            }
+            ircSocketDataHandler(data, websocket, ircSocket);
         });
         
         ircSocket.IRC.nick = nick;
         // Send the login data
+        ircSocket.write('CAP LS\r\n');
         ircSocket.write('NICK ' + nick + '\r\n');
         ircSocket.write('USER ' + nick + '_kiwi 0 0 :' + nick + '\r\n');
         
