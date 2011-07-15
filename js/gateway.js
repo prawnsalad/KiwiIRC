@@ -12,8 +12,8 @@ var gateway = {
     user_prefixes: [],
     socket: null,
 	
-    start: function () {
-        gateway.socket = io.connect('wss://192.168.1.127:7777/');
+    start: function (kiwi_server) {
+        gateway.socket = io.connect(kiwi_server);
         gateway.socket.on('connect', function () {
             gateway.sendData = function (data, callback) {
                 gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
