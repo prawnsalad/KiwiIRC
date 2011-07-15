@@ -1,0 +1,34 @@
+e inde  doctype 5
+html
+  head
+    title Socket.IO: realtime cross-browser web apps toolkit.
+    link(href='css/main.css', rel='stylesheet', media='all')
+
+    script(src='js/main.js')
+    script
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-18488944-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+  body
+    #wrap
+      #header
+        .subtext Introducing
+        a(href='/', class='logo') Socket.IO
+        a(href='http://github.com/learnboost/socket.io-node', class='download')
+          span.version v
+          span.version .7
+      #content
+        .section
+          form(action='http://groups.google.com/group/socket_io/boxsubscribe')
+            a#google-subscribe-link(href='http://groups.google.com/group/socket_io')
+              img(src='images/groups.png', border='0')
+            #google-subscribe-input
+              | Email:
+              input#google-subscribe-email(type='text', name='email')
+              input(type='submit', name='go', value='Subscribe')

@@ -45,7 +45,7 @@
 <link rel="stylesheet" type="text/css" href="css/touchscreen_tweaks.css">
 <?php } ?>
 
-
+<script src="http://192.168.1.127:7777/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.json-2.2.min.js"></script>
