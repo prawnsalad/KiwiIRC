@@ -9,8 +9,8 @@ var front = {
 	buffer: [],
 	buffer_pos: 0,
 	
-	init: function () {	
-		gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
+	init: function(){	
+		gateway.nick = 'kiwi_'+Math.ceil(100*Math.random())+Math.ceil(100*Math.random());
 		gateway.session_id = null;
 		
 		$(gateway).bind("onmsg", front.onMsg);
@@ -32,7 +32,7 @@ var front = {
 		$(gateway).bind("onchannel_redirect", front.onChannelRedirect);
 		$(gateway).bind("ondebug", front.onDebug);
 		
-		this.buffer = [];
+		this.buffer = new Array();
 		
 		// Build the about box
 		front.boxes.about = new box("about");
@@ -40,25 +40,23 @@ var front = {
 		front.boxes.about.content.append("<p>An alternative to downloading an irc client. Kiwi IRC is the best web app you'll use for the next couple years.</p>");
 		front.boxes.about.content.append('<button class="about_close">Close</button>');
 		
-		var about_info = 'UI adapted for ' + agent;
-		if (touchscreen) {
-            about_info += ' touchscreen ';
-        }
+		var about_info = 'UI adapted for '+agent;
+		if(touchscreen) about_info += ' touchscreen ';
 		about_info += 'usage';
 		
-		front.boxes.about.content.append('<p class="info">' + about_info + '</p>');
-		front.boxes.about.content.append('<p class="revisions">Front: ' + front.revision + '<br />Gateway: ' + gateway.revision + '</p>');
+		front.boxes.about.content.append('<p class="info">'+about_info+'</p>');
+		front.boxes.about.content.append('<p class="revisions">Front: '+front.revision+'<br />Gateway: '+gateway.revision+'</p>');
 		
 		//$(window).bind("beforeunload", function(){ gateway.quit(); });
 		
 		front.registerKeys();
 		
 		
-		$('#kiwi .formconnectwindow').submit(function () {
+		$('#kiwi .formconnectwindow').submit(function(){
 			var netsel = $('#kiwi .formconnectwindow .network');
 			var nick = $('#kiwi .formconnectwindow .nick');
 			
-			if (nick.val() === '') {
+			if(nick.val() == ''){
 				nick.val('Nick please!');
 				nick.focus();
 				return false;
@@ -68,8 +66,8 @@ var front = {
 			gateway.nick = tmp[0];
 			front.doLayout();
 			try {
-				front.run('/connect ' + netsel.val());
-			} catch (e) {
+				front.run('/connect '+netsel.val());
+			} catch(e){
 				alert(e);
 			}
 			
@@ -87,20 +85,21 @@ var front = {
 		front.tabviewAdd('server');
 		
 		// Any pre-defined nick?
-		if (typeof init_data.nick === "string") {
-            $('#kiwi .formconnectwindow .nick').val(init_data.nick);
-        }
+		if(typeof init_data.nick == "string") $('#kiwi .formconnectwindow .nick').val(init_data.nick);
 		
+		//gateway.session_id = 'testses';
+		
+		gateway.start();
 		//front.sync();
 	},
 	
-	doLayoutSize: function () {
+	doLayoutSize: function() {
 	    var kiwi = $('#kiwi');
-		if (kiwi.width() < 330 && !kiwi.hasClass('small_kiwi')) {
+		if(kiwi.width() < 330 && !kiwi.hasClass('small_kiwi')){
 			console.log("switching to small kiwi");
 			kiwi.removeClass('large_kiwi');
 			kiwi.addClass('small_kiwi');
-		} else if (kiwi.width() >= 330 && !kiwi.hasClass('large_kiwi')) {
+		} else if(kiwi.width() >= 330 && !kiwi.hasClass('large_kiwi')) {
 			console.log("switching to large kiwi");
 			kiwi.removeClass('small_kiwi');
 			kiwi.addClass('large_kiwi');
@@ -110,26 +109,25 @@ var front = {
 		var ul = $('#kiwi .userlist');
 		var top = ul.css('margin-top').replace('px', '') + ct.css('border-bottom-width').replace('px', '');
 		//top = parseInt(ct.offset().top) + parseInt(ct.height()) + parseInt(top);
-		top = parseInt(ct.height(), 10) + parseInt(top, 10);
+		top = parseInt(ct.height()) + parseInt(top);
 
-		$('#kiwi .messages').css('top', top + "px");
-		$('#kiwi .userlist').css('top', top + "px");
+		$('#kiwi .messages').css('top', top+"px");
+		$('#kiwi .userlist').css('top', top+"px");
 	},
 
 
-	doLayout: function () {
+	doLayout: function(){
 		$('#kiwi .msginput .nick a').text(gateway.nick);
 		$('#kiwi_msginput').val(' ');
 		$('#kiwi_msginput').focus();
 	},
 	
 	
-	joinChannel: function (chan_name) {
-		var chans = chan_name.split(','),
-            i;
-		for (i in chans) {
+	joinChannel: function(chan_name){
+		var chans = chan_name.split(',');
+		for(var i in chans){
 			chan = chans[i];
-			if (front.tabviews[chan.toLowerCase()] === undefined) {
+			if(front.tabviews[chan.toLowerCase()] == undefined){
 				gateway.join(chan);
 				front.tabviewAdd(chan);
 			} else {
@@ -139,331 +137,315 @@ var front = {
 	},
 	
 	
-	run: function (msg) {
-		if (msg.substring(0, 1) === '/') {
+	run: function(msg){
+		if(msg.substring(0,1) == '/'){
 			var parts = msg.split(' ');
-			switch (parts[0]) {
-			case '/j':
-			case '/join':
-				front.joinChannel(parts[1]);
-				break;
-				
-			case '/connect':
-			case '/server':
-				if (parts[1] === undefined) {
-					alert('Usage: /connect servername [port]');
+			switch(parts[0]){
+				case '/j':
+				case '/join':
+					front.joinChannel(parts[1]);
 					break;
-				}
-				
-				if (parts[2] === undefined) {
-                    parts[2] = 6667;
-                }
-				front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + '...', 'status');
-				gateway.connect(parts[1], parts[2], 0);
-				break;
-				
-			case '/part':
-				if (typeof parts[1] === "undefined") {
-					gateway.raw(msg.substring(1) + ' ' + front.cur_channel.name);
-				} else {
+					
+				case '/connect':
+				case '/server':
+					if(parts[1] == undefined){
+						alert('Usage: /connect servername [port]');
+						break;
+					}
+					
+					if(parts[2] == undefined) parts[2] = 6667;
+					front.cur_channel.addMsg(null, ' ', '=== Connecting to '+parts[1]+'...', 'status');
+					gateway.connect(parts[1], parts[2], 0);
+					break;
+					
+				case '/part':
+					if(typeof parts[1] == "undefined"){
+						gateway.raw(msg.substring(1)+' '+front.cur_channel.name);
+					} else {
+						gateway.raw(msg.substring(1));
+					}
+					break;
+					
+				case '/names':
+					if(typeof parts[1] != "undefined"){
+						gateway.raw(msg.substring(1));
+					}
+					break;
+					
+				case '/debug':
+					gateway.debug();
+					break;
+					
+				case '/q':
+				case '/query':
+					if(typeof parts[1] != "undefined"){
+						front.tabviewAdd(parts[1]);
+					}
+					break;
+					
+				case '/quote':
+					gateway.raw(msg.replace(/^\/quote /i,''));
+					break;
+					
+				case '/me':
+					gateway.action(front.cur_channel.name, msg.substring(4));
+					//front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
+					front.cur_channel.addMsg(null, ' ', '* '+gateway.nick+' '+msg.substring(4), 'action', 'color:#555;');
+					break;
+					
+				default:
+					//front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
 					gateway.raw(msg.substring(1));
-				}
-				break;
-				
-			case '/names':
-				if (typeof parts[1] !== "undefined") {
-					gateway.raw(msg.substring(1));
-				}
-				break;
-				
-			case '/debug':
-				gateway.debug();
-				break;
-				
-			case '/q':
-			case '/query':
-				if (typeof parts[1] !== "undefined") {
-					front.tabviewAdd(parts[1]);
-				}
-				break;
-				
-			case '/quote':
-				gateway.raw(msg.replace(/^\/quote /i, ''));
-				break;
-				
-			case '/me':
-				gateway.action(front.cur_channel.name, msg.substring(4));
-				//front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
-				front.cur_channel.addMsg(null, ' ', '* ' + gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
-				break;
-			case '/quit':
-                gateway.quit(msg.split(" ",2)[1]);
-                break;
-
-			default:
-				//front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
-				gateway.raw(msg.substring(1));
 			}
 
 		} else {
 			//alert('Sending message: '+msg);
-			if (msg.trim() === '') {
-                return;
-            }
+			if(msg.trim() == '') return;
 			gateway.msg(front.cur_channel.name, msg);
 			var d = new Date();
-			d = d.getHours() + ":" + d.getMinutes();
+			var d = d.getHours() + ":" + d.getMinutes();
 			//front.addMsg(d, gateway.nick, msg);
 			front.cur_channel.addMsg(null, gateway.nick, msg);
 		}
 	},
 	
 	
-	onMsg: function (e, data) {
-        var destination;
+	onMsg: function(e, data){
 		// Is this message from a user?
-		if (data.channel === gateway.nick) {
-			destination = data.nick.toLowerCase();
+		if(data.channel == gateway.nick){
+			var destination = data.nick.toLowerCase();
 		} else {
-			destination = data.channel.toLowerCase();	
+			var destination = data.channel.toLowerCase();	
 		}
 		
-		if (!front.tabviewExists(destination)) {
-            front.tabviewAdd(destination);
-        }
+		if(!front.tabviewExists(destination)) front.tabviewAdd(destination);
 		front.tabviews[destination].addMsg(null, data.nick, data.msg);
 	},
 	
-	onDebug: function (e, data) {
-		if (!front.tabviewExists('kiwi_debug')) {
-            front.tabviewAdd('kiwi_debug');
-        }
-		front.tabviews.kiwi_debug.addMsg(null, ' ', data.msg);
+	onDebug: function(e, data){
+		if(!front.tabviewExists('kiwi_debug')) front.tabviewAdd('kiwi_debug');
+		front.tabviews['kiwi_debug'].addMsg(null, ' ', data.msg);
 	},
 	
-	onAction: function (e, data) {
-        var destination;
+	onAction: function(e, data){
 		// Is this message from a user?
-		if (data.channel === gateway.nick) {
-			destination = data.nick;
+		if(data.channel == gateway.nick){
+			var destination = data.nick;
 		} else {
-			destination = data.channel;	
+			var destination = data.channel;	
 		}
 		
-		if (!front.tabviewExists(destination)) {
-            front.tabviewAdd(destination);
-        }
-		front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
+		if(!front.tabviewExists(destination)) front.tabviewAdd(destination);
+		front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'action', 'color:#555;');
 	},
 	
-	onTopic: function (e, data) {
-		if (front.tabviewExists(data.channel)) {
+	onTopic: function(e, data){
+		if(front.tabviewExists(data.channel)){
 			front.tabviews[data.channel.toLowerCase()].changeTopic(data.topic);			
 		}
 	},
 	
-	onNotice: function (e, data) {
-		var nick = (data.nick === "") ? "" : '[' + data.nick + ']';
-		if (data.channel !== undefined) {
+	onNotice: function(e, data){
+		var nick = (data.nick=="") ? "" : '['+data.nick+']';
+		if(data.channel != undefined){
 			//alert('notice for '+data.channel);
-			if (front.tabviewExists(data.channel)) {
+			if(front.tabviewExists(data.channel)){
 				front.tabviews[data.channel.toLowerCase()].addMsg(null, nick, data.msg, 'notice');
 			}
 		} else {
 			//alert('direct notice');
-			front.tabviews.server.addMsg(null, nick, data.msg, 'notice');
+			front.tabviews['server'].addMsg(null, nick, data.msg, 'notice');
 		}
 	},
-	onConnect: function (e, data) {
-		if (data.connected) {
-			front.tabviews.server.addMsg(null, ' ', '=== Connected OK :)', 'status');
-			if (typeof init_data.channel === "string") {
+	onConnect: function(e, data){
+		if(data.connected){
+			front.tabviews['server'].addMsg(null, ' ', '=== Connected OK :)', 'status');
+			if(typeof init_data.channel == "string"){
 				front.joinChannel(init_data.channel);
 			}
 		} else {
-			front.tabviews.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
+			front.tabviews['server'].addMsg(null, ' ', '=== Failed to connect :(', 'status');
 		}
 	},
-	onOptions: function (e, data) {
-		if (typeof gateway.network_name === "string" && gateway.network_name !== "") {
-			front.tabviews.server.tab.text(gateway.network_name);
+	onOptions: function(e, data){
+		if(typeof gateway.network_name == "string" && gateway.network_name != ""){
+			front.tabviews['server'].tab.text(gateway.network_name);
 		}
 	},
-	onMOTD: function (e, data) {
-		front.tabviews.server.addMsg(null, data.server, data.msg, 'motd');
+	onMOTD: function(e, data){
+		front.tabviews['server'].addMsg(null, data.server, data.msg, 'motd');
 	},
-	onWhois: function (e, data) {
+	onWhois: function(e, data){
 		front.cur_channel.addMsg(null, data.nick, data.msg, 'whois');
 	},
-	onUserList: function (e, data) {
-		if (front.tabviews[data.channel.toLowerCase()] === undefined) {
-            return;
-		}
+	onUserList: function(e, data){
+		if(front.tabviews[data.channel.toLowerCase()] == undefined) return;
+		
 		var ul = front.tabviews[data.channel.toLowerCase()].userlist;
 		
-		if (!document.userlist_updating) {
+		if(!document.userlist_updating){
 			document.userlist_updating = true;
 			ul.empty();
 		}
 		
-		$.each(data.users, function (i, item) {
+		$.each(data.users, function(i,item){
 			var nick = i; //i.match(/^.+!/g);
 			var mode = item;
-			$('<li><a class="nick" onclick="front.userClick(this);">' + mode + nick + '</a></li>').appendTo(ul);
+			$('<li><a class="nick" onclick="front.userClick(this);">'+mode+nick+'</a></li>').appendTo(ul);
 		});
 		
 		front.tabviews[data.channel.toLowerCase()].userlistSort();
 	},
-	onUserListEnd: function (e, data) {
+	onUserListEnd: function(e, data){
 		document.userlist_updating = false;
 	},
 	
-	onJoin: function (e, data) {
-		if (!front.tabviewExists(data.channel)) {
+	onJoin: function(e, data){
+		if(!front.tabviewExists(data.channel)){
 			front.tabviewAdd(data.channel.toLowerCase());
 		}
 		
-		if (data.nick === gateway.nick) {
-            return; // Not needed as it's already in nicklist
-        }
-		front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action', 'color:#009900;');
-		$('<li><a class="nick" onclick="front.userClick(this);">' + data.nick + '</a></li>').appendTo(front.tabviews[data.channel.toLowerCase()].userlist);
+		if(data.nick == gateway.nick) return; // Not needed as it's already in nicklist
+		front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> '+data.nick+' has joined', 'action', 'color:#009900;');
+		$('<li><a class="nick" onclick="front.userClick(this);">'+data.nick+'</a></li>').appendTo(front.tabviews[data.channel.toLowerCase()].userlist);
 		front.tabviews[data.channel.toLowerCase()].userlistSort();
 	},
-	onPart: function (e, data) {
-		if (front.tabviewExists(data.channel)) {
+	onPart: function(e, data){
+		if(front.tabviewExists(data.channel)){
 			// If this is us, close the tabview
-			if (data.nick === gateway.nick) {
+			if(data.nick == gateway.nick){
 				front.tabviews[data.channel.toLowerCase()].close();
-				front.tabviews.server.show();
+				front.tabviews['server'].show();
 				return;
 			}
 			
-			front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- ' + data.nick + ' has left (' + data.message + ')', 'action', 'color:#990000;');
-			front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
-				if ($(this).text() === data.nick) {
+			front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- '+data.nick+' has left ('+data.message+')', 'action', 'color:#990000;');
+			front.tabviews[data.channel.toLowerCase()].userlist.children().each(function(){
+				if($(this).text() == data.nick){
 					$(this).remove();
 				}
 			});
 		}
 	},
-	onKick: function (e, data) {
-		if (front.tabviewExists(data.channel)) {
-			// If this is us, close the tabvi ew
-			if (data.kicked === gateway.nick) {
+	onKick: function(e, data){
+		if(front.tabviewExists(data.channel)){
+			// If this is us, close the tabview
+			if(data.kicked == gateway.nick){
 				front.tabviews[data.channel.toLowerCase()].close();
 				return;
 			}
 			
-			front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- ' + data.kicked + ' kicked by ' + data.nick + '(' + data.message + ')', 'action', 'color:#990000;');
-			front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
-				if ($(this).text() === data.nick) {
+			front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- '+data.kicked+' kicked by '+data.nick+'('+data.message+')', 'action', 'color:#990000;');
+			front.tabviews[data.channel.toLowerCase()].userlist.children().each(function(){
+				if($(this).text() == data.nick){
 					$(this).remove();
 				}
 			});
 		}
 	},
-	onNick: function (e, data) {
-		if (data.nick === gateway.nick) {
+	onNick: function(e, data){
+		if(data.nick == gateway.nick){
 			gateway.nick = data.newnick;
 			front.doLayout();
 		}
 		
-		$.each(front.tabviews, function (i, item) {
-			$.each(front.tabviews, function (i, item) {
+		$.each(front.tabviews, function(i,item){
+			$.each(front.tabviews, function(i,item){
 				item.changeNick(data.newnick, data.nick);
 			});
 		});
 	},
-	onQuit: function (e, data) {
-		$.each(front.tabviews, function (i, item) {
-			$.each(front.tabviews, function (i, item) {
-				item.userlist.children().each(function () {
-					if ($(this).text() === data.nick) {
+	onQuit: function(e, data){
+		$.each(front.tabviews, function(i,item){
+			$.each(front.tabviews, function(i,item){
+				item.userlist.children().each(function(){
+					if($(this).text() == data.nick){
 						$(this).remove();
-						item.addMsg(null, ' ', '<-- ' + data.nick + ' has quit (' + data.message + ')', 'action', 'color:#990000;');
+						item.addMsg(null, ' ', '<-- '+data.nick+' has quit ('+data.message+')', 'action', 'color:#990000;');
 					}
 				});
 			});
 		});
 	},
-	onChannelRedirect: function (e, data) {
+	onChannelRedirect: function(e, data){
 		front.tabviews[data.from.toLowerCase()].close();
 		front.tabviewAdd(data.to.toLowerCase());
-		front.tabviews[data.to.toLowerCase()].addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
+		front.tabviews[data.to.toLowerCase()].addMsg(null, ' ', '=== Redirected from '+data.from, 'action');
 	},
 	
-	registerKeys: function () {
-		$('#kiwi_msginput').bind('keydown', function (e) {
+	registerKeys: function(){
+		$('#kiwi_msginput').bind('keydown', function(e){
 		//$('input').keypress(function(e){
-			switch (e.which) {
-			case 27:			// escape					
-				return false;
-			case 13:			// return
-				var msg = $('#kiwi_msginput').val();
-				msg = msg.trim();
-				
-				front.buffer.push(msg);
-				front.buffer_pos = front.buffer.length;
-				
-				front.run(msg);
-				$('#kiwi_msginput').val('');
-				
-				break;
-				
-			case 38:			// up
-				if (front.buffer_pos > 0) {
-					front.buffer_pos--;
-					$('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
-				}
-				break;
-			case 40:			// down
-				if (front.buffer_pos < front.buffer.length) {
-					front.buffer_pos++;
-					$('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
-				}
-				break;
-				
-			case 9:				// tab
-				// Get possible autocompletions
-				var data = [];
-				front.cur_channel.userlist.children().each(function () {
-					nick = front.nickStripPrefix($('a.nick', this).text());
-					data.push(nick);
-				});
-				
-				// Do the autocomplete
-				if (this.value.length === this.selectionStart && this.value.length === this.selectionEnd) {
-					var candidates = [];
+			switch(e.which){
+				case 27:			// escape					
+					return false;
+					break;
+				case 13:			// return
+					var msg = $('#kiwi_msginput').val();
+					msg = msg.trim();
 					
-					var word_pos = this.value.lastIndexOf(' ');
-					var word = "";
-					if (word_pos === -1) {
-						word = this.value;
-					} else {
-						word = this.value.substr(word_pos);
-					}
-					word = word.trim();
+					front.buffer.push(msg);
+					front.buffer_pos = front.buffer.length;
 					
-					// filter data to find only strings that start with existing value
-					for (i = 0; i < data.length; i++) {
-						if (data[i].indexOf(word) === 0 && data[i].length > word.length) {
-							candidates.push(data[i]);
-                        }
-					}
+					front.run(msg);
+					$('#kiwi_msginput').val('');
 					
-					if (candidates.length > 0) {
-						// some candidates for autocompletion are found
-						this.value = this.value.substring(0, word_pos) + ' ' + candidates[0] + ': ';
-						this.selectionStart = this.value.length;
+					break;
+					
+				case 38:			// up
+					if(front.buffer_pos > 0){
+						front.buffer_pos--;
+						$('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
 					}
-				}
-				return false;
+					break;
+				case 40:			// down
+					if(front.buffer_pos < front.buffer.length){
+						front.buffer_pos++;
+						$('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
+					}
+					break;
+					
+				case 9:				// tab
+					// Get possible autocompletions
+					var data = [];
+					front.cur_channel.userlist.children().each(function(){
+						nick = front.nickStripPrefix($('a.nick', this).text());
+						data.push(nick);
+					});
+					
+					// Do the autocomplete
+					if (this.value.length == this.selectionStart && this.value.length == this.selectionEnd) {
+						var candidates = [];
+						
+						var word_pos = this.value.lastIndexOf(' ');
+						var word = "";
+						if(word_pos == -1){
+							word = this.value;
+						} else {
+							word = this.value.substr(word_pos);
+						}
+						word = word.trim();
+						
+						// filter data to find only strings that start with existing value
+						for (var i=0; i < data.length; i++) {
+							if (data[i].indexOf(word) == 0 && data[i].length > word.length)
+								candidates.push(data[i]);
+						}
+						
+						if (candidates.length > 0) {
+							// some candidates for autocompletion are found
+							this.value = this.value.substring(0, word_pos) + ' ' + candidates[0]+': ';
+							this.selectionStart = this.value.length;
+						}
+					}
+					return false;
+					
+					break;
 			}
 		});
 		
 		
-		$('#kiwi .control .msginput .nick').click(function () {
+		$('#kiwi .control .msginput .nick').click(function(){
 			var html = '<div class="newnick box">\
 	Your new nick:<br />\
 	<form class="form_newnick">\
@@ -472,12 +454,12 @@ var front = {
 	</form>\
 </div>';
 			$('#kiwi').append(html);
-			$('#kiwi .form_newnick').submit(function () {
-				front.run('/NICK ' + $('#kiwi .txtnewnick').val());
+			$('#kiwi .form_newnick').submit(function(){
+				front.run('/NICK '+$('#kiwi .txtnewnick').val());
 				$('#kiwi .newnick').remove();
 				return false;
 			});
-			$('#kiwi .cancelnewnick').click(function () {
+			$('#kiwi .cancelnewnick').click(function(){
 				$('#kiwi .newnick').remove();
 			});
 			
@@ -489,10 +471,8 @@ var front = {
 		
 		
 		
-		$('#kiwi .plugins .load_plugin_file').click(function () {
-			if (typeof front.boxes.plugins !== "undefined") {
-                return;
-            }
+		$('#kiwi .plugins .load_plugin_file').click(function(){
+			if(typeof front.boxes.plugins != "undefined") return;
 			
 			var html = '<div class="list">\
 		<h2>Kiwi plugins</h2>\
@@ -511,43 +491,40 @@ var front = {
 	</div>';
 			front.boxes.plugins = new box("plugin_file");
 			front.boxes.plugins.content.html(html);
-			front.boxes.plugins.box.css('top', -(front.boxes.plugins.height + 40));
+			front.boxes.plugins.box.css('top', -(front.boxes.plugins.height+40));
 			
 			// Populate the plugin list..
 			var lst = $('#plugin_list');
 			lst.find('option').remove();
-            var j;
-			for (j in plugins.privmsg) {
-				var txt = plugins.privmsg[j].name;
-				lst.append('<option value="' + txt + '">' + txt + '</option>');
+			for(var i in plugins.privmsg){
+				var txt = plugins.privmsg[i].name;
+				lst.append('<option value="'+txt+'">'+txt+'</option>');
 			}
 			
 			// Event bindings
-			$('#kiwi .plugin_file').submit(function () {
-				$.getJSON($('.txtpluginfile').val(), function (data) {
+			$('#kiwi .plugin_file').submit(function(){
+				$.getJSON($('.txtpluginfile').val(), function(data) {
 					var plg = {};
 					plg.name = data.name;
-					eval("plg.onprivmsg = " + data.onprivmsg);
-					eval("plg.onload = " + data.onload);
-					eval("plg.onunload = " + data.onunload);
+					eval("plg.onprivmsg = "+data.onprivmsg);
+					eval("plg.onload = "+data.onload);
+					eval("plg.onunload = "+data.onunload);
 					plugins.privmsg.push(plg);
 					
-					if (plg.onload instanceof Function) {
-                        plg.onload();
-                    }
+					if(plg.onload instanceof Function) plg.onload();
 				});
 				return false;
 			});
-			$('#kiwi .cancelpluginfile').click(function () {
+			$('#kiwi .cancelpluginfile').click(function(){
 				front.boxes.plugins.destroy();
 			});
 			
-			$('#kiwi #plugins_list_unload').click(function () {
+			$('#kiwi #plugins_list_unload').click(function(){
 				var selected_plugin = $('#plugin_list').val();
 				console.log("removing plugin: "+selected_plugin);
-				for (var i in plugins.privmsg) {
-					if (plugins.privmsg[i].name === selected_plugin) {
-						if (plugins.privmsg[i].onunload instanceof Function)
+				for(var i in plugins.privmsg){
+					if(plugins.privmsg[i].name == selected_plugin){
+						if(plugins.privmsg[i].onunload instanceof Function)
 							plugins.privmsg[i].onunload();
 						
 						delete plugins.privmsg[i];
@@ -559,11 +536,11 @@ var front = {
 			
 		});
 		
-		$('#kiwi .plugins .reload_css').click(function () {
+		$('#kiwi .plugins .reload_css').click(function(){
 			var links = document.getElementsByTagName("link");
-			for (var i=0; i < links.length; i++) {
-				if (links[i].rel === "stylesheet") {
-					if (links[i].href.indexOf("?")===-1) {
+			for (var i=0; i < links.length; i++){
+				if(links[i].rel === "stylesheet"){
+					if(links[i].href.indexOf("?")===-1){
 						links[i].href += "?";
 					}
 					links[i].href += "x";
@@ -572,38 +549,38 @@ var front = {
 		});
 
 
-		$('#kiwi .about .about_close').click(function () {
+		$('#kiwi .about .about_close').click(function(){
 			$('#kiwi .about').css('display', 'none');
 		});
 		
 		
-		$('#kiwi .poweredby').click(function () {
+		$('#kiwi .poweredby').click(function(){
 			$('#kiwi .about').css('display', 'block');
 		});
 		
 	},
 	
 	
-	tabviewExists: function (name) {
+	tabviewExists: function(name){
 		return !(front.tabviews[name.toLowerCase()] == undefined);
 	},
 	
-	tabviewAdd: function (v_name) {
-		if (v_name.charAt(0) == gateway.channel_prefix) {
+	tabviewAdd: function(v_name){
+		if(v_name.charAt(0) == gateway.channel_prefix){
 			var re = new RegExp(gateway.channel_prefix,"g");
 			var htmlsafe_name = v_name.replace(re, 'pre');
-			htmlsafe_name = "chan_" + htmlsafe_name;
+			htmlsafe_name = "chan_"+htmlsafe_name;
 		} else {
-			var htmlsafe_name = 'query_' + v_name;
+			var htmlsafe_name = 'query_'+v_name;
 		}
 		
-		var tmp_divname = 'kiwi_window_' + htmlsafe_name;
-		var tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
-		var tmp_tabname = 'kiwi_tab_' + htmlsafe_name
+		var tmp_divname = 'kiwi_window_'+htmlsafe_name;
+		var tmp_userlistname = 'kiwi_userlist_'+htmlsafe_name;
+		var tmp_tabname = 'kiwi_tab_'+htmlsafe_name
 		
-		$('#kiwi').append('<div id="' + tmp_divname + '" class="messages"></div>');
-		$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
-		$('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
+		$('#kiwi').append('<div id="'+tmp_divname+'" class="messages"></div>');
+		$('#kiwi .userlist').append('<ul id="'+tmp_userlistname+'"></ul>');
+		$('#kiwi .windowlist ul').append('<li id="'+tmp_tabname+'" onclick="front.tabviews[\''+v_name.toLowerCase()+'\'].show();">'+v_name+'</li>');
 		//$('#kiwi .windowlist ul .window_'+v_name).click(function(){ front.windowShow(v_name); });
 		//front.windowShow(v_name);
 		
@@ -614,7 +591,7 @@ var front = {
 		front.tabviews[v_name.toLowerCase()].tab = $('#'+tmp_tabname);
 		front.tabviews[v_name.toLowerCase()].show();
 		
-		if (typeof registerTouches === "function") {
+		if(typeof registerTouches == "function"){
 			//alert("Registering touch interface");
 			//registerTouches($('#'+tmp_divname));
 			registerTouches(document.getElementById(tmp_divname));
@@ -629,46 +606,46 @@ var front = {
 	},
 	
 	
-	userClick: function (item) {
+	userClick: function(item){
 		// Remove any existing userboxes
 		$('#kiwi .userbox').remove();
 		
 		var li = $(item).parent();
 		var html = '<div class="userbox">\
-	<input type="hidden" class="userbox_nick" value="' + front.nickStripPrefix($(item).text()) + '" />\
+	<input type="hidden" class="userbox_nick" value="'+front.nickStripPrefix($(item).text())+'" />\
 	<a href="#" class="userbox_query">Message</a>\
 	<a href="#" class="userbox_whois">Info</a>\
 </div>';
 		li.append(html);
 		
-		$('#kiwi .userbox .userbox_query').click(function (ev) {
+		$('#kiwi .userbox .userbox_query').click(function(ev){
 			var nick = $('#kiwi .userbox_nick').val();
-			front.run('/query ' + nick);
+			front.run('/query '+nick);
 		});
 		
-		$('#kiwi .userbox .userbox_whois').click(function (ev) {
+		$('#kiwi .userbox .userbox_whois').click(function(ev){
 			var nick = $('#kiwi .userbox_nick').val();
-			front.run('/whois ' + nick);
+			front.run('/whois '+nick);
 		});
 	},
 	
 	
-	sync: function () {
+	sync: function(){
 		gateway.sync();
 	},
 	
-	onSync: function (e, data) {
+	onSync: function(e, data){
 		// Set any settings
-		if (data.nick != undefined) gateway.nick = data.nick;
+		if(data.nick != undefined) gateway.nick = data.nick;
 		
 		// Add the tabviews
-		if (data.tabviews != undefined) {
-			$.each(data.tabviews, function (i, tab) {
+		if(data.tabviews != undefined){
+			$.each(data.tabviews, function(i,tab){
 				if(!front.tabviewExists(tab.name)){
-					front.tabviewAdd(gateway.channel_prefix + tab.name);
+					front.tabviewAdd(gateway.channel_prefix+tab.name);
 					
-					if (tab.userlist !== undefined)
-						front.onUserList({'channel':gateway.channel_prefix + tab.name, 'users':tab.userlist});
+					if(tab.userlist != undefined)
+						front.onUserList({'channel':gateway.channel_prefix+tab.name, 'users':tab.userlist});
 				}
 			});
 		}
@@ -677,7 +654,7 @@ var front = {
 	},
 	
 	
-	setTopicText: function (new_topic) {
+	setTopicText: function(new_topic){
 		$('#kiwi .cur_topic').text(new_topic);
 	},
 	
@@ -687,29 +664,29 @@ var front = {
 	
 	
 	
-	nickStripPrefix: function (nick) {
+	nickStripPrefix: function(nick){
 		var tmp = nick;
 		
 		prefix = tmp.charAt(0);
-		if (typeof gateway.user_prefixes[prefix] != "undefined") tmp = tmp.substring(1);
+		if(typeof gateway.user_prefixes[prefix] != "undefined") tmp = tmp.substring(1);
 		
 		return tmp;
 	},
 	
-	nickGetPrefix: function (nick) {
+	nickGetPrefix: function(nick){
 		var tmp = nick;
 		
 		prefix = tmp.charAt(0);
-		if (typeof gateway.user_prefixes[prefix] == "undefined") {
+		if(typeof gateway.user_prefixes[prefix] == "undefined"){
 			prefix = "";
 		}
 		
 		return prefix;
 	},
 	
-	isChannel: function (name) {
+	isChannel: function(name){
 		prefix = name.charAt(0);
-		if (gateway.channel_prefix.indexOf(prefix) > -1) {
+		if(gateway.channel_prefix.indexOf(prefix) > -1){
 			is_chan = true;
 		} else {
 			is_chan = false;
