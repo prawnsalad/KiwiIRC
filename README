@@ -1,6 +1,0 @@
-THOUGHTS
-	The session ID posted from the webclient needs to be parsed. Eg. only allow chars [A-Za-z0-9]{number_of_chars}
-
-
-WEBIRC/CGIIRC NOTES
-	
