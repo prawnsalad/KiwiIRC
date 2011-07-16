@@ -1,0 +1,8 @@
+{
+    "port":           7777,
+    "listen_ssl":     false,
+    "ssl_key":        "server.key",
+    "ssl_cert":       "cert.pem",
+    "quit_message":   "KiwiIRC",
+    "cap_options":    []
+}

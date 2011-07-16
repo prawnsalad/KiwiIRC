@@ -55,7 +55,6 @@
 <script type="text/javascript" src="js/gateway.js"></script>
 <script type="text/javascript" src="js/front.js"></script>
 <script type="text/javascript" src="js/iscroll.js"></script>
-<script type="text/javascript" src="assets.php?js=jquery.json-2.2.min,util,gateway,front,iscroll"></script>
 
 <?php if(in_array($agent, array("android", "ipad", "iphone", "ipad"))){ ?>
 <script type="text/javascript" src="js/touchscreen_tweaks.js"></script>
