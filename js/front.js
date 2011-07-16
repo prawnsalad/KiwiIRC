@@ -112,8 +112,9 @@ var front = {
 		var ct = $('#kiwi .cur_topic');
 		var ul = $('#kiwi .userlist');
 		var top = ul.css('margin-top').replace('px', '') + ct.css('border-bottom-width').replace('px', '');
+		console.log("TOP="+top);
 		//top = parseInt(ct.offset().top) + parseInt(ct.height()) + parseInt(top);
-		top = parseInt(ct.height(), 10) + parseInt(top, 10);
+		top = parseInt(ct.height(), 10) + parseInt(top, 10) - 8;
 
 		$('#kiwi .messages').css('top', top + "px");
 		$('#kiwi .userlist').css('top', top + "px");

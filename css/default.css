@@ -167,6 +167,7 @@ body, html {
 	width:70%; display:block;
 	margin-left:12em;
 	padding: 2px 0px;
+	outline:none;
 }
 #kiwi .control .plugins { margin:3px; margin-top:7px; }
 #kiwi .control .plugins ul li {
