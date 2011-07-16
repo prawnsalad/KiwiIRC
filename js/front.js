@@ -104,17 +104,19 @@ var front = {
 			kiwi.removeClass('large_kiwi');
 			kiwi.addClass('small_kiwi');
 		} else if (kiwi.width() >= 330 && !kiwi.hasClass('large_kiwi')) {
-			console.log("switching to large kiwi");
 			kiwi.removeClass('small_kiwi');
 			kiwi.addClass('large_kiwi');
 		}
 
 		var ct = $('#kiwi .cur_topic');
 		var ul = $('#kiwi .userlist');
-		var top = ul.css('margin-top').replace('px', '') + ct.css('border-bottom-width').replace('px', '');
-		console.log("TOP="+top);
-		//top = parseInt(ct.offset().top) + parseInt(ct.height()) + parseInt(top);
-		top = parseInt(ct.height(), 10) + parseInt(top, 10) - 8;
+
+		var top = parseInt(ct.offset().top) + parseInt(ct.height());
+        top = top + parseInt(ct.css('border-top-width').replace('px', ''));
+        top = top + parseInt(ct.css('border-bottom-width').replace('px', ''));
+        top = top + parseInt(ct.css('padding-top').replace('px', ''));
+        top = top + parseInt(ct.css('padding-bottom').replace('px', ''));
+        top = top + 1;
 
 		$('#kiwi .messages').css('top', top + "px");
 		$('#kiwi .userlist').css('top', top + "px");
@@ -732,6 +734,33 @@ var front = {
 		var wl = $('#kiwi .windowlist ul');
 		var next_left = parseInt(wl.css('text-indent').replace('px', ''))-170;
 		wl.css('text-indent', next_left);
+	},
+
+	windowsNext: function(){
+		var tab, next;
+		next = false;
+		for(tab in front.tabviews){
+			if(!next){
+				if(front.tabviews[tab] == front.cur_channel){
+					next = true;
+					continue;
+				}
+			} else {
+				front.tabviews[tab].show();
+			}
+		};
+	},
+
+	windowsPrevious: function(){
+		var tab, prev_tab, next;
+		next = false;
+		for(tab in front.tabviews){
+			if(front.tabviews[tab] == front.cur_channel){
+				prev_tab.show();
+				return;
+			}
+			prev_tab = front.tabviews[tab];
+		};
 	}
 }
 
@@ -784,7 +813,7 @@ tabview.prototype.show = function(){
 	front.cur_channel = this;
 	
 	this.scrollBottom();
-	$('#kiwi_msginput').focus();
+	if(!touchscreen) $('#kiwi_msginput').focus();
 }
 
 tabview.prototype.close = function(){

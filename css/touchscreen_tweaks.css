@@ -6,6 +6,8 @@
 
 #kiwi .windowlist ul {
 	/* border: 1px solid blue;*/
-	margin-right: 0px; /* i* safaris seem to behave differently here :/ */
+	margin-right: 0px; /* i* safari seem to behave differently here :/ */
 	height: 50px;
 }
+
+#kiwi.touchscreen .userlist { line-height:1.6em; }
