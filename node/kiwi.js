@@ -8,10 +8,7 @@ var tls = require('tls'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
 
-asdf = fs.readFileSync('config.json', 'ascii')
-console.log(asdf, typeof asdf);
-var config = JSON.parse(asdf);
-console.log(config);
+var config = JSON.parse(fs.readFileSync('config.json', 'ascii'));
 
 var ircNumerics = {
     RPL_WELCOME:        '001',
@@ -72,15 +69,15 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                         regex = /\(([^)]*)\)(.*)/;
                         matches = regex.exec(opt[1]);
                         if ((matches) && (matches.length === 3)) {
-                            options[opt[0]] = {};
+                            ircSocket.IRC.options[opt[0]] = {};
                             for (j = 0; j < matches[2].length; j++) {
-                                options[opt[0]][matches[2].charAt(j)] = matches[1].charAt(j);
+                                ircSocket.IRC.options[opt[0]][matches[2].charAt(j)] = matches[1].charAt(j);
                             }
                         }
                     }
                 }
             }
-            websocket.emit('message', {event: 'options', server: '', "options": options});
+            websocket.emit('message', {event: 'options', server: '', "options": ircSocket.IRC.options});
             break;
         case ircNumerics.RPL_WHOISUSER:
         case ircNumerics.RPL_WHOISSERVER:
@@ -257,7 +254,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
         ircSocket.holdLast = false;
         ircSocket.held = '';
     }
-    if (data.substring(data.length-2,0) === '\r\n') {
+    if (data.substr(-2) === '\r\n') {
         ircSocket.holdLast = true;
     }
     data = data.split("\r\n");         
@@ -291,6 +288,8 @@ io.sockets.on('connection', function (websocket) {
         ircSocket.setEncoding('ascii');
         ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}};
         websocket.ircSocket = ircSocket;
+        ircSocket.holdLast = false;
+        ircSocket.held = '';
         
         ircSocket.on('data', function (data) {
             ircSocketDataHandler(data, websocket, ircSocket);
