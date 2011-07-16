@@ -1,6 +1,6 @@
-#kiwi.touchscreen.portrait .userlist {	right:-100px; }
+#kiwi.touchscreen.portrait .userlist { display:none; }
 
-#kiwi.touchscreen.portrait .messages { right:10px; }
+#kiwi.touchscreen.portrait .messages { right:0px; }
 
 #kiwi.touchscreen .windowlist ul li { padding:10px; }
 

@@ -9,7 +9,7 @@ var gateway = {
     syncing: false,
     channel_prefix: '#',
     network_name: '',
-    user_prefixes: [],
+    user_prefixes: ['~','&','@','+'],
     socket: null,
 	
     start: function (kiwi_server) {
@@ -21,6 +21,8 @@ var gateway = {
             gateway.socket.on('message', gateway.parse);
             gateway.socket.on('disconnect', function () {
                 // Teardown procedure here
+                // TODO: Ask Ehm if teardown with socket.io is required
+                $(gateway).trigger("ondisconnect", {});
             });
         });
     },

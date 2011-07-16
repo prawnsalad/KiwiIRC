@@ -54,6 +54,8 @@
 <script type="text/javascript" src="js/util.js"></script>
 <script type="text/javascript" src="js/gateway.js"></script>
 <script type="text/javascript" src="js/front.js"></script>
+<script type="text/javascript" src="js/iscroll.js"></script>
+<script type="text/javascript" src="assets.php?js=jquery.json-2.2.min,util,gateway,front,iscroll"></script>
 
 <?php if(in_array($agent, array("android", "ipad", "iphone", "ipad"))){ ?>
 <script type="text/javascript" src="js/touchscreen_tweaks.js"></script>
@@ -64,9 +66,16 @@
 	var touchscreen = <?php echo ($touchscreen) ? 'true' : 'false'; ?>;
 	var init_data = {};
 	var kiwi_server = 'wss://<?php echo $node_server; ?>:7777/';
+	var touch_scroll;
 	
 	$(document).ready(function(){
-		if(touchscreen) $('#kiwi').addClass('touchscreen');
+		if(touchscreen){
+			$('#kiwi').addClass('touchscreen');
+
+			// Single touch scrolling through scrollback for touchscreens
+			scroll_opts = {};
+			touch_scroll = new iScroll('windows', scroll_opts);
+		}
 		
 		//#nick@irc.anonnet.org:6679+/#channel,##channel,&channel
 		var chans = document.location.hash.match(/[#&]+[^ ,\007]+/g);
@@ -139,6 +148,8 @@
 		<ul></ul>
 	</div>
 	
+	<div id="windows" class="windows"><div class="scroller" style="width:100%;"></div></div>
+
 	<div class="control">
 		<div class="msginput">
 			<div class="nick"><a href="#"></a>:</div>

@@ -19,6 +19,7 @@ var front = {
 		$(gateway).bind("onmotd", front.onMOTD);
 		$(gateway).bind("onoptions", front.onOptions);
 		$(gateway).bind("onconnect", front.onConnect);
+		$(gateway).bind("ondisconnect", front.onDisconnect);
 		$(gateway).bind("onnick", front.onNick);
 		$(gateway).bind("onuserlist", front.onUserList);
 		$(gateway).bind("onuserlist_end", front.onUserListEnd);
@@ -118,7 +119,7 @@ var front = {
         top = top + parseInt(ct.css('padding-bottom').replace('px', ''));
         top = top + 1;
 
-		$('#kiwi .messages').css('top', top + "px");
+		$('#kiwi .windows').css('top', top + "px");
 		$('#kiwi .userlist').css('top', top + "px");
 	},
 
@@ -288,6 +289,12 @@ var front = {
 			}
 		} else {
 			front.tabviews.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
+		}
+	},
+	onDisconnect: function(e, data){
+		var tab;
+		for(tab in front.tabviews){
+			front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error')
 		}
 	},
 	onOptions: function (e, data) {
@@ -607,7 +614,7 @@ var front = {
 		var tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
 		var tmp_tabname = 'kiwi_tab_' + htmlsafe_name
 		
-		$('#kiwi').append('<div id="' + tmp_divname + '" class="messages"></div>');
+		$('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
 		$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
 		$('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
 		//$('#kiwi .windowlist ul .window_'+v_name).click(function(){ front.windowShow(v_name); });
@@ -812,6 +819,9 @@ tabview.prototype.show = function(){
 	front.setTopicText(this.topic);
 	front.cur_channel = this;
 	
+	// If we're using fancy scrolling, refresh it
+	if(touch_scroll) touch_scroll.refresh();
+
 	this.scrollBottom();
 	if(!touchscreen) $('#kiwi_msginput').focus();
 }
@@ -909,13 +919,24 @@ tabview.prototype.addMsg = function(time, nick, msg, type, style){
 	}
 	
 	
-	var line_msg = '<div class="msg '+type+'"><div class="time">'+time+'</div><div class="nick">'+html_nick+'</div><div class="text" style="'+style+'">'+msg+' </div></div>';
+	var line_msg = $('<div class="msg '+type+'"><div class="time">'+time+'</div><div class="nick">'+html_nick+'</div><div class="text" style="'+style+'">'+msg+' </div></div>');
 	this.div.append(line_msg);
-	this.scrollBottom();
+
+	if(!touchscreen){
+		this.scrollBottom();
+	} else {
+		touch_scroll.refresh();
+		//console.log(this.div.attr("scrollHeight") +" - "+ $('#windows').height());
+		this.scrollBottom();
+		//if(this.div.attr("scrollHeight") > $('#windows').height()){
+		//	touch_scroll.scrollTo(0, this.div.height());
+		//}
+	}
 }
 
 tabview.prototype.scrollBottom = function(){
-	this.div.attr({ scrollTop: this.div.attr("scrollHeight") });
+	var w = $('#windows');
+	w.attr({ scrollTop: w.attr("scrollHeight") });
 }
 
 tabview.prototype.changeNick = function(newNick, oldNick){
@@ -942,8 +963,8 @@ tabview.prototype.userlistSort = function(){
 		var compB = $(b).text().toUpperCase();
 		
 		// Sort by prefixes first
-		for (var prefix in gateway.user_prefixes) {
-			mode = gateway.user_prefixes[prefix];
+		for (var i in gateway.user_prefixes) {
+			prefix = gateway.user_prefixes[i];
 			
 			if(compA.charAt(0) == prefix && compB.charAt(0) == prefix){
 				// Both have the same prefix, string compare time
