@@ -47,7 +47,8 @@
 <link rel="stylesheet" type="text/css" href="css/touchscreen_tweaks.css">
 <?php } ?>
 
-<script src="http://<?php echo $node_server; ?>:7777/socket.io/socket.io.js"></script>
+<script type="text/javascript">var kiwi_server = 'https://<?php echo $node_server; ?>:7777/';</script>
+<script src="https://<?php echo $node_server; ?>:7777/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.json-2.2.min.js"></script>
@@ -63,7 +64,6 @@
 	var agent = '<?php echo $agent; ?>';
 	var touchscreen = <?php echo ($touchscreen) ? 'true' : 'false'; ?>;
 	var init_data = {};
-	var kiwi_server = 'wss://<?php echo $node_server; ?>:7777/';
 	
 	$(document).ready(function(){
 		if(touchscreen) $('#kiwi').addClass('touchscreen');

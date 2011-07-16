@@ -1,5 +1,5 @@
 /*jslint browser: true, confusion: true, sloppy: true, maxerr: 50, indent: 4 */
-/*globals io, $ */
+/*globals io, $, kiwi_server */
 var gateway = {
 
     revision: 16,

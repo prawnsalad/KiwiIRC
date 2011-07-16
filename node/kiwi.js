@@ -3,9 +3,15 @@
 var tls = require('tls'),
     net = require('net'),
     http = require('http'),
+    fs = require('fs'),
     ws = require('socket.io'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
+
+asdf = fs.readFileSync('config.json', 'ascii')
+console.log(asdf, typeof asdf);
+var config = JSON.parse(asdf);
+console.log(config);
 
 var ircNumerics = {
     RPL_WELCOME:        '001',
@@ -178,7 +184,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.emit('message', {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
             break;
         case 'CAP':
-            caps = [];
+            caps = config.cap_options;
             options = msg.trailing.split(" ");
             switch (_.first(msg.params.split(" "))) {
             case 'LS':
@@ -246,9 +252,21 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
 
 var ircSocketDataHandler = function (data, websocket, ircSocket) {
     var i;
-    data = data.split("\r\n");            
+    if ((ircSocket.holdLast) && (ircSocket.held !== '')) {
+        data = ircSocket.held + data;
+        ircSocket.holdLast = false;
+        ircSocket.held = '';
+    }
+    if (data.substring(data.length-2,0) === '\r\n') {
+        ircSocket.holdLast = true;
+    }
+    data = data.split("\r\n");         
     for (i = 0; i < data.length; i++) {
         if (data[i]) {
+            if ((ircSocket.holdLast) && (i === data.length-1)) {
+                ircSocket.held = data[i];
+                break;
+            }
             console.log("->" + data[i]);
             parseIRCMessage(websocket, ircSocket, data[i]);
         }
@@ -256,7 +274,11 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
 };
 
 //setup websocket listener
-var io = ws.listen(7777, {secure: true});
+if (config.listen_ssl) {
+    var io = ws.listen(config.port, {secure: true, key: fs.readFileSync(config.ssl_key), cert: fs.readFileSync(config.ssl_cert)});
+} else {
+    var io = ws.listen(config.port, {secure: false});
+}
 io.sockets.on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
         var ircSocket;
@@ -327,7 +349,7 @@ io.sockets.on('connection', function (websocket) {
     });
     websocket.on('disconnect', function () {
         if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
-            websocket.ircSocket.end('QUIT :KiwiIRC\r\n');
+            websocket.ircSocket.end('QUIT :' + config.quit_messages + '\r\n');
             websocket.sentQUIT = true;
             websocket.ircSocket.destroySoon();
         }
