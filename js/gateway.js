@@ -21,7 +21,6 @@ var gateway = {
             gateway.socket.on('message', gateway.parse);
             gateway.socket.on('disconnect', function () {
                 // Teardown procedure here
-                // TODO: Ask Ehm if teardown with socket.io is required
                 $(gateway).trigger("ondisconnect", {});
             });
         });

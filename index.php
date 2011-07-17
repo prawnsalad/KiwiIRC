@@ -1,5 +1,7 @@
 <?php
 
+	$node_config = json_decode(file_get_contents("node/config.json"), true);
+
 	switch(true){
 		case stripos($_SERVER['HTTP_USER_AGENT'], 'android') > 0:
 			$agent = "android"; $touchscreen = true;
@@ -64,7 +66,7 @@
 	var agent = '<?php echo $agent; ?>';
 	var touchscreen = <?php echo ($touchscreen) ? 'true' : 'false'; ?>;
 	var init_data = {};
-	var kiwi_server = 'wss://<?php echo $node_server; ?>:7777/';
+	var kiwi_server = '<?php echo ($node_config['listen_ssl'] ? "https" : "http")."://".$node_server; ?>:7777/';
 	var touch_scroll;
 	
 	$(document).ready(function(){
