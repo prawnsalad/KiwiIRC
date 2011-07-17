@@ -8,7 +8,7 @@ var tls = require('tls'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
 
-var config = JSON.parse(fs.readFileSync(__dirname+'/config.json', 'ascii'));
+var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'ascii'));
 
 var ircNumerics = {
     RPL_WELCOME:        '001',
@@ -32,7 +32,7 @@ var ircNumerics = {
 
 var parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps, IRC, listeners, ssl_socket;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@([a-z0-9\.\-:]+)) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     msg = regex.exec(data);
     if (msg) {
@@ -260,7 +260,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
     data = data.split("\r\n");         
     for (i = 0; i < data.length; i++) {
         if (data[i]) {
-            if ((ircSocket.holdLast) && (i === data.length-1)) {
+            if ((ircSocket.holdLast) && (i === data.length - 1)) {
                 ircSocket.held = data[i];
                 break;
             }
@@ -272,7 +272,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 //setup websocket listener
 if (config.listen_ssl) {
-    var io = ws.listen(config.port, {secure: true, key: fs.readFileSync(__dirname+'/'+config.ssl_key), cert: fs.readFileSync(__dirname+'/'+config.ssl_cert)});
+    var io = ws.listen(config.port, {secure: true, key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)});
 } else {
     var io = ws.listen(config.port, {secure: false});
 }
