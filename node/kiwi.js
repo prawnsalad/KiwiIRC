@@ -348,7 +348,7 @@ io.sockets.on('connection', function (websocket) {
     });
     websocket.on('disconnect', function () {
         if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
-            websocket.ircSocket.end('QUIT :' + config.quit_messages + '\r\n');
+            websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
             websocket.sentQUIT = true;
             websocket.ircSocket.destroySoon();
         }
