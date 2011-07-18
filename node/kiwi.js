@@ -3,6 +3,7 @@
 var tls = require('tls'),
     net = require('net'),
     http = require('http'),
+    https = require('https'),
     fs = require('fs'),
     ws = require('socket.io'),
     _ = require('./lib/underscore.min.js'),
@@ -272,9 +273,13 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 //setup websocket listener
 if (config.listen_ssl) {
-    var io = ws.listen(config.port, {secure: true, key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)});
+    var httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)});
+    var io = ws.listen(httpServer, {secure: true});
+    httpServer.listen(config.port, config.bind_address);
 } else {
-    var io = ws.listen(config.port, {secure: false});
+    var httpServer = http.createServer();
+    var io = ws.listen(httpServer, {secure: false});
+    httpServer.listen(config.port, config.bind_address);
 }
 io.sockets.on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
