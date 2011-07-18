@@ -131,6 +131,19 @@ var gateway = {
     },
 
 
+    notice: function (s_target, s_msg, callback) {
+	    var data = {
+		    method: 'notice',
+		    args: {
+			    target: s_target,
+			    msg: s_msg
+		    }
+	    };
+
+	    gateway.sendData(data, callback);
+    },
+
+
     join: function (s_channel, callback) {
 	    var data = {
 		    method: 'join',

@@ -221,6 +221,16 @@ var front = {
 				//front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
 				front.cur_channel.addMsg(null, ' ', '* ' + gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
 				break;
+
+			case '/notice':
+				var dest, msg;
+				dest = parts[1];
+				msg = parts.slice(2).join(' ');
+
+				gateway.notice(dest, msg);
+				this.onNotice({}, {nick:gateway.nick, channel:dest, msg:msg});
+				break;
+
 			case '/quit':
                 gateway.quit(msg.split(" ",2)[1]);
                 break;
