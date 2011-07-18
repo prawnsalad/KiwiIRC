@@ -342,6 +342,11 @@ io.sockets.on('connection', function (websocket) {
                 websocket.ircSocket.destroySoon();
                 websocket.disconnect();
                 break;
+            case 'notice':
+                if ((args.target) && (args.msg)) {
+                    websocket.ircSocket.write('NOTICE ' + args.target + ' :' + args.msg + '\r\n');
+                }
+                break;
             default:
             }
             if ((callback) && (typeof (callback) === 'function')) {

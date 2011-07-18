@@ -21,7 +21,6 @@ var gateway = {
             gateway.socket.on('message', gateway.parse);
             gateway.socket.on('disconnect', function () {
                 // Teardown procedure here
-                // TODO: Ask Ehm if teardown with socket.io is required
                 $(gateway).trigger("ondisconnect", {});
             });
         });
@@ -122,6 +121,19 @@ var gateway = {
     action: function (s_target, s_msg, callback) {
 	    var data = {
 		    method: 'action',
+		    args: {
+			    target: s_target,
+			    msg: s_msg
+		    }
+	    };
+
+	    gateway.sendData(data, callback);
+    },
+
+
+    notice: function (s_target, s_msg, callback) {
+	    var data = {
+		    method: 'notice',
 		    args: {
 			    target: s_target,
 			    msg: s_msg
