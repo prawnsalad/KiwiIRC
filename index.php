@@ -50,7 +50,7 @@
 <?php } ?>
 
 <script src="http://<?php echo $node_server; ?>:7777/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.json-2.2.min.js"></script>
 <script type="text/javascript" src="js/util.js"></script>
@@ -70,14 +70,6 @@
 	var touch_scroll;
 	
 	$(document).ready(function(){
-		if(touchscreen){
-			$('#kiwi').addClass('touchscreen');
-
-			// Single touch scrolling through scrollback for touchscreens
-			scroll_opts = {};
-			touch_scroll = new iScroll('windows', scroll_opts);
-		}
-		
 		//#nick@irc.anonnet.org:6679+/#channel,##channel,&channel
 		var chans = document.location.hash.match(/[#&]+[^ ,\007]+/g);
 		if(chans != null && chans.length > 0) {
@@ -103,6 +95,52 @@
 	}
 </script>
 
+
+<script id="tmpl_about_box" type="text/x-jquery-tmpl">
+	<h2>Kiwi IRC</h2>
+	<p>An alternative to downloading an irc client. Kiwi IRC is the best web app you'll use for the next couple years.</p>
+	<button class="about_close">Close</button>
+	<p class="info">${about}</p>
+	<p class="revisions">Front: ${front_revision}<br />Gateway: ${gateway_revision}</p>
+</script>
+
+<script id="tmpl_change_nick" type="text/x-jquery-tmpl">
+	<div class="newnick box">
+		Your new nick:<br />
+		<form class="form_newnick">
+			<input type="text" class="txtnewnick" /><br />
+			<button class="butnewnick" type="submit">Change</button> <a class="link cancelnewnick">Cancel</a>
+		</form>
+	</div>
+</script>
+
+
+<script id="tmpl_plugins" type="text/x-jquery-tmpl">
+	<div class="list">
+		<h2>Kiwi plugins</h2>
+		<p>
+			<select multiple="multiple" id="plugin_list">
+			</select>
+			<button id="plugins_list_unload">Unload</button>
+		</p>
+	</div>
+	<div class="load">
+		Plugin file URL:<br />
+		<form>
+			<input type="text" class="txtpluginfile" /><br />
+			<button class="butnewnick" type="submit">Load..</button> <a class="link cancelpluginfile">Cancel</a>
+		</form>
+	</div>
+</script>
+
+<script id="tmpl_user_box" type="text/x-jquery-tmpl">
+	<div class="userbox">
+		<input type="hidden" class="userbox_nick" value="${nick}" />
+		<a href="#" class="userbox_query">Message</a>
+		<a href="#" class="userbox_whois">Info</a>
+	</div>
+</script>
+
 </head>
 
 <body>
@@ -115,7 +153,7 @@
 				<div class="content top">
 					<ul>
 						<li><label for="nick">Your nickname:</label>
-							<input type="text" id="nick" name="nick" class="nick" value="<?php echo htmlentities($nick); ?>" /></li>
+							<input type="text" id="nick" name="nick" class="nick" placeholder="Your nick.." /></li>
 					</ul>
 					<a class="connect" href="">Connect..</a>
 				</div>
@@ -158,7 +196,7 @@
 		</div>
 		<div class="plugins">
 			<ul>
-				<!-- <li><a class="load_plugin_file">Plugins</a></li> -->
+				<li><a class="load_plugin_file">Plugins</a></li>
 				<?php if(isset($_GET['debug'])){ ?>
 				<li><a class="reload_css">Reload CSS</a></li>
 				<?php } ?>

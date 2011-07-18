@@ -37,21 +37,25 @@ var front = {
 		
 		// Build the about box
 		front.boxes.about = new box("about");
-		front.boxes.about.content.html('<h2>Kiwi IRC</h2>');
-		front.boxes.about.content.append("<p>An alternative to downloading an irc client. Kiwi IRC is the best web app you'll use for the next couple years.</p>");
-		front.boxes.about.content.append('<button class="about_close">Close</button>');
-		
 		var about_info = 'UI adapted for ' + agent;
-		if (touchscreen) {
-            about_info += ' touchscreen ';
-        }
+		if (touchscreen) about_info += ' touchscreen ';
 		about_info += 'usage';
-		
-		front.boxes.about.content.append('<p class="info">' + about_info + '</p>');
-		front.boxes.about.content.append('<p class="revisions">Front: ' + front.revision + '<br />Gateway: ' + gateway.revision + '</p>');
-		
+		$('#tmpl_about_box').tmpl({
+			about:about_info,
+			front_revision:front.revision,
+			gateway_revision:gateway.revision
+		}).appendTo(front.boxes.about.content);
+
 		//$(window).bind("beforeunload", function(){ gateway.quit(); });
 		
+		if(touchscreen){
+			$('#kiwi').addClass('touchscreen');
+
+			// Single touch scrolling through scrollback for touchscreens
+			scroll_opts = {};
+			touch_scroll = new iScroll('windows', scroll_opts);
+		}
+
 		front.registerKeys();
 		
 		
@@ -75,6 +79,8 @@ var front = {
 			}
 			
 			$('#kiwi .connectwindow').slideUp();
+			$(document).mouseup(function(){ $('#kiwi_msginput').focus(); });
+
 			return false;
 		});
 
@@ -147,9 +153,10 @@ var front = {
 	
 	
 	run: function (msg) {
+		console.log("running "+msg);
 		if (msg.substring(0, 1) === '/') {
 			var parts = msg.split(' ');
-			switch (parts[0]) {
+			switch (parts[0].toLowerCase()) {
 			case '/j':
 			case '/join':
 				front.joinChannel(parts[1]);
@@ -169,6 +176,17 @@ var front = {
 				gateway.connect(parts[1], parts[2], 0);
 				break;
 				
+			case '/nick':
+				console.log("/nick");
+				if (parts[1] === undefined) {
+					console.log("calling show nick");
+					front.showChangeNick();
+				} else {
+					console.log("sending raw");
+					gateway.raw(msg.substring(1));
+				}
+				break;
+
 			case '/part':
 				if (typeof parts[1] === "undefined") {
 					gateway.raw(msg.substring(1) + ' ' + front.cur_channel.name);
@@ -477,25 +495,7 @@ var front = {
 		
 		
 		$('#kiwi .control .msginput .nick').click(function () {
-			var html = '<div class="newnick box">\
-	Your new nick:<br />\
-	<form class="form_newnick">\
-		<input type="text" class="txtnewnick" /><br />\
-		<button class="butnewnick" type="submit">Change</button> <a class="link cancelnewnick">Cancel</a>\
-	</form>\
-</div>';
-			$('#kiwi').append(html);
-			$('#kiwi .form_newnick').submit(function () {
-				front.run('/NICK ' + $('#kiwi .txtnewnick').val());
-				$('#kiwi .newnick').remove();
-				return false;
-			});
-			$('#kiwi .cancelnewnick').click(function () {
-				$('#kiwi .newnick').remove();
-			});
-			
-			$('#kiwi .txtnewnick').focus();
-			
+			front.showChangeNick();			
 		});
 		
 		
@@ -507,23 +507,8 @@ var front = {
                 return;
             }
 			
-			var html = '<div class="list">\
-		<h2>Kiwi plugins</h2>\
-		<p>\
-			<select multiple="multiple" id="plugin_list">\
-			</select>\
-			<button id="plugins_list_unload">Unload</button>\
-		</p>\
-	</div>\
-	<div class="load">\
-		Plugin file URL:<br />\
-		<form>\
-			<input type="text" class="txtpluginfile" /><br />\
-			<button class="butnewnick" type="submit">Load..</button> <a class="link cancelpluginfile">Cancel</a>\
-		</form>\
-	</div>';
 			front.boxes.plugins = new box("plugin_file");
-			front.boxes.plugins.content.html(html);
+			$('#tmpl_plugins').tmpl({}).appendTo(front.boxes.plugins.content);
 			front.boxes.plugins.box.css('top', -(front.boxes.plugins.height + 40));
 			
 			// Populate the plugin list..
@@ -597,6 +582,35 @@ var front = {
 	},
 	
 	
+	showChangeNick: function(){
+		$('#kiwi').append($('#tmpl_change_nick').tmpl({}));
+		
+		$('#kiwi .form_newnick').submit(function () {
+			front.run('/NICK ' + $('#kiwi .txtnewnick').val());
+			$('#kiwi .newnick').remove();
+			return false;
+		});
+		
+		$('#kiwi .txtnewnick').keypress(function(ev){
+			if(!this.first_press) {
+				this.first_press=true;
+				return false;
+			}
+
+			if(ev.keyCode === 27){  // ESC
+				$('#kiwi_msginput').focus();
+				$('#kiwi .newnick').remove();
+			}
+		});
+		
+		$('#kiwi .cancelnewnick').click(function () {
+			$('#kiwi .newnick').remove();
+		});
+		
+		$('#kiwi .txtnewnick').focus();
+	},
+
+
 	tabviewExists: function (name) {
 		return !(front.tabviews[name.toLowerCase()] == undefined);
 	},
@@ -647,12 +661,13 @@ var front = {
 		$('#kiwi .userbox').remove();
 		
 		var li = $(item).parent();
-		var html = '<div class="userbox">\
+		/*var html = '<div class="userbox">\
 	<input type="hidden" class="userbox_nick" value="' + front.nickStripPrefix($(item).text()) + '" />\
 	<a href="#" class="userbox_query">Message</a>\
 	<a href="#" class="userbox_whois">Info</a>\
 </div>';
-		li.append(html);
+		li.append(html);*/
+		$('#tmpl_user_box').tmpl({nick: front.nickStripPrefix($(item).text())}).appendTo(li);
 		
 		$('#kiwi .userbox .userbox_query').click(function (ev) {
 			var nick = $('#kiwi .userbox_nick').val();
