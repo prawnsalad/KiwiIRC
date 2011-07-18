@@ -79,7 +79,7 @@ var front = {
 			}
 			
 			$('#kiwi .connectwindow').slideUp();
-			$(document).mouseup(function(){ $('#kiwi_msginput').focus(); });
+			$('#windows').click(function(){ $('#kiwi_msginput').focus(); });
 
 			return false;
 		});
@@ -118,15 +118,17 @@ var front = {
 		var ct = $('#kiwi .cur_topic');
 		var ul = $('#kiwi .userlist');
 
-		var top = parseInt(ct.offset().top) + parseInt(ct.height());
-        top = top + parseInt(ct.css('border-top-width').replace('px', ''));
-        top = top + parseInt(ct.css('border-bottom-width').replace('px', ''));
-        top = top + parseInt(ct.css('padding-top').replace('px', ''));
-        top = top + parseInt(ct.css('padding-bottom').replace('px', ''));
-        top = top + 1;
+		var n_top = parseInt(ct.offset().top) + parseInt(ct.height());
+        n_top = n_top + parseInt(ct.css('border-top-width').replace('px', ''));
+        n_top = n_top + parseInt(ct.css('border-bottom-width').replace('px', ''));
+        n_top = n_top + parseInt(ct.css('padding-top').replace('px', ''));
+        n_top = n_top + parseInt(ct.css('padding-bottom').replace('px', ''));
+        n_top = n_top + 1; // Dunno why this is needed.. but it's always 1 px out :/
 
-		$('#kiwi .windows').css('top', top + "px");
-		$('#kiwi .userlist').css('top', top + "px");
+        var n_bottom = $(document).height() - parseInt($('#kiwi .control').offset().top);
+
+		$('#kiwi .windows').css({top: n_top + 'px', bottom: n_bottom + 'px'});
+		$('#kiwi .userlist').css({top: n_top + 'px', bottom: n_bottom + 'px'});
 	},
 
 
@@ -436,11 +438,22 @@ var front = {
 	
 	registerKeys: function () {
 		$('#kiwi_msginput').bind('keydown', function (e) {
+			var windows = $('#windows');
+			console.log(e.which);
 		//$('input').keypress(function(e){
-			switch (e.which) {
-			case 27:			// escape					
+			switch (true) {
+			case (e.which >= 48) && (e.which <= 57):
+				if(e.altKey){
+					var num = e.which - 48;
+					if(num === 0) num = 10;
+					num = num - 1;
+					front.windowsShow(num);
+					return false;
+				}
+				break;
+			case e.which === 27:			// escape					
 				return false;
-			case 13:			// return
+			case e.which === 13:			// return
 				var msg = $('#kiwi_msginput').val();
 				msg = msg.trim();
 				
@@ -451,21 +464,37 @@ var front = {
 				$('#kiwi_msginput').val('');
 				
 				break;
-				
-			case 38:			// up
+			case e.which === 33: 			// page up
+				console.log("page up");
+				windows[0].scrollTop = windows[0].scrollTop - windows.height();
+				return false;
+				break;
+			case e.which === 34: 			// page down
+				windows[0].scrollTop = windows[0].scrollTop + windows.height();
+				return false;
+				break;
+			case e.which === 37:			// left
+				if(e.altKey) front.windowsPrevious();
+				return false;
+				break;
+			case e.which === 38:			// up
 				if (front.buffer_pos > 0) {
 					front.buffer_pos--;
 					$('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
 				}
 				break;
-			case 40:			// down
+			case e.which === 39:			// right
+				if(e.altKey) front.windowsNext();
+				return false;
+				break;
+			case e.which === 40:			// down
 				if (front.buffer_pos < front.buffer.length) {
 					front.buffer_pos++;
 					$('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
 				}
 				break;
 				
-			case 9:				// tab
+			case e.which === 9:				// tab
 				// Get possible autocompletions
 				var data = [];
 				front.cur_channel.userlist.children().each(function () {
@@ -606,8 +635,10 @@ var front = {
 				this.first_press=true;
 				return false;
 			}
+		});
 
-			if(ev.keyCode === 27){  // ESC
+		$('#kiwi .txtnewnick').keydown(function(ev){
+			if(ev.which === 27){  // ESC
 				$('#kiwi_msginput').focus();
 				$('#kiwi .newnick').remove();
 			}
@@ -779,6 +810,7 @@ var front = {
 				}
 			} else {
 				front.tabviews[tab].show();
+				return;
 			}
 		};
 	},
@@ -788,11 +820,24 @@ var front = {
 		next = false;
 		for(tab in front.tabviews){
 			if(front.tabviews[tab] == front.cur_channel){
-				prev_tab.show();
+				if(prev_tab) prev_tab.show();
 				return;
 			}
 			prev_tab = front.tabviews[tab];
 		};
+	},
+
+	windowsShow: function(num){
+		num = parseInt(num);
+		console.log('Showing window '+num.toString());
+		var i = 0, tab;
+		for(tab in front.tabviews){
+			if(i === num){
+				front.tabviews[tab].show();
+				return;
+			}
+			i++;
+		}
 	}
 }
 
@@ -961,7 +1006,7 @@ tabview.prototype.addMsg = function(time, nick, msg, type, style){
 
 tabview.prototype.scrollBottom = function(){
 	var w = $('#windows');
-	w.attr({ scrollTop: w.attr("scrollHeight") });
+	w[0].scrollTop = w[0].scrollHeight;
 }
 
 tabview.prototype.changeNick = function(newNick, oldNick){
