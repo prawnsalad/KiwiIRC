@@ -272,9 +272,9 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 //setup websocket listener
 if (config.listen_ssl) {
-    var io = ws.listen('127.0.0.1:'+config.port.toString(), {secure: true, key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)});
+    var io = ws.listen(config.port, {secure: true, key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)});
 } else {
-    var io = ws.listen('127.0.0.1:'+config.port.toString(), {secure: false});
+    var io = ws.listen(config.port, {secure: false});
 }
 io.sockets.on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
