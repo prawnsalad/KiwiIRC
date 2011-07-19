@@ -1,0 +1,166 @@
+!!! transitional
+html(xmlns="http://www.w3.org/1999/xhtml")
+    head
+
+        meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+        - if ((agent === 'android') || (agent === 'iphone') || (agent === 'ipad') || (agent === 'ipod'))
+            meta(name="viewport", content="width=device-width,user-scalable=no")
+
+        title Kiwi IRC
+        link(rel="stylesheet", type="text/css", href="css/default.css")
+        link(rel="stylesheet", type="text/css", href="css/ui.css")
+
+        - if (touchscreen)
+            link(rel="stylesheet", type="text/css", href="css/touchscreen_tweaks.css")
+
+        script(src="http://192.168.1.127:7777/socket.io/socket.io.js")
+        script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
+        script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
+        script(type="text/javascript", src="js/jquery.json-2.2.min.js")
+        script(type="text/javascript", src="js/util.js")
+        script(type="text/javascript", src="js/gateway.js")
+        script(type="text/javascript", src="js/front.js")
+        script(type="text/javascript", src="js/iscroll.js")
+
+        - if (touchscreen)
+            script(type="text/javascript", src="js/touchscreen_tweaks.js")
+
+        - var proto
+        - if (config.listen_ssl)
+            - proto = 'https'
+        - else
+            - proto = 'http'
+        script(type="text/javascript")
+            var agent = '#{agent}';
+            var touchscreen = #{touchscreen};
+            var init_data = {};
+            var kiwi_server = '#{proto}://192.168.1.127:7777/';
+            var touch_scroll;
+            
+            $(document).ready(function(){
+                manageDebug(false);
+
+                //#channel,##channel,&channel
+                var chans = document.location.hash.match(/[#&]+[^ ,\\007]+/g);
+                if(chans != null && chans.length > 0) {
+                    init_data.channel = chans.join(',');
+                    $('#channel').val(init_data.channel);
+                }
+                
+                front.init();
+                gateway.start(kiwi_server);
+                
+                addEvents();
+                $('.nick').focus();
+            });
+            
+            
+            function addEvents(){
+                $('.more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.network').focus(); return false; });
+                $('.formconnectwindow').submit(function(){
+                    init_data.channel = $('#channel').val();
+                    return false;
+                });
+                $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
+            }
+
+
+        script#tmpl_about_box(type="text/x-jquery-tmpl")
+            |    <h2>Kiwi IRC</h2>
+            |    <p>An alternative to downloading an irc client. Kiwi IRC is the best web app you'll use for the next couple years.</p>
+            |    <button class="about_close">Close</button>
+            |    <p class="info">${about}</p>
+            |    <p class="revisions">Front: ${front_revision}<br />Gateway: ${gateway_revision}</p>
+        
+        script#tmpl_change_nick(type="text/x-jquery-tmpl")
+            |    <div class="newnick box">
+            |        Your new nick:<br />
+            |        <form class="form_newnick">
+            |            <input type="text" class="txtnewnick" /><br />
+            |            <button class="butnewnick" type="submit">Change</button> <a class="link cancelnewnick">Cancel</a>
+            |        </form>
+            |    </div>
+
+
+        script#tmpl_plugins(type="text/x-jquery-tmpl")
+            |    <div class="list">
+            |        <h2>Kiwi plugins</h2>
+            |        <p>
+            |            <select multiple="multiple" id="plugin_list">
+            |            </select>
+            |            <button id="plugins_list_unload">Unload</button>
+            |        </p>
+            |    </div>
+            |    <div class="load">
+            |        Plugin file URL:<br />
+            |        <form>
+            |            <input type="text" class="txtpluginfile" /><br />
+            |            <button class="butnewnick" type="submit">Load..</button> <a class="link cancelpluginfile">Cancel</a>
+            |        </form>
+            |    </div>
+
+        script#tmpl_user_box(type="text/x-jquery-tmpl")
+            |    <div class="userbox">
+            |        <input type="hidden" class="userbox_nick" value="${nick}" />
+            |        <a href="#" class="userbox_query">Message</a>
+            |        <a href="#" class="userbox_whois">Info</a>
+            |    </div>
+
+    body
+
+        div#kiwi
+            div.connectwindow
+                h1.logo Kiwi IRC
+                div#login
+                    form.formconnectwindow
+                        div.content.top
+                            ul
+                                li
+                                    label(for="nick") Your nickname:
+                                    input(type="text", id="nick", name="nick", class="nick", placeholder="Your nick..")
+                            a.connect(href="") Connect...
+
+                        - var display
+                        - if (server_set)
+                            - display = 'display:none'
+                        - else
+                            - display = '';
+                        div.more(style=display)
+                            a(href="", class="more_link") more
+                            div.content.bottom
+                                ul
+                                    li
+                                        label(for="network") Server:
+                                        input(type="text", id="network", name="network", class="network", value=server)
+                                    li
+                                        label(for="channel") Channel:
+                                        input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
+                                a.connect(href="") Connect...
+
+
+
+            div.windowlist
+                div.poweredby Powered by Kiwi IRC
+                ul
+
+            div.cur_topic
+
+            div.userlist
+                ul
+
+            div#windows.windows
+                div.scroller(style="width:100%")
+
+            div.control
+                div.msginput
+                    div.nick
+                        a(href="#")
+                        | :
+                    input(type="text", name="kiwi_msginput", id="kiwi_msginput")
+                div.plugins
+                    ul
+                        li
+                            a.load_plugin_file Plugins
+                        - if (debug)
+                            li
+                                a.reload_css Reload CSS
