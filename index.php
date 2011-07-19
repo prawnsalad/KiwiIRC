@@ -70,7 +70,9 @@
 	var touch_scroll;
 	
 	$(document).ready(function(){
-		//#nick@irc.anonnet.org:6679+/#channel,##channel,&channel
+		manageDebug(false);
+
+		//#channel,##channel,&channel
 		var chans = document.location.hash.match(/[#&]+[^ ,\007]+/g);
 		if(chans != null && chans.length > 0) {
 			init_data.channel = chans.join(',');
