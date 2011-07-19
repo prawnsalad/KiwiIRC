@@ -86,12 +86,14 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.RPL_WHOISUSER:
         case ircNumerics.RPL_WHOISSERVER:
         case ircNumerics.RPL_WHOISOPERATOR:
-        case ircNumerics.RPL_WHOISIDLE:
         case ircNumerics.RPL_ENDOFWHOIS:
         case ircNumerics.RPL_WHOISCHANNELS:
         case ircNumerics.RPL_WHOISMODES:
             websocket.emit('message', {event: 'whois', server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing});
             break;
+        case ircNumerics.RPL_WHOISIDLE:
+            params = msg.params.split(" ", 3);
+            websocket.emit('message', {event: 'whois', server: '', nick: params[1], "msg": params[2] + ' ' + msg.trailing});
         case ircNumerics.RPL_MOTD:
             websocket.emit('message', {event: 'motd', server: '', "msg": msg.trailing});
             break;
