@@ -34,7 +34,7 @@ html(xmlns="http://www.w3.org/1999/xhtml")
             var agent = '#{agent}';
             var touchscreen = #{touchscreen};
             var init_data = {};
-            var kiwi_server = '#{proto}://192.168.1.127:7777/kiwi';
+            var kiwi_server = '#{proto}://' + document.location.host + '/kiwi';
             var touch_scroll;
             
             $(document).ready(function(){
