@@ -5,7 +5,10 @@ var tls = require('tls'),
     http = require('http'),
     https = require('https'),
     fs = require('fs'),
+    url = require('url'),
+    static_server = require('node-static'),
     ws = require('socket.io'),
+    jade = require('jade'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
 
@@ -271,17 +274,74 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
     }
 };
 
+var fileServer = new (static_server.Server)(__dirname + '/client');
+
+var httpHandler = function (request, response) {
+    var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen;
+    if (config.handle_http) {
+        uri = url.parse(request.url);
+        subs = uri.pathname.substr(0, 4);
+        if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
+            request.addListener('end', function () {
+                fileServer.serve(request, response);
+            });
+        } else if (uri.pathname === '/') {
+            useragent = (response.headers) ? response.headers['user-agent']: '';
+            if (useragent.indexOf('android') !== -1) {
+                agent = 'android';
+                touchscreen = true;
+            } else if (useragent.indexOf('iphone') !== -1) {
+                agent = 'iphone';
+                touchscreen = true;
+            } else if (useragent.indexOf('ipad') !== -1) {
+                agent = 'ipad';
+                touchscreen = true;
+            } else if (useragent.indexOf('ipod') !== -1) {
+                agent = 'ipod';
+                touchscreen = true;
+            } else {
+                agent = 'normal';
+                touchscreen = false;
+            }
+            if (uri.query) {
+                server_set = (uri.query.server !== '');
+                server = uri.query.server || 'irc.anonnet.org';
+                nick = uri.query.nick || '';
+                debug = (uri.query.debug !== '');
+            } else {
+                server = 'irc.anonnet.org';
+                nick = '';
+            }
+            response.setHeader('Connection', 'close');
+            response.setHeader('X-Generated-By', 'KiwiIRC');
+            jade.renderFile(__dirname + '/client/index.html.jade', { locals: { "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": config }}, function (err, html) {
+                if (!err) {
+                    response.write(html);
+                } else {
+                    response.statusCode = 500;
+                }
+                response.end();
+            });
+        } else if (uri.pathname.substr(0, 10) === '/socket.io') {
+            // Do nothing!
+        } else {
+            response.statusCode = 404;
+            response.end();
+        }
+    }
+};
+
 //setup websocket listener
 if (config.listen_ssl) {
-    var httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)});
+    var httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)}, httpHandler);
     var io = ws.listen(httpServer, {secure: true});
     httpServer.listen(config.port, config.bind_address);
 } else {
-    var httpServer = http.createServer();
+    var httpServer = http.createServer(httpHandler);
     var io = ws.listen(httpServer, {secure: false});
     httpServer.listen(config.port, config.bind_address);
 }
-io.sockets.on('connection', function (websocket) {
+io.of('/kiwi').on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
         var ircSocket;
         //setup IRC connection

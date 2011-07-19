@@ -13,17 +13,20 @@ var gateway = {
     socket: null,
 	
     start: function (kiwi_server) {
-        gateway.socket = io.connect(kiwi_server);
-        gateway.socket.on('connect', function () {
-            gateway.sendData = function (data, callback) {
-                gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
-            };
-            gateway.socket.on('message', gateway.parse);
-            gateway.socket.on('disconnect', function () {
-                // Teardown procedure here
-                $(gateway).trigger("ondisconnect", {});
+        if (typeof kiwi_server !== 'undefined') {
+            gateway.socket = io.connect(kiwi_server);
+            gateway.socket.on('connect', function () {
+                console.debug("Connecting to " + kiwi_server);
+                gateway.sendData = function (data, callback) {
+                    gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
+                };
+                gateway.socket.on('message', gateway.parse);
+                gateway.socket.on('disconnect', function () {
+                    // Teardown procedure here
+                    $(gateway).trigger("ondisconnect", {});
+                });
             });
-        });
+        }
     },
 
     connect: function (host, port, ssl, callback) {
@@ -50,6 +53,7 @@ var gateway = {
 		    debug
     */
     parse: function (item) {
+        console.debug('a',item);
 	    if (item.event !== undefined) {
 		    $(gateway).trigger("on" + item.event, item);
 		

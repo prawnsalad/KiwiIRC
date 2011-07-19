@@ -66,7 +66,7 @@
     var agent = '<?php echo $agent; ?>';
     var touchscreen = <?php echo ($touchscreen) ? 'true' : 'false'; ?>;
     var init_data = {};
-    var kiwi_server = '<?php echo ($node_config['listen_ssl'] ? "https" : "http")."://".$node_server; ?>:7777/';
+    var kiwi_server = '<?php echo ($node_config['listen_ssl'] ? "https" : "http")."://".$node_server; ?>:7777/kiwi';
     var touch_scroll;
     
     $(document).ready(function(){

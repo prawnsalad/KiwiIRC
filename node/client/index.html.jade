@@ -13,7 +13,7 @@ html(xmlns="http://www.w3.org/1999/xhtml")
         - if (touchscreen)
             link(rel="stylesheet", type="text/css", href="css/touchscreen_tweaks.css")
 
-        script(src="http://192.168.1.127:7777/socket.io/socket.io.js")
+        script(type="text/javascript", src="/socket.io/socket.io.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
         script(type="text/javascript", src="js/jquery.json-2.2.min.js")
@@ -34,7 +34,7 @@ html(xmlns="http://www.w3.org/1999/xhtml")
             var agent = '#{agent}';
             var touchscreen = #{touchscreen};
             var init_data = {};
-            var kiwi_server = '#{proto}://192.168.1.127:7777/';
+            var kiwi_server = '#{proto}://192.168.1.127:7777/kiwi';
             var touch_scroll;
             
             $(document).ready(function(){
