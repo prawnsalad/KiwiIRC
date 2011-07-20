@@ -32,7 +32,7 @@
     $node_server = $_SERVER['HTTP_HOST'];
     
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -183,7 +183,21 @@
         <ul></ul>
     </div>
     
-    <div class="cur_topic"></div>
+    <div class="cur_topic">
+        <!--
+        <ul class="edit" style="float:right;">
+            <li>
+                <img src="img/more.png" />
+                <ul id="kiwi_menu">
+                    <li>Item 1</li>
+                    <li>Item 2</li>
+                    <li>Item 3</li>
+                </ul>
+            </li>
+        </ul>
+        -->
+        <div class="topic" style="margin-right:5em; overflow:hidden; white-space: pre-wrap; word-wrap: break-word;"></div>
+    </div>
     
     <div class="userlist">
         <ul></ul>

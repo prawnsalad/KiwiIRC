@@ -58,7 +58,8 @@ var front = {
 
 		front.registerKeys();
 		
-		
+		$('#kiwi .cur_topic').resize(front.doLayoutSize);
+
 		$('#kiwi .formconnectwindow').submit(function () {
 			var netsel = $('#kiwi .formconnectwindow .network');
 			var nick = $('#kiwi .formconnectwindow .nick');
@@ -231,6 +232,12 @@ var front = {
 
 				gateway.notice(dest, msg);
 				this.onNotice({}, {nick:gateway.nick, channel:dest, msg:msg});
+				break;
+
+			case '/win':
+				if (parts[1] !== undefined) {
+					front.windowsShow(parseInt(parts[1]));
+				}
 				break;
 
 			case '/quit':
@@ -474,8 +481,10 @@ var front = {
 				return false;
 				break;
 			case e.which === 37:			// left
-				if(e.altKey) front.windowsPrevious();
-				return false;
+				if(e.altKey){
+					front.windowsPrevious();
+					return false;
+				}
 				break;
 			case e.which === 38:			// up
 				if (front.buffer_pos > 0) {
@@ -484,8 +493,10 @@ var front = {
 				}
 				break;
 			case e.which === 39:			// right
-				if(e.altKey) front.windowsNext();
-				return false;
+				if(e.altKey){
+					front.windowsNext();
+					return false;
+				}
 				break;
 			case e.which === 40:			// down
 				if (front.buffer_pos < front.buffer.length) {
@@ -747,7 +758,8 @@ var front = {
 	
 	
 	setTopicText: function (new_topic) {
-		$('#kiwi .cur_topic').text(new_topic);
+		$('#kiwi .cur_topic .topic').text(new_topic);
+		front.doLayoutSize();
 	},
 	
 	

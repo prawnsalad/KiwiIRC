@@ -102,13 +102,25 @@ body, html {
 	font-family:Verdana, Geneva, sans-serif;
 	font-size:.85em;
 	line-height:18px; vertical-align:middle;
-	height:18px;
+	/*height:18px;*/
 	text-align:center;
-	white-space: nowrap; overflow: hidden;
+	/*white-space: nowrap;*/ overflow: hidden;
 	padding: 3px 5px;
 	border-bottom:3px solid #1B1B1B;
 	
 }
+
+
+#kiwi_menu {
+	display:none;
+	position:absolute;
+	right:0px;
+	background: gray;
+	border: 1px solid dark-gray;
+}
+.cur_topic .edit:hover #kiwi_menu { display:inline; }
+
+
 
 #kiwi .windows {
 	position: absolute;

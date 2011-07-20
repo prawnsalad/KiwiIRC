@@ -6,5 +6,6 @@
     "ssl_cert":         "cert.pem",
     "quit_message":     "KiwiIRC",
     "cap_options":      [],
-    "handle_http":      true
+    "handle_http":      true,
+    "public_http":	"./../"
 }

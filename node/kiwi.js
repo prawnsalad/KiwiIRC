@@ -6,13 +6,16 @@ var tls = require('tls'),
     https = require('https'),
     fs = require('fs'),
     url = require('url'),
-    static_server = require('node-static'),
     ws = require('socket.io'),
-    jade = require('jade'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
 
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'ascii'));
+
+if (config.handle_http) {
+    var static_server = require('node-static'),
+        jade = require('jade');
+}
 
 var ircNumerics = {
     RPL_WELCOME:        '001',
@@ -276,7 +279,9 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
     }
 };
 
-var fileServer = new (static_server.Server)(__dirname + '/client');
+if (config.handle_http) {
+    var fileServer = new (static_server.Server)(__dirname + config.public_http);
+}
 
 var httpHandler = function (request, response) {
     var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen;
