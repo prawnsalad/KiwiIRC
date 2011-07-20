@@ -12,11 +12,6 @@ var tls = require('tls'),
 
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'ascii'));
 
-if (config.handle_http) {
-    var static_server = require('node-static'),
-        jade = require('jade');
-}
-
 var ircNumerics = {
     RPL_WELCOME:        '001',
     RPL_ISUPPORT:       '005',
@@ -39,7 +34,7 @@ var ircNumerics = {
 
 var parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps, rtn;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@([a-z0-9\.\-:]+)) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     msg = regex.exec(data);
     if (msg) {
@@ -95,8 +90,13 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.emit('message', {event: 'whois', server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing});
             break;
         case ircNumerics.RPL_WHOISIDLE:
-            params = msg.params.split(" ", 3);
-            websocket.emit('message', {event: 'whois', server: '', nick: params[1], "msg": params[2] + ' ' + msg.trailing});
+            params = msg.params.split(" ", 4);
+            rtn = {event: 'whois', server: '', nick: params[1], idle: params[2]};
+            if (params[3]) {
+                rtn.logon = params[3];
+            }
+            websocket.emit('message', rtn);
+            break;
         case ircNumerics.RPL_MOTD:
             websocket.emit('message', {event: 'motd', server: '', "msg": msg.trailing});
             break;
@@ -280,7 +280,8 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
 };
 
 if (config.handle_http) {
-    var fileServer = new (static_server.Server)(__dirname + config.public_http);
+    var fileServer = new (require('node-static').Server)(__dirname + config.public_http);
+    var jade = require('jade');
 }
 
 var httpHandler = function (request, response) {

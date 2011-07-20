@@ -343,7 +343,17 @@ var front = {
 		front.tabviews.server.addMsg(null, data.server, data.msg, 'motd');
 	},
 	onWhois: function (e, data) {
-		front.cur_channel.addMsg(null, data.nick, data.msg, 'whois');
+        var d;
+        if (data.msg) {
+    		front.cur_channel.addMsg(null, data.nick, data.msg, 'whois');
+        } else if (data.logon) {
+            d = new Date();
+            d.setTime(data.logon * 1000);
+            d = d.toLocaleString();
+            front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' second' + ((data.idle !== 1) ? 's' : '') + ', signed on ' + d, 'whois');
+        } else {
+            front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' seconds', 'whois');
+        }
 	},
 	onUserList: function (e, data) {
 		if (front.tabviews[data.channel.toLowerCase()] === undefined) {
