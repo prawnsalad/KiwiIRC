@@ -1010,7 +1010,13 @@ tabview.prototype.addMsg = function(time, nick, msg, type, style){
 		if(next == '</u>') msg =+ '</u>';
 	}
 	
+    var re = '\\B(#[^ ,\\007]+)';
+    re = new RegExp(re, 'g');
 	
+    msg = msg.replace(re, function(match) {
+        return '<a class="chan" href="#">' + match + '</a>';
+    });
+
 	var line_msg = $('<div class="msg '+type+'"><div class="time">'+time+'</div><div class="nick">'+html_nick+'</div><div class="text" style="'+style+'">'+msg+' </div></div>');
 	this.div.append(line_msg);
 
