@@ -94,6 +94,7 @@
             return false;
         });
         $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
+        $('a.chan').live('dblclick', function() { front.joinChannel($(this).text()); });
     }
 </script>
 
