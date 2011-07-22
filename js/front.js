@@ -32,6 +32,8 @@ var front = {
 		$(gateway).bind("onsync", front.onSync);
 		$(gateway).bind("onchannel_redirect", front.onChannelRedirect);
 		$(gateway).bind("ondebug", front.onDebug);
+        $(dateway).bind("onctcp_request", front.onCTCPRequest);
+        $(dateway).bind("onctcp_response", front.onCTCPResponse);
 		
 		this.buffer = [];
 		
@@ -318,6 +320,23 @@ var front = {
 			front.tabviews.server.addMsg(null, nick, data.msg, 'notice');
 		}
 	},
+    
+    onCTCPRequest: function (e, data) {
+        var msg = data.msg.split(" ", 2);
+        switch (msg[0]) {
+        case 'PING':
+            gateway.notice(data.nick, '\001PING ' + msg[1] + '\001');
+            break;
+        case 'TIME';
+            gateway.notice(data.nick, '\001TIME ' + (new Date()).toLocaleString() + '\001');
+            break;
+        }
+        front.tabviews.server.addMsg(null, data.server, data.msg, 'ctcp');
+    },
+    
+    on CTCPResponse: function(e, data) {
+    },
+    
 	onConnect: function (e, data) {
 		if (data.connected) {
 			front.tabviews.server.addMsg(null, ' ', '=== Connected OK :)', 'status');
