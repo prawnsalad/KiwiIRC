@@ -155,7 +155,12 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.emit('message', {event: 'quit', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, message: msg.trailing});
             break;
         case 'NOTICE':
-            websocket.emit('message', {event: 'notice', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
+            if ((msg.trailing.charAt(0) === '\001') && (msg.trailing.charAt(msg.trailing.length - 1) === '\001')) {
+                // It's a CTCP response
+                websocket.emit('message', {event: 'ctcp_response', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
+            } else {
+                websocket.emit('message', {event: 'notice', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
+            }
             break;
         case 'NICK':
             websocket.emit('message', {event: 'nick', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, newnick: msg.trailing});
@@ -187,7 +192,18 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.emit('message', params);
             break;
         case 'PRIVMSG':
-            websocket.emit('message', {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
+            if ((msg.trailing.charAt(0) === '\001') && (msg.trailing.charAt(msg.trailing.length - 1) === '\001')) {
+                // It's a CTCP request
+                if (msg.trailing.substr(1, 6) === 'ACTION') {
+                    websocket.emit('message', {event: 'action', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
+                } else if (msg.trailing.substr(1, 7) === 'VERSION') {
+                    ircSocket.write('NOTICE ' + msg.nick + ':\001VERSION Kiwi IRC\001\r\n');
+                } else {
+                    websocket.emit('message', {event: 'ctcp_request', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
+                }
+            } else {
+                websocket.emit('message', {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
+            }
             break;
         case 'CAP':
             caps = config.cap_options;
