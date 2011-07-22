@@ -32,8 +32,8 @@ var front = {
 		$(gateway).bind("onsync", front.onSync);
 		$(gateway).bind("onchannel_redirect", front.onChannelRedirect);
 		$(gateway).bind("ondebug", front.onDebug);
-        $(dateway).bind("onctcp_request", front.onCTCPRequest);
-        $(dateway).bind("onctcp_response", front.onCTCPResponse);
+        $(gateway).bind("onctcp_request", front.onCTCPRequest);
+        $(gateway).bind("onctcp_response", front.onCTCPResponse);
 		
 		this.buffer = [];
 		
@@ -327,14 +327,14 @@ var front = {
         case 'PING':
             gateway.notice(data.nick, '\001PING ' + msg[1] + '\001');
             break;
-        case 'TIME';
+        case 'TIME':
             gateway.notice(data.nick, '\001TIME ' + (new Date()).toLocaleString() + '\001');
             break;
         }
-        front.tabviews.server.addMsg(null, data.server, data.msg, 'ctcp');
+        front.tabviews.server.addMsg(null, 'CTCP ['+data.nick+']', data.msg, 'ctcp');
     },
     
-    on CTCPResponse: function(e, data) {
+    onCTCPResponse: function(e, data) {
     },
     
 	onConnect: function (e, data) {

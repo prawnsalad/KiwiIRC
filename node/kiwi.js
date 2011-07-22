@@ -197,7 +197,8 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                 if (msg.trailing.substr(1, 6) === 'ACTION') {
                     websocket.emit('message', {event: 'action', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
                 } else if (msg.trailing.substr(1, 7) === 'VERSION') {
-                    ircSocket.write('NOTICE ' + msg.nick + ':\001VERSION Kiwi IRC\001\r\n');
+                    console.log('NOTICE ' + msg.nick + ':\001VERSION KiwiIRC\001\r\n');
+                    ircSocket.write('NOTICE ' + msg.nick + ':\001VERSION KiwiIRC\001\r\n');
                 } else {
                     websocket.emit('message', {event: 'ctcp_request', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
                 }
