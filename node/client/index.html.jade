@@ -62,7 +62,7 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
                     return false;
                 });
                 $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
-                $('a.chan').live('dblclick', function() {
+                $('a.chan').live('click', function() {
                     front.joinChannel($(this).text());
                     return false;
                 });

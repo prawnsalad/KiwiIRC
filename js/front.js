@@ -325,6 +325,7 @@ var front = {
         var msg = data.msg.split(" ", 2);
         switch (msg[0]) {
         case 'PING':
+        	if(typeof msg[1] === 'undefined') msg[1] = '';
             gateway.notice(data.nick, '\001PING ' + msg[1] + '\001');
             break;
         case 'TIME':
