@@ -88,13 +88,16 @@
     
     
     function addEvents(){
-        $('.more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.network').focus(); return false; });
-        $('.formconnectwindow').submit(function(){
+        $('#kiwi .more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.network').focus(); return false; });
+        $('#kiwi .formconnectwindow').submit(function(){
             init_data.channel = $('#channel').val();
             return false;
         });
-        $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
-        $('a.chan').live('dblclick', function() { front.joinChannel($(this).text()); });
+        $('#kiwi a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
+        $('#kiwi .messages a.chan').live('click', function() {
+            front.joinChannel($(this).text());
+            return false;
+        });
     }
 </script>
 
