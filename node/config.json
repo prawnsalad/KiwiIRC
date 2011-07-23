@@ -1,11 +1,17 @@
 {
     "port":             7777,
     "bind_address":     "0.0.0.0",
+
+    "user":				"",
+    "group":			"",
+
     "listen_ssl":       false,
     "ssl_key":          "server.key",
     "ssl_cert":         "cert.pem",
+
     "quit_message":     "KiwiIRC",
     "cap_options":      [],
+
     "handle_http":      true,
     "public_http":	    "./../"
 }

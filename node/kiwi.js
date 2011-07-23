@@ -10,7 +10,64 @@ var tls = require('tls'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
 
-var config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'ascii'));
+
+/*
+ * Find a config file in the following order:
+ * - /etc/kiwi/config.json
+ * - ./config.json
+ */
+var config = null, config_filename = 'config.json';
+var config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
+for(var i in config_dirs){
+    try {
+        if(fs.lstatSync(config_dirs[i] + config_filename).isDirectory() === false){
+            config = JSON.parse(fs.readFileSync(config_dirs[i] + config_filename, 'ascii'));
+            console.log('Using config file ' + config_dirs[i] + config_filename);
+            break;
+        }
+    } catch(e){
+        continue;
+    }
+}
+
+if(config === null){
+    console.log('Couldn\'t find a config file!');
+    process.exit(0);
+}
+
+
+
+
+/*
+ * Some process changes
+ */
+process.title = 'kiwiirc';
+function changeUser(){
+    if(typeof config.group !== 'undefined' && config.group !== ''){
+        try {
+            process.setgid(config.group);
+        }
+        catch (err) {
+            console.log('Failed to set gid: ' + err);
+            process.exit();
+        }
+    }
+
+    if(typeof config.user !== 'undefined' && config.user !== ''){
+        try {
+            process.setuid(config.user);
+        }
+        catch (err) {
+            console.log('Failed to set uid: ' + err);
+            process.exit();
+        }
+    }
+}
+
+
+/*
+ * And now KiwiIRC, the server :)
+ */
 
 var ircNumerics = {
     RPL_WELCOME:        '001',
@@ -368,6 +425,10 @@ if (config.listen_ssl) {
     var io = ws.listen(httpServer, {secure: false});
     httpServer.listen(config.port, config.bind_address);
 }
+
+// Now we're listening on the network, set our UID/GIDs if required
+changeUser();
+
 io.of('/kiwi').on('connection', function (websocket) {
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
         var ircSocket;
