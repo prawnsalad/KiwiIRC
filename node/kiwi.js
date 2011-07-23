@@ -71,10 +71,13 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                         regex = /\(([^)]*)\)(.*)/;
                         matches = regex.exec(opt[1]);
                         if ((matches) && (matches.length === 3)) {
-                            ircSocket.IRC.options[opt[0]] = {};
+                            ircSocket.IRC.options[opt[0]] = [];
                             for (j = 0; j < matches[2].length; j++) {
-                                ircSocket.IRC.options[opt[0]][matches[2].charAt(j)] = matches[1].charAt(j);
+                                //ircSocket.IRC.options[opt[0]][matches[2].charAt(j)] = matches[1].charAt(j);
+                                ircSocket.IRC.options[opt[0]].push({symbol: matches[2].charAt(j), mode: matches[1].charAt(j)});
+                                //console.log({symbol: matches[2].charAt(j), mode: matches[1].charAt(j)});
                             }
+                            console.log(ircSocket.IRC.options);
                         }
                     }
                 }
@@ -195,7 +198,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             if ((msg.trailing.charAt(0) === '\001') && (msg.trailing.charAt(msg.trailing.length - 1) === '\001')) {
                 // It's a CTCP request
                 if (msg.trailing.substr(1, 6) === 'ACTION') {
-                    websocket.emit('message', {event: 'action', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
+                    websocket.emit('message', {event: 'action', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(7, msg.trailing.length - 2)});
                 } else if (msg.trailing.substr(1, 7) === 'VERSION') {
                     ircSocket.write('NOTICE ' + msg.nick + ' :\001VERSION KiwiIRC\001\r\n');
                 } else {

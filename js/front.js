@@ -802,8 +802,11 @@ var front = {
 		var tmp = nick;
 		
 		prefix = tmp.charAt(0);
-		if (typeof gateway.user_prefixes[prefix] != "undefined") tmp = tmp.substring(1);
-		
+		for(var i in gateway.user_prefixes){
+			if(gateway.user_prefixes[i].symbol !== prefix) continue;
+			return tmp.substring(1);
+		}
+
 		return tmp;
 	},
 	
@@ -811,11 +814,13 @@ var front = {
 		var tmp = nick;
 		
 		prefix = tmp.charAt(0);
-		if (typeof gateway.user_prefixes[prefix] == "undefined") {
-			prefix = "";
+		for(var i in gateway.user_prefixes){
+			if(gateway.user_prefixes[i].symbol === prefix){
+				return prefix;
+			}
 		}
-		
-		return prefix;
+
+		return '';
 	},
 	
 	isChannel: function (name) {
@@ -950,6 +955,9 @@ tabview.prototype.close = function(){
 tabview.prototype.addPartImage = function(){
 	this.clearPartImage();
 	
+	// We can't close this tab, so don't have the close image
+	if(this.name == 'server') return;
+
 	var del_html = '<img src="img/redcross.png" class="tab_part" />';
 	this.tab.append(del_html);
 	
@@ -958,7 +966,7 @@ tabview.prototype.addPartImage = function(){
 			front.run("/part");
 		} else {
 			// Make sure we don't close the server tab
-			if(front.cur_channel.name != "server") front.cur_channel.close();
+			if(front.cur_channel.name != 'server') front.cur_channel.close();
 		}
 	});
 }
@@ -1082,7 +1090,7 @@ tabview.prototype.userlistSort = function(){
 		
 		// Sort by prefixes first
 		for (var i in gateway.user_prefixes) {
-			prefix = gateway.user_prefixes[i];
+			prefix = gateway.user_prefixes[i].symbol;
 			
 			if(compA.charAt(0) == prefix && compB.charAt(0) == prefix){
 				// Both have the same prefix, string compare time
