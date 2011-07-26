@@ -34,6 +34,7 @@ var front = {
 		$(gateway).bind("ondebug", front.onDebug);
         $(gateway).bind("onctcp_request", front.onCTCPRequest);
         $(gateway).bind("onctcp_response", front.onCTCPResponse);
+        $(gateway).bind("onirc_error", front.onIRCError);
 		
 		this.buffer = [];
 		
@@ -149,7 +150,7 @@ var front = {
 			chan = chans[i];
 			if (front.tabviews[chan.toLowerCase()] === undefined) {
 				gateway.join(chan);
-				front.tabviewAdd(chan);
+				//front.tabviewAdd(chan);
 			} else {
 				front.tabviews[chan.toLowerCase()].show();
 			}
@@ -473,6 +474,25 @@ var front = {
 		front.tabviews[data.to.toLowerCase()].addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
 	},
 	
+    onIRCError: function (e, data) {
+        switch(data.error) {
+        case 'banned_from_channel':
+            front.tabviews.server.addMsg(null, ' ', '=== You are banned from ' + data.channel + ': ' + data.reason, 'status');
+            break;
+        case 'bad_channel_key':
+            front.tabviews.server.addMsg(null, ' ', '=== Bad channel key for ' + data.channel, 'status');
+            break;
+        case 'invite_only_channel':
+            front.tabviews.server.addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
+            break;
+        case 'channel_is_full':
+            front.tabviews.server.addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
+            break;
+        default:
+            front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
+        }
+    },
+    
 	registerKeys: function () {
 		$('#kiwi_msginput').bind('keydown', function (e) {
 			var windows = $('#windows');

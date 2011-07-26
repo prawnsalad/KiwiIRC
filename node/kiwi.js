@@ -70,22 +70,30 @@ function changeUser(){
  */
 
 var ircNumerics = {
-    RPL_WELCOME:        '001',
-    RPL_ISUPPORT:       '005',
-    RPL_WHOISUSER:      '311',
-    RPL_WHOISSERVER:    '312',
-    RPL_WHOISOPERATOR:  '313',
-    RPL_WHOISIDLE:      '317',
-    RPL_ENDOFWHOIS:     '318',
-    RPL_WHOISCHANNELS:  '319',
-    RPL_TOPIC:          '332',
-    RPL_NAMEREPLY:      '353',
-    RPL_ENDOFNAMES:     '366',
-    RPL_MOTD:           '372',
-    RPL_WHOISMODES:     '379',
-    ERR_NOSUCHNICK:     '401',
-    ERR_LINKCHANNEL:    '470',
-    RPL_STARTTLS:       '670'
+    RPL_WELCOME:            '001',
+    RPL_ISUPPORT:           '005',
+    RPL_WHOISUSER:          '311',
+    RPL_WHOISSERVER:        '312',
+    RPL_WHOISOPERATOR:      '313',
+    RPL_WHOISIDLE:          '317',
+    RPL_ENDOFWHOIS:         '318',
+    RPL_WHOISCHANNELS:      '319',
+    RPL_TOPIC:              '332',
+    RPL_NAMEREPLY:          '353',
+    RPL_ENDOFNAMES:         '366',
+    RPL_MOTD:               '372',
+    RPL_WHOISMODES:         '379',
+    ERR_NOSUCHNICK:         '401',
+    ERR_CANNOTSENDTOCHAN:   '404',
+    ERR_TOOMANYCHANNELS:    '405',
+    ERR_USERNOTINCHANNEL:   '441',
+    ERR_NOTONCHANNEL:       '442',
+    ERR_LINKCHANNEL:        '470',
+    ERR_CHANNELISFULL:      '471',
+    ERR_INVITEONLYCHAN:     '473',
+    ERR_BANNEDFROMCHAN:     '474',
+    ERR_BADCHANNELKEY:      '475',
+    RPL_STARTTLS:           '670'
 };
 
 
@@ -326,6 +334,31 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                 console.log(e);
             }
             break;*/
+        case ircNumerics.ERR_CANNOTSENDTOCHAN:
+            websocket.emit('message', {event: 'irc_error', error: 'cannot_send_to_chan', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_TOOMANYCHANNELS:
+            websocket.emit('message', {event: 'irc_error', error: 'too_many_channels', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_USERNOTINCHANNEL:
+            params = msg.params.split(" ");
+            websocket.emit('message', {event: 'irc_error', error: 'user_not_in_channel', nick: params[0], channel: params[1], reason: msg.trainling});
+            break;
+        case ircNumerics.ERR_NOTONCHANNEL:
+            websocket.emit('message', {event: 'irc_error', error: 'not_on_channel', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_CHANNELISFULL:
+            websocket.emit('message', {event: 'irc_error', error: 'channel_is_full', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_INVITEONLYCHAN:
+            websocket.emit('message', {event: 'irc_error', error: 'invite_only_channel', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_BANNEDFROMCHAN:
+            websocket.emit('message', {event: 'irc_error', error: 'banned_from_channel', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_BADCHANNELKEY:
+            websocket.emit('message', {event: 'irc_error', error: 'bad_channel_key', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
         }
     } else {
         console.log("Unknown command.\r\n");
