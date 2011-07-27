@@ -274,6 +274,9 @@ var front = {
                 gateway.quit(msg.split(" ",2)[1]);
                 break;
 
+            case '/topic':
+                gateway.raw('TOPIC ' + front.cur_channel.name + ' :' + msg.split(" ", 2)[1]);
+                break;
 			default:
 				//front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
 				gateway.raw(msg.substring(1));
