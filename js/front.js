@@ -8,6 +8,8 @@ var front = {
 	
 	buffer: [],
 	buffer_pos: 0,
+
+    original_topic: '',
 	
 	init: function () {	
 		gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
@@ -103,6 +105,27 @@ var front = {
 		
 		//gateway.session_id = 'testses';
 		
+        $('.cur_topic').live('keypress', function(e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                $(this).change();
+                $('#kiwi_msginput').focus();
+            }
+        });
+        $('.cur_topic').live('change', function (e) {
+            var chan, text;
+            text = $(this).text();
+            console.debug(text);
+            console.debug(front.original_topic);
+            console.debug(text === front.original_topic);
+            if (text !== front.original_topic) {
+                console.debug('sending topic msg');
+                chan = front.cur_channel.name;
+                gateway.raw('TOPIC ' + chan + ' :' + text);
+            }
+        });
+        
+        
 		gateway.start();
 		//front.sync();
 	},
@@ -788,6 +811,7 @@ var front = {
 	
 	
 	setTopicText: function (new_topic) {
+        front.original_topic = new_topic;
 		$('#kiwi .cur_topic .topic').text(new_topic);
 		front.doLayoutSize();
 	},
