@@ -107,9 +107,14 @@ var front = {
 		
         $('.cur_topic').live('keypress', function(e) {
             if (e.keyCode === 13) {
+                // enter
                 e.preventDefault();
                 $(this).change();
                 $('#kiwi_msginput').focus();
+            } else if (e.keyCode === 27) {
+                // escape
+                e.preventDefault();
+                $(this).text(front.original_topic);
             }
         });
         $('.cur_topic').live('change', function (e) {
