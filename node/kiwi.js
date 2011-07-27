@@ -78,6 +78,7 @@ var ircNumerics = {
     RPL_WHOISIDLE:          '317',
     RPL_ENDOFWHOIS:         '318',
     RPL_WHOISCHANNELS:      '319',
+    RPL_NOTOPIC:            '331',
     RPL_TOPIC:              '332',
     RPL_NAMEREPLY:          '353',
     RPL_ENDOFNAMES:         '366',
@@ -93,6 +94,8 @@ var ircNumerics = {
     ERR_INVITEONLYCHAN:     '473',
     ERR_BANNEDFROMCHAN:     '474',
     ERR_BADCHANNELKEY:      '475',
+    ERR_LINKCHANNEL:        '470',
+    ERR_CHANOPRIVSNEEDED:   '482',
     RPL_STARTTLS:           '670'
 };
 
@@ -204,7 +207,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.emit('message', {event: 'channel_redirect', from: params[1], to: params[2]});
             break;
         case ircNumerics.ERR_NOSUCHNICK:
-			//TODO: shit
+			websocket.emit('message', {event: 'irc_error', error: 'no_suck_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
 			break;
         case 'JOIN':
             websocket.emit('message', {event: 'join', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.trailing});
@@ -238,6 +241,9 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             break;
         case ircNumerics.RPL_TOPIC:
             websocket.emit('message', {event: 'topic', nick: '', channel: msg.params.split(" ")[1], topic: msg.trailing});
+            break;
+        case ircNumerics.RPL_NOTOPIC:
+            websocket.emit('message', {event: 'topic', nick: '', channel: msg.params.split(" ")[1], topic:''});
             break;
         case 'MODE':
             opts = msg.params.split(" ");
@@ -358,6 +364,9 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             break;
         case ircNumerics.ERR_BADCHANNELKEY:
             websocket.emit('message', {event: 'irc_error', error: 'bad_channel_key', channel: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.ERR_CHANOPRIVSNEEDED:
+            websocket.emit('message', {event: 'irc_error', error: 'chanop_privs_needed', channel: msg.params.split(" ")[1], reason: msg.trailing});
             break;
         }
     } else {

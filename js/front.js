@@ -488,6 +488,12 @@ var front = {
         case 'channel_is_full':
             front.tabviews.server.addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
             break;
+        case 'chanop_privs_needed':
+            front.tabviews[data.channel].addMsg(null, ' ', '=== ' + data.reason, 'status');
+            break;
+        case 'no_such_nick':
+            front.tabviews.server.addMsg(null, ' ', '=== ' + data.nick + ': ' + data.reason, 'status'); 
+            break;
         default:
             front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
         }
