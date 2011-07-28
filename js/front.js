@@ -8,6 +8,8 @@ var front = {
 	
 	buffer: [],
 	buffer_pos: 0,
+
+    original_topic: '',
 	
 	init: function () {	
 		gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
@@ -104,6 +106,32 @@ var front = {
 		
 		//gateway.session_id = 'testses';
 		
+        $('.cur_topic').live('keypress', function(e) {
+            if (e.keyCode === 13) {
+                // enter
+                e.preventDefault();
+                $(this).change();
+                $('#kiwi_msginput').focus();
+            } else if (e.keyCode === 27) {
+                // escape
+                e.preventDefault();
+                $(this).text(front.original_topic);
+            }
+        });
+        $('.cur_topic').live('change', function (e) {
+            var chan, text;
+            text = $(this).text();
+            console.debug(text);
+            console.debug(front.original_topic);
+            console.debug(text === front.original_topic);
+            if (text !== front.original_topic) {
+                console.debug('sending topic msg');
+                chan = front.cur_channel.name;
+                gateway.raw('TOPIC ' + chan + ' :' + text);
+            }
+        });
+        
+        
 		gateway.start();
 		//front.sync();
 	},
@@ -247,6 +275,9 @@ var front = {
                 gateway.quit(msg.split(" ",2)[1]);
                 break;
 
+            case '/topic':
+                gateway.raw('TOPIC ' + front.cur_channel.name + ' :' + msg.split(" ", 2)[1]);
+                break;
 			default:
 				//front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
 				gateway.raw(msg.substring(1));
@@ -814,6 +845,7 @@ var front = {
 	
 	
 	setTopicText: function (new_topic) {
+        front.original_topic = new_topic;
 		$('#kiwi .cur_topic .topic').text(new_topic);
 		front.doLayoutSize();
 	},
