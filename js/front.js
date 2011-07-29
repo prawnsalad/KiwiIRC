@@ -132,7 +132,7 @@ var front = {
         });
         
         
-		gateway.start();
+		//gateway.start();
 		//front.sync();
 	},
 	

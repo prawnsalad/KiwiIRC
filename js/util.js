@@ -121,6 +121,19 @@ plugins.privmsg = [
 			
 			return text;
 		}
+	},
+
+    {
+		name: "lftobr",
+		onprivmsg: function(text){
+			if( !text ) return text;
+			
+			text = text.replace(/\n/gi,function(txt){
+				return '<br/>';
+			});
+			
+			return text;
+		}
 	}
 ];
 

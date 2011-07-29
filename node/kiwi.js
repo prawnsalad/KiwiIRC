@@ -18,19 +18,19 @@ var tls = require('tls'),
  */
 var config = null, config_filename = 'config.json';
 var config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
-for(var i in config_dirs){
+for (var i in config_dirs) {
     try {
         if(fs.lstatSync(config_dirs[i] + config_filename).isDirectory() === false){
             config = JSON.parse(fs.readFileSync(config_dirs[i] + config_filename, 'ascii'));
             console.log('Using config file ' + config_dirs[i] + config_filename);
             break;
         }
-    } catch(e){
+    } catch (e) {
         continue;
     }
 }
 
-if(config === null){
+if (config === null) {
     console.log('Couldn\'t find a config file!');
     process.exit(0);
 }
@@ -471,7 +471,25 @@ if (config.listen_ssl) {
 // Now we're listening on the network, set our UID/GIDs if required
 changeUser();
 
-io.of('/kiwi').on('connection', function (websocket) {
+var connections = {};
+
+io.of('/kiwi').authorization(function (handshakeData, callback) {
+    var connection, address = handshakeData.address.address;
+    if (typeof connections[address] === 'undefined') {
+        connections[address] = {count: 0, sockets: []};
+    }
+    connection = connections[address];
+    if (connection.count >= config.max_client_conns) {
+        callback(null, false);
+        return;
+    }
+    connection.count += 1;
+    callback(null, true);
+}).on('connection', function (websocket) {
+    var con;
+    websocket.kiwi = {address: websocket.handshake.address.address};
+    con = connections[websocket.kiwi.address];
+    con.sockets.push(websocket);
     websocket.on('irc connect', function (nick, host, port, ssl, callback) {
         var ircSocket;
         //setup IRC connection
@@ -547,11 +565,17 @@ io.of('/kiwi').on('connection', function (websocket) {
         }
     });
     websocket.on('disconnect', function () {
+        var con;
         if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
             websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
             websocket.sentQUIT = true;
             websocket.ircSocket.destroySoon();
         }
+        con = connections[websocket.kiwi.address];
+        con.count -=1;
+        con.sockets = _.reject(con.sockets, function (sock) {
+            return sock === websocket;
+        });
     });
 });
 

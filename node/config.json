@@ -13,5 +13,7 @@
     "cap_options":      [],
 
     "handle_http":      true,
-    "public_http":	    "./../"
+    "public_http":	    "./../",
+
+    "max_client_conns": 2
 }
