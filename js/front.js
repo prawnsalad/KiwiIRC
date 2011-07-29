@@ -106,7 +106,20 @@ var front = {
 		
 		//gateway.session_id = 'testses';
 		
-        $('.cur_topic').live('keypress', function(e) {
+		$('#kiwi .cur_topic').keydown(function(e){
+            if (e.which === 13) {
+                // enter
+                e.preventDefault();
+                $(this).change();
+                $('#kiwi_msginput').focus();
+            } else if (e.which === 27) {
+                // escape
+                e.preventDefault();
+                $(this).text(front.original_topic);
+                $('#kiwi_msginput').focus();
+            }
+		});
+        /*$('.cur_topic').live('keypress', function(e) {
             if (e.keyCode === 13) {
                 // enter
                 e.preventDefault();
@@ -117,17 +130,13 @@ var front = {
                 e.preventDefault();
                 $(this).text(front.original_topic);
             }
-        });
+        });*/
         $('.cur_topic').live('change', function (e) {
             var chan, text;
             text = $(this).text();
-            console.debug(text);
-            console.debug(front.original_topic);
-            console.debug(text === front.original_topic);
             if (text !== front.original_topic) {
-                console.debug('sending topic msg');
                 chan = front.cur_channel.name;
-                gateway.raw('TOPIC ' + chan + ' :' + text);
+                gateway.setTopic(chan, text);
             }
         });
         
@@ -176,9 +185,9 @@ var front = {
             i;
 		for (i in chans) {
 			chan = chans[i];
-			if (front.tabviews[chan.toLowerCase()] === undefined) {
+			if (front.tabviews[chan.toLowerCase()] === undefined || (front.tabviews[chan.toLowerCase()] !== undefined && front.tabviews[chan.toLowerCase()].safe_to_close === true)) {
 				gateway.join(chan);
-				//front.tabviewAdd(chan);
+				front.tabviewAdd(chan);
 			} else {
 				front.tabviews[chan.toLowerCase()].show();
 			}
@@ -223,7 +232,11 @@ var front = {
 
 			case '/part':
 				if (typeof parts[1] === "undefined") {
-					gateway.raw(msg.substring(1) + ' ' + front.cur_channel.name);
+					if(front.cur_channel.safe_to_close){
+						front.cur_channel.close();
+					} else {
+						gateway.raw(msg.substring(1) + ' ' + front.cur_channel.name);
+					}
 				} else {
 					gateway.raw(msg.substring(1));
 				}
@@ -276,7 +289,22 @@ var front = {
                 break;
 
             case '/topic':
-                gateway.raw('TOPIC ' + front.cur_channel.name + ' :' + msg.split(" ", 2)[1]);
+            	if (parts[1] === undefined) {
+            		var t = $('.cur_topic');
+					if (t.createTextRange) {
+						var pos = t.text().length();
+					    var textRange = t.createTextRange();
+					    textRange.collapse(true);
+					    textRange.moveEnd(pos);
+					    textRange.moveStart(pos);
+					    textRange.select();
+					} else if (t.setSelectionRange) {
+					    t.setSelectionRange(pos,pos);
+					}
+            	} else {
+            		gateway.setTopic(front.cur_channel.name, msg.split(' ', 2)[1]);
+                	//gateway.raw('TOPIC ' + front.cur_channel.name + ' :' + msg.split(' ', 2)[1]);
+                }
                 break;
 			default:
 				//front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
@@ -461,9 +489,12 @@ var front = {
 	},
 	onKick: function (e, data) {
 		if (front.tabviewExists(data.channel)) {
-			// If this is us, close the tabvi ew
+			// If this is us, close the tabview
 			if (data.kicked === gateway.nick) {
-				front.tabviews[data.channel.toLowerCase()].close();
+				//front.tabviews[data.channel.toLowerCase()].close();
+				front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '=== You have been kicked from ' + data.channel + '. ' + data.message, 'status');
+				front.tabviews[data.channel.toLowerCase()].safe_to_close = true;
+				$('li', front.tabviews[data.channel.toLowerCase()].userlist).remove();
 				return;
 			}
 			
@@ -506,18 +537,29 @@ var front = {
 	},
 	
     onIRCError: function (e, data) {
+    	var t_view;
+    	if (data.channel !== undefined && front.tabviewExists(data.channel)) {
+    		t_view = data.channel;
+    	} else {
+    		t_view = 'server';
+    	}
+
         switch(data.error) {
         case 'banned_from_channel':
-            front.tabviews.server.addMsg(null, ' ', '=== You are banned from ' + data.channel + ': ' + data.reason, 'status');
+            front.tabviews[t_view].addMsg(null, ' ', '=== You are banned from ' + data.channel + '. ' + data.reason, 'status');
+            if (t_view !== 'server' ) front.tabviews[t_view].safe_to_close = true;
             break;
         case 'bad_channel_key':
-            front.tabviews.server.addMsg(null, ' ', '=== Bad channel key for ' + data.channel, 'status');
+            front.tabviews[t_view].addMsg(null, ' ', '=== Bad channel key for ' + data.channel, 'status');
+            if (t_view !== 'server' ) front.tabviews[t_view].safe_to_close = true;
             break;
         case 'invite_only_channel':
-            front.tabviews.server.addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
+            front.tabviews[t_view].addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
+            if (t_view !== 'server' ) front.tabviews[t_view].safe_to_close = true;
             break;
         case 'channel_is_full':
-            front.tabviews.server.addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
+            front.tabviews[t_view].addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
+            if (t_view !== 'server' ) front.tabviews[t_view].safe_to_close = true;
             break;
         case 'chanop_privs_needed':
             front.tabviews[data.channel].addMsg(null, ' ', '=== ' + data.reason, 'status');
@@ -533,11 +575,12 @@ var front = {
 	registerKeys: function () {
 		$('#kiwi_msginput').bind('keydown', function (e) {
 			var windows = $('#windows');
-			console.log(e.which);
-		//$('input').keypress(function(e){
+			//var meta = e.altKey;
+			var meta = e.ctrlKey;
+			
 			switch (true) {
 			case (e.which >= 48) && (e.which <= 57):
-				if(e.altKey){
+				if(meta){
 					var num = e.which - 48;
 					if(num === 0) num = 10;
 					num = num - 1;
@@ -568,7 +611,7 @@ var front = {
 				return false;
 				break;
 			case e.which === 37:			// left
-				if(e.altKey){
+				if(meta){
 					front.windowsPrevious();
 					return false;
 				}
@@ -580,7 +623,7 @@ var front = {
 				}
 				break;
 			case e.which === 39:			// right
-				if(e.altKey){
+				if(meta){
 					front.windowsNext();
 					return false;
 				}
@@ -767,9 +810,11 @@ var front = {
 		var tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
 		var tmp_tabname = 'kiwi_tab_' + htmlsafe_name
 		
-		$('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-		$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
-		$('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
+		if(!front.tabviewExists(v_name)){
+			$('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
+			$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
+			$('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
+		}
 		//$('#kiwi .windowlist ul .window_'+v_name).click(function(){ front.windowShow(v_name); });
 		//front.windowShow(v_name);
 		
@@ -975,6 +1020,7 @@ tabview.prototype.div = null;
 tabview.prototype.userlist = null;
 tabview.prototype.tab = null;
 tabview.prototype.topic = "";
+tabview.prototype.safe_to_close = false;				// If we have been kicked/banned/etc from this channel, don't wait for a part message
 
 tabview.prototype.show = function(){
 	$('#kiwi .messages').removeClass("active");
@@ -1006,7 +1052,7 @@ tabview.prototype.close = function(){
 	this.userlist.remove();
 	this.tab.remove();
 	
-	front.tabviews['server'].show();
+	if(front.cur_channel == this) front.tabviews['server'].show();
 	delete front.tabviews[this.name.toLowerCase()];
 }
 

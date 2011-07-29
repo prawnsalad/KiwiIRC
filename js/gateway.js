@@ -157,6 +157,18 @@ var gateway = {
 	    gateway.sendData(data, callback);
     },
 
+    setTopic: function (s_channel, new_topic, callback){
+	    var data = {
+		    method: 'topic',
+		    args: {
+			    channel: s_channel,
+			    topic: new_topic
+		    }
+	    };
+
+	    gateway.sendData(data, callback);
+    },
+
 
     raw: function (v_data, callback) {
 	    var data = {

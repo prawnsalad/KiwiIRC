@@ -526,6 +526,11 @@ io.of('/kiwi').on('connection', function (websocket) {
                     });
                 }
                 break;
+            case 'topic':
+                if (args.channel) {
+                    websocket.ircSocket.write('TOPIC ' + args.channel + ' :' + args.topic + '\r\n');
+                }
+                break;
 	        case 'quit':
                 websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
                 websocket.sentQUIT = true;
