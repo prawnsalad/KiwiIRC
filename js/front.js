@@ -316,11 +316,13 @@ var front = {
 			if (msg.trim() === '') {
                 return;
             }
-			gateway.msg(front.cur_channel.name, msg);
-			var d = new Date();
-			d = d.getHours() + ":" + d.getMinutes();
-			//front.addMsg(d, gateway.nick, msg);
-			front.cur_channel.addMsg(null, gateway.nick, msg);
+            if (front.cur_channel.name !== 'server') {
+				gateway.msg(front.cur_channel.name, msg);
+				var d = new Date();
+				d = d.getHours() + ":" + d.getMinutes();
+				//front.addMsg(d, gateway.nick, msg);
+				front.cur_channel.addMsg(null, gateway.nick, msg);
+			}
 		}
 	},
 	
@@ -369,14 +371,14 @@ var front = {
 	},
 	
 	onNotice: function (e, data) {
-		var nick = (data.nick === "") ? "" : '[' + data.nick + ']';
+		var nick = (data.nick === undefined || data.nick === '') ? '' : '[' + data.nick + ']';
 		if (data.channel !== undefined) {
-			//alert('notice for '+data.channel);
 			if (front.tabviewExists(data.channel)) {
 				front.tabviews[data.channel.toLowerCase()].addMsg(null, nick, data.msg, 'notice');
+			} else {
+				front.tabviews.server.addMsg(null, nick, data.msg, 'notice');
 			}
 		} else {
-			//alert('direct notice');
 			front.tabviews.server.addMsg(null, nick, data.msg, 'notice');
 		}
 	},
@@ -568,7 +570,8 @@ var front = {
             front.tabviews.server.addMsg(null, ' ', '=== ' + data.nick + ': ' + data.reason, 'status'); 
             break;
         default:
-            front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
+        	// We don't know what data contains, so don't do anything with it.
+            //front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
         }
     },
     

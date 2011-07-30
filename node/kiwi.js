@@ -207,7 +207,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.emit('message', {event: 'channel_redirect', from: params[1], to: params[2]});
             break;
         case ircNumerics.ERR_NOSUCHNICK:
-			websocket.emit('message', {event: 'irc_error', error: 'no_suck_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
+			websocket.emit('message', {event: 'irc_error', error: 'no_such_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
 			break;
         case 'JOIN':
             websocket.emit('message', {event: 'join', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.trailing});
