@@ -8,7 +8,12 @@ var tls = require('tls'),
     url = require('url'),
     ws = require('socket.io'),
     _ = require('./lib/underscore.min.js'),
-    starttls = require('./lib/starttls.js');
+    starttls = require('./lib/starttls.js'),
+    kiwi_mod = require('./lib/kiwi_mod.js');
+
+    // Libraries may need to know kiwi.js path as __dirname
+    // only gives that librarys path. Set it here for usage later.
+    kiwi_root = __dirname;
 
 
 /*
@@ -16,7 +21,7 @@ var tls = require('tls'),
  * - /etc/kiwi/config.json
  * - ./config.json
  */
-var config = null, config_filename = 'config.json';
+config = null, config_filename = 'config.json';
 var config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
 for(var i in config_dirs){
     try {
@@ -34,6 +39,14 @@ if(config === null){
     console.log('Couldn\'t find a config file!');
     process.exit(0);
 }
+
+
+
+/*
+ * Load the modules as set in the config and print them out
+ */
+kiwi_mod.loadModules();
+kiwi_mod.printMods();
 
 
 
@@ -276,7 +289,9 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                     websocket.emit('message', {event: 'ctcp_request', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(1, msg.trailing.length - 2)});
                 }
             } else {
-                websocket.emit('message', {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing});
+                var obj = {event: 'msg', nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing};
+                obj = kiwi_mod.run('msg', obj);
+                if(obj !== null) websocket.emit('message', obj);
             }
             break;
         case 'CAP':
@@ -508,7 +523,8 @@ io.of('/kiwi').on('connection', function (websocket) {
             switch (msg.data.method) {
             case 'msg':
                 if ((args.target) && (args.msg)) {
-                    websocket.ircSocket.write('PRIVMSG ' + args.target + ' :' + args.msg + '\r\n');
+                    var obj = kiwi_mod.run('msgsend', args, {websocket: websocket});
+                    if (obj !== null) websocket.ircSocket.write('PRIVMSG ' + args.target + ' :' + args.msg + '\r\n');
                 }
                 break;
 	        case 'action':

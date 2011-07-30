@@ -1,0 +1,48 @@
+/*
+ * Kiwi module handler
+ *
+ * To run module events:
+ *     kiwi_mod.run(event_name, obj);
+ *
+ * - Each module call must return obj, with or without changes.
+ * - If a module call returns null, the event is considered cancelled
+ *   and null is passed back to the caller to take action.
+ *   For example, if null is returned for onmsg, kiwi stops sending
+ *   the message to any clients.
+*/
+
+this.loaded_modules = {};
+
+
+exports.loadModules = function(){
+	// Warn each module it is about to be unloaded
+	this.run('unload');
+	this.loaded_modules = {};
+
+	// Load each module and run the onload event
+	for(var i in config.modules){
+		var mod_name = config.modules[i];
+		this.loaded_modules[mod_name] = require(kiwi_root + '/' + config.module_dir + mod_name);
+	}
+	this.run('load');
+}
+
+exports.run = function (event, obj, opts){
+	var ret = obj;
+
+	for (var mod_name in this.loaded_modules) {
+		if (typeof this.loaded_modules[mod_name]['on' + event] === 'function') {
+			ret = this.loaded_modules[mod_name]['on' + event](ret, opts);
+			if (ret === null) return null;
+		}
+	}
+
+	return ret;
+}
+
+exports.printMods = function(){
+	console.log('Loaded Kiwi modules');
+	for (var mod_name in this.loaded_modules) {
+		console.log(' - ' + mod_name);
+	}
+}

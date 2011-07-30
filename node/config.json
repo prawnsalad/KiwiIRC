@@ -13,5 +13,8 @@
     "cap_options":      [],
 
     "handle_http":      true,
-    "public_http":	    "./../"
+    "public_http":	    "./../",
+
+    "module_dir":       "./kiwi_modules/",
+    "modules":          ["spamfilter", "statistics"]
 }
