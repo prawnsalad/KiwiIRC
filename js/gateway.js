@@ -24,7 +24,7 @@ var gateway = {
             gateway.socket = io.connect(kiwi_server, {'max reconnection attempts': 3});
             gateway.socket.of('/kiwi').on('connect_failed', function (reason) {
                 console.debug('Unable to connect Socket.IO', reason);
-                front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\nYour IP address has too many open connections to Kiwi', 'error');
+                front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
                 gateway.socket.disconnect();
                 $(gateway).trigger("ondisconnect", {});
                 gateway.sendData = function () {};
@@ -41,6 +41,9 @@ var gateway = {
                     $(gateway).trigger("ondisconnect", {});
                 });
                 gateway.socket.emit('irc connect', gateway.nick, host, port, ssl, callback);
+            });
+            gateway.socket.on('too_many_connections', function () {
+                front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\nYour IP address has too many connections to Kiwi IRC', 'error');
             });
         }
     },
