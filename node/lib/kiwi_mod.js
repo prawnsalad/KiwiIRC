@@ -27,12 +27,15 @@ exports.loadModules = function(){
 	this.run('load');
 }
 
-exports.run = function (event, obj, opts){
-	var ret = obj;
-
+exports.run = function (event_name, event_data, opts){
+	var ret = event_data;
+	
+	event_data = (typeof event_data === 'undefined') ? {} : event_data;
+	opts = (typeof opts === 'undefined') ? {} : opts;
+	
 	for (var mod_name in this.loaded_modules) {
-		if (typeof this.loaded_modules[mod_name]['on' + event] === 'function') {
-			ret = this.loaded_modules[mod_name]['on' + event](ret, opts);
+		if (typeof this.loaded_modules[mod_name]['on' + event_name] === 'function') {
+			ret = this.loaded_modules[mod_name]['on' + event_name](ret, opts);
 			if (ret === null) return null;
 		}
 	}
