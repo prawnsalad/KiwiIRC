@@ -492,111 +492,133 @@ if (config.listen_ssl) {
 // Now we're listening on the network, set our UID/GIDs if required
 changeUser();
 
+var connections = {};
 
 // The main socket listening/handling routines
-io.of('/kiwi').on('connection', function (websocket) {
+io.of('/kiwi').authorization(function (handshakeData, callback) {
+    var connection, address = handshakeData.address.address;
+    if (typeof connections[address] === 'undefined') {
+        connections[address] = {count: 0, sockets: []};
+    }
+    callback(null, true);
+}).on('connection', function (websocket) {
+    var con;
+    websocket.kiwi = {address: websocket.handshake.address.address};
+    con = connections[websocket.kiwi.address];
+    if (con.count >= config.max_client_conns) {
+        websocket.emit('too_many_connections');
+        websocket.disconnect();
+    } else {
+        con.count += 1
+        con.sockets.push(websocket);
 
-    websocket.sendClientEvent = function (event_name, data) {
-        kiwi_mod.run(event_name, data, {websocket: this});
-        data.event = event_name;
-        websocket.emit('message', data);
-    };
+        websocket.sendClientEvent = function (event_name, data) {
+            kiwi_mod.run(event_name, data, {websocket: this});
+            data.event = event_name;
+            websocket.emit('message', data);
+        };
 
-    websocket.sendServerLine = function (data, eol) {
-        eol = (typeof eol === 'undefined') ? '\r\n' : eol;
-        websocket.ircSocket.write(data + eol);
-    };
+        websocket.sendServerLine = function (data, eol) {
+            eol = (typeof eol === 'undefined') ? '\r\n' : eol;
+            websocket.ircSocket.write(data + eol);
+        };
 
-    websocket.on('irc connect', function (nick, host, port, ssl, callback) {
-        var ircSocket;
-        //setup IRC connection
-        if (!ssl) {
-            ircSocket = net.createConnection(port, host);
-        } else {
-            ircSocket = tls.connect(port, host);
-        }
-        ircSocket.setEncoding('ascii');
-        ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}};
-        websocket.ircSocket = ircSocket;
-        ircSocket.holdLast = false;
-        ircSocket.held = '';
-        
-        ircSocket.on('data', function (data) {
-            ircSocketDataHandler(data, websocket, ircSocket);
-        });
-        
-        ircSocket.IRC.nick = nick;
-        // Send the login data
-        websocket.sendServerLine('CAP LS');
-        websocket.sendServerLine('NICK ' + nick);
-        websocket.sendServerLine('USER ' + nick + '_kiwi 0 0 :' + nick);
-
-        if ((callback) && (typeof (callback) === 'function')) {
-            callback();
-        }
-    });
-    websocket.on('message', function (msg, callback) {
-        var args, obj;
-        try {
-            msg.data = JSON.parse(msg.data);
-            args = msg.data.args;
-            switch (msg.data.method) {
-            case 'msg':
-                if ((args.target) && (args.msg)) {
-                    obj = kiwi_mod.run('msgsend', args, {websocket: websocket});
-                    if (obj !== null) {
-                        websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + args.msg);
-                    }
-                }
-                break;
-            case 'action':
-                if ((args.target) && (args.msg)) {
-                    websocket.sendServerLine('PRIVMSG ' + args.target + ' :ACTION ' + args.msg);
-                }
-                break;
-            case 'raw':
-                websocket.sendServerLine(args.data);
-                break;
-            case 'join':
-                if (args.channel) {
-                    _.each(args.channel.split(","), function (chan) {
-                        websocket.sendServerLine('JOIN ' + chan);
-                    });
-                }
-                break;
-            case 'topic':
-                if (args.channel) {
-                    websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
-                }
-                break;
-            case 'quit':
-                websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
-                websocket.sentQUIT = true;
-                websocket.ircSocket.destroySoon();
-                websocket.disconnect();
-                break;
-            case 'notice':
-                if ((args.target) && (args.msg)) {
-                    websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg);
-                }
-                break;
-            default:
+        websocket.on('irc connect', function (nick, host, port, ssl, callback) {
+            var ircSocket;
+            //setup IRC connection
+            if (!ssl) {
+                ircSocket = net.createConnection(port, host);
+            } else {
+                ircSocket = tls.connect(port, host);
             }
+            ircSocket.setEncoding('ascii');
+            ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}};
+            websocket.ircSocket = ircSocket;
+            ircSocket.holdLast = false;
+            ircSocket.held = '';
+            
+            ircSocket.on('data', function (data) {
+                ircSocketDataHandler(data, websocket, ircSocket);
+            });
+            
+            ircSocket.IRC.nick = nick;
+            // Send the login data
+            websocket.sendServerLine('CAP LS');
+            websocket.sendServerLine('NICK ' + nick);
+            websocket.sendServerLine('USER ' + nick + '_kiwi 0 0 :' + nick);
+
             if ((callback) && (typeof (callback) === 'function')) {
                 callback();
             }
-        } catch (e) {
-            console.log("Caught error: " + e);
-        }
-    });
+        });
+        websocket.on('message', function (msg, callback) {
+            var args, obj;
+            try {
+                msg.data = JSON.parse(msg.data);
+                args = msg.data.args;
+                switch (msg.data.method) {
+                case 'msg':
+                    if ((args.target) && (args.msg)) {
+                        obj = kiwi_mod.run('msgsend', args, {websocket: websocket});
+                        if (obj !== null) {
+                            websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + args.msg);
+                        }
+                    }
+                    break;
+                case 'action':
+                    if ((args.target) && (args.msg)) {
+                        websocket.sendServerLine('PRIVMSG ' + args.target + ' :ACTION ' + args.msg);
+                    }
+                    break;
+                case 'raw':
+                    websocket.sendServerLine(args.data);
+                    break;
+                case 'join':
+                    if (args.channel) {
+                        _.each(args.channel.split(","), function (chan) {
+                            websocket.sendServerLine('JOIN ' + chan);
+                        });
+                    }
+                    break;
+                case 'topic':
+                    if (args.channel) {
+                        websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
+                    }
+                    break;
+                case 'quit':
+                    websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
+                    websocket.sentQUIT = true;
+                    websocket.ircSocket.destroySoon();
+                    websocket.disconnect();
+                    break;
+                case 'notice':
+                    if ((args.target) && (args.msg)) {
+                        websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg);
+                    }
+                    break;
+                default:
+                }
+                if ((callback) && (typeof (callback) === 'function')) {
+                    callback();
+                }
+            } catch (e) {
+                console.log("Caught error: " + e);
+            }
+        });
 
-    
-    websocket.on('disconnect', function () {
-        if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
-            websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
-            websocket.sentQUIT = true;
-            websocket.ircSocket.destroySoon();
-        }
-    });
+        
+        websocket.on('disconnect', function () {
+            if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
+                websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
+                websocket.sentQUIT = true;
+                websocket.ircSocket.destroySoon();
+            }
+            con = connections[websocket.kiwi.address];
+            con.count -=1;
+            con.sockets = _.reject(con.sockets, function (sock) {
+                return sock === websocket;
+            });
+        });
+    }
 });
 
