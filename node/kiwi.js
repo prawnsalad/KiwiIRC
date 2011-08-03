@@ -120,14 +120,14 @@ var ircNumerics = {
 var parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
     var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps, rtn, obj;
-    regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@([a-z0-9\.\-:]+)) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
+    regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     msg = regex.exec(data);
     if (msg) {
         msg = {
             prefix:     msg[1],
             nick:       msg[2],
             ident:      msg[3],
-            hostname:   msg[4],
+            hostname:   (msg[4]) ? msg[4] : '',
             command:    msg[5],
             params:     msg[6] || '',
             trailing:   (msg[7]) ? msg[7].trim() : ''
@@ -227,7 +227,15 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.sendClientEvent('irc_error', {error: 'no_such_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
             break;
         case 'JOIN':
-            websocket.sendClientEvent('join', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.trailing});
+            // Some BNC's send malformed JOIN causing the channel to be as a
+            // parameter instead of trailing.
+            if(typeof msg.trailing === 'string' && msg.trailing !== ''){
+                channel = msg.trailing;
+            } else if(typeof msg.params === 'string' && msg.params !== ''){
+                channel = msg.params;
+            }
+
+            websocket.sendClientEvent('join', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: channel});
             if (msg.nick === ircSocket.IRC.nick) {
                 websocket.sendServerLine('NAMES ' + msg.trailing);
             }
@@ -389,12 +397,20 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.ERR_CHANOPRIVSNEEDED:
             websocket.sendClientEvent('irc_error', {error: 'chanop_privs_needed', channel: msg.params.split(" ")[1], reason: msg.trailing});
             break;
+
+        default:
+            console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
         }
     } else {
-        console.log("Unknown command.\r\n");
+        console.log("Malformed IRC line");
     }
 };
 
+
+/*
+ * NOTE: Some IRC servers or BNC's out there incorrectly use
+ * only \n as a line splitter.
+ */
 var ircSocketDataHandler = function (data, websocket, ircSocket) {
     var i;
     if ((ircSocket.holdLast) && (ircSocket.held !== '')) {
@@ -402,10 +418,10 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
         ircSocket.holdLast = false;
         ircSocket.held = '';
     }
-    if (data.substr(-2) === '\r\n') {
+    if (data.substr(-2) === '\n') {
         ircSocket.holdLast = true;
     }
-    data = data.split("\r\n");         
+    data = data.split("\n");         
     for (i = 0; i < data.length; i++) {
         if (data[i]) {
             if ((ircSocket.holdLast) && (i === data.length - 1)) {
@@ -413,7 +429,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
                 break;
             }
             console.log("->" + data[i]);
-            parseIRCMessage(websocket, ircSocket, data[i]);
+            parseIRCMessage(websocket, ircSocket, data[i].replace(/^\r+|\r+$/, '') );
         }
     }
 };
@@ -488,6 +504,7 @@ if (config.listen_ssl) {
     var io = ws.listen(httpServer, {secure: false});
     httpServer.listen(config.port, config.bind_address);
 }
+io.set('log level', 1);
 
 // Now we're listening on the network, set our UID/GIDs if required
 changeUser();
@@ -520,6 +537,7 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
 
         websocket.sendServerLine = function (data, eol) {
             eol = (typeof eol === 'undefined') ? '\r\n' : eol;
+            //console.log('Out: -----\n' + data + '\n-----');
             websocket.ircSocket.write(data + eol);
         };
 
@@ -538,6 +556,7 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
             ircSocket.held = '';
             
             ircSocket.on('data', function (data) {
+                //console.log('In: -----\n' + data + '\n-----');
                 ircSocketDataHandler(data, websocket, ircSocket);
             });
             
