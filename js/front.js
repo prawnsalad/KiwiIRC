@@ -24,6 +24,7 @@ var front = {
         $(gateway).bind("onmotd", front.onMOTD);
         $(gateway).bind("onoptions", front.onOptions);
         $(gateway).bind("onconnect", front.onConnect);
+        $(gateway).bind("onconnect_fail", front.onConnectFail);
         $(gateway).bind("ondisconnect", front.onDisconnect);
         $(gateway).bind("onnick", front.onNick);
         $(gateway).bind("onuserlist", front.onUserList);
@@ -417,6 +418,10 @@ var front = {
         } else {
             front.tabviews.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
         }
+    },
+    onConnectFail: function (e, data) {
+        var reason = (typeof data.reason === 'string') ? data.reason : '';
+        front.tabviews.server.addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
     },
     onDisconnect: function (e, data) {
         var tab;

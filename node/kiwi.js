@@ -586,7 +586,7 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
                     break;
                 case 'action':
                     if ((args.target) && (args.msg)) {
-                        websocket.sendServerLine('PRIVMSG ' + args.target + ' :ACTION ' + args.msg);
+                        websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'ACTION ' + args.msg + String.fromCharCode(1));
                     }
                     break;
                 case 'raw':

@@ -23,15 +23,19 @@ var gateway = {
         if (typeof gateway.kiwi_server !== 'undefined') {
             gateway.socket = io.connect(kiwi_server, {'max reconnection attempts': 3});
             gateway.socket.of('/kiwi').on('connect_failed', function (reason) {
+                // TODO: When does this even actually get fired? I can't find a case! ~Darren
                 console.debug('Unable to connect Socket.IO', reason);
-                front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
+                //front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
                 gateway.socket.disconnect();
-                $(gateway).trigger("ondisconnect", {});
+                $(gateway).trigger("onconnect_fail", {reason: reason});
                 gateway.sendData = function () {};
             }).on('error', function (e) {
+                $(gateway).trigger("onconnect_fail", {});
                 console.debug(e);
+                console.log(e);
             });
             gateway.socket.on('connect', function () {
+                console.log('connect event');
                 gateway.sendData = function (data, callback) {
                     gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
                 };
@@ -43,7 +47,7 @@ var gateway = {
                 gateway.socket.emit('irc connect', gateway.nick, host, port, ssl, callback);
             });
             gateway.socket.on('too_many_connections', function () {
-                front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\nYour IP address has too many connections to Kiwi IRC', 'error');
+                $(gateway).trigger("onconnect_fail", {reason: 'too_many_connections'});
             });
         }
     },
