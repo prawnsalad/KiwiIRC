@@ -311,7 +311,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case 'CAP':
             caps = config.cap_options;
             options = msg.trailing.split(" ");
-            switch (_.first(msg.params.split(" "))) {
+            switch (_.last(msg.params.split(" "))) {
             case 'LS':
                 opts = '';
                 _.each(_.intersect(caps, options), function (cap) {
