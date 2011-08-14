@@ -6,6 +6,7 @@ var tls = require('tls'),
     https = require('https'),
     fs = require('fs'),
     url = require('url'),
+    dns = require('dns'),
     ws = require('socket.io'),
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
@@ -523,13 +524,22 @@ var connections = {};
 // The main socket listening/handling routines
 io.of('/kiwi').authorization(function (handshakeData, callback) {
     var address = handshakeData.address.address;
+        handshakeData.kiwi = {hostname: null};
+    dns.reverse(address, function (err, domains) {
+        console.log(domains);
+        if (err) {
+            handshakeData.kiwi.hostname = err;
+        } else {
+            handshakeData.kiwi.hostname = _.first(domains);
+        }
+    });
     if (typeof connections[address] === 'undefined') {
         connections[address] = {count: 0, sockets: []};
     }
     callback(null, true);
 }).on('connection', function (websocket) {
     var con;
-    websocket.kiwi = {address: websocket.handshake.address.address};
+    websocket.kiwi = {address: websocket.handshake.address.address, hostname: websocket.handshake.kiwi.hostname};
     con = connections[websocket.kiwi.address];
     if (con.count >= config.max_client_conns) {
         websocket.emit('too_many_connections');
@@ -551,7 +561,7 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
         };
 
         websocket.on('irc connect', function (nick, host, port, ssl, callback) {
-            var ircSocket;
+            var ircSocket, login;
             //setup IRC connection
             if (!ssl) {
                 ircSocket = net.createConnection(port, host);
@@ -578,9 +588,16 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
             
             ircSocket.IRC.nick = nick;
             // Send the login data
+            if ((config.webirc) && (config.webirc_pass[host])) {
+                if ((websocket.kiwi.hostname === null) || (typeof websocket.kiwi.hostname === Error)) {
+                    websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.address + ' ' + websocket.kiwi.address);
+                } else {
+                    websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
+                }
+            }
             websocket.sendServerLine('CAP LS');
             websocket.sendServerLine('NICK ' + nick);
-            websocket.sendServerLine('USER ' + nick + '_kiwi 0 0 :' + nick);
+            websocket.sendServerLine('USER ' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + '_kiwi 0 0 :' + nick);
 
             if ((callback) && (typeof (callback) === 'function')) {
                 callback();
