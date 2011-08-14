@@ -427,7 +427,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
         ircSocket.holdLast = false;
         ircSocket.held = '';
     }
-    if (data.substr(-1) === '\n') {
+    if (data.substr(-1) !== '\n') {
         ircSocket.holdLast = true;
     }
     data = data.split("\n");         
