@@ -103,6 +103,7 @@ var ircNumerics = {
     ERR_NOSUCHNICK:         '401',
     ERR_CANNOTSENDTOCHAN:   '404',
     ERR_TOOMANYCHANNELS:    '405',
+    ERR_NICKNAMEINUSE:      '433',
     ERR_USERNOTINCHANNEL:   '441',
     ERR_NOTONCHANNEL:       '442',
     ERR_LINKCHANNEL:        '470',
@@ -119,7 +120,7 @@ var ircNumerics = {
 
 var parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, params, prefix, prefixes, nicklist, caps, rtn, obj;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     msg = regex.exec(data);
     if (msg) {
@@ -127,7 +128,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             prefix:     msg[1],
             nick:       msg[2],
             ident:      msg[3],
-            hostname:   (msg[4]) ? msg[4] : '',
+            hostname:   msg[4] || '',
             command:    msg[5],
             params:     msg[6] || '',
             trailing:   (msg[7]) ? msg[7].trim() : ''
@@ -141,6 +142,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                 ircSocket.IRC.CAP.negotiating = false;
                 ircSocket.IRC.CAP.enabled = [];
                 ircSocket.IRC.CAP.requested = [];
+                ircSocket.IRC.registered = true;
             }
             websocket.sendClientEvent('connect', {connected: true, host: null});
             break;
@@ -229,9 +231,9 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case 'JOIN':
             // Some BNC's send malformed JOIN causing the channel to be as a
             // parameter instead of trailing.
-            if(typeof msg.trailing === 'string' && msg.trailing !== ''){
+            if (typeof msg.trailing === 'string' && msg.trailing !== '') {
                 channel = msg.trailing;
-            } else if(typeof msg.params === 'string' && msg.params !== ''){
+            } else if (typeof msg.params === 'string' && msg.params !== '') {
                 channel = msg.params;
             }
 
@@ -397,7 +399,14 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.ERR_CHANOPRIVSNEEDED:
             websocket.sendClientEvent('irc_error', {error: 'chanop_privs_needed', channel: msg.params.split(" ")[1], reason: msg.trailing});
             break;
-
+        case ircNumerics.ERR_NICKNAMEINUSE:
+            websocket.sendClientEvent('irc_error', {error: 'nickname_in_use', nick: _.last(msg.params.split(" ")), reason: msg.trailing});
+            break;
+        case 'ERROR':
+            ircSocket.end();
+            websocket.sendClientEvent('irc_error', {error: 'error', reason: msg.trailing});
+            websocket.disconnect();
+            break;
         default:
             console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
         }
@@ -418,7 +427,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
         ircSocket.holdLast = false;
         ircSocket.held = '';
     }
-    if (data.substr(-1) === '\n') {
+    if (data.substr(-1) !== '\n') {
         ircSocket.holdLast = true;
     }
     data = data.split("\n");         
@@ -429,7 +438,7 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
                 break;
             }
             console.log("->" + data[i]);
-            parseIRCMessage(websocket, ircSocket, data[i].replace(/^\r+|\r+$/, '') );
+            parseIRCMessage(websocket, ircSocket, data[i].replace(/^\r+|\r+$/, ''));
         }
     }
 };
@@ -513,7 +522,7 @@ var connections = {};
 
 // The main socket listening/handling routines
 io.of('/kiwi').authorization(function (handshakeData, callback) {
-    var connection, address = handshakeData.address.address;
+    var address = handshakeData.address.address;
     if (typeof connections[address] === 'undefined') {
         connections[address] = {count: 0, sockets: []};
     }
@@ -526,7 +535,7 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
         websocket.emit('too_many_connections');
         websocket.disconnect();
     } else {
-        con.count += 1
+        con.count += 1;
         con.sockets.push(websocket);
 
         websocket.sendClientEvent = function (event_name, data) {
@@ -550,7 +559,14 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
                 ircSocket = tls.connect(port, host);
             }
             ircSocket.setEncoding('ascii');
-            ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}};
+            ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}, registered: false};
+            ircSocket.on('error', function (e) {
+                if (ircSocket.IRC.registered) {
+                    websocket.emit('disconnect');
+                } else {
+                    websocket.emit('error', e.message);
+                }
+            });
             websocket.ircSocket = ircSocket;
             ircSocket.holdLast = false;
             ircSocket.held = '';
@@ -628,12 +644,15 @@ io.of('/kiwi').authorization(function (handshakeData, callback) {
         
         websocket.on('disconnect', function () {
             if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
-                websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
-                websocket.sentQUIT = true;
-                websocket.ircSocket.destroySoon();
+                try {
+                    websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
+                    websocket.sentQUIT = true;
+                    websocket.ircSocket.destroySoon();
+                } catch (e) {
+                }
             }
             con = connections[websocket.kiwi.address];
-            con.count -=1;
+            con.count -= 1;
             con.sockets = _.reject(con.sockets, function (sock) {
                 return sock === websocket;
             });

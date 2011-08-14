@@ -30,7 +30,7 @@ var gateway = {
                 $(gateway).trigger("onconnect_fail", {reason: reason});
                 gateway.sendData = function () {};
             }).on('error', function (e) {
-                $(gateway).trigger("onconnect_fail", {});
+                $(gateway).trigger("onconnect_fail", {reason: e});
                 console.debug(e);
                 console.log(e);
             });
