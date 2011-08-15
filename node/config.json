@@ -18,5 +18,11 @@
     "max_client_conns": 2,
 
     "module_dir":       "./kiwi_modules/",
-    "modules":          ["spamfilter", "statistics"]
+    "modules":          ["spamfilter", "statistics"],
+    
+    "webirc":           true,
+    "webirc_pass":      {
+                            "irc.example.com":  "examplepassword",
+                            "127.0.0.1":        "foobar"
+                        }
 }
