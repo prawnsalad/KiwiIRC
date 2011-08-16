@@ -29,31 +29,43 @@ var loadConfig = function () {
     var i, j;
     var nconf = {};
     var cconf = {};
+    var found_config = false;
     for (i in config_dirs) {
         try {
             if (fs.lstatSync(config_dirs[i] + config_filename).isDirectory() === false) {
+                found_config = true;
                 nconf = JSON.parse(fs.readFileSync(config_dirs[i] + config_filename, 'ascii'));
                 for (j in nconf) {
+                    // If this has changed from the previous config, mark it as changed
                     if (!_.isEqual(config[j], nconf[j])) {
                         cconf[j] = nconf[j];
                     }
+
                     config[j] = nconf[j];
                 }
+
                 console.log('Loaded config file ' + config_dirs[i] + config_filename);
                 break;
             }
         } catch (e) {
+            switch (e.code){
+            case 'ENOENT':      // No file/dir
+                break;
+            default:
+                console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
+                return false;
+            }
             continue;
         }
     }
     if (Object.keys(config).length === 0) {
-        console.log('Couldn\'t find a config file!');
-        process.exit(0);
+        if (!found_config) console.log('Couldn\'t find a config file!');
+        return false;
     }
     return [nconf, cconf];
 };
 
-loadConfig();
+if (!loadConfig()) process.exit(0);
 
 
 /*
@@ -89,6 +101,8 @@ var changeUser = function () {
         }
     }
 };
+
+
 
 
 /*
@@ -448,7 +462,8 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
                 ircSocket.held = data[i];
                 break;
             }
-            console.log("->" + data[i]);
+
+            // We have a complete line of data, parse it!
             parseIRCMessage(websocket, ircSocket, data[i].replace(/^\r+|\r+$/, ''));
         }
     }
@@ -567,7 +582,6 @@ var websocketListen = function (port, host, handler, secure, key, cert) {
 
             websocket.sendServerLine = function (data, eol) {
                 eol = (typeof eol === 'undefined') ? '\r\n' : eol;
-                //console.log('Out: -----\n' + data + '\n-----');
                 websocket.ircSocket.write(data + eol);
             };
 
@@ -593,7 +607,6 @@ var websocketListen = function (port, host, handler, secure, key, cert) {
                 ircSocket.held = '';
                 
                 ircSocket.on('data', function (data) {
-                    //console.log('In: -----\n' + data + '\n-----');
                     ircSocketDataHandler(data, websocket, ircSocket);
                 });
                 
@@ -694,9 +707,19 @@ websocketListen(config.port, config.bind_address, httpHandler, config.listen_ssl
 // Now we're listening on the network, set our UID/GIDs if required
 changeUser();
 
+
+
+
 var rehash = function () {
     var changes, i;
-    changes = loadConfig()[1];
+    var reload_config = loadConfig();
+
+    // If loading the new config errored out, dont attempt any changes
+    if (reload_config === false) return false;
+    
+    // We just want the settings that have been changed
+    changes = reload_config[1];
+
     if (Object.keys(changes).length !== 0) {
         console.log('%s config changes: \n', Object.keys(changes).length, changes);
         for (i in changes) {
@@ -729,17 +752,27 @@ var rehash = function () {
             }
         }
     }
+
+    return true;
 };
 
+
+
+/*
+ * KiwiIRC controlling via STDIN
+ */
 process.stdin.resume();
 process.stdin.on('data', function (chunk) {
     var command;
     command = chunk.toString().trim();
-    console.log(command);
     switch (command) {
     case 'rehash':
-        rehash();
+        console.log('Rehashing...');
+        console.log(rehash() ? 'Rehash complete' : 'Rehash failed');
         break;
+
+    default:
+        console.log('Unknown command \'' + command + '\'');
     }
 });
 
