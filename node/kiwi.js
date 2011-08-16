@@ -21,29 +21,39 @@ var kiwi_root = __dirname;
  * - /etc/kiwi/config.json
  * - ./config.json
  */
-var config = null,
+var config = {},
     config_filename = 'config.json',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
 
-(function () {
-    var i;
+var loadConfig = function () {
+    var i, j;
+    var nconf = {};
+    var cconf = {};
     for (i in config_dirs) {
         try {
             if (fs.lstatSync(config_dirs[i] + config_filename).isDirectory() === false) {
-                config = JSON.parse(fs.readFileSync(config_dirs[i] + config_filename, 'ascii'));
-                console.log('Using config file ' + config_dirs[i] + config_filename);
+                nconf = JSON.parse(fs.readFileSync(config_dirs[i] + config_filename, 'ascii'));
+                for (j in nconf) {
+                    if (!_.isEqual(config[j], nconf[j])) {
+                        cconf[j] = nconf[j];
+                    }
+                    config[j] = nconf[j];
+                }
+                console.log('Loaded config file ' + config_dirs[i] + config_filename);
                 break;
             }
         } catch (e) {
             continue;
         }
     }
-
-    if (config === null) {
+    if (Object.keys(config).length === 0) {
         console.log('Couldn\'t find a config file!');
         process.exit(0);
     }
-}());
+    return [nconf, cconf];
+};
+
+loadConfig();
 
 
 /*
@@ -451,6 +461,7 @@ if (config.handle_http) {
 
 var httpHandler = function (request, response) {
     var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen;
+    console.log(request.url);
     if (config.handle_http) {
         uri = url.parse(request.url);
         subs = uri.pathname.substr(0, 4);
@@ -504,176 +515,234 @@ var httpHandler = function (request, response) {
     }
 };
 
-//setup websocket listener
-if (config.listen_ssl) {
-    var httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + config.ssl_key), cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)}, httpHandler);
-    var io = ws.listen(httpServer, {secure: true});
-    httpServer.listen(config.port, config.bind_address);
-} else {
-    var httpServer = http.createServer(httpHandler);
-    var io = ws.listen(httpServer, {secure: false});
-    httpServer.listen(config.port, config.bind_address);
-}
-io.set('log level', 1);
+var connections = {};
+
+var httpServer, io;
+var websocketListen = function (port, host, handler, secure, key, cert) {
+    if (httpServer) {
+        httpServer.close();
+    }
+    if (secure) {
+        httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
+        io = ws.listen(httpServer, {secure: true});
+        httpServer.listen(port, host);
+    } else {
+        httpServer = http.createServer(handler);
+        io = ws.listen(httpServer, {secure: false});
+        httpServer.listen(port, host);
+    }
+    //console.log(httpServer);
+    io.set('log level', 1);
+    io.of('/kiwi').authorization(function (handshakeData, callback) {
+        var address = handshakeData.address.address;
+        handshakeData.kiwi = {hostname: null};
+        dns.reverse(address, function (err, domains) {
+            console.log(domains);
+            if (err) {
+                handshakeData.kiwi.hostname = err;
+            } else {
+                handshakeData.kiwi.hostname = _.first(domains);
+            }
+        });
+        if (typeof connections[address] === 'undefined') {
+            connections[address] = {count: 0, sockets: []};
+        }
+        callback(null, true);
+    }).on('connection', function (websocket) {
+        var con;
+        websocket.kiwi = {address: websocket.handshake.address.address, hostname: websocket.handshake.kiwi.hostname};
+        con = connections[websocket.kiwi.address];
+        if (con.count >= config.max_client_conns) {
+            websocket.emit('too_many_connections');
+            websocket.disconnect();
+        } else {
+            con.count += 1;
+            con.sockets.push(websocket);
+
+            websocket.sendClientEvent = function (event_name, data) {
+                kiwi_mod.run(event_name, data, {websocket: this});
+                data.event = event_name;
+                websocket.emit('message', data);
+            };
+
+            websocket.sendServerLine = function (data, eol) {
+                eol = (typeof eol === 'undefined') ? '\r\n' : eol;
+                //console.log('Out: -----\n' + data + '\n-----');
+                websocket.ircSocket.write(data + eol);
+            };
+
+            websocket.on('irc connect', function (nick, host, port, ssl, callback) {
+                var ircSocket, login;
+                //setup IRC connection
+                if (!ssl) {
+                    ircSocket = net.createConnection(port, host);
+                } else {
+                    ircSocket = tls.connect(port, host);
+                }
+                ircSocket.setEncoding('ascii');
+                ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}, registered: false};
+                ircSocket.on('error', function (e) {
+                    if (ircSocket.IRC.registered) {
+                        websocket.emit('disconnect');
+                    } else {
+                        websocket.emit('error', e.message);
+                    }
+                });
+                websocket.ircSocket = ircSocket;
+                ircSocket.holdLast = false;
+                ircSocket.held = '';
+                
+                ircSocket.on('data', function (data) {
+                    //console.log('In: -----\n' + data + '\n-----');
+                    ircSocketDataHandler(data, websocket, ircSocket);
+                });
+                
+                ircSocket.IRC.nick = nick;
+                // Send the login data
+                if ((config.webirc) && (config.webirc_pass[host])) {
+                    if ((websocket.kiwi.hostname === null) || (typeof websocket.kiwi.hostname === Error)) {
+                        websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.address + ' ' + websocket.kiwi.address);
+                    } else {
+                        websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
+                    }
+                }
+                websocket.sendServerLine('CAP LS');
+                websocket.sendServerLine('NICK ' + nick);
+                websocket.sendServerLine('USER ' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + '_kiwi 0 0 :' + nick);
+
+                if ((callback) && (typeof (callback) === 'function')) {
+                    callback();
+                }
+            });
+            websocket.on('message', function (msg, callback) {
+                var args, obj;
+                try {
+                    msg.data = JSON.parse(msg.data);
+                    args = msg.data.args;
+                    switch (msg.data.method) {
+                    case 'msg':
+                        if ((args.target) && (args.msg)) {
+                            obj = kiwi_mod.run('msgsend', args, {websocket: websocket});
+                            if (obj !== null) {
+                                websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + args.msg);
+                            }
+                        }
+                        break;
+                    case 'action':
+                        if ((args.target) && (args.msg)) {
+                            websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'ACTION ' + args.msg + String.fromCharCode(1));
+                        }
+                        break;
+                    case 'raw':
+                        websocket.sendServerLine(args.data);
+                        break;
+                    case 'join':
+                        if (args.channel) {
+                            _.each(args.channel.split(","), function (chan) {
+                                websocket.sendServerLine('JOIN ' + chan);
+                            });
+                        }
+                        break;
+                    case 'topic':
+                        if (args.channel) {
+                            websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
+                        }
+                        break;
+                    case 'quit':
+                        websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
+                        websocket.sentQUIT = true;
+                        websocket.ircSocket.destroySoon();
+                        websocket.disconnect();
+                        break;
+                    case 'notice':
+                        if ((args.target) && (args.msg)) {
+                            websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg);
+                        }
+                        break;
+                    default:
+                    }
+                    if ((callback) && (typeof (callback) === 'function')) {
+                        callback();
+                    }
+                } catch (e) {
+                    console.log("Caught error: " + e);
+                }
+            });
+
+            
+            websocket.on('disconnect', function () {
+                if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
+                    try {
+                        websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
+                        websocket.sentQUIT = true;
+                        websocket.ircSocket.destroySoon();
+                    } catch (e) {
+                    }
+                }
+                con = connections[websocket.kiwi.address];
+                con.count -= 1;
+                con.sockets = _.reject(con.sockets, function (sock) {
+                    return sock === websocket;
+                });
+            });
+        }
+    });
+};
+
+websocketListen(config.port, config.bind_address, httpHandler, config.listen_ssl, config.ssl_key, config.ssl_cert);
 
 // Now we're listening on the network, set our UID/GIDs if required
 changeUser();
 
-var connections = {};
-
-// The main socket listening/handling routines
-io.of('/kiwi').authorization(function (handshakeData, callback) {
-    var address = handshakeData.address.address;
-        handshakeData.kiwi = {hostname: null};
-    dns.reverse(address, function (err, domains) {
-        console.log(domains);
-        if (err) {
-            handshakeData.kiwi.hostname = err;
-        } else {
-            handshakeData.kiwi.hostname = _.first(domains);
+var rehash = function () {
+    var changes, i;
+    changes = loadConfig()[1];
+    if (Object.keys(changes).length !== 0) {
+        console.log('%s config changes: \n', Object.keys(changes).length, changes);
+        for (i in changes) {
+            switch (i) {
+            case 'port':
+            case 'bind_address':
+            case 'listen_ssl':
+            case 'ssl_key':
+            case 'ssl_cert':
+                websocketListen(config.port, config.bind_address, httpHandler, config.listen_ssl, config.ssl_key, config.ssl_cert);
+                delete changes['port'];
+                delete changes['bind_address'];
+                delete changes['listen_ssl'];
+                delete changes['ssl_key'];
+                delete changes['ssl_cert'];
+                break;
+            case 'user':
+            case 'group':
+                changeUser();
+                delete changes['user'];
+                delete changes['group'];
+                break;
+            case 'module_dir':
+            case 'modules':
+                kiwi_mod.loadModules(kiwi_root, config);
+                kiwi_mod.printMods();
+                delete changes['module_dir'];
+                delete changes['modules'];
+                break;
+            }
         }
-    });
-    if (typeof connections[address] === 'undefined') {
-        connections[address] = {count: 0, sockets: []};
     }
-    callback(null, true);
-}).on('connection', function (websocket) {
-    var con;
-    websocket.kiwi = {address: websocket.handshake.address.address, hostname: websocket.handshake.kiwi.hostname};
-    con = connections[websocket.kiwi.address];
-    if (con.count >= config.max_client_conns) {
-        websocket.emit('too_many_connections');
-        websocket.disconnect();
-    } else {
-        con.count += 1;
-        con.sockets.push(websocket);
+};
 
-        websocket.sendClientEvent = function (event_name, data) {
-            kiwi_mod.run(event_name, data, {websocket: this});
-            data.event = event_name;
-            websocket.emit('message', data);
-        };
-
-        websocket.sendServerLine = function (data, eol) {
-            eol = (typeof eol === 'undefined') ? '\r\n' : eol;
-            //console.log('Out: -----\n' + data + '\n-----');
-            websocket.ircSocket.write(data + eol);
-        };
-
-        websocket.on('irc connect', function (nick, host, port, ssl, callback) {
-            var ircSocket, login;
-            //setup IRC connection
-            if (!ssl) {
-                ircSocket = net.createConnection(port, host);
-            } else {
-                ircSocket = tls.connect(port, host);
-            }
-            ircSocket.setEncoding('ascii');
-            ircSocket.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}, registered: false};
-            ircSocket.on('error', function (e) {
-                if (ircSocket.IRC.registered) {
-                    websocket.emit('disconnect');
-                } else {
-                    websocket.emit('error', e.message);
-                }
-            });
-            websocket.ircSocket = ircSocket;
-            ircSocket.holdLast = false;
-            ircSocket.held = '';
-            
-            ircSocket.on('data', function (data) {
-                //console.log('In: -----\n' + data + '\n-----');
-                ircSocketDataHandler(data, websocket, ircSocket);
-            });
-            
-            ircSocket.IRC.nick = nick;
-            // Send the login data
-            if ((config.webirc) && (config.webirc_pass[host])) {
-                if ((websocket.kiwi.hostname === null) || (typeof websocket.kiwi.hostname === Error)) {
-                    websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.address + ' ' + websocket.kiwi.address);
-                } else {
-                    websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
-                }
-            }
-            websocket.sendServerLine('CAP LS');
-            websocket.sendServerLine('NICK ' + nick);
-            websocket.sendServerLine('USER ' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + '_kiwi 0 0 :' + nick);
-
-            if ((callback) && (typeof (callback) === 'function')) {
-                callback();
-            }
-        });
-        websocket.on('message', function (msg, callback) {
-            var args, obj;
-            try {
-                msg.data = JSON.parse(msg.data);
-                args = msg.data.args;
-                switch (msg.data.method) {
-                case 'msg':
-                    if ((args.target) && (args.msg)) {
-                        obj = kiwi_mod.run('msgsend', args, {websocket: websocket});
-                        if (obj !== null) {
-                            websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + args.msg);
-                        }
-                    }
-                    break;
-                case 'action':
-                    if ((args.target) && (args.msg)) {
-                        websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'ACTION ' + args.msg + String.fromCharCode(1));
-                    }
-                    break;
-                case 'raw':
-                    websocket.sendServerLine(args.data);
-                    break;
-                case 'join':
-                    if (args.channel) {
-                        _.each(args.channel.split(","), function (chan) {
-                            websocket.sendServerLine('JOIN ' + chan);
-                        });
-                    }
-                    break;
-                case 'topic':
-                    if (args.channel) {
-                        websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
-                    }
-                    break;
-                case 'quit':
-                    websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
-                    websocket.sentQUIT = true;
-                    websocket.ircSocket.destroySoon();
-                    websocket.disconnect();
-                    break;
-                case 'notice':
-                    if ((args.target) && (args.msg)) {
-                        websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg);
-                    }
-                    break;
-                default:
-                }
-                if ((callback) && (typeof (callback) === 'function')) {
-                    callback();
-                }
-            } catch (e) {
-                console.log("Caught error: " + e);
-            }
-        });
-
-        
-        websocket.on('disconnect', function () {
-            if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
-                try {
-                    websocket.ircSocket.end('QUIT :' + config.quit_message + '\r\n');
-                    websocket.sentQUIT = true;
-                    websocket.ircSocket.destroySoon();
-                } catch (e) {
-                }
-            }
-            con = connections[websocket.kiwi.address];
-            con.count -= 1;
-            con.sockets = _.reject(con.sockets, function (sock) {
-                return sock === websocket;
-            });
-        });
+process.stdin.resume();
+process.stdin.on('data', function (chunk) {
+    var command;
+    command = chunk.toString().trim();
+    console.log(command);
+    switch (command) {
+    case 'rehash':
+        rehash();
+        break;
     }
 });
+
+
+
 
