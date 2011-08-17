@@ -476,9 +476,9 @@ if (config.handle_http) {
 
 var httpHandler = function (request, response) {
     var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen;
-    console.log(request.url);
+    //console.log(request.url);
     if (config.handle_http) {
-        uri = url.parse(request.url);
+        uri = url.parse(request.url, true);
         subs = uri.pathname.substr(0, 4);
         if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
             request.addListener('end', function () {
@@ -502,6 +502,7 @@ var httpHandler = function (request, response) {
                 agent = 'normal';
                 touchscreen = false;
             }
+            
             if (uri.query) {
                 server_set = (uri.query.server !== '');
                 server = uri.query.server || 'irc.anonnet.org';
