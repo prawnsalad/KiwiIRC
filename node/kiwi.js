@@ -7,7 +7,10 @@ var tls = require('tls'),
     fs = require('fs'),
     url = require('url'),
     dns = require('dns'),
+    crypto = require('crypto'),
     ws = require('socket.io'),
+    jsp = require("uglify-js").parser,
+    pro = require("uglify-js").uglify,
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js');
 
@@ -472,15 +475,37 @@ var ircSocketDataHandler = function (data, websocket, ircSocket) {
 if (config.handle_http) {
     var fileServer = new (require('node-static').Server)(__dirname + config.public_http);
     var jade = require('jade');
+    var cache = {alljs: '', html: []};
 }
 
 var httpHandler = function (request, response) {
-    var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen;
-    //console.log(request.url);
+    var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash;
+    var min = {};
     if (config.handle_http) {
         uri = url.parse(request.url, true);
         subs = uri.pathname.substr(0, 4);
-        if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
+        if (uri.pathname === '/js/all.js') {
+            if (cache.alljs === '') {
+                min.util = fs.readFileSync(config.public_http + 'js/util.js');
+                min.gateway = fs.readFileSync(config.public_http + 'js/gateway.js');
+                min.front = fs.readFileSync(config.public_http + 'js/front.js');
+                min.iscroll = fs.readFileSync(config.public_http + 'js/iscroll.js');
+                min.ast = jsp.parse(min.util + min.gateway + min.front + min.iscroll);
+                min.ast = pro.ast_mangle(min.ast);
+                min.ast = pro.ast_squeeze(min.ast);
+                min.final_code = pro.gen_code(min.ast);
+                cache.alljs = min.final_code;
+                hash = crypto.createHash('md5').update(cache.alljs);
+                cache.alljs_hash = hash.digest('base64');
+            }
+            if (request.headers['if-none-match'] === cache.alljs_hash) {
+                response.statusCode = 304;
+            } else {
+                response.setHeader('ETag', cache.alljs_hash);
+                response.write(cache.alljs);
+            }
+            response.end();
+        } else if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
             request.addListener('end', function () {
                 fileServer.serve(request, response);
             });
@@ -512,16 +537,33 @@ var httpHandler = function (request, response) {
                 server = 'irc.anonnet.org';
                 nick = '';
             }
-            response.setHeader('Connection', 'close');
             response.setHeader('X-Generated-By', 'KiwiIRC');
-            jade.renderFile(__dirname + '/client/index.html.jade', { locals: { "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": config }}, function (err, html) {
-                if (!err) {
-                    response.write(html);
+            hash = crypto.createHash('md5').update(touchscreen?'t':'f').update(debug?'t':'f').update(server_set?'t':'f').update(server).update(nick).update(agent).update(JSON.stringify(config)).digest('base64');
+            if (cache.html[hash]) {
+                if (request.headers['if-none-match'] === cache.html[hash].hash) {
+                    response.statusCode = 304;
                 } else {
-                    response.statusCode = 500;
+                    response.setHeader('Etag', cache.html[hash].hash);
+                    response.write(cache.html[hash].html);
                 }
                 response.end();
-            });
+            } else {
+                jade.renderFile(__dirname + '/client/index.html.jade', { locals: { "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": config }}, function (err, html) {
+                    if (!err) {
+                        var hash2 = crypto.createHash('md5').update(html).digest('base64');
+                        cache.html[hash] = {"html": html, "hash": hash2};
+                        if (request.headers['if-none-match'] === hash2) {
+                            response.statusCode = 304;
+                        } else {
+                            response.setHeader('Etag', hash2);
+                            response.write(html);
+                        }
+                    } else {
+                        response.statusCode = 500;
+                    }
+                    response.end();
+                });
+            }
         } else if (uri.pathname.substr(0, 10) === '/socket.io') {
             return;
         } else {
@@ -547,8 +589,12 @@ var websocketListen = function (port, host, handler, secure, key, cert) {
         io = ws.listen(httpServer, {secure: false});
         httpServer.listen(port, host);
     }
-    //console.log(httpServer);
+
     io.set('log level', 1);
+    io.enable('browser client minification');
+    io.enable('browser client etag');
+    io.set('transports', config.transports);
+
     io.of('/kiwi').authorization(function (handshakeData, callback) {
         var address = handshakeData.address.address;
         handshakeData.kiwi = {hostname: null};
@@ -752,6 +798,11 @@ var rehash = function () {
                 break;
             }
         }
+    }
+
+    // Also clear the cached javascript and HTML
+    if (config.handle_http) {
+        cache = {alljs: '', html: []};
     }
 
     return true;

@@ -24,5 +24,13 @@
     "webirc_pass":      {
                             "irc.example.com":  "examplepassword",
                             "127.0.0.1":        "foobar"
-                        }
+                        },
+
+    "transports":       [
+                            "websocket",
+                            "flashsocket",
+                            "htmlfile",
+                            "xhr-polling",
+                            "jsonp-polling"
+                        ]
 }
