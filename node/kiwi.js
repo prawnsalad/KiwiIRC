@@ -1,5 +1,5 @@
-/*jslint continue: true, forin: true, regexp: true, confusion: true, undef: false, node: true, sloppy: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
-
+/*jslint continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
+"use strict";
 var tls = require('tls'),
     net = require('net'),
     http = require('http'),
@@ -29,10 +29,10 @@ var config = {},
     config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
 
 var loadConfig = function () {
-    var i, j;
-    var nconf = {};
-    var cconf = {};
-    var found_config = false;
+    var i, j,
+        nconf = {},
+        cconf = {},
+        found_config = false;
     for (i in config_dirs) {
         try {
             if (fs.lstatSync(config_dirs[i] + config_filename).isDirectory() === false) {
@@ -51,7 +51,7 @@ var loadConfig = function () {
                 break;
             }
         } catch (e) {
-            switch (e.code){
+            switch (e.code) {
             case 'ENOENT':      // No file/dir
                 break;
             default:
@@ -62,13 +62,17 @@ var loadConfig = function () {
         }
     }
     if (Object.keys(config).length === 0) {
-        if (!found_config) console.log('Couldn\'t find a config file!');
+        if (!found_config) {
+            console.log('Couldn\'t find a config file!');
+        }
         return false;
     }
     return [nconf, cconf];
 };
 
-if (!loadConfig()) process.exit(0);
+if (!loadConfig()) {
+    process.exit(0);
+}
 
 
 /*
@@ -134,6 +138,7 @@ var ircNumerics = {
     ERR_NICKNAMEINUSE:      '433',
     ERR_USERNOTINCHANNEL:   '441',
     ERR_NOTONCHANNEL:       '442',
+    ERR_NOTREGISTERED:      '451',
     ERR_LINKCHANNEL:        '470',
     ERR_CHANNELISFULL:      '471',
     ERR_INVITEONLYCHAN:     '473',
@@ -192,7 +197,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
                                 ircSocket.IRC.options[opt[0]].push({symbol: matches[2].charAt(j), mode: matches[1].charAt(j)});
                                 //console.log({symbol: matches[2].charAt(j), mode: matches[1].charAt(j)});
                             }
-                            console.log(ircSocket.IRC.options);
+                            //console.log(ircSocket.IRC.options);
                         }
                     }
                 }
@@ -435,6 +440,11 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.sendClientEvent('irc_error', {error: 'error', reason: msg.trailing});
             websocket.disconnect();
             break;
+        case ircNumerics.ERR_NOTREGISTERED:
+            if (ircSocket.IRC.registered) {
+                // We may be doing something wrong...
+            }
+            break;
         default:
             console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
         }
@@ -479,8 +489,8 @@ if (config.handle_http) {
 }
 
 var httpHandler = function (request, response) {
-    var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash;
-    var min = {};
+    var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
+        min = {};
     if (config.handle_http) {
         uri = url.parse(request.url, true);
         subs = uri.pathname.substr(0, 4);
@@ -538,7 +548,7 @@ var httpHandler = function (request, response) {
                 nick = '';
             }
             response.setHeader('X-Generated-By', 'KiwiIRC');
-            hash = crypto.createHash('md5').update(touchscreen?'t':'f').update(debug?'t':'f').update(server_set?'t':'f').update(server).update(nick).update(agent).update(JSON.stringify(config)).digest('base64');
+            hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f').update(debug ? 't' : 'f').update(server_set ? 't' : 'f').update(server).update(nick).update(agent).update(JSON.stringify(config)).digest('base64');
             if (cache.html[hash]) {
                 if (request.headers['if-none-match'] === cache.html[hash].hash) {
                     response.statusCode = 304;
@@ -633,7 +643,7 @@ var websocketListen = function (port, host, handler, secure, key, cert) {
             };
 
             websocket.on('irc connect', function (nick, host, port, ssl, callback) {
-                var ircSocket, login;
+                var ircSocket;
                 //setup IRC connection
                 if (!ssl) {
                     ircSocket = net.createConnection(port, host);
@@ -758,11 +768,13 @@ changeUser();
 
 
 var rehash = function () {
-    var changes, i;
-    var reload_config = loadConfig();
+    var changes, i,
+        reload_config = loadConfig();
 
     // If loading the new config errored out, dont attempt any changes
-    if (reload_config === false) return false;
+    if (reload_config === false) {
+        return false;
+    }
     
     // We just want the settings that have been changed
     changes = reload_config[1];
@@ -777,24 +789,24 @@ var rehash = function () {
             case 'ssl_key':
             case 'ssl_cert':
                 websocketListen(config.port, config.bind_address, httpHandler, config.listen_ssl, config.ssl_key, config.ssl_cert);
-                delete changes['port'];
-                delete changes['bind_address'];
-                delete changes['listen_ssl'];
-                delete changes['ssl_key'];
-                delete changes['ssl_cert'];
+                delete changes.port;
+                delete changes.bind_address;
+                delete changes.listen_ssl;
+                delete changes.ssl_key;
+                delete changes.ssl_cert;
                 break;
             case 'user':
             case 'group':
                 changeUser();
-                delete changes['user'];
-                delete changes['group'];
+                delete changes.user;
+                delete changes.group;
                 break;
             case 'module_dir':
             case 'modules':
                 kiwi_mod.loadModules(kiwi_root, config);
                 kiwi_mod.printMods();
-                delete changes['module_dir'];
-                delete changes['modules'];
+                delete changes.module_dir;
+                delete changes.modules;
                 break;
             }
         }
