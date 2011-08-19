@@ -442,7 +442,7 @@ var parseIRCMessage = function (websocket, ircSocket, data) {
             break;
         case ircNumerics.ERR_NOTREGISTERED:
             if (ircSocket.IRC.registered) {
-                // We may be doing something wrong...
+                console.log('Kiwi thinks user is registered, but the IRC server thinks differently');
             }
             break;
         default:
@@ -539,7 +539,7 @@ var httpHandler = function (request, response) {
             }
             
             if (uri.query) {
-                server_set = (uri.query.server !== '');
+                server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
                 server = uri.query.server || 'irc.anonnet.org';
                 nick = uri.query.nick || '';
                 debug = (uri.query.debug !== '');
@@ -607,22 +607,14 @@ var websocketListen = function (port, host, handler, secure, key, cert) {
 
     io.of('/kiwi').authorization(function (handshakeData, callback) {
         var address = handshakeData.address.address;
-        handshakeData.kiwi = {hostname: null};
-        dns.reverse(address, function (err, domains) {
-            console.log(domains);
-            if (err) {
-                handshakeData.kiwi.hostname = err;
-            } else {
-                handshakeData.kiwi.hostname = _.first(domains);
-            }
-        });
+        
         if (typeof connections[address] === 'undefined') {
             connections[address] = {count: 0, sockets: []};
         }
         callback(null, true);
     }).on('connection', function (websocket) {
         var con;
-        websocket.kiwi = {address: websocket.handshake.address.address, hostname: websocket.handshake.kiwi.hostname};
+        websocket.kiwi = {address: websocket.handshake.address.address};
         con = connections[websocket.kiwi.address];
         if (con.count >= config.max_client_conns) {
             websocket.emit('too_many_connections');
@@ -669,20 +661,20 @@ var websocketListen = function (port, host, handler, secure, key, cert) {
                 
                 ircSocket.IRC.nick = nick;
                 // Send the login data
-                if ((config.webirc) && (config.webirc_pass[host])) {
-                    if ((websocket.kiwi.hostname === null) || (typeof websocket.kiwi.hostname === Error)) {
-                        websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.address + ' ' + websocket.kiwi.address);
-                    } else {
+                dns.reverse(websocket.kiwi.address, function (err, domains) {
+                    //console.log(domains);
+                    websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
+                    if ((config.webirc) && (config.webirc_pass[host])) {
                         websocket.sendServerLine('WEBIRC ' + config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
                     }
-                }
-                websocket.sendServerLine('CAP LS');
-                websocket.sendServerLine('NICK ' + nick);
-                websocket.sendServerLine('USER ' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + '_kiwi 0 0 :' + nick);
+                    websocket.sendServerLine('CAP LS');
+                    websocket.sendServerLine('NICK ' + nick);
+                    websocket.sendServerLine('USER ' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + '_kiwi 0 0 :' + nick);
 
-                if ((callback) && (typeof (callback) === 'function')) {
-                    callback();
-                }
+                    if ((callback) && (typeof (callback) === 'function')) {
+                        callback();
+                    }
+                });
             });
             websocket.on('message', function (msg, callback) {
                 var args, obj;
