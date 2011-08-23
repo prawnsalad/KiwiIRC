@@ -490,16 +490,17 @@ if (config.handle_http) {
 
 var httpHandler = function (request, response) {
     var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {};
+        min = {}, public_http_path;
     if (config.handle_http) {
         uri = url.parse(request.url, true);
         subs = uri.pathname.substr(0, 4);
         if (uri.pathname === '/js/all.js') {
             if (cache.alljs === '') {
-                min.util = fs.readFileSync(config.public_http + 'js/util.js');
-                min.gateway = fs.readFileSync(config.public_http + 'js/gateway.js');
-                min.front = fs.readFileSync(config.public_http + 'js/front.js');
-                min.iscroll = fs.readFileSync(config.public_http + 'js/iscroll.js');
+                public_http_path = kiwi_root + '/' + config.public_http;
+                min.util = fs.readFileSync(public_http_path + 'js/util.js');
+                min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
+                min.front = fs.readFileSync(public_http_path + 'js/front.js');
+                min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
                 min.ast = jsp.parse(min.util + min.gateway + min.front + min.iscroll);
                 min.ast = pro.ast_mangle(min.ast);
                 min.ast = pro.ast_squeeze(min.ast);
