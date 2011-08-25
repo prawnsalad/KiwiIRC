@@ -144,7 +144,7 @@ this.websocketConnection = function (websocket) {
     return app.websocketConnection(websocket);
 }
 this.websocketDisconnect = function () {
-    return app.websocketDisconnect();
+    return app.websocketDisconnect(this);
 }
 this.websocketMessage = function (msg, callback) {
     return app.websocketMessage(this, msg, callback);
