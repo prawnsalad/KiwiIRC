@@ -12,6 +12,7 @@
  *   the message to any clients.
 */
 
+var kiwi = require('../kiwi.js');
 this.loaded_modules = {};
 
 
@@ -22,9 +23,9 @@ exports.loadModules = function (kiwi_root, config) {
     this.loaded_modules = {};
 
     // Load each module and run the onload event
-    for (i in config.modules) {
-        mod_name = config.modules[i];
-        this.loaded_modules[mod_name] = require(kiwi_root + '/' + config.module_dir + mod_name);
+    for (i in kiwi.config.modules) {
+        mod_name = kiwi.config.modules[i];
+        this.loaded_modules[mod_name] = require(kiwi_root + '/' + kiwi.config.module_dir + mod_name);
     }
     this.run('load');
 };
