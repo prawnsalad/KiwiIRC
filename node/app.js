@@ -590,7 +590,9 @@ this.websocketConnection = function (websocket) {
         con.sockets.push(websocket);
 
         websocket.sendClientEvent = function (event_name, data) {
-            kiwi.kiwi_mod.run(event_name, data, {websocket: this});
+            var ev = kiwi.kiwi_mod.run(event_name, data, {websocket: this});
+            if(ev === null) return;
+
             data.event = event_name;
             websocket.emit('message', data);
         };
@@ -798,9 +800,8 @@ this.rehash = function () {
 this.startControll = function () {
 	process.stdin.resume();
 	process.stdin.on('data', function (chunk) {
-	    var command;
-	    command = chunk.toString().trim();
-	    switch (command) {
+        var parts = chunk.toString().trim().split(' ');
+	    switch (parts[0]) {
 	    case 'rehash':
 	        console.log('Rehashing...');
 	        console.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
@@ -811,8 +812,15 @@ this.startControll = function () {
 	        console.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
 	        break;
 
+        case 'mod':
+            if (parts[1] === 'reload') {
+                console.log('Reloading module (' + parts[2] + ')..');
+                kiwi.kiwi_mod.reloadModule(parts[2]);
+            }
+            break;
+
 	    default:
-	        console.log('Unknown command \'' + command + '\'');
+	        console.log('Unknown command \'' + parts[0] + '\'');
 	    }
 	});
 };

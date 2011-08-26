@@ -29,7 +29,7 @@ this.kiwi_root = __dirname;
  * Configuration and rehashing routines
  */
 var config_filename = 'config.json',
-    config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
+    config_dirs = ['/etc/kiwiirc/', this.kiwi_root + '/'];
 
 this.config = {};
 this.loadConfig = function () {
@@ -83,8 +83,8 @@ this.rehash = function () {
 
 // Reloads app.js during runtime for any recoding
 this.recode = function () {
-    if (typeof require.cache[__dirname + '/app.js'] !== 'undefined'){
-        delete require.cache[__dirname + '/app.js'];
+    if (typeof require.cache[this.kiwi_root + '/app.js'] !== 'undefined'){
+        delete require.cache[this.kiwi_root + '/app.js'];
     }
 
     app = null;
