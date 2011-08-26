@@ -1042,6 +1042,96 @@ var front = {
 
 
 
+/*
+ *   MISC VIEW
+ */
+
+var Utilityview = function (name, src) {
+
+    var tmp_divname = 'kiwi_window_' + name;
+    var tmp_userlistname = 'kiwi_userlist_' + name;
+    var tmp_tabname = 'kiwi_tab_' + name;
+    
+    this.name = name;
+
+    if (!front.tabviewExists(name)) {
+        $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
+        $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + name.toLowerCase() + '\'].show();">' + name + '</li>');
+    }
+    
+    this.div = $('#' + tmp_divname);
+    this.div.css('overflow', 'hidden');
+
+    this.tab = $('#' + tmp_tabname);
+
+    this.iframe = $('<iframe border="0" class="utility_view" src="http://google.com/" style="width:100%;height:100%;border:none;"></iframe>');
+    if(src) this.iframe.attr('src', src);
+    this.div.append(this.iframe);
+
+    front.tabviews[name.toLowerCase()] = this;
+};
+
+Utilityview.prototype.name = null;
+Utilityview.prototype.div = null;
+Utilityview.prototype.tab = null;
+Utilityview.prototype.iframe = null;
+Utilityview.prototype.show = function () {
+    $('#kiwi .messages').removeClass("active");
+    $('#kiwi .userlist ul').removeClass("active");
+    $('#kiwi .windowlist ul li').removeClass("active");
+
+    $('#windows').css('overflow-y', 'hidden');
+
+    // Activate this tab!
+    this.div.addClass('active');
+    this.tab.addClass('active');
+
+    this.addPartImage();
+
+    front.setTopicText(' ');
+    front.cur_channel = this;
+
+    // If we're using fancy scrolling, refresh it
+    if (touch_scroll) {
+        touch_scroll.refresh();
+    }
+}
+
+Utilityview.prototype.close = function () {
+    this.div.remove();
+    this.tab.remove();
+    
+    if (front.cur_channel === this) {
+        front.tabviews.server.show();
+    }
+    delete front.tabviews[this.name.toLowerCase()];
+};
+
+Utilityview.prototype.addPartImage = function () {
+    this.clearPartImage();
+    
+    // We can't close this tab, so don't have the close image
+    if (this.name === 'server') {
+        return;
+    }
+
+    var del_html = '<img src="img/redcross.png" class="tab_part" />';
+    this.tab.append(del_html);
+    
+    $('.tab_part', this.tab).click(function () {
+        if (front.cur_channel.name !== 'server') {
+            front.cur_channel.close();
+        }
+    });
+};
+
+Utilityview.prototype.clearPartImage = function () {
+    $('#kiwi .windowlist .tab_part').remove();
+};
+
+
+
+
 
 /*
  *
@@ -1063,12 +1153,13 @@ Tabview.prototype.show = function () {
     $('#kiwi .userlist ul').removeClass("active");
     $('#kiwi .windowlist ul li').removeClass("active");
     
+    $('#windows').css('overflow-y', 'scroll');
+
     // Activate this tab!
     this.div.addClass('active');
     this.userlist.addClass('active');
     this.tab.addClass('active');
     
-    document.tmp = this.div;
     // Add the part image to the tab
     this.addPartImage();
     
