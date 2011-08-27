@@ -1088,6 +1088,7 @@ var Utilityview = function (name, src) {
     var tmp_tabname = 'kiwi_tab_' + name;
     
     this.name = name;
+    this.topic = src;
 
     if (!front.tabviewExists(name)) {
         $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
@@ -1099,7 +1100,7 @@ var Utilityview = function (name, src) {
 
     this.tab = $('#' + tmp_tabname);
 
-    this.iframe = $('<iframe border="0" class="utility_view" src="http://google.com/" style="width:100%;height:100%;border:none;"></iframe>');
+    this.iframe = $('<iframe border="0" class="utility_view" src="" style="width:100%;height:100%;border:none;"></iframe>');
     if(src) this.iframe.attr('src', src);
     this.div.append(this.iframe);
 
@@ -1110,6 +1111,7 @@ Utilityview.prototype.name = null;
 Utilityview.prototype.div = null;
 Utilityview.prototype.tab = null;
 Utilityview.prototype.iframe = null;
+Utilityview.prototype.topic = ' ';
 Utilityview.prototype.show = function () {
     $('#kiwi .messages').removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
@@ -1123,7 +1125,7 @@ Utilityview.prototype.show = function () {
 
     this.addPartImage();
 
-    front.setTopicText(' ');
+    front.setTopicText(this.topic);
     front.cur_channel = this;
 
     // If we're using fancy scrolling, refresh it
@@ -1252,35 +1254,19 @@ Tabview.prototype.clearPartImage = function () {
 };
 
 Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
-    var html_nick, self, tmp, plugin_ret, i, d, re, line_msg;
-    html_nick = $('<div/>').text(nick).html();
+    var self, tmp, plugin_ret, i, d, re, line_msg;
     
     self = this;
     
-    tmp = msg;
-    plugin_ret = '';
-    for (i in plugins.privmsg) {
-        if ((plugins.privmsg[i].onprivmsg instanceof Function)) {
-            plugin_ret = '';
-            try {
-                plugin_ret = plugins.privmsg[i].onprivmsg(tmp, this.name);
-                
-                // If this plugin has returned false, do not add this message
-                if (plugin_ret === false) {
-                    return;
-                }
-            } catch (e) {
-            }
-            
-            // If we actually have a string from the plugin, use it
-            if (typeof plugin_ret === "string") {
-                tmp = plugin_ret;
-            }
-        }
-    }
-    msg = tmp;
+    tmp = {msg: msg, time: time, nick: nick, tabview: this.name};
+    tmp = plugs.run('addmsg', tmp);
+    if (!tmp) return;
     
-    //var html_msg = $('<div/>').text(msg).html()+' '; // Add the space so the styling always has at least 1 character to go from
+
+    msg = tmp.msg;
+    time = tmp.time;
+    nick = tmp.nick;
+
     if (time === null) {
         d = new Date();
         time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
@@ -1326,15 +1312,14 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
         }
     }
     
+    // Make the channels clickable
     re = new RegExp('\\B(' + gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
-    
     msg = msg.replace(re, function (match) {
-        return '<a class="chan" href="#">' + match + '</a>';
+        return '<a class="chan">' + match + '</a>';
     });
 
-    line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + html_nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
-    //$('a.link_ext', line_msg).tooltip({ tip : $('#tooltip_link'), effect : 'toggle', offset : [2, 0] });
-
+    // Build up and add the line
+    line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
     this.div.append(line_msg);
 
     if (!touchscreen) {

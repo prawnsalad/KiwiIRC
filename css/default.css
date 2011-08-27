@@ -189,6 +189,8 @@ body, html {
 #kiwi .messages a:hover .tt a { cursor:pointer; color:inherit; }
 #kiwi .messages a:active .tt a { color:inherit; }
 
+#kiwi .messages a.link_img { border: 1px solid gray; }
+
 
 
 

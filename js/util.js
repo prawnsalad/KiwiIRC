@@ -45,94 +45,104 @@ String.prototype.lpad = function(length, character){
 	Each function in each object is looped through and ran. The resulting text
 	is expected to be returned.
 */
-var plugins={}; 
-plugins.privmsg = [
+var plugins = [
 	{
-		name: "html_safe",
-		onprivmsg: function(inp, tabview){
-			return $('<div/>').text(inp).html();
+		name: "images",
+		onaddmsg: function(event, opts){
+			if( !event.msg ) return event;
+
+			event.msg = event.msg.replace(/^((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$/gi,function(url){
+				// Don't let any future plugins change it (ie. html_safe plugins)
+				event.event_bubbles = false;
+
+				var img = '<img src="'+url+'" height="100%" width="100%" />';
+				return '<a class="link_ext link_img" target="_blank" rel="nofollow" href="'+ url +'" style="height:50px;width:50px;display:block">'+ img +'<div class="tt box"></div></a>';
+			});
+			
+			return event;
 		}
 	},
-	
+
+	{
+		name: "html_safe",
+		onaddmsg: function(event, opts){
+			event.msg = $('<div/>').text(event.msg).html();
+			event.nick = $('<div/>').text(event.nick).html();
+
+			return event;
+		}
+	},
+
 	{
 		name: "activity",
-		onprivmsg: function(inp, tabview){
-			if(front.cur_channel.name.toLowerCase() != front.tabviews[tabview.toLowerCase()].name){
-				front.tabviews[tabview].activity();
+		onaddmsg: function(event, opts){
+			if(front.cur_channel.name.toLowerCase() != front.tabviews[event.tabview.toLowerCase()].name){
+				front.tabviews[event.tabview].activity();
 			}
+
+			return event;
 		}
 	},
 	
 	{
 		name: "highlight",
-		onprivmsg: function(inp, tabview){
-			if(inp.toLowerCase().indexOf(gateway.nick.toLowerCase()) > -1){
-				if(front.cur_channel.name.toLowerCase() != front.tabviews[tabview.toLowerCase()].name){
-					front.tabviews[tabview].highlight();
+		onaddmsg: function(event, opts){
+			if(event.msg.toLowerCase().indexOf(gateway.nick.toLowerCase()) > -1){
+				if(front.cur_channel.name.toLowerCase() != front.tabviews[event.tabview.toLowerCase()].name){
+					front.tabviews[event.tabview].highlight();
 				}
-				if(front.isChannel(front.tabviews[tabview].name))
-					inp = '<span style="color:red;">'+inp+'</span>';
+				if(front.isChannel(front.tabviews[event.tabview].name)){
+					event.msg = '<span style="color:red;">'+event.msg+'</span>';
+				}
 			}
 			
 			if(
-				!front.isChannel(front.tabviews[tabview].name) && front.tabviews[tabview].name != "server"
-				&& front.cur_channel.name.toLowerCase() != front.tabviews[tabview.toLowerCase()].name
+				!front.isChannel(front.tabviews[event.tabview].name) && front.tabviews[event.tabview].name != "server"
+				&& front.cur_channel.name.toLowerCase() != front.tabviews[event.tabview.toLowerCase()].name
 			){
-				front.tabviews[tabview].highlight();
+				front.tabviews[event.tabview].highlight();
 			}
-			return inp;
-		}
-	},
 
-	/*
-	{
-		name: "images",
-		onprivmsg: function(text){
-			if( !text ) return text;
-			//alert("-"+text+"-");
-			text = text.replace(/^((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$/gi,function(url){
-				var img = '<img src="'+url+'" height="50" width="50" />';
-				return '<a target="_blank" rel="nofollow" href="'+ url +'">'+ img +'</a>';
-			});
-			
-			return text;
+			return event;
 		}
-	},
+	},	
 	
-	*/
 	
 	
 	{
 		//Following method taken from: http://snipplr.com/view/13533/convert-text-urls-into-links/
 		name: "linkify_plain",
-		onprivmsg: function(text){
-			if( !text ) return text;
+		onaddmsg: function(event, opts){
+			if( !event.msg ) return event;
 			
-			text = text.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,function(url){
+			event.msg = event.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,function(url){
+				// If it's any of the supported images in the images plugin, skip it
+				if(url.match('(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$')) return url;
+
 				nice = url;
 				if(url.match('^https?:\/\/')){
 					//nice = nice.replace(/^https?:\/\//i,'')
-				}else{
+				} else {
 					url = 'http://'+url;
 				}
 				
 				return '<a class="link_ext" target="_blank" rel="nofollow" href="'+ url +'">'+ nice +'<div class="tt box"></div></a>';
 			});
 			
-			return text;
+			return event;
 		}
 	},
 
     {
 		name: "lftobr",
-		onprivmsg: function(text){
-			if( !text ) return text;
+		onaddmsg: function(event, opts){
+			if( !event.msg ) return event;
 			
-			text = text.replace(/\n/gi,function(txt){
+			event.msg = event.msg.replace(/\n/gi,function(txt){
 				return '<br/>';
 			});
 			
-			return text;
+			return event;
 		}
 	}
 ];
@@ -140,6 +150,62 @@ plugins.privmsg = [
 
 
 
+
+
+
+
+
+plugs = {};
+plugs.loaded = {};
+plugs.loadPlugin = function (plugin) {
+	if (typeof plugin.name !== 'string') return false;
+
+	var plugin_ret = plugs.run('plugin_load', {plugin: plugin});
+    if (typeof plugin_ret === 'object') plugs.loaded[plugin_ret.plugin.name] = plugin_ret.plugin;
+    plugs.run('init', {}, {run_only: plugin_ret.plugin.name});
+
+    return true;
+};
+
+
+
+/*
+ * Run an event against all loaded plugins
+ */
+plugs.run = function (event_name, event_data, opts) {
+    var ret = event_data,
+        ret_tmp, plugin_name;
+    
+    // Set some defaults if not provided
+    event_data = (typeof event_data === 'undefined') ? {} : event_data;
+    opts = (typeof opts === 'undefined') ? {} : opts;
+    
+    for (plugin_name in plugs.loaded) {
+    	// If we're only calling 1 plugin, make sure it's that one
+    	if (typeof opts.run_only === 'string' && opts.run_only !== plugin_name) continue;
+
+        if (typeof plugs.loaded[plugin_name]['on' + event_name] === 'function') {
+            try {
+                ret_tmp = plugs.loaded[plugin_name]['on' + event_name](ret, opts);
+                if (ret_tmp === null) {
+                    return null;
+                }
+                ret = ret_tmp;
+               	
+                if (typeof ret.event_bubbles === 'boolean' && ret.event_bubbles === false){
+                	delete ret.event_bubbles;
+                	return ret;
+                }
+            } catch (e) {
+            }
+        }
+    }
+
+    return ret;
+};
+
+
+for(var i in plugins) plugs.loadPlugin(plugins[i]);
 
 
 
