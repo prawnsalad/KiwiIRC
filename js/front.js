@@ -308,7 +308,11 @@ var front = {
                 if (typeof parts[1] !== "undefined") {
                     var msg_sliced = msg.split(' ').slice(2).join(' ');
                     gateway.msg(parts[1], msg_sliced);
-                    front.cur_channel.addMsg(null, gateway.nick, msg_sliced);
+
+                    if (!front.tabviewExists(parts[1])) {
+                        front.tabviewAdd(parts[1]);
+                    }
+                    front.tabviews[parts[1].toLowerCase()].addMsg(null, gateway.nick, msg_sliced);
                 }
                 break;
             
@@ -424,15 +428,15 @@ var front = {
     },
     
     onNotice: function (e, data) {
-        var nick = (data.nick === undefined || data.nick === '') ? '' : '[' + data.nick + ']';
-        if (data.channel !== undefined) {
-            if (front.tabviewExists(data.channel)) {
-                front.tabviews[data.channel.toLowerCase()].addMsg(null, nick, data.msg, 'notice');
-            } else {
-                front.tabviews.server.addMsg(null, nick, data.msg, 'notice');
-            }
+        var nick = (data.nick === undefined) ? '' : data.nick;
+        var enick = '[' + nick + ']';
+        
+        if (front.tabviewExists(data.target)) {
+            front.tabviews[data.target.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
+        } else if (front.tabviewExists(nick)) {
+            front.tabviews[nick.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
         } else {
-            front.tabviews.server.addMsg(null, nick, data.msg, 'notice');
+            front.tabviews.server.addMsg(null, enick, data.msg, 'notice');
         }
     },
     
