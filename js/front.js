@@ -301,6 +301,17 @@ var front = {
                     front.tabviewAdd(parts[1]);
                 }
                 break;
+
+            
+            case '/m':
+            case '/msg':
+                if (typeof parts[1] !== "undefined") {
+                    var msg_sliced = msg.split(' ').slice(2).join(' ');
+                    gateway.msg(parts[1], msg_sliced);
+                    front.cur_channel.addMsg(null, gateway.nick, msg_sliced);
+                }
+                break;
+            
                 
             case '/quote':
                 gateway.raw(msg.replace(/^\/quote /i, ''));
