@@ -22,12 +22,12 @@ body, html {
 
 /* The main app container */
 #kiwi {
-	overflow:hidden;
-	position:relative; 
+	overflow:hidden; position:relative; 
 	height:100%;
-	font-family:monospace; font-size:1em;
+	font-family:Arial, Helvetica, sans-serif; font-size:1em;
 	background:#EBEBEB;
 }
+#kiwi .messages { font-family:monospace; }
 #kiwi.small_kiwi .userlist { right:-100px; }
 #kiwi.small_kiwi .messages { right:10px; }
 
@@ -158,6 +158,37 @@ body, html {
 	border:1px solid #A33F3F; background-color:#D28A8A;
 	padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
+
+
+/*
+ * Link tooltips
+ */
+#kiwi .messages a { position: relative; }
+#kiwi .messages a .tt {
+	position: absolute; display:none;
+	padding: 1em 1.5em;
+	/*background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0.04, rgb(164,200,126)),
+	    color-stop(0.52, rgb(197,240,164))
+	);
+	background-image: -moz-linear-gradient(
+	    center bottom,
+	    rgb(164,200,126) 4%,
+	    rgb(197,240,164) 52%
+	);
+	border: 1px solid #444;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;*/
+	font-size: 0.9em;
+}
+#kiwi .messages a:hover .tt { display:inline; cursor:default; }
+#kiwi .messages a:hover .tt a { cursor:pointer; color:inherit; }
+#kiwi .messages a:active .tt a { color:inherit; }
+
 
 
 

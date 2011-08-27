@@ -68,7 +68,6 @@
 
 
 
-
 #kiwi .about {
 	top: 100px;
 	left: 200px;
@@ -79,6 +78,7 @@
 #kiwi .about button { float:right; }
 
 #kiwi .box {
+	color:#eee;
 	min-width:150px;
 	background: url(../img/trans_back.png) repeat;
 	border-radius:5px;
@@ -104,6 +104,7 @@
 }
 
 .box .boxarea {
+	color:black;
 	padding:15px !important;
 	background-color:#D4D4D4;
 	border-radius:3px;

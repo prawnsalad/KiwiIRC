@@ -116,7 +116,7 @@ plugins.privmsg = [
 					url = 'http://'+url;
 				}
 				
-				return '<a target="_blank" rel="nofollow" href="'+ url +'">'+ nice +'</a>';
+				return '<a class="link_ext" target="_blank" rel="nofollow" href="'+ url +'">'+ nice +'<div class="tt box"></div></a>';
 			});
 			
 			return text;
@@ -136,13 +136,6 @@ plugins.privmsg = [
 		}
 	}
 ];
-
-
-
-
-
-
-
 
 
 

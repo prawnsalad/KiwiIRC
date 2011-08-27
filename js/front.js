@@ -146,9 +146,44 @@ var front = {
                 gateway.setTopic(chan, text);
             }
         });
+
+
+        $('#windows a.chan').live('click', function() {
+            front.joinChannel($(this).text());
+            return false;
+        });
+
+        $('#windows a.link_ext').live('mouseover', function () {
+            var a = $(this);
+            var tt = $('.tt', a);
+
+            if (tt.text() === '') {
+                var tooltip = $('<a class="link_ext_browser">Open in Kiwi..</a>');
+                tt.append(tooltip);
+            }
+
+            tt.css('top', -tt.outerHeight()+'px');
+            tt.css('left', (a.outerWidth() / 2) - (tt.outerWidth() / 2));
+        });
+        $('#windows a.link_ext').live('mouseout', function () {
+            var a = $(this);
+            var tt = $('.tt', a);
+        });
+        $('#windows a.link_ext').live('click', function (e) {
+            var a = $(this);
+            
+            switch (e.target.className) {
+            case 'link_ext':
+                return true;
+                break;
+            case 'link_ext_browser':
+                var t = new Utilityview('Browser', a.attr('href'));
+                t.show();
+                break;
+            }
+            return false;
+        });
         
-        //gateway.start();
-        //front.sync();
     },
     
     doLayoutSize: function () {
@@ -1298,6 +1333,8 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     });
 
     line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + html_nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
+    //$('a.link_ext', line_msg).tooltip({ tip : $('#tooltip_link'), effect : 'toggle', offset : [2, 0] });
+
     this.div.append(line_msg);
 
     if (!touchscreen) {
