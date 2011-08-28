@@ -819,6 +819,13 @@ this.startControll = function () {
             }
             break;
 
+        case 'cache':
+            if (parts[1] === 'clear') {
+                kiwi.cache.html = {};
+                console.log('HTML cache cleared');
+            }
+            break;
+
 	    default:
 	        console.log('Unknown command \'' + parts[0] + '\'');
 	    }

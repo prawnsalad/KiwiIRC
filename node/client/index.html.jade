@@ -45,7 +45,6 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
                 var chans = document.location.hash.match(/[#&]+[^ ,\\007]+/g);
                 if(chans != null && chans.length > 0) {
                     init_data.channel = chans.join(',');
-                    $('#channel').val(init_data.channel);
                 }
                 
                 front.init();
@@ -58,10 +57,6 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
             
             function addEvents(){
                 $('.more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.network').focus(); return false; });
-                $('.formconnectwindow').submit(function(){
-                    init_data.channel = $('#channel').val();
-                    return false;
-                });
                 $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
             }
 

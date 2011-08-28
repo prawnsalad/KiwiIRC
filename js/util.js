@@ -55,7 +55,7 @@ var plugins = [
 				// Don't let any future plugins change it (ie. html_safe plugins)
 				event.event_bubbles = false;
 
-				var img = '<img src="'+url+'" height="100%" width="100%" />';
+				var img = '<img class="link_img_a" src="'+url+'" height="100%" width="100%" />';
 				return '<a class="link_ext link_img" target="_blank" rel="nofollow" href="'+ url +'" style="height:50px;width:50px;display:block">'+ img +'<div class="tt box"></div></a>';
 			});
 			

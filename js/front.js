@@ -84,6 +84,9 @@ var front = {
             
             tmp = nick.val().split(' ');
             gateway.nick = tmp[0];
+
+            init_data.channel = $('#channel').val();
+
             front.doLayout();
             try {
                 front.run('/connect ' + netsel.val());
@@ -103,15 +106,18 @@ var front = {
         //$('#kiwi').bind("resize", front.doLayoutSize, false);
 
         front.doLayout();
-        //front.windowAdd('server');
         front.tabviewAdd('server');
         
         // Any pre-defined nick?
-        if (typeof init_data.nick === "string") {
+        if (typeof window.init_data.nick === "string") {
             $('#kiwi .formconnectwindow .nick').val(init_data.nick);
         }
+
+        // Any pre-defined channels?
+        if (typeof window.init_data.channel === 'string') {
+            $('#channel').val(init_data.channel);
+        }
         
-        //gateway.session_id = 'testses';
         
         $('#kiwi .cur_topic').keydown(function (e) {
             if (e.which === 13) {
@@ -174,6 +180,7 @@ var front = {
             
             switch (e.target.className) {
             case 'link_ext':
+            case 'link_img_a':
                 return true;
                 break;
             case 'link_ext_browser':
@@ -430,7 +437,7 @@ var front = {
     onNotice: function (e, data) {
         var nick = (data.nick === undefined) ? '' : data.nick;
         var enick = '[' + nick + ']';
-        
+
         if (front.tabviewExists(data.target)) {
             front.tabviews[data.target.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
         } else if (front.tabviewExists(nick)) {
