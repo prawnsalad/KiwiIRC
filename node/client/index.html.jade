@@ -58,6 +58,13 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
             function addEvents(){
                 $('.more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.network').focus(); return false; });
                 $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
+
+                var input_submit = function(e){
+                    if (e.which === 13) $('.formconnectwindow').submit();
+                }
+                $('.formconnectwindow .nick').keydown(input_submit);
+                $('.formconnectwindow .channel').keydown(input_submit);
+                $('.formconnectwindow .server').keydown(input_submit);
             }
 
 
