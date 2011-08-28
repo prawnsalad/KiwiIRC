@@ -797,37 +797,42 @@ this.rehash = function () {
 /*
  * KiwiIRC controlling via STDIN
  */
-this.startControll = function () {
-	process.stdin.resume();
-	process.stdin.on('data', function (chunk) {
-        var parts = chunk.toString().trim().split(' ');
-	    switch (parts[0]) {
-	    case 'rehash':
-	        console.log('Rehashing...');
-	        console.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
-	        break;
+this.manageControll = function (data) {
+    var parts = data.toString().trim().split(' ');
+    switch (parts[0]) {
+    case 'rehash':
+        console.log('Rehashing...');
+        console.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
+        break;
 
-		case 'recode':
-	        console.log('Recoding...');
-	        console.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
-	        break;
+	case 'recode':
+        console.log('Recoding...');
+        console.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
+        break;
 
-        case 'mod':
-            if (parts[1] === 'reload') {
-                console.log('Reloading module (' + parts[2] + ')..');
-                kiwi.kiwi_mod.reloadModule(parts[2]);
-            }
-            break;
+    case 'mod':
+        if (parts[1] === 'reload') {
+            console.log('Reloading module (' + parts[2] + ')..');
+            kiwi.kiwi_mod.reloadModule(parts[2]);
+        }
+        break;
 
-        case 'cache':
-            if (parts[1] === 'clear') {
-                kiwi.cache.html = {};
-                console.log('HTML cache cleared');
-            }
-            break;
+    case 'cache':
+        if (parts[1] === 'clear') {
+            kiwi.cache.html = {};
+            console.log('HTML cache cleared');
+        }
+        break;
 
-	    default:
-	        console.log('Unknown command \'' + parts[0] + '\'');
-	    }
-	});
+    case 'status':
+        var connections_cnt = 0;
+        for (var i in kiwi.connections) {
+            connections_cnt = connections_cnt + parseInt(kiwi.connections[i].count, 10);
+        }
+        console.log(connections_cnt.toString() + ' connected clients');
+        break;
+
+    default:
+        console.log('Unknown command \'' + parts[0] + '\'');
+    }
 };

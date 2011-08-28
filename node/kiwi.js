@@ -205,7 +205,9 @@ this.websocketListen(this.config.port, this.config.bind_address, this.httpHandle
 app.changeUser();
 
 // Listen for controll messages
-app.startControll();
+process.stdin.resume();
+process.stdin.on('data', function (data) { app.manageControll(data); });
+
 
 
 
