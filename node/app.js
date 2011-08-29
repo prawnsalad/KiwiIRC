@@ -106,7 +106,7 @@ var ircNumerics = {
 this.parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
     var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj;
-    regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
+    regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     msg = regex.exec(data);
     if (msg) {
         msg = {
@@ -401,7 +401,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
         }
     } else {
-        console.log("Malformed IRC line");
+        console.log("Malformed IRC line: " + data);
     }
 };
 
