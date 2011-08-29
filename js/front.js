@@ -102,7 +102,12 @@ var front = {
 
         supportsOrientationChange = (typeof window.onorientationchange !==  undefined);
         orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
-        window.addEventListener(orientationEvent, front.doLayoutSize, false);
+        if (window.addEventListener) {
+            window.addEventListener(orientationEvent, front.doLayoutSize, false);
+        } else {
+            // < IE9
+            window.attachEvent(orientationEvent, front.doLayoutSize, false);
+        }
         //$('#kiwi').bind("resize", front.doLayoutSize, false);
 
         front.doLayout();
