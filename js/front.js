@@ -111,7 +111,9 @@ var front = {
         //$('#kiwi').bind("resize", front.doLayoutSize, false);
 
         front.doLayout();
+        
         front.tabviewAdd('server');
+        front.tabviews.server.userlist_width = 0; // Disable the userlist
         
         // Any pre-defined nick?
         if (typeof window.init_data.nick === "string") {
@@ -199,8 +201,9 @@ var front = {
     },
     
     doLayoutSize: function () {
-        var kiwi, ct, ul, n_top, n_bottom;
+        var kiwi, toolbars, ul, n_top, n_bottom;
         kiwi = $('#kiwi');
+
         if (kiwi.width() < 330 && !kiwi.hasClass('small_kiwi')) {
             console.log("switching to small kiwi");
             kiwi.removeClass('large_kiwi');
@@ -210,10 +213,10 @@ var front = {
             kiwi.addClass('large_kiwi');
         }
 
-        ct = $('#kiwi .cur_topic');
+        toolbars = $('#kiwi .cur_topic');
         ul = $('#kiwi .userlist');
 
-        n_top = parseInt(ct.offset().top, 10) + parseInt(ct.outerHeight(true), 10);
+        n_top = parseInt(toolbars.offset().top, 10) + parseInt(toolbars.outerHeight(true), 10);
         n_bottom = $(document).height() - parseInt($('#kiwi .control').offset().top, 10);
 
         $('#kiwi .windows').css({top: n_top + 'px', bottom: n_bottom + 'px'});
@@ -244,7 +247,16 @@ var front = {
     
     
     run: function (msg) {
-        var parts, dest, t, pos, textRange, d;
+        var parts, dest, t, pos, textRange, d, plugin_event;
+        
+        // Run through any plugins
+        plugin_event = {command: msg};
+        plugin_event = plugs.run('command_run', plugin_event);
+        if (!plugin_event || typeof plugin_event.command === 'undefined') return;
+
+        // Update msg if it's been changed by any plugins
+        msg = plugin_event.command.toString();
+
         console.log("running " + msg);
         if (msg.substring(0, 1) === '/') {
             parts = msg.split(' ');
@@ -391,7 +403,7 @@ var front = {
     
     
     onMsg: function (e, data) {
-        var destination;
+        var destination, plugin_event;
         // Is this message from a user?
         if (data.channel === gateway.nick) {
             destination = data.nick.toLowerCase();
@@ -399,10 +411,14 @@ var front = {
             destination = data.channel.toLowerCase();    
         }
         
-        if (!front.tabviewExists(destination)) {
-            front.tabviewAdd(destination);
+        plugin_event = {nick: data.nick, msg:data.msg, destination: destination};
+        plugin_event = plugs.run('msg_recieved', plugin_event);
+        if (!plugin_event) return;
+
+        if (!front.tabviewExists(plugin_event.destination)) {
+            front.tabviewAdd(plugin_event.destination);
         }
-        front.tabviews[destination].addMsg(null, data.nick, data.msg);
+        front.tabviews[plugin_event.destination].addMsg(null, plugin_event.nick, plugin_event.msg);
     },
     
     onDebug: function (e, data) {
@@ -471,19 +487,23 @@ var front = {
             if (typeof init_data.channel === "string") {
                 front.joinChannel(init_data.channel);
             }
+            plugs.run('connect', {success: true});
         } else {
             front.tabviews.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
+            plugs.run('connect', {success: false});
         }
     },
     onConnectFail: function (e, data) {
         var reason = (typeof data.reason === 'string') ? data.reason : '';
         front.tabviews.server.addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
+        plugs.run('connect', {success: false});
     },
     onDisconnect: function (e, data) {
         var tab;
         for (tab in front.tabviews) {
             front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error');
         }
+        plugs.run('disconnect', {success: false});
     },
     onOptions: function (e, data) {
         if (typeof gateway.network_name === "string" && gateway.network_name !== "") {
@@ -882,13 +902,15 @@ var front = {
     },
     
     tabviewAdd: function (v_name) {
-        var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname;
+        var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
+
         if (v_name.charAt(0) === gateway.channel_prefix) {
             re = new RegExp(gateway.channel_prefix, "g");
             htmlsafe_name = v_name.replace(re, 'pre');
             htmlsafe_name = "chan_" + htmlsafe_name;
         } else {
             htmlsafe_name = 'query_' + v_name;
+            userlist_enabled = false;
         }
         
         tmp_divname = 'kiwi_window_' + htmlsafe_name;
@@ -908,6 +930,7 @@ var front = {
         front.tabviews[v_name.toLowerCase()].div = $('#' + tmp_divname);
         front.tabviews[v_name.toLowerCase()].userlist = $('#' + tmp_userlistname);
         front.tabviews[v_name.toLowerCase()].tab = $('#' + tmp_tabname);
+        if (!userlist_enabled) front.tabviews[v_name.toLowerCase()].userlist_width = 0;
         front.tabviews[v_name.toLowerCase()].show();
         
         if (typeof registerTouches === "function") {
@@ -1202,20 +1225,34 @@ var Tabview = function () {};
 Tabview.prototype.name = null;
 Tabview.prototype.div = null;
 Tabview.prototype.userlist = null;
+Tabview.prototype.userlist_width = 100;     // 0 for disabled
 Tabview.prototype.tab = null;
 Tabview.prototype.topic = "";
 Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
 
 Tabview.prototype.show = function () {
+    var w, u;
+
     $('#kiwi .messages').removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
     $('#kiwi .windowlist ul li').removeClass("active");
     
-    $('#windows').css('overflow-y', 'scroll');
+    w = $('#windows');
+    u = $('#kiwi .userlist');
+
+    w.css('overflow-y', 'scroll');
+
+    // Set the window size accordingly
+    if (this.userlist_width > 0) {
+        u.width(this.userlist_width);
+        w.css('right', u.outerWidth(true));
+    } else {
+        w.css('right', 0);
+    }
 
     // Activate this tab!
     this.div.addClass('active');
-    this.userlist.addClass('active');
+    if (this.userlist_width > 0) this.userlist.addClass('active');
     this.tab.addClass('active');
     
     // Add the part image to the tab
