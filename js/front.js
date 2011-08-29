@@ -213,13 +213,7 @@ var front = {
         ct = $('#kiwi .cur_topic');
         ul = $('#kiwi .userlist');
 
-        n_top = parseInt(ct.offset().top, 10) + parseInt(ct.height(), 10);
-        n_top = n_top + parseInt(ct.css('border-top-width').replace('px', ''), 10);
-        n_top = n_top + parseInt(ct.css('border-bottom-width').replace('px', ''), 10);
-        n_top = n_top + parseInt(ct.css('padding-top').replace('px', ''), 10);
-        n_top = n_top + parseInt(ct.css('padding-bottom').replace('px', ''), 10);
-        n_top += 1; // Dunno why this is needed.. but it's always 1 px out :/
-
+        n_top = parseInt(ct.offset().top, 10) + parseInt(ct.outerHeight(true), 10);
         n_bottom = $(document).height() - parseInt($('#kiwi .control').offset().top, 10);
 
         $('#kiwi .windows').css({top: n_top + 'px', bottom: n_bottom + 'px'});
