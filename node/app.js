@@ -134,9 +134,10 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 ircSocket.IRC.CAP.requested = [];
                 ircSocket.IRC.registered = true;
             }
-            regex = /([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)/i;
-            matches = regex.exec(msg.trailing);
-            websocket.sendClientEvent('connect', {connected: true, host: null, nick: matches[1]});
+            //regex = /([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)/i;
+            //matches = regex.exec(msg.trailing);
+            nick =  msg.params.split(' ')[0];
+            websocket.sendClientEvent('connect', {connected: true, host: null, nick: nick});
             break;
         case ircNumerics.RPL_ISUPPORT:
             opts = msg.params.split(" ");
