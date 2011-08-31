@@ -484,6 +484,11 @@ var front = {
     
     onConnect: function (e, data) {
         if (data.connected) {
+            if (gateway.nick !== data.nick) {
+                gateway.nick = data.nick;
+                front.doLayout();
+            }
+
             front.tabviews.server.addMsg(null, ' ', '=== Connected OK :)', 'status');
             if (typeof init_data.channel === "string") {
                 front.joinChannel(init_data.channel);
@@ -667,6 +672,10 @@ var front = {
             break;
         case 'no_such_nick':
             front.tabviews.server.addMsg(null, ' ', '=== ' + data.nick + ': ' + data.reason, 'status'); 
+            break;
+        case 'nickname_in_use':
+            front.tabviews.server.addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
+            front.showChangeNick();
             break;
         default:
             // We don't know what data contains, so don't do anything with it.

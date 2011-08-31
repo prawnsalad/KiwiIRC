@@ -72,6 +72,7 @@ this.changeUser = function () {
 
 var ircNumerics = {
     RPL_WELCOME:            '001',
+    RPL_MYINFO:             '004',
     RPL_ISUPPORT:           '005',
     RPL_WHOISUSER:          '311',
     RPL_WHOISSERVER:        '312',
@@ -106,7 +107,10 @@ var ircNumerics = {
 this.parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
     var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj;
-    regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
+    //regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
+    //regex = /^(?::(\S+) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+    regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+
     msg = regex.exec(data);
     if (msg) {
         msg = {
@@ -118,6 +122,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             params:     msg[6] || '',
             trailing:   (msg[7]) ? msg[7].trim() : ''
         };
+        
         switch (msg.command.toUpperCase()) {
         case 'PING':
             websocket.sendServerLine('PONG ' + msg.trailing);
@@ -129,7 +134,9 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 ircSocket.IRC.CAP.requested = [];
                 ircSocket.IRC.registered = true;
             }
-            websocket.sendClientEvent('connect', {connected: true, host: null});
+            regex = /([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)/i;
+            matches = regex.exec(msg.trailing);
+            websocket.sendClientEvent('connect', {connected: true, host: null, nick: matches[1]});
             break;
         case ircNumerics.RPL_ISUPPORT:
             opts = msg.params.split(" ");
@@ -137,7 +144,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             for (i = 0; i < opts.length; i++) {
                 opt = opts[i].split("=", 2);
                 opt[0] = opt[0].toUpperCase();
-                ircSocket.IRC.options[opt[0]] = opt[1] || true;
+                ircSocket.IRC.options[opt[0]] = (typeof opt[1] !== 'undefined') ? opt[1] : true;
                 if (_.include(['NETWORK', 'PREFIX', 'CHANTYPES'], opt[0])) {
                     if (opt[0] === 'PREFIX') {
                         regex = /\(([^)]*)\)(.*)/;
@@ -147,13 +154,13 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                             for (j = 0; j < matches[2].length; j++) {
                                 //ircSocket.IRC.options[opt[0]][matches[2].charAt(j)] = matches[1].charAt(j);
                                 ircSocket.IRC.options[opt[0]].push({symbol: matches[2].charAt(j), mode: matches[1].charAt(j)});
-                                //console.log({symbol: matches[2].charAt(j), mode: matches[1].charAt(j)});
                             }
-                            //console.log(ircSocket.IRC.options);
+
                         }
                     }
                 }
             }
+
             websocket.sendClientEvent('options', {server: '', "options": ircSocket.IRC.options});
             break;
         case ircNumerics.RPL_WHOISUSER:
