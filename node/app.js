@@ -828,6 +828,7 @@ this.manageControll = function (data) {
     case 'cache':
         if (parts[1] === 'clear') {
             kiwi.cache.html = {};
+            kiwi.cache.alljs = '';
             console.log('HTML cache cleared');
         }
         break;
