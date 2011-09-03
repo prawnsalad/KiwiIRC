@@ -1158,7 +1158,7 @@ var Utilityview = function (name, src) {
 
     if (!front.tabviewExists(name)) {
         $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-        $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + name.toLowerCase() + '\'].show();">' + name + '</li>');
+        $('#kiwi .utilityviewlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + name.toLowerCase() + '\'].show();">' + name + '</li>');
     }
     
     this.div = $('#' + tmp_divname);
@@ -1181,10 +1181,10 @@ Utilityview.prototype.topic = ' ';
 Utilityview.prototype.show = function () {
     $('#kiwi .messages').removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
-    $('#kiwi .windowlist ul li').removeClass("active");
+    $('#kiwi .toolbars ul li').removeClass("active");
 
     $('#windows').css('overflow-y', 'hidden');
-
+    $('#windows').css('right', 0);
     // Activate this tab!
     this.div.addClass('active');
     this.tab.addClass('active');
@@ -1229,7 +1229,7 @@ Utilityview.prototype.addPartImage = function () {
 };
 
 Utilityview.prototype.clearPartImage = function () {
-    $('#kiwi .windowlist .tab_part').remove();
+    $('#kiwi .toolbars .tab_part').remove();
 };
 
 
@@ -1257,7 +1257,7 @@ Tabview.prototype.show = function () {
 
     $('#kiwi .messages').removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
-    $('#kiwi .windowlist ul li').removeClass("active");
+    $('#kiwi .toolbars ul li').removeClass("active");
     
     w = $('#windows');
     u = $('#kiwi .userlist');
@@ -1330,7 +1330,7 @@ Tabview.prototype.addPartImage = function () {
 };
 
 Tabview.prototype.clearPartImage = function () {
-    $('#kiwi .windowlist .tab_part').remove();
+    $('#kiwi .toolbars .tab_part').remove();
 };
 
 Tabview.prototype.addMsg = function (time, nick, msg, type, style) {

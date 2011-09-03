@@ -32,19 +32,19 @@ body, html {
 #kiwi.small_kiwi .messages { right:10px; }
 
 
-#kiwi .windowlist {
+#kiwi .windowlist, #kiwi .utilityviewlist {
 	/*height: 65px;*/
 	background-color:#1B1B1B;
 	font-size:0.9em;
 }
-#kiwi .windowlist ul {
+#kiwi .windowlist ul, #kiwi .utilityviewlist ul {
 	overflow: hidden;
 	margin-right: 200px;
 	white-space: nowrap;
 	display:block;
 	/*height: 35px;*/
 }
-#kiwi .windowlist ul li {
+#kiwi .windowlist ul li, #kiwi .utilityviewlist ul li {
 	float: left;
 	list-style: inline;
 	padding:5px;
@@ -63,14 +63,14 @@ body, html {
 	-khtml-border-radius:5px;
 	behavior: url(border-radius.htc);
 }
-#kiwi .windowlist .active { padding-right:23px; }
-#kiwi .windowlist .highlight {
+#kiwi .windowlist .active, #kiwi .utilityviewlist .active { padding-right:23px; }
+#kiwi .windowlist .highlight, #kiwi .utilityviewlist .highlight {
 	background-color: #990000;
 	font-weight: bold;
 }
-#kiwi .windowlist .activity { font-weight: bold; background-color: #009900; }
+#kiwi .windowlist .activity, #kiwi .utilityviewlist .activity { font-weight: bold; background-color: #009900; }
 
-#kiwi .windowlist ul li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
+#kiwi .windowlist ul li img, #kiwi .utilityviewlist ul li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
 /*#kiwi .windowlist ul li a {
 	margin:3px;
 	border: 1px solid #333;
