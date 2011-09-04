@@ -149,6 +149,7 @@ background-image: -moz-linear-gradient(
 	overflow-x:wrap;
 	border:none;
 	display: none;
+	height: 100%;
 }
 #kiwi .messages a {
 	text-decoration:none;

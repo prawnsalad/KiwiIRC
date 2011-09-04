@@ -451,10 +451,12 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 
 this.httpHandler = function (request, response) {
-    var uri, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
+    var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
         min = {}, public_http_path;
     if (kiwi.config.handle_http) {
         uri = url.parse(request.url, true);
+        uri_parts = uri.pathname.split('/');
+        
         subs = uri.pathname.substr(0, 4);
         if (uri.pathname === '/js/all.js') {
             if (kiwi.cache.alljs === '') {
@@ -483,7 +485,7 @@ this.httpHandler = function (request, response) {
             request.addListener('end', function () {
                 kiwi.fileServer.serve(request, response);
             });
-        } else if (uri.pathname === '/') {
+        } else if (uri.pathname === '/' || uri_parts[1] === 'client') {
             useragent = (request.headers) ? request.headers['user-agent'] : '';
             if (useragent.match(/android/i) !== -1) {
                 agent = 'android';
@@ -504,16 +506,23 @@ this.httpHandler = function (request, response) {
             agent = 'normal';
             touchscreen = false;
             
-            if (uri.query) {
-                server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
-                server = uri.query.server || 'irc.anonnet.org';
-                nick = uri.query.nick || '';
-                debug = (uri.query.debug !== '');
+            if (uri_parts[1] !== 'client') {
+                if (uri.query) {
+                    server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
+                    server = uri.query.server || 'irc.anonnet.org';
+                    nick = uri.query.nick || '';
+                    debug = (uri.query.debug !== '');
+                } else {
+                    server_set = false;
+                    server = 'irc.anonnet.org';
+                    nick = '';
+                }
             } else {
-                server_set = false;
-                server = 'irc.anonnet.org';
-                nick = '';
+                server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
+                server = server_set ? uri_parts[2] : 'irc.anonnet.org';
+                nick = uri.query.nick || '';
             }
+
             response.setHeader('X-Generated-By', 'KiwiIRC');
             hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f').update(debug ? 't' : 'f').update(server_set ? 't' : 'f').update(server).update(nick).update(agent).update(JSON.stringify(kiwi.config)).digest('base64');
             if (kiwi.cache.html[hash]) {
@@ -657,7 +666,7 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback)
         }
         websocket.sendServerLine('CAP LS');
         websocket.sendServerLine('NICK ' + nick);
-        websocket.sendServerLine('USER ' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + '_kiwi 0 0 :' + nick);
+        websocket.sendServerLine('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + nick);
 
         if ((callback) && (typeof (callback) === 'function')) {
             callback();

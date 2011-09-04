@@ -1172,7 +1172,7 @@ Utilityview.prototype.addPartImage = function () {
         return;
     }
 
-    var del_html = '<img src="img/redcross.png" class="tab_part" />';
+    var del_html = '<img src="/img/redcross.png" class="tab_part" />';
     this.tab.append(del_html);
     
     $('.tab_part', this.tab).click(function () {
@@ -1268,7 +1268,7 @@ Tabview.prototype.addPartImage = function () {
         return;
     }
 
-    var del_html = '<img src="img/redcross.png" class="tab_part" />';
+    var del_html = '<img src="/img/redcross.png" class="tab_part" />';
     this.tab.append(del_html);
     
     $('.tab_part', this.tab).click(function () {

@@ -7,8 +7,8 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
             meta(name="viewport", content="width=device-width,user-scalable=no")
 
         title Kiwi IRC
-        link(rel="stylesheet", type="text/css", href="css/default.css")
-        link(rel="stylesheet", type="text/css", href="css/ui.css")
+        link(rel="stylesheet", type="text/css", href="/css/default.css")
+        link(rel="stylesheet", type="text/css", href="/css/ui.css")
 
         - if (touchscreen)
             link(rel="stylesheet", type="text/css", href="css/touchscreen_tweaks.css")
@@ -16,16 +16,16 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
         script(type="text/javascript", src="/socket.io/socket.io.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
-        script(type="text/javascript", src="js/jquery.json-2.2.min.js")
-        //script(type="text/javascript", src="js/util.js")
-        //script(type="text/javascript", src="js/gateway.js")
-        //script(type="text/javascript", src="js/front.js")
-        //script(type="text/javascript", src="js/iscroll.js")
-        script(type="text/javascript", src="js/all.js")
-        //script(type="text/javascript", src="js/plugins.js")
+        script(type="text/javascript", src="/js/jquery.json-2.2.min.js")
+        //script(type="text/javascript", src="/js/util.js")
+        //script(type="text/javascript", src="/js/gateway.js")
+        //script(type="text/javascript", src="/js/front.js")
+        //script(type="text/javascript", src="/js/iscroll.js")
+        script(type="text/javascript", src="/js/all.js")
+        //script(type="text/javascript", src="/js/plugins.js")
 
         - if (touchscreen)
-            script(type="text/javascript", src="js/touchscreen_tweaks.js")
+            script(type="text/javascript", src="/js/touchscreen_tweaks.js")
 
         - var proto
         - if (config.listen_ssl)
@@ -78,7 +78,7 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
         
         script#tmpl_change_nick(type="text/x-jquery-tmpl")
             |    <div class="newnick box">
-            |        Your new nick:<br />
+            |        Your new nickname:<br />
             |        <form class="form_newnick">
             |            <input type="text" class="txtnewnick" /><br />
             |            <button class="butnewnick" type="submit">Change</button> <a class="link cancelnewnick">Cancel</a>
@@ -106,8 +106,8 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
         script#tmpl_user_box(type="text/x-jquery-tmpl")
             |    <div class="userbox">
             |        <input type="hidden" class="userbox_nick" value="${nick}" />
-            |        <a href="#" class="userbox_query">Message</a>
-            |        <a href="#" class="userbox_whois">Info</a>
+            |        <a class="userbox_query">Message</a>
+            |        <a class="userbox_whois">Info</a>
             |    </div>
 
     body
@@ -166,7 +166,7 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
                 ul
 
             div#windows.windows
-                div.scroller(style="width:100%")
+                div.scroller(style="width:100%;height:100%;")
 
             div.control
                 div.msginput
