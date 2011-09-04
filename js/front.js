@@ -774,26 +774,20 @@ var front = {
             front.boxes.plugins.box.css('top', -(front.boxes.plugins.height + 40));
             
             // Populate the plugin list..
-            lst = $('#plugin_list');
-            lst.find('option').remove();
-            for (j in plugins.privmsg) {
-                txt = plugins.privmsg[j].name;
-                lst.append('<option value="' + txt + '">' + txt + '</option>');
+            function enumPlugins () {
+                lst = $('#plugin_list');
+                lst.find('option').remove();
+                for (j in plugs.loaded) {
+                    txt = plugs.loaded[j].name;
+                    lst.append('<option value="' + txt + '">' + txt + '</option>');
+                }
             }
+            enumPlugins();
             
             // Event bindings
             $('#kiwi .plugin_file').submit(function () {
-                $.getJSON($('.txtpluginfile').val(), function (data) {
-                    var plg = {};
-                    plg.name = data.name;
-                    eval("plg.onprivmsg = " + data.onprivmsg);
-                    eval("plg.onload = " + data.onload);
-                    eval("plg.onunload = " + data.onunload);
-                    plugins.privmsg.push(plg);
-                    
-                    if (plg.onload instanceof Function) {
-                        plg.onload();
-                    }
+                $('<div></div>').load($('.txtpluginfile').val(), function(e){
+                    enumPlugins();
                 });
                 return false;
             });
@@ -802,17 +796,10 @@ var front = {
             });
             
             $('#kiwi #plugins_list_unload').click(function () {
-                var selected_plugin, i;
+                var selected_plugin;
                 selected_plugin = $('#plugin_list').val();
-                console.log("removing plugin: " + selected_plugin);
-                for (i in plugins.privmsg) {
-                    if (plugins.privmsg[i].name === selected_plugin) {
-                        if (plugins.privmsg[i].onunload instanceof Function) {
-                            plugins.privmsg[i].onunload();
-                        }
-                        delete plugins.privmsg[i];
-                    }
-                }
+                plugs.unloadPlugin(selected_plugin);
+                enumPlugins();
             });
             
             $('#kiwi .txtpluginfile').focus();
