@@ -23,19 +23,22 @@
 
 
 #kiwi .connectwindow {
-	background:#1b1b1b;
-	color: #D4D4D4;
-	z-index:50;
-	position:absolute;
+	background:#1b1b1b; color: #D4D4D4;
+	z-index:50; position:absolute;
 	top:0px; bottom:0px;
+	overflow-y:scroll;
 	width:100%; height:100%;
 }
 #kiwi h1.logo { display:block; width:264px; height:90px; text-indent:-1000px; margin:70px auto 100px; background:url(../img/logo.png) no-repeat; }
 #kiwi #login { width:665px; margin:0px auto; }
 #kiwi #login ul { list-style:none; }
-#kiwi #login ul li { overflow:hidden; margin-bottom:10px; }
+#kiwi #login ul li { overflow:show; margin-bottom:10px; }
 #kiwi #login ul li label { float:left; text-align:right; padding-right:.5em; }
-#kiwi #login input { border:none; }
+#kiwi #login input {
+	border:none;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.5),0 1px 0px rgba(255,255,255,0.3);
+
+}
 #kiwi #login .more { border-top: 1px dotted #888888; }
 #kiwi #login .more_link {
 	font-size:12px;
@@ -56,14 +59,14 @@
 	width:240px; padding:.2em .5em;
 	font-size:.8em; text-align:center;
 	background:#D4D4D4;
-	border-radius:8px; -moz-border-radius:8px;
+	border-radius:4px; -moz-border-radius:4px;
 }
 #kiwi #login .content.top a { display:block; text-align:right; font-size:22px; margin-top:30px; }
 
 #kiwi #login .content.bottom { width:350px; margin:30px auto; display:none; }
 #kiwi #login .content.bottom ul { font-size:18px; }
 #kiwi #login .content.bottom label { width:25%; }
-#kiwi #login .content.bottom input { width:216px; font-size:.8em; no-repeat; padding:.2em .5em; background:#D4D4D4; border-radius:8px; -moz-border-radius:8px; }
+#kiwi #login .content.bottom input { width:216px; font-size:.8em; no-repeat; padding:.2em .5em; background:#D4D4D4; border-radius:4px; -moz-border-radius:4px; }
 #kiwi #login .content.bottom a { display:block; text-align:right; font-size:16px; margin-top:30px; }
 
 

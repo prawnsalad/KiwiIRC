@@ -24,6 +24,7 @@ body, html {
 }
 
 
+
 /* The main app container */
 #kiwi {
 	overflow:hidden; position:relative; 
@@ -65,6 +66,19 @@ body, html {
 	-webkit-border-radius:5px;
 	-khtml-border-radius:5px;
 	behavior: url(border-radius.htc);
+
+background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.38, rgb(238,238,238)),
+    color-stop(0.68, rgb(209,209,209))
+);
+background-image: -moz-linear-gradient(
+    center top,
+    rgb(238,238,238) 38%,
+    rgb(209,209,209) 68%
+);
 }
 #kiwi .windowlist .active, #kiwi .utilityviewlist .active { padding-right:23px; }
 #kiwi .windowlist .highlight, #kiwi .utilityviewlist .highlight {

@@ -484,23 +484,25 @@ this.httpHandler = function (request, response) {
                 kiwi.fileServer.serve(request, response);
             });
         } else if (uri.pathname === '/') {
-            useragent = (response.headers) ? response.headers['user-agent'] : '';
-            if (useragent.indexOf('android') !== -1) {
+            useragent = (request.headers) ? request.headers['user-agent'] : '';
+            if (useragent.match(/android/i) !== -1) {
                 agent = 'android';
                 touchscreen = true;
-            } else if (useragent.indexOf('iphone') !== -1) {
+            } else if (useragent.match(/iphone/) !== -1) {
                 agent = 'iphone';
                 touchscreen = true;
-            } else if (useragent.indexOf('ipad') !== -1) {
+            } else if (useragent.match(/ipad/) !== -1) {
                 agent = 'ipad';
                 touchscreen = true;
-            } else if (useragent.indexOf('ipod') !== -1) {
+            } else if (useragent.match(/ipod/) !== -1) {
                 agent = 'ipod';
                 touchscreen = true;
             } else {
                 agent = 'normal';
                 touchscreen = false;
             }
+            agent = 'normal';
+            touchscreen = false;
             
             if (uri.query) {
                 server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
