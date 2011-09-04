@@ -486,7 +486,7 @@ this.httpHandler = function (request, response) {
                 kiwi.fileServer.serve(request, response);
             });
         } else if (uri.pathname === '/' || uri_parts[1] === 'client') {
-            useragent = (request.headers) ? request.headers['user-agent'] : '';
+            useragent = (typeof request.headers === 'string') ? request.headers['user-agent'] : '';
             if (useragent.match(/android/i) !== -1) {
                 agent = 'android';
                 touchscreen = true;
