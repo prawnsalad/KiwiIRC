@@ -915,27 +915,27 @@ var front = {
     
     
     userClick: function (item) {
+        var li = $(item).parent();
+
         // Remove any existing userboxes
         $('#kiwi .userbox').remove();
-        
-        var li = $(item).parent();
-        /*var html = '<div class="userbox">\
-    <input type="hidden" class="userbox_nick" value="' + front.nickStripPrefix($(item).text()) + '" />\
-    <a href="#" class="userbox_query">Message</a>\
-    <a href="#" class="userbox_whois">Info</a>\
-</div>';
-        li.append(html);*/
-        $('#tmpl_user_box').tmpl({nick: front.nickStripPrefix($(item).text())}).appendTo(li);
-        
-        $('#kiwi .userbox .userbox_query').click(function (ev) {
-            var nick = $('#kiwi .userbox_nick').val();
-            front.run('/query ' + nick);
-        });
-        
-        $('#kiwi .userbox .userbox_whois').click(function (ev) {
-            var nick = $('#kiwi .userbox_nick').val();
-            front.run('/whois ' + nick);
-        });
+
+        if ($(li).data('userbox') === item) {
+            $(li).removeData('userbox');
+        } else {
+            $('#tmpl_user_box').tmpl({nick: front.nickStripPrefix($(item).text())}).appendTo(li);
+            
+            $('#kiwi .userbox .userbox_query').click(function (ev) {
+                var nick = $('#kiwi .userbox_nick').val();
+                front.run('/query ' + nick);
+            });
+            
+            $('#kiwi .userbox .userbox_whois').click(function (ev) {
+                var nick = $('#kiwi .userbox_nick').val();
+                front.run('/whois ' + nick);
+            });
+            $(li).data('userbox', item);
+        }
     },
     
     
