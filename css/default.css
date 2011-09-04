@@ -14,10 +14,15 @@ body, html {
 }
 #kiwi ul { list-style:none; }
 
+#kiwi a {
+	color: #36C; text-decoration:none;
+	cursor: pointer;
+}
 #kiwi #login a {
 	color: #8D9713;
 	text-decoration:none;
 }
+
 
 
 /* The main app container */
@@ -45,23 +50,35 @@ body, html {
 	/*height: 35px;*/
 }
 #kiwi .windowlist ul li, #kiwi .utilityviewlist ul li {
-	float: left;
-	list-style: inline;
-	padding:5px;
-	margin:3px;
+	float: left; list-style: inline;
+	display:inline; position:relative;
+	padding:5px; margin:3px;
 	border: 1px solid #333;
 	background-color: #eee;
-	display: inline;
+	
+	cursor: pointer;
+
 	line-height: 1.4em;
 	vertical-align: middle;
-	
-	position:relative;
 	
 	border-radius:5px;
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	-khtml-border-radius:5px;
 	behavior: url(border-radius.htc);
+
+background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.38, rgb(238,238,238)),
+    color-stop(0.68, rgb(209,209,209))
+);
+background-image: -moz-linear-gradient(
+    center top,
+    rgb(238,238,238) 38%,
+    rgb(209,209,209) 68%
+);
 }
 #kiwi .windowlist .active, #kiwi .utilityviewlist .active { padding-right:23px; }
 #kiwi .windowlist .highlight, #kiwi .utilityviewlist .highlight {
@@ -93,7 +110,7 @@ body, html {
 #kiwi .userlist ul.active { display:block; }
 #kiwi .userlist ul li { padding:1px 2px; cursor:pointer; }
 #kiwi .userlist ul li:hover { background-color:#FAF7D3; }
-#kiwi .userlist ul li a.nick { display:block; }
+#kiwi .userlist ul li a.nick { display:block; color:black; }
 
 #kiwi .userlist ul li .userbox { margin:0px 5px 5px 5px; font-size:.9em; }
 #kiwi .userlist ul li .userbox a { display:block; text-decoration:none; border-bottom: 1px dashed #aaa; }
@@ -132,6 +149,7 @@ body, html {
 	overflow-x:wrap;
 	border:none;
 	display: none;
+	height: 100%;
 }
 #kiwi .messages a {
 	text-decoration:none;

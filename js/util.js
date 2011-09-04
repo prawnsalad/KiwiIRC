@@ -144,6 +144,64 @@ var plugins = [
 			
 			return event;
 		}
+	},
+
+
+	{
+		name: "inBrowser",
+		oninit: function(event, opts){
+	        $('#windows a.link_ext').live('mouseover', this.mouseover);
+	        $('#windows a.link_ext').live('mouseout', this.mouseout);
+	        $('#windows a.link_ext').live('click', this.mouseclick);
+		},
+
+		onunload: function(event, opts){
+			// TODO: make this work
+			$('#windows a.link_ext').die('mouseover', this.mouseover);
+			$('#windows a.link_ext').die('mouseout', this.mouseout);
+			$('#windows a.link_ext').die('click', this.mouseclick);
+		},
+
+
+
+		mouseover: function(e){
+            var a = $(this);
+            var tt = $('.tt', a);
+
+            if (tt.text() === '') {
+                var tooltip = $('<a class="link_ext_browser">Open in Kiwi..</a>');
+                tt.append(tooltip);
+            }
+
+            tt.css('top', -tt.outerHeight()+'px');
+            tt.css('left', (a.outerWidth() / 2) - (tt.outerWidth() / 2));
+		},
+
+		mouseout: function(e){
+            var a = $(this);
+            var tt = $('.tt', a);
+		},
+
+		mouseclick: function(e){
+            var a = $(this);
+            
+            switch (e.target.className) {
+            case 'link_ext':
+            case 'link_img_a':
+                return true;
+                break;
+            case 'link_ext_browser':
+                var t = new Utilityview('Browser');
+                t.topic = a.attr('href');
+
+				t.iframe = $('<iframe border="0" class="utility_view" src="" style="width:100%;height:100%;border:none;"></iframe>');
+			    t.iframe.attr('src', a.attr('href'));
+			    t.div.append(t.iframe);
+                t.show();
+                break;
+            }
+            return false;
+		}
 	}
 ];
 
@@ -166,6 +224,13 @@ plugs.loadPlugin = function (plugin) {
 
     return true;
 };
+
+plugs.unloadPlugin = function (plugin_name) {
+	if (typeof plugs.loaded[plugin_name] !== 'object') return;
+
+	plugs.run('unload', {}, {run_only: plugin_name});
+	delete plugs.loaded[plugin_name];
+}
 
 
 

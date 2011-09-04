@@ -6,6 +6,7 @@ var front = {
     cur_channel: '',
     windows: {},
     tabviews: {},
+    utilityviews: {},
     boxes: {},
     
     buffer: [],
@@ -164,38 +165,6 @@ var front = {
 
         $('#windows a.chan').live('click', function() {
             front.joinChannel($(this).text());
-            return false;
-        });
-
-        $('#windows a.link_ext').live('mouseover', function () {
-            var a = $(this);
-            var tt = $('.tt', a);
-
-            if (tt.text() === '') {
-                var tooltip = $('<a class="link_ext_browser">Open in Kiwi..</a>');
-                tt.append(tooltip);
-            }
-
-            tt.css('top', -tt.outerHeight()+'px');
-            tt.css('left', (a.outerWidth() / 2) - (tt.outerWidth() / 2));
-        });
-        $('#windows a.link_ext').live('mouseout', function () {
-            var a = $(this);
-            var tt = $('.tt', a);
-        });
-        $('#windows a.link_ext').live('click', function (e) {
-            var a = $(this);
-            
-            switch (e.target.className) {
-            case 'link_ext':
-            case 'link_img_a':
-                return true;
-                break;
-            case 'link_ext_browser':
-                var t = new Utilityview('Browser', a.attr('href'));
-                t.show();
-                break;
-            }
             return false;
         });
         
@@ -805,26 +774,20 @@ var front = {
             front.boxes.plugins.box.css('top', -(front.boxes.plugins.height + 40));
             
             // Populate the plugin list..
-            lst = $('#plugin_list');
-            lst.find('option').remove();
-            for (j in plugins.privmsg) {
-                txt = plugins.privmsg[j].name;
-                lst.append('<option value="' + txt + '">' + txt + '</option>');
+            function enumPlugins () {
+                lst = $('#plugin_list');
+                lst.find('option').remove();
+                for (j in plugs.loaded) {
+                    txt = plugs.loaded[j].name;
+                    lst.append('<option value="' + txt + '">' + txt + '</option>');
+                }
             }
+            enumPlugins();
             
             // Event bindings
             $('#kiwi .plugin_file').submit(function () {
-                $.getJSON($('.txtpluginfile').val(), function (data) {
-                    var plg = {};
-                    plg.name = data.name;
-                    eval("plg.onprivmsg = " + data.onprivmsg);
-                    eval("plg.onload = " + data.onload);
-                    eval("plg.onunload = " + data.onunload);
-                    plugins.privmsg.push(plg);
-                    
-                    if (plg.onload instanceof Function) {
-                        plg.onload();
-                    }
+                $('<div></div>').load($('.txtpluginfile').val(), function(e){
+                    enumPlugins();
                 });
                 return false;
             });
@@ -833,17 +796,10 @@ var front = {
             });
             
             $('#kiwi #plugins_list_unload').click(function () {
-                var selected_plugin, i;
+                var selected_plugin;
                 selected_plugin = $('#plugin_list').val();
-                console.log("removing plugin: " + selected_plugin);
-                for (i in plugins.privmsg) {
-                    if (plugins.privmsg[i].name === selected_plugin) {
-                        if (plugins.privmsg[i].onunload instanceof Function) {
-                            plugins.privmsg[i].onunload();
-                        }
-                        delete plugins.privmsg[i];
-                    }
-                }
+                plugs.unloadPlugin(selected_plugin);
+                enumPlugins();
             });
             
             $('#kiwi .txtpluginfile').focus();
@@ -1147,36 +1103,34 @@ var front = {
  *   MISC VIEW
  */
 
-var Utilityview = function (name, src) {
-
-    var tmp_divname = 'kiwi_window_' + name;
-    var tmp_userlistname = 'kiwi_userlist_' + name;
-    var tmp_tabname = 'kiwi_tab_' + name;
+var Utilityview = function (name) {
+    var rand_name = randomString(15);
+    var tmp_divname = 'kiwi_window_' + rand_name;
+    var tmp_userlistname = 'kiwi_userlist_' + rand_name;
+    var tmp_tabname = 'kiwi_tab_' + rand_name;
     
-    this.name = name;
-    this.topic = src;
+    this.name = rand_name;
+    this.title = name;
+    this.topic = ' ';
 
-    if (!front.tabviewExists(name)) {
-        $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-        $('#kiwi .utilityviewlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + name.toLowerCase() + '\'].show();">' + name + '</li>');
-    }
+    $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
+
+    this.tab = $('<li id="' + tmp_tabname + '">' + this.title + '</li>');
+    this.tab.click(function(){
+        front.utilityviews[rand_name.toLowerCase()].show();
+    });
+    $('#kiwi .utilityviewlist ul').append(this.tab);
     
     this.div = $('#' + tmp_divname);
     this.div.css('overflow', 'hidden');
 
-    this.tab = $('#' + tmp_tabname);
-
-    this.iframe = $('<iframe border="0" class="utility_view" src="" style="width:100%;height:100%;border:none;"></iframe>');
-    if(src) this.iframe.attr('src', src);
-    this.div.append(this.iframe);
-
-    front.tabviews[name.toLowerCase()] = this;
+    front.utilityviews[rand_name.toLowerCase()] = this;
 };
 
 Utilityview.prototype.name = null;
+Utilityview.prototype.title = null;
 Utilityview.prototype.div = null;
 Utilityview.prototype.tab = null;
-Utilityview.prototype.iframe = null;
 Utilityview.prototype.topic = ' ';
 Utilityview.prototype.show = function () {
     $('#kiwi .messages').removeClass("active");
@@ -1207,7 +1161,7 @@ Utilityview.prototype.close = function () {
     if (front.cur_channel === this) {
         front.tabviews.server.show();
     }
-    delete front.tabviews[this.name.toLowerCase()];
+    delete front.utilityviews[this.name.toLowerCase()];
 };
 
 Utilityview.prototype.addPartImage = function () {
@@ -1218,7 +1172,7 @@ Utilityview.prototype.addPartImage = function () {
         return;
     }
 
-    var del_html = '<img src="img/redcross.png" class="tab_part" />';
+    var del_html = '<img src="/img/redcross.png" class="tab_part" />';
     this.tab.append(del_html);
     
     $('.tab_part', this.tab).click(function () {
@@ -1314,7 +1268,7 @@ Tabview.prototype.addPartImage = function () {
         return;
     }
 
-    var del_html = '<img src="img/redcross.png" class="tab_part" />';
+    var del_html = '<img src="/img/redcross.png" class="tab_part" />';
     this.tab.append(del_html);
     
     $('.tab_part', this.tab).click(function () {
