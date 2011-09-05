@@ -692,7 +692,7 @@ this.websocketMessage = function (websocket, msg, callback) {
             break;
         case 'action':
             if ((args.target) && (args.msg)) {
-                websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'ACTION ' + args.msg + String.fromCharCode(1));
+                websocket.sendServerLine('PRIVMSG ' + args.target + ' :\001ACTION ' + args.msg + '\001');
             }
             break;
         case 'raw':
