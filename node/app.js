@@ -293,6 +293,11 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 // It's a CTCP request
                 if (msg.trailing.substr(1, 6) === 'ACTION') {
                     websocket.sendClientEvent('action', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(7, msg.trailing.length - 2)});
+                } else if (msg.trailing.substr(1, 4) === 'KIWI') {
+                    var tmp = msg.trailing.substr(6, msg.trailing.length - 2);
+                    var namespace = tmp.split(' ', 1)[0];
+                    websocket.sendClientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length+1)});
+                    
                 } else if (msg.trailing.substr(1, 7) === 'VERSION') {
                     ircSocket.write('NOTICE ' + msg.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1) + '\r\n');
                 } else {
@@ -618,7 +623,10 @@ this.websocketConnection = function (websocket) {
 
         websocket.sendServerLine = function (data, eol) {
             eol = (typeof eol === 'undefined') ? '\r\n' : eol;
-            websocket.ircSocket.write(data + eol);
+
+            try {
+                websocket.ircSocket.write(data + eol);
+            } catch (e) { }
         };
 
         websocket.on('irc connect', kiwi.websocketIRCConnect);
@@ -695,6 +703,13 @@ this.websocketMessage = function (websocket, msg, callback) {
                 websocket.sendServerLine('PRIVMSG ' + args.target + ' :\001ACTION ' + args.msg + '\001');
             }
             break;
+
+        case 'kiwi':
+            if ((args.target) && (args.data)) {
+                websocket.sendServerLine('PRIVMSG ' + args.target + ' :\001KIWI ' + args.data + '\001');
+            }
+            break;
+
         case 'raw':
             websocket.sendServerLine(args.data);
             break;
