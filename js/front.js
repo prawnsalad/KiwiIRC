@@ -525,7 +525,35 @@ var front = {
         }
     },
     onMode: function (e, data) {
-        console.log(data);
+        var i, new_nick_text;
+        
+        // TODO: Store the modes in the elements data, then work out the current
+        // mode symbol from the highest mode. Eg. -h may leave +o from previous modes; It
+        // doesn't simply clear it! ~Darren
+        if (typeof data.channel === 'string' && typeof data.effected_nick === 'string') {
+            front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '[' + data.mode + '] ' + data.effected_nick + ' by ' + data.nick, 'mode', '');
+            front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
+                if (front.nickStripPrefix($(this).text()) === data.effected_nick) {
+
+                    if (data.mode.split('')[0] === '+') {
+                        for (i in gateway.user_prefixes) {
+                            if (gateway.user_prefixes[i].mode == data.mode.split('')[1]) {
+                                new_nick_text = gateway.user_prefixes[i].symbol + data.effected_nick;
+                                break;
+                            }
+                        }
+                    } else if (data.mode.split('')[0] === '-') {
+                        new_nick_text = data.effected_nick;
+                    }
+
+                    if (new_nick_text !== '') {
+                        $(this).text(new_nick_text);
+                        return false;
+                    }
+
+                }
+            });
+        }
     },
     onUserList: function (e, data) {
         var ul, nick, mode;
