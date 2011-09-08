@@ -1,3 +1,5 @@
+/*jslint continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
+/*globals kiwi_root */
 var tls = null;
 var net = null;
 var http = null;
@@ -28,7 +30,7 @@ this.init = function (objs) {
 	_ = objs._;
 	starttls = objs.starttls;
 	kiwi = require('./kiwi.js');
-}
+};
 
 
 
@@ -40,7 +42,7 @@ this.init = function (objs) {
  */
 this.setTitle = function () {
 	process.title = 'kiwiirc';
-}
+};
 
 this.changeUser = function () {
     if (typeof kiwi.config.group !== 'undefined' && kiwi.config.group !== '') {
@@ -106,7 +108,7 @@ var ircNumerics = {
 
 this.parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj, tmp, namespace;
     //regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     //regex = /^(?::(\S+) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
@@ -294,9 +296,9 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 if (msg.trailing.substr(1, 6) === 'ACTION') {
                     websocket.sendClientEvent('action', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing.substr(7, msg.trailing.length - 2)});
                 } else if (msg.trailing.substr(1, 4) === 'KIWI') {
-                    var tmp = msg.trailing.substr(6, msg.trailing.length - 2);
-                    var namespace = tmp.split(' ', 1)[0];
-                    websocket.sendClientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length+1)});
+                    tmp = msg.trailing.substr(6, msg.trailing.length - 2);
+                    namespace = tmp.split(' ', 1)[0];
+                    websocket.sendClientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length + 1)});
                     
                 } else if (msg.trailing.substr(1, 7) === 'VERSION') {
                     ircSocket.write('NOTICE ' + msg.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1) + '\r\n');
@@ -615,7 +617,9 @@ this.websocketConnection = function (websocket) {
 
         websocket.sendClientEvent = function (event_name, data) {
             var ev = kiwi.kiwi_mod.run(event_name, data, {websocket: this});
-            if(ev === null) return;
+            if (ev === null) {
+                return;
+            }
 
             data.event = event_name;
             websocket.emit('message', data);
@@ -700,13 +704,13 @@ this.websocketMessage = function (websocket, msg, callback) {
             break;
         case 'action':
             if ((args.target) && (args.msg)) {
-                websocket.sendServerLine('PRIVMSG ' + args.target + ' :\001ACTION ' + args.msg + '\001');
+                websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'ACTION ' + args.msg + String.fromCharCode(1));
             }
             break;
 
         case 'kiwi':
             if ((args.target) && (args.data)) {
-                websocket.sendServerLine('PRIVMSG ' + args.target + ' :\001KIWI ' + args.data + '\001');
+                websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1));
             }
             break;
 
@@ -832,7 +836,9 @@ this.rehash = function () {
  * KiwiIRC controlling via STDIN
  */
 this.manageControll = function (data) {
-    var parts = data.toString().trim().split(' ');
+    var parts = data.toString().trim().split(' '),
+        connections_cnt = 0,
+        i;
     switch (parts[0]) {
     case 'rehash':
         console.log('Rehashing...');
@@ -860,8 +866,7 @@ this.manageControll = function (data) {
         break;
 
     case 'status':
-        var connections_cnt = 0;
-        for (var i in kiwi.connections) {
+        for (i in kiwi.connections) {
             connections_cnt = connections_cnt + parseInt(kiwi.connections[i].count, 10);
         }
         console.log(connections_cnt.toString() + ' connected clients');
