@@ -1,208 +1,228 @@
-function manageDebug(debug){  
-    if(window.console){  
-        var consoleBackUp = window.console.log;  
-        window.console.log = function(str){  
-            if(debug){  
-                consoleBackUp.call(this,str);  
+/*jslint devel: true, browser: true, continue: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4 */
+/*globals $, front, gateway, Utilityview */
+function manageDebug(debug) {
+    var log, consoleBackUp;
+    if (window.console) {  
+        consoleBackUp = window.console.log;  
+        window.console.log = function (str) {  
+            if (debug) {  
+                consoleBackUp.call(this, str);  
             }  
-        }  
-    }else{  
-        var log = window.opera ? window.opera.postError : alert;  
+        };  
+    } else {  
+        log = window.opera ? window.opera.postError : alert;  
         window.console = {};  
-        window.console.log = function(str){  
-            if(debug){  
+        window.console.log = function (str) {  
+            if (debug) {  
                 log(str);  
             }  
-        }  
+        };
     }  
 }
 
 
 function randomString(string_length) {
-	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-	var randomstring = '';
-	for (var i=0; i<string_length; i++) {
-		var rnum = Math.floor(Math.random() * chars.length);
-		randomstring += chars.substring(rnum,rnum+1);
-	}
-	return randomstring;
+    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
+        randomstring = '',
+        i,
+        rnum;
+    for (i = 0; i < string_length; i++) {
+        rnum = Math.floor(Math.random() * chars.length);
+        randomstring += chars.substring(rnum, rnum + 1);
+    }
+    return randomstring;
 }
 
-String.prototype.trim = function() {
-  return this.replace(/^\s+|\s+$/g, "");
+String.prototype.trim = function () {
+    return this.replace(/^\s+|\s+$/g, "");
 };
 
-String.prototype.lpad = function(length, character){
-	var padding = "";
-	for(var i=0; i<length; i++) padding += character;
-	return (padding + this).slice (-length)
+String.prototype.lpad = function (length, character) {
+    var padding = "",
+        i;
+    for (i = 0; i < length; i++) {
+        padding += character;
+    }
+    return (padding + this).slice(-length);
 };
 
 
 
 /*
-	PLUGINS
-	Each function in each object is looped through and ran. The resulting text
-	is expected to be returned.
+    PLUGINS
+    Each function in each object is looped through and ran. The resulting text
+    is expected to be returned.
 */
 var plugins = [
-	{
-		name: "images",
-		onaddmsg: function(event, opts){
-			if( !event.msg ) return event;
+    {
+        name: "images",
+        onaddmsg: function (event, opts) {
+            if (!event.msg) {
+                return event;
+            }
 
-			event.msg = event.msg.replace(/^((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$/gi,function(url){
-				// Don't let any future plugins change it (ie. html_safe plugins)
-				event.event_bubbles = false;
+            event.msg = event.msg.replace(/^((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$/gi, function (url) {
+                // Don't let any future plugins change it (ie. html_safe plugins)
+                event.event_bubbles = false;
 
-				var img = '<img class="link_img_a" src="'+url+'" height="100%" width="100%" />';
-				return '<a class="link_ext link_img" target="_blank" rel="nofollow" href="'+ url +'" style="height:50px;width:50px;display:block">'+ img +'<div class="tt box"></div></a>';
-			});
-			
-			return event;
-		}
-	},
-
-	{
-		name: "html_safe",
-		onaddmsg: function(event, opts){
-			event.msg = $('<div/>').text(event.msg).html();
-			event.nick = $('<div/>').text(event.nick).html();
-
-			return event;
-		}
-	},
-
-	{
-		name: "activity",
-		onaddmsg: function(event, opts){
-			if(front.cur_channel.name.toLowerCase() != front.tabviews[event.tabview.toLowerCase()].name){
-				front.tabviews[event.tabview].activity();
-			}
-
-			return event;
-		}
-	},
-	
-	{
-		name: "highlight",
-		onaddmsg: function(event, opts){
-			if(event.msg.toLowerCase().indexOf(gateway.nick.toLowerCase()) > -1){
-				if(front.cur_channel.name.toLowerCase() != front.tabviews[event.tabview.toLowerCase()].name){
-					front.tabviews[event.tabview].highlight();
-				}
-				if(front.isChannel(front.tabviews[event.tabview].name)){
-					event.msg = '<span style="color:red;">'+event.msg+'</span>';
-				}
-			}
-			
-			if(
-				!front.isChannel(front.tabviews[event.tabview].name) && front.tabviews[event.tabview].name != "server"
-				&& front.cur_channel.name.toLowerCase() != front.tabviews[event.tabview.toLowerCase()].name
-			){
-				front.tabviews[event.tabview].highlight();
-			}
-
-			return event;
-		}
-	},	
-	
-	
-	
-	{
-		//Following method taken from: http://snipplr.com/view/13533/convert-text-urls-into-links/
-		name: "linkify_plain",
-		onaddmsg: function(event, opts){
-			if( !event.msg ) return event;
-			
-			event.msg = event.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,function(url){
-				// If it's any of the supported images in the images plugin, skip it
-				if(url.match('(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$')) return url;
-
-				nice = url;
-				if(url.match('^https?:\/\/')){
-					//nice = nice.replace(/^https?:\/\//i,'')
-				} else {
-					url = 'http://'+url;
-				}
-				
-				return '<a class="link_ext" target="_blank" rel="nofollow" href="'+ url +'">'+ nice +'<div class="tt box"></div></a>';
-			});
-			
-			return event;
-		}
-	},
+                var img = '<img class="link_img_a" src="' + url + '" height="100%" width="100%" />';
+                return '<a class="link_ext link_img" target="_blank" rel="nofollow" href="' + url + '" style="height:50px;width:50px;display:block">' + img + '<div class="tt box"></div></a>';
+            });
+            
+            return event;
+        }
+    },
 
     {
-		name: "lftobr",
-		onaddmsg: function(event, opts){
-			if( !event.msg ) return event;
-			
-			event.msg = event.msg.replace(/\n/gi,function(txt){
-				return '<br/>';
-			});
-			
-			return event;
-		}
-	},
+        name: "html_safe",
+        onaddmsg: function (event, opts) {
+            event.msg = $('<div/>').text(event.msg).html();
+            event.nick = $('<div/>').text(event.nick).html();
+
+            return event;
+        }
+    },
+
+    {
+        name: "activity",
+        onaddmsg: function (event, opts) {
+            if (front.cur_channel.name.toLowerCase() !== front.tabviews[event.tabview.toLowerCase()].name) {
+                front.tabviews[event.tabview].activity();
+            }
+
+            return event;
+        }
+    },
+    
+    {
+        name: "highlight",
+        onaddmsg: function (event, opts) {
+            if (event.msg.toLowerCase().indexOf(gateway.nick.toLowerCase()) > -1) {
+                if (front.cur_channel.name.toLowerCase() !== front.tabviews[event.tabview.toLowerCase()].name) {
+                    front.tabviews[event.tabview].highlight();
+                }
+                if (front.isChannel(front.tabviews[event.tabview].name)) {
+                    event.msg = '<span style="color:red;">' + event.msg + '</span>';
+                }
+            }
+            
+            if (
+                !front.isChannel(front.tabviews[event.tabview].name) && front.tabviews[event.tabview].name !== "server"
+                    && front.cur_channel.name.toLowerCase() !== front.tabviews[event.tabview.toLowerCase()].name
+            ) {
+                front.tabviews[event.tabview].highlight();
+            }
+
+            return event;
+        }
+    },    
+    
+    
+    
+    {
+        //Following method taken from: http://snipplr.com/view/13533/convert-text-urls-into-links/
+        name: "linkify_plain",
+        onaddmsg: function (event, opts) {
+            if (!event.msg) {
+                return event;
+            }
+            
+            event.msg = event.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function (url) {
+                var nice;
+                // If it's any of the supported images in the images plugin, skip it
+                if (url.match(/(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$/)) {
+                    return url;
+                }
+
+                nice = url;
+                if (url.match('^https?:\/\/')) {
+                    //nice = nice.replace(/^https?:\/\//i,'')
+                    nice = url; // Shutting up JSLint...
+                } else {
+                    url = 'http://' + url;
+                }
+                
+                return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '<div class="tt box"></div></a>';
+            });
+            
+            return event;
+        }
+    },
+
+    {
+        name: "lftobr",
+        onaddmsg: function (event, opts) {
+            if (!event.msg) {
+                return event;
+            }
+            
+            event.msg = event.msg.replace(/\n/gi, function (txt) {
+                return '<br/>';
+            });
+            
+            return event;
+        }
+    },
 
 
-	{
-		name: "inBrowser",
-		oninit: function(event, opts){
-	        $('#windows a.link_ext').live('mouseover', this.mouseover);
-	        $('#windows a.link_ext').live('mouseout', this.mouseout);
-	        $('#windows a.link_ext').live('click', this.mouseclick);
-		},
+    {
+        name: "inBrowser",
+        oninit: function (event, opts) {
+            $('#windows a.link_ext').live('mouseover', this.mouseover);
+            $('#windows a.link_ext').live('mouseout', this.mouseout);
+            $('#windows a.link_ext').live('click', this.mouseclick);
+        },
 
-		onunload: function(event, opts){
-			// TODO: make this work
-			$('#windows a.link_ext').die('mouseover', this.mouseover);
-			$('#windows a.link_ext').die('mouseout', this.mouseout);
-			$('#windows a.link_ext').die('click', this.mouseclick);
-		},
+        onunload: function (event, opts) {
+            // TODO: make this work
+            $('#windows a.link_ext').die('mouseover', this.mouseover);
+            $('#windows a.link_ext').die('mouseout', this.mouseout);
+            $('#windows a.link_ext').die('click', this.mouseclick);
+        },
 
 
 
-		mouseover: function(e){
-            var a = $(this);
-            var tt = $('.tt', a);
+        mouseover: function (e) {
+            var a = $(this),
+                tt = $('.tt', a),
+                tooltip;
 
             if (tt.text() === '') {
-                var tooltip = $('<a class="link_ext_browser">Open in Kiwi..</a>');
+                tooltip = $('<a class="link_ext_browser">Open in Kiwi..</a>');
                 tt.append(tooltip);
             }
 
-            tt.css('top', -tt.outerHeight()+'px');
+            tt.css('top', -tt.outerHeight() + 'px');
             tt.css('left', (a.outerWidth() / 2) - (tt.outerWidth() / 2));
-		},
+        },
 
-		mouseout: function(e){
-            var a = $(this);
-            var tt = $('.tt', a);
-		},
+        mouseout: function (e) {
+            var a = $(this),
+                tt = $('.tt', a);
+        },
 
-		mouseclick: function(e){
-            var a = $(this);
+        mouseclick: function (e) {
+            var a = $(this),
+                t;
             
             switch (e.target.className) {
             case 'link_ext':
             case 'link_img_a':
                 return true;
-                break;
+                //break;
             case 'link_ext_browser':
-                var t = new Utilityview('Browser');
+                t = new Utilityview('Browser');
                 t.topic = a.attr('href');
 
-				t.iframe = $('<iframe border="0" class="utility_view" src="" style="width:100%;height:100%;border:none;"></iframe>');
-			    t.iframe.attr('src', a.attr('href'));
-			    t.div.append(t.iframe);
+                t.iframe = $('<iframe border="0" class="utility_view" src="" style="width:100%;height:100%;border:none;"></iframe>');
+                t.iframe.attr('src', a.attr('href'));
+                t.div.append(t.iframe);
                 t.show();
                 break;
             }
             return false;
-		}
-	}
+        }
+    }
 ];
 
 
@@ -213,24 +233,31 @@ var plugins = [
 
 
 
-plugs = {};
+var plugs = {};
 plugs.loaded = {};
 plugs.loadPlugin = function (plugin) {
-	if (typeof plugin.name !== 'string') return false;
+    var plugin_ret;
+    if (typeof plugin.name !== 'string') {
+        return false;
+    }
 
-	var plugin_ret = plugs.run('plugin_load', {plugin: plugin});
-    if (typeof plugin_ret === 'object') plugs.loaded[plugin_ret.plugin.name] = plugin_ret.plugin;
+    plugin_ret = plugs.run('plugin_load', {plugin: plugin});
+    if (typeof plugin_ret === 'object') {
+        plugs.loaded[plugin_ret.plugin.name] = plugin_ret.plugin;
+    }
     plugs.run('init', {}, {run_only: plugin_ret.plugin.name});
 
     return true;
 };
 
 plugs.unloadPlugin = function (plugin_name) {
-	if (typeof plugs.loaded[plugin_name] !== 'object') return;
+    if (typeof plugs.loaded[plugin_name] !== 'object') {
+        return;
+    }
 
-	plugs.run('unload', {}, {run_only: plugin_name});
-	delete plugs.loaded[plugin_name];
-}
+    plugs.run('unload', {}, {run_only: plugin_name});
+    delete plugs.loaded[plugin_name];
+};
 
 
 
@@ -239,15 +266,18 @@ plugs.unloadPlugin = function (plugin_name) {
  */
 plugs.run = function (event_name, event_data, opts) {
     var ret = event_data,
-        ret_tmp, plugin_name;
+        ret_tmp,
+        plugin_name;
     
     // Set some defaults if not provided
     event_data = (typeof event_data === 'undefined') ? {} : event_data;
     opts = (typeof opts === 'undefined') ? {} : opts;
     
     for (plugin_name in plugs.loaded) {
-    	// If we're only calling 1 plugin, make sure it's that one
-    	if (typeof opts.run_only === 'string' && opts.run_only !== plugin_name) continue;
+        // If we're only calling 1 plugin, make sure it's that one
+        if (typeof opts.run_only === 'string' && opts.run_only !== plugin_name) {
+            continue;
+        }
 
         if (typeof plugs.loaded[plugin_name]['on' + event_name] === 'function') {
             try {
@@ -256,10 +286,10 @@ plugs.run = function (event_name, event_data, opts) {
                     return null;
                 }
                 ret = ret_tmp;
-               	
-                if (typeof ret.event_bubbles === 'boolean' && ret.event_bubbles === false){
-                	delete ret.event_bubbles;
-                	return ret;
+                   
+                if (typeof ret.event_bubbles === 'boolean' && ret.event_bubbles === false) {
+                    delete ret.event_bubbles;
+                    return ret;
                 }
             } catch (e) {
             }
@@ -269,10 +299,12 @@ plugs.run = function (event_name, event_data, opts) {
     return ret;
 };
 
-
-for(var i in plugins) plugs.loadPlugin(plugins[i]);
-
-
+(function () {
+    var i;
+    for (i in plugins) {
+        plugs.loadPlugin(plugins[i]);
+    }
+}());
 
 
 
