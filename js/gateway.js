@@ -35,7 +35,6 @@ var gateway = {
                 console.log(e);
             });
             gateway.socket.on('connect', function () {
-                console.log('connect event');
                 gateway.sendData = function (data, callback) {
                     gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
                 };
@@ -74,7 +73,7 @@ var gateway = {
     parse: function (item) {
         if (item.event !== undefined) {
             $(gateway).trigger("on" + item.event, item);
-        
+            
             switch (item.event) {
             case 'options':
                 $.each(item.options, function (name, value) {
@@ -97,6 +96,10 @@ var gateway = {
                     gateway.syncing = false;
                     gateway.onSync(item);
                 }
+                break;
+
+            case 'kiwi':
+                $(gateway).trigger('kiwi.' + item.namespace, item.data);
                 break;
             }
         }
@@ -149,6 +152,18 @@ var gateway = {
             }
         };
 
+        gateway.sendData(data, callback);
+    },
+
+
+    kiwi: function (s_target, s_data, callback) {
+        var data = {
+            method: 'kiwi',
+            args: {
+                target: s_target,
+                data: s_data
+            }
+        };
         gateway.sendData(data, callback);
     },
 

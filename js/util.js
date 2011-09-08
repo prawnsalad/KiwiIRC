@@ -221,8 +221,20 @@ var plugins = [
                 break;
             }
             return false;
-        }
-    }
+
+		}
+	},
+
+	{
+		name: "kiwitest",
+		oninit: function (event, opts) {
+			console.log('registering namespace');
+			$(gateway).bind("kiwi.lol.browser", function (e, data) {
+				console.log('YAY kiwitest');
+				console.log(data);
+			});
+		}
+	}
 ];
 
 
@@ -298,17 +310,6 @@ plugs.run = function (event_name, event_data, opts) {
 
     return ret;
 };
-
-(function () {
-    var i;
-    for (i in plugins) {
-        plugs.loadPlugin(plugins[i]);
-    }
-}());
-
-
-
-
 
 
 /*

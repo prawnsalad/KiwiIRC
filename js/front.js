@@ -1,5 +1,5 @@
 /*jslint devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
-/*global gateway, io, $, iScroll, agent, touchscreen, init_data, plugs, registerTouches, randomString */
+/*global gateway, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
 var front = {
     revision: 38,
     
@@ -36,6 +36,7 @@ var front = {
         $(gateway).bind("onpart", front.onPart);
         $(gateway).bind("onkick", front.onKick);
         $(gateway).bind("onquit", front.onQuit);
+        $(gateway).bind("onmode", front.onMode);
         $(gateway).bind("onwhois", front.onWhois);
         $(gateway).bind("onsync", front.onSync);
         $(gateway).bind("onchannel_redirect", front.onChannelRedirect);
@@ -43,6 +44,7 @@ var front = {
         $(gateway).bind("onctcp_request", front.onCTCPRequest);
         $(gateway).bind("onctcp_response", front.onCTCPResponse);
         $(gateway).bind("onirc_error", front.onIRCError);
+        $(gateway).bind("onkiwi", front.onKiwi);
         
         this.buffer = [];
         
@@ -168,7 +170,13 @@ var front = {
             front.joinChannel($(this).text());
             return false;
         });
-        
+
+        (function () {
+            var i;
+            for (i in plugins) {
+                plugs.loadPlugin(plugins[i]);
+            }
+        }());
     },
     
     doLayoutSize: function () {
@@ -355,6 +363,11 @@ var front = {
                     //gateway.raw('TOPIC ' + front.cur_channel.name + ' :' + msg.split(' ', 2)[1]);
                 }
                 break;
+
+            case '/kiwi':
+                gateway.kiwi(front.cur_channel.name, msg.substring(6));
+                break;
+
             default:
                 //front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
                 gateway.raw(msg.substring(1));
@@ -456,6 +469,10 @@ var front = {
     
     onCTCPResponse: function (e, data) {
     },
+
+    onKiwi: function (e, data) {
+        //console.log(data);
+    },
     
     onConnect: function (e, data) {
         if (data.connected) {
@@ -506,6 +523,9 @@ var front = {
         } else {
             front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' seconds', 'whois');
         }
+    },
+    onMode: function (e, data) {
+        console.log(data);
     },
     onUserList: function (e, data) {
         var ul, nick, mode;
