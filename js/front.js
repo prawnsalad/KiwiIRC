@@ -1,5 +1,5 @@
-/*jslint undef: true, browser: true, continue: true, sloppy: true, evil: true, forin: true, newcap: false, plusplus: true, maxerr: 50, indent: 4 */
-/*global gateway, io, $, iScroll, agent, touchscreen*/
+/*jslint devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
+/*global gateway, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
 var front = {
     revision: 38,
     
@@ -15,7 +15,8 @@ var front = {
     original_topic: '',
     
     init: function () {
-        var about_info, supportsOrientationChange, orientationEvent;
+        /*global Box, touch_scroll:true */
+        var about_info, supportsOrientationChange, orientationEvent, scroll_opts;
         gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
         gateway.session_id = null;
         
@@ -165,15 +166,17 @@ var front = {
         });
 
 
-        $('#windows a.chan').live('click', function() {
+        $('#windows a.chan').live('click', function () {
             front.joinChannel($(this).text());
             return false;
         });
 
-
-
-        for(var i in plugins) plugs.loadPlugin(plugins[i]);
-        
+        (function () {
+            var i;
+            for (i in plugins) {
+                plugs.loadPlugin(plugins[i]);
+            }
+        }());
     },
     
     doLayoutSize: function () {
@@ -209,7 +212,8 @@ var front = {
     
     joinChannel: function (chan_name) {
         var chans = chan_name.split(','),
-            i;
+            i,
+            chan;
         for (i in chans) {
             chan = chans[i];
             if (front.tabviews[chan.toLowerCase()] === undefined || (front.tabviews[chan.toLowerCase()] !== undefined && front.tabviews[chan.toLowerCase()].safe_to_close === true)) {
@@ -223,12 +227,14 @@ var front = {
     
     
     run: function (msg) {
-        var parts, dest, t, pos, textRange, d, plugin_event;
+        var parts, dest, t, pos, textRange, d, plugin_event, msg_sliced;
         
         // Run through any plugins
         plugin_event = {command: msg};
         plugin_event = plugs.run('command_run', plugin_event);
-        if (!plugin_event || typeof plugin_event.command === 'undefined') return;
+        if (!plugin_event || typeof plugin_event.command === 'undefined') {
+            return;
+        }
 
         // Update msg if it's been changed by any plugins
         msg = plugin_event.command.toString();
@@ -300,7 +306,7 @@ var front = {
             case '/m':
             case '/msg':
                 if (typeof parts[1] !== "undefined") {
-                    var msg_sliced = msg.split(' ').slice(2).join(' ');
+                    msg_sliced = msg.split(' ').slice(2).join(' ');
                     gateway.msg(parts[1], msg_sliced);
 
                     if (!front.tabviewExists(parts[1])) {
@@ -392,9 +398,11 @@ var front = {
             destination = data.channel.toLowerCase();    
         }
         
-        plugin_event = {nick: data.nick, msg:data.msg, destination: destination};
+        plugin_event = {nick: data.nick, msg: data.msg, destination: destination};
         plugin_event = plugs.run('msg_recieved', plugin_event);
-        if (!plugin_event) return;
+        if (!plugin_event) {
+            return;
+        }
 
         if (!front.tabviewExists(plugin_event.destination)) {
             front.tabviewAdd(plugin_event.destination);
@@ -431,8 +439,8 @@ var front = {
     },
     
     onNotice: function (e, data) {
-        var nick = (data.nick === undefined) ? '' : data.nick;
-        var enick = '[' + nick + ']';
+        var nick = (data.nick === undefined) ? '' : data.nick,
+            enick = '[' + nick + ']';
 
         if (front.tabviewExists(data.target)) {
             front.tabviews[data.target.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
@@ -672,7 +680,7 @@ var front = {
     
     registerKeys: function () {
         $('#kiwi_msginput').bind('keydown', function (e) {
-            var windows, meta, num, msg, data, candidates, word_pos, word;
+            var windows, meta, num, msg, data, candidates, word_pos, word, i;
             windows = $('#windows');
             //var meta = e.altKey;
             meta = e.ctrlKey;
@@ -738,6 +746,7 @@ var front = {
                 // Get possible autocompletions
                 data = [];
                 front.cur_channel.userlist.children().each(function () {
+                    var nick;
                     nick = front.nickStripPrefix($('a.nick', this).text());
                     data.push(nick);
                 });
@@ -782,7 +791,6 @@ var front = {
         
         
         $('#kiwi .plugins .load_plugin_file').click(function () {
-            var lst, j, txt;
             if (typeof front.boxes.plugins !== "undefined") {
                 return;
             }
@@ -792,7 +800,8 @@ var front = {
             front.boxes.plugins.box.css('top', -(front.boxes.plugins.height + 40));
             
             // Populate the plugin list..
-            function enumPlugins () {
+            function enumPlugins() {
+                var lst, j, txt;
                 lst = $('#plugin_list');
                 lst.find('option').remove();
                 for (j in plugs.loaded) {
@@ -804,7 +813,7 @@ var front = {
             
             // Event bindings
             $('#kiwi .plugin_file').submit(function () {
-                $('<div></div>').load($('.txtpluginfile').val(), function(e){
+                $('<div></div>').load($('.txtpluginfile').val(), function (e) {
                     enumPlugins();
                 });
                 return false;
@@ -886,6 +895,7 @@ var front = {
     },
     
     tabviewAdd: function (v_name) {
+        /*global Tabview */
         var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
 
         if (v_name.charAt(0) === gateway.channel_prefix) {
@@ -914,7 +924,9 @@ var front = {
         front.tabviews[v_name.toLowerCase()].div = $('#' + tmp_divname);
         front.tabviews[v_name.toLowerCase()].userlist = $('#' + tmp_userlistname);
         front.tabviews[v_name.toLowerCase()].tab = $('#' + tmp_tabname);
-        if (!userlist_enabled) front.tabviews[v_name.toLowerCase()].userlist_width = 0;
+        if (!userlist_enabled) {
+            front.tabviews[v_name.toLowerCase()].userlist_width = 0;
+        }
         front.tabviews[v_name.toLowerCase()].show();
         
         if (typeof registerTouches === "function") {
@@ -997,21 +1009,20 @@ var front = {
     
     
     nickStripPrefix: function (nick) {
-        var tmp = nick, i;
+        var tmp = nick, i, prefix;
         
         prefix = tmp.charAt(0);
         for (i in gateway.user_prefixes) {
-            if (gateway.user_prefixes[i].symbol !== prefix) {
-                continue;
+            if (gateway.user_prefixes[i].symbol === prefix) {
+                return tmp.substring(1);
             }
-            return tmp.substring(1);
         }
 
         return tmp;
     },
     
     nickGetPrefix: function (nick) {
-        var tmp = nick, i;
+        var tmp = nick, i, prefix;
         
         prefix = tmp.charAt(0);
         for (i in gateway.user_prefixes) {
@@ -1024,6 +1035,7 @@ var front = {
     },
     
     isChannel: function (name) {
+        var prefix, is_chan;
         prefix = name.charAt(0);
         if (gateway.channel_prefix.indexOf(prefix) > -1) {
             is_chan = true;
@@ -1122,10 +1134,10 @@ var front = {
  */
 
 var Utilityview = function (name) {
-    var rand_name = randomString(15);
-    var tmp_divname = 'kiwi_window_' + rand_name;
-    var tmp_userlistname = 'kiwi_userlist_' + rand_name;
-    var tmp_tabname = 'kiwi_tab_' + rand_name;
+    var rand_name = randomString(15),
+        tmp_divname = 'kiwi_window_' + rand_name,
+        tmp_userlistname = 'kiwi_userlist_' + rand_name,
+        tmp_tabname = 'kiwi_tab_' + rand_name;
     
     this.name = rand_name;
     this.title = name;
@@ -1134,7 +1146,7 @@ var Utilityview = function (name) {
     $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
 
     this.tab = $('<li id="' + tmp_tabname + '">' + this.title + '</li>');
-    this.tab.click(function(){
+    this.tab.click(function () {
         front.utilityviews[rand_name.toLowerCase()].show();
     });
     $('#kiwi .utilityviewlist ul').append(this.tab);
@@ -1170,7 +1182,7 @@ Utilityview.prototype.show = function () {
     if (touch_scroll) {
         touch_scroll.refresh();
     }
-}
+};
 
 Utilityview.prototype.close = function () {
     this.div.remove();
@@ -1246,7 +1258,9 @@ Tabview.prototype.show = function () {
 
     // Activate this tab!
     this.div.addClass('active');
-    if (this.userlist_width > 0) this.userlist.addClass('active');
+    if (this.userlist_width > 0) {
+        this.userlist.addClass('active');
+    }
     this.tab.addClass('active');
     
     // Add the part image to the tab
@@ -1306,13 +1320,15 @@ Tabview.prototype.clearPartImage = function () {
 };
 
 Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
-    var self, tmp, plugin_ret, i, d, re, line_msg;
+    var self, tmp, plugin_ret, i, d, re, line_msg, next;
     
     self = this;
     
     tmp = {msg: msg, time: time, nick: nick, tabview: this.name};
     tmp = plugs.run('addmsg', tmp);
-    if (!tmp) return;
+    if (!tmp) {
+        return;
+    }
     
 
     msg = tmp.msg;
@@ -1409,7 +1425,8 @@ Tabview.prototype.changeNick = function (newNick, oldNick) {
 
 Tabview.prototype.userlistSort = function () {
     var ul = this.userlist,
-        listitems = ul.children('li').get();
+        listitems = ul.children('li').get(),
+        prefix;
     listitems.sort(function (a, b) {
         var compA = $(a).text().toUpperCase(),
             compB = $(b).text().toUpperCase(),
