@@ -316,7 +316,12 @@ var front = {
                 }
                 break;
             
-                
+            case '/k':
+            case '/kick':
+                if (typeof parts[1] === 'undefined') return;
+                gateway.raw('KICK ' + front.cur_channel.name + ' ' + msg.split(' ', 2)[1]);
+                break;
+
             case '/quote':
                 gateway.raw(msg.replace(/^\/quote /i, ''));
                 break;
