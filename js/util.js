@@ -225,6 +225,42 @@ var plugins = [
 		}
 	},
 
+    {
+        name: "nick_colour",
+        onaddmsg: function (event, opts) {
+            if (!event.msg) {
+                return event;
+            }
+
+            if (typeof front.tabviews[event.tabview].nick_colours === 'undefined') {
+                front.tabviews[event.tabview].nick_colours = {};
+            }
+
+            if (typeof front.tabviews[event.tabview].nick_colours[event.nick] === 'undefined') {
+                front.tabviews[event.tabview].nick_colours[event.nick] = this.randColour();
+            }
+            
+            var c = front.tabviews[event.tabview].nick_colours[event.nick];
+            event.nick = '<span style="color:' + c + ';">' + event.nick + '</span>';
+            
+            return event;
+        },
+
+
+
+        randColour: function () {
+            var h = this.rand(-250, 0);
+            var s = this.rand(30, 100);
+            var l = this.rand(20, 70);
+            return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+        },
+
+
+        rand: function (min, max) {
+            return parseInt(Math.random() * (max-min+1), 10) + min;
+        }
+    },
+
 	{
 		name: "kiwitest",
 		oninit: function (event, opts) {
