@@ -130,6 +130,8 @@ var front = {
             $('#channel').val(init_data.channel);
         }
         
+        // Fix for Opera inserting a spurious <br/>
+        $('#kiwi .cur_topic br').remove();
         
         $('#kiwi .cur_topic').keydown(function (e) {
             if (e.which === 13) {
