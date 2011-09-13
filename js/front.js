@@ -1,6 +1,6 @@
 /*jslint devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global gateway, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
-var front = {
+kiwi.front = {
     revision: 38,
     
     cur_channel: '',
@@ -17,39 +17,39 @@ var front = {
     init: function () {
         /*global Box, touch_scroll:true */
         var about_info, supportsOrientationChange, orientationEvent, scroll_opts;
-        gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
-        gateway.session_id = null;
+        kiwi.gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
+        kiwi.gateway.session_id = null;
         
-        $(gateway).bind("onmsg", front.onMsg);
-        $(gateway).bind("onnotice", front.onNotice);
-        $(gateway).bind("onaction", front.onAction);
-        $(gateway).bind("onmotd", front.onMOTD);
-        $(gateway).bind("onoptions", front.onOptions);
-        $(gateway).bind("onconnect", front.onConnect);
-        $(gateway).bind("onconnect_fail", front.onConnectFail);
-        $(gateway).bind("ondisconnect", front.onDisconnect);
-        $(gateway).bind("onnick", front.onNick);
-        $(gateway).bind("onuserlist", front.onUserList);
-        $(gateway).bind("onuserlist_end", front.onUserListEnd);
-        $(gateway).bind("onjoin", front.onJoin);
-        $(gateway).bind("ontopic", front.onTopic);
-        $(gateway).bind("onpart", front.onPart);
-        $(gateway).bind("onkick", front.onKick);
-        $(gateway).bind("onquit", front.onQuit);
-        $(gateway).bind("onmode", front.onMode);
-        $(gateway).bind("onwhois", front.onWhois);
-        $(gateway).bind("onsync", front.onSync);
-        $(gateway).bind("onchannel_redirect", front.onChannelRedirect);
-        $(gateway).bind("ondebug", front.onDebug);
-        $(gateway).bind("onctcp_request", front.onCTCPRequest);
-        $(gateway).bind("onctcp_response", front.onCTCPResponse);
-        $(gateway).bind("onirc_error", front.onIRCError);
-        $(gateway).bind("onkiwi", front.onKiwi);
+        $(kiwi.gateway).bind("onmsg", kiwi.front.onMsg);
+        $(kiwi.gateway).bind("onnotice", kiwi.front.onNotice);
+        $(kiwi.gateway).bind("onaction", kiwi.front.onAction);
+        $(kiwi.gateway).bind("onmotd", kiwi.front.onMOTD);
+        $(kiwi.gateway).bind("onoptions", kiwi.front.onOptions);
+        $(kiwi.gateway).bind("onconnect", kiwi.front.onConnect);
+        $(kiwi.gateway).bind("onconnect_fail", kiwi.front.onConnectFail);
+        $(kiwi.gateway).bind("ondisconnect", kiwi.front.onDisconnect);
+        $(kiwi.gateway).bind("onnick", kiwi.front.onNick);
+        $(kiwi.gateway).bind("onuserlist", kiwi.front.onUserList);
+        $(kiwi.gateway).bind("onuserlist_end", kiwi.front.onUserListEnd);
+        $(kiwi.gateway).bind("onjoin", kiwi.front.onJoin);
+        $(kiwi.gateway).bind("ontopic", kiwi.front.onTopic);
+        $(kiwi.gateway).bind("onpart", kiwi.front.onPart);
+        $(kiwi.gateway).bind("onkick", kiwi.front.onKick);
+        $(kiwi.gateway).bind("onquit", kiwi.front.onQuit);
+        $(kiwi.gateway).bind("onmode", kiwi.front.onMode);
+        $(kiwi.gateway).bind("onwhois", kiwi.front.onWhois);
+        $(kiwi.gateway).bind("onsync", kiwi.front.onSync);
+        $(kiwi.gateway).bind("onchannel_redirect", kiwi.front.onChannelRedirect);
+        $(kiwi.gateway).bind("ondebug", kiwi.front.onDebug);
+        $(kiwi.gateway).bind("onctcp_request", kiwi.front.onCTCPRequest);
+        $(kiwi.gateway).bind("onctcp_response", kiwi.front.onCTCPResponse);
+        $(kiwi.gateway).bind("onirc_error", kiwi.front.onIRCError);
+        $(kiwi.gateway).bind("onkiwi", kiwi.front.onKiwi);
         
         this.buffer = [];
         
         // Build the about box
-        front.boxes.about = new Box("about");
+        kiwi.front.boxes.about = new Box("about");
         about_info = 'UI adapted for ' + agent;
         if (touchscreen) {
             about_info += ' touchscreen ';
@@ -57,11 +57,11 @@ var front = {
         about_info += 'usage';
         $('#tmpl_about_box').tmpl({
             about: about_info,
-            front_revision: front.revision,
-            gateway_revision: gateway.revision
-        }).appendTo(front.boxes.about.content);
+            front_revision: kiwi.front.revision,
+            gateway_revision: kiwi.gateway.revision
+        }).appendTo(kiwi.front.boxes.about.content);
 
-        //$(window).bind("beforeunload", function(){ gateway.quit(); });
+        //$(window).bind("beforeunload", function(){ kiwi.gateway.quit(); });
         
         if (touchscreen) {
             $('#kiwi').addClass('touchscreen');
@@ -71,9 +71,9 @@ var front = {
             touch_scroll = new iScroll('windows', scroll_opts);
         }
 
-        front.registerKeys();
+        kiwi.front.registerKeys();
         
-        $('#kiwi .toolbars').resize(front.doLayoutSize);
+        $('#kiwi .toolbars').resize(kiwi.front.doLayoutSize);
 
         $('#kiwi .formconnectwindow').submit(function () {
             var netsel = $('#kiwi .formconnectwindow .network'),
@@ -87,18 +87,18 @@ var front = {
             }
             
             tmp = nick.val().split(' ');
-            gateway.nick = tmp[0];
+            kiwi.gateway.nick = tmp[0];
 
             init_data.channel = $('#channel').val();
 
-            front.doLayout();
+            kiwi.front.doLayout();
             try {
-                front.run('/connect ' + netsel.val());
+                kiwi.front.run('/connect ' + netsel.val());
             } catch (e) {
                 alert(e);
             }
             
-            $('#kiwi .connectwindow').slideUp('', front.barsShow);
+            $('#kiwi .connectwindow').slideUp('', kiwi.front.barsShow);
             $('#windows').click(function () { $('#kiwi_msginput').focus(); });
 
             return false;
@@ -107,18 +107,18 @@ var front = {
         supportsOrientationChange = (typeof window.onorientationchange !==  undefined);
         orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
         if (window.addEventListener) {
-            window.addEventListener(orientationEvent, front.doLayoutSize, false);
+            window.addEventListener(orientationEvent, kiwi.front.doLayoutSize, false);
         } else {
             // < IE9
-            window.attachEvent(orientationEvent, front.doLayoutSize, false);
+            window.attachEvent(orientationEvent, kiwi.front.doLayoutSize, false);
         }
-        //$('#kiwi').bind("resize", front.doLayoutSize, false);
+        //$('#kiwi').bind("resize", kiwi.front.doLayoutSize, false);
 
-        front.doLayout();
-        front.barsHide();
+        kiwi.front.doLayout();
+        kiwi.front.barsHide();
         
-        front.tabviewAdd('server');
-        front.tabviews.server.userlist_width = 0; // Disable the userlist
+        kiwi.front.tabviewAdd('server');
+        kiwi.front.tabviews.server.userlist_width = 0; // Disable the userlist
         
         // Any pre-defined nick?
         if (typeof window.init_data.nick === "string") {
@@ -142,7 +142,7 @@ var front = {
             } else if (e.which === 27) {
                 // escape
                 e.preventDefault();
-                $(this).text(front.original_topic);
+                $(this).text(kiwi.front.original_topic);
                 $('#kiwi_msginput').focus();
             }
         });
@@ -155,28 +155,28 @@ var front = {
             } else if (e.keyCode === 27) {
                 // escape
                 e.preventDefault();
-                $(this).text(front.original_topic);
+                $(this).text(kiwi.front.original_topic);
             }
         });*/
         $('.cur_topic').live('change', function () {
             var chan, text;
             text = $(this).text();
-            if (text !== front.original_topic) {
-                chan = front.cur_channel.name;
-                gateway.setTopic(chan, text);
+            if (text !== kiwi.front.original_topic) {
+                chan = kiwi.front.cur_channel.name;
+                kiwi.gateway.setTopic(chan, text);
             }
         });
 
 
         $('#windows a.chan').live('click', function () {
-            front.joinChannel($(this).text());
+            kiwi.front.joinChannel($(this).text());
             return false;
         });
 
         (function () {
             var i;
             for (i in plugins) {
-                plugs.loadPlugin(plugins[i]);
+                kiwi.plugs.loadPlugin(plugins[i]);
             }
         }());
     },
@@ -206,7 +206,7 @@ var front = {
 
 
     doLayout: function () {
-        $('#kiwi .msginput .nick a').text(gateway.nick);
+        $('#kiwi .msginput .nick a').text(kiwi.gateway.nick);
         $('#kiwi_msginput').val(' ');
         $('#kiwi_msginput').focus();
     },
@@ -218,11 +218,11 @@ var front = {
             chan;
         for (i in chans) {
             chan = chans[i];
-            if (front.tabviews[chan.toLowerCase()] === undefined || (front.tabviews[chan.toLowerCase()] !== undefined && front.tabviews[chan.toLowerCase()].safe_to_close === true)) {
-                gateway.join(chan);
-                front.tabviewAdd(chan);
+            if (kiwi.front.tabviews[chan.toLowerCase()] === undefined || (kiwi.front.tabviews[chan.toLowerCase()] !== undefined && kiwi.front.tabviews[chan.toLowerCase()].safe_to_close === true)) {
+                kiwi.gateway.join(chan);
+                kiwi.front.tabviewAdd(chan);
             } else {
-                front.tabviews[chan.toLowerCase()].show();
+                kiwi.front.tabviews[chan.toLowerCase()].show();
             }
         }
     },
@@ -233,7 +233,7 @@ var front = {
         
         // Run through any plugins
         plugin_event = {command: msg};
-        plugin_event = plugs.run('command_run', plugin_event);
+        plugin_event = kiwi.plugs.run('command_run', plugin_event);
         if (!plugin_event || typeof plugin_event.command === 'undefined') {
             return;
         }
@@ -247,7 +247,7 @@ var front = {
             switch (parts[0].toLowerCase()) {
             case '/j':
             case '/join':
-                front.joinChannel(parts[1]);
+                kiwi.front.joinChannel(parts[1]);
                 break;
                 
             case '/connect':
@@ -260,47 +260,47 @@ var front = {
                 if (parts[2] === undefined) {
                     parts[2] = 6667;
                 }
-                front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + '...', 'status');
-                gateway.connect(parts[1], parts[2], 0);
+                kiwi.front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + '...', 'status');
+                kiwi.gateway.connect(parts[1], parts[2], 0);
                 break;
                 
             case '/nick':
                 console.log("/nick");
                 if (parts[1] === undefined) {
                     console.log("calling show nick");
-                    front.showChangeNick();
+                    kiwi.front.showChangeNick();
                 } else {
                     console.log("sending raw");
-                    gateway.raw(msg.substring(1));
+                    kiwi.gateway.raw(msg.substring(1));
                 }
                 break;
 
             case '/part':
                 if (typeof parts[1] === "undefined") {
-                    if (front.cur_channel.safe_to_close) {
-                        front.cur_channel.close();
+                    if (kiwi.front.cur_channel.safe_to_close) {
+                        kiwi.front.cur_channel.close();
                     } else {
-                        gateway.raw(msg.substring(1) + ' ' + front.cur_channel.name);
+                        kiwi.gateway.raw(msg.substring(1) + ' ' + kiwi.front.cur_channel.name);
                     }
                 } else {
-                    gateway.raw(msg.substring(1));
+                    kiwi.gateway.raw(msg.substring(1));
                 }
                 break;
                 
             case '/names':
                 if (typeof parts[1] !== "undefined") {
-                    gateway.raw(msg.substring(1));
+                    kiwi.gateway.raw(msg.substring(1));
                 }
                 break;
                 
             case '/debug':
-                gateway.debug();
+                kiwi.gateway.debug();
                 break;
                 
             case '/q':
             case '/query':
                 if (typeof parts[1] !== "undefined") {
-                    front.tabviewAdd(parts[1]);
+                    kiwi.front.tabviewAdd(parts[1]);
                 }
                 break;
 
@@ -309,47 +309,47 @@ var front = {
             case '/msg':
                 if (typeof parts[1] !== "undefined") {
                     msg_sliced = msg.split(' ').slice(2).join(' ');
-                    gateway.msg(parts[1], msg_sliced);
+                    kiwi.gateway.msg(parts[1], msg_sliced);
 
-                    if (!front.tabviewExists(parts[1])) {
-                        front.tabviewAdd(parts[1]);
+                    if (!kiwi.front.tabviewExists(parts[1])) {
+                        kiwi.front.tabviewAdd(parts[1]);
                     }
-                    front.tabviews[parts[1].toLowerCase()].addMsg(null, gateway.nick, msg_sliced);
+                    kiwi.front.tabviews[parts[1].toLowerCase()].addMsg(null, kiwi.gateway.nick, msg_sliced);
                 }
                 break;
             
             case '/k':
             case '/kick':
                 if (typeof parts[1] === 'undefined') return;
-                gateway.raw('KICK ' + front.cur_channel.name + ' ' + msg.split(' ', 2)[1]);
+                kiwi.gateway.raw('KICK ' + kiwi.front.cur_channel.name + ' ' + msg.split(' ', 2)[1]);
                 break;
 
             case '/quote':
-                gateway.raw(msg.replace(/^\/quote /i, ''));
+                kiwi.gateway.raw(msg.replace(/^\/quote /i, ''));
                 break;
                 
             case '/me':
-                gateway.action(front.cur_channel.name, msg.substring(4));
-                //front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
-                front.cur_channel.addMsg(null, ' ', '* ' + gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
+                kiwi.gateway.action(kiwi.front.cur_channel.name, msg.substring(4));
+                //kiwi.front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
+                kiwi.front.cur_channel.addMsg(null, ' ', '* ' + kiwi.gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
                 break;
 
             case '/notice':
                 dest = parts[1];
                 msg = parts.slice(2).join(' ');
 
-                gateway.notice(dest, msg);
-                this.onNotice({}, {nick: gateway.nick, channel: dest, msg: msg});
+                kiwi.gateway.notice(dest, msg);
+                this.onNotice({}, {nick: kiwi.gateway.nick, channel: dest, msg: msg});
                 break;
 
             case '/win':
                 if (parts[1] !== undefined) {
-                    front.windowsShow(parseInt(parts[1], 10));
+                    kiwi.front.windowsShow(parseInt(parts[1], 10));
                 }
                 break;
 
             case '/quit':
-                gateway.quit(msg.split(" ", 2)[1]);
+                kiwi.gateway.quit(msg.split(" ", 2)[1]);
                 break;
 
             case '/topic':
@@ -366,18 +366,18 @@ var front = {
                         t.setSelectionRange(pos, pos);
                     }
                 } else {
-                    gateway.setTopic(front.cur_channel.name, msg.split(' ', 2)[1]);
-                    //gateway.raw('TOPIC ' + front.cur_channel.name + ' :' + msg.split(' ', 2)[1]);
+                    kiwi.gateway.setTopic(kiwi.front.cur_channel.name, msg.split(' ', 2)[1]);
+                    //kiwi.gateway.raw('TOPIC ' + kiwi.front.cur_channel.name + ' :' + msg.split(' ', 2)[1]);
                 }
                 break;
 
             case '/kiwi':
-                gateway.kiwi(front.cur_channel.name, msg.substring(6));
+                kiwi.gateway.kiwi(kiwi.front.cur_channel.name, msg.substring(6));
                 break;
 
             default:
-                //front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
-                gateway.raw(msg.substring(1));
+                //kiwi.front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
+                kiwi.gateway.raw(msg.substring(1));
             }
 
         } else {
@@ -385,12 +385,12 @@ var front = {
             if (msg.trim() === '') {
                 return;
             }
-            if (front.cur_channel.name !== 'server') {
-                gateway.msg(front.cur_channel.name, msg);
+            if (kiwi.front.cur_channel.name !== 'server') {
+                kiwi.gateway.msg(kiwi.front.cur_channel.name, msg);
                 d = new Date();
                 d = d.getHours() + ":" + d.getMinutes();
-                //front.addMsg(d, gateway.nick, msg);
-                front.cur_channel.addMsg(null, gateway.nick, msg);
+                //kiwi.front.addMsg(d, kiwi.gateway.nick, msg);
+                kiwi.front.cur_channel.addMsg(null, kiwi.gateway.nick, msg);
             }
         }
     },
@@ -399,49 +399,49 @@ var front = {
     onMsg: function (e, data) {
         var destination, plugin_event;
         // Is this message from a user?
-        if (data.channel === gateway.nick) {
+        if (data.channel === kiwi.gateway.nick) {
             destination = data.nick.toLowerCase();
         } else {
             destination = data.channel.toLowerCase();    
         }
         
         plugin_event = {nick: data.nick, msg: data.msg, destination: destination};
-        plugin_event = plugs.run('msg_recieved', plugin_event);
+        plugin_event = kiwi.plugs.run('msg_recieved', plugin_event);
         if (!plugin_event) {
             return;
         }
 
-        if (!front.tabviewExists(plugin_event.destination)) {
-            front.tabviewAdd(plugin_event.destination);
+        if (!kiwi.front.tabviewExists(plugin_event.destination)) {
+            kiwi.front.tabviewAdd(plugin_event.destination);
         }
-        front.tabviews[plugin_event.destination].addMsg(null, plugin_event.nick, plugin_event.msg);
+        kiwi.front.tabviews[plugin_event.destination].addMsg(null, plugin_event.nick, plugin_event.msg);
     },
     
     onDebug: function (e, data) {
-        if (!front.tabviewExists('kiwi_debug')) {
-            front.tabviewAdd('kiwi_debug');
+        if (!kiwi.front.tabviewExists('kiwi_debug')) {
+            kiwi.front.tabviewAdd('kiwi_debug');
         }
-        front.tabviews.kiwi_debug.addMsg(null, ' ', data.msg);
+        kiwi.front.tabviews.kiwi_debug.addMsg(null, ' ', data.msg);
     },
     
     onAction: function (e, data) {
         var destination;
         // Is this message from a user?
-        if (data.channel === gateway.nick) {
+        if (data.channel === kiwi.gateway.nick) {
             destination = data.nick;
         } else {
             destination = data.channel;    
         }
         
-        if (!front.tabviewExists(destination)) {
-            front.tabviewAdd(destination);
+        if (!kiwi.front.tabviewExists(destination)) {
+            kiwi.front.tabviewAdd(destination);
         }
-        front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
+        kiwi.front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
     },
     
     onTopic: function (e, data) {
-        if (front.tabviewExists(data.channel)) {
-            front.tabviews[data.channel.toLowerCase()].changeTopic(data.topic);            
+        if (kiwi.front.tabviewExists(data.channel)) {
+            kiwi.front.tabviews[data.channel.toLowerCase()].changeTopic(data.topic);            
         }
     },
     
@@ -449,12 +449,12 @@ var front = {
         var nick = (data.nick === undefined) ? '' : data.nick,
             enick = '[' + nick + ']';
 
-        if (front.tabviewExists(data.target)) {
-            front.tabviews[data.target.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
-        } else if (front.tabviewExists(nick)) {
-            front.tabviews[nick.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
+        if (kiwi.front.tabviewExists(data.target)) {
+            kiwi.front.tabviews[data.target.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
+        } else if (kiwi.front.tabviewExists(nick)) {
+            kiwi.front.tabviews[nick.toLowerCase()].addMsg(null, enick, data.msg, 'notice');
         } else {
-            front.tabviews.server.addMsg(null, enick, data.msg, 'notice');
+            kiwi.front.tabviews.server.addMsg(null, enick, data.msg, 'notice');
         }
     },
     
@@ -465,13 +465,13 @@ var front = {
             if (typeof msg[1] === 'undefined') {
                 msg[1] = '';
             }
-            gateway.notice(data.nick, String.fromCharCode(1) + 'PING ' + msg[1] + String.fromCharCode(1));
+            kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'PING ' + msg[1] + String.fromCharCode(1));
             break;
         case 'TIME':
-            gateway.notice(data.nick, String.fromCharCode(1) + 'TIME ' + (new Date()).toLocaleString() + String.fromCharCode(1));
+            kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'TIME ' + (new Date()).toLocaleString() + String.fromCharCode(1));
             break;
         }
-        front.tabviews.server.addMsg(null, 'CTCP [' + data.nick + ']', data.msg, 'ctcp');
+        kiwi.front.tabviews.server.addMsg(null, 'CTCP [' + data.nick + ']', data.msg, 'ctcp');
     },
     
     onCTCPResponse: function (e, data) {
@@ -483,52 +483,52 @@ var front = {
     
     onConnect: function (e, data) {
         if (data.connected) {
-            if (gateway.nick !== data.nick) {
-                gateway.nick = data.nick;
-                front.doLayout();
+            if (kiwi.gateway.nick !== data.nick) {
+                kiwi.gateway.nick = data.nick;
+                kiwi.front.doLayout();
             }
 
-            front.tabviews.server.addMsg(null, ' ', '=== Connected OK :)', 'status');
+            kiwi.front.tabviews.server.addMsg(null, ' ', '=== Connected OK :)', 'status');
             if (typeof init_data.channel === "string") {
-                front.joinChannel(init_data.channel);
+                kiwi.front.joinChannel(init_data.channel);
             }
-            plugs.run('connect', {success: true});
+            kiwi.plugs.run('connect', {success: true});
         } else {
-            front.tabviews.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
-            plugs.run('connect', {success: false});
+            kiwi.front.tabviews.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
+            kiwi.plugs.run('connect', {success: false});
         }
     },
     onConnectFail: function (e, data) {
         var reason = (typeof data.reason === 'string') ? data.reason : '';
-        front.tabviews.server.addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
-        plugs.run('connect', {success: false});
+        kiwi.front.tabviews.server.addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
+        kiwi.plugs.run('connect', {success: false});
     },
     onDisconnect: function (e, data) {
         var tab;
-        for (tab in front.tabviews) {
-            front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error');
+        for (tab in kiwi.front.tabviews) {
+            kiwi.front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error');
         }
-        plugs.run('disconnect', {success: false});
+        kiwi.plugs.run('disconnect', {success: false});
     },
     onOptions: function (e, data) {
-        if (typeof gateway.network_name === "string" && gateway.network_name !== "") {
-            front.tabviews.server.tab.text(gateway.network_name);
+        if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
+            kiwi.front.tabviews.server.tab.text(kiwi.gateway.network_name);
         }
     },
     onMOTD: function (e, data) {
-        front.tabviews.server.addMsg(null, data.server, data.msg, 'motd');
+        kiwi.front.tabviews.server.addMsg(null, data.server, data.msg, 'motd');
     },
     onWhois: function (e, data) {
         var d;
         if (data.msg) {
-            front.cur_channel.addMsg(null, data.nick, data.msg, 'whois');
+            kiwi.front.cur_channel.addMsg(null, data.nick, data.msg, 'whois');
         } else if (data.logon) {
             d = new Date();
             d.setTime(data.logon * 1000);
             d = d.toLocaleString();
-            front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' second' + ((data.idle !== 1) ? 's' : '') + ', signed on ' + d, 'whois');
+            kiwi.front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' second' + ((data.idle !== 1) ? 's' : '') + ', signed on ' + d, 'whois');
         } else {
-            front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' seconds', 'whois');
+            kiwi.front.cur_channel.addMsg(null, data.nick, 'idle for ' + data.idle + ' seconds', 'whois');
         }
     },
     onMode: function (e, data) {
@@ -538,14 +538,14 @@ var front = {
         // mode symbol from the highest mode. Eg. -h may leave +o from previous modes; It
         // doesn't simply clear it! ~Darren
         if (typeof data.channel === 'string' && typeof data.effected_nick === 'string') {
-            front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '[' + data.mode + '] ' + data.effected_nick + ' by ' + data.nick, 'mode', '');
-            front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
-                if (front.nickStripPrefix($(this).text()) === data.effected_nick) {
+            kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '[' + data.mode + '] ' + data.effected_nick + ' by ' + data.nick, 'mode', '');
+            kiwi.front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
+                if (kiwi.front.nickStripPrefix($(this).text()) === data.effected_nick) {
 
                     if (data.mode.split('')[0] === '+') {
-                        for (i in gateway.user_prefixes) {
-                            if (gateway.user_prefixes[i].mode == data.mode.split('')[1]) {
-                                new_nick_text = gateway.user_prefixes[i].symbol + data.effected_nick;
+                        for (i in kiwi.gateway.user_prefixes) {
+                            if (kiwi.gateway.user_prefixes[i].mode == data.mode.split('')[1]) {
+                                new_nick_text = kiwi.gateway.user_prefixes[i].symbol + data.effected_nick;
                                 break;
                             }
                         }
@@ -564,10 +564,10 @@ var front = {
     },
     onUserList: function (e, data) {
         var ul, nick, mode;
-        if (front.tabviews[data.channel.toLowerCase()] === undefined) {
+        if (kiwi.front.tabviews[data.channel.toLowerCase()] === undefined) {
             return;
         }
-        ul = front.tabviews[data.channel.toLowerCase()].userlist;
+        ul = kiwi.front.tabviews[data.channel.toLowerCase()].userlist;
         
         if (!document.userlist_updating) {
             document.userlist_updating = true;
@@ -577,38 +577,38 @@ var front = {
         $.each(data.users, function (i, item) {
             nick = i; //i.match(/^.+!/g);
             mode = item;
-            $('<li><a class="nick" onclick="front.userClick(this);">' + mode + nick + '</a></li>').appendTo(ul);
+            $('<li><a class="nick" onclick="kiwi.front.userClick(this);">' + mode + nick + '</a></li>').appendTo(ul);
         });
         
-        front.tabviews[data.channel.toLowerCase()].userlistSort();
+        kiwi.front.tabviews[data.channel.toLowerCase()].userlistSort();
     },
     onUserListEnd: function (e, data) {
         document.userlist_updating = false;
     },
     
     onJoin: function (e, data) {
-        if (!front.tabviewExists(data.channel)) {
-            front.tabviewAdd(data.channel.toLowerCase());
+        if (!kiwi.front.tabviewExists(data.channel)) {
+            kiwi.front.tabviewAdd(data.channel.toLowerCase());
         }
         
-        if (data.nick === gateway.nick) {
+        if (data.nick === kiwi.gateway.nick) {
             return; // Not needed as it's already in nicklist
         }
-        front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action', 'color:#009900;');
-        $('<li><a class="nick" onclick="front.userClick(this);">' + data.nick + '</a></li>').appendTo(front.tabviews[data.channel.toLowerCase()].userlist);
-        front.tabviews[data.channel.toLowerCase()].userlistSort();
+        kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
+        $('<li><a class="nick" onclick="kiwi.front.userClick(this);">' + data.nick + '</a></li>').appendTo(kiwi.front.tabviews[data.channel.toLowerCase()].userlist);
+        kiwi.front.tabviews[data.channel.toLowerCase()].userlistSort();
     },
     onPart: function (e, data) {
-        if (front.tabviewExists(data.channel)) {
+        if (kiwi.front.tabviewExists(data.channel)) {
             // If this is us, close the tabview
-            if (data.nick === gateway.nick) {
-                front.tabviews[data.channel.toLowerCase()].close();
-                front.tabviews.server.show();
+            if (data.nick === kiwi.gateway.nick) {
+                kiwi.front.tabviews[data.channel.toLowerCase()].close();
+                kiwi.front.tabviews.server.show();
                 return;
             }
             
-            front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- ' + data.nick + ' has left (' + data.message + ')', 'action', 'color:#990000;');
-            front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
+            kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- ' + data.nick + ' has left (' + data.message + ')', 'action part', 'color:#990000;');
+            kiwi.front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
                 if ($(this).text() === data.nick) {
                     $(this).remove();
                 }
@@ -616,18 +616,18 @@ var front = {
         }
     },
     onKick: function (e, data) {
-        if (front.tabviewExists(data.channel)) {
+        if (kiwi.front.tabviewExists(data.channel)) {
             // If this is us, close the tabview
-            if (data.kicked === gateway.nick) {
-                //front.tabviews[data.channel.toLowerCase()].close();
-                front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '=== You have been kicked from ' + data.channel + '. ' + data.message, 'status');
-                front.tabviews[data.channel.toLowerCase()].safe_to_close = true;
-                $('li', front.tabviews[data.channel.toLowerCase()].userlist).remove();
+            if (data.kicked === kiwi.gateway.nick) {
+                //kiwi.front.tabviews[data.channel.toLowerCase()].close();
+                kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '=== You have been kicked from ' + data.channel + '. ' + data.message, 'status kick');
+                kiwi.front.tabviews[data.channel.toLowerCase()].safe_to_close = true;
+                $('li', kiwi.front.tabviews[data.channel.toLowerCase()].userlist).remove();
                 return;
             }
             
-            front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- ' + data.kicked + ' kicked by ' + data.nick + '(' + data.message + ')', 'action', 'color:#990000;');
-            front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
+            kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '<-- ' + data.kicked + ' kicked by ' + data.nick + '(' + data.message + ')', 'action kick', 'color:#990000;');
+            kiwi.front.tabviews[data.channel.toLowerCase()].userlist.children().each(function () {
                 if ($(this).text() === data.nick) {
                     $(this).remove();
                 }
@@ -635,38 +635,38 @@ var front = {
         }
     },
     onNick: function (e, data) {
-        if (data.nick === gateway.nick) {
-            gateway.nick = data.newnick;
-            front.doLayout();
+        if (data.nick === kiwi.gateway.nick) {
+            kiwi.gateway.nick = data.newnick;
+            kiwi.front.doLayout();
         }
         
-        $.each(front.tabviews, function (i, item) {
-            $.each(front.tabviews, function (i, item) {
+        $.each(kiwi.front.tabviews, function (i, item) {
+            $.each(kiwi.front.tabviews, function (i, item) {
                 item.changeNick(data.newnick, data.nick);
             });
         });
     },
     onQuit: function (e, data) {
-        $.each(front.tabviews, function (i, item) {
-            $.each(front.tabviews, function (i, item) {
+        $.each(kiwi.front.tabviews, function (i, item) {
+            $.each(kiwi.front.tabviews, function (i, item) {
                 item.userlist.children().each(function () {
                     if ($(this).text() === data.nick) {
                         $(this).remove();
-                        item.addMsg(null, ' ', '<-- ' + data.nick + ' has quit (' + data.message + ')', 'action', 'color:#990000;');
+                        item.addMsg(null, ' ', '<-- ' + data.nick + ' has quit (' + data.message + ')', 'action quit', 'color:#990000;');
                     }
                 });
             });
         });
     },
     onChannelRedirect: function (e, data) {
-        front.tabviews[data.from.toLowerCase()].close();
-        front.tabviewAdd(data.to.toLowerCase());
-        front.tabviews[data.to.toLowerCase()].addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
+        kiwi.front.tabviews[data.from.toLowerCase()].close();
+        kiwi.front.tabviewAdd(data.to.toLowerCase());
+        kiwi.front.tabviews[data.to.toLowerCase()].addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
     },
     
     onIRCError: function (e, data) {
         var t_view;
-        if (data.channel !== undefined && front.tabviewExists(data.channel)) {
+        if (data.channel !== undefined && kiwi.front.tabviewExists(data.channel)) {
             t_view = data.channel;
         } else {
             t_view = 'server';
@@ -674,42 +674,42 @@ var front = {
 
         switch (data.error) {
         case 'banned_from_channel':
-            front.tabviews[t_view].addMsg(null, ' ', '=== You are banned from ' + data.channel + '. ' + data.reason, 'status');
+            kiwi.front.tabviews[t_view].addMsg(null, ' ', '=== You are banned from ' + data.channel + '. ' + data.reason, 'status');
             if (t_view !== 'server') {
-                front.tabviews[t_view].safe_to_close = true;
+                kiwi.front.tabviews[t_view].safe_to_close = true;
             }
             break;
         case 'bad_channel_key':
-            front.tabviews[t_view].addMsg(null, ' ', '=== Bad channel key for ' + data.channel, 'status');
+            kiwi.front.tabviews[t_view].addMsg(null, ' ', '=== Bad channel key for ' + data.channel, 'status');
             if (t_view !== 'server') {
-                front.tabviews[t_view].safe_to_close = true;
+                kiwi.front.tabviews[t_view].safe_to_close = true;
             }
             break;
         case 'invite_only_channel':
-            front.tabviews[t_view].addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
+            kiwi.front.tabviews[t_view].addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
             if (t_view !== 'server') {
-                front.tabviews[t_view].safe_to_close = true;
+                kiwi.front.tabviews[t_view].safe_to_close = true;
             }
             break;
         case 'channel_is_full':
-            front.tabviews[t_view].addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
+            kiwi.front.tabviews[t_view].addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
             if (t_view !== 'server') {
-                front.tabviews[t_view].safe_to_close = true;
+                kiwi.front.tabviews[t_view].safe_to_close = true;
             }
             break;
         case 'chanop_privs_needed':
-            front.tabviews[data.channel].addMsg(null, ' ', '=== ' + data.reason, 'status');
+            kiwi.front.tabviews[data.channel].addMsg(null, ' ', '=== ' + data.reason, 'status');
             break;
         case 'no_such_nick':
-            front.tabviews.server.addMsg(null, ' ', '=== ' + data.nick + ': ' + data.reason, 'status'); 
+            kiwi.front.tabviews.server.addMsg(null, ' ', '=== ' + data.nick + ': ' + data.reason, 'status'); 
             break;
         case 'nickname_in_use':
-            front.tabviews.server.addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
-            front.showChangeNick();
+            kiwi.front.tabviews.server.addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
+            kiwi.front.showChangeNick();
             break;
         default:
             // We don't know what data contains, so don't do anything with it.
-            //front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
+            //kiwi.front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
         }
     },
     
@@ -728,7 +728,7 @@ var front = {
                         num = 10;
                     }
                     num = num - 1;
-                    front.windowsShow(num);
+                    kiwi.front.windowsShow(num);
                     return false;
                 }
                 break;
@@ -738,10 +738,10 @@ var front = {
                 msg = $('#kiwi_msginput').val();
                 msg = msg.trim();
                 
-                front.buffer.push(msg);
-                front.buffer_pos = front.buffer.length;
+                kiwi.front.buffer.push(msg);
+                kiwi.front.buffer_pos = kiwi.front.buffer.length;
                 
-                front.run(msg);
+                kiwi.front.run(msg);
                 $('#kiwi_msginput').val('');
                 
                 break;
@@ -754,35 +754,35 @@ var front = {
                 return false;
             case e.which === 37:            // left
                 if (meta) {
-                    front.windowsPrevious();
+                    kiwi.front.windowsPrevious();
                     return false;
                 }
                 break;
             case e.which === 38:            // up
-                if (front.buffer_pos > 0) {
-                    front.buffer_pos--;
-                    $('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
+                if (kiwi.front.buffer_pos > 0) {
+                    kiwi.front.buffer_pos--;
+                    $('#kiwi_msginput').val(kiwi.front.buffer[kiwi.front.buffer_pos]);
                 }
                 break;
             case e.which === 39:            // right
                 if (meta) {
-                    front.windowsNext();
+                    kiwi.front.windowsNext();
                     return false;
                 }
                 break;
             case e.which === 40:            // down
-                if (front.buffer_pos < front.buffer.length) {
-                    front.buffer_pos++;
-                    $('#kiwi_msginput').val(front.buffer[front.buffer_pos]);
+                if (kiwi.front.buffer_pos < kiwi.front.buffer.length) {
+                    kiwi.front.buffer_pos++;
+                    $('#kiwi_msginput').val(kiwi.front.buffer[kiwi.front.buffer_pos]);
                 }
                 break;
                 
             case e.which === 9:                // tab
                 // Get possible autocompletions
                 data = [];
-                front.cur_channel.userlist.children().each(function () {
+                kiwi.front.cur_channel.userlist.children().each(function () {
                     var nick;
-                    nick = front.nickStripPrefix($('a.nick', this).text());
+                    nick = kiwi.front.nickStripPrefix($('a.nick', this).text());
                     data.push(nick);
                 });
                 
@@ -818,7 +818,7 @@ var front = {
         
         
         $('#kiwi .control .msginput .nick').click(function () {
-            front.showChangeNick();            
+            kiwi.front.showChangeNick();            
         });
         
         
@@ -826,21 +826,21 @@ var front = {
         
         
         $('#kiwi .plugins .load_plugin_file').click(function () {
-            if (typeof front.boxes.plugins !== "undefined") {
+            if (typeof kiwi.front.boxes.plugins !== "undefined") {
                 return;
             }
             
-            front.boxes.plugins = new Box("plugin_file");
-            $('#tmpl_plugins').tmpl({}).appendTo(front.boxes.plugins.content);
-            front.boxes.plugins.box.css('top', -(front.boxes.plugins.height + 40));
+            kiwi.front.boxes.plugins = new Box("plugin_file");
+            $('#tmpl_plugins').tmpl({}).appendTo(kiwi.front.boxes.plugins.content);
+            kiwi.front.boxes.plugins.box.css('top', -(kiwi.front.boxes.plugins.height + 40));
             
             // Populate the plugin list..
             function enumPlugins() {
                 var lst, j, txt;
                 lst = $('#plugin_list');
                 lst.find('option').remove();
-                for (j in plugs.loaded) {
-                    txt = plugs.loaded[j].name;
+                for (j in kiwi.plugs.loaded) {
+                    txt = kiwi.plugs.loaded[j].name;
                     lst.append('<option value="' + txt + '">' + txt + '</option>');
                 }
             }
@@ -854,13 +854,13 @@ var front = {
                 return false;
             });
             $('#kiwi .cancelpluginfile').click(function () {
-                front.boxes.plugins.destroy();
+                kiwi.front.boxes.plugins.destroy();
             });
             
             $('#kiwi #plugins_list_unload').click(function () {
                 var selected_plugin;
                 selected_plugin = $('#plugin_list').val();
-                plugs.unloadPlugin(selected_plugin);
+                kiwi.plugs.unloadPlugin(selected_plugin);
                 enumPlugins();
             });
             
@@ -898,7 +898,7 @@ var front = {
         $('#kiwi').append($('#tmpl_change_nick').tmpl({}));
         
         $('#kiwi .form_newnick').submit(function () {
-            front.run('/NICK ' + $('#kiwi .txtnewnick').val());
+            kiwi.front.run('/NICK ' + $('#kiwi .txtnewnick').val());
             $('#kiwi .newnick').remove();
             return false;
         });
@@ -926,15 +926,15 @@ var front = {
 
 
     tabviewExists: function (name) {
-        return (typeof front.tabviews[name.toLowerCase()] !== 'undefined');
+        return (typeof kiwi.front.tabviews[name.toLowerCase()] !== 'undefined');
     },
     
     tabviewAdd: function (v_name) {
         /*global Tabview */
         var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
 
-        if (v_name.charAt(0) === gateway.channel_prefix) {
-            re = new RegExp(gateway.channel_prefix, "g");
+        if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
+            re = new RegExp(kiwi.gateway.channel_prefix, "g");
             htmlsafe_name = v_name.replace(re, 'pre');
             htmlsafe_name = "chan_" + htmlsafe_name;
         } else {
@@ -946,23 +946,23 @@ var front = {
         tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
         tmp_tabname = 'kiwi_tab_' + htmlsafe_name;
         
-        if (!front.tabviewExists(v_name)) {
+        if (!kiwi.front.tabviewExists(v_name)) {
             $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
             $('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
-            $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
+            $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="kiwi.front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
         }
-        //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ front.windowShow(v_name); });
-        //front.windowShow(v_name);
+        //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.windowShow(v_name); });
+        //kiwi.front.windowShow(v_name);
         
-        front.tabviews[v_name.toLowerCase()] = new Tabview();
-        front.tabviews[v_name.toLowerCase()].name = v_name;
-        front.tabviews[v_name.toLowerCase()].div = $('#' + tmp_divname);
-        front.tabviews[v_name.toLowerCase()].userlist = $('#' + tmp_userlistname);
-        front.tabviews[v_name.toLowerCase()].tab = $('#' + tmp_tabname);
+        kiwi.front.tabviews[v_name.toLowerCase()] = new Tabview();
+        kiwi.front.tabviews[v_name.toLowerCase()].name = v_name;
+        kiwi.front.tabviews[v_name.toLowerCase()].div = $('#' + tmp_divname);
+        kiwi.front.tabviews[v_name.toLowerCase()].userlist = $('#' + tmp_userlistname);
+        kiwi.front.tabviews[v_name.toLowerCase()].tab = $('#' + tmp_tabname);
         if (!userlist_enabled) {
-            front.tabviews[v_name.toLowerCase()].userlist_width = 0;
+            kiwi.front.tabviews[v_name.toLowerCase()].userlist_width = 0;
         }
-        front.tabviews[v_name.toLowerCase()].show();
+        kiwi.front.tabviews[v_name.toLowerCase()].show();
         
         if (typeof registerTouches === "function") {
             //alert("Registering touch interface");
@@ -970,12 +970,12 @@ var front = {
             registerTouches(document.getElementById(tmp_divname));
         }
         /*
-        front.tabviews[v_name.toLowerCase()].userlist.click(function(){
+        kiwi.front.tabviews[v_name.toLowerCase()].userlist.click(function(){
             alert($(this).attr('id'));
         });
         */
 
-        front.doLayoutSize();
+        kiwi.front.doLayoutSize();
     },
     
     
@@ -988,16 +988,16 @@ var front = {
         if ($(li).data('userbox') === item) {
             $(li).removeData('userbox');
         } else {
-            $('#tmpl_user_box').tmpl({nick: front.nickStripPrefix($(item).text())}).appendTo(li);
+            $('#tmpl_user_box').tmpl({nick: kiwi.front.nickStripPrefix($(item).text())}).appendTo(li);
             
             $('#kiwi .userbox .userbox_query').click(function (ev) {
                 var nick = $('#kiwi .userbox_nick').val();
-                front.run('/query ' + nick);
+                kiwi.front.run('/query ' + nick);
             });
             
             $('#kiwi .userbox .userbox_whois').click(function (ev) {
                 var nick = $('#kiwi .userbox_nick').val();
-                front.run('/whois ' + nick);
+                kiwi.front.run('/whois ' + nick);
             });
             $(li).data('userbox', item);
         }
@@ -1005,36 +1005,36 @@ var front = {
     
     
     sync: function () {
-        gateway.sync();
+        kiwi.gateway.sync();
     },
     
     onSync: function (e, data) {
         // Set any settings
         if (data.nick !== undefined) {
-            gateway.nick = data.nick;
+            kiwi.gateway.nick = data.nick;
         }
         
         // Add the tabviews
         if (data.tabviews !== undefined) {
             $.each(data.tabviews, function (i, tab) {
-                if (!front.tabviewExists(tab.name)) {
-                    front.tabviewAdd(gateway.channel_prefix + tab.name);
+                if (!kiwi.front.tabviewExists(tab.name)) {
+                    kiwi.front.tabviewAdd(kiwi.gateway.channel_prefix + tab.name);
                     
                     if (tab.userlist !== undefined) {
-                        front.onUserList({'channel': gateway.channel_prefix + tab.name, 'users': tab.userlist});
+                        kiwi.front.onUserList({'channel': kiwi.gateway.channel_prefix + tab.name, 'users': tab.userlist});
                     }
                 }
             });
         }
         
-        front.doLayout();
+        kiwi.front.doLayout();
     },
     
     
     setTopicText: function (new_topic) {
-        front.original_topic = new_topic;
+        kiwi.front.original_topic = new_topic;
         $('#kiwi .cur_topic .topic').text(new_topic);
-        front.doLayoutSize();
+        kiwi.front.doLayoutSize();
     },
     
     
@@ -1047,8 +1047,8 @@ var front = {
         var tmp = nick, i, prefix;
         
         prefix = tmp.charAt(0);
-        for (i in gateway.user_prefixes) {
-            if (gateway.user_prefixes[i].symbol === prefix) {
+        for (i in kiwi.gateway.user_prefixes) {
+            if (kiwi.gateway.user_prefixes[i].symbol === prefix) {
                 return tmp.substring(1);
             }
         }
@@ -1060,8 +1060,8 @@ var front = {
         var tmp = nick, i, prefix;
         
         prefix = tmp.charAt(0);
-        for (i in gateway.user_prefixes) {
-            if (gateway.user_prefixes[i].symbol === prefix) {
+        for (i in kiwi.gateway.user_prefixes) {
+            if (kiwi.gateway.user_prefixes[i].symbol === prefix) {
                 return prefix;
             }
         }
@@ -1072,7 +1072,7 @@ var front = {
     isChannel: function (name) {
         var prefix, is_chan;
         prefix = name.charAt(0);
-        if (gateway.channel_prefix.indexOf(prefix) > -1) {
+        if (kiwi.gateway.channel_prefix.indexOf(prefix) > -1) {
             is_chan = true;
         } else {
             is_chan = false;
@@ -1096,14 +1096,14 @@ var front = {
     windowsNext: function () {
         var tab, next;
         next = false;
-        for (tab in front.tabviews) {
+        for (tab in kiwi.front.tabviews) {
             if (!next) {
-                if (front.tabviews[tab] === front.cur_channel) {
+                if (kiwi.front.tabviews[tab] === kiwi.front.cur_channel) {
                     next = true;
                     continue;
                 }
             } else {
-                front.tabviews[tab].show();
+                kiwi.front.tabviews[tab].show();
                 return;
             }
         }
@@ -1112,14 +1112,14 @@ var front = {
     windowsPrevious: function () {
         var tab, prev_tab, next;
         next = false;
-        for (tab in front.tabviews) {
-            if (front.tabviews[tab] === front.cur_channel) {
+        for (tab in kiwi.front.tabviews) {
+            if (kiwi.front.tabviews[tab] === kiwi.front.cur_channel) {
                 if (prev_tab) {
                     prev_tab.show();
                 }
                 return;
             }
-            prev_tab = front.tabviews[tab];
+            prev_tab = kiwi.front.tabviews[tab];
         }
     },
 
@@ -1127,9 +1127,9 @@ var front = {
         num = parseInt(num, 10);
         console.log('Showing window ' + num.toString());
         var i = 0, tab;
-        for (tab in front.tabviews) {
+        for (tab in kiwi.front.tabviews) {
             if (i === num) {
-                front.tabviews[tab].show();
+                kiwi.front.tabviews[tab].show();
                 return;
             }
             i++;
@@ -1182,14 +1182,14 @@ var Utilityview = function (name) {
 
     this.tab = $('<li id="' + tmp_tabname + '">' + this.title + '</li>');
     this.tab.click(function () {
-        front.utilityviews[rand_name.toLowerCase()].show();
+        kiwi.front.utilityviews[rand_name.toLowerCase()].show();
     });
     $('#kiwi .utilityviewlist ul').append(this.tab);
     
     this.div = $('#' + tmp_divname);
     this.div.css('overflow', 'hidden');
 
-    front.utilityviews[rand_name.toLowerCase()] = this;
+    kiwi.front.utilityviews[rand_name.toLowerCase()] = this;
 };
 
 Utilityview.prototype.name = null;
@@ -1210,8 +1210,8 @@ Utilityview.prototype.show = function () {
 
     this.addPartImage();
 
-    front.setTopicText(this.topic);
-    front.cur_channel = this;
+    kiwi.front.setTopicText(this.topic);
+    kiwi.front.cur_channel = this;
 
     // If we're using fancy scrolling, refresh it
     if (touch_scroll) {
@@ -1223,10 +1223,10 @@ Utilityview.prototype.close = function () {
     this.div.remove();
     this.tab.remove();
     
-    if (front.cur_channel === this) {
-        front.tabviews.server.show();
+    if (kiwi.front.cur_channel === this) {
+        kiwi.front.tabviews.server.show();
     }
-    delete front.utilityviews[this.name.toLowerCase()];
+    delete kiwi.front.utilityviews[this.name.toLowerCase()];
 };
 
 Utilityview.prototype.addPartImage = function () {
@@ -1241,8 +1241,8 @@ Utilityview.prototype.addPartImage = function () {
     this.tab.append(del_html);
     
     $('.tab_part', this.tab).click(function () {
-        if (front.cur_channel.name !== 'server') {
-            front.cur_channel.close();
+        if (kiwi.front.cur_channel.name !== 'server') {
+            kiwi.front.cur_channel.close();
         }
     });
 };
@@ -1302,8 +1302,8 @@ Tabview.prototype.show = function () {
     this.addPartImage();
     
     this.clearHighlight();
-    front.setTopicText(this.topic);
-    front.cur_channel = this;
+    kiwi.front.setTopicText(this.topic);
+    kiwi.front.cur_channel = this;
     
     // If we're using fancy scrolling, refresh it
     if (touch_scroll) {
@@ -1321,10 +1321,10 @@ Tabview.prototype.close = function () {
     this.userlist.remove();
     this.tab.remove();
     
-    if (front.cur_channel === this) {
-        front.tabviews.server.show();
+    if (kiwi.front.cur_channel === this) {
+        kiwi.front.tabviews.server.show();
     }
-    delete front.tabviews[this.name.toLowerCase()];
+    delete kiwi.front.tabviews[this.name.toLowerCase()];
 };
 
 Tabview.prototype.addPartImage = function () {
@@ -1339,12 +1339,12 @@ Tabview.prototype.addPartImage = function () {
     this.tab.append(del_html);
     
     $('.tab_part', this.tab).click(function () {
-        if (front.isChannel($(this).parent().text())) {
-            front.run("/part");
+        if (kiwi.front.isChannel($(this).parent().text())) {
+            kiwi.front.run("/part");
         } else {
             // Make sure we don't close the server tab
-            if (front.cur_channel.name !== 'server') {
-                front.cur_channel.close();
+            if (kiwi.front.cur_channel.name !== 'server') {
+                kiwi.front.cur_channel.close();
             }
         }
     });
@@ -1360,7 +1360,7 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     self = this;
     
     tmp = {msg: msg, time: time, nick: nick, tabview: this.name};
-    tmp = plugs.run('addmsg', tmp);
+    tmp = kiwi.plugs.run('addmsg', tmp);
     if (!tmp) {
         return;
     }
@@ -1416,7 +1416,7 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     }
     
     // Make the channels clickable
-    re = new RegExp('\\B(' + gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
+    re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
     msg = msg.replace(re, function (match) {
         return '<a class="chan">' + match + '</a>';
     });
@@ -1445,14 +1445,14 @@ Tabview.prototype.scrollBottom = function () {
 Tabview.prototype.changeNick = function (newNick, oldNick) {
     this.userlist.children().each(function () {
         var item = $('a.nick', this);
-        if (front.nickStripPrefix(item.text()) === oldNick) {
-            item.text(front.nickGetPrefix(item.text()) + newNick);
+        if (kiwi.front.nickStripPrefix(item.text()) === oldNick) {
+            item.text(kiwi.front.nickGetPrefix(item.text()) + newNick);
             document.temp_chan = 1;
         }
     });
     
     if (typeof document.temp_chan !== "undefined") {
-        this.addMsg(null, ' ', '=== ' + oldNick + ' is now known as ' + newNick, 'action');
+        this.addMsg(null, ' ', '=== ' + oldNick + ' is now known as ' + newNick, 'action changenick');
         delete document.temp_chan;
         this.userlistSort();
     }
@@ -1468,8 +1468,8 @@ Tabview.prototype.userlistSort = function () {
             i;
         
         // Sort by prefixes first
-        for (i in gateway.user_prefixes) {
-            prefix = gateway.user_prefixes[i].symbol;
+        for (i in kiwi.gateway.user_prefixes) {
+            prefix = kiwi.gateway.user_prefixes[i].symbol;
             
             if (compA.charAt(0) === prefix && compB.charAt(0) === prefix) {
                 // Both have the same prefix, string compare time
@@ -1504,8 +1504,8 @@ Tabview.prototype.clearHighlight = function () {
 Tabview.prototype.changeTopic = function (new_topic) {
     this.topic = new_topic;
     this.addMsg(null, ' ', '=== Topic for ' + this.name + ' is: ' + new_topic, 'topic');
-    if (front.cur_channel.name === this.name) {
-        front.setTopicText(new_topic);
+    if (kiwi.front.cur_channel.name === this.name) {
+        kiwi.front.setTopicText(new_topic);
     }
 };
 
@@ -1533,9 +1533,9 @@ Box.prototype.content = null;
 Box.prototype.destroy = function () {
     var name;
     this.box.remove();
-    for (name in front.boxes) {
-        if (front.boxes[name].id === this.id) {
-            delete front.boxes[name];
+    for (name in kiwi.front.boxes) {
+        if (kiwi.front.boxes[name].id === this.id) {
+            delete kiwi.front.boxes[name];
         }
     }
 };

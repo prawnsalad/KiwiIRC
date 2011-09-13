@@ -48,8 +48,8 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
                     init_data.channel = chans.join(',');
                 }
                 
-                front.init();
-                gateway.start(kiwi_server);
+                kiwi.front.init();
+                kiwi.gateway.start(kiwi_server);
                 
                 addEvents();
                 $('.nick').focus();

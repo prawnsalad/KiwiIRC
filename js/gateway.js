@@ -1,6 +1,6 @@
 /*jslint browser: true, confusion: true, sloppy: true, maxerr: 50, indent: 4 */
 /*globals io, $, kiwi_server */
-var gateway = {
+kiwi.gateway = {
 
     revision: 16,
 
@@ -15,38 +15,38 @@ var gateway = {
 	
     start: function (kiwi_server) {
         if (typeof kiwi_server !== 'undefined') {
-            gateway.kiwi_server = kiwi_server;
+            kiwi.gateway.kiwi_server = kiwi_server;
         }
     },
 
     connect: function (host, port, ssl, callback) {
-        if (typeof gateway.kiwi_server !== 'undefined') {
-            gateway.socket = io.connect(kiwi_server, {'max reconnection attempts': 3});
-            gateway.socket.of('/kiwi').on('connect_failed', function (reason) {
+        if (typeof kiwi.gateway.kiwi_server !== 'undefined') {
+            kiwi.gateway.socket = io.connect(kiwi_server, {'max reconnection attempts': 3});
+            kiwi.gateway.socket.of('/kiwi').on('connect_failed', function (reason) {
                 // TODO: When does this even actually get fired? I can't find a case! ~Darren
                 console.debug('Unable to connect Socket.IO', reason);
-                //front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
-                gateway.socket.disconnect();
-                $(gateway).trigger("onconnect_fail", {reason: reason});
-                gateway.sendData = function () {};
+                //kiwi.front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
+                kiwi.gateway.socket.disconnect();
+                $(kiwi.gateway).trigger("onconnect_fail", {reason: reason});
+                kiwi.gateway.sendData = function () {};
             }).on('error', function (e) {
-                $(gateway).trigger("onconnect_fail", {reason: e});
+                $(kiwi.gateway).trigger("onconnect_fail", {reason: e});
                 console.debug(e);
                 console.log(e);
             });
-            gateway.socket.on('connect', function () {
-                gateway.sendData = function (data, callback) {
-                    gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
+            kiwi.gateway.socket.on('connect', function () {
+                kiwi.gateway.sendData = function (data, callback) {
+                    kiwi.gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
                 };
-                gateway.socket.on('message', gateway.parse);
-                gateway.socket.on('disconnect', function () {
+                kiwi.gateway.socket.on('message', kiwi.gateway.parse);
+                kiwi.gateway.socket.on('disconnect', function () {
                     // Teardown procedure here
-                    $(gateway).trigger("ondisconnect", {});
+                    $(kiwi.gateway).trigger("ondisconnect", {});
                 });
-                gateway.socket.emit('irc connect', gateway.nick, host, port, ssl, callback);
+                kiwi.gateway.socket.emit('irc connect', kiwi.gateway.nick, host, port, ssl, callback);
             });
-            gateway.socket.on('too_many_connections', function () {
-                $(gateway).trigger("onconnect_fail", {reason: 'too_many_connections'});
+            kiwi.gateway.socket.on('too_many_connections', function () {
+                $(kiwi.gateway).trigger("onconnect_fail", {reason: 'too_many_connections'});
             });
         }
     },
@@ -72,34 +72,34 @@ var gateway = {
     */
     parse: function (item) {
         if (item.event !== undefined) {
-            $(gateway).trigger("on" + item.event, item);
+            $(kiwi.gateway).trigger("on" + item.event, item);
             
             switch (item.event) {
             case 'options':
                 $.each(item.options, function (name, value) {
                     switch (name) {
                     case 'CHANTYPES':
-                        gateway.channel_prefix = value.charAt(0);
+                        kiwi.gateway.channel_prefix = value.charAt(0);
                         break;
                     case 'NETWORK':
-                        gateway.network_name = value;
+                        kiwi.gateway.network_name = value;
                         break;
                     case 'PREFIX':
-                        gateway.user_prefixes = value;
+                        kiwi.gateway.user_prefixes = value;
                         break;
                     }
                 });
                 break;
         
             case 'sync':
-                if (gateway.onSync && gateway.syncing) {
-                    gateway.syncing = false;
-                    gateway.onSync(item);
+                if (kiwi.gateway.onSync && kiwi.gateway.syncing) {
+                    kiwi.gateway.syncing = false;
+                    kiwi.gateway.onSync(item);
                 }
                 break;
 
             case 'kiwi':
-                $(gateway).trigger('kiwi.' + item.namespace, item.data);
+                $(kiwi.gateway).trigger('kiwi.' + item.namespace, item.data);
                 break;
             }
         }
@@ -117,8 +117,8 @@ var gateway = {
             args: {}
         };
     
-        gateway.syncing = true;
-        gateway.sendData(data, callback);
+        kiwi.gateway.syncing = true;
+        kiwi.gateway.sendData(data, callback);
     },
 
     debug: function (callback) {
@@ -127,7 +127,7 @@ var gateway = {
             args: {}
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
 
@@ -140,7 +140,7 @@ var gateway = {
             }
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
     action: function (s_target, s_msg, callback) {
@@ -152,7 +152,7 @@ var gateway = {
             }
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
 
@@ -164,7 +164,7 @@ var gateway = {
                 data: s_data
             }
         };
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
 
@@ -177,7 +177,7 @@ var gateway = {
             }
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
 
@@ -189,7 +189,7 @@ var gateway = {
             }
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
     setTopic: function (s_channel, new_topic, callback) {
@@ -201,7 +201,7 @@ var gateway = {
             }
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
 
@@ -213,7 +213,7 @@ var gateway = {
             }
         };
 
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     },
 
 
@@ -227,7 +227,7 @@ var gateway = {
             }
         };
     
-        gateway.sendData(data, callback);
+        kiwi.gateway.sendData(data, callback);
     }
 
 
