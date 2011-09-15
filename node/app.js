@@ -504,11 +504,12 @@ this.httpHandler = function (request, response) {
             if (kiwi.cache.alljs === '') {
                 public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
 
+				min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
                 min.util = fs.readFileSync(public_http_path + 'js/util.js');
                 min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
                 min.front = fs.readFileSync(public_http_path + 'js/front.js');
                 min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
-                min.ast = jsp.parse(min.util + min.gateway + min.front + min.iscroll);
+                min.ast = jsp.parse(min.underscore + min.util + min.gateway + min.front + min.iscroll);
                 min.ast = pro.ast_mangle(min.ast);
                 min.ast = pro.ast_squeeze(min.ast);
                 min.final_code = pro.gen_code(min.ast);
