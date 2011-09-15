@@ -29,7 +29,7 @@
 	overflow-y:scroll;
 	width:100%; height:100%;
 }
-#kiwi h1.logo { display:block; width:264px; height:90px; text-indent:-1000px; margin:70px auto 100px; background:url(../img/logo.png) no-repeat; }
+#kiwi h1.logo { display:block; width:150px; height:175px; text-indent:-1000px; margin:70px auto 60px; background:url(../img/logo.png) no-repeat; }
 #kiwi #login { width:665px; margin:0px auto; }
 #kiwi #login ul { list-style:none; }
 #kiwi #login ul li { overflow:show; margin-bottom:10px; }
