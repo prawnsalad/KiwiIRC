@@ -548,13 +548,14 @@ this.httpHandler = function (request, response) {
             }
             agent = 'normal';
             touchscreen = false;
+
+            debug = (typeof uri.query.debug !== 'undefined');
             
             if (uri_parts[1] !== 'client') {
                 if (uri.query) {
                     server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
                     server = uri.query.server || 'irc.anonnet.org';
                     nick = uri.query.nick || '';
-                    debug = (uri.query.debug !== '');
                 } else {
                     server_set = false;
                     server = 'irc.anonnet.org';

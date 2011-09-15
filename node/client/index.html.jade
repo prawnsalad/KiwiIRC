@@ -17,12 +17,16 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
         script(type="text/javascript", src="/js/jquery.json-2.2.min.js")
-        //script(type="text/javascript", src="/js/underscore.min.js")
-        //script(type="text/javascript", src="/js/util.js")
-        //script(type="text/javascript", src="/js/gateway.js")
-        //script(type="text/javascript", src="/js/front.js")
-        //script(type="text/javascript", src="/js/iscroll.js")
-        script(type="text/javascript", src="/js/all.js")
+
+        - if (debug)
+            script(type="text/javascript", src="/js/underscore.min.js")
+            script(type="text/javascript", src="/js/util.js")
+            script(type="text/javascript", src="/js/gateway.js")
+            script(type="text/javascript", src="/js/front.js")
+            script(type="text/javascript", src="/js/iscroll.js")
+        - if (!debug)
+            script(type="text/javascript", src="/js/all.js")
+        
         //script(type="text/javascript", src="/js/plugins.js")
 
         - if (touchscreen)
@@ -41,7 +45,7 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
             var touch_scroll;
             
             $(document).ready(function(){
-                manageDebug(false);
+                manageDebug(#{debug});
 
                 //#channel,##channel,&channel
                 var chans = document.location.hash.match(/[#&]+[^ ,\\007]+/g);
