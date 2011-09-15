@@ -31,6 +31,9 @@ kiwi.front = {
         $(kiwi.gateway).bind("onnick", kiwi.front.onNick);
         $(kiwi.gateway).bind("onuserlist", kiwi.front.onUserList);
         $(kiwi.gateway).bind("onuserlist_end", kiwi.front.onUserListEnd);
+        $(kiwi.gateway).bind("onlist_start", kiwi.front.onChannelListStart);
+        $(kiwi.gateway).bind("onlist_channel", kiwi.front.onChannelList);
+        $(kiwi.gateway).bind("onlist_end", kiwi.front.onChannelListEnd);
         $(kiwi.gateway).bind("onjoin", kiwi.front.onJoin);
         $(kiwi.gateway).bind("ontopic", kiwi.front.onTopic);
         $(kiwi.gateway).bind("onpart", kiwi.front.onPart);
@@ -74,6 +77,27 @@ kiwi.front = {
         kiwi.front.registerKeys();
         
         $('#kiwi .toolbars').resize(kiwi.front.doLayoutSize);
+        $(window).resize(kiwi.front.doLayoutSize);
+
+        // Add the resizer for the userlist
+        $('<div id="nicklist_resize" style="position:absolute; cursor:w-resize; width:5px;"></div>').appendTo('#kiwi');
+        $('#nicklist_resize').draggable({axis: "x", drag: function() {
+            var t = $(this);
+
+            var new_width = $(document).width() - parseInt(t.css('left'), 10);
+            new_width = new_width - parseInt($('#kiwi .userlist').css('margin-left'), 10);
+            new_width = new_width - parseInt($('#kiwi .userlist').css('margin-right'), 10);
+
+            // Make sure we don't remove the userlist alltogether
+            console.log(new_width);
+            if (new_width < 20) {
+                $(this).data('draggable').offset.click.left = 10;
+                console.log('whoaa');
+            }
+
+            kiwi.front.cur_channel.setUserlistWidth(new_width);
+        }});
+
 
         $('#kiwi .formconnectwindow').submit(function () {
             var netsel = $('#kiwi .formconnectwindow .network'),
@@ -94,9 +118,7 @@ kiwi.front = {
             kiwi.front.doLayout();
             try {
                 kiwi.front.run('/connect ' + netsel.val());
-            } catch (e) {
-                alert(e);
-            }
+            } catch (e) {}
             
             $('#kiwi .connectwindow').slideUp('', kiwi.front.barsShow);
             $('#windows').click(function () { $('#kiwi_msginput').focus(); });
@@ -201,7 +223,10 @@ kiwi.front = {
         n_bottom = $(document).height() - parseInt($('#kiwi .control').offset().top, 10);
 
         $('#kiwi .windows').css({top: n_top + 'px', bottom: n_bottom + 'px'});
-        $('#kiwi .userlist').css({top: n_top + 'px', bottom: n_bottom + 'px'});
+        ul.css({top: n_top + 'px', bottom: n_bottom + 'px'});
+
+        var nl = $('#nicklist_resize');
+        nl.css({top: n_top + 'px', bottom: n_bottom + 'px', left: $(document).width()-ul.outerWidth(true)});
     },
 
 
@@ -586,6 +611,18 @@ kiwi.front = {
         document.userlist_updating = false;
     },
     
+    onChannelListStart: function (e, data) {
+        console.log('Channel listing started');
+    },
+    onChannelList: function (e, data) {
+        var network_name = kiwi.gateway.network_name;
+        kiwi.front.tabviews.server.addMsg(null, network_name, data.channel + ' (' + data.num_users + ') ' + data.topic, '');
+    },
+    onChannelListEnd: function (e, data) {
+        console.log('Channel listing ended');
+    },
+
+
     onJoin: function (e, data) {
         if (!kiwi.front.tabviewExists(data.channel)) {
             kiwi.front.tabviewAdd(data.channel.toLowerCase());
@@ -1284,17 +1321,17 @@ Tabview.prototype.show = function () {
     w.css('overflow-y', 'scroll');
 
     // Set the window size accordingly
-    if (this.userlist_width > 0) {
-        u.width(this.userlist_width);
-        w.css('right', u.outerWidth(true));
-    } else {
-        w.css('right', 0);
-    }
+    this.setUserlistWidth();
 
     // Activate this tab!
     this.div.addClass('active');
     if (this.userlist_width > 0) {
         this.userlist.addClass('active');
+        // Enable the userlist resizer
+        $('#nicklist_resize').css('display', 'block');
+    } else {
+        // Disable the userlist resizer
+        $('#nicklist_resize').css('display', 'none');
     }
     this.tab.addClass('active');
     
@@ -1325,6 +1362,22 @@ Tabview.prototype.close = function () {
         kiwi.front.tabviews.server.show();
     }
     delete kiwi.front.tabviews[this.name.toLowerCase()];
+};
+
+Tabview.prototype.setUserlistWidth = function (new_width) {
+    var w, u;
+    if (typeof new_width === 'number') this.userlist_width = new_width;
+
+    w = $('#windows');
+    u = $('#kiwi .userlist');
+
+    // Set the window size accordingly
+    if (this.userlist_width > 0) {
+        u.width(this.userlist_width);
+        w.css('right', u.outerWidth(true));
+    } else {
+        w.css('right', 0);
+    }    
 };
 
 Tabview.prototype.addPartImage = function () {

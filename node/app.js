@@ -82,6 +82,9 @@ var ircNumerics = {
     RPL_WHOISIDLE:          '317',
     RPL_ENDOFWHOIS:         '318',
     RPL_WHOISCHANNELS:      '319',
+    RPL_LISTSTART:          '321',
+    RPL_LIST:               '322',
+    RPL_LISTEND:            '323',
     RPL_NOTOPIC:            '331',
     RPL_TOPIC:              '332',
     RPL_NAMEREPLY:          '353',
@@ -174,6 +177,38 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.RPL_WHOISMODES:
             websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing});
             break;
+
+        case ircNumerics.RPL_LISTSTART:
+            (function () {
+                websocket.sendClientEvent('list_start', {server: ''});
+            }());
+            break;
+        case ircNumerics.RPL_LISTEND:
+            (function () {
+                websocket.sendClientEvent('list_end', {server: ''});
+            }());
+            break;
+        
+        case ircNumerics.RPL_LIST:
+            (function () {
+                var parts, channel, num_users, modes, topic;
+
+                parts = msg.params.split(' ');
+                channel = parts[1];
+                num_users = parts[2];
+                modes = msg.trailing.split(' ', 1);
+                topic = msg.trailing.substring(msg.trailing.indexOf(' ')+1);
+
+                websocket.sendClientEvent('list_channel', {
+                    server: '',
+                    channel: channel,
+                    topic: topic,
+                    modes: modes,
+                    num_users: num_users
+                });
+            }());
+            break;
+
         case ircNumerics.RPL_WHOISIDLE:
             params = msg.params.split(" ", 4);
             rtn = {server: '', nick: params[1], idle: params[2]};
