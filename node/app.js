@@ -1,4 +1,4 @@
-/*jslint continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
+/*jslint sloppy: true, continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
 /*globals kiwi_root */
 var tls = null;
 var net = null;
@@ -197,7 +197,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 channel = parts[1];
                 num_users = parts[2];
                 modes = msg.trailing.split(' ', 1);
-                topic = msg.trailing.substring(msg.trailing.indexOf(' ')+1);
+                topic = msg.trailing.substring(msg.trailing.indexOf(' ') + 1);
 
                 websocket.sendClientEvent('list_channel', {
                     server: '',
