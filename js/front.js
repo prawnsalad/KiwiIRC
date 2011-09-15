@@ -1,4 +1,4 @@
-/*jslint devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
+/*jslint nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global gateway, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
 kiwi.front = {
     revision: 38,
@@ -83,8 +83,8 @@ kiwi.front = {
         $('<div id="nicklist_resize" style="position:absolute; cursor:w-resize; width:5px;"></div>').appendTo('#kiwi');
         $('#nicklist_resize').draggable({axis: "x", drag: function () {
             var t = $(this),
-				new_width = $(document).width() - parseInt(t.css('left'), 10);
-			
+                new_width = $(document).width() - parseInt(t.css('left'), 10);
+            
             new_width = new_width - parseInt($('#kiwi .userlist').css('margin-left'), 10);
             new_width = new_width - parseInt($('#kiwi .userlist').css('margin-right'), 10);
 
@@ -194,6 +194,8 @@ kiwi.front = {
             kiwi.front.joinChannel($(this).text());
             return false;
         });
+        
+        kiwi.data.set('chanList', []);
 
         (function () {
             var i;
@@ -346,8 +348,8 @@ kiwi.front = {
             case '/k':
             case '/kick':
                 if (typeof parts[1] === 'undefined') {
-					return;
-				}
+                    return;
+                }
                 kiwi.gateway.raw('KICK ' + kiwi.front.cur_channel.name + ' ' + msg.split(' ', 2)[1]);
                 break;
 
@@ -614,14 +616,30 @@ kiwi.front = {
     },
     
     onChannelListStart: function (e, data) {
-        console.log('Channel listing started');
+        kiwi.data.set('chanList', []);
     },
     onChannelList: function (e, data) {
-        var network_name = kiwi.gateway.network_name;
-        kiwi.front.tabviews.server.addMsg(null, network_name, data.channel + ' (' + data.num_users + ') ' + data.topic, '');
+        var network_name = kiwi.gateway.network_name,
+            chanList = kiwi.data.get('chanList');
+        chanList.push(data);
+        kiwi.data.set('chanList', chanList);
     },
     onChannelListEnd: function (e, data) {
-        console.log('Channel listing ended');
+        var chanList, tab, table, body, chan;
+        
+        chanList = kiwi.data.get('chanList');
+        tab = new Utilityview('Channel List');
+        table = $('<table><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
+        body = table.children('tbody:first');
+        chanList = _.sortBy(chanList, function (channel) {
+            return parseInt(channel.num_users, 10);
+        }).reverse();
+        for (chan in chanList) {
+            body.append($('<tr><td><a class="chan">' + chanList[chan].channel + '</a></td><td style="text-align: center;">' + chanList[chan].num_users + '</td><td style="padding-left: 2em;">' + chanList[chan].topic + '</td></tr>'));
+        }
+        tab.div.append(table);
+        tab.div.css('overflow-y', 'scroll');
+        tab.show();
     },
 
 
@@ -1369,8 +1387,8 @@ Tabview.prototype.close = function () {
 Tabview.prototype.setUserlistWidth = function (new_width) {
     var w, u;
     if (typeof new_width === 'number') {
-		this.userlist_width = new_width;
-	}
+        this.userlist_width = new_width;
+    }
 
     w = $('#windows');
     u = $('#kiwi .userlist');
