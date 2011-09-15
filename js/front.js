@@ -81,10 +81,10 @@ kiwi.front = {
 
         // Add the resizer for the userlist
         $('<div id="nicklist_resize" style="position:absolute; cursor:w-resize; width:5px;"></div>').appendTo('#kiwi');
-        $('#nicklist_resize').draggable({axis: "x", drag: function() {
-            var t = $(this);
-
-            var new_width = $(document).width() - parseInt(t.css('left'), 10);
+        $('#nicklist_resize').draggable({axis: "x", drag: function () {
+            var t = $(this),
+				new_width = $(document).width() - parseInt(t.css('left'), 10);
+			
             new_width = new_width - parseInt($('#kiwi .userlist').css('margin-left'), 10);
             new_width = new_width - parseInt($('#kiwi .userlist').css('margin-right'), 10);
 
@@ -204,7 +204,7 @@ kiwi.front = {
     },
     
     doLayoutSize: function () {
-        var kiwi, toolbars, ul, n_top, n_bottom;
+        var kiwi, toolbars, ul, n_top, n_bottom, nl;
         kiwi = $('#kiwi');
 
         if (kiwi.width() < 330 && !kiwi.hasClass('small_kiwi')) {
@@ -225,8 +225,8 @@ kiwi.front = {
         $('#kiwi .windows').css({top: n_top + 'px', bottom: n_bottom + 'px'});
         ul.css({top: n_top + 'px', bottom: n_bottom + 'px'});
 
-        var nl = $('#nicklist_resize');
-        nl.css({top: n_top + 'px', bottom: n_bottom + 'px', left: $(document).width()-ul.outerWidth(true)});
+        nl = $('#nicklist_resize');
+        nl.css({top: n_top + 'px', bottom: n_bottom + 'px', left: $(document).width() - ul.outerWidth(true)});
     },
 
 
@@ -345,7 +345,9 @@ kiwi.front = {
             
             case '/k':
             case '/kick':
-                if (typeof parts[1] === 'undefined') return;
+                if (typeof parts[1] === 'undefined') {
+					return;
+				}
                 kiwi.gateway.raw('KICK ' + kiwi.front.cur_channel.name + ' ' + msg.split(' ', 2)[1]);
                 break;
 
@@ -568,8 +570,8 @@ kiwi.front = {
                 if (kiwi.front.nickStripPrefix($(this).text()) === data.effected_nick) {
 
                     if (data.mode.split('')[0] === '+') {
-                        for (i in kiwi.gateway.user_prefixes) {
-                            if (kiwi.gateway.user_prefixes[i].mode == data.mode.split('')[1]) {
+                        for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
+                            if (kiwi.gateway.user_prefixes[i].mode === data.mode.split('')[1]) {
                                 new_nick_text = kiwi.gateway.user_prefixes[i].symbol + data.effected_nick;
                                 break;
                             }
@@ -1366,7 +1368,9 @@ Tabview.prototype.close = function () {
 
 Tabview.prototype.setUserlistWidth = function (new_width) {
     var w, u;
-    if (typeof new_width === 'number') this.userlist_width = new_width;
+    if (typeof new_width === 'number') {
+		this.userlist_width = new_width;
+	}
 
     w = $('#windows');
     u = $('#kiwi .userlist');
