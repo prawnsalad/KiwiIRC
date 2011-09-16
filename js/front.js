@@ -635,7 +635,7 @@ kiwi.front = {
             return parseInt(channel.num_users, 10);
         }).reverse();
         for (chan in chanList) {
-            body.append($('<tr><td><a class="chan">' + chanList[chan].channel + '</a></td><td style="text-align: center;">' + chanList[chan].num_users + '</td><td style="padding-left: 2em;">' + chanList[chan].topic + '</td></tr>'));
+            body.append($('<tr><td><a class="chan">' + chanList[chan].channel + '</a></td><td style="text-align: center;">' + chanList[chan].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.format(chanList[chan].topic) + '</td></tr>'));
         }
         tab.div.append(table);
         tab.div.css('overflow-y', 'scroll');
@@ -1090,15 +1090,9 @@ kiwi.front = {
     
     setTopicText: function (new_topic) {
         kiwi.front.original_topic = new_topic;
-        $('#kiwi .cur_topic .topic').text(new_topic);
+        $('#kiwi .cur_topic .topic').text(kiwi.front.format(new_topic));
         kiwi.front.doLayoutSize();
     },
-    
-    
-    
-    
-    
-    
     
     nickStripPrefix: function (nick) {
         var tmp = nick, i, prefix;
@@ -1203,7 +1197,85 @@ kiwi.front = {
     barsHide: function () {
         $('#kiwi .toolbars').slideUp();
         $('#kiwi .control').slideUp();
+    },
+    
+    format: function (msg) {
+        var re;
+        
+        // bold
+        if (msg.indexOf(String.fromCharCode(2)) !== -1) {
+            next = '<b>';
+            while (msg.indexOf(String.fromCharCode(2)) !== -1) {
+                msg = msg.replace(String.fromCharCode(2), next);
+                next = (next === '<b>') ? '</b>' : '<b>';
+            }
+            if (next === '</b>') {
+                msg = msg + '</b>';
+            }
+        }
+        
+        // underline
+        if (msg.indexOf(String.fromCharCode(31)) !== -1) {
+            next = '<u>';
+            while (msg.indexOf(String.fromCharCode(31)) !== -1) {
+                msg = msg.replace(String.fromCharCode(31), next);
+                next = (next === '<u>') ? '</u>' : '<u>';
+            }
+            if (next === '</u>') {
+                msg = msg + '</u>';
+            }
+        }
+        
+        // colour
+        re = /\x03([0-9][0-5]?)(,([0-9][0-5]?))?(.*?)\x03/g;
+        
+        msg = msg.replace(re, function (str, p1, p2, p3, p4) {
+            var fg, bg,
+                col = function (num) {
+                    switch (parseInt(num, 10)) {
+                    case 0:
+                        return '#FFFFFF';
+                    case 1:
+                        return '#000000';
+                    case 2:
+                        return '#000080';
+                    case 3:
+                        return '#008000';
+                    case 4:
+                        return '#FF0000';
+                    case 5:
+                        return '#800040';
+                    case 6:
+                        return '#800080';
+                    case 7:
+                        return '#FF8040';
+                    case 8:
+                        return '#FFFF00';
+                    case 9:
+                        return '#80FF00';
+                    case 10:
+                        return '#008080';
+                    case 11:
+                        return '#00FFFF';
+                    case 12:
+                        return '#0000FF';
+                    case 13:
+                        return '#FF55FF';
+                    case 14:
+                        return '#808080';
+                    case 15:
+                        return '#C0C0C0';
+                    default:
+                        return null;
+                    }
+                };
+            fg = col(p1);
+            bg = col(p3);
+            return '<span style="' + ((fg !== null) ? 'color: ' + fg +'; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + p4 + '</span>';
+        });
+        return msg;
     }
+    
 };
 
 
@@ -1460,35 +1532,7 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
         msg = '';
     }
     
-    // Text formatting
-    // bold
-    if (msg.indexOf(String.fromCharCode(2)) !== -1) {
-        next = '<b>';
-        while (msg.indexOf(String.fromCharCode(2)) !== -1) {
-            msg = msg.replace(String.fromCharCode(2), next);
-            next = (next === '<b>') ? '</b>' : '<b>';
-        }
-        if (next === '</b>') {
-            msg = msg + '</b>';
-        }
-    }
-    
-    // Wierd thing noticed by Dux0r on the irc.esper.net server
-    if (typeof msg !== "string") {
-        msg = '';
-    }
-    
-    // underline
-    if (msg.indexOf(String.fromCharCode(31)) !== -1) {
-        next = '<u>';
-        while (msg.indexOf(String.fromCharCode(31)) !== -1) {
-            msg = msg.replace(String.fromCharCode(31), next);
-            next = (next === '<u>') ? '</u>' : '<u>';
-        }
-        if (next === '</u>') {
-            msg = msg + '</u>';
-        }
-    }
+    msg = kiwi.front.format(msg);
     
     // Make the channels clickable
     re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
