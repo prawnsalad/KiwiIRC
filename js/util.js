@@ -11,10 +11,10 @@ function manageDebug(debug) {
     var log, consoleBackUp;
     if (window.console) {  
         consoleBackUp = window.console.log;  
-        window.console.log = function (str) {  
+        window.console.log = function () {  
             if (debug) {  
-                consoleBackUp.call(this, str);  
-            }  
+                consoleBackUp.apply(console, arguments); 
+            }
         };  
     } else {  
         log = window.opera ? window.opera.postError : alert;  
