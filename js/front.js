@@ -12,6 +12,8 @@ kiwi.front = {
     buffer: [],
     buffer_pos: 0,
 
+    cache: {},
+    
     original_topic: '',
     
     init: function () {
@@ -616,30 +618,68 @@ kiwi.front = {
     },
     
     onChannelListStart: function (e, data) {
-        kiwi.data.set('chanList', []);
+        var tab, table;
+        console.log('/list start');
+        console.profile('list');
+        
+        tab = new Utilityview('Channel List');
+        tab.div.css('overflow-y', 'scroll');
+        table = $('<table><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
+        tab.div.append(table);
+        
+        kiwi.front.cache.list = {chans: [], tab: tab, table: table,
+            update: function (newChans) {
+                var body = this.table.children('tbody:first').detach(),
+                    chan,
+                    html;
+                
+                html = '';
+                for (chan in newChans) {
+                    this.chans.push(newChans[chan]);
+                    html += newChans[chan].html;
+                }
+                body.append(html);
+                this.table.append(body);
+                
+            },
+            finalise: function () {
+                var body = this.table.children('tbody:first').detach(),
+                    list,
+                    chan;
+                
+                list = $.makeArray($(body).children());
+                
+                for (chan in list) {
+                    list[chan] = $(list[chan]).detach();
+                }
+                
+                list = _.sortBy(list, function (channel) {
+                    return parseInt(channel.children('.num_users').first().text(), 10);
+                }).reverse();
+                
+                for (chan in list) {
+                    body.append(list[chan]);
+                }
+                
+                this.table.append(body);
+                
+            }};
     },
     onChannelList: function (e, data) {
-        var network_name = kiwi.gateway.network_name,
-            chanList = kiwi.data.get('chanList');
-        chanList.push(data);
-        kiwi.data.set('chanList', chanList);
+        var chans;
+        console.log(data);
+        data = data.chans;
+        //data = [data];
+        for (chans in data) {
+            data[chans] = {data: data[chans], html: '<tr><td><a class="chan">' + data[chans].channel + '</a></td><td class="num_users" style="text-align: center;">' + data[chans].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.format(data[chans].topic) + '</td></tr>'};
+        }
+        kiwi.front.cache.list.update(data);
     },
     onChannelListEnd: function (e, data) {
-        var chanList, tab, table, body, chan;
-        
-        chanList = kiwi.data.get('chanList');
-        tab = new Utilityview('Channel List');
-        table = $('<table><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
-        body = table.children('tbody:first');
-        chanList = _.sortBy(chanList, function (channel) {
-            return parseInt(channel.num_users, 10);
-        }).reverse();
-        for (chan in chanList) {
-            body.append($('<tr><td><a class="chan">' + chanList[chan].channel + '</a></td><td style="text-align: center;">' + chanList[chan].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.format(chanList[chan].topic) + '</td></tr>'));
-        }
-        tab.div.append(table);
-        tab.div.css('overflow-y', 'scroll');
-        tab.show();
+        kiwi.front.cache.list.finalise();
+        kiwi.front.cache.list.tab.show();
+        console.profileEnd();
+        console.log('/list end.');
     },
 
 
@@ -1271,7 +1311,7 @@ kiwi.front = {
                 };
             fg = col(p1);
             bg = col(p3);
-            return '<span style="' + ((fg !== null) ? 'color: ' + fg +'; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + p4 + '</span>';
+            return '<span style="' + ((fg !== null) ? 'color: ' + fg + '; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + p4 + '</span>';
         });
         return msg;
     }

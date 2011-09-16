@@ -181,10 +181,18 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.RPL_LISTSTART:
             (function () {
                 websocket.sendClientEvent('list_start', {server: ''});
+                websocket.kiwi.buffer.list = [];
             }());
             break;
         case ircNumerics.RPL_LISTEND:
             (function () {
+                if (websocket.kiwi.buffer.list.length > 0) {
+                    websocket.kiwi.buffer.list = _.sortBy(websocket.kiwi.buffer.list, function (channel) {
+                        return channel.num_users;
+                    });
+                    websocket.sendClientEvent('list_channel', {chans: websocket.kiwi.buffer.list});
+                    websocket.kiwi.buffer.list = [];
+                }
                 websocket.sendClientEvent('list_end', {server: ''});
             }());
             break;
@@ -199,13 +207,23 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 modes = msg.trailing.split(' ', 1);
                 topic = msg.trailing.substring(msg.trailing.indexOf(' ') + 1);
 
-                websocket.sendClientEvent('list_channel', {
+                //websocket.sendClientEvent('list_channel', {
+                websocket.kiwi.buffer.list.push({
                     server: '',
                     channel: channel,
                     topic: topic,
                     modes: modes,
-                    num_users: num_users
+                    num_users: parseInt(num_users, 10)
                 });
+                
+                if (websocket.kiwi.buffer.list.length > 200) {
+                    websocket.kiwi.buffer.list = _.sortBy(websocket.kiwi.buffer.list, function (channel) {
+                        return channel.num_users;
+                    });
+                    websocket.sendClientEvent('list_channel', {chans: websocket.kiwi.buffer.list});
+                    websocket.kiwi.buffer.list = [];
+                }
+                
             }());
             break;
 
@@ -642,7 +660,7 @@ this.websocketListen = function (port, host, handler, secure, key, cert) {
 
 this.websocketConnection = function (websocket) {
     var con;
-    websocket.kiwi = {address: websocket.handshake.address.address};
+    websocket.kiwi = {address: websocket.handshake.address.address, buffer: {list: []}};
     con = kiwi.connections[websocket.kiwi.address];
 
     if (con.count >= kiwi.config.max_client_conns) {
