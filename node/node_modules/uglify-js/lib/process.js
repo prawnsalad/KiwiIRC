@@ -66,7 +66,7 @@ var jsp = require("./parse-js"),
 
 /* -----[ helper for AST traversal ]----- */
 
-function ast_walker(ast) {
+function ast_walker() {
         function _vardefs(defs) {
                 return [ this[0], MAP(defs, function(def){
                         var a = [ def[0] ];
@@ -351,9 +351,15 @@ Scope.prototype = {
                 if (!newMangle) return name;                      // not found and no mangling requested
                 return s.set_mangle(name, s.next_mangled());
         },
-        define: function(name) {
-                if (name != null)
-                        return this.names[name] = name;
+        references: function(name) {
+                return name && !this.parent || this.uses_with || this.uses_eval || this.refs[name];
+        },
+        define: function(name, type) {
+                if (name != null) {
+                        if (type == "var" || !HOP(this.names, name))
+                                this.names[name] = type || "var";
+                        return name;
+                }
         }
 };
 
@@ -371,8 +377,8 @@ function ast_add_scope(ast) {
                 return ret;
         };
 
-        function define(name) {
-                return current_scope.define(name);
+        function define(name, type) {
+                return current_scope.define(name, type);
         };
 
         function reference(name) {
@@ -381,11 +387,20 @@ function ast_add_scope(ast) {
 
         function _lambda(name, args, body) {
                 var is_defun = this[0] == "defun";
-                return [ this[0], is_defun ? define(name) : name, args, with_new_scope(function(){
-                        if (!is_defun) define(name);
-                        MAP(args, define);
+                return [ this[0], is_defun ? define(name, "defun") : name, args, with_new_scope(function(){
+                        if (!is_defun) define(name, "lambda");
+                        MAP(args, function(name){ define(name, "arg") });
                         return MAP(body, walk);
                 })];
+        };
+
+        function _vardefs(type) {
+                return function(defs) {
+                        MAP(defs, function(d){
+                                define(d[0], type);
+                                if (d[1]) reference(d[0]);
+                        });
+                };
         };
 
         return with_new_scope(function(){
@@ -393,21 +408,20 @@ function ast_add_scope(ast) {
                 var ret = w.with_walkers({
                         "function": _lambda,
                         "defun": _lambda,
+                        "label": function(name, stat) { define(name, "label") },
+                        "break": function(label) { if (label) reference(label) },
+                        "continue": function(label) { if (label) reference(label) },
                         "with": function(expr, block) {
                                 for (var s = current_scope; s; s = s.parent)
                                         s.uses_with = true;
                         },
-                        "var": function(defs) {
-                                MAP(defs, function(d){ define(d[0]) });
-                        },
-                        "const": function(defs) {
-                                MAP(defs, function(d){ define(d[0]) });
-                        },
+                        "var": _vardefs("var"),
+                        "const": _vardefs("const"),
                         "try": function(t, c, f) {
                                 if (c != null) return [
                                         this[0],
                                         MAP(t, walk),
-                                        [ define(c[0]), MAP(c[1], walk) ],
+                                        [ define(c[0], "catch"), MAP(c[1], walk) ],
                                         f != null ? MAP(f, walk) : null
                                 ];
                         },
@@ -535,6 +549,9 @@ function ast_mangle(ast, options) {
                         }
                         return ast;
                 },
+                "label": function(label, stat) { return [ this[0], get_mangled(label), walk(stat) ] },
+                "break": function(label) { if (label) return [ this[0], get_mangled(label) ] },
+                "continue": function(label) { if (label) return [ this[0], get_mangled(label) ] },
                 "var": _vardefs,
                 "const": _vardefs,
                 "name": function(name) {
@@ -581,10 +598,12 @@ function last_stat(b) {
 }
 
 function aborts(t) {
-        if (t) {
-                t = last_stat(t);
-                if (t[0] == "return" || t[0] == "break" || t[0] == "continue" || t[0] == "throw")
-                        return true;
+        if (t) switch (last_stat(t)[0]) {
+            case "return":
+            case "break":
+            case "continue":
+            case "throw":
+                return true;
         }
 };
 
@@ -773,9 +792,7 @@ function prepare_ifs(ast) {
                         var conditional = walk(fi[1]);
 
                         var e_body = statements.slice(i + 1);
-                        var e;
-                        if (e_body.length == 1) e = e_body[0];
-                        else e = [ "block", e_body ];
+                        var e = e_body.length == 1 ? e_body[0] : [ "block", e_body ];
 
                         var ret = statements.slice(0, i).concat([ [
                                 fi[0],          // "if"
@@ -792,14 +809,11 @@ function prepare_ifs(ast) {
 
         function redo_if_lambda(name, args, body) {
                 body = redo_if(body);
-                return [ this[0], name, args.slice(), body ];
+                return [ this[0], name, args, body ];
         };
 
         function redo_if_block(statements) {
-                var out = [ this[0] ];
-                if (statements != null)
-                        out.push(redo_if(statements));
-                return out;
+                return [ this[0], statements != null ? redo_if(statements) : null ];
         };
 
         return w.with_walkers({
@@ -820,6 +834,139 @@ function prepare_ifs(ast) {
                 }
         }, function() {
                 return walk(ast);
+        });
+};
+
+function for_side_effects(ast, handler) {
+        var w = ast_walker(), walk = w.walk;
+        var $stop = {}, $restart = {};
+        function stop() { throw $stop };
+        function restart() { throw $restart };
+        function found(){ return handler.call(this, this, w, stop, restart) };
+        function unary(op) {
+                if (op == "++" || op == "--")
+                        return found.apply(this, arguments);
+        };
+        return w.with_walkers({
+                "try": found,
+                "throw": found,
+                "return": found,
+                "new": found,
+                "switch": found,
+                "break": found,
+                "continue": found,
+                "assign": found,
+                "call": found,
+                "if": found,
+                "for": found,
+                "for-in": found,
+                "while": found,
+                "do": found,
+                "return": found,
+                "unary-prefix": unary,
+                "unary-postfix": unary,
+                "defun": found
+        }, function(){
+                while (true) try {
+                        walk(ast);
+                        break;
+                } catch(ex) {
+                        if (ex === $stop) break;
+                        if (ex === $restart) continue;
+                        throw ex;
+                }
+        });
+};
+
+function ast_lift_variables(ast) {
+        var w = ast_walker(), walk = w.walk, scope;
+        function do_body(body, env) {
+                var _scope = scope;
+                scope = env;
+                body = MAP(body, walk);
+                var hash = {}, names = MAP(env.names, function(type, name){
+                        if (type != "var") return MAP.skip;
+                        if (!env.references(name)) return MAP.skip;
+                        hash[name] = true;
+                        return [ name ];
+                });
+                if (names.length > 0) {
+                        // looking for assignments to any of these variables.
+                        // we can save considerable space by moving the definitions
+                        // in the var declaration.
+                        for_side_effects([ "block", body ], function(ast, walker, stop, restart) {
+                                if (ast[0] == "assign"
+                                    && ast[1] === true
+                                    && ast[2][0] == "name"
+                                    && HOP(hash, ast[2][1])) {
+                                        // insert the definition into the var declaration
+                                        for (var i = names.length; --i >= 0;) {
+                                                if (names[i][0] == ast[2][1]) {
+                                                        if (names[i][1]) // this name already defined, we must stop
+                                                                stop();
+                                                        names[i][1] = ast[3]; // definition
+                                                        names.push(names.splice(i, 1)[0]);
+                                                        break;
+                                                }
+                                        }
+                                        // remove this assignment from the AST.
+                                        var p = walker.parent();
+                                        if (p[0] == "seq") {
+                                                var a = p[2];
+                                                a.unshift(0, p.length);
+                                                p.splice.apply(p, a);
+                                        }
+                                        else if (p[0] == "stat") {
+                                                p.splice(0, p.length, "block"); // empty statement
+                                        }
+                                        else {
+                                                stop();
+                                        }
+                                        restart();
+                                }
+                                stop();
+                        });
+                        body.unshift([ "var", names ]);
+                }
+                scope = _scope;
+                return body;
+        };
+        function _vardefs(defs) {
+                var ret = null;
+                for (var i = defs.length; --i >= 0;) {
+                        var d = defs[i];
+                        if (!d[1]) continue;
+                        d = [ "assign", true, [ "name", d[0] ], d[1] ];
+                        if (ret == null) ret = d;
+                        else ret = [ "seq", d, ret ];
+                }
+                if (ret == null) {
+                        if (w.parent()[0] == "for-in")
+                                return [ "name", defs[0][0] ];
+                        return MAP.skip;
+                }
+                return [ "stat", ret ];
+        };
+        function _toplevel(body) {
+                return [ this[0], do_body(body, this.scope) ];
+        };
+        return w.with_walkers({
+                "function": function(name, args, body){
+                        for (var i = args.length; --i >= 0 && !body.scope.references(args[i]);)
+                                args.pop();
+                        if (!body.scope.references(name)) name = null;
+                        return [ this[0], name, args, do_body(body, body.scope) ];
+                },
+                "defun": function(name, args, body){
+                        if (!scope.references(name)) return MAP.skip;
+                        for (var i = args.length; --i >= 0 && !body.scope.references(args[i]);)
+                                args.pop();
+                        return [ this[0], name, args, do_body(body, body.scope) ];
+                },
+                "var": _vardefs,
+                "toplevel": _toplevel
+        }, function(){
+                return walk(ast_add_scope(ast));
         });
 };
 
@@ -887,15 +1034,14 @@ function ast_squeeze(ast, options) {
         function _lambda(name, args, body) {
                 var is_defun = this[0] == "defun";
                 body = with_scope(body.scope, function(){
-                        var ret = tighten(MAP(body, walk), "lambda");
-                        if (!is_defun && name && !HOP(scope.refs, name))
+                        var ret = tighten(body, "lambda");
+                        if (!is_defun && name && !scope.references(name))
                                 name = null;
                         return ret;
                 });
                 return [ this[0], name, args, body ];
         };
 
-        // we get here for blocks that have been already transformed.
         // this function does a few things:
         // 1. discard useless blocks
         // 2. join consecutive var declarations
@@ -903,6 +1049,8 @@ function ast_squeeze(ast, options) {
         // 4. transform consecutive statements using the comma operator
         // 5. if block_type == "lambda" and it detects constructs like if(foo) return ... - rewrite like if (!foo) { ... }
         function tighten(statements, block_type) {
+                statements = MAP(statements, walk);
+
                 statements = statements.reduce(function(a, stat){
                         if (stat[0] == "block") {
                                 if (stat[1]) {
@@ -930,7 +1078,17 @@ function ast_squeeze(ast, options) {
                 if (options.dead_code) statements = (function(a, has_quit){
                         statements.forEach(function(st){
                                 if (has_quit) {
-                                        if (member(st[0], [ "function", "defun" , "var", "const" ])) {
+                                        if (st[0] == "function" || st[0] == "defun") {
+                                                a.push(st);
+                                        }
+                                        else if (st[0] == "var" || st[0] == "const") {
+                                                if (!options.no_warnings)
+                                                        warn("Variables declared in unreachable code");
+                                                st[1] = MAP(st[1], function(def){
+                                                        if (def[1] && !options.no_warnings)
+                                                                warn_unreachable([ "assign", true, [ "name", def[0] ], def[1] ]);
+                                                        return [ def[0] ];
+                                                });
                                                 a.push(st);
                                         }
                                         else if (!options.no_warnings)
@@ -954,27 +1112,38 @@ function ast_squeeze(ast, options) {
                                         prev = cur;
                                 }
                         });
+                        if (a.length >= 2
+                            && a[a.length-2][0] == "stat"
+                            && (a[a.length-1][0] == "return" || a[a.length-1][0] == "throw")
+                            && a[a.length-1][1])
+                        {
+                                a.splice(a.length - 2, 2,
+                                         [ a[a.length-1][0],
+                                           [ "seq", a[a.length-2][1], a[a.length-1][1] ]]);
+                        }
                         return a;
                 })([]);
 
-                if (block_type == "lambda") statements = (function(i, a, stat){
-                        while (i < statements.length) {
-                                stat = statements[i++];
-                                if (stat[0] == "if" && !stat[3]) {
-                                        if (stat[2][0] == "return" && stat[2][1] == null) {
-                                                a.push(make_if(negate(stat[1]), [ "block", statements.slice(i) ]));
-                                                break;
-                                        }
-                                        var last = last_stat(stat[2]);
-                                        if (last[0] == "return" && last[1] == null) {
-                                                a.push(make_if(stat[1], [ "block", stat[2][1].slice(0, -1) ], [ "block", statements.slice(i) ]));
-                                                break;
-                                        }
-                                }
-                                a.push(stat);
-                        }
-                        return a;
-                })(0, []);
+                // this increases jQuery by 1K.  Probably not such a good idea after all..
+                // part of this is done in prepare_ifs anyway.
+                // if (block_type == "lambda") statements = (function(i, a, stat){
+                //         while (i < statements.length) {
+                //                 stat = statements[i++];
+                //                 if (stat[0] == "if" && !stat[3]) {
+                //                         if (stat[2][0] == "return" && stat[2][1] == null) {
+                //                                 a.push(make_if(negate(stat[1]), [ "block", statements.slice(i) ]));
+                //                                 break;
+                //                         }
+                //                         var last = last_stat(stat[2]);
+                //                         if (last[0] == "return" && last[1] == null) {
+                //                                 a.push(make_if(stat[1], [ "block", stat[2][1].slice(0, -1) ], [ "block", statements.slice(i) ]));
+                //                                 break;
+                //                         }
+                //                 }
+                //                 a.push(stat);
+                //         }
+                //         return a;
+                // })(0, []);
 
                 return statements;
         };
@@ -1070,9 +1239,6 @@ function ast_squeeze(ast, options) {
                 });
         };
 
-        ast = prepare_ifs(ast);
-        ast = ast_add_scope(ast);
-
         return w.with_walkers({
                 "sub": function(expr, subscript) {
                         if (subscript[0] == "string") {
@@ -1086,13 +1252,13 @@ function ast_squeeze(ast, options) {
                 "if": make_if,
                 "toplevel": function(body) {
                         return [ "toplevel", with_scope(this.scope, function(){
-                                return tighten(MAP(body, walk));
+                                return tighten(body);
                         }) ];
                 },
                 "switch": function(expr, body) {
                         var last = body.length - 1;
                         return [ "switch", walk(expr), MAP(body, function(branch, i){
-                                var block = tighten(MAP(branch[1], walk));
+                                var block = tighten(branch[1]);
                                 if (i == last && block.length > 0) {
                                         var node = block[block.length - 1];
                                         if (node[0] == "break" && !node[1])
@@ -1104,7 +1270,7 @@ function ast_squeeze(ast, options) {
                 "function": _lambda,
                 "defun": _lambda,
                 "block": function(body) {
-                        if (body) return rmblock([ "block", tighten(MAP(body, walk)) ]);
+                        if (body) return rmblock([ "block", tighten(body) ]);
                 },
                 "binary": function(op, left, right) {
                         return when_constant([ "binary", op, walk(left), walk(right) ], function yes(c){
@@ -1119,9 +1285,9 @@ function ast_squeeze(ast, options) {
                 "try": function(t, c, f) {
                         return [
                                 "try",
-                                tighten(MAP(t, walk)),
-                                c != null ? [ c[0], tighten(MAP(c[1], walk)) ] : null,
-                                f != null ? tighten(MAP(f, walk)) : null
+                                tighten(t),
+                                c != null ? [ c[0], tighten(c[1]) ] : null,
+                                f != null ? tighten(f) : null
                         ];
                 },
                 "unary-prefix": function(op, expr) {
@@ -1139,23 +1305,14 @@ function ast_squeeze(ast, options) {
                             case "false": return [ "unary-prefix", "!", [ "num", 1 ]];
                         }
                 },
-                "new": function(ctor, args) {
-                        if (ctor[0] == "name" && ctor[1] == "Array" && !scope.has("Array")) {
-                                if (args.length != 1) {
-                                        return [ "array", args ];
-                                } else {
-                                        return [ "call", [ "name", "Array" ], args ];
-                                }
-                        }
-                },
-                "call": function(expr, args) {
-                        if (expr[0] == "name" && expr[1] == "Array" && args.length != 1 && !scope.has("Array")) {
-                                return [ "array", args ];
-                        }
-                },
                 "while": _do_while
         }, function() {
-                return walk(ast);
+                for (var i = 0; i < 2; ++i) {
+                        ast = prepare_ifs(ast);
+                        ast = ast_add_scope(ast);
+                        ast = walk(ast);
+                }
+                return ast;
         });
 };
 
@@ -1300,7 +1457,7 @@ function gen_code(ast, options) {
                         // we're the first in this "seq" and the
                         // parent is "stat", and so on.  Messy stuff,
                         // but it worths the trouble.
-                        var a = slice($stack), self = a.pop(), p = a.pop();
+                        var a = slice(w.stack()), self = a.pop(), p = a.pop();
                         while (p) {
                                 if (p[0] == "stat") return true;
                                 if (((p[0] == "seq" || p[0] == "call" || p[0] == "dot" || p[0] == "sub" || p[0] == "conditional") && p[1] === self) ||
@@ -1330,7 +1487,9 @@ function gen_code(ast, options) {
                 return best_of(a);
         };
 
-        var generators = {
+        var w = ast_walker();
+        var make = w.walk;
+        return w.with_walkers({
                 "string": encode_string,
                 "num": make_num,
                 "name": make_name,
@@ -1339,7 +1498,7 @@ function gen_code(ast, options) {
                                 .join(newline + newline);
                 },
                 "splice": function(statements) {
-                        var parent = $stack[$stack.length - 2][0];
+                        var parent = w.parent();
                         if (HOP(SPLICE_NEEDS_BRACKETS, parent)) {
                                 // we need block brackets in this case
                                 return make_block.apply(this, arguments);
@@ -1513,7 +1672,7 @@ function gen_code(ast, options) {
                                                 // body in p[1][3] and type ("get" / "set") in p[2].
                                                 return indent(make_function(p[0], p[1][2], p[1][3], p[2]));
                                         }
-                                        var key = p[0], val = make(p[1]);
+                                        var key = p[0], val = parenthesize(p[1], "seq");
                                         if (options.quote_keys) {
                                                 key = encode_string(key);
                                         } else if ((typeof key == "number" || !beautify && +key + "" == key)
@@ -1553,7 +1712,7 @@ function gen_code(ast, options) {
                 "atom": function(name) {
                         return make_name(name);
                 }
-        };
+        }, function(){ return make(ast) });
 
         // The squeezer replaces "block"-s that contain only a single
         // statement with the statement itself; technically, the AST
@@ -1568,7 +1727,7 @@ function gen_code(ast, options) {
                         // IE croaks with "syntax error" on code like this:
                         //     if (foo) do ... while(cond); else ...
                         // we need block brackets around do/while
-                        return make([ "block", [ th ]]);
+                        return make_block([ th ]);
                 }
                 var b = th;
                 while (true) {
@@ -1595,20 +1754,31 @@ function gen_code(ast, options) {
                 return add_spaces([ out, make_block(body) ]);
         };
 
+        function must_has_semicolon(node) {
+                switch (node[0]) {
+                    case "with":
+                    case "while":
+                        return empty(node[2]); // `with' or `while' with empty body?
+                    case "for":
+                    case "for-in":
+                        return empty(node[4]); // `for' with empty body?
+                    case "if":
+                        if (empty(node[2]) && !node[3]) return true; // `if' with empty `then' and no `else'
+                        if (node[3]) {
+                                if (empty(node[3])) return true; // `else' present but empty
+                                return must_has_semicolon(node[3]); // dive into the `else' branch
+                        }
+                        return must_has_semicolon(node[2]); // dive into the `then' branch
+                }
+        };
+
         function make_block_statements(statements, noindent) {
                 for (var a = [], last = statements.length - 1, i = 0; i <= last; ++i) {
                         var stat = statements[i];
                         var code = make(stat);
                         if (code != ";") {
-                                if (!beautify && i == last) {
-                                        if ((stat[0] == "while" && empty(stat[2])) ||
-                                            (member(stat[0], [ "for", "for-in"] ) && empty(stat[4])) ||
-                                            (stat[0] == "if" && empty(stat[2]) && !stat[3]) ||
-                                            (stat[0] == "if" && stat[3] && empty(stat[3]))) {
-                                                code = code.replace(/;*\s*$/, ";");
-                                        } else {
-                                                code = code.replace(/;+\s*$/, "");
-                                        }
+                                if (!beautify && i == last && !must_has_semicolon(stat)) {
+                                        code = code.replace(/;+\s*$/, "");
                                 }
                                 a.push(code);
                         }
@@ -1648,20 +1818,6 @@ function gen_code(ast, options) {
                 return name;
         };
 
-        var $stack = [];
-
-        function make(node) {
-                var type = node[0];
-                var gen = generators[type];
-                if (!gen)
-                        throw new Error("Can't find generator for \"" + type + "\"");
-                $stack.push(node);
-                var ret = gen.apply(type, node.slice(1));
-                $stack.pop();
-                return ret;
-        };
-
-        return make(ast);
 };
 
 function split_lines(code, max_line_length) {
@@ -1746,16 +1902,34 @@ var MAP;
 
 (function(){
         MAP = function(a, f, o) {
-                var ret = [];
-                for (var i = 0; i < a.length; ++i) {
+                var ret = [], top = [], i;
+                function doit() {
                         var val = f.call(o, a[i], i);
-                        if (val instanceof AtTop) ret.unshift(val.v);
-                        else ret.push(val);
-                }
-                return ret;
+                        if (val instanceof AtTop) {
+                                val = val.v;
+                                if (val instanceof Splice) {
+                                        top.push.apply(top, val.v);
+                                } else {
+                                        top.push(val);
+                                }
+                        }
+                        else if (val != skip) {
+                                if (val instanceof Splice) {
+                                        ret.push.apply(ret, val.v);
+                                } else {
+                                        ret.push(val);
+                                }
+                        }
+                };
+                if (a instanceof Array) for (i = 0; i < a.length; ++i) doit();
+                else for (i in a) if (HOP(a, i)) doit();
+                return top.concat(ret);
         };
         MAP.at_top = function(val) { return new AtTop(val) };
+        MAP.splice = function(val) { return new Splice(val) };
+        var skip = MAP.skip = {};
         function AtTop(val) { this.v = val };
+        function Splice(val) { this.v = val };
 })();
 
 /* -----[ Exports ]----- */
@@ -1763,6 +1937,7 @@ var MAP;
 exports.ast_walker = ast_walker;
 exports.ast_mangle = ast_mangle;
 exports.ast_squeeze = ast_squeeze;
+exports.ast_lift_variables = ast_lift_variables;
 exports.gen_code = gen_code;
 exports.ast_add_scope = ast_add_scope;
 exports.set_logger = function(logger) { warn = logger };

@@ -189,7 +189,7 @@ var OPERATORS = array_to_hash([
         "||"
 ]);
 
-var WHITESPACE_CHARS = array_to_hash(characters(" \u00a0\n\r\t\f\v\u200b"));
+var WHITESPACE_CHARS = array_to_hash(characters(" \u00a0\n\r\t\f\u000b\u200b"));
 
 var PUNC_BEFORE_EXPRESSION = array_to_hash(characters("[{}(,.;:"));
 
@@ -404,11 +404,12 @@ function tokenizer($TEXT) {
                     case "r" : return "\r";
                     case "t" : return "\t";
                     case "b" : return "\b";
-                    case "v" : return "\v";
+                    case "v" : return "\u000b";
                     case "f" : return "\f";
                     case "0" : return "\0";
                     case "x" : return String.fromCharCode(hex_bytes(2));
                     case "u" : return String.fromCharCode(hex_bytes(4));
+                    case "\n": return "";
                     default  : return ch;
                 }
         };
@@ -1300,7 +1301,7 @@ function array_to_hash(a) {
 };
 
 function slice(a, start) {
-        return Array.prototype.slice.call(a, start == null ? 0 : start);
+        return Array.prototype.slice.call(a, start || 0);
 };
 
 function characters(str) {
