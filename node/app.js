@@ -600,7 +600,6 @@ this.httpHandler = function (request, response) {
                     var html, hash2;
                     if (!err) {
                         html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
-                        console.log(typeof html, html);
                         hash2 = crypto.createHash('md5').update(html).digest('base64');
                         kiwi.cache.html[hash] = {"html": html, "hash": hash2};
                         if (request.headers['if-none-match'] === hash2) {
