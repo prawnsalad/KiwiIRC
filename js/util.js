@@ -256,15 +256,15 @@ var plugins = [
 
 
         randColour: function () {
-            var h = this.rand(-250, 0);
-            var s = this.rand(30, 100);
-            var l = this.rand(20, 70);
+            var h = this.rand(-250, 0),
+                s = this.rand(30, 100),
+                l = this.rand(20, 70);
             return 'hsl(' + h + ',' + s + '%,' + l + '%)';
         },
 
 
         rand: function (min, max) {
-            return parseInt(Math.random() * (max-min+1), 10) + min;
+            return parseInt(Math.random() * (max - min + 1), 10) + min;
         }
     },
 
