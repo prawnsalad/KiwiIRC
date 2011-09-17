@@ -1,6 +1,7 @@
 # Installation
 
-*Install the dependencies
+* Install the dependencies
+
     $npm install jade
 
     $npm install node-static
@@ -11,10 +12,11 @@
 
     $npm install socket.io-client
     
-*Edit the configuration file
+* Edit the configuration file
+
     $nano node/config.json
     
-*If you're using SSL, create your certificate and key, place it in the node foder.
+* If you're using SSL, create your certificate and key, place it in the node foder.
 
 # Running 
     $node node/kiwi.js
