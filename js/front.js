@@ -103,6 +103,8 @@ kiwi.front = {
 
         $('#kiwi .formconnectwindow').submit(function () {
             var netsel = $('#kiwi .formconnectwindow .network'),
+                netport = $('#kiwi .formconnectwindow .port'),
+                netssl = $('#kiwi .formconnectwindow .ssl'),
                 nick = $('#kiwi .formconnectwindow .nick'),
                 tmp;
             
@@ -119,7 +121,7 @@ kiwi.front = {
 
             kiwi.front.doLayout();
             try {
-                kiwi.front.run('/connect ' + netsel.val());
+                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : ''));
             } catch (e) {}
             
             $('#kiwi .connectwindow').slideUp('', kiwi.front.barsShow);
@@ -282,15 +284,22 @@ kiwi.front = {
             case '/connect':
             case '/server':
                 if (parts[1] === undefined) {
-                    alert('Usage: /connect servername [port]');
+                    alert('Usage: /connect servername [[port] [ssl]]');
                     break;
                 }
                 
                 if (parts[2] === undefined) {
                     parts[2] = 6667;
                 }
-                kiwi.front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + '...', 'status');
-                kiwi.gateway.connect(parts[1], parts[2], 0);
+                
+                if ((parts[3] === undefined) || (parts[3] === 'false') || (parts[3] === 'no')) {
+                    parts[3] = false;
+                } else {
+                    parts[3] = true;
+                }
+                
+                kiwi.front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + ((parts[3]) ? ' using SSL' : '') + '...', 'status');
+                kiwi.gateway.connect(parts[1], parts[2], parts[3]);
                 break;
                 
             case '/nick':
