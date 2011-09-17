@@ -1242,6 +1242,10 @@ kiwi.front = {
     format: function (msg) {
         var re;
         
+        if ((!msg) || (typeof msg !== 'string')) {
+            return;
+        }
+        
         // bold
         if (msg.indexOf(String.fromCharCode(2)) !== -1) {
             next = '<b>';
@@ -1572,14 +1576,14 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
         msg = '';
     }
     
-    msg = kiwi.front.format(msg);
-    
     // Make the channels clickable
     re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
     msg = msg.replace(re, function (match) {
         return '<a class="chan">' + match + '</a>';
     });
 
+    msg = kiwi.front.format(msg);
+    
     // Build up and add the line
     line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
     this.div.append(line_msg);
