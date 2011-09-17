@@ -181,10 +181,18 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.RPL_LISTSTART:
             (function () {
                 websocket.sendClientEvent('list_start', {server: ''});
+                websocket.kiwi.buffer.list = [];
             }());
             break;
         case ircNumerics.RPL_LISTEND:
             (function () {
+                if (websocket.kiwi.buffer.list.length > 0) {
+                    websocket.kiwi.buffer.list = _.sortBy(websocket.kiwi.buffer.list, function (channel) {
+                        return channel.num_users;
+                    });
+                    websocket.sendClientEvent('list_channel', {chans: websocket.kiwi.buffer.list});
+                    websocket.kiwi.buffer.list = [];
+                }
                 websocket.sendClientEvent('list_end', {server: ''});
             }());
             break;
@@ -199,13 +207,23 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 modes = msg.trailing.split(' ', 1);
                 topic = msg.trailing.substring(msg.trailing.indexOf(' ') + 1);
 
-                websocket.sendClientEvent('list_channel', {
+                //websocket.sendClientEvent('list_channel', {
+                websocket.kiwi.buffer.list.push({
                     server: '',
                     channel: channel,
                     topic: topic,
                     modes: modes,
-                    num_users: num_users
+                    num_users: parseInt(num_users, 10)
                 });
+                
+                if (websocket.kiwi.buffer.list.length > 200) {
+                    websocket.kiwi.buffer.list = _.sortBy(websocket.kiwi.buffer.list, function (channel) {
+                        return channel.num_users;
+                    });
+                    websocket.sendClientEvent('list_channel', {chans: websocket.kiwi.buffer.list});
+                    websocket.kiwi.buffer.list = [];
+                }
+                
             }());
             break;
 
@@ -578,9 +596,12 @@ this.httpHandler = function (request, response) {
                 }
                 response.end();
             } else {
-                kiwi.jade.renderFile(__dirname + '/client/index.html.jade', { locals: { "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config }}, function (err, html) {
+                fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
+                    var html, hash2;
                     if (!err) {
-                        var hash2 = crypto.createHash('md5').update(html).digest('base64');
+                        html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
+                        console.log(typeof html, html);
+                        hash2 = crypto.createHash('md5').update(html).digest('base64');
                         kiwi.cache.html[hash] = {"html": html, "hash": hash2};
                         if (request.headers['if-none-match'] === hash2) {
                             response.statusCode = 304;
@@ -642,7 +663,7 @@ this.websocketListen = function (port, host, handler, secure, key, cert) {
 
 this.websocketConnection = function (websocket) {
     var con;
-    websocket.kiwi = {address: websocket.handshake.address.address};
+    websocket.kiwi = {address: websocket.handshake.address.address, buffer: {list: []}};
     con = kiwi.connections[websocket.kiwi.address];
 
     if (con.count >= kiwi.config.max_client_conns) {
