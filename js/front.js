@@ -619,12 +619,10 @@ kiwi.front = {
     
     onChannelListStart: function (e, data) {
         var tab, table;
-        console.log('/list start');
-        console.profile('list');
         
         tab = new Utilityview('Channel List');
         tab.div.css('overflow-y', 'scroll');
-        table = $('<table><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
+        table = $('<table style="margin:1em 2em;"><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
         tab.div.append(table);
         
         kiwi.front.cache.list = {chans: [], tab: tab, table: table,
@@ -678,8 +676,6 @@ kiwi.front = {
     onChannelListEnd: function (e, data) {
         kiwi.front.cache.list.finalise();
         kiwi.front.cache.list.tab.show();
-        console.profileEnd();
-        console.log('/list end.');
     },
 
 
