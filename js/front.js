@@ -1130,7 +1130,7 @@ kiwi.front = {
     
     setTopicText: function (new_topic) {
         kiwi.front.original_topic = new_topic;
-        $('#kiwi .cur_topic .topic').text(kiwi.front.format(new_topic));
+        $('#kiwi .cur_topic .topic').text(new_topic);
         kiwi.front.doLayoutSize();
     },
     
