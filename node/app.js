@@ -596,9 +596,12 @@ this.httpHandler = function (request, response) {
                 }
                 response.end();
             } else {
-                kiwi.jade.renderFile(__dirname + '/client/index.html.jade', { locals: { "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config }}, function (err, html) {
+                fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
+                    var html, hash2;
                     if (!err) {
-                        var hash2 = crypto.createHash('md5').update(html).digest('base64');
+                        html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
+                        console.log(typeof html, html);
+                        hash2 = crypto.createHash('md5').update(html).digest('base64');
                         kiwi.cache.html[hash] = {"html": html, "hash": hash2};
                         if (request.headers['if-none-match'] === hash2) {
                             response.statusCode = 304;

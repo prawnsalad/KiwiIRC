@@ -1,5 +1,0 @@
-Initialize the Socket object upon handshake.
-Pass it to authorization function(s).
-When a transport opens, publish the transport name with the 'open' channel
-Set the transport name to the Socket object.
-Upon handshake, set a timeout of x seconds to GC that Socket object.
