@@ -380,7 +380,7 @@ kiwi.front = {
                 break;
 
             case '/quit':
-                kiwi.gateway.quit(msg.split(" ", 2)[1]);
+                kiwi.gateway.quit(parts.slice(1).join(' '));
                 break;
 
             case '/topic':
