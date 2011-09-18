@@ -1365,6 +1365,7 @@ var Utilityview = function (name) {
         kiwi.front.utilityviews[rand_name.toLowerCase()].show();
     });
     $('#kiwi .utilityviewlist ul').append(this.tab);
+    kiwi.front.doLayoutSize();
     
     this.div = $('#' + tmp_divname);
     this.div.css('overflow', 'hidden');
