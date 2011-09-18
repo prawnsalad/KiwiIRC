@@ -91,7 +91,6 @@ kiwi.front = {
             new_width = new_width - parseInt($('#kiwi .userlist').css('margin-right'), 10);
 
             // Make sure we don't remove the userlist alltogether
-            console.log(new_width);
             if (new_width < 20) {
                 $(this).data('draggable').offset.click.left = 10;
                 console.log('whoaa');
@@ -1357,8 +1356,13 @@ var Utilityview = function (name) {
     this.name = rand_name;
     this.title = name;
     this.topic = ' ';
+    this.panel = $('#panel1');
 
-    $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
+    if (typeof $('.scroller', this.panel)[0] === 'undefined') {
+        this.panel.append('<div id="' + tmp_divname + '" class="messages"></div>');
+    } else {
+        $('.scroller', this.panel).append('<div id="' + tmp_divname + '" class="messages"></div>');
+    }
 
     this.tab = $('<li id="' + tmp_tabname + '">' + this.title + '</li>');
     this.tab.click(function () {
@@ -1378,12 +1382,13 @@ Utilityview.prototype.title = null;
 Utilityview.prototype.div = null;
 Utilityview.prototype.tab = null;
 Utilityview.prototype.topic = ' ';
+Utilityview.prototype.panel = null;
 Utilityview.prototype.show = function () {
-    $('#kiwi .messages').removeClass("active");
+    $('.messages', this.panel).removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
     $('#kiwi .toolbars ul li').removeClass("active");
 
-    $('#windows').css('overflow-y', 'hidden');
+    this.panel.css('overflow-y', 'hidden');
     $('#windows').css('right', 0);
     // Activate this tab!
     this.div.addClass('active');
@@ -1398,6 +1403,13 @@ Utilityview.prototype.show = function () {
     if (touch_scroll) {
         touch_scroll.refresh();
     }
+};
+
+Utilityview.prototype.setPanel = function (new_panel) {
+    this.div.detach();
+    this.panel = new_panel;
+    this.panel.append(this.div);
+    this.show();
 };
 
 Utilityview.prototype.close = function () {
@@ -1443,7 +1455,9 @@ Utilityview.prototype.clearPartImage = function () {
  */
 
 
-var Tabview = function () {};
+var Tabview = function () {
+    this.panel = $('#panel1');
+};
 Tabview.prototype.name = null;
 Tabview.prototype.div = null;
 Tabview.prototype.userlist = null;
@@ -1451,18 +1465,19 @@ Tabview.prototype.userlist_width = 100;     // 0 for disabled
 Tabview.prototype.tab = null;
 Tabview.prototype.topic = "";
 Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
+Tabview.prototype.panel = null;
 
 Tabview.prototype.show = function () {
     var w, u;
 
-    $('#kiwi .messages').removeClass("active");
+    $('.messages', this.panel).removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
     $('#kiwi .toolbars ul li').removeClass("active");
     
     w = $('#windows');
     u = $('#kiwi .userlist');
 
-    w.css('overflow-y', 'scroll');
+    //w.css('overflow-y', 'scroll');
 
     // Set the window size accordingly
     this.setUserlistWidth();
@@ -1609,8 +1624,9 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
 };
 
 Tabview.prototype.scrollBottom = function () {
-    var w = $('#windows');
-    w[0].scrollTop = w[0].scrollHeight;
+    var panel = this.panel;
+    console.log(panel);
+    panel[0].scrollTop = panel[0].scrollHeight;
 };
 
 Tabview.prototype.changeNick = function (newNick, oldNick) {

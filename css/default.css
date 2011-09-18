@@ -143,8 +143,10 @@ background-image: -moz-linear-gradient(
 	position: absolute;
 	top:92px; left:0px;
 	right: 110px; bottom:30px;
-	overflow-y:scroll;
 }
+#kiwi .panel { overflow-y:scroll; height:100%; }
+#panel1 { float:left; width:100%;}
+#panel2 { float:right; width:0%; }
 #kiwi .messages {
 	overflow-x:wrap;
 	border:none;
