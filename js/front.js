@@ -122,7 +122,9 @@ kiwi.front = {
             kiwi.front.doLayout();
             try {
                 kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : ''));
-            } catch (e) {}
+            } catch (e) {
+                console.log(e);
+            }
             
             $('#kiwi .connectwindow').slideUp('', kiwi.front.barsShow);
             $('#windows').click(function () { $('#kiwi_msginput').focus(); });
@@ -283,22 +285,22 @@ kiwi.front = {
                 
             case '/connect':
             case '/server':
-                if (parts[1] === undefined) {
-                    alert('Usage: /connect servername [[port] [ssl]]');
+                if (typeof parts[1] === 'undefined') {
+                    alert('Usage: /connect servername [port] [ssl]');
                     break;
                 }
                 
-                if (parts[2] === undefined) {
+                if (typeof parts[2] === 'undefined') {
                     parts[2] = 6667;
                 }
                 
-                if ((parts[3] === undefined) || (parts[3] === 'false') || (parts[3] === 'no')) {
+                if ((typeof parts[3] === 'undefined') || !parts[3] || (parts[3] === 'false') || (parts[3] === 'no')) {
                     parts[3] = false;
                 } else {
                     parts[3] = true;
                 }
                 
-                kiwi.front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + ((parts[3]) ? ' using SSL' : '') + '...', 'status');
+                kiwi.front.cur_channel.addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + (parts[3] ? ' using SSL' : '') + '...', 'status');
                 kiwi.gateway.connect(parts[1], parts[2], parts[3]);
                 break;
                 
