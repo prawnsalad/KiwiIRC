@@ -1503,7 +1503,7 @@ Tabview.prototype.show = function () {
     w = $('#windows');
     u = $('#kiwi .userlist');
 
-    //w.css('overflow-y', 'scroll');
+    this.panel.css('overflow-y', 'scroll');
 
     // Set the window size accordingly
     this.setUserlistWidth();
