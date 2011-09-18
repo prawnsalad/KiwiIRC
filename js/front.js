@@ -1,4 +1,4 @@
-/*jslint nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
+/*jslint regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global gateway, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
 kiwi.front = {
     revision: 38,
@@ -817,11 +817,18 @@ kiwi.front = {
     },
     
     registerKeys: function () {
+        var tabcomplete = {active: false, data: [], prefix: ''};
         $('#kiwi_msginput').bind('keydown', function (e) {
-            var windows, meta, num, msg, data, candidates, word_pos, word, i;
+            var windows, meta, num, msg, data, candidates, word_pos, word, i, self;
             windows = $('#windows');
             //var meta = e.altKey;
             meta = e.ctrlKey;
+            
+            if (e.which !== 9) {
+                tabcomplete.active = false;
+                tabcomplete.data = [];
+                tabcomplete.prefix = '';
+            }
             
             switch (true) {
             case (e.which >= 48) && (e.which <= 57):
@@ -881,40 +888,59 @@ kiwi.front = {
                 break;
                 
             case e.which === 9:                // tab
-                // Get possible autocompletions
-                data = [];
-                kiwi.front.cur_channel.userlist.children().each(function () {
-                    var nick;
-                    nick = kiwi.front.nickStripPrefix($('a.nick', this).text());
-                    data.push(nick);
-                });
+                tabcomplete.active = true;
+                if (_.isEqual(tabcomplete.data, [])) {
+                    // Get possible autocompletions
+                    data = [];
+                    kiwi.front.cur_channel.userlist.children().each(function () {
+                        var nick;
+                        nick = kiwi.front.nickStripPrefix($('a.nick', this).text());
+                        data.push(nick);
+                    });
+                    data = _.sortBy(data, function (nick) {
+                        return nick;
+                    });
+                    tabcomplete.data = data;
+                }
                 
-                // Do the autocomplete
-                if (this.value.length === this.selectionStart && this.value.length === this.selectionEnd) {
-                    candidates = [];
-                    
-                    word_pos = this.value.lastIndexOf(' ');
-                    word = "";
-                    if (word_pos === -1) {
-                        word = this.value;
-                    } else {
-                        word = this.value.substr(word_pos);
+                if (this.value[this.selectionStart - 1] === ' ') {
+                    return false;
+                }
+                self = this;
+                (function () {
+                    var tokens = self.value.substring(0, self.selectionStart).split(" "),
+                        val,
+                        p1,
+                        newnick,
+                        range;
+                    nick = tokens[tokens.length - 1];
+                    if (tabcomplete.prefix === '') {
+                        tabcomplete.prefix = nick;
                     }
-                    word = word.trim();
                     
-                    // filter data to find only strings that start with existing value
-                    for (i = 0; i < data.length; i++) {
-                        if (data[i].indexOf(word) === 0 && data[i].length > word.length) {
-                            candidates.push(data[i]);
+                    tabcomplete.data = _.select(tabcomplete.data, function (n) {
+                        return (n.toLowerCase().indexOf(tabcomplete.prefix.toLowerCase()) === 0);
+                    });
+                    
+                    if (tabcomplete.data.length > 0) {
+                        p1 = self.selectionStart - (nick.length);
+                        val = self.value.substr(0, p1);
+                        newnick = tabcomplete.data.shift();
+                        tabcomplete.data.push(newnick);
+                        val += newnick;
+                        val += self.value.substr(self.selectionStart);
+                        self.value = val;
+                        if (self.setSelectionRange) {
+                            self.setSelectionRange(p1 + newnick.length, p1 + newnick.length);
+                        } else if (self.createTextRange) { // not sure if this bit is actually needed....
+                            range = self.createTextRange();
+                            range.collapse(true);
+                            range.moveEnd('character', p1 + newnick.length);
+                            range.moveStart('character', p1 + newnick.length);
+                            range.select();
                         }
                     }
-                    
-                    if (candidates.length > 0) {
-                        // some candidates for autocompletion are found
-                        this.value = this.value.substring(0, word_pos) + ' ' + candidates[0] + ': ';
-                        this.selectionStart = this.value.length;
-                    }
-                }
+                }());
                 return false;
             }
         });
