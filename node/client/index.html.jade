@@ -5,8 +5,9 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
         meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
         - if ((agent === 'android') || (agent === 'iphone') || (agent === 'ipad') || (agent === 'ipod'))
             meta(name="viewport", content="width=device-width,user-scalable=no")
-
+        
         title Kiwi IRC
+        link(rel="shortcut icon", href="/img/ico.png")
         link(rel="stylesheet", type="text/css", href="/css/default.css")
         link(rel="stylesheet", type="text/css", href="/css/ui.css")
 
@@ -70,7 +71,8 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
                 }
                 $('.formconnectwindow .nick').keydown(input_submit);
                 $('.formconnectwindow .channel').keydown(input_submit);
-                $('.formconnectwindow .server').keydown(input_submit);
+                $('.formconnectwindow .network').keydown(input_submit);
+                $('.formconnectwindow .port').keydown(input_submit);
             }
 
 

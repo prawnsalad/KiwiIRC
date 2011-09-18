@@ -538,6 +538,7 @@ this.httpHandler = function (request, response) {
             if (request.headers['if-none-match'] === kiwi.cache.alljs_hash) {
                 response.statusCode = 304;
             } else {
+                response.setHeader('Content-type', 'application/javascript');
                 response.setHeader('ETag', kiwi.cache.alljs_hash);
                 response.write(kiwi.cache.alljs);
             }
@@ -586,7 +587,14 @@ this.httpHandler = function (request, response) {
             }
 
             response.setHeader('X-Generated-By', 'KiwiIRC');
-            hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f').update(debug ? 't' : 'f').update(server_set ? 't' : 'f').update(server).update(nick).update(agent).update(JSON.stringify(kiwi.config)).digest('base64');
+            hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
+                                            .update(debug ? 't' : 'f')
+                                            .update(server_set ? 't' : 'f')
+                                            .update(server)
+                                            .update(nick)
+                                            .update(agent)
+                                            .update(JSON.stringify(kiwi.config))
+                                            .digest('base64');
             if (kiwi.cache.html[hash]) {
                 if (request.headers['if-none-match'] === kiwi.cache.html[hash].hash) {
                     response.statusCode = 304;
