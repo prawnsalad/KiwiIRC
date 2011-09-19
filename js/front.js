@@ -418,7 +418,7 @@ kiwi.front = {
 
             default:
                 //kiwi.front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
-                kiwi.gateway.raw(msg.substring(1));
+                kiwi.gateway.raw(msg.substring(1)); 
             }
 
         } else {
