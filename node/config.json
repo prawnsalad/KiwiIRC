@@ -1,11 +1,20 @@
 {
-    "port":             7777,
+    "ports":            [
+                            {
+                                "secure":   true,
+                                "number":   7777
+                            },
+                            {
+                                "secure":   false,
+                                "number":   7778
+                            }
+                            
+                        ],
     "bind_address":     "0.0.0.0",
 
-    "user":				"",
-    "group":			"",
+    "user":             "",
+    "group":            "",
 
-    "listen_ssl":       false,
     "ssl_key":          "server.key",
     "ssl_cert":         "cert.pem",
 
@@ -13,7 +22,7 @@
     "cap_options":      [],
 
     "handle_http":      true,
-    "public_http":	    "./../",
+    "public_http":      "./../",
 
     "max_client_conns": 2,
 
