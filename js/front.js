@@ -30,6 +30,7 @@ kiwi.front = {
         $(kiwi.gateway).bind("onconnect", kiwi.front.onConnect);
         $(kiwi.gateway).bind("onconnect_fail", kiwi.front.onConnectFail);
         $(kiwi.gateway).bind("ondisconnect", kiwi.front.onDisconnect);
+        $(kiwi.gateway).bind("onreconnecting", kiwi.front.onReconnecting);
         $(kiwi.gateway).bind("onnick", kiwi.front.onNick);
         $(kiwi.gateway).bind("onuserlist", kiwi.front.onUserList);
         $(kiwi.gateway).bind("onuserlist_end", kiwi.front.onUserListEnd);
@@ -523,7 +524,26 @@ kiwi.front = {
     },
     
     onConnect: function (e, data) {
+        var err_box, channels, tabview, i;
+
         if (data.connected) {
+            // Did we disconnect?
+            err_box = $('.messages .msg.error.disconnect .text');
+            if (typeof err_box[0] !== 'undefined') {
+                err_box.text('Reconnected OK :)');
+                err_box.removeClass('disconnect');
+
+                // Rejoin channels
+                channels = '';
+                $.each(kiwi.front.tabviews, function (i, tabview) {
+                    if (tabview.name == 'server') return;
+                    channels += tabview.name + ',';
+                });
+                console.log('Rejoining: ' + channels);
+                kiwi.gateway.join(channels);
+                return;
+            }
+
             if (kiwi.gateway.nick !== data.nick) {
                 kiwi.gateway.nick = data.nick;
                 kiwi.front.doLayout();
@@ -547,9 +567,32 @@ kiwi.front = {
     onDisconnect: function (e, data) {
         var tab;
         for (tab in kiwi.front.tabviews) {
-            kiwi.front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error');
+            kiwi.front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error disconnect');
         }
         kiwi.plugs.run('disconnect', {success: false});
+    },
+    onReconnecting: function (e, data) {
+        var err_box, f, msg;
+
+        err_box = $('.messages .msg.error.disconnect .text');
+        if (!err_box) return;
+
+        f = function (num) {
+            switch (num) {
+            case 1: return 'First';
+            case 2: return 'Second';
+            case 3: return 'Third';
+            case 4: return 'Fourth';
+            case 5: return 'Fifth';
+            case 6: return 'Sixth';
+            case 7: return 'Seventh';
+            default: return 'Next'
+            }
+        };
+
+        // TODO: convert seconds to mins:secs
+        msg = f(data.attempts) + ' attempt at reconnecting in ' + (data.delay / 1000).toString() + ' seconds..';
+        err_box.text(msg);
     },
     onOptions: function (e, data) {
         if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
@@ -694,10 +737,12 @@ kiwi.front = {
             kiwi.front.tabviewAdd(data.channel.toLowerCase());
         }
         
+        kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
+
         if (data.nick === kiwi.gateway.nick) {
             return; // Not needed as it's already in nicklist
         }
-        kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
+
         $('<li><a class="nick" onclick="kiwi.front.userClick(this);">' + data.nick + '</a></li>').appendTo(kiwi.front.tabviews[data.channel.toLowerCase()].userlist);
         kiwi.front.tabviews[data.channel.toLowerCase()].userlistSort();
     },
@@ -808,7 +853,7 @@ kiwi.front = {
             break;
         case 'nickname_in_use':
             kiwi.front.tabviews.server.addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
-            kiwi.front.showChangeNick();
+            kiwi.front.showChangeNick('That nick is already taken');
             break;
         default:
             // We don't know what data contains, so don't do anything with it.
@@ -1023,9 +1068,13 @@ kiwi.front = {
     },
     
     
-    showChangeNick: function () {
+    showChangeNick: function (caption) {
+        caption = (typeof caption !== 'undefined') ? caption : '';
+
         $('#kiwi').append($('#tmpl_change_nick').tmpl({}));
         
+        $('#kiwi .newnick .caption').text(caption);
+
         $('#kiwi .form_newnick').submit(function () {
             kiwi.front.run('/NICK ' + $('#kiwi .txtnewnick').val());
             $('#kiwi .newnick').remove();
@@ -1651,7 +1700,6 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
 
 Tabview.prototype.scrollBottom = function () {
     var panel = this.panel;
-    console.log(panel);
     panel[0].scrollTop = panel[0].scrollHeight;
 };
 

@@ -72,6 +72,7 @@
 #kiwi #login .content.bottom a { display:block; text-align:right; font-size:16px; margin-top:30px; }
 
 
+#kiwi .newnick .caption { display:block; margin-bottom:1em; }
 
 #kiwi .about {
 	top: 100px;
