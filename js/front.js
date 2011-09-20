@@ -30,6 +30,7 @@ kiwi.front = {
         $(kiwi.gateway).bind("onconnect", kiwi.front.onConnect);
         $(kiwi.gateway).bind("onconnect_fail", kiwi.front.onConnectFail);
         $(kiwi.gateway).bind("ondisconnect", kiwi.front.onDisconnect);
+        $(kiwi.gateway).bind("onreconnecting", kiwi.front.onReconnecting);
         $(kiwi.gateway).bind("onnick", kiwi.front.onNick);
         $(kiwi.gateway).bind("onuserlist", kiwi.front.onUserList);
         $(kiwi.gateway).bind("onuserlist_end", kiwi.front.onUserListEnd);
@@ -91,7 +92,6 @@ kiwi.front = {
             new_width = new_width - parseInt($('#kiwi .userlist').css('margin-right'), 10);
 
             // Make sure we don't remove the userlist alltogether
-            console.log(new_width);
             if (new_width < 20) {
                 $(this).data('draggable').offset.click.left = 10;
                 console.log('whoaa');
@@ -419,7 +419,7 @@ kiwi.front = {
 
             default:
                 //kiwi.front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
-                kiwi.gateway.raw(msg.substring(1));
+                kiwi.gateway.raw(msg.substring(1)); 
             }
 
         } else {
@@ -524,7 +524,26 @@ kiwi.front = {
     },
     
     onConnect: function (e, data) {
+        var err_box, channels, tabview, i;
+
         if (data.connected) {
+            // Did we disconnect?
+            err_box = $('.messages .msg.error.disconnect .text');
+            if (typeof err_box[0] !== 'undefined') {
+                err_box.text('Reconnected OK :)');
+                err_box.removeClass('disconnect');
+
+                // Rejoin channels
+                channels = '';
+                $.each(kiwi.front.tabviews, function (i, tabview) {
+                    if (tabview.name == 'server') return;
+                    channels += tabview.name + ',';
+                });
+                console.log('Rejoining: ' + channels);
+                kiwi.gateway.join(channels);
+                return;
+            }
+
             if (kiwi.gateway.nick !== data.nick) {
                 kiwi.gateway.nick = data.nick;
                 kiwi.front.doLayout();
@@ -548,9 +567,32 @@ kiwi.front = {
     onDisconnect: function (e, data) {
         var tab;
         for (tab in kiwi.front.tabviews) {
-            kiwi.front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error');
+            kiwi.front.tabviews[tab].addMsg(null, '', 'Disconnected from server!', 'error disconnect');
         }
         kiwi.plugs.run('disconnect', {success: false});
+    },
+    onReconnecting: function (e, data) {
+        var err_box, f, msg;
+
+        err_box = $('.messages .msg.error.disconnect .text');
+        if (!err_box) return;
+
+        f = function (num) {
+            switch (num) {
+            case 1: return 'First';
+            case 2: return 'Second';
+            case 3: return 'Third';
+            case 4: return 'Fourth';
+            case 5: return 'Fifth';
+            case 6: return 'Sixth';
+            case 7: return 'Seventh';
+            default: return 'Next'
+            }
+        };
+
+        // TODO: convert seconds to mins:secs
+        msg = f(data.attempts) + ' attempt at reconnecting in ' + (data.delay / 1000).toString() + ' seconds..';
+        err_box.text(msg);
     },
     onOptions: function (e, data) {
         if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
@@ -695,10 +737,12 @@ kiwi.front = {
             kiwi.front.tabviewAdd(data.channel.toLowerCase());
         }
         
+        kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
+
         if (data.nick === kiwi.gateway.nick) {
             return; // Not needed as it's already in nicklist
         }
-        kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
+
         $('<li><a class="nick" onclick="kiwi.front.userClick(this);">' + data.nick + '</a></li>').appendTo(kiwi.front.tabviews[data.channel.toLowerCase()].userlist);
         kiwi.front.tabviews[data.channel.toLowerCase()].userlistSort();
     },
@@ -809,7 +853,7 @@ kiwi.front = {
             break;
         case 'nickname_in_use':
             kiwi.front.tabviews.server.addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
-            kiwi.front.showChangeNick();
+            kiwi.front.showChangeNick('That nick is already taken');
             break;
         default:
             // We don't know what data contains, so don't do anything with it.
@@ -1024,9 +1068,13 @@ kiwi.front = {
     },
     
     
-    showChangeNick: function () {
+    showChangeNick: function (caption) {
+        caption = (typeof caption !== 'undefined') ? caption : '';
+
         $('#kiwi').append($('#tmpl_change_nick').tmpl({}));
         
+        $('#kiwi .newnick .caption').text(caption);
+
         $('#kiwi .form_newnick').submit(function () {
             kiwi.front.run('/NICK ' + $('#kiwi .txtnewnick').val());
             $('#kiwi .newnick').remove();
@@ -1383,14 +1431,20 @@ var Utilityview = function (name) {
     this.name = rand_name;
     this.title = name;
     this.topic = ' ';
+    this.panel = $('#panel1');
 
-    $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
+    if (typeof $('.scroller', this.panel)[0] === 'undefined') {
+        this.panel.append('<div id="' + tmp_divname + '" class="messages"></div>');
+    } else {
+        $('.scroller', this.panel).append('<div id="' + tmp_divname + '" class="messages"></div>');
+    }
 
     this.tab = $('<li id="' + tmp_tabname + '">' + this.title + '</li>');
     this.tab.click(function () {
         kiwi.front.utilityviews[rand_name.toLowerCase()].show();
     });
     $('#kiwi .utilityviewlist ul').append(this.tab);
+    kiwi.front.doLayoutSize();
     
     this.div = $('#' + tmp_divname);
     this.div.css('overflow', 'hidden');
@@ -1403,12 +1457,13 @@ Utilityview.prototype.title = null;
 Utilityview.prototype.div = null;
 Utilityview.prototype.tab = null;
 Utilityview.prototype.topic = ' ';
+Utilityview.prototype.panel = null;
 Utilityview.prototype.show = function () {
-    $('#kiwi .messages').removeClass("active");
+    $('.messages', this.panel).removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
     $('#kiwi .toolbars ul li').removeClass("active");
 
-    $('#windows').css('overflow-y', 'hidden');
+    this.panel.css('overflow-y', 'hidden');
     $('#windows').css('right', 0);
     // Activate this tab!
     this.div.addClass('active');
@@ -1423,6 +1478,13 @@ Utilityview.prototype.show = function () {
     if (touch_scroll) {
         touch_scroll.refresh();
     }
+};
+
+Utilityview.prototype.setPanel = function (new_panel) {
+    this.div.detach();
+    this.panel = new_panel;
+    this.panel.append(this.div);
+    this.show();
 };
 
 Utilityview.prototype.close = function () {
@@ -1468,7 +1530,9 @@ Utilityview.prototype.clearPartImage = function () {
  */
 
 
-var Tabview = function () {};
+var Tabview = function () {
+    this.panel = $('#panel1');
+};
 Tabview.prototype.name = null;
 Tabview.prototype.div = null;
 Tabview.prototype.userlist = null;
@@ -1476,18 +1540,19 @@ Tabview.prototype.userlist_width = 100;     // 0 for disabled
 Tabview.prototype.tab = null;
 Tabview.prototype.topic = "";
 Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
+Tabview.prototype.panel = null;
 
 Tabview.prototype.show = function () {
     var w, u;
 
-    $('#kiwi .messages').removeClass("active");
+    $('.messages', this.panel).removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
     $('#kiwi .toolbars ul li').removeClass("active");
     
     w = $('#windows');
     u = $('#kiwi .userlist');
 
-    w.css('overflow-y', 'scroll');
+    this.panel.css('overflow-y', 'scroll');
 
     // Set the window size accordingly
     this.setUserlistWidth();
@@ -1634,8 +1699,8 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
 };
 
 Tabview.prototype.scrollBottom = function () {
-    var w = $('#windows');
-    w[0].scrollTop = w[0].scrollHeight;
+    var panel = this.panel;
+    panel[0].scrollTop = panel[0].scrollHeight;
 };
 
 Tabview.prototype.changeNick = function (newNick, oldNick) {
