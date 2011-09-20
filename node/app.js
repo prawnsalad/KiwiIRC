@@ -591,6 +591,7 @@ this.httpHandler = function (request, response) {
             hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
                 .update(debug ? 't' : 'f')
                 .update(server_set ? 't' : 'f')
+                .update(secure ? 't' : 'f')
                 .update(server)
                 .update(nick)
                 .update(agent)
