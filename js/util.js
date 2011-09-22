@@ -40,19 +40,22 @@ function randomString(string_length) {
     return randomstring;
 }
 
-String.prototype.trim = function () {
-    return this.replace(/^\s+|\s+$/g, "");
-};
+if (typeof String.prototype.trim === 'undefined') {
+    String.prototype.trim = function () {
+        return this.replace(/^\s+|\s+$/g, "");
+    };
+}
 
-String.prototype.lpad = function (length, character) {
-    var padding = "",
-        i;
-    for (i = 0; i < length; i++) {
-        padding += character;
-    }
-    return (padding + this).slice(-length);
-};
-
+if (typeof String.prototype.lpad === 'undefined') {
+    String.prototype.lpad = function (length, character) {
+        var padding = "",
+            i;
+        for (i = 0; i < length; i++) {
+            padding += character;
+        }
+        return (padding + this).slice(-length);
+    };
+}
 
 
 /*
