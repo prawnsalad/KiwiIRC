@@ -418,6 +418,14 @@ kiwi.front = {
                 kiwi.gateway.kiwi(kiwi.front.cur_channel.name, msg.substring(6));
                 break;
 
+            case '/ctcp':
+                parts = parts.slice(1);
+                dest = parts.shift();
+                msg = parts.join(' ');
+                
+                kiwi.gateway.msg(dest, String.fromCharCode(1) + msg + String.fromCharCode(1));
+                kiwi.front.tabviews.server.addMsg(null, 'CTCP Request', '[to ' + dest + '] ' + msg, 'ctcp');
+                break;
             default:
                 //kiwi.front.cur_channel.addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
                 kiwi.gateway.raw(msg.substring(1)); 
@@ -514,10 +522,11 @@ kiwi.front = {
             kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'TIME ' + (new Date()).toLocaleString() + String.fromCharCode(1));
             break;
         }
-        kiwi.front.tabviews.server.addMsg(null, 'CTCP [' + data.nick + ']', data.msg, 'ctcp');
+        kiwi.front.tabviews.server.addMsg(null, 'CTCP Request', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
     },
     
     onCTCPResponse: function (e, data) {
+        kiwi.front.tabviews.server.addMsg(null, 'CTCP Reply', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
     },
 
     onKiwi: function (e, data) {
