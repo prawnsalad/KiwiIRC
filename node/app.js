@@ -1,5 +1,6 @@
 /*jslint sloppy: true, continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
 /*globals kiwi_root */
+/* Fuck you, git. */
 var tls = null;
 var net = null;
 var http = null;
