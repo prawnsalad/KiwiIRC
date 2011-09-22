@@ -14,6 +14,87 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
         - if (touchscreen)
             link(rel="stylesheet", type="text/css", href="css/touchscreen_tweaks.css")
 
+    body
+
+        div#kiwi
+            div.connectwindow
+                h1.logo Kiwi IRC
+                div#login
+                    form.formconnectwindow
+                        div.content.top
+                            ul
+                                li
+                                    label(for="nick") Your nickname:
+                                    input(type="text", id="nick", name="nick", class="nick", placeholder="Your nick..", value=nick)
+                            a.connect(href="") Connect...
+
+                        - var display
+                        - if (server_set)
+                            - display = 'display:none'
+                        - else
+                            - display = '';
+                        div.more(style=display)
+                            a(href="", class="more_link") more
+                            div.content.bottom
+                                ul
+                                    li
+                                        label(for="network") Server:
+                                        input(type="text", id="network", name="network", class="network", value=server)
+                                    li
+                                        label(for="channel") Channel:
+                                        input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
+                                    li(class="section")
+                                        label(for="port") Port:
+                                        input(type="text", id="port", name="port", class="port", value="6667")
+                                    li
+                                        label(for="ssl") SSL:
+                                        input(type="checkbox", id="ssl", name="ssl", class="ssl")
+                                a.connect(href="") Connect...
+
+
+            
+            div.toolbars
+                div.windowlist
+                    div.poweredby Powered by Kiwi IRC
+                    ul
+
+                div.utilityviewlist
+                    ul
+
+                div.cur_topic(contenteditable="true", spellcheck="true")
+                    //
+                        ul.edit(style="float:right;")
+                            li
+                                img(src="img/more.png")
+                                    ul#kiwi_menu
+                                        li Item 1
+                                        li Item 2
+                                        li Item 3
+                    div.topic(style="margin-right:5em; overflow:hidden; white-space: pre-wrap; word-wrap: break-word;")
+
+            div.userlist
+                ul
+
+            div#windows.windows
+                div#panel1.panel
+                    div.scroller(style="width:100%;height:100%;")
+
+                div#panel2.panel
+
+            div.control
+                div.msginput
+                    div.nick
+                        a
+                        | :
+                    input(type="text", name="kiwi_msginput", id="kiwi_msginput")
+                div.plugins
+                    ul
+                        li
+                            a.load_plugin_file Plugins
+                        - if (debug)
+                            li
+                                a.reload_css Reload CSS
+
         script(type="text/javascript", src="/socket.io/socket.io.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
         script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
@@ -34,7 +115,7 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
             script(type="text/javascript", src="/js/touchscreen_tweaks.js")
 
         - var proto
-        - if (config.listen_ssl)
+        - if (secure)
             - proto = 'https'
         - else
             - proto = 'http'
@@ -117,84 +198,3 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en-gb")
             |        <a class="userbox_query">Message</a>
             |        <a class="userbox_whois">Info</a>
             |    </div>
-
-    body
-
-        div#kiwi
-            div.connectwindow
-                h1.logo Kiwi IRC
-                div#login
-                    form.formconnectwindow
-                        div.content.top
-                            ul
-                                li
-                                    label(for="nick") Your nickname:
-                                    input(type="text", id="nick", name="nick", class="nick", placeholder="Your nick..", value=nick)
-                            a.connect(href="") Connect...
-
-                        - var display
-                        - if (server_set)
-                            - display = 'display:none'
-                        - else
-                            - display = '';
-                        div.more(style=display)
-                            a(href="", class="more_link") more
-                            div.content.bottom
-                                ul
-                                    li
-                                        label(for="network") Server:
-                                        input(type="text", id="network", name="network", class="network", value=server)
-                                    li
-                                        label(for="channel") Channel:
-                                        input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
-                                    li(class="section")
-                                        label(for="port") Port:
-                                        input(type="text", id="port", name="port", class="port", value="6667")
-                                    li
-                                        label(for="ssl") SSL:
-                                        input(type="checkbox", id="ssl", name="ssl", class="ssl")
-                                a.connect(href="") Connect...
-
-
-            
-            div.toolbars
-                div.windowlist
-                    div.poweredby Powered by Kiwi IRC
-                    ul
-
-                div.utilityviewlist
-                    ul
-
-                div.cur_topic(contenteditable="true", spellcheck="true")
-                    //
-                        ul.edit(style="float:right;")
-                            li
-                                img(src="img/more.png")
-                                    ul#kiwi_menu
-                                        li Item 1
-                                        li Item 2
-                                        li Item 3
-                    div.topic(style="margin-right:5em; overflow:hidden; white-space: pre-wrap; word-wrap: break-word;")
-
-            div.userlist
-                ul
-
-            div#windows.windows
-                div#panel1.panel
-                    div.scroller(style="width:100%;height:100%;")
-
-                div#panel2.panel
-
-            div.control
-                div.msginput
-                    div.nick
-                        a
-                        | :
-                    input(type="text", name="kiwi_msginput", id="kiwi_msginput")
-                div.plugins
-                    ul
-                        li
-                            a.load_plugin_file Plugins
-                        - if (debug)
-                            li
-                                a.reload_css Reload CSS

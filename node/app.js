@@ -512,7 +512,8 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {}, public_http_path;
+        min = {}, public_http_path,
+        secure = (typeof request.client.encrypted === 'object');
     if (kiwi.config.handle_http) {
         uri = url.parse(request.url, true);
         uri_parts = uri.pathname.split('/');
@@ -588,13 +589,14 @@ this.httpHandler = function (request, response) {
 
             response.setHeader('X-Generated-By', 'KiwiIRC');
             hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
-                                            .update(debug ? 't' : 'f')
-                                            .update(server_set ? 't' : 'f')
-                                            .update(server)
-                                            .update(nick)
-                                            .update(agent)
-                                            .update(JSON.stringify(kiwi.config))
-                                            .digest('base64');
+                .update(debug ? 't' : 'f')
+                .update(server_set ? 't' : 'f')
+                .update(secure ? 't' : 'f')
+                .update(server)
+                .update(nick)
+                .update(agent)
+                .update(JSON.stringify(kiwi.config))
+                .digest('base64');
             if (kiwi.cache.html[hash]) {
                 if (request.headers['if-none-match'] === kiwi.cache.html[hash].hash) {
                     response.statusCode = 304;
@@ -607,7 +609,7 @@ this.httpHandler = function (request, response) {
                 fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
                     var html, hash2;
                     if (!err) {
-                        html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
+                        html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
                         hash2 = crypto.createHash('md5').update(html).digest('base64');
                         kiwi.cache.html[hash] = {"html": html, "hash": hash2};
                         if (request.headers['if-none-match'] === hash2) {
@@ -634,33 +636,42 @@ this.httpHandler = function (request, response) {
 
 
 
-this.websocketListen = function (port, host, handler, secure, key, cert) {
-    if (kiwi.httpServer) {
-        kiwi.httpServer.close();
+this.websocketListen = function (ports, host, handler, key, cert) {
+    if (kiwi.httpServers.length > 0) {
+        _.each(kiwi.httpServers, function (hs) {
+            hs.close();
+        });
+        kiwi.httpsServers = [];
     }
-    if (secure) {
-        kiwi.httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
-        kiwi.io = ws.listen(kiwi.httpServer, {secure: true});
-        kiwi.httpServer.listen(port, host);
-    } else {
-        kiwi.httpServer = http.createServer(handler);
-        kiwi.io = ws.listen(kiwi.httpServer, {secure: false});
-        kiwi.httpServer.listen(port, host);
-    }
-
-    kiwi.io.set('log level', 1);
-    kiwi.io.enable('browser client minification');
-    kiwi.io.enable('browser client etag');
-    kiwi.io.set('transports', kiwi.config.transports);
-
-    kiwi.io.of('/kiwi').authorization(function (handshakeData, callback) {
-        var address = handshakeData.address.address;
-        
-        if (typeof kiwi.connections[address] === 'undefined') {
-            kiwi.connections[address] = {count: 0, sockets: []};
+    _.each(ports, function (port) {
+        var hs;
+        if (port.secure === true) {
+            hs = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
+            kiwi.io.push(ws.listen(hs, {secure: true}));
+            hs.listen(port.number);
+            console.log("Listening on %s, port %d with SSL", host, port.number);
+        } else {
+            hs = http.createServer(handler);
+            kiwi.io.push(ws.listen(hs, {secure: false}));
+            hs.listen(port.number);
+            console.log("Listening on %s, port %d without SSL", host, port.number);
         }
-        callback(null, true);
-    }).on('connection', kiwi.websocketConnection);
+    });
+    
+    _.each(kiwi.io, function (io) {
+        io.set('log level', 1);
+        io.enable('browser client minification');
+        io.enable('browser client etag');
+        io.set('transports', kiwi.config.transports);
+        
+        io.of('/kiwi').authorization(function (handshakeData, callback) {
+            var address = handshakeData.address.address;
+            if (typeof kiwi.connections[address] === 'undefined') {
+                kiwi.connections[address] = {count: 0, sockets: []};
+            }
+            callback(null, true);
+        }).on('connection', kiwi.websocketConnection);
+    });
 };
 
 
@@ -670,6 +681,7 @@ this.websocketListen = function (port, host, handler, secure, key, cert) {
 
 this.websocketConnection = function (websocket) {
     var con;
+    console.log("New connection!");
     websocket.kiwi = {address: websocket.handshake.address.address, buffer: {list: []}};
     con = kiwi.connections[websocket.kiwi.address];
 
@@ -856,15 +868,13 @@ this.rehash = function () {
         console.log('%s config changes: \n', Object.keys(changes).length, changes);
         for (i in changes) {
             switch (i) {
-            case 'port':
+            case 'ports':
             case 'bind_address':
-            case 'listen_ssl':
             case 'ssl_key':
             case 'ssl_cert':
-                kiwi.websocketListen(kiwi.config.port, kiwi.config.bind_address, kiwi.httpHandler, kiwi.config.listen_ssl, kiwi.config.ssl_key, kiwi.config.ssl_cert);
-                delete changes.port;
+                kiwi.websocketListen(kiwi.config.ports, kiwi.config.bind_address, kiwi.httpHandler, kiwi.config.ssl_key, kiwi.config.ssl_cert);
+                delete changes.ports;
                 delete changes.bind_address;
-                delete changes.listen_ssl;
                 delete changes.ssl_key;
                 delete changes.ssl_cert;
                 break;
