@@ -274,8 +274,9 @@ kiwi.front = {
         // Update msg if it's been changed by any plugins
         msg = plugin_event.command.toString();
 
-        console.log("running " + msg);
+        
         if (msg.substring(0, 1) === '/') {
+            console.log("running " + msg);
             parts = msg.split(' ');
             switch (parts[0].toLowerCase()) {
             case '/j':
