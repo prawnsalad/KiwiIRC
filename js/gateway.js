@@ -25,8 +25,7 @@ kiwi.gateway = {
                 'try multiple transports': true,
                 'connect timeout': 3000,
                 'max reconnection attempts': 7,
-                'reconnection delay': 2000,
-
+                'reconnection delay': 2000
             });
             kiwi.gateway.socket.on('connect_failed', function (reason) {
                 // TODO: When does this even actually get fired? I can't find a case! ~Darren

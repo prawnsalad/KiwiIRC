@@ -602,6 +602,7 @@ this.httpHandler = function (request, response) {
                     response.statusCode = 304;
                 } else {
                     response.setHeader('Etag', kiwi.cache.html[hash].hash);
+                    response.setHeader('Content-type', 'text/html');
                     response.write(kiwi.cache.html[hash].html);
                 }
                 response.end();
@@ -616,6 +617,7 @@ this.httpHandler = function (request, response) {
                             response.statusCode = 304;
                         } else {
                             response.setHeader('Etag', hash2);
+                            response.setHeader('Content-type', 'text/html');
                             response.write(html);
                         }
                     } else {

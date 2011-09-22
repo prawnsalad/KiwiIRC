@@ -274,8 +274,9 @@ kiwi.front = {
         // Update msg if it's been changed by any plugins
         msg = plugin_event.command.toString();
 
-        console.log("running " + msg);
+        
         if (msg.substring(0, 1) === '/') {
+            console.log("running " + msg);
             parts = msg.split(' ');
             switch (parts[0].toLowerCase()) {
             case '/j':
@@ -536,7 +537,9 @@ kiwi.front = {
                 // Rejoin channels
                 channels = '';
                 $.each(kiwi.front.tabviews, function (i, tabview) {
-                    if (tabview.name == 'server') return;
+                    if (tabview.name === 'server') {
+                        return;
+                    }
                     channels += tabview.name + ',';
                 });
                 console.log('Rejoining: ' + channels);
@@ -575,7 +578,9 @@ kiwi.front = {
         var err_box, f, msg;
 
         err_box = $('.messages .msg.error.disconnect .text');
-        if (!err_box) return;
+        if (!err_box) {
+            return;
+        }
 
         f = function (num) {
             switch (num) {
@@ -586,7 +591,7 @@ kiwi.front = {
             case 5: return 'Fifth';
             case 6: return 'Sixth';
             case 7: return 'Seventh';
-            default: return 'Next'
+            default: return 'Next';
             }
         };
 
