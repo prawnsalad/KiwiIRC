@@ -60,9 +60,7 @@ kiwi.front = {
         }
         about_info += 'usage';
         $('#tmpl_about_box').tmpl({
-            about: about_info,
-            front_revision: kiwi.front.revision,
-            gateway_revision: kiwi.gateway.revision
+            about: about_info
         }).appendTo(kiwi.front.boxes.about.content);
 
         //$(window).bind("beforeunload", function(){ kiwi.gateway.quit(); });
@@ -541,7 +539,7 @@ kiwi.front = {
             err_box = $('.messages .msg.error.disconnect .text');
             if (typeof err_box[0] !== 'undefined') {
                 err_box.text('Reconnected OK :)');
-                err_box.removeClass('disconnect');
+                err_box.parent().removeClass('disconnect');
 
                 // Rejoin channels
                 channels = '';
