@@ -12,7 +12,7 @@ kiwi.gateway = {
     user_prefixes: ['~', '&', '@', '+'],
     socket: null,
     kiwi_server: null,
-	
+
     start: function (kiwi_server) {
         if (typeof kiwi_server !== 'undefined') {
             kiwi.gateway.kiwi_server = kiwi_server;
@@ -101,7 +101,7 @@ kiwi.gateway = {
     parse: function (item) {
         if (item.event !== undefined) {
             $(kiwi.gateway).trigger("on" + item.event, item);
-            
+
             switch (item.event) {
             case 'options':
                 $.each(item.options, function (name, value) {
@@ -118,7 +118,7 @@ kiwi.gateway = {
                     }
                 });
                 break;
-        
+
             case 'sync':
                 if (kiwi.gateway.onSync && kiwi.gateway.syncing) {
                     kiwi.gateway.syncing = false;
@@ -139,12 +139,12 @@ kiwi.gateway = {
         if (this.session_id === null) {
             return;
         }
-    
+
         var data = {
             method: 'sync',
             args: {}
         };
-    
+
         kiwi.gateway.syncing = true;
         kiwi.gateway.sendData(data, callback);
     },
@@ -254,7 +254,7 @@ kiwi.gateway = {
                 message: msg
             }
         };
-    
+
         kiwi.gateway.sendData(data, callback);
     }
 

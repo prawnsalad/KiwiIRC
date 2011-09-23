@@ -112,7 +112,7 @@ var ircNumerics = {
 
 this.parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj, tmp, namespace;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, nicklist, caps, rtn, obj, tmp, namespace;
     //regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     //regex = /^(?::(\S+) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
@@ -128,7 +128,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             params:     msg[6] || '',
             trailing:   (msg[7]) ? msg[7].trim() : ''
         };
-        
+
         switch (msg.command.toUpperCase()) {
         case 'PING':
             websocket.sendServerLine('PONG ' + msg.trailing);
@@ -152,7 +152,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 opt = opts[i].split("=", 2);
                 opt[0] = opt[0].toUpperCase();
                 ircSocket.IRC.options[opt[0]] = (typeof opt[1] !== 'undefined') ? opt[1] : true;
-                if (_.include(['NETWORK', 'PREFIX', 'CHANTYPES'], opt[0])) {
+                if (_.include(['NETWORK', 'PREFIX', 'CHANTYPES', 'NAMESX'], opt[0])) {
                     if (opt[0] === 'PREFIX') {
                         regex = /\(([^)]*)\)(.*)/;
                         matches = regex.exec(opt[1]);
@@ -164,6 +164,9 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                             }
 
                         }
+                    }
+                    if (opt[0] === 'NAMESX') {
+                        websocket.sendServerLine('PROTOCTL NAMESX');
                     }
                 }
             }
@@ -197,7 +200,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 websocket.sendClientEvent('list_end', {server: ''});
             }());
             break;
-        
+
         case ircNumerics.RPL_LIST:
             (function () {
                 var parts, channel, num_users, modes, topic;
@@ -216,7 +219,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                     modes: modes,
                     num_users: parseInt(num_users, 10)
                 });
-                
+
                 if (websocket.kiwi.buffer.list.length > 200) {
                     websocket.kiwi.buffer.list = _.sortBy(websocket.kiwi.buffer.list, function (channel) {
                         return channel.num_users;
@@ -224,7 +227,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                     websocket.sendClientEvent('list_channel', {chans: websocket.kiwi.buffer.list});
                     websocket.kiwi.buffer.list = [];
                 }
-                
+
             }());
             break;
 
@@ -244,20 +247,21 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             nick = params[0];
             chan = params[2];
             users = msg.trailing.split(" ");
-            prefixes = _.values(ircSocket.IRC.options.PREFIX);
-            nicklist = {};
+            nicklist = [];
             i = 0;
             _.each(users, function (user) {
-                if (_.include(prefix, user.charAt(0))) {
-                    prefix = user.charAt(0);
-                    user = user.substring(1);
-                    nicklist[user] = prefix;
-                } else {
-                    nicklist[user] = '';
+                var j, k, modes = [];
+                for (j = 0; j < user.length; j++) {
+                    for (k = 0; k < ircSocket.IRC.options.PREFIX.length; k++) {
+                        if (user.charAt(j) === ircSocket.IRC.options.PREFIX[k].symbol) {
+                            modes.push(ircSocket.IRC.options.PREFIX[k].mode);
+                        }
+                    }
                 }
+                nicklist.push({nick: user, modes: modes});
                 if (i++ >= 50) {
                     websocket.sendClientEvent('userlist', {server: '', 'users': nicklist, channel: chan});
-                    nicklist = {};
+                    nicklist = [];
                     i = 0;
                 }
             });
@@ -271,7 +275,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.sendClientEvent('userlist_end', {server: '', channel: msg.params.split(" ")[1]});
             break;
         case ircNumerics.ERR_LINKCHANNEL:
-            params = msg.params.split(" "); 
+            params = msg.params.split(" ");
             websocket.sendClientEvent('channel_redirect', {from: params[1], to: params[2]});
             break;
         case ircNumerics.ERR_NOSUCHNICK:
@@ -353,7 +357,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                     tmp = msg.trailing.substr(6, msg.trailing.length - 2);
                     namespace = tmp.split(' ', 1)[0];
                     websocket.sendClientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length + 1)});
-                    
+
                 } else if (msg.trailing.substr(1, 7) === 'VERSION') {
                     ircSocket.write('NOTICE ' + msg.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1) + '\r\n');
                 } else {
@@ -493,7 +497,7 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
     if (data.substr(-1) !== '\n') {
         ircSocket.holdLast = true;
     }
-    data = data.split("\n");         
+    data = data.split("\n");
     for (i = 0; i < data.length; i++) {
         if (data[i]) {
             if ((ircSocket.holdLast) && (i === data.length - 1)) {
@@ -518,7 +522,7 @@ this.httpHandler = function (request, response) {
     if (kiwi.config.handle_http) {
         uri = url.parse(request.url, true);
         uri_parts = uri.pathname.split('/');
-        
+
         subs = uri.pathname.substr(0, 4);
         if (uri.pathname === '/js/all.js') {
             if (kiwi.cache.alljs === '') {
@@ -571,7 +575,7 @@ this.httpHandler = function (request, response) {
             touchscreen = false;
 
             debug = (typeof uri.query.debug !== 'undefined');
-            
+
             if (uri_parts[1] !== 'client') {
                 if (uri.query) {
                     server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
@@ -646,6 +650,7 @@ this.websocketListen = function (ports, host, handler, key, cert) {
         });
         kiwi.httpsServers = [];
     }
+
     _.each(ports, function (port) {
         var hs;
         if (port.secure === true) {
@@ -660,7 +665,7 @@ this.websocketListen = function (ports, host, handler, key, cert) {
             console.log("Listening on %s, port %d without SSL", host, port.number);
         }
     });
-    
+
     _.each(kiwi.io, function (io) {
         io.set('log level', 1);
         io.enable('browser client minification');
@@ -743,11 +748,11 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback)
     websocket.ircSocket = ircSocket;
     ircSocket.holdLast = false;
     ircSocket.held = '';
-    
+
     ircSocket.on('data', function (data) {
         kiwi.ircSocketDataHandler(data, websocket, ircSocket);
     });
-    
+
     ircSocket.IRC.nick = nick;
     // Send the login data
     dns.reverse(websocket.kiwi.address, function (err, domains) {
@@ -863,7 +868,7 @@ this.rehash = function () {
     if (reload_config === false) {
         return false;
     }
-    
+
     // We just want the settings that have been changed
     changes = reload_config[1];
 
