@@ -1,8 +1,6 @@
 /*jslint white:true, regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global kiwi, _, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
 kiwi.front = {
-    revision: 38,
-
     cur_channel: '',
     windows: {},
     tabviews: {},
@@ -255,7 +253,7 @@ kiwi.front = {
             chan = chans[i];
             if (kiwi.front.tabviews[chan.toLowerCase()] === undefined || (kiwi.front.tabviews[chan.toLowerCase()] !== undefined && kiwi.front.tabviews[chan.toLowerCase()].safe_to_close === true)) {
                 kiwi.gateway.join(chan);
-                kiwi.front.tabviewAdd(chan);
+                new Tabview(chan);
             } else {
                 kiwi.front.tabviews[chan.toLowerCase()].show();
             }
@@ -343,7 +341,7 @@ kiwi.front = {
             case '/q':
             case '/query':
                 if (typeof parts[1] !== "undefined") {
-                    kiwi.front.tabviewAdd(parts[1]);
+                    new Tabview(parts[1]);
                 }
                 break;
 
@@ -355,7 +353,7 @@ kiwi.front = {
                     kiwi.gateway.msg(parts[1], msg_sliced);
 
                     if (!kiwi.front.tabviewExists(parts[1])) {
-                        kiwi.front.tabviewAdd(parts[1]);
+                        new Tabview(parts[1]);
                     }
                     kiwi.front.tabviews[parts[1].toLowerCase()].addMsg(null, kiwi.gateway.nick, msg_sliced);
                 }
@@ -465,14 +463,14 @@ kiwi.front = {
         }
 
         if (!kiwi.front.tabviewExists(plugin_event.destination)) {
-            kiwi.front.tabviewAdd(plugin_event.destination);
+            new Tabview(plugin_event.destination);
         }
         kiwi.front.tabviews[plugin_event.destination].addMsg(null, plugin_event.nick, plugin_event.msg);
     },
 
     onDebug: function (e, data) {
         if (!kiwi.front.tabviewExists('kiwi_debug')) {
-            kiwi.front.tabviewAdd('kiwi_debug');
+            new Tabview('kiwi_debug');
         }
         kiwi.front.tabviews.kiwi_debug.addMsg(null, ' ', data.msg);
     },
@@ -487,7 +485,7 @@ kiwi.front = {
         }
 
         if (!kiwi.front.tabviewExists(destination)) {
-            kiwi.front.tabviewAdd(destination);
+            new Tabview(destination);
         }
         kiwi.front.tabviews[destination.toLowerCase()].addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
     },
@@ -734,7 +732,7 @@ kiwi.front = {
 
     onJoin: function (e, data) {
         if (!kiwi.front.tabviewExists(data.channel)) {
-            kiwi.front.tabviewAdd(data.channel.toLowerCase());
+            new Tabview(data.channel.toLowerCase());
         }
 
         kiwi.front.tabviews[data.channel.toLowerCase()].addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
@@ -800,7 +798,7 @@ kiwi.front = {
     },
     onChannelRedirect: function (e, data) {
         kiwi.front.tabviews[data.from.toLowerCase()].close();
-        kiwi.front.tabviewAdd(data.to.toLowerCase());
+        new Tabview(data.to.toLowerCase());
         kiwi.front.tabviews[data.to.toLowerCase()].addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
     },
 
@@ -1099,10 +1097,6 @@ kiwi.front = {
         return (typeof kiwi.front.tabviews[name.toLowerCase()] !== 'undefined');
     },
 
-    tabviewAdd: function (v_name) {
-        return new Tabview(v_name);
-    },
-
 
     sync: function () {
         kiwi.gateway.sync();
@@ -1118,7 +1112,7 @@ kiwi.front = {
         if (data.tabviews !== undefined) {
             $.each(data.tabviews, function (i, tab) {
                 if (!kiwi.front.tabviewExists(tab.name)) {
-                    kiwi.front.tabviewAdd(kiwi.gateway.channel_prefix + tab.name);
+                    new Tabview(kiwi.gateway.channel_prefix + tab.name);
 
                     if (tab.userlist !== undefined) {
                         kiwi.front.onUserList({'channel': kiwi.gateway.channel_prefix + tab.name, 'users': tab.userlist.getUsers(false)});

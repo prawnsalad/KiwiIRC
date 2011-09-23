@@ -1,9 +1,6 @@
 /*jslint devel: true, browser: true, confusion: true, sloppy: true, maxerr: 50, indent: 4 */
 /*globals io, $, kiwi, kiwi_server */
 kiwi.gateway = {
-
-    revision: 16,
-
     nick: 'kiwi',
     session_id: null,
     syncing: false,
