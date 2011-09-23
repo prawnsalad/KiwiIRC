@@ -278,7 +278,7 @@ kiwi.front.ui = {
 
 
     setTopicText: function (new_topic) {
-        kiwi.front.original_topic = new_topic;
+        kiwi.front.cache.original_topic = new_topic;
         $('#kiwi .cur_topic .topic').text(new_topic);
         kiwi.front.ui.doLayoutSize();
     },
@@ -356,6 +356,6 @@ kiwi.front.ui = {
     barsHide: function () {
         $('#kiwi .toolbars').slideUp();
         $('#kiwi .control').slideUp();
-    },
+    }
 
-}
+};

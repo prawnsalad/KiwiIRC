@@ -7,12 +7,11 @@ kiwi.front = {
     utilityviews: {},
     boxes: {},
 
-    buffer: [],
-    buffer_pos: 0,
+    buffer: [],         // Command history
+    buffer_pos: 0,      // Current command history position
 
-    cache: {},
-
-    original_topic: '',
+    // Container for misc data (eg. userlist generation)
+    cache: {original_topic: '', userlist: {}},
 
     init: function () {
         /*global Box, touch_scroll:true, Tabview */
@@ -22,8 +21,6 @@ kiwi.front = {
 
         // Bind to the gateway events
         kiwi.front.events.bindAll();
-
-        this.buffer = [];
 
         // Build the about box
         kiwi.front.boxes.about = new Box("about");
@@ -47,6 +44,10 @@ kiwi.front = {
         }
 
         kiwi.front.ui.registerKeys();
+
+        window.onbeforeunload = function() {
+            return "Are you sure you leave Kiwi IRC?";
+        }
 
         $('#kiwi .toolbars').resize(kiwi.front.ui.doLayoutSize);
         $(window).resize(kiwi.front.ui.doLayoutSize);
@@ -141,7 +142,7 @@ kiwi.front = {
             } else if (e.which === 27) {
                 // escape
                 e.preventDefault();
-                $(this).text(kiwi.front.original_topic);
+                $(this).text(kiwi.front.cache.original_topic);
                 $('#kiwi_msginput').focus();
             }
         });
@@ -154,13 +155,13 @@ kiwi.front = {
             } else if (e.keyCode === 27) {
                 // escape
                 e.preventDefault();
-                $(this).text(kiwi.front.original_topic);
+                $(this).text(kiwi.front.cache.original_topic);
             }
         });*/
         $('.cur_topic').live('change', function () {
             var chan, text;
             text = $(this).text();
-            if (text !== kiwi.front.original_topic) {
+            if (text !== kiwi.front.cache.original_topic) {
                 chan = Tabview.getCurrentTab().name;
                 kiwi.gateway.setTopic(chan, text);
             }
@@ -373,6 +374,7 @@ kiwi.front = {
             default:
                 //Tabview.getCurrentTab().addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
                 kiwi.gateway.raw(msg.substring(1));
+                break;
             }
 
         } else {

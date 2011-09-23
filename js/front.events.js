@@ -369,7 +369,7 @@ kiwi.front.events = {
     onNick: function (e, data) {
         if (data.nick === kiwi.gateway.nick) {
             kiwi.gateway.nick = data.newnick;
-            kiwi.front.doLayout();
+            kiwi.front.ui.doLayout();
         }
 
         _.each(Tabview.getAllTabs(), function (tab) {
@@ -473,7 +473,7 @@ kiwi.front.events = {
         }
 
         kiwi.front.doLayout();
-    },
+    }
 
 
-}
+};
