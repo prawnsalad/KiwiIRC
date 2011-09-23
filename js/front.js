@@ -722,7 +722,7 @@ kiwi.front = {
         data = data.chans;
         //data = [data];
         for (chans in data) {
-            data[chans] = {data: data[chans], html: '<tr><td><a class="chan">' + data[chans].channel + '</a></td><td class="num_users" style="text-align: center;">' + data[chans].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.format(data[chans].topic) + '</td></tr>'};
+            data[chans] = {data: data[chans], html: '<tr><td><a class="chan">' + data[chans].channel + '</a></td><td class="num_users" style="text-align: center;">' + data[chans].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.formatIRCMsg(data[chans].topic) + '</td></tr>'};
         }
         kiwi.front.cache.list.update(data);
     },
@@ -1246,7 +1246,7 @@ kiwi.front = {
         $('#kiwi .control').slideUp();
     },
 
-    format: function (msg) {
+    formatIRCMsg: function (msg) {
         var re, next;
 
         if ((!msg) || (typeof msg !== 'string')) {
@@ -1738,11 +1738,9 @@ Utilityview.prototype.clearPartImage = function () {
 var Tabview = function (v_name) {
     /*global Tabview, UserList */
     var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
-    console.log(v_name);
-    console.log(v_name[0]);
-    console.log('charAt(0): ' + v_name.charAt(0));
-    
-    if (v_name[0] === kiwi.gateway.channel_prefix) {
+
+    if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
+    //if (v_name[0] === kiwi.gateway.channel_prefix) {
         re = new RegExp(kiwi.gateway.channel_prefix, "g");
         htmlsafe_name = v_name.replace(re, 'pre');
         htmlsafe_name = "chan_" + htmlsafe_name;
@@ -1763,7 +1761,7 @@ var Tabview = function (v_name) {
     //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.windowShow(v_name); });
     //kiwi.front.windowShow(v_name);
 
-    kiwi.front.tabviews[v_name.toLowerCase()] = new Tabview();
+    kiwi.front.tabviews[v_name.toLowerCase()] = this;
     this.name = v_name;
     this.div = $('#' + tmp_divname);
     this.userlist = new UserList(htmlsafe_name);
@@ -1913,7 +1911,7 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
         return '<a class="chan">' + match + '</a>';
     });
 
-    msg = kiwi.front.format(msg);
+    msg = kiwi.front.formatIRCMsg(msg);
 
     // Build up and add the line
     line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
