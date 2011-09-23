@@ -17,20 +17,20 @@ var starttls = null;
 var kiwi = null;
 
 this.init = function (objs) {
-	tls = objs.tls;
-	net = objs.net;
-	http = objs.http;
-	https = objs.https;
-	fs = objs.fs;
-	url = objs.url;
-	dns = objs.dns;
-	crypto = objs.crypto;
-	ws = objs.ws;
-	jsp = objs.jsp;
-	pro = objs.pro;
-	_ = objs._;
-	starttls = objs.starttls;
-	kiwi = require('./kiwi.js');
+    tls = objs.tls;
+    net = objs.net;
+    http = objs.http;
+    https = objs.https;
+    fs = objs.fs;
+    url = objs.url;
+    dns = objs.dns;
+    crypto = objs.crypto;
+    ws = objs.ws;
+    jsp = objs.jsp;
+    pro = objs.pro;
+    _ = objs._;
+    starttls = objs.starttls;
+    kiwi = require('./kiwi.js');
 };
 
 
@@ -42,7 +42,7 @@ this.init = function (objs) {
  * Some process changes
  */
 this.setTitle = function () {
-	process.title = 'kiwiirc';
+    process.title = 'kiwiirc';
 };
 
 this.changeUser = function () {
@@ -530,7 +530,7 @@ this.httpHandler = function (request, response) {
                 if (kiwi.cache.alljs === '') {
                     public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
 
-    				min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
+                    min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
                     min.util = fs.readFileSync(public_http_path + 'js/util.js');
                     min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
                     min.front = fs.readFileSync(public_http_path + 'js/front.js');
@@ -678,7 +678,7 @@ this.websocketListen = function (ports, host, handler, key, cert) {
         io.enable('browser client minification');
         io.enable('browser client etag');
         io.set('transports', kiwi.config.transports);
-        
+
         io.of('/kiwi').authorization(function (handshakeData, callback) {
             var address = handshakeData.address.address;
             if (typeof kiwi.connections[address] === 'undefined') {
@@ -845,7 +845,7 @@ this.websocketMessage = function (websocket, msg, callback) {
 
 
 this.websocketDisconnect = function (websocket) {
-	var con;
+    var con;
 
     if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
         try {
@@ -935,7 +935,7 @@ this.manageControll = function (data) {
         console.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
         break;
 
-	case 'recode':
+    case 'recode':
         console.log('Recoding...');
         console.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
         break;
