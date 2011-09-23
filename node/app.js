@@ -519,124 +519,131 @@ this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
         min = {}, public_http_path,
         secure = (typeof request.client.encrypted === 'object');
-    if (kiwi.config.handle_http) {
-        uri = url.parse(request.url, true);
-        uri_parts = uri.pathname.split('/');
 
-        subs = uri.pathname.substr(0, 4);
-        if (uri.pathname === '/js/all.js') {
-            if (kiwi.cache.alljs === '') {
-                public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
+    try {
+        if (kiwi.config.handle_http) {
+            uri = url.parse(request.url, true);
+            uri_parts = uri.pathname.split('/');
 
-				min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
-                min.util = fs.readFileSync(public_http_path + 'js/util.js');
-                min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
-                min.front = fs.readFileSync(public_http_path + 'js/front.js');
-                min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
-                min.ast = jsp.parse(min.underscore + min.util + min.gateway + min.front + min.iscroll);
-                min.ast = pro.ast_mangle(min.ast);
-                min.ast = pro.ast_squeeze(min.ast);
-                min.final_code = pro.gen_code(min.ast);
-                kiwi.cache.alljs = min.final_code;
-                hash = crypto.createHash('md5').update(kiwi.cache.alljs);
-                kiwi.cache.alljs_hash = hash.digest('base64');
-            }
-            if (request.headers['if-none-match'] === kiwi.cache.alljs_hash) {
-                response.statusCode = 304;
-            } else {
-                response.setHeader('Content-type', 'application/javascript');
-                response.setHeader('ETag', kiwi.cache.alljs_hash);
-                response.write(kiwi.cache.alljs);
-            }
-            response.end();
-        } else if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
-            request.addListener('end', function () {
-                kiwi.fileServer.serve(request, response);
-            });
-        } else if (uri.pathname === '/' || uri_parts[1] === 'client') {
-            useragent = (typeof request.headers === 'string') ? request.headers['user-agent'] : '';
-            if (useragent.match(/android/i) !== -1) {
-                agent = 'android';
-                touchscreen = true;
-            } else if (useragent.match(/iphone/) !== -1) {
-                agent = 'iphone';
-                touchscreen = true;
-            } else if (useragent.match(/ipad/) !== -1) {
-                agent = 'ipad';
-                touchscreen = true;
-            } else if (useragent.match(/ipod/) !== -1) {
-                agent = 'ipod';
-                touchscreen = true;
-            } else {
-                agent = 'normal';
-                touchscreen = false;
-            }
-            agent = 'normal';
-            touchscreen = false;
+            subs = uri.pathname.substr(0, 4);
+            if (uri.pathname === '/js/all.js') {
+                if (kiwi.cache.alljs === '') {
+                    public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
 
-            debug = (typeof uri.query.debug !== 'undefined');
-
-            if (uri_parts[1] !== 'client') {
-                if (uri.query) {
-                    server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
-                    server = uri.query.server || 'irc.anonnet.org';
-                    nick = uri.query.nick || '';
-                } else {
-                    server_set = false;
-                    server = 'irc.anonnet.org';
-                    nick = '';
+    				min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
+                    min.util = fs.readFileSync(public_http_path + 'js/util.js');
+                    min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
+                    min.front = fs.readFileSync(public_http_path + 'js/front.js');
+                    min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
+                    min.ast = jsp.parse(min.underscore + min.util + min.gateway + min.front + min.iscroll);
+                    min.ast = pro.ast_mangle(min.ast);
+                    min.ast = pro.ast_squeeze(min.ast);
+                    min.final_code = pro.gen_code(min.ast);
+                    kiwi.cache.alljs = min.final_code;
+                    hash = crypto.createHash('md5').update(kiwi.cache.alljs);
+                    kiwi.cache.alljs_hash = hash.digest('base64');
                 }
-            } else {
-                server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
-                server = server_set ? uri_parts[2] : 'irc.anonnet.org';
-                nick = uri.query.nick || '';
-            }
-
-            response.setHeader('X-Generated-By', 'KiwiIRC');
-            hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
-                .update(debug ? 't' : 'f')
-                .update(server_set ? 't' : 'f')
-                .update(secure ? 't' : 'f')
-                .update(server)
-                .update(nick)
-                .update(agent)
-                .update(JSON.stringify(kiwi.config))
-                .digest('base64');
-            if (kiwi.cache.html[hash]) {
-                if (request.headers['if-none-match'] === kiwi.cache.html[hash].hash) {
+                if (request.headers['if-none-match'] === kiwi.cache.alljs_hash) {
                     response.statusCode = 304;
                 } else {
-                    response.setHeader('Etag', kiwi.cache.html[hash].hash);
-                    response.setHeader('Content-type', 'text/html');
-                    response.write(kiwi.cache.html[hash].html);
+                    response.setHeader('Content-type', 'application/javascript');
+                    response.setHeader('ETag', kiwi.cache.alljs_hash);
+                    response.write(kiwi.cache.alljs);
                 }
                 response.end();
-            } else {
-                fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
-                    var html, hash2;
-                    if (!err) {
-                        html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
-                        hash2 = crypto.createHash('md5').update(html).digest('base64');
-                        kiwi.cache.html[hash] = {"html": html, "hash": hash2};
-                        if (request.headers['if-none-match'] === hash2) {
-                            response.statusCode = 304;
-                        } else {
-                            response.setHeader('Etag', hash2);
-                            response.setHeader('Content-type', 'text/html');
-                            response.write(html);
-                        }
+            } else if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
+                request.addListener('end', function () {
+                    kiwi.fileServer.serve(request, response);
+                });
+            } else if (uri.pathname === '/' || uri_parts[1] === 'client') {
+                useragent = (typeof request.headers === 'string') ? request.headers['user-agent'] : '';
+                if (useragent.match(/android/i) !== -1) {
+                    agent = 'android';
+                    touchscreen = true;
+                } else if (useragent.match(/iphone/) !== -1) {
+                    agent = 'iphone';
+                    touchscreen = true;
+                } else if (useragent.match(/ipad/) !== -1) {
+                    agent = 'ipad';
+                    touchscreen = true;
+                } else if (useragent.match(/ipod/) !== -1) {
+                    agent = 'ipod';
+                    touchscreen = true;
+                } else {
+                    agent = 'normal';
+                    touchscreen = false;
+                }
+                agent = 'normal';
+                touchscreen = false;
+
+                debug = (typeof uri.query.debug !== 'undefined');
+
+                if (uri_parts[1] !== 'client') {
+                    if (uri.query) {
+                        server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
+                        server = uri.query.server || 'irc.anonnet.org';
+                        nick = uri.query.nick || '';
                     } else {
-                        response.statusCode = 500;
+                        server_set = false;
+                        server = 'irc.anonnet.org';
+                        nick = '';
+                    }
+                } else {
+                    server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
+                    server = server_set ? uri_parts[2] : 'irc.anonnet.org';
+                    nick = uri.query.nick || '';
+                }
+
+                response.setHeader('X-Generated-By', 'KiwiIRC');
+                hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
+                    .update(debug ? 't' : 'f')
+                    .update(server_set ? 't' : 'f')
+                    .update(secure ? 't' : 'f')
+                    .update(server)
+                    .update(nick)
+                    .update(agent)
+                    .update(JSON.stringify(kiwi.config))
+                    .digest('base64');
+                if (kiwi.cache.html[hash]) {
+                    if (request.headers['if-none-match'] === kiwi.cache.html[hash].hash) {
+                        response.statusCode = 304;
+                    } else {
+                        response.setHeader('Etag', kiwi.cache.html[hash].hash);
+                        response.setHeader('Content-type', 'text/html');
+                        response.write(kiwi.cache.html[hash].html);
                     }
                     response.end();
-                });
+                } else {
+                    fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
+                        var html, hash2;
+                        if (!err) {
+                            html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
+                            hash2 = crypto.createHash('md5').update(html).digest('base64');
+                            kiwi.cache.html[hash] = {"html": html, "hash": hash2};
+                            if (request.headers['if-none-match'] === hash2) {
+                                response.statusCode = 304;
+                            } else {
+                                response.setHeader('Etag', hash2);
+                                response.setHeader('Content-type', 'text/html');
+                                response.write(html);
+                            }
+                        } else {
+                            response.statusCode = 500;
+                        }
+                        response.end();
+                    });
+                }
+            } else if (uri.pathname.substr(0, 10) === '/socket.io') {
+                return;
+            } else {
+                response.statusCode = 404;
+                response.end();
             }
-        } else if (uri.pathname.substr(0, 10) === '/socket.io') {
-            return;
-        } else {
-            response.statusCode = 404;
-            response.end();
         }
+
+    } catch (e) {
+        console.log('ERROR app.httpHandler()');
+        console.log(e);
     }
 };
 
@@ -657,12 +664,12 @@ this.websocketListen = function (ports, host, handler, key, cert) {
             hs = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
             kiwi.io.push(ws.listen(hs, {secure: true}));
             hs.listen(port.number);
-            console.log("Listening on %s, port %d with SSL", host, port.number);
+            console.log("Listening on %s:%d with SSL", host, port.number);
         } else {
             hs = http.createServer(handler);
             kiwi.io.push(ws.listen(hs, {secure: false}));
             hs.listen(port.number);
-            console.log("Listening on %s, port %d without SSL", host, port.number);
+            console.log("Listening on %s:%d without SSL", host, port.number);
         }
     });
 
