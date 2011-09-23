@@ -86,10 +86,11 @@ kiwi.front = {
         $('<div id="nicklist_resize" style="position:absolute; cursor:w-resize; width:5px;"></div>').appendTo('#kiwi');
         $('#nicklist_resize').draggable({axis: "x", drag: function () {
             var t = $(this),
+                ul = $('#kiwi .userlist'),
                 new_width = $(document).width() - parseInt(t.css('left'), 10);
 
-            new_width = new_width - parseInt($('#kiwi .userlist').css('margin-left'), 10);
-            new_width = new_width - parseInt($('#kiwi .userlist').css('margin-right'), 10);
+            new_width = new_width - parseInt(ul.css('margin-left'), 10);
+            new_width = new_width - parseInt(ul.css('margin-right'), 10);
 
             // Make sure we don't remove the userlist alltogether
             if (new_width < 20) {
@@ -98,6 +99,7 @@ kiwi.front = {
             }
 
             kiwi.front.cur_channel.userlist.setWidth(new_width);
+            $('#windows').css('right', ul.outerWidth(true));
         }});
 
 
@@ -146,7 +148,7 @@ kiwi.front = {
         kiwi.front.barsHide();
 
         kiwi.front.tabviewAdd('server');
-        //kiwi.front.tabviews.server.userlist.setWidth(0); // Disable the userlist
+        kiwi.front.tabviews.server.userlist.setWidth(0); // Disable the userlist
 
         // Any pre-defined nick?
         if (typeof window.init_data.nick === "string") {
@@ -1624,23 +1626,17 @@ var UserList = function (name) {
         return this;
     };
 };
-UserList.prototype.width = null;
+UserList.prototype.width = 100;
 UserList.prototype.setWidth = function (newWidth) {
     var w, u;
-    if (typeof newWidth === 'Number') {
+    if (typeof newWidth === 'number') {
         this.width = newWidth;
-
-        w = $('#windows');
-        u = $('#kiwi .userlist');
-
-        // Set the window size accordingly
-        if (this.width > 0) {
-            u.width(this.width);
-            w.css('right', u.outerWidth(true));
-        } else {
-            w.css('right', 0);
-        }
     }
+
+    w = $('#windows');
+    u = $('#kiwi .userlist');
+
+    u.width(this.width);
 
     return this;
 };
@@ -1809,18 +1805,19 @@ Tabview.prototype.show = function () {
     this.panel.css('overflow-y', 'scroll');
 
     // Set the window size accordingly
-    this.setUserlistWidth();
-
-    // Activate this tab!
-    this.div.addClass('active');
-    if (this.userlist_width > 0) {
+    if (this.userlist.width > 0) {
+        this.userlist.setWidth();
+        w.css('right', u.outerWidth(true));
         this.userlist.active(true);
         // Enable the userlist resizer
         $('#nicklist_resize').css('display', 'block');
     } else {
+        w.css('right', 0);
         // Disable the userlist resizer
         $('#nicklist_resize').css('display', 'none');
     }
+
+    this.div.addClass('active');
     this.tab.addClass('active');
 
     // Add the part image to the tab
@@ -1851,10 +1848,6 @@ Tabview.prototype.close = function () {
         kiwi.front.tabviews.server.show();
     }
     delete kiwi.front.tabviews[this.name.toLowerCase()];
-};
-
-Tabview.prototype.setUserlistWidth = function (new_width) {
-    this.userlist.setWidth(new_width);
 };
 
 Tabview.prototype.addPartImage = function () {
