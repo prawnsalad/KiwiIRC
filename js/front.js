@@ -20,35 +20,8 @@ kiwi.front = {
         kiwi.gateway.nick = 'kiwi_' + Math.ceil(100 * Math.random()) + Math.ceil(100 * Math.random());
         kiwi.gateway.session_id = null;
 
-        $(kiwi.gateway).bind("onmsg", kiwi.front.onMsg);
-        $(kiwi.gateway).bind("onnotice", kiwi.front.onNotice);
-        $(kiwi.gateway).bind("onaction", kiwi.front.onAction);
-        $(kiwi.gateway).bind("onmotd", kiwi.front.onMOTD);
-        $(kiwi.gateway).bind("onoptions", kiwi.front.onOptions);
-        $(kiwi.gateway).bind("onconnect", kiwi.front.onConnect);
-        $(kiwi.gateway).bind("onconnect_fail", kiwi.front.onConnectFail);
-        $(kiwi.gateway).bind("ondisconnect", kiwi.front.onDisconnect);
-        $(kiwi.gateway).bind("onreconnecting", kiwi.front.onReconnecting);
-        $(kiwi.gateway).bind("onnick", kiwi.front.onNick);
-        $(kiwi.gateway).bind("onuserlist", kiwi.front.onUserList);
-        $(kiwi.gateway).bind("onuserlist_end", kiwi.front.onUserListEnd);
-        $(kiwi.gateway).bind("onlist_start", kiwi.front.onChannelListStart);
-        $(kiwi.gateway).bind("onlist_channel", kiwi.front.onChannelList);
-        $(kiwi.gateway).bind("onlist_end", kiwi.front.onChannelListEnd);
-        $(kiwi.gateway).bind("onjoin", kiwi.front.onJoin);
-        $(kiwi.gateway).bind("ontopic", kiwi.front.onTopic);
-        $(kiwi.gateway).bind("onpart", kiwi.front.onPart);
-        $(kiwi.gateway).bind("onkick", kiwi.front.onKick);
-        $(kiwi.gateway).bind("onquit", kiwi.front.onQuit);
-        $(kiwi.gateway).bind("onmode", kiwi.front.onMode);
-        $(kiwi.gateway).bind("onwhois", kiwi.front.onWhois);
-        $(kiwi.gateway).bind("onsync", kiwi.front.onSync);
-        $(kiwi.gateway).bind("onchannel_redirect", kiwi.front.onChannelRedirect);
-        $(kiwi.gateway).bind("ondebug", kiwi.front.onDebug);
-        $(kiwi.gateway).bind("onctcp_request", kiwi.front.onCTCPRequest);
-        $(kiwi.gateway).bind("onctcp_response", kiwi.front.onCTCPResponse);
-        $(kiwi.gateway).bind("onirc_error", kiwi.front.onIRCError);
-        $(kiwi.gateway).bind("onkiwi", kiwi.front.onKiwi);
+        // Bind to the gateway events
+        kiwi.front.events.bindAll();
 
         this.buffer = [];
 
@@ -73,10 +46,10 @@ kiwi.front = {
             touch_scroll = new iScroll('windows', scroll_opts);
         }
 
-        kiwi.front.registerKeys();
+        kiwi.front.ui.registerKeys();
 
-        $('#kiwi .toolbars').resize(kiwi.front.doLayoutSize);
-        $(window).resize(kiwi.front.doLayoutSize);
+        $('#kiwi .toolbars').resize(kiwi.front.ui.doLayoutSize);
+        $(window).resize(kiwi.front.ui.doLayoutSize);
 
         // Add the resizer for the userlist
         $('<div id="nicklist_resize" style="position:absolute; cursor:w-resize; width:5px;"></div>').appendTo('#kiwi');
@@ -117,14 +90,14 @@ kiwi.front = {
 
             init_data.channel = $('#channel').val();
 
-            kiwi.front.doLayout();
+            kiwi.front.ui.doLayout();
             try {
                 kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : ''));
             } catch (e) {
                 console.log(e);
             }
 
-            $('#kiwi .connectwindow').slideUp('', kiwi.front.barsShow);
+            $('#kiwi .connectwindow').slideUp('', kiwi.front.ui.barsShow);
             $('#windows').click(function () { $('#kiwi_msginput').focus(); });
 
             return false;
@@ -133,15 +106,15 @@ kiwi.front = {
         supportsOrientationChange = (typeof window.onorientationchange !==  undefined);
         orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
         if (window.addEventListener) {
-            window.addEventListener(orientationEvent, kiwi.front.doLayoutSize, false);
+            window.addEventListener(orientationEvent, kiwi.front.ui.doLayoutSize, false);
         } else {
             // < IE9
-            window.attachEvent(orientationEvent, kiwi.front.doLayoutSize, false);
+            window.attachEvent(orientationEvent, kiwi.front.ui.doLayoutSize, false);
         }
-        //$('#kiwi').bind("resize", kiwi.front.doLayoutSize, false);
+        //$('#kiwi').bind("resize", kiwi.front.ui.doLayoutSize, false);
 
-        kiwi.front.doLayout();
-        kiwi.front.barsHide();
+        kiwi.front.ui.doLayout();
+        kiwi.front.ui.barsHide();
 
         server_tabview = new Tabview('server');
         server_tabview.userlist.setWidth(0); // Disable the userlist
@@ -209,38 +182,7 @@ kiwi.front = {
         }());
     },
 
-    doLayoutSize: function () {
-        var kiwi, toolbars, ul, n_top, n_bottom, nl;
-        kiwi = $('#kiwi');
 
-        if (kiwi.width() < 330 && !kiwi.hasClass('small_kiwi')) {
-            console.log("switching to small kiwi");
-            kiwi.removeClass('large_kiwi');
-            kiwi.addClass('small_kiwi');
-        } else if (kiwi.width() >= 330 && !kiwi.hasClass('large_kiwi')) {
-            kiwi.removeClass('small_kiwi');
-            kiwi.addClass('large_kiwi');
-        }
-
-        toolbars = $('#kiwi .cur_topic');
-        ul = $('#kiwi .userlist');
-
-        n_top = parseInt(toolbars.offset().top, 10) + parseInt(toolbars.outerHeight(true), 10);
-        n_bottom = $(document).height() - parseInt($('#kiwi .control').offset().top, 10);
-
-        $('#kiwi .windows').css({top: n_top + 'px', bottom: n_bottom + 'px'});
-        ul.css({top: n_top + 'px', bottom: n_bottom + 'px'});
-
-        nl = $('#nicklist_resize');
-        nl.css({top: n_top + 'px', bottom: n_bottom + 'px', left: $(document).width() - ul.outerWidth(true)});
-    },
-
-
-    doLayout: function () {
-        $('#kiwi .msginput .nick a').text(kiwi.gateway.nick);
-        $('#kiwi_msginput').val(' ');
-        $('#kiwi_msginput').focus();
-    },
 
 
     joinChannel: function (chan_name) {
@@ -309,7 +251,7 @@ kiwi.front = {
                 console.log("/nick");
                 if (parts[1] === undefined) {
                     console.log("calling show nick");
-                    kiwi.front.showChangeNick();
+                    kiwi.front.ui.showChangeNick();
                 } else {
                     console.log("sending raw");
                     kiwi.gateway.raw(msg.substring(1));
@@ -384,12 +326,12 @@ kiwi.front = {
                 msg = parts.slice(2).join(' ');
 
                 kiwi.gateway.notice(dest, msg);
-                this.onNotice({}, {nick: kiwi.gateway.nick, channel: dest, msg: msg});
+                kiwi.front.events.onNotice({}, {nick: kiwi.gateway.nick, channel: dest, msg: msg});
                 break;
 
             case '/win':
                 if (parts[1] !== undefined) {
-                    kiwi.front.windowsShow(parseInt(parts[1], 10));
+                    kiwi.front.ui.windowsShow(parseInt(parts[1], 10));
                 }
                 break;
 
@@ -440,702 +382,25 @@ kiwi.front = {
             }
             if (Tabview.getCurrentTab().name !== 'server') {
                 kiwi.gateway.msg(Tabview.getCurrentTab().name, msg);
-                d = new Date();
-                d = d.getHours() + ":" + d.getMinutes();
-                //kiwi.front.addMsg(d, kiwi.gateway.nick, msg);
                 Tabview.getCurrentTab().addMsg(null, kiwi.gateway.nick, msg);
             }
         }
     },
 
 
-    onMsg: function (e, data) {
-        var destination, plugin_event, tab;
-        // Is this message from a user?
-        if (data.channel === kiwi.gateway.nick) {
-            destination = data.nick.toLowerCase();
-        } else {
-            destination = data.channel.toLowerCase();
-        }
 
-        plugin_event = {nick: data.nick, msg: data.msg, destination: destination};
-        plugin_event = kiwi.plugs.run('msg_recieved', plugin_event);
-        if (!plugin_event) {
-            return;
-        }
-        tab = Tabview.getTab(plugin_event.destination);
-        if (!tab) {
-            tab = new Tabview(plugin_event.destination);
-        }
-        tab.addMsg(null, plugin_event.nick, plugin_event.msg);
-    },
 
-    onDebug: function (e, data) {
-        var tab = Tabview.getTab('kiwi_debug');
-        if (!tab) {
-            tab = new Tabview('kiwi_debug');
-        }
-        tab.addMsg(null, ' ', data.msg);
-    },
-
-    onAction: function (e, data) {
-        var destination, tab;
-        // Is this message from a user?
-        if (data.channel === kiwi.gateway.nick) {
-            destination = data.nick;
-        } else {
-            destination = data.channel;
-        }
-
-        tab = Tabview.getTab(destination);
-        if (!tab) {
-            tab = new Tabview(destination);
-        }
-        tab.addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
-    },
-
-    onTopic: function (e, data) {
-        var tab = Tabview.getTab(data.channel);
-        if (tab) {
-            tab.changeTopic(data.topic);
-        }
-    },
-
-    onNotice: function (e, data) {
-        var nick = (data.nick === undefined) ? '' : data.nick,
-            enick = '[' + nick + ']',
-            tab;
-
-        if (Tabview.tabExists(data.target)) {
-            Tabview.getTab(data.target).addMsg(null, enick, data.msg, 'notice');
-        } else if (Tabview.tabExists(nick)) {
-            Tabview.getTab(nick).addMsg(null, enick, data.msg, 'notice');
-        } else {
-            Tabview.getServerTab().addMsg(null, enick, data.msg, 'notice');
-        }
-    },
-
-    onCTCPRequest: function (e, data) {
-        var msg = data.msg.split(" ", 2);
-        switch (msg[0]) {
-        case 'PING':
-            if (typeof msg[1] === 'undefined') {
-                msg[1] = '';
-            }
-            kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'PING ' + msg[1] + String.fromCharCode(1));
-            break;
-        case 'TIME':
-            kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'TIME ' + (new Date()).toLocaleString() + String.fromCharCode(1));
-            break;
-        }
-        Tabview.getServerTab().addMsg(null, 'CTCP Request', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
-    },
-
-    onCTCPResponse: function (e, data) {
-        Tabview.getServerTab().addMsg(null, 'CTCP Reply', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
-    },
-
-    onKiwi: function (e, data) {
-        //console.log(data);
-    },
-
-    onConnect: function (e, data) {
-        var err_box, channels;
-
-        if (data.connected) {
-            // Did we disconnect?
-            err_box = $('.messages .msg.error.disconnect .text');
-            if (typeof err_box[0] !== 'undefined') {
-                err_box.text('Reconnected OK :)');
-                err_box.parent().removeClass('disconnect');
-
-                // Rejoin channels
-                channels = '';
-                _.each(Tabview.getAllTabs(), function (tabview) {
-                    if (tabview.name === 'server') {
-                        return;
-                    }
-                    channels += tabview.name + ',';
-                });
-                console.log('Rejoining: ' + channels);
-                kiwi.gateway.join(channels);
-                return;
-            }
-
-            if (kiwi.gateway.nick !== data.nick) {
-                kiwi.gateway.nick = data.nick;
-                kiwi.front.doLayout();
-            }
-
-            Tabview.getServerTab().addMsg(null, ' ', '=== Connected OK :)', 'status');
-            if (typeof init_data.channel === "string") {
-                kiwi.front.joinChannel(init_data.channel);
-            }
-            kiwi.plugs.run('connect', {success: true});
-        } else {
-            Tabview.getServerTab().addMsg(null, ' ', '=== Failed to connect :(', 'status');
-            kiwi.plugs.run('connect', {success: false});
-        }
-    },
-    onConnectFail: function (e, data) {
-        var reason = (typeof data.reason === 'string') ? data.reason : '';
-        Tabview.getServerTab().addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
-        kiwi.plugs.run('connect', {success: false});
-    },
-    onDisconnect: function (e, data) {
-        var tab, tabs;
-        tabs = Tabview.getAllTabs();
-        for (tab in tabs) {
-            tabs[tab].addMsg(null, '', 'Disconnected from server!', 'error disconnect');
-        }
-        kiwi.plugs.run('disconnect', {success: false});
-    },
-    onReconnecting: function (e, data) {
-        var err_box, f, msg;
-
-        err_box = $('.messages .msg.error.disconnect .text');
-        if (!err_box) {
-            return;
-        }
-
-        f = function (num) {
-            switch (num) {
-            case 1: return 'First';
-            case 2: return 'Second';
-            case 3: return 'Third';
-            case 4: return 'Fourth';
-            case 5: return 'Fifth';
-            case 6: return 'Sixth';
-            case 7: return 'Seventh';
-            default: return 'Next';
-            }
-        };
-
-        // TODO: convert seconds to mins:secs
-        msg = f(data.attempts) + ' attempt at reconnecting in ' + (data.delay / 1000).toString() + ' seconds..';
-        err_box.text(msg);
-    },
-    onOptions: function (e, data) {
-        if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
-            Tabview.getServerTab().tab.text(kiwi.gateway.network_name);
-        }
-    },
-    onMOTD: function (e, data) {
-        Tabview.getServerTab().addMsg(null, data.server, data.msg, 'motd');
-    },
-    onWhois: function (e, data) {
-        var d, tab;
-        tab = Tabview.getCurrentTab();
-        if (data.msg) {
-            tab.addMsg(null, data.nick, data.msg, 'whois');
-        } else if (data.logon) {
-            d = new Date();
-            d.setTime(data.logon * 1000);
-            d = d.toLocaleString();
-            tab.addMsg(null, data.nick, 'idle for ' + data.idle + ' second' + ((data.idle !== 1) ? 's' : '') + ', signed on ' + d, 'whois');
-        } else {
-            tab.addMsg(null, data.nick, 'idle for ' + data.idle + ' seconds', 'whois');
-        }
-    },
-    onMode: function (e, data) {
-        var tab;
-        if ((typeof data.channel === 'string') && (typeof data.effected_nick === 'string')) {
-            tab = Tabview.getTab(data.channel);
-            tab.addMsg(null, ' ', '[' + data.mode + '] ' + data.effected_nick + ' by ' + data.nick, 'mode', '');
-            if (tab.userlist.hasUser(data.effected_nick)) {
-                tab.userlist.changeUserMode(data.effected_nick, data.mode.substr(1), (data.mode[0] === '+'));
-            }
-        }
-
-        // TODO: Other mode changes that aren't +/- qaohv. - JA
-    },
-    onUserList: function (e, data) {
-        var tab;
-
-        tab = Tabview.getTab(data.channel);
-        if (!tab) {
-            return;
-        }
-
-        if ((!kiwi.front.cache.userlist) || (!kiwi.front.cache.userlist.updating)) {
-            if (!kiwi.front.cache.userlist) {
-                kiwi.front.cache.userlist = {updating: true};
-            } else {
-                kiwi.front.cache.userlist.updating = true;
-            }
-            tab.userlist.empty();
-        }
-
-        tab.userlist.addUser(data.users);
-
-    },
-    onUserListEnd: function (e, data) {
-        if (!kiwi.front.cache.userlist) {
-            kiwi.front.cache.userlist = {};
-        }
-        kiwi.front.cache.userlist.updating = false;
-    },
-
-    onChannelListStart: function (e, data) {
-        /*global Utilityview */
-        var tab, table;
-
-        tab = new Utilityview('Channel List');
-        tab.div.css('overflow-y', 'scroll');
-        table = $('<table style="margin:1em 2em;"><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
-        tab.div.append(table);
-
-        kiwi.front.cache.list = {chans: [], tab: tab, table: table,
-            update: function (newChans) {
-                var body = this.table.children('tbody:first').detach(),
-                    chan,
-                    html;
-
-                html = '';
-                for (chan in newChans) {
-                    this.chans.push(newChans[chan]);
-                    html += newChans[chan].html;
-                }
-                body.append(html);
-                this.table.append(body);
-
-            },
-            finalise: function () {
-                var body = this.table.children('tbody:first').detach(),
-                    list,
-                    chan;
-
-                list = $.makeArray($(body).children());
-
-                for (chan in list) {
-                    list[chan] = $(list[chan]).detach();
-                }
-
-                list = _.sortBy(list, function (channel) {
-                    return parseInt(channel.children('.num_users').first().text(), 10);
-                }).reverse();
-
-                for (chan in list) {
-                    body.append(list[chan]);
-                }
-
-                this.table.append(body);
-
-            }};
-    },
-    onChannelList: function (e, data) {
-        var chans;
-        data = data.chans;
-        //data = [data];
-        for (chans in data) {
-            data[chans] = {data: data[chans], html: '<tr><td><a class="chan">' + data[chans].channel + '</a></td><td class="num_users" style="text-align: center;">' + data[chans].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.formatIRCMsg(data[chans].topic) + '</td></tr>'};
-        }
-        kiwi.front.cache.list.update(data);
-    },
-    onChannelListEnd: function (e, data) {
-        kiwi.front.cache.list.finalise();
-        kiwi.front.cache.list.tab.show();
-    },
-
-
-    onJoin: function (e, data) {
-        var tab = Tabview.getTab(data.channel);
-        if (!tab) {
-            tab = new Tabview(data.channel.toLowerCase());
-        }
-
-        tab.addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
-
-        if (data.nick === kiwi.gateway.nick) {
-            return; // Not needed as it's already in nicklist
-        }
-
-        tab.userlist.addUser({nick: data.nick, modes: []});
-    },
-    onPart: function (e, data) {
-        var tab = Tabview.getTab(data.channel);
-        if (tab) {
-            // If this is us, close the tabview
-            if (data.nick === kiwi.gateway.nick) {
-                tab.close();
-                Tabview.getServerTab().show();
-                return;
-            }
-
-            tab.addMsg(null, ' ', '<-- ' + data.nick + ' has left (' + data.message + ')', 'action part', 'color:#990000;');
-            tab.userlist.removeUser(data.nick);
-        }
-    },
-    onKick: function (e, data) {
-        var tab = Tabview.getTab(data.channel);
-        if (tab) {
-            // If this is us, close the tabview
-            if (data.kicked === kiwi.gateway.nick) {
-                //tab.close();
-                tab.addMsg(null, ' ', '=== You have been kicked from ' + data.channel + '. ' + data.message, 'status kick');
-                tab.safe_to_close = true;
-                tab.userlist.remove();
-                return;
-            }
-
-            tab.addMsg(null, ' ', '<-- ' + data.kicked + ' kicked by ' + data.nick + '(' + data.message + ')', 'action kick', 'color:#990000;');
-            tab.userlist.removeUser(data.nick);
-        }
-    },
-    onNick: function (e, data) {
-        if (data.nick === kiwi.gateway.nick) {
-            kiwi.gateway.nick = data.newnick;
-            kiwi.front.doLayout();
-        }
-
-        _.each(Tabview.getAllTabs(), function (tab) {
-            if (tab.userlist.hasUser(data.nick)) {
-                tab.userlist.renameUser(data.nick, data.newnick);
-                tab.addMsg(null, ' ', '=== ' + data.nick + ' is now known as ' + data.newnick, 'action changenick');
-            }
-        });
-    },
-    onQuit: function (e, data) {
-        _.each(Tabview.getAllTabs(), function (tab) {
-            if (tab.userlist.hasUser(data.nick)) {
-                tab.userlist.removeUser(data.nick);
-                tab.addMsg(null, ' ', '<-- ' + data.nick + ' has quit (' + data.message + ')', 'action quit', 'color:#990000;');
-            }
-        });
-    },
-    onChannelRedirect: function (e, data) {
-        var tab = Tabview.getTab(data.from);
-        tab.close();
-        tab = new Tabview(data.to);
-        tab.addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
-    },
-
-    onIRCError: function (e, data) {
-        var t_view,
-            tab = Tabview.getTab(data.channel);
-        if (data.channel !== undefined && tab) {
-            t_view = data.channel;
-        } else {
-            t_view = 'server';
-            tab = Tabview.getServerTab();
-        }
-
-        switch (data.error) {
-        case 'banned_from_channel':
-            tab.addMsg(null, ' ', '=== You are banned from ' + data.channel + '. ' + data.reason, 'status');
-            if (t_view !== 'server') {
-                tab.safe_to_close = true;
-            }
-            break;
-        case 'bad_channel_key':
-            tab.addMsg(null, ' ', '=== Bad channel key for ' + data.channel, 'status');
-            if (t_view !== 'server') {
-                tab.safe_to_close = true;
-            }
-            break;
-        case 'invite_only_channel':
-            tab.addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
-            if (t_view !== 'server') {
-               tab.safe_to_close = true;
-            }
-            break;
-        case 'channel_is_full':
-            tab.addMsg(null, ' ', '=== ' + data.channel + ' is full.', 'status');
-            if (t_view !== 'server') {
-                tab.safe_to_close = true;
-            }
-            break;
-        case 'chanop_privs_needed':
-            tab.addMsg(null, ' ', '=== ' + data.reason, 'status');
-            break;
-        case 'no_such_nick':
-            Tabview.getServerTab().addMsg(null, ' ', '=== ' + data.nick + ': ' + data.reason, 'status');
-            break;
-        case 'nickname_in_use':
-            Tabview.getServerTab().addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
-            kiwi.front.showChangeNick('That nick is already taken');
-            break;
-        default:
-            // We don't know what data contains, so don't do anything with it.
-            //kiwi.front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
-        }
-    },
-
-    registerKeys: function () {
-        var tabcomplete = {active: false, data: [], prefix: ''};
-        $('#kiwi_msginput').bind('keydown', function (e) {
-            var windows, meta, num, msg, data, self;
-            windows = $('#windows');
-            //var meta = e.altKey;
-            meta = e.ctrlKey;
-
-            if (e.which !== 9) {
-                tabcomplete.active = false;
-                tabcomplete.data = [];
-                tabcomplete.prefix = '';
-            }
-
-            switch (true) {
-            case (e.which >= 48) && (e.which <= 57):
-                if (meta) {
-                    num = e.which - 48;
-                    if (num === 0) {
-                        num = 10;
-                    }
-                    num = num - 1;
-                    kiwi.front.windowsShow(num);
-                    return false;
-                }
-                break;
-            case e.which === 27:            // escape                    
-                return false;
-            case e.which === 13:            // return
-                msg = $('#kiwi_msginput').val();
-                msg = msg.trim();
-
-                kiwi.front.buffer.push(msg);
-                kiwi.front.buffer_pos = kiwi.front.buffer.length;
-
-                kiwi.front.run(msg);
-                $('#kiwi_msginput').val('');
-
-                break;
-            case e.which === 33:             // page up
-                console.log("page up");
-                windows[0].scrollTop = windows[0].scrollTop - windows.height();
-                return false;
-            case e.which === 34:             // page down
-                windows[0].scrollTop = windows[0].scrollTop + windows.height();
-                return false;
-            case e.which === 37:            // left
-                if (meta) {
-                    kiwi.front.windowsPrevious();
-                    return false;
-                }
-                break;
-            case e.which === 38:            // up
-                if (kiwi.front.buffer_pos > 0) {
-                    kiwi.front.buffer_pos--;
-                    $('#kiwi_msginput').val(kiwi.front.buffer[kiwi.front.buffer_pos]);
-                }
-                break;
-            case e.which === 39:            // right
-                if (meta) {
-                    kiwi.front.windowsNext();
-                    return false;
-                }
-                break;
-            case e.which === 40:            // down
-                if (kiwi.front.buffer_pos < kiwi.front.buffer.length) {
-                    kiwi.front.buffer_pos++;
-                    $('#kiwi_msginput').val(kiwi.front.buffer[kiwi.front.buffer_pos]);
-                }
-                break;
-
-            case e.which === 9:                // tab
-                tabcomplete.active = true;
-                if (_.isEqual(tabcomplete.data, [])) {
-                    // Get possible autocompletions
-                    data = [];
-                    Tabview.getCurrentTab().userlist.listUsers(false).each(function () {
-                        var nick;
-                        nick = kiwi.front.nickStripPrefix($('a.nick', this).text());
-                        data.push(nick);
-                    });
-                    data = _.sortBy(data, function (nick) {
-                        return nick;
-                    });
-                    tabcomplete.data = data;
-                }
-
-                if (this.value[this.selectionStart - 1] === ' ') {
-                    return false;
-                }
-                self = this;
-                (function () {
-                    var tokens = self.value.substring(0, self.selectionStart).split(" "),
-                        val,
-                        p1,
-                        newnick,
-                        range,
-                        nick = tokens[tokens.length - 1];
-                    if (tabcomplete.prefix === '') {
-                        tabcomplete.prefix = nick;
-                    }
-
-                    tabcomplete.data = _.select(tabcomplete.data, function (n) {
-                        return (n.toLowerCase().indexOf(tabcomplete.prefix.toLowerCase()) === 0);
-                    });
-
-                    if (tabcomplete.data.length > 0) {
-                        p1 = self.selectionStart - (nick.length);
-                        val = self.value.substr(0, p1);
-                        newnick = tabcomplete.data.shift();
-                        tabcomplete.data.push(newnick);
-                        val += newnick;
-                        val += self.value.substr(self.selectionStart);
-                        self.value = val;
-                        if (self.setSelectionRange) {
-                            self.setSelectionRange(p1 + newnick.length, p1 + newnick.length);
-                        } else if (self.createTextRange) { // not sure if this bit is actually needed....
-                            range = self.createTextRange();
-                            range.collapse(true);
-                            range.moveEnd('character', p1 + newnick.length);
-                            range.moveStart('character', p1 + newnick.length);
-                            range.select();
-                        }
-                    }
-                }());
-                return false;
-            }
-        });
-
-
-        $('#kiwi .control .msginput .nick').click(function () {
-            kiwi.front.showChangeNick();
-        });
-
-
-
-
-
-        $('#kiwi .plugins .load_plugin_file').click(function () {
-            if (typeof kiwi.front.boxes.plugins !== "undefined") {
-                return;
-            }
-
-            kiwi.front.boxes.plugins = new Box("plugin_file");
-            $('#tmpl_plugins').tmpl({}).appendTo(kiwi.front.boxes.plugins.content);
-            kiwi.front.boxes.plugins.box.css('top', -(kiwi.front.boxes.plugins.height + 40));
-
-            // Populate the plugin list..
-            function enumPlugins() {
-                var lst, j, txt;
-                lst = $('#plugin_list');
-                lst.find('option').remove();
-                for (j in kiwi.plugs.loaded) {
-                    txt = kiwi.plugs.loaded[j].name;
-                    lst.append('<option value="' + txt + '">' + txt + '</option>');
-                }
-            }
-            enumPlugins();
-
-            // Event bindings
-            $('#kiwi .plugin_file').submit(function () {
-                $('<div></div>').load($('.txtpluginfile').val(), function (e) {
-                    enumPlugins();
-                });
-                return false;
-            });
-            $('#kiwi .cancelpluginfile').click(function () {
-                kiwi.front.boxes.plugins.destroy();
-            });
-
-            $('#kiwi #plugins_list_unload').click(function () {
-                var selected_plugin;
-                selected_plugin = $('#plugin_list').val();
-                kiwi.plugs.unloadPlugin(selected_plugin);
-                enumPlugins();
-            });
-
-            $('#kiwi .txtpluginfile').focus();
-
-        });
-
-        $('#kiwi .plugins .reload_css').click(function () {
-            var links = document.getElementsByTagName("link"),
-                i;
-            for (i = 0; i < links.length; i++) {
-                if (links[i].rel === "stylesheet") {
-                    if (links[i].href.indexOf("?") === -1) {
-                        links[i].href += "?";
-                    }
-                    links[i].href += "x";
-                }
-            }
-        });
-
-
-        $('#kiwi .about .about_close').click(function () {
-            $('#kiwi .about').css('display', 'none');
-        });
-
-
-        $('#kiwi .poweredby').click(function () {
-            $('#kiwi .about').css('display', 'block');
-        });
-
-    },
-
-
-    showChangeNick: function (caption) {
-        caption = (typeof caption !== 'undefined') ? caption : '';
-
-        $('#kiwi').append($('#tmpl_change_nick').tmpl({}));
-
-        $('#kiwi .newnick .caption').text(caption);
-
-        $('#kiwi .form_newnick').submit(function () {
-            kiwi.front.run('/NICK ' + $('#kiwi .txtnewnick').val());
-            $('#kiwi .newnick').remove();
-            return false;
-        });
-
-        $('#kiwi .txtnewnick').keypress(function (ev) {
-            if (!this.first_press) {
-                this.first_press = true;
-                return false;
-            }
-        });
-
-        $('#kiwi .txtnewnick').keydown(function (ev) {
-            if (ev.which === 27) {  // ESC
-                $('#kiwi_msginput').focus();
-                $('#kiwi .newnick').remove();
-            }
-        });
-
-        $('#kiwi .cancelnewnick').click(function () {
-            $('#kiwi .newnick').remove();
-        });
-
-        $('#kiwi .txtnewnick').focus();
-    },
+    
 
 
     sync: function () {
         kiwi.gateway.sync();
     },
 
-    onSync: function (e, data) {
-        // Set any settings
-        if (data.nick !== undefined) {
-            kiwi.gateway.nick = data.nick;
-        }
-
-        // Add the tabviews
-        if (data.tabviews !== undefined) {
-            _.each(data.tabviews, function (tab) {
-                var newTab;
-                if (!Tabview.tabExists(tab.name)) {
-                    newTab = new Tabview(kiwi.gateway.channel_prefix + tab.name);
-
-                    if (tab.userlist !== undefined) {
-                        kiwi.front.onUserList({'channel': kiwi.gateway.channel_prefix + tab.name, 'users': tab.userlist.getUsers(false)});
-                    }
-                }
-            });
-        }
-
-        kiwi.front.doLayout();
-    },
+    
 
 
-    setTopicText: function (new_topic) {
-        kiwi.front.original_topic = new_topic;
-        $('#kiwi .cur_topic .topic').text(new_topic);
-        kiwi.front.doLayoutSize();
-    },
+
 
     nickStripPrefix: function (nick) {
         var tmp = nick, i, j, k;
@@ -1179,77 +444,7 @@ kiwi.front = {
         return is_chan;
     },
 
-    tabviewsNext: function () {
-        var wl = $('#kiwi .windowlist ul'),
-            next_left = parseInt(wl.css('text-indent').replace('px', ''), 10) + 170;
-        wl.css('text-indent', next_left);
-    },
 
-    tabviewsPrevious: function () {
-        var wl = $('#kiwi .windowlist ul'),
-            next_left = parseInt(wl.css('text-indent').replace('px', ''), 10) - 170;
-        wl.css('text-indent', next_left);
-    },
-
-    windowsNext: function () {
-        var tab, tabs, curTab, next;
-        next = false;
-        tabs = Tabview.getAllTabs();
-        curTab = Tabview.getCurrentTab();
-        for (tab in tabs) {
-            if (!next) {
-                if (tabs[tab] === curTab) {
-                    next = true;
-                    continue;
-                }
-            } else {
-                tabs[tab].show();
-                return;
-            }
-        }
-    },
-
-    windowsPrevious: function () {
-        var tab, tabs, curTab, prev_tab, next;
-        next = false;
-        tabs = Tabview.getAllTabs();
-        curTab = Tabview.getCurrentTab();
-        for (tab in tabs) {
-            if (tabs[tab] === curTab) {
-                if (prev_tab) {
-                    prev_tab.show();
-                }
-                return;
-            }
-            prev_tab = tabs[tab];
-        }
-    },
-
-    windowsShow: function (num) {
-        num = parseInt(num, 10);
-        console.log('Showing window ' + num.toString());
-        var i = 0, tab, tabs;
-        tabs = Tabview.getAllTabs();
-        for (tab in tabs) {
-            if (i === num) {
-                tabs[tab].show();
-                return;
-            }
-            i++;
-        }
-    },
-
-
-
-    barsShow: function () {
-        $('#kiwi .toolbars').slideDown();
-        $('#kiwi .control').slideDown();
-    },
-
-    barsHide: function () {
-        $('#kiwi .toolbars').slideUp();
-        $('#kiwi .control').slideUp();
-    },
 
     formatIRCMsg: function (msg) {
         var re, next;
@@ -1654,7 +849,7 @@ var Utilityview = function (name) {
         kiwi.front.utilityviews[rand_name.toLowerCase()].show();
     });
     $('#kiwi .utilityviewlist ul').append(this.tab);
-    kiwi.front.doLayoutSize();
+    kiwi.front.ui.doLayoutSize();
 
     this.div = $('#' + tmp_divname);
     this.div.css('overflow', 'hidden');
@@ -1681,7 +876,7 @@ Utilityview.prototype.show = function () {
 
     this.addPartImage();
 
-    kiwi.front.setTopicText(this.topic);
+    kiwi.front.ui.setTopicText(this.topic);
     kiwi.front.cur_channel = this;
 
     // If we're using fancy scrolling, refresh it
@@ -1769,8 +964,8 @@ var Tabview = function (v_name) {
             }
         });
     }
-    //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.windowShow(v_name); });
-    //kiwi.front.windowShow(v_name);
+    //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.ui.windowShow(v_name); });
+    //kiwi.front.ui.windowShow(v_name);
 
     kiwi.front.tabviews[v_name.toLowerCase()] = this;
     this.name = v_name;
@@ -1790,7 +985,7 @@ var Tabview = function (v_name) {
         registerTouches(document.getElementById(tmp_divname));
     }
 
-    kiwi.front.doLayoutSize();
+    kiwi.front.ui.doLayoutSize();
 };
 Tabview.prototype.name = null;
 Tabview.prototype.div = null;
@@ -1832,7 +1027,7 @@ Tabview.prototype.show = function () {
     this.addPartImage();
 
     this.clearHighlight();
-    kiwi.front.setTopicText(this.topic);
+    kiwi.front.ui.setTopicText(this.topic);
     kiwi.front.cur_channel = this;
 
     // If we're using fancy scrolling, refresh it
@@ -1966,7 +1161,7 @@ Tabview.prototype.changeTopic = function (new_topic) {
     this.topic = new_topic;
     this.addMsg(null, ' ', '=== Topic for ' + this.name + ' is: ' + new_topic, 'topic');
     if (kiwi.front.cur_channel.name === this.name) {
-        kiwi.front.setTopicText(new_topic);
+        kiwi.front.ui.setTopicText(new_topic);
     }
 };
 // Static functions
@@ -1991,6 +1186,12 @@ Tabview.getAllTabs = function () {
 Tabview.getCurrentTab = function () {
     return kiwi.front.cur_channel;
 };
+
+
+
+
+
+
 
 var Box = function (classname) {
     this.id = randomString(10);
