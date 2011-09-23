@@ -147,8 +147,8 @@ kiwi.front = {
         kiwi.front.doLayout();
         kiwi.front.barsHide();
 
-        kiwi.front.tabviewAdd('server');
-        kiwi.front.tabviews.server.userlist.setWidth(0); // Disable the userlist
+        var server_tabview = new Tabview('server');
+        server_tabview.userlist.setWidth(0); // Disable the userlist
 
         // Any pre-defined nick?
         if (typeof window.init_data.nick === "string") {
@@ -1100,52 +1100,7 @@ kiwi.front = {
     },
 
     tabviewAdd: function (v_name) {
-        /*global Tabview, UserList */
-        var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
-
-        if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
-            re = new RegExp(kiwi.gateway.channel_prefix, "g");
-            htmlsafe_name = v_name.replace(re, 'pre');
-            htmlsafe_name = "chan_" + htmlsafe_name;
-        } else {
-            htmlsafe_name = 'query_' + v_name;
-            userlist_enabled = false;
-        }
-
-        tmp_divname = 'kiwi_window_' + htmlsafe_name;
-        tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
-        tmp_tabname = 'kiwi_tab_' + htmlsafe_name;
-
-        if (!kiwi.front.tabviewExists(v_name)) {
-            $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-            //$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
-            $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="kiwi.front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
-        }
-        //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.windowShow(v_name); });
-        //kiwi.front.windowShow(v_name);
-
-        kiwi.front.tabviews[v_name.toLowerCase()] = new Tabview();
-        kiwi.front.tabviews[v_name.toLowerCase()].name = v_name;
-        kiwi.front.tabviews[v_name.toLowerCase()].div = $('#' + tmp_divname);
-        kiwi.front.tabviews[v_name.toLowerCase()].userlist = new UserList(htmlsafe_name);
-        kiwi.front.tabviews[v_name.toLowerCase()].tab = $('#' + tmp_tabname);
-        if (!userlist_enabled) {
-            kiwi.front.tabviews[v_name.toLowerCase()].userlist.setWidth(0);
-        }
-        kiwi.front.tabviews[v_name.toLowerCase()].show();
-
-        if (typeof registerTouches === "function") {
-            //alert("Registering touch interface");
-            //registerTouches($('#'+tmp_divname));
-            registerTouches(document.getElementById(tmp_divname));
-        }
-        /*
-        kiwi.front.tabviews[v_name.toLowerCase()].userlist.click(function(){
-            alert($(this).attr('id'));
-        });
-        */
-
-        kiwi.front.doLayoutSize();
+        return new Tabview(v_name);
     },
 
 
@@ -1626,7 +1581,7 @@ var UserList = function (name) {
         return this;
     };
 };
-UserList.prototype.width = 100;
+UserList.prototype.width = 100;     // 0 to disable
 UserList.prototype.setWidth = function (newWidth) {
     var w, u;
     if (typeof newWidth === 'number') {
@@ -1780,13 +1735,57 @@ Utilityview.prototype.clearPartImage = function () {
  */
 
 
-var Tabview = function () {
+var Tabview = function (v_name) {
+    /*global Tabview, UserList */
+    var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
+    console.log(v_name);
+    console.log(v_name[0]);
+    console.log('charAt(0): ' + v_name.charAt(0));
+    
+    if (v_name[0] === kiwi.gateway.channel_prefix) {
+        re = new RegExp(kiwi.gateway.channel_prefix, "g");
+        htmlsafe_name = v_name.replace(re, 'pre');
+        htmlsafe_name = "chan_" + htmlsafe_name;
+    } else {
+        htmlsafe_name = 'query_' + v_name;
+        userlist_enabled = false;
+    }
+
+    tmp_divname = 'kiwi_window_' + htmlsafe_name;
+    tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
+    tmp_tabname = 'kiwi_tab_' + htmlsafe_name;
+
+    if (!kiwi.front.tabviewExists(v_name)) {
+        $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
+        //$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
+        $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '" onclick="kiwi.front.tabviews[\'' + v_name.toLowerCase() + '\'].show();">' + v_name + '</li>');
+    }
+    //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.windowShow(v_name); });
+    //kiwi.front.windowShow(v_name);
+
+    kiwi.front.tabviews[v_name.toLowerCase()] = new Tabview();
+    this.name = v_name;
+    this.div = $('#' + tmp_divname);
+    this.userlist = new UserList(htmlsafe_name);
+    this.tab = $('#' + tmp_tabname);
     this.panel = $('#panel1');
+
+    if (!userlist_enabled) {
+        this.userlist.setWidth(0);
+    }
+    this.show();
+
+    if (typeof registerTouches === "function") {
+        //alert("Registering touch interface");
+        //registerTouches($('#'+tmp_divname));
+        registerTouches(document.getElementById(tmp_divname));
+    }
+
+    kiwi.front.doLayoutSize();
 };
 Tabview.prototype.name = null;
 Tabview.prototype.div = null;
 Tabview.prototype.userlist = null;
-Tabview.prototype.userlist_width = 100;     // 0 for disabled
 Tabview.prototype.tab = null;
 Tabview.prototype.topic = "";
 Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
