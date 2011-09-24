@@ -96,6 +96,7 @@ background-image: -moz-linear-gradient(
 }*/
 
 #kiwi .poweredby { float:right; margin:8px 15px; cursor:pointer; color:#EBEBEB; font-family: arial;}
+#kiwi .poweredby img { height:1.5em; float:right; margin-left:7px; }
 
 
 #kiwi .userlist {

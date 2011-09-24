@@ -47,7 +47,7 @@ kiwi.front = {
 
         window.onbeforeunload = function() {
             return "Are you sure you leave Kiwi IRC?";
-        }
+        };
 
         $('#kiwi .toolbars').resize(kiwi.front.ui.doLayoutSize);
         $(window).resize(kiwi.front.ui.doLayoutSize);
