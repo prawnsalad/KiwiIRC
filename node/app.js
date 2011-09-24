@@ -622,15 +622,19 @@ this.httpHandler = function (request, response) {
                     fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
                         var html, hash2;
                         if (!err) {
-                            html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
-                            hash2 = crypto.createHash('md5').update(html).digest('base64');
-                            kiwi.cache.html[hash] = {"html": html, "hash": hash2};
-                            if (request.headers['if-none-match'] === hash2) {
-                                response.statusCode = 304;
-                            } else {
-                                response.setHeader('Etag', hash2);
-                                response.setHeader('Content-type', 'text/html');
-                                response.write(html);
+                            try {
+                                html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
+                                hash2 = crypto.createHash('md5').update(html).digest('base64');
+                                kiwi.cache.html[hash] = {"html": html, "hash": hash2};
+                                if (request.headers['if-none-match'] === hash2) {
+                                    response.statusCode = 304;
+                                } else {
+                                    response.setHeader('Etag', hash2);
+                                    response.setHeader('Content-type', 'text/html');
+                                    response.write(html);
+                                }
+                            } catch (e) {
+                                response.statusCode = 500;
                             }
                         } else {
                             response.statusCode = 500;
