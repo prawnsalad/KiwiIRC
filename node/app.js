@@ -668,12 +668,12 @@ this.websocketListen = function (ports, host, handler, key, cert) {
         if (port.secure === true) {
             hs = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
             kiwi.io.push(ws.listen(hs, {secure: true}));
-            hs.listen(port.number);
+            hs.listen(port.number, host);
             console.log("Listening on %s:%d with SSL", host, port.number);
         } else {
             hs = http.createServer(handler);
             kiwi.io.push(ws.listen(hs, {secure: false}));
-            hs.listen(port.number);
+            hs.listen(port.number, host);
             console.log("Listening on %s:%d without SSL", host, port.number);
         }
     });
