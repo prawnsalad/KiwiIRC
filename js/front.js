@@ -119,6 +119,14 @@ kiwi.front = {
 
         server_tabview = new Tabview('server');
         server_tabview.userlist.setWidth(0); // Disable the userlist
+        server_tabview.setIcon('/img/app_menu.png');
+        console.log($('.icon', server_tabview.tab));
+        $('.icon', server_tabview.tab).tipTip({
+            delay: 0,
+            keepAlive: true,
+            content: $('#tmpl_network_menu').tmpl({}).html(),
+            activation: 'click'
+        });
 
         // Any pre-defined nick?
         if (typeof window.init_data.nick === "string") {
@@ -939,7 +947,7 @@ Utilityview.prototype.clearPartImage = function () {
 
 var Tabview = function (v_name) {
     /*global Tabview, UserList */
-    var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, userlist_enabled = true;
+    var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, tmp_tab, userlist_enabled = true;
 
     if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
     //if (v_name[0] === kiwi.gateway.channel_prefix) {
@@ -957,17 +965,15 @@ var Tabview = function (v_name) {
 
     if (!Tabview.tabExists(v_name)) {
         $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-        //$('#kiwi .userlist').append('<ul id="' + tmp_userlistname + '"></ul>');
-        $('#kiwi .windowlist ul').append('<li id="' + tmp_tabname + '">' + v_name + '</li>');
-        $('li', $('#kiwi .windowlist ul')[0]).last().bind('click', function () {
+        tmp_tab = $('<li id="' + tmp_tabname + '"><span>' + v_name + '</span></li>');
+        $('#kiwi .windowlist ul').append(tmp_tab);
+        tmp_tab.click(function (e) {
             var tab = Tabview.getTab(v_name);
             if (tab) {
                 tab.show();
             }
         });
     }
-    //$('#kiwi .windowlist ul .window_'+v_name).click(function(){ kiwi.front.ui.windowShow(v_name); });
-    //kiwi.front.ui.windowShow(v_name);
 
     kiwi.front.tabviews[v_name.toLowerCase()] = this;
     this.name = v_name;
@@ -1081,6 +1087,15 @@ Tabview.prototype.addPartImage = function () {
 Tabview.prototype.clearPartImage = function () {
     $('#kiwi .toolbars .tab_part').remove();
 };
+
+Tabview.prototype.setIcon = function (url) {
+    this.tab.prepend('<img src="' + url + '" class="icon" />');
+    this.tab.css('padding-left', '33px');
+}
+
+Tabview.prototype.setTabText = function (text) {
+    $('span', this.tab).text(text);
+}
 
 Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     var self, tmp, d, re, line_msg;

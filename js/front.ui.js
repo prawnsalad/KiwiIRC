@@ -356,6 +356,61 @@ kiwi.front.ui = {
     barsHide: function () {
         $('#kiwi .toolbars').slideUp();
         $('#kiwi .control').slideUp();
+    },
+
+
+
+
+
+
+
+
+    tutorial: function () {
+        var b = $('<div id="tutorial_box" style="border:3px solid blue;"></div>');
+        b.css({display: 'block', position: 'absolute', height:'100%', width:'100%'});
+        $('#kiwi').append(b);
+
+        var bounds = function (el) {
+            var b = 3, ret = {};
+            ret.top = el.offset().top;
+            ret.left = el.offset().left;
+            ret.width = parseInt(el.outerWidth(true), 10) - (b*2);
+            ret.height = parseInt(el.outerHeight(true), 10) - (b*2);
+            return ret;
+        }
+
+        var s = [
+            function(){
+                b.animate(bounds($('#kiwi .msginput')), 2000, '', next_s);
+            },
+
+            function(){
+                b.animate(bounds($('#kiwi .userlist')), 2000, '', next_s);
+            },
+
+            function(){
+                b.animate(bounds($('#panel1')), 2000, '', next_s);
+            },
+
+            function(){
+                b.animate(bounds($('#kiwi .cur_topic')), 2000, '', next_s);
+            },
+
+            function(){
+                b.animate(bounds($('#kiwi .windowlist')), 2000, '', next_s);
+            }
+        ];
+
+
+        var current_s = -1;
+        var next_s = function () {
+            current_s++;
+            if (typeof s[current_s] === 'function') {
+                console.log('Animating ' + current_s.toString());
+                s[current_s]();
+            }
+        };
+        next_s();
     }
 
 };

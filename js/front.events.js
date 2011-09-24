@@ -148,7 +148,7 @@ kiwi.front.events = {
 
             if (kiwi.gateway.nick !== data.nick) {
                 kiwi.gateway.nick = data.nick;
-                kiwi.front.doLayout();
+                kiwi.front.ui.doLayout();
             }
 
             Tabview.getServerTab().addMsg(null, ' ', '=== Connected OK :)', 'status');
@@ -201,7 +201,7 @@ kiwi.front.events = {
     },
     onOptions: function (e, data) {
         if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
-            Tabview.getServerTab().tab.text(kiwi.gateway.network_name);
+            Tabview.getServerTab().setTabText(kiwi.gateway.network_name);
         }
     },
     onMOTD: function (e, data) {
@@ -437,7 +437,7 @@ kiwi.front.events = {
             break;
         case 'nickname_in_use':
             Tabview.getServerTab().addMsg(null, ' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
-            kiwi.front.showChangeNick('That nick is already taken');
+            kiwi.front.ui.showChangeNick('That nick is already taken');
             break;
         default:
             // We don't know what data contains, so don't do anything with it.
@@ -472,7 +472,7 @@ kiwi.front.events = {
             });
         }
 
-        kiwi.front.doLayout();
+        kiwi.front.ui.doLayout();
     }
 
 

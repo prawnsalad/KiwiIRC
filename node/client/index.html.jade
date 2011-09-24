@@ -200,3 +200,9 @@ html(lang="en-gb")
             |        <a class="userbox_query">Message</a>
             |        <a class="userbox_whois">Info</a>
             |    </div>
+
+        script#tmpl_network_menu(type="text/x-jquery-tmpl")
+            |    <ul id="network_menu">
+            |       <li><a class="link" onclick="kiwi.front.run('/motd');Tabview.getServerTab().show();">Show MOTD</a></li>
+            |       <li><a class="link" onclick="kiwi.front.run('/list');">Channel list</a></li>
+            |    </ul>
