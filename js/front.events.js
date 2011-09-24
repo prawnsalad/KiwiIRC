@@ -208,7 +208,15 @@ kiwi.front.events = {
         Tabview.getServerTab().addMsg(null, data.server, data.msg, 'motd');
     },
     onWhois: function (e, data) {
-        var d, tab;
+        var d, tab, idle_time = '';
+
+        if (data.end) return;
+
+        if (typeof data.idle !== 'undefined'){
+            idle_time = secondsToTime(parseInt(data.idle, 10));
+            idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
+        }
+
         tab = Tabview.getCurrentTab();
         if (data.msg) {
             tab.addMsg(null, data.nick, data.msg, 'whois');
@@ -216,9 +224,10 @@ kiwi.front.events = {
             d = new Date();
             d.setTime(data.logon * 1000);
             d = d.toLocaleString();
-            tab.addMsg(null, data.nick, 'idle for ' + data.idle + ' second' + ((data.idle !== 1) ? 's' : '') + ', signed on ' + d, 'whois');
+
+            tab.addMsg(null, data.nick, 'idle for ' + idle_time + ', signed on ' + d, 'whois');
         } else {
-            tab.addMsg(null, data.nick, 'idle for ' + data.idle + ' seconds', 'whois');
+            tab.addMsg(null, data.nick, 'idle for ' + idle_time, 'whois');
         }
     },
     onMode: function (e, data) {

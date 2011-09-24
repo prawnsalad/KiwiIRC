@@ -112,7 +112,8 @@ var ircNumerics = {
 
 this.parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, nicklist, caps, rtn, obj, tmp, namespace;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel,
+        params, nicklist, caps, rtn, obj, tmp, namespace, whois_end = false;
     //regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     //regex = /^(?::(\S+) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
@@ -173,13 +174,15 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
 
             websocket.sendClientEvent('options', {server: '', "options": ircSocket.IRC.options});
             break;
+
+        case ircNumerics.RPL_ENDOFWHOIS:
+            whois_end = true;
         case ircNumerics.RPL_WHOISUSER:
         case ircNumerics.RPL_WHOISSERVER:
         case ircNumerics.RPL_WHOISOPERATOR:
-        case ircNumerics.RPL_ENDOFWHOIS:
         case ircNumerics.RPL_WHOISCHANNELS:
         case ircNumerics.RPL_WHOISMODES:
-            websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing});
+            websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: whois_end});
             break;
 
         case ircNumerics.RPL_LISTSTART:
