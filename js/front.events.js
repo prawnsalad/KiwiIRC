@@ -16,6 +16,8 @@ kiwi.front.events = {
         $(kiwi.gateway).bind("onlist_start", this.onChannelListStart);
         $(kiwi.gateway).bind("onlist_channel", this.onChannelList);
         $(kiwi.gateway).bind("onlist_end", this.onChannelListEnd);
+        $(kiwi.gateway).bind("banlist", this.onBanList);
+        $(kiwi.gateway).bind("banlist_end", this.onBanListEnd);
         $(kiwi.gateway).bind("onjoin", this.onJoin);
         $(kiwi.gateway).bind("ontopic", this.onTopic);
         $(kiwi.gateway).bind("onpart", this.onPart);
@@ -195,7 +197,6 @@ kiwi.front.events = {
             }
         };
 
-        // TODO: convert seconds to mins:secs
         secs = Math.floor(data.delay / 1000);
         mins = Math.floor(secs / 60);
         secs = secs % 60;
@@ -338,6 +339,11 @@ kiwi.front.events = {
         kiwi.front.cache.list.tab.show();
     },
 
+    onBanList: function (e, data) {
+    },
+
+    onBanListEnd: function (e, data) {
+    },
 
     onJoin: function (e, data) {
         var tab = Tabview.getTab(data.channel);

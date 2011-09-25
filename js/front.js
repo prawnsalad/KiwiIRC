@@ -1183,6 +1183,9 @@ Tabview.prototype.changeTopic = function (new_topic) {
 };
 // Static functions
 Tabview.tabExists = function (name) {
+    if ((!name) || (typeof name !== 'string')) {
+        return false;
+    }
     var ret = (typeof kiwi.front.tabviews[name.toLowerCase()] !== 'undefined');
     return ret;
 };

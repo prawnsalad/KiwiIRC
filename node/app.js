@@ -90,6 +90,8 @@ var ircNumerics = {
     RPL_TOPIC:              '332',
     RPL_NAMEREPLY:          '353',
     RPL_ENDOFNAMES:         '366',
+    RPL_BANLIST:            '367',
+    RPL_ENDOFBANLIST:       '368',
     RPL_MOTD:               '372',
     RPL_WHOISMODES:         '379',
     ERR_NOSUCHNICK:         '401',
@@ -283,6 +285,14 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             break;
         case ircNumerics.ERR_NOSUCHNICK:
             websocket.sendClientEvent('irc_error', {error: 'no_such_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.RPL_BANLIST:
+            params = msg.params.split(" ");
+            console.log(params);
+            websocket.sendClientEvent('banlist', {server: '', channel: params[1], banned: params[2], banned_by: params[3], banned_at: params[4]});
+            break;
+        case ircNumerics.RPL_ENDOFBANLIST:
+            websocket.sendClientEvent('banlist_end', {server: '', channel: msg.params.split(" ")[1]});
             break;
         case 'JOIN':
             // Some BNC's send malformed JOIN causing the channel to be as a
