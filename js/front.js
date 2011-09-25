@@ -460,7 +460,7 @@ kiwi.front = {
         var re, next;
 
         if ((!msg) || (typeof msg !== 'string')) {
-            return;
+            return '';
         }
 
         // bold

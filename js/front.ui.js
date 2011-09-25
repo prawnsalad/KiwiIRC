@@ -13,7 +13,7 @@ kiwi.front.ui = {
             kiwi.addClass('large_kiwi');
         }
 
-        toolbars = $('#kiwi .cur_topic');
+        toolbars = $('#kiwi .toolbars');
         ul = $('#kiwi .userlist');
 
         n_top = parseInt(toolbars.offset().top, 10) + parseInt(toolbars.outerHeight(true), 10);
