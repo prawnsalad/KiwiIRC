@@ -1,4 +1,4 @@
-/*jslint devel: true, browser: true, continue: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4 */
+/*jslint devel: true, browser: true, continue: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4, nomen: true, regexp: true*/
 /*globals $, front, gateway, Utilityview */
 
 // Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
@@ -9,22 +9,22 @@ var kiwi = {};
 
 function manageDebug(debug) {
     var log, consoleBackUp;
-    if (window.console) {  
-        consoleBackUp = window.console.log;  
-        window.console.log = function () {  
-            if (debug) {  
-                consoleBackUp.apply(console, arguments); 
+    if (window.console) {
+        consoleBackUp = window.console.log;
+        window.console.log = function () {
+            if (debug) {
+                consoleBackUp.apply(console, arguments);
             }
-        };  
-    } else {  
-        log = window.opera ? window.opera.postError : alert;  
-        window.console = {};  
-        window.console.log = function (str) {  
-            if (debug) {  
-                log(str);  
-            }  
         };
-    }  
+    } else {
+        log = window.opera ? window.opera.postError : alert;
+        window.console = {};
+        window.console.log = function (str) {
+            if (debug) {
+                log(str);
+            }
+        };
+    }
 }
 
 
@@ -59,16 +59,17 @@ if (typeof String.prototype.lpad === 'undefined') {
 
 
 
-function secondsToTime(secs){
-    var hours = Math.floor(secs / (60 * 60));
-   
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
- 
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-   
-    var obj = {
+function secondsToTime(secs) {
+    var hours, minutes, seconds, divisor_for_minutes, divisor_for_seconds, obj;
+    hours = Math.floor(secs / (60 * 60));
+
+    divisor_for_minutes = secs % (60 * 60);
+    minutes = Math.floor(divisor_for_minutes / 60);
+
+    divisor_for_seconds = divisor_for_minutes % 60;
+    seconds = Math.ceil(divisor_for_seconds);
+
+    obj = {
         "h": hours,
         "m": minutes,
         "s": seconds
@@ -97,7 +98,7 @@ var plugins = [
                 var img = '<img class="link_img_a" src="' + url + '" height="100%" width="100%" />';
                 return '<a class="link_ext link_img" target="_blank" rel="nofollow" href="' + url + '" style="height:50px;width:50px;display:block">' + img + '<div class="tt box"></div></a>';
             });
-            
+
             return event;
         }
     },
@@ -122,7 +123,7 @@ var plugins = [
             return event;
         }
     },
-    
+
     {
         name: "highlight",
         onaddmsg: function (event, opts) {
@@ -134,7 +135,7 @@ var plugins = [
                     event.msg = '<span style="color:red;">' + event.msg + '</span>';
                 }
             }
-            
+
             if (
                 !kiwi.front.isChannel(kiwi.front.tabviews[event.tabview].name) && kiwi.front.tabviews[event.tabview].name !== "server"
                     && kiwi.front.cur_channel.name.toLowerCase() !== kiwi.front.tabviews[event.tabview.toLowerCase()].name
@@ -144,10 +145,10 @@ var plugins = [
 
             return event;
         }
-    },    
-    
-    
-    
+    },
+
+
+
     {
         //Following method taken from: http://snipplr.com/view/13533/convert-text-urls-into-links/
         name: "linkify_plain",
@@ -155,7 +156,7 @@ var plugins = [
             if (!event.msg) {
                 return event;
             }
-            
+
             event.msg = event.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function (url) {
                 var nice;
                 // If it's any of the supported images in the images plugin, skip it
@@ -170,10 +171,10 @@ var plugins = [
                 } else {
                     url = 'http://' + url;
                 }
-                
+
                 return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '<div class="tt box"></div></a>';
             });
-            
+
             return event;
         }
     },
@@ -184,11 +185,11 @@ var plugins = [
             if (!event.msg) {
                 return event;
             }
-            
+
             event.msg = event.msg.replace(/\n/gi, function (txt) {
                 return '<br/>';
             });
-            
+
             return event;
         }
     },
@@ -233,7 +234,7 @@ var plugins = [
         mouseclick: function (e) {
             var a = $(this),
                 t;
-            
+
             switch (e.target.className) {
             case 'link_ext':
             case 'link_img_a':
@@ -268,10 +269,10 @@ var plugins = [
             if (typeof kiwi.front.tabviews[event.tabview].nick_colours[event.nick] === 'undefined') {
                 kiwi.front.tabviews[event.tabview].nick_colours[event.nick] = this.randColour();
             }
-            
+
             var c = kiwi.front.tabviews[event.tabview].nick_colours[event.nick];
             event.nick = '<span style="color:' + c + ';">' + event.nick + '</span>';
-            
+
             return event;
         },
 
@@ -345,11 +346,11 @@ kiwi.plugs.run = function (event_name, event_data, opts) {
     var ret = event_data,
         ret_tmp,
         plugin_name;
-    
+
     // Set some defaults if not provided
     event_data = (typeof event_data === 'undefined') ? {} : event_data;
     opts = (typeof opts === 'undefined') ? {} : opts;
-    
+
     for (plugin_name in kiwi.plugs.loaded) {
         // If we're only calling 1 plugin, make sure it's that one
         if (typeof opts.run_only === 'string' && opts.run_only !== plugin_name) {
@@ -363,7 +364,7 @@ kiwi.plugs.run = function (event_name, event_data, opts) {
                     return null;
                 }
                 ret = ret_tmp;
-                   
+
                 if (typeof ret.event_bubbles === 'boolean' && ret.event_bubbles === false) {
                     delete ret.event_bubbles;
                     return ret;

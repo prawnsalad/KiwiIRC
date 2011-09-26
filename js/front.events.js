@@ -1,3 +1,5 @@
+/*jslint browser: true, devel: true, sloppy: true, plusplus: true, nomen: true, forin: true, continue: true */
+/*globals kiwi, $, _, Tabview, Userlist, User, Box, init_data */
 kiwi.front.events = {
 
 	bindAll: function () {
@@ -16,6 +18,8 @@ kiwi.front.events = {
         $(kiwi.gateway).bind("onlist_start", this.onChannelListStart);
         $(kiwi.gateway).bind("onlist_channel", this.onChannelList);
         $(kiwi.gateway).bind("onlist_end", this.onChannelListEnd);
+        $(kiwi.gateway).bind("banlist", this.onBanList);
+        $(kiwi.gateway).bind("banlist_end", this.onBanListEnd);
         $(kiwi.gateway).bind("onjoin", this.onJoin);
         $(kiwi.gateway).bind("ontopic", this.onTopic);
         $(kiwi.gateway).bind("onpart", this.onPart);
@@ -87,8 +91,7 @@ kiwi.front.events = {
 
     onNotice: function (e, data) {
         var nick = (data.nick === undefined) ? '' : data.nick,
-            enick = '[' + nick + ']',
-            tab;
+            enick = '[' + nick + ']';
 
         if (Tabview.tabExists(data.target)) {
             Tabview.getTab(data.target).addMsg(null, enick, data.msg, 'notice');
@@ -175,7 +178,7 @@ kiwi.front.events = {
         kiwi.plugs.run('disconnect', {success: false});
     },
     onReconnecting: function (e, data) {
-        var err_box, f, msg;
+        var err_box, f, msg, mins, secs;
 
         err_box = $('.messages .msg.error.disconnect .text');
         if (!err_box) {
@@ -195,8 +198,15 @@ kiwi.front.events = {
             }
         };
 
-        // TODO: convert seconds to mins:secs
-        msg = f(data.attempts) + ' attempt at reconnecting in ' + (data.delay / 1000).toString() + ' seconds..';
+        secs = Math.floor(data.delay / 1000);
+        mins = Math.floor(secs / 60);
+        secs = secs % 60;
+        if (mins > 0) {
+            msg = f(data.attempts) + ' attempt at reconnecting in ' + mins + ' minute' + ((mins > 1) ? 's' : '') + ', ' + secs + ' second' + (((secs > 1) || (secs === 0)) ? 's' : '') + '...';
+        } else {
+            msg = f(data.attempts) + ' attempt at reconnecting in ' + secs + ' second' + (((secs > 1) || (secs === 0)) ? 's' : '') + '...';
+        }
+        
         err_box.text(msg);
     },
     onOptions: function (e, data) {
@@ -208,9 +218,12 @@ kiwi.front.events = {
         Tabview.getServerTab().addMsg(null, data.server, data.msg, 'motd');
     },
     onWhois: function (e, data) {
+        /*globals secondsToTime */
         var d, tab, idle_time = '';
 
-        if (data.end) return;
+        if (data.end) {
+            return;
+        }
 
         if (typeof data.idle !== 'undefined'){
             idle_time = secondsToTime(parseInt(data.idle, 10));
@@ -330,6 +343,11 @@ kiwi.front.events = {
         kiwi.front.cache.list.tab.show();
     },
 
+    onBanList: function (e, data) {
+    },
+
+    onBanListEnd: function (e, data) {
+    },
 
     onJoin: function (e, data) {
         var tab = Tabview.getTab(data.channel);
