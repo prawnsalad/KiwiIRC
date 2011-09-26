@@ -1,5 +1,7 @@
+/*jslint browser: true, devel: true, sloppy: true, plusplus: true, nomen: true, forin: true, continue: true */
+/*globals kiwi, $, _, Tabview, Userlist, User, Box */
 kiwi.front.ui = {
-	
+
     doLayoutSize: function () {
         var kiwi, toolbars, ul, n_top, n_bottom, nl;
         kiwi = $('#kiwi');
@@ -112,7 +114,7 @@ kiwi.front.ui = {
                     data = [];
                     Tabview.getCurrentTab().userlist.listUsers(false).each(function () {
                         var nick;
-                        nick = kiwi.front.nickStripPrefix($('a.nick', this).text());
+                        nick = User.stripPrefix($('a.nick', this).text());
                         data.push(nick);
                     });
                     data = _.sortBy(data, function (nick) {
@@ -366,20 +368,24 @@ kiwi.front.ui = {
 
 
     tutorial: function () {
-        var b = $('<div id="tutorial_box" style="border:3px solid blue;"></div>');
+        var b = $('<div id="tutorial_box" style="border:3px solid blue;"></div>'),
+            bounds,
+            s,
+            current_s,
+            next_s;
         b.css({display: 'block', position: 'absolute', height:'100%', width:'100%'});
         $('#kiwi').append(b);
 
-        var bounds = function (el) {
+        bounds = function (el) {
             var b = 3, ret = {};
             ret.top = el.offset().top;
             ret.left = el.offset().left;
             ret.width = parseInt(el.outerWidth(true), 10) - (b*2);
             ret.height = parseInt(el.outerHeight(true), 10) - (b*2);
             return ret;
-        }
+        };
 
-        var s = [
+        s = [
             function(){
                 b.animate(bounds($('#kiwi .msginput')), 2000, '', next_s);
             },
@@ -402,8 +408,8 @@ kiwi.front.ui = {
         ];
 
 
-        var current_s = -1;
-        var next_s = function () {
+        current_s = -1;
+        next_s = function () {
             current_s++;
             if (typeof s[current_s] === 'function') {
                 console.log('Animating ' + current_s.toString());

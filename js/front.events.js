@@ -1,3 +1,5 @@
+/*jslint browser: true, devel: true, sloppy: true, plusplus: true, nomen: true, forin: true, continue: true */
+/*globals kiwi, $, _, Tabview, Userlist, User, Box, init_data */
 kiwi.front.events = {
 
 	bindAll: function () {
@@ -89,8 +91,7 @@ kiwi.front.events = {
 
     onNotice: function (e, data) {
         var nick = (data.nick === undefined) ? '' : data.nick,
-            enick = '[' + nick + ']',
-            tab;
+            enick = '[' + nick + ']';
 
         if (Tabview.tabExists(data.target)) {
             Tabview.getTab(data.target).addMsg(null, enick, data.msg, 'notice');
@@ -217,9 +218,12 @@ kiwi.front.events = {
         Tabview.getServerTab().addMsg(null, data.server, data.msg, 'motd');
     },
     onWhois: function (e, data) {
+        /*globals secondsToTime */
         var d, tab, idle_time = '';
 
-        if (data.end) return;
+        if (data.end) {
+            return;
+        }
 
         if (typeof data.idle !== 'undefined'){
             idle_time = secondsToTime(parseInt(data.idle, 10));
