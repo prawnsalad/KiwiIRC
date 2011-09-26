@@ -213,7 +213,7 @@ kiwi.front = {
 
 
     run: function (msg) {
-        var parts, dest, t, pos, textRange, d, plugin_event, msg_sliced, tab;
+        var parts, dest, t, pos, textRange, plugin_event, msg_sliced, tab;
 
         // Run through any plugins
         plugin_event = {command: msg};
@@ -400,46 +400,11 @@ kiwi.front = {
 
 
 
-    
+
 
 
     sync: function () {
         kiwi.gateway.sync();
-    },
-
-    
-
-
-
-
-    nickStripPrefix: function (nick) {
-        var tmp = nick, i, j, k;
-        i = 0;
-        for (j = 0; j < nick.length; j++) {
-            for (k = 0; k < kiwi.gateway.user_prefixes.length; k++) {
-                if (nick.charAt(j) === kiwi.gateway.user_prefixes[k].symbol) {
-                    i++;
-                    break;
-                }
-            }
-        }
-
-        return tmp.substr(i);
-    },
-
-    nickGetPrefix: function (nick) {
-        var tmp = nick, i, j, k;
-        i = 0;
-        for (j = 0; j < nick.length; j++) {
-            for (k = 0; k < kiwi.gateway.user_prefixes.length; k++) {
-                if (nick.charAt(j) === kiwi.gateway.user_prefixes[k].symbol) {
-                    i++;
-                    break;
-                }
-            }
-        }
-
-        return tmp.substr(0, i);
     },
 
     isChannel: function (name) {
@@ -453,8 +418,6 @@ kiwi.front = {
 
         return is_chan;
     },
-
-
 
     formatIRCMsg: function (msg) {
         var re, next;
@@ -549,7 +512,8 @@ kiwi.front = {
 
 
 var UserList = function (name) {
-    var userlist, list_html, sortUsers, sortModes, getPrefix;
+    /*globals User */
+    var userlist, list_html, sortUsers;
 
     userlist = [];
 
@@ -577,50 +541,8 @@ var UserList = function (name) {
             }
         });
 
-        userlist.sort(function (a, b) {
-            var i, a_idx, b_idx, a_nick, b_nick;
-            // Try to sort by modes first
-            if (a.modes.length > 0) {
-                // a has modes, but b doesn't so a should appear first
-                if (b.modes.length === 0) {
-                    return -1;
-                }
-                a_idx = b_idx = -1;
-                // Compare the first (highest) mode
-                for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-                    if (kiwi.gateway.user_prefixes[i].mode === a.modes[0]) {
-                        a_idx = i;
-                    }
-                }
-                for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-                    if (kiwi.gateway.user_prefixes[i].mode === b.modes[0]) {
-                        b_idx = i;
-                    }
-                }
-                if (a_idx < b_idx) {
-                    return -1;
-                } else if (a_idx > b_idx) {
-                    return 1;
-                }
-                // If we get to here both a and b have the same highest mode so have to resort to lexicographical sorting
+        userlist.sort(User.compare);
 
-            } else if (b.modes.length > 0) {
-                // b has modes but a doesn't so b should appear first
-                return 1;
-            }
-            a_nick = a.nick.toLocaleUpperCase();
-            b_nick = b.nick.toLocaleUpperCase();
-            // Lexicographical sorting
-            if (a_nick < b_nick) {
-                return -1;
-            } else if (a_nick > b_nick) {
-                return 1;
-            } else {
-                // This should never happen; both users have the same nick.
-                console.log('Something\'s gone wrong somewhere - two users have the same nick!');
-                return 0;
-            }
-        });
         _.each(userlist, function (user) {
             user.html = user.html.appendTo(list_html);
         });
@@ -628,56 +550,15 @@ var UserList = function (name) {
         list_html = list_html.appendTo(parent);
     };
 
-    sortModes = function (modes) {
-        return modes.sort(function (a, b) {
-            var a_idx, b_idx, i;
-            for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-                if (kiwi.gateway.user_prefixes[i].mode === a) {
-                    a_idx = i;
-                }
-            }
-            for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-                if (kiwi.gateway.user_prefixes[i].mode === b) {
-                    b_idx = i;
-                }
-            }
-            if (a_idx < b_idx) {
-                return -1;
-            } else if (a_idx > b_idx) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-    };
-
-    getPrefix = function (modes) {
-        var prefix = '';
-        if (typeof modes[0] !== 'undefined') {
-            prefix = _.detect(kiwi.gateway.user_prefixes, function (prefix) {
-                return prefix.mode === modes[0];
-            });
-            prefix = (prefix) ? prefix.symbol : '';
-        }
-        return prefix;
-    };
-
     this.addUser = function (users) {
         if (!_.isArray(users)) {
             users = [users];
         }
         _.each(users, function (user) {
-            var html, prefix = '';
-            user.nick = kiwi.front.nickStripPrefix(user.nick);
-            user.modes = sortModes(user.modes);
-            if (typeof user.modes[0] !== 'undefined') {
-                prefix = _.detect(kiwi.gateway.user_prefixes, function (prefix) {
-                    return prefix.mode === user.modes[0];
-                });
-                prefix = (prefix) ? prefix.symbol : '';
-            }
-            html = $('<li><a class="nick">' + prefix + user.nick + '</a></li>');
-            userlist.push({nick: user.nick, modes: user.modes, html: html});
+            user = new User(user.nick, user.modes);
+            user.html = $('<li><a class="nick">' + user.prefix + user.nick + '</a></li>');
+            user.html.data('user', user);
+            userlist.push(user);
         });
         sortUsers();
 
@@ -710,7 +591,7 @@ var UserList = function (name) {
         });
         if (user) {
             user.nick = newNick;
-            user.html.text(getPrefix(user.modes) + newNick);
+            user.html.text(User.getPrefix(user.modes) + newNick);
         }
 
         sortUsers();
@@ -757,6 +638,16 @@ var UserList = function (name) {
         });
     };
 
+    this.getUser = function (nick) {
+        if (this.hasUser(nick)) {
+            return _.detect(userlist, function (user) {
+                return user.nick === nick;
+            });
+        } else {
+            return null;
+        }
+    };
+
     this.active = function (active) {
         if ((arguments.length === 0) || (active)) {
             list_html.addClass('active');
@@ -770,21 +661,21 @@ var UserList = function (name) {
     };
 
     this.changeUserMode = function (nick, mode, add) {
-        var user;
+        var user, prefix;
         if (this.hasUser(nick)) {
-            user  = _.detect(userlist, function (u) {
+            user = _.detect(userlist, function (u) {
                 return u.nick === nick;
             });
 
+            prefix = user.prefix;
             if ((arguments.length < 3) || (add)) {
-                user.modes.push(mode);
+                user.addMode(mode);
             } else {
-                user.modes = _.reject(user.modes, function (m) {
-                    return m === mode;
-                });
+                user.removeMode(mode);
             }
-            user.modes = sortModes(user.modes);
-            user.html.children('a:first').text(getPrefix(user.modes) + user.nick);
+            if (prefix !== user.prefix) {
+                user.html.children('a:first').text(user.prefix + user.nick);
+            }
             sortUsers();
         }
 
@@ -807,7 +698,8 @@ UserList.prototype.setWidth = function (newWidth) {
 };
 
 UserList.prototype.clickHandler = function () {
-    var li = $(this).parent();
+    var li = $(this).parent(),
+        user = li.data('user');
 
     // Remove any existing userboxes
     $('#kiwi .userbox').remove();
@@ -815,7 +707,7 @@ UserList.prototype.clickHandler = function () {
     if ($(li).data('userbox') === this) {
         $(li).removeData('userbox');
     } else {
-        $('#tmpl_user_box').tmpl({nick: kiwi.front.nickStripPrefix($(this).text())}).appendTo(li);
+        $('#tmpl_user_box').tmpl({nick: user.nick}).appendTo(li);
 
         $('#kiwi .userbox .userbox_query').click(function (ev) {
             var nick = $('#kiwi .userbox_nick').val();
@@ -831,6 +723,130 @@ UserList.prototype.clickHandler = function () {
 };
 
 
+
+
+var User = function (nick, modes) {
+    var sortModes;
+
+    sortModes = function (modes) {
+        return modes.sort(function (a, b) {
+            var a_idx, b_idx, i;
+            for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
+                if (kiwi.gateway.user_prefixes[i].mode === a) {
+                    a_idx = i;
+                }
+            }
+            for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
+                if (kiwi.gateway.user_prefixes[i].mode === b) {
+                    b_idx = i;
+                }
+            }
+            if (a_idx < b_idx) {
+                return -1;
+            } else if (a_idx > b_idx) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    };
+
+    this.nick = User.stripPrefix(nick);
+    this.modes = modes || [];
+    this.modes = sortModes(this.modes);
+    this.prefix = User.getPrefix(this.modes);
+
+    this.addMode = function (mode) {
+        this.modes.push(mode);
+        this.modes = sortModes(this.modes);
+        this.prefix = User.getPrefix(this.modes);
+        return this;
+    };
+};
+
+User.prototype.removeMode = function (mode) {
+    this.modes = _.reject(this.modes, function (m) {
+        return m === mode;
+    });
+    this.prefix = User.getPrefix(this.modes);
+    return this;
+};
+
+User.prototype.isOp = function () {
+    // return true if this.mode[0] > o
+    return false;
+};
+
+User.getPrefix = function (modes) {
+    var prefix = '';
+    if (typeof modes[0] !== 'undefined') {
+        prefix = _.detect(kiwi.gateway.user_prefixes, function (prefix) {
+            return prefix.mode === modes[0];
+        });
+        prefix = (prefix) ? prefix.symbol : '';
+    }
+    return prefix;
+};
+
+User.stripPrefix = function (nick) {
+    var tmp = nick, i, j, k;
+    i = 0;
+    for (j = 0; j < nick.length; j++) {
+        for (k = 0; k < kiwi.gateway.user_prefixes.length; k++) {
+            if (nick.charAt(j) === kiwi.gateway.user_prefixes[k].symbol) {
+                i++;
+                break;
+            }
+        }
+    }
+
+    return tmp.substr(i);
+};
+
+User.compare = function (a, b) {
+    var i, a_idx, b_idx, a_nick, b_nick;
+    // Try to sort by modes first
+    if (a.modes.length > 0) {
+        // a has modes, but b doesn't so a should appear first
+        if (b.modes.length === 0) {
+            return -1;
+        }
+        a_idx = b_idx = -1;
+        // Compare the first (highest) mode
+        for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
+            if (kiwi.gateway.user_prefixes[i].mode === a.modes[0]) {
+                a_idx = i;
+            }
+        }
+        for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
+            if (kiwi.gateway.user_prefixes[i].mode === b.modes[0]) {
+                b_idx = i;
+            }
+        }
+        if (a_idx < b_idx) {
+            return -1;
+        } else if (a_idx > b_idx) {
+            return 1;
+        }
+        // If we get to here both a and b have the same highest mode so have to resort to lexicographical sorting
+
+    } else if (b.modes.length > 0) {
+        // b has modes but a doesn't so b should appear first
+        return 1;
+    }
+    a_nick = a.nick.toLocaleUpperCase();
+    b_nick = b.nick.toLocaleUpperCase();
+    // Lexicographical sorting
+    if (a_nick < b_nick) {
+        return -1;
+    } else if (a_nick > b_nick) {
+        return 1;
+    } else {
+        // This should never happen; both users have the same nick.
+        console.log('Something\'s gone wrong somewhere - two users have the same nick!');
+        return 0;
+    }
+};
 
 
 
@@ -1091,11 +1107,11 @@ Tabview.prototype.clearPartImage = function () {
 Tabview.prototype.setIcon = function (url) {
     this.tab.prepend('<img src="' + url + '" class="icon" />');
     this.tab.css('padding-left', '33px');
-}
+};
 
 Tabview.prototype.setTabText = function (text) {
     $('span', this.tab).text(text);
-}
+};
 
 Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     var self, tmp, d, re, line_msg;
@@ -1183,6 +1199,9 @@ Tabview.prototype.changeTopic = function (new_topic) {
 };
 // Static functions
 Tabview.tabExists = function (name) {
+    if ((!name) || (typeof name !== 'string')) {
+        return false;
+    }
     var ret = (typeof kiwi.front.tabviews[name.toLowerCase()] !== 'undefined');
     return ret;
 };
