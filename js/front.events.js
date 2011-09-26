@@ -201,7 +201,7 @@ kiwi.front.events = {
         mins = Math.floor(secs / 60);
         secs = secs % 60;
         if (mins > 0) {
-            msg = f(data.attempts) + ' attempt at reconnecting in ' + mins + ' minute' + ((mins > 1) ? 's' : '') + ' , ' + secs + 'second' + (((secs > 1) || (secs === 0)) ? 's' : '') + '...';
+            msg = f(data.attempts) + ' attempt at reconnecting in ' + mins + ' minute' + ((mins > 1) ? 's' : '') + ', ' + secs + ' second' + (((secs > 1) || (secs === 0)) ? 's' : '') + '...';
         } else {
             msg = f(data.attempts) + ' attempt at reconnecting in ' + secs + ' second' + (((secs > 1) || (secs === 0)) ? 's' : '') + '...';
         }
