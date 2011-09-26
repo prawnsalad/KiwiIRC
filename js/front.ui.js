@@ -112,9 +112,9 @@ kiwi.front.ui = {
                 if (_.isEqual(tabcomplete.data, [])) {
                     // Get possible autocompletions
                     data = [];
-                    Tabview.getCurrentTab().userlist.listUsers(false).each(function () {
+                    $.each(Tabview.getCurrentTab().userlist.listUsers(false), function () {
                         var nick;
-                        nick = User.stripPrefix($('a.nick', this).text());
+                        nick = User.stripPrefix(this.nick);
                         data.push(nick);
                     });
                     data = _.sortBy(data, function (nick) {
