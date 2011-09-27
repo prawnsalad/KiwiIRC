@@ -45,10 +45,14 @@ html(lang="en-gb")
                                         input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
                                     li(class="section")
                                         label(for="port") Port:
-                                        input(type="text", id="port", name="port", class="port", value="6667")
+                                        input(type="text", id="port", name="port", class="port", value=port)
                                     li
                                         label(for="ssl") SSL:
-                                        input(type="checkbox", id="ssl", name="ssl", class="ssl")
+                                        - if (ssl)
+                                            input(type="checkbox", id="ssl", name="ssl", class="ssl", checked)
+                                        - else
+                                            input(type="checkbox", id="ssl", name="ssl", class="ssl")
+                                        
                                 a.connect(href="") Connect...
 
 

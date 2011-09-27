@@ -530,10 +530,10 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {}, public_http_path,
+        min = {}, public_http_path, port, ssl,
         secure = (typeof request.client.encrypted === 'object');
 
-    try {
+    //try {
         if (kiwi.config.handle_http) {
             uri = url.parse(request.url, true);
             uri_parts = uri.pathname.split('/');
@@ -598,14 +598,26 @@ this.httpHandler = function (request, response) {
                         server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
                         server = uri.query.server || 'irc.anonnet.org';
                         nick = uri.query.nick || '';
+                        port = 6667;
+                        ssl = false;
                     } else {
                         server_set = false;
                         server = 'irc.anonnet.org';
                         nick = '';
+                        port = 6667;
+                        ssl = false;
                     }
                 } else {
                     server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
                     server = server_set ? uri_parts[2] : 'irc.anonnet.org';
+                    if (server.search(/:/) > 0) {
+                        port = server.substring(server.search(/:/) + 1);
+                        server = server.substring(0, server.search(/:/));
+                        if (port[0] == '+') {
+                            port = port.substring(1);
+                            ssl = true;
+                        }
+                    }
                     nick = uri.query.nick || '';
                 }
 
@@ -615,6 +627,8 @@ this.httpHandler = function (request, response) {
                     .update(server_set ? 't' : 'f')
                     .update(secure ? 't' : 'f')
                     .update(server)
+                    .update(port)
+                    .update(ssl  ? 't' : 'f')
                     .update(nick)
                     .update(agent)
                     .update(JSON.stringify(kiwi.config))
@@ -633,7 +647,7 @@ this.httpHandler = function (request, response) {
                         var html, hash2;
                         if (!err) {
                             try {
-                                html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
+                                html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "port": port, "ssl": ssl, "nick": nick, "agent": agent, "config": kiwi.config });
                                 hash2 = crypto.createHash('md5').update(html).digest('base64');
                                 kiwi.cache.html[hash] = {"html": html, "hash": hash2};
                                 if (request.headers['if-none-match'] === hash2) {
@@ -660,10 +674,10 @@ this.httpHandler = function (request, response) {
             }
         }
 
-    } catch (e) {
-        console.log('ERROR app.httpHandler()');
-        console.log(e);
-    }
+    //} catch (e) {
+    //    console.log('ERROR app.httpHandler()');
+    //    console.log(e);
+    //}
 };
 
 
