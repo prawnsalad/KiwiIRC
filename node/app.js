@@ -593,19 +593,17 @@ this.httpHandler = function (request, response) {
 
                 debug = (typeof uri.query.debug !== 'undefined');
 
+                port = 6667;
+                ssl = false;
                 if (uri_parts[1] !== 'client') {
                     if (uri.query) {
                         server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
                         server = uri.query.server || 'irc.anonnet.org';
                         nick = uri.query.nick || '';
-                        port = 6667;
-                        ssl = false;
                     } else {
                         server_set = false;
                         server = 'irc.anonnet.org';
                         nick = '';
-                        port = 6667;
-                        ssl = false;
                     }
                 } else {
                     server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
@@ -627,7 +625,7 @@ this.httpHandler = function (request, response) {
                     .update(server_set ? 't' : 'f')
                     .update(secure ? 't' : 'f')
                     .update(server)
-                    .update(port)
+                    .update(port.toString())
                     .update(ssl  ? 't' : 'f')
                     .update(nick)
                     .update(agent)
