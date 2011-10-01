@@ -600,8 +600,8 @@ this.httpHandler = function (request, response) {
 
                 debug = (typeof uri.query.debug !== 'undefined');
 
-                port = 6667;
                 ssl = (typeof request.socket.pair !== 'undefined');
+                port = ssl ? 6697 : 6667;
                 if (uri_parts[1] !== 'client') {
                     if (uri.query) {
                         server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
@@ -621,6 +621,8 @@ this.httpHandler = function (request, response) {
                         if (port[0] == '+') {
                             port = port.substring(1);
                             ssl = true;
+                        } else {
+                            ssl = false;
                         }
                     }
                     nick = uri.query.nick || '';
