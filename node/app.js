@@ -213,15 +213,14 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 parts = msg.params.split(' ');
                 channel = parts[1];
                 num_users = parts[2];
-                modes = msg.trailing.split(' ', 1);
-                topic = msg.trailing.substring(msg.trailing.indexOf(' ') + 1);
+                topic = msg.trailing;
 
                 //websocket.sendClientEvent('list_channel', {
                 websocket.kiwi.buffer.list.push({
                     server: '',
                     channel: channel,
                     topic: topic,
-                    modes: modes,
+                    //modes: modes,
                     num_users: parseInt(num_users, 10)
                 });
 
