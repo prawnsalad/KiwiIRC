@@ -77,6 +77,7 @@ kiwi.front = {
             var netsel = $('#kiwi .formconnectwindow .network'),
                 netport = $('#kiwi .formconnectwindow .port'),
                 netssl = $('#kiwi .formconnectwindow .ssl'),
+                netpass = $('#kiwi .formconnectwindow .password'),
                 nick = $('#kiwi .formconnectwindow .nick'),
                 tmp;
 
@@ -93,7 +94,7 @@ kiwi.front = {
 
             kiwi.front.ui.doLayout();
             try {
-                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : ''));
+                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : 'false') + ' ' + netpass.val());
             } catch (e) {
                 console.log(e);
             }
@@ -238,7 +239,7 @@ kiwi.front = {
             case '/connect':
             case '/server':
                 if (typeof parts[1] === 'undefined') {
-                    alert('Usage: /connect servername [port] [ssl]');
+                    alert('Usage: /connect servername [port] [ssl] [password]');
                     break;
                 }
 
@@ -253,7 +254,7 @@ kiwi.front = {
                 }
 
                 Tabview.getCurrentTab().addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + (parts[3] ? ' using SSL' : '') + '...', 'status');
-                kiwi.gateway.connect(parts[1], parts[2], parts[3]);
+                kiwi.gateway.connect(parts[1], parts[2], parts[3], parts[4]);
                 break;
 
             case '/nick':
@@ -451,52 +452,90 @@ kiwi.front = {
         }
 
         // colour
-        re = /\x03([0-9][0-5]?)(,([0-9][0-5]?))?(.*?)\x03/g;
-
-        msg = msg.replace(re, function (str, p1, p2, p3, p4) {
-            var fg, bg,
-                col = function (num) {
-                    switch (parseInt(num, 10)) {
-                    case 0:
-                        return '#FFFFFF';
-                    case 1:
-                        return '#000000';
-                    case 2:
-                        return '#000080';
-                    case 3:
-                        return '#008000';
-                    case 4:
-                        return '#FF0000';
-                    case 5:
-                        return '#800040';
-                    case 6:
-                        return '#800080';
-                    case 7:
-                        return '#FF8040';
-                    case 8:
-                        return '#FFFF00';
-                    case 9:
-                        return '#80FF00';
-                    case 10:
-                        return '#008080';
-                    case 11:
-                        return '#00FFFF';
-                    case 12:
-                        return '#0000FF';
-                    case 13:
-                        return '#FF55FF';
-                    case 14:
-                        return '#808080';
-                    case 15:
-                        return '#C0C0C0';
-                    default:
-                        return null;
+        msg = (function (msg) {
+            var replace, colourMatch, col, i, match, to, endCol, fg, bg, str;
+            replace = '';
+            colourMatch = function (str) {
+                var re = /^\x03([0-9][0-5]?)(,([0-9][0-5]?))?/;
+                return re.exec(str);
+            };
+            col = function (num) {
+                switch (parseInt(num, 10)) {
+                case 0:
+                    return '#FFFFFF';
+                case 1:
+                    return '#000000';
+                case 2:
+                    return '#000080';
+                case 3:
+                    return '#008000';
+                case 4:
+                    return '#FF0000';
+                case 5:
+                    return '#800040';
+                case 6:
+                    return '#800080';
+                case 7:
+                    return '#FF8040';
+                case 8:
+                    return '#FFFF00';
+                case 9:
+                    return '#80FF00';
+                case 10:
+                    return '#008080';
+                case 11:
+                    return '#00FFFF';
+                case 12:
+                    return '#0000FF';
+                case 13:
+                    return '#FF55FF';
+                case 14:
+                    return '#808080';
+                case 15:
+                    return '#C0C0C0';
+                default:
+                    return null;
+                }
+            };
+            if (msg.indexOf('\x03') !== -1) {
+                i = msg.indexOf('\x03');
+                replace = msg.substr(0, i);
+                while (i < msg.length) {
+                    match = colourMatch(msg.substr(i, 6));
+                    if (match) {
+                        //console.log(match);
+                        // Next colour code
+                        to = msg.indexOf('\x03', i + 1);
+                        endCol = msg.indexOf(String.fromCharCode(15), i + 1);
+                        if (endCol !== -1) {
+                            if (to === -1) {
+                                to = endCol;
+                            } else {
+                                to = ((to < endCol) ? to : endCol);
+                            }
+                        }
+                        if (to === -1) {
+                            to = msg.length;
+                        }
+                        //console.log(i, to);
+                        fg = col(match[1]);
+                        bg = col(match[3]);
+                        str = msg.substring(i + 1 + match[1].length + ((bg !== null) ? match[2].length + 1 : 0), to);
+                        //console.log(str);
+                        replace += '<span style="' + ((fg !== null) ? 'color: ' + fg + '; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + str + '</span>';
+                        i = to;
+                    } else {
+                        if ((msg[i] !== '\x03') && (msg[i] !== String.fromCharCode(15))) {
+                            replace += msg[i];
+                        }
+                        i++;
                     }
-                };
-            fg = col(p1);
-            bg = col(p3);
-            return '<span style="' + ((fg !== null) ? 'color: ' + fg + '; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + p4 + '</span>';
-        });
+                }
+                return replace;
+            }
+            return msg;
+        }(msg));
+        
         return msg;
     }
 

@@ -213,15 +213,14 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 parts = msg.params.split(' ');
                 channel = parts[1];
                 num_users = parts[2];
-                modes = msg.trailing.split(' ', 1);
-                topic = msg.trailing.substring(msg.trailing.indexOf(' ') + 1);
+                topic = msg.trailing;
 
                 //websocket.sendClientEvent('list_channel', {
                 websocket.kiwi.buffer.list.push({
                     server: '',
                     channel: channel,
                     topic: topic,
-                    modes: modes,
+                    //modes: modes,
                     num_users: parseInt(num_users, 10)
                 });
 
@@ -539,9 +538,9 @@ this.httpHandler = function (request, response) {
             uri_parts = uri.pathname.split('/');
 
             subs = uri.pathname.substr(0, 4);
+            public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
             if (uri.pathname === '/js/all.js') {
                 if (kiwi.cache.alljs === '') {
-                    public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
 
                     min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
                     min.util = fs.readFileSync(public_http_path + 'js/util.js');
@@ -641,7 +640,7 @@ this.httpHandler = function (request, response) {
                     }
                     response.end();
                 } else {
-                    fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
+                    fs.readFile(public_http_path + 'index.html.jade', 'utf8', function (err, str) {
                         var html, hash2;
                         if (!err) {
                             try {
@@ -657,8 +656,10 @@ this.httpHandler = function (request, response) {
                                 }
                             } catch (e) {
                                 response.statusCode = 500;
+                                console.log(e);
                             }
                         } else {
+                            console.log(err);
                             response.statusCode = 500;
                         }
                         response.end();
@@ -766,7 +767,7 @@ this.websocketConnection = function (websocket) {
 
 
 
-this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback) {
+this.websocketIRCConnect = function (websocket, nick, host, port, ssl, password, callback) {
     var ircSocket;
     //setup IRC connection
     if (!ssl) {
@@ -798,6 +799,9 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback)
         websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
         if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
             websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
+        }
+        if (password) {
+            websocket.sendServerLine('PASS ' + password);
         }
         websocket.sendServerLine('CAP LS');
         websocket.sendServerLine('NICK ' + nick);
