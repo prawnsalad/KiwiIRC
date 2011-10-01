@@ -7,23 +7,33 @@ var kiwi = require('../kiwi.js');
 
 
 exports.onhttp = function (ev) {
+	var host, port = null, i;
+
 	// TODO: request.socket.pair seems to only be set in a SSL req, is this
 	// the best way to check for this?
 	if (typeof ev.request.socket.pair === 'undefined') {
 	    host = ev.request.headers.host;
-	    //port = 443;
-	    
+
+	    // Remove the port if one is set
 	    if (host.search(/:/)) {
-	        //port = parseInt(host.substring(host.search(/:/) + 1), 10);
 	        host = host.substring(0, host.search(/:/));
 	    }
-	    if (kiwi.config.ports[0].number != 443) {
-	    	for (i in kiwi.config.ports) {
-	    		if (kiwi.config.ports[i].secure) {
-	    			host += ':' + kiwi.config.ports[0].number.toString();
-	    			break;
-	    		}
-	    	}
+
+    	for (i in kiwi.config.ports) {
+    		if (kiwi.config.ports[i].secure) {
+    			port = kiwi.config.ports[0].number;
+    			break;
+    		}
+    	}
+
+	    // If we didn't find an SSL listener, don't redirect
+	    if (port == null) {
+	    	return ev;
+	    }
+
+	    // No need to specify port 443 since it's the standard
+	    if (port !== 443) {
+	    	host += ':' + port.toString();
 	    }
 
 	    console.log('https://' + host + ev.request.url);
