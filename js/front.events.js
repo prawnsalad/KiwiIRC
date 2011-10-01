@@ -230,7 +230,7 @@ kiwi.front.events = {
             return;
         }
 
-        if (typeof data.idle !== 'undefined'){
+        if (typeof data.idle !== 'undefined') {
             idle_time = secondsToTime(parseInt(data.idle, 10));
             idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
         }
@@ -288,64 +288,16 @@ kiwi.front.events = {
     },
 
     onChannelListStart: function (e, data) {
-        /*global Utilityview */
-        var tab, table;
-
-        tab = new Utilityview('Channel List');
-        tab.div.css('overflow-y', 'scroll');
-        table = $('<table style="margin:1em 2em;"><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
-        tab.div.append(table);
-
-        kiwi.front.cache.list = {chans: [], tab: tab, table: table,
-            update: function (newChans) {
-                var body = this.table.children('tbody:first').detach(),
-                    chan,
-                    html;
-
-                html = '';
-                for (chan in newChans) {
-                    this.chans.push(newChans[chan]);
-                    html += newChans[chan].html;
-                }
-                body.append(html);
-                this.table.append(body);
-
-            },
-            finalise: function () {
-                var body = this.table.children('tbody:first').detach(),
-                    list,
-                    chan;
-
-                list = $.makeArray($(body).children());
-
-                for (chan in list) {
-                    list[chan] = $(list[chan]).detach();
-                }
-
-                list = _.sortBy(list, function (channel) {
-                    return parseInt(channel.children('.num_users').first().text(), 10);
-                }).reverse();
-
-                for (chan in list) {
-                    body.append(list[chan]);
-                }
-
-                this.table.append(body);
-
-            }};
+        /*global ChannelList */
+        kiwi.front.cache.list = new ChannelList();
+        console.profile('list');
     },
     onChannelList: function (e, data) {
-        var chans;
-        data = data.chans;
-        //data = [data];
-        for (chans in data) {
-            data[chans] = {data: data[chans], html: '<tr><td><a class="chan">' + data[chans].channel + '</a></td><td class="num_users" style="text-align: center;">' + data[chans].num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.formatIRCMsg(data[chans].topic) + '</td></tr>'};
-        }
-        kiwi.front.cache.list.update(data);
+        kiwi.front.cache.list.addChannel(data.chans);
     },
     onChannelListEnd: function (e, data) {
-        kiwi.front.cache.list.finalise();
-        kiwi.front.cache.list.tab.show();
+        kiwi.front.cache.list.show();
+        console.profileEnd();
     },
 
     onBanList: function (e, data) {
@@ -452,7 +404,7 @@ kiwi.front.events = {
         case 'invite_only_channel':
             tab.addMsg(null, ' ', '=== ' + data.channel + ' is invite only.', 'status');
             if (t_view !== 'server') {
-               tab.safe_to_close = true;
+                tab.safe_to_close = true;
             }
             break;
         case 'channel_is_full':

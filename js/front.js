@@ -542,7 +542,65 @@ kiwi.front = {
 
 
 
+var ChannelList = function () {
+    /*globals Utilityview */
+    var chanList, view, table, obj, renderTable, waiting;
+    chanList = [];
 
+    view = new Utilityview('Channel List');
+    view.div.css('overflow-y', 'scroll');
+
+    table = $('<table style="margin:1em 2em;"><thead style="font-weight: bold;"><tr><td>Channel Name</td><td>Members</td><td style="padding-left: 2em;">Topic</td></tr></thead><tbody style="vertical-align: top;"></tbody>');
+    table = table.appendTo(view.div);
+
+    waiting = false;
+    renderTable = function () {
+        var tbody;
+        tbody = table.children('tbody:first').detach();
+        /*tbody.children().each(function (child) {
+            var i, chan;
+            child = $(child);
+            chan = child.children('td:first').text();
+            for (i = 0; i < chanList.length; i++) {
+                if (chanList[i].channel === chan) {
+                    chanList[i].html = child.detach();
+                    break;
+                }
+            }
+        });*/
+        _.each(chanList, function (chan) {
+            chan.html = $(chan.html).appendTo(tbody);
+        });
+        table = table.append(tbody);
+        waiting = false;
+    };
+
+    obj = {
+        addChannel: function (channels) {
+            if (!_.isArray(channels)) {
+                channels = [channels];
+            }
+            _.each(channels, function (chan) {
+                var html, channel;
+                html = $('<tr><td><a class="chan">' + chan.channel + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + kiwi.front.formatIRCMsg(chan.topic) + '</td></tr>');
+                chan.html = html;
+                chanList.push(chan);
+            });
+            chanList.sort(function (a, b) {
+                return b.num_users - a.num_users;
+            });
+            if (!waiting) {
+                waiting = true;
+                _.defer(renderTable);
+            }
+        },
+        show: function () {
+            view.show();
+        },
+        prototype: {constructor: this}
+    };
+    return obj;
+};
 
 
 
