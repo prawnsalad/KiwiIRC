@@ -12,7 +12,7 @@
 
     $npm install socket.io-client
     
-* If you're using SSL, create your certificate and key, place it in the node foder.
+* If you're using SSL, create your certificate and key, place it in the server foder.
 
 * Edit the configuration file
 
