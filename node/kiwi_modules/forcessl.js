@@ -15,13 +15,13 @@ exports.onhttp = function (ev) {
 	    host = ev.request.headers.host;
 
 	    // Remove the port if one is set
-	    if (host.search(/:/)) {
+	    if (host.search(/:/) > -1) {
 	        host = host.substring(0, host.search(/:/));
 	    }
 
     	for (i in kiwi.config.ports) {
     		if (kiwi.config.ports[i].secure) {
-    			port = kiwi.config.ports[0].number;
+    			port = kiwi.config.ports[i].number;
     			break;
     		}
     	}
