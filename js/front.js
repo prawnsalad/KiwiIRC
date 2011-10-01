@@ -90,7 +90,7 @@ kiwi.front = {
 
             kiwi.front.ui.doLayout();
             try {
-                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : 'false') + ' ' + netpass.val());
+                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.is(':checked') ? 'true' : 'false') + ' ' + netpass.val());
             } catch (e) {
                 console.log(e);
             }
