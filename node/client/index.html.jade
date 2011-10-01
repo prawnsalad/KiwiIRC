@@ -54,7 +54,7 @@ html(lang="en-gb")
                                         label(for="port") Port:
                                         input(type="text", id="port", name="port", class="port", value=port)
                                     li
-                                        label(for="password") Server password:
+                                        label(for="password") Password:
                                         input(type="text", id="password", name="password", class="password")
                                     li
                                         label(for="ssl") SSL:
@@ -159,7 +159,7 @@ html(lang="en-gb")
             
             
             function addEvents(){
-                $('.more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.network').focus(); return false; });
+                $('.more_link').click(function(){ $('.content.bottom').slideDown('fast'); $('.channel').focus(); return false; });
                 $('a.connect').click(function(){ $('.formconnectwindow').submit(); return false; });
 
                 var input_submit = function(e){
@@ -169,6 +169,7 @@ html(lang="en-gb")
                 $('.formconnectwindow .channel').keydown(input_submit);
                 $('.formconnectwindow .network').keydown(input_submit);
                 $('.formconnectwindow .port').keydown(input_submit);
+                $('.formconnectwindow .password').keydown(input_submit);
             }
 
 

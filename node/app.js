@@ -529,11 +529,19 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {}, public_http_path, port, ssl,
+        min = {}, public_http_path, port, ssl, host, obj, args,
         secure = (typeof request.client.encrypted === 'object');
 
     //try {
         if (kiwi.config.handle_http) {
+            // Run through any plugins..
+            args = {request: request, response: response};
+            obj = kiwi.kiwi_mod.run('http', args);
+            if (obj === null) {
+                return;
+            }
+            response = args.response;
+
             uri = url.parse(request.url, true);
             uri_parts = uri.pathname.split('/');
 
@@ -593,7 +601,7 @@ this.httpHandler = function (request, response) {
                 debug = (typeof uri.query.debug !== 'undefined');
 
                 port = 6667;
-                ssl = false;
+                ssl = (typeof request.socket.pair !== 'undefined');
                 if (uri_parts[1] !== 'client') {
                     if (uri.query) {
                         server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
@@ -701,6 +709,8 @@ this.websocketListen = function (ports, host, handler, key, cert) {
             hs.listen(port.number, host);
             console.log("Listening on %s:%d without SSL", host, port.number);
         }
+
+        kiwi.httpServers.push(hs);
     });
 
     _.each(kiwi.io, function (io) {

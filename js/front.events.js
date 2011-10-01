@@ -163,6 +163,11 @@ kiwi.front.events = {
             Tabview.getServerTab().addMsg(null, ' ', '=== Failed to connect :(', 'status');
             kiwi.plugs.run('connect', {success: false});
         }
+
+        // Now that we're connected, warn the user if they really want to quit
+        window.onbeforeunload = function() {
+            return "Are you sure you leave Kiwi IRC?";
+        };
     },
     onConnectFail: function (e, data) {
         var reason = (typeof data.reason === 'string') ? data.reason : '';
