@@ -1,9 +1,6 @@
 /*jslint devel: true, browser: true, confusion: true, sloppy: true, maxerr: 50, indent: 4 */
 /*globals io, $, kiwi, kiwi_server */
 kiwi.gateway = {
-
-    revision: 16,
-
     nick: 'kiwi',
     session_id: null,
     syncing: false,
@@ -12,41 +9,69 @@ kiwi.gateway = {
     user_prefixes: ['~', '&', '@', '+'],
     socket: null,
     kiwi_server: null,
-	
+
     start: function (kiwi_server) {
         if (typeof kiwi_server !== 'undefined') {
             kiwi.gateway.kiwi_server = kiwi_server;
         }
     },
 
-    connect: function (host, port, ssl, callback) {
+    connect: function (host, port, ssl, password, callback) {
         if (typeof kiwi.gateway.kiwi_server !== 'undefined') {
-            kiwi.gateway.socket = io.connect(kiwi_server, {'max reconnection attempts': 3});
-            kiwi.gateway.socket.of('/kiwi').on('connect_failed', function (reason) {
+            kiwi.gateway.socket = io.connect(kiwi_server, {
+                'try multiple transports': true,
+                'connect timeout': 3000,
+                'max reconnection attempts': 7,
+                'reconnection delay': 2000
+            });
+            kiwi.gateway.socket.on('connect_failed', function (reason) {
                 // TODO: When does this even actually get fired? I can't find a case! ~Darren
                 console.debug('Unable to connect Socket.IO', reason);
+                console.log("kiwi.gateway.socket.on('connect_failed')");
                 //kiwi.front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
                 kiwi.gateway.socket.disconnect();
                 $(kiwi.gateway).trigger("onconnect_fail", {reason: reason});
                 kiwi.gateway.sendData = function () {};
             }).on('error', function (e) {
                 $(kiwi.gateway).trigger("onconnect_fail", {reason: e});
-                console.debug(e);
+                console.log("kiwi.gateway.socket.on('error')");
                 console.log(e);
             });
+
+            kiwi.gateway.socket.on('connecting', function (transport_type) {
+                console.log("kiwi.gateway.socket.on('connecting')");
+                $(kiwi.gateway).trigger("connecting");
+            });
+
             kiwi.gateway.socket.on('connect', function () {
+                // This is also called when reconnected..
                 kiwi.gateway.sendData = function (data, callback) {
                     kiwi.gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
                 };
-                kiwi.gateway.socket.on('message', kiwi.gateway.parse);
-                kiwi.gateway.socket.on('disconnect', function () {
-                    // Teardown procedure here
-                    $(kiwi.gateway).trigger("ondisconnect", {});
-                });
-                kiwi.gateway.socket.emit('irc connect', kiwi.gateway.nick, host, port, ssl, callback);
+
+                kiwi.gateway.socket.emit('irc connect', kiwi.gateway.nick, host, port, ssl, password, callback);
+                console.log("kiwi.gateway.socket.on('connect')");
             });
             kiwi.gateway.socket.on('too_many_connections', function () {
                 $(kiwi.gateway).trigger("onconnect_fail", {reason: 'too_many_connections'});
+            });
+
+            kiwi.gateway.socket.on('message', kiwi.gateway.parse);
+            kiwi.gateway.socket.on('disconnect', function () {
+                // Teardown procedure here
+                $(kiwi.gateway).trigger("ondisconnect", {});
+                console.log("kiwi.gateway.socket.on('disconnect')");
+            });
+            kiwi.gateway.socket.on('close', function () {
+                console.log("kiwi.gateway.socket.on('close')");
+            });
+
+            kiwi.gateway.socket.on('reconnecting', function (reconnectionDelay, reconnectionAttempts) {
+                console.log("kiwi.gateway.socket.on('reconnecting')");
+                $(kiwi.gateway).trigger("onreconnecting", {delay: reconnectionDelay, attempts: reconnectionAttempts});
+            });
+            kiwi.gateway.socket.on('reconnect_failed', function () {
+                console.log("kiwi.gateway.socket.on('reconnect_failed')");
             });
         }
     },
@@ -73,7 +98,7 @@ kiwi.gateway = {
     parse: function (item) {
         if (item.event !== undefined) {
             $(kiwi.gateway).trigger("on" + item.event, item);
-            
+
             switch (item.event) {
             case 'options':
                 $.each(item.options, function (name, value) {
@@ -90,7 +115,7 @@ kiwi.gateway = {
                     }
                 });
                 break;
-        
+
             case 'sync':
                 if (kiwi.gateway.onSync && kiwi.gateway.syncing) {
                     kiwi.gateway.syncing = false;
@@ -111,12 +136,12 @@ kiwi.gateway = {
         if (this.session_id === null) {
             return;
         }
-    
+
         var data = {
             method: 'sync',
             args: {}
         };
-    
+
         kiwi.gateway.syncing = true;
         kiwi.gateway.sendData(data, callback);
     },
@@ -226,7 +251,7 @@ kiwi.gateway = {
                 message: msg
             }
         };
-    
+
         kiwi.gateway.sendData(data, callback);
     }
 

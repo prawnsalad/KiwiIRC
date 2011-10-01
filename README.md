@@ -27,3 +27,7 @@ Report bugs using the issue tracker on github: https://github.com/prawnsalad/Kiw
 # Licence
 
 To be decided
+
+
+# Thanks to
+The KiwiIRC logo credited to Michael Drahony (www.drahony.com)

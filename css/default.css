@@ -88,6 +88,7 @@ background-image: -moz-linear-gradient(
 #kiwi .windowlist .activity, #kiwi .utilityviewlist .activity { font-weight: bold; background-color: #009900; }
 
 #kiwi .windowlist ul li img, #kiwi .utilityviewlist ul li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
+#kiwi .windowlist ul li img.icon, #kiwi .utilityviewlist ul li img.icon { left:5px; top:2px; height:auto; width:auto;}
 /*#kiwi .windowlist ul li a {
 	margin:3px;
 	border: 1px solid #333;
@@ -96,6 +97,7 @@ background-image: -moz-linear-gradient(
 }*/
 
 #kiwi .poweredby { float:right; margin:8px 15px; cursor:pointer; color:#EBEBEB; font-family: arial;}
+#kiwi .poweredby img { height:1.5em; float:right; margin-left:7px; }
 
 
 #kiwi .userlist {
@@ -143,8 +145,10 @@ background-image: -moz-linear-gradient(
 	position: absolute;
 	top:92px; left:0px;
 	right: 110px; bottom:30px;
-	overflow-y:scroll;
 }
+#kiwi .panel { overflow-y:scroll; height:100%; }
+#panel1 { float:left; width:100%;}
+#panel2 { float:right; width:0%; }
 #kiwi .messages {
 	overflow-x:wrap;
 	border:none;

@@ -1,5 +1,6 @@
 /*jslint sloppy: true, continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
 /*globals kiwi_root */
+/* Fuck you, git. */
 var tls = null;
 var net = null;
 var http = null;
@@ -16,20 +17,20 @@ var starttls = null;
 var kiwi = null;
 
 this.init = function (objs) {
-	tls = objs.tls;
-	net = objs.net;
-	http = objs.http;
-	https = objs.https;
-	fs = objs.fs;
-	url = objs.url;
-	dns = objs.dns;
-	crypto = objs.crypto;
-	ws = objs.ws;
-	jsp = objs.jsp;
-	pro = objs.pro;
-	_ = objs._;
-	starttls = objs.starttls;
-	kiwi = require('./kiwi.js');
+    tls = objs.tls;
+    net = objs.net;
+    http = objs.http;
+    https = objs.https;
+    fs = objs.fs;
+    url = objs.url;
+    dns = objs.dns;
+    crypto = objs.crypto;
+    ws = objs.ws;
+    jsp = objs.jsp;
+    pro = objs.pro;
+    _ = objs._;
+    starttls = objs.starttls;
+    kiwi = require('./kiwi.js');
 };
 
 
@@ -41,7 +42,7 @@ this.init = function (objs) {
  * Some process changes
  */
 this.setTitle = function () {
-	process.title = 'kiwiirc';
+    process.title = 'kiwiirc';
 };
 
 this.changeUser = function () {
@@ -89,6 +90,8 @@ var ircNumerics = {
     RPL_TOPIC:              '332',
     RPL_NAMEREPLY:          '353',
     RPL_ENDOFNAMES:         '366',
+    RPL_BANLIST:            '367',
+    RPL_ENDOFBANLIST:       '368',
     RPL_MOTD:               '372',
     RPL_WHOISMODES:         '379',
     ERR_NOSUCHNICK:         '401',
@@ -111,7 +114,8 @@ var ircNumerics = {
 
 this.parseIRCMessage = function (websocket, ircSocket, data) {
     /*global ircSocketDataHandler */
-    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel, params, prefix, prefixes, nicklist, caps, rtn, obj, tmp, namespace;
+    var msg, regex, opts, options, opt, i, j, matches, nick, users, chan, channel,
+        params, nicklist, caps, rtn, obj, tmp, namespace, whois_end = false;
     //regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?([a-z0-9]+)(?:(?: ([^:]+))?(?: :(.+))?)$/i;
     //regex = /^(?::(\S+) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
     regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
@@ -127,7 +131,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             params:     msg[6] || '',
             trailing:   (msg[7]) ? msg[7].trim() : ''
         };
-        
+
         switch (msg.command.toUpperCase()) {
         case 'PING':
             websocket.sendServerLine('PONG ' + msg.trailing);
@@ -151,7 +155,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 opt = opts[i].split("=", 2);
                 opt[0] = opt[0].toUpperCase();
                 ircSocket.IRC.options[opt[0]] = (typeof opt[1] !== 'undefined') ? opt[1] : true;
-                if (_.include(['NETWORK', 'PREFIX', 'CHANTYPES'], opt[0])) {
+                if (_.include(['NETWORK', 'PREFIX', 'CHANTYPES', 'NAMESX'], opt[0])) {
                     if (opt[0] === 'PREFIX') {
                         regex = /\(([^)]*)\)(.*)/;
                         matches = regex.exec(opt[1]);
@@ -164,18 +168,23 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
 
                         }
                     }
+                    if (opt[0] === 'NAMESX') {
+                        websocket.sendServerLine('PROTOCTL NAMESX');
+                    }
                 }
             }
 
             websocket.sendClientEvent('options', {server: '', "options": ircSocket.IRC.options});
             break;
+
+        case ircNumerics.RPL_ENDOFWHOIS:
+            whois_end = true;
         case ircNumerics.RPL_WHOISUSER:
         case ircNumerics.RPL_WHOISSERVER:
         case ircNumerics.RPL_WHOISOPERATOR:
-        case ircNumerics.RPL_ENDOFWHOIS:
         case ircNumerics.RPL_WHOISCHANNELS:
         case ircNumerics.RPL_WHOISMODES:
-            websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing});
+            websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: whois_end});
             break;
 
         case ircNumerics.RPL_LISTSTART:
@@ -196,7 +205,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 websocket.sendClientEvent('list_end', {server: ''});
             }());
             break;
-        
+
         case ircNumerics.RPL_LIST:
             (function () {
                 var parts, channel, num_users, modes, topic;
@@ -204,18 +213,17 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                 parts = msg.params.split(' ');
                 channel = parts[1];
                 num_users = parts[2];
-                modes = msg.trailing.split(' ', 1);
-                topic = msg.trailing.substring(msg.trailing.indexOf(' ') + 1);
+                topic = msg.trailing;
 
                 //websocket.sendClientEvent('list_channel', {
                 websocket.kiwi.buffer.list.push({
                     server: '',
                     channel: channel,
                     topic: topic,
-                    modes: modes,
+                    //modes: modes,
                     num_users: parseInt(num_users, 10)
                 });
-                
+
                 if (websocket.kiwi.buffer.list.length > 200) {
                     websocket.kiwi.buffer.list = _.sortBy(websocket.kiwi.buffer.list, function (channel) {
                         return channel.num_users;
@@ -223,7 +231,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                     websocket.sendClientEvent('list_channel', {chans: websocket.kiwi.buffer.list});
                     websocket.kiwi.buffer.list = [];
                 }
-                
+
             }());
             break;
 
@@ -243,20 +251,21 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             nick = params[0];
             chan = params[2];
             users = msg.trailing.split(" ");
-            prefixes = _.values(ircSocket.IRC.options.PREFIX);
-            nicklist = {};
+            nicklist = [];
             i = 0;
             _.each(users, function (user) {
-                if (_.include(prefix, user.charAt(0))) {
-                    prefix = user.charAt(0);
-                    user = user.substring(1);
-                    nicklist[user] = prefix;
-                } else {
-                    nicklist[user] = '';
+                var j, k, modes = [];
+                for (j = 0; j < user.length; j++) {
+                    for (k = 0; k < ircSocket.IRC.options.PREFIX.length; k++) {
+                        if (user.charAt(j) === ircSocket.IRC.options.PREFIX[k].symbol) {
+                            modes.push(ircSocket.IRC.options.PREFIX[k].mode);
+                        }
+                    }
                 }
+                nicklist.push({nick: user, modes: modes});
                 if (i++ >= 50) {
                     websocket.sendClientEvent('userlist', {server: '', 'users': nicklist, channel: chan});
-                    nicklist = {};
+                    nicklist = [];
                     i = 0;
                 }
             });
@@ -270,11 +279,19 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.sendClientEvent('userlist_end', {server: '', channel: msg.params.split(" ")[1]});
             break;
         case ircNumerics.ERR_LINKCHANNEL:
-            params = msg.params.split(" "); 
+            params = msg.params.split(" ");
             websocket.sendClientEvent('channel_redirect', {from: params[1], to: params[2]});
             break;
         case ircNumerics.ERR_NOSUCHNICK:
             websocket.sendClientEvent('irc_error', {error: 'no_such_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
+            break;
+        case ircNumerics.RPL_BANLIST:
+            params = msg.params.split(" ");
+            console.log(params);
+            websocket.sendClientEvent('banlist', {server: '', channel: params[1], banned: params[2], banned_by: params[3], banned_at: params[4]});
+            break;
+        case ircNumerics.RPL_ENDOFBANLIST:
+            websocket.sendClientEvent('banlist_end', {server: '', channel: msg.params.split(" ")[1]});
             break;
         case 'JOIN':
             // Some BNC's send malformed JOIN causing the channel to be as a
@@ -352,7 +369,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                     tmp = msg.trailing.substr(6, msg.trailing.length - 2);
                     namespace = tmp.split(' ', 1)[0];
                     websocket.sendClientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length + 1)});
-                    
+
                 } else if (msg.trailing.substr(1, 7) === 'VERSION') {
                     ircSocket.write('NOTICE ' + msg.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1) + '\r\n');
                 } else {
@@ -492,7 +509,7 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
     if (data.substr(-1) !== '\n') {
         ircSocket.holdLast = true;
     }
-    data = data.split("\n");         
+    data = data.split("\n");
     for (i = 0; i < data.length; i++) {
         if (data[i]) {
             if ((ircSocket.holdLast) && (i === data.length - 1)) {
@@ -512,147 +529,194 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {}, public_http_path;
-    if (kiwi.config.handle_http) {
-        uri = url.parse(request.url, true);
-        uri_parts = uri.pathname.split('/');
-        
-        subs = uri.pathname.substr(0, 4);
-        if (uri.pathname === '/js/all.js') {
-            if (kiwi.cache.alljs === '') {
-                public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
+        min = {}, public_http_path, port, ssl,
+        secure = (typeof request.client.encrypted === 'object');
 
-				min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
-                min.util = fs.readFileSync(public_http_path + 'js/util.js');
-                min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
-                min.front = fs.readFileSync(public_http_path + 'js/front.js');
-                min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
-                min.ast = jsp.parse(min.underscore + min.util + min.gateway + min.front + min.iscroll);
-                min.ast = pro.ast_mangle(min.ast);
-                min.ast = pro.ast_squeeze(min.ast);
-                min.final_code = pro.gen_code(min.ast);
-                kiwi.cache.alljs = min.final_code;
-                hash = crypto.createHash('md5').update(kiwi.cache.alljs);
-                kiwi.cache.alljs_hash = hash.digest('base64');
-            }
-            if (request.headers['if-none-match'] === kiwi.cache.alljs_hash) {
-                response.statusCode = 304;
-            } else {
-                response.setHeader('ETag', kiwi.cache.alljs_hash);
-                response.write(kiwi.cache.alljs);
-            }
-            response.end();
-        } else if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
-            request.addListener('end', function () {
-                kiwi.fileServer.serve(request, response);
-            });
-        } else if (uri.pathname === '/' || uri_parts[1] === 'client') {
-            useragent = (typeof request.headers === 'string') ? request.headers['user-agent'] : '';
-            if (useragent.match(/android/i) !== -1) {
-                agent = 'android';
-                touchscreen = true;
-            } else if (useragent.match(/iphone/) !== -1) {
-                agent = 'iphone';
-                touchscreen = true;
-            } else if (useragent.match(/ipad/) !== -1) {
-                agent = 'ipad';
-                touchscreen = true;
-            } else if (useragent.match(/ipod/) !== -1) {
-                agent = 'ipod';
-                touchscreen = true;
-            } else {
-                agent = 'normal';
-                touchscreen = false;
-            }
-            agent = 'normal';
-            touchscreen = false;
+    //try {
+        if (kiwi.config.handle_http) {
+            uri = url.parse(request.url, true);
+            uri_parts = uri.pathname.split('/');
 
-            debug = (typeof uri.query.debug !== 'undefined');
-            
-            if (uri_parts[1] !== 'client') {
-                if (uri.query) {
-                    server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
-                    server = uri.query.server || 'irc.anonnet.org';
-                    nick = uri.query.nick || '';
-                } else {
-                    server_set = false;
-                    server = 'irc.anonnet.org';
-                    nick = '';
+            subs = uri.pathname.substr(0, 4);
+            if (uri.pathname === '/js/all.js') {
+                if (kiwi.cache.alljs === '') {
+                    public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
+
+                    min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
+                    min.util = fs.readFileSync(public_http_path + 'js/util.js');
+                    min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
+                    min.front = fs.readFileSync(public_http_path + 'js/front.js');
+                    min.front_events = fs.readFileSync(public_http_path + 'js/front.events.js');
+                    min.front_ui = fs.readFileSync(public_http_path + 'js/front.ui.js');
+                    min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
+                    min.ast = jsp.parse(min.underscore + min.util + min.gateway + min.front + min.front_events + min.front_ui + min.iscroll);
+                    min.ast = pro.ast_mangle(min.ast);
+                    min.ast = pro.ast_squeeze(min.ast);
+                    min.final_code = pro.gen_code(min.ast);
+                    kiwi.cache.alljs = min.final_code;
+                    hash = crypto.createHash('md5').update(kiwi.cache.alljs);
+                    kiwi.cache.alljs_hash = hash.digest('base64');
                 }
-            } else {
-                server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
-                server = server_set ? uri_parts[2] : 'irc.anonnet.org';
-                nick = uri.query.nick || '';
-            }
-
-            response.setHeader('X-Generated-By', 'KiwiIRC');
-            hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f').update(debug ? 't' : 'f').update(server_set ? 't' : 'f').update(server).update(nick).update(agent).update(JSON.stringify(kiwi.config)).digest('base64');
-            if (kiwi.cache.html[hash]) {
-                if (request.headers['if-none-match'] === kiwi.cache.html[hash].hash) {
+                if (request.headers['if-none-match'] === kiwi.cache.alljs_hash) {
                     response.statusCode = 304;
                 } else {
-                    response.setHeader('Etag', kiwi.cache.html[hash].hash);
-                    response.write(kiwi.cache.html[hash].html);
+                    response.setHeader('Content-type', 'application/javascript');
+                    response.setHeader('ETag', kiwi.cache.alljs_hash);
+                    response.write(kiwi.cache.alljs);
                 }
                 response.end();
-            } else {
-                fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
-                    var html, hash2;
-                    if (!err) {
-                        html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "server_set": server_set, "server": server, "nick": nick, "agent": agent, "config": kiwi.config });
-                        hash2 = crypto.createHash('md5').update(html).digest('base64');
-                        kiwi.cache.html[hash] = {"html": html, "hash": hash2};
-                        if (request.headers['if-none-match'] === hash2) {
-                            response.statusCode = 304;
-                        } else {
-                            response.setHeader('Etag', hash2);
-                            response.write(html);
-                        }
+            } else if ((subs === '/js/') || (subs === '/css') || (subs === '/img')) {
+                request.addListener('end', function () {
+                    kiwi.fileServer.serve(request, response);
+                });
+            } else if (uri.pathname === '/' || uri_parts[1] === 'client') {
+                useragent = (typeof request.headers === 'string') ? request.headers['user-agent'] : '';
+                if (useragent.match(/android/i) !== -1) {
+                    agent = 'android';
+                    touchscreen = true;
+                } else if (useragent.match(/iphone/) !== -1) {
+                    agent = 'iphone';
+                    touchscreen = true;
+                } else if (useragent.match(/ipad/) !== -1) {
+                    agent = 'ipad';
+                    touchscreen = true;
+                } else if (useragent.match(/ipod/) !== -1) {
+                    agent = 'ipod';
+                    touchscreen = true;
+                } else {
+                    agent = 'normal';
+                    touchscreen = false;
+                }
+                agent = 'normal';
+                touchscreen = false;
+
+                debug = (typeof uri.query.debug !== 'undefined');
+
+                port = 6667;
+                ssl = false;
+                if (uri_parts[1] !== 'client') {
+                    if (uri.query) {
+                        server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
+                        server = uri.query.server || 'irc.anonnet.org';
+                        nick = uri.query.nick || '';
                     } else {
-                        response.statusCode = 500;
+                        server_set = false;
+                        server = 'irc.anonnet.org';
+                        nick = '';
+                    }
+                } else {
+                    server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
+                    server = server_set ? uri_parts[2] : 'irc.anonnet.org';
+                    if (server.search(/:/) > 0) {
+                        port = server.substring(server.search(/:/) + 1);
+                        server = server.substring(0, server.search(/:/));
+                        if (port[0] == '+') {
+                            port = port.substring(1);
+                            ssl = true;
+                        }
+                    }
+                    nick = uri.query.nick || '';
+                }
+
+                response.setHeader('X-Generated-By', 'KiwiIRC');
+                hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
+                    .update(debug ? 't' : 'f')
+                    .update(server_set ? 't' : 'f')
+                    .update(secure ? 't' : 'f')
+                    .update(server)
+                    .update(port.toString())
+                    .update(ssl  ? 't' : 'f')
+                    .update(nick)
+                    .update(agent)
+                    .update(JSON.stringify(kiwi.config))
+                    .digest('base64');
+                if (kiwi.cache.html[hash]) {
+                    if (request.headers['if-none-match'] === kiwi.cache.html[hash].hash) {
+                        response.statusCode = 304;
+                    } else {
+                        response.setHeader('Etag', kiwi.cache.html[hash].hash);
+                        response.setHeader('Content-type', 'text/html');
+                        response.write(kiwi.cache.html[hash].html);
                     }
                     response.end();
-                });
+                } else {
+                    fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
+                        var html, hash2;
+                        if (!err) {
+                            try {
+                                html = kiwi.jade.compile(str)({ "touchscreen": touchscreen, "debug": debug, "secure": secure, "server_set": server_set, "server": server, "port": port, "ssl": ssl, "nick": nick, "agent": agent, "config": kiwi.config });
+                                hash2 = crypto.createHash('md5').update(html).digest('base64');
+                                kiwi.cache.html[hash] = {"html": html, "hash": hash2};
+                                if (request.headers['if-none-match'] === hash2) {
+                                    response.statusCode = 304;
+                                } else {
+                                    response.setHeader('Etag', hash2);
+                                    response.setHeader('Content-type', 'text/html');
+                                    response.write(html);
+                                }
+                            } catch (e) {
+                                response.statusCode = 500;
+                            }
+                        } else {
+                            response.statusCode = 500;
+                        }
+                        response.end();
+                    });
+                }
+            } else if (uri.pathname.substr(0, 10) === '/socket.io') {
+                return;
+            } else {
+                response.statusCode = 404;
+                response.end();
             }
-        } else if (uri.pathname.substr(0, 10) === '/socket.io') {
-            return;
-        } else {
-            response.statusCode = 404;
-            response.end();
         }
-    }
+
+    //} catch (e) {
+    //    console.log('ERROR app.httpHandler()');
+    //    console.log(e);
+    //}
 };
 
 
 
 
-this.websocketListen = function (port, host, handler, secure, key, cert) {
-    if (kiwi.httpServer) {
-        kiwi.httpServer.close();
-    }
-    if (secure) {
-        kiwi.httpServer = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
-        kiwi.io = ws.listen(kiwi.httpServer, {secure: true});
-        kiwi.httpServer.listen(port, host);
-    } else {
-        kiwi.httpServer = http.createServer(handler);
-        kiwi.io = ws.listen(kiwi.httpServer, {secure: false});
-        kiwi.httpServer.listen(port, host);
+this.websocketListen = function (ports, host, handler, key, cert) {
+    if (kiwi.httpServers.length > 0) {
+        _.each(kiwi.httpServers, function (hs) {
+            hs.close();
+        });
+        kiwi.httpsServers = [];
     }
 
-    kiwi.io.set('log level', 1);
-    kiwi.io.enable('browser client minification');
-    kiwi.io.enable('browser client etag');
-    kiwi.io.set('transports', kiwi.config.transports);
-
-    kiwi.io.of('/kiwi').authorization(function (handshakeData, callback) {
-        var address = handshakeData.address.address;
-        
-        if (typeof kiwi.connections[address] === 'undefined') {
-            kiwi.connections[address] = {count: 0, sockets: []};
+    _.each(ports, function (port) {
+        var hs;
+        if (port.secure === true) {
+            hs = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
+            kiwi.io.push(ws.listen(hs, {secure: true}));
+            hs.listen(port.number, host);
+            console.log("Listening on %s:%d with SSL", host, port.number);
+        } else {
+            hs = http.createServer(handler);
+            kiwi.io.push(ws.listen(hs, {secure: false}));
+            hs.listen(port.number, host);
+            console.log("Listening on %s:%d without SSL", host, port.number);
         }
-        callback(null, true);
-    }).on('connection', kiwi.websocketConnection);
+    });
+
+    _.each(kiwi.io, function (io) {
+        io.set('log level', 1);
+        io.enable('browser client minification');
+        io.enable('browser client etag');
+        io.set('transports', kiwi.config.transports);
+
+        io.of('/kiwi').authorization(function (handshakeData, callback) {
+            var address = handshakeData.address.address;
+            if (typeof kiwi.connections[address] === 'undefined') {
+                kiwi.connections[address] = {count: 0, sockets: []};
+            }
+            callback(null, true);
+        }).on('connection', kiwi.websocketConnection);
+    });
 };
 
 
@@ -662,6 +726,7 @@ this.websocketListen = function (port, host, handler, secure, key, cert) {
 
 this.websocketConnection = function (websocket) {
     var con;
+    console.log("New connection!");
     websocket.kiwi = {address: websocket.handshake.address.address, buffer: {list: []}};
     con = kiwi.connections[websocket.kiwi.address];
 
@@ -700,7 +765,7 @@ this.websocketConnection = function (websocket) {
 
 
 
-this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback) {
+this.websocketIRCConnect = function (websocket, nick, host, port, ssl, password, callback) {
     var ircSocket;
     //setup IRC connection
     if (!ssl) {
@@ -720,11 +785,11 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback)
     websocket.ircSocket = ircSocket;
     ircSocket.holdLast = false;
     ircSocket.held = '';
-    
+
     ircSocket.on('data', function (data) {
         kiwi.ircSocketDataHandler(data, websocket, ircSocket);
     });
-    
+
     ircSocket.IRC.nick = nick;
     // Send the login data
     dns.reverse(websocket.kiwi.address, function (err, domains) {
@@ -732,6 +797,9 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback)
         websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
         if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
             websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
+        }
+        if (password) {
+            websocket.sendServerLine('PASS ' + password);
         }
         websocket.sendServerLine('CAP LS');
         websocket.sendServerLine('NICK ' + nick);
@@ -810,7 +878,7 @@ this.websocketMessage = function (websocket, msg, callback) {
 
 
 this.websocketDisconnect = function (websocket) {
-	var con;
+    var con;
 
     if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
         try {
@@ -840,7 +908,7 @@ this.rehash = function () {
     if (reload_config === false) {
         return false;
     }
-    
+
     // We just want the settings that have been changed
     changes = reload_config[1];
 
@@ -848,15 +916,13 @@ this.rehash = function () {
         console.log('%s config changes: \n', Object.keys(changes).length, changes);
         for (i in changes) {
             switch (i) {
-            case 'port':
+            case 'ports':
             case 'bind_address':
-            case 'listen_ssl':
             case 'ssl_key':
             case 'ssl_cert':
-                kiwi.websocketListen(kiwi.config.port, kiwi.config.bind_address, kiwi.httpHandler, kiwi.config.listen_ssl, kiwi.config.ssl_key, kiwi.config.ssl_cert);
-                delete changes.port;
+                kiwi.websocketListen(kiwi.config.ports, kiwi.config.bind_address, kiwi.httpHandler, kiwi.config.ssl_key, kiwi.config.ssl_cert);
+                delete changes.ports;
                 delete changes.bind_address;
-                delete changes.listen_ssl;
                 delete changes.ssl_key;
                 delete changes.ssl_cert;
                 break;
@@ -902,7 +968,7 @@ this.manageControll = function (data) {
         console.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
         break;
 
-	case 'recode':
+    case 'recode':
         console.log('Recoding...');
         console.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
         break;
