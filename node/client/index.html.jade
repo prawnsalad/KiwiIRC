@@ -17,7 +17,7 @@ html(lang="en-gb")
         script(type="text/javascript")
             !window.jQuery && document.write(unescape('%3Cscript type="text/javascript" src="js/jquery-1.6.4.min.js"%3E%3C/script%3E'))
         script(type="text/javascript", src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js")
-	script(type="text/javascript")
+        script(type="text/javascript")
             !window.jQuery.ui && document.write(unescape('%3Cscript type="text/javascript" src="js/jquery-ui.1.8.16.min.js"%3E%3C/script%3E'))
 
 
@@ -45,14 +45,17 @@ html(lang="en-gb")
                             div.content.bottom
                                 ul
                                     li
-                                        label(for="network") Server:
-                                        input(type="text", id="network", name="network", class="network", value=server)
-                                    li
                                         label(for="channel") Channel:
                                         input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
+                                    li
+                                        label(for="network") Server:
+                                        input(type="text", id="network", name="network", class="network", value=server)
                                     li(class="section")
                                         label(for="port") Port:
                                         input(type="text", id="port", name="port", class="port", value=port)
+                                    li
+                                        label(for="password") Server password:
+                                        input(type="text", id="password", name="password", class="password")
                                     li
                                         label(for="ssl") SSL:
                                         - if (ssl)

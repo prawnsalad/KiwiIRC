@@ -16,7 +16,7 @@ kiwi.gateway = {
         }
     },
 
-    connect: function (host, port, ssl, callback) {
+    connect: function (host, port, ssl, password, callback) {
         if (typeof kiwi.gateway.kiwi_server !== 'undefined') {
             kiwi.gateway.socket = io.connect(kiwi_server, {
                 'try multiple transports': true,
@@ -49,7 +49,7 @@ kiwi.gateway = {
                     kiwi.gateway.socket.emit('message', {sid: this.session_id, data: $.toJSON(data)}, callback);
                 };
 
-                kiwi.gateway.socket.emit('irc connect', kiwi.gateway.nick, host, port, ssl, callback);
+                kiwi.gateway.socket.emit('irc connect', kiwi.gateway.nick, host, port, ssl, password, callback);
                 console.log("kiwi.gateway.socket.on('connect')");
             });
             kiwi.gateway.socket.on('too_many_connections', function () {
