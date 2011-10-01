@@ -77,6 +77,7 @@ kiwi.front = {
             var netsel = $('#kiwi .formconnectwindow .network'),
                 netport = $('#kiwi .formconnectwindow .port'),
                 netssl = $('#kiwi .formconnectwindow .ssl'),
+                netpass = $('#kiwi .formconnectwindow .password'),
                 nick = $('#kiwi .formconnectwindow .nick'),
                 tmp;
 
@@ -93,7 +94,7 @@ kiwi.front = {
 
             kiwi.front.ui.doLayout();
             try {
-                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : ''));
+                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.attr('checked') ? 'true' : 'false') + ' ' + netpass.val());
             } catch (e) {
                 console.log(e);
             }
@@ -238,7 +239,7 @@ kiwi.front = {
             case '/connect':
             case '/server':
                 if (typeof parts[1] === 'undefined') {
-                    alert('Usage: /connect servername [port] [ssl]');
+                    alert('Usage: /connect servername [port] [ssl] [password]');
                     break;
                 }
 
@@ -253,7 +254,7 @@ kiwi.front = {
                 }
 
                 Tabview.getCurrentTab().addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + (parts[3] ? ' using SSL' : '') + '...', 'status');
-                kiwi.gateway.connect(parts[1], parts[2], parts[3]);
+                kiwi.gateway.connect(parts[1], parts[2], parts[3], parts[4]);
                 break;
 
             case '/nick':

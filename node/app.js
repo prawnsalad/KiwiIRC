@@ -766,7 +766,7 @@ this.websocketConnection = function (websocket) {
 
 
 
-this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback) {
+this.websocketIRCConnect = function (websocket, nick, host, port, ssl, password, callback) {
     var ircSocket;
     //setup IRC connection
     if (!ssl) {
@@ -798,6 +798,9 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, callback)
         websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
         if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
             websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
+        }
+        if (password) {
+            websocket.sendServerLine('PASS ' + password);
         }
         websocket.sendServerLine('CAP LS');
         websocket.sendServerLine('NICK ' + nick);

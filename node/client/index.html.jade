@@ -45,14 +45,17 @@ html(lang="en-gb")
                             div.content.bottom
                                 ul
                                     li
-                                        label(for="network") Server:
-                                        input(type="text", id="network", name="network", class="network", value=server)
-                                    li
                                         label(for="channel") Channel:
                                         input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
+                                    li
+                                        label(for="network") Server:
+                                        input(type="text", id="network", name="network", class="network", value=server)
                                     li(class="section")
                                         label(for="port") Port:
                                         input(type="text", id="port", name="port", class="port", value=port)
+                                    li
+                                        label(for="password") Server password:
+                                        input(type="text", id="password", name="password", class="password")
                                     li
                                         label(for="ssl") SSL:
                                         - if (ssl)
