@@ -22,7 +22,7 @@
     "cap_options":      [],
 
     "handle_http":      true,
-    "public_http":      "./../",
+    "public_http":      "./../client/",
 
     "max_client_conns": 2,
 
