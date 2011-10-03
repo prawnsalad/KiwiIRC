@@ -529,7 +529,7 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {}, public_http_path, port, ssl,
+        min = {}, public_http_path, port, ssl, ircuri, pass, target, modifiers, query,
         secure = (typeof request.client.encrypted === 'object');
 
     //try {
@@ -538,7 +538,23 @@ this.httpHandler = function (request, response) {
             uri_parts = uri.pathname.split('/');
 
             subs = uri.pathname.substr(0, 4);
-            if (uri.pathname === '/js/all.js') {
+            if (typeof uri.query.ircuri !== 'undefined') {
+                ircuri = url.parse(uri.query.ircuri, true);
+                if (ircuri.protocol === 'irc:') {
+                    uri_parts = /^\/([^,\?]*)((,[^,\?]*)*)?$/.exec(ircuri.pathname);
+                    target = uri_parts[1];
+                    modifiers = (typeof uri_parts[2] !== 'undefined') ? uri_parts[2].split(',') : [];
+                    query = ircuri.query;
+
+                    nick = _.detect(modifiers, function (mod) {
+                        return mod === ',isnick';
+                    });
+                    console.log(request.headers);
+                    response.statusCode = 303;
+                    response.setHeader('Location', 'http' + ((secure) ? 's' : '') + '://' + request.headers.host + '/client/' + ircuri.host + '/' + ((!nick) ? target : ''));
+                    response.end();
+                }
+            } else if (uri.pathname === '/js/all.js') {
                 if (kiwi.cache.alljs === '') {
                     public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
 
