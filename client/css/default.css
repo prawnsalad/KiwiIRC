@@ -82,10 +82,10 @@ background-image: -moz-linear-gradient(
 }
 #kiwi .windowlist .active, #kiwi .utilityviewlist .active { padding-right:23px; }
 #kiwi .windowlist .highlight, #kiwi .utilityviewlist .highlight {
-	background-color: #990000;
+	background: #990000;
 	font-weight: bold;
 }
-#kiwi .windowlist .activity, #kiwi .utilityviewlist .activity { font-weight: bold; background-color: #009900; }
+#kiwi .windowlist .activity, #kiwi .utilityviewlist .activity { font-weight: bold; background: #009900; }
 
 #kiwi .windowlist ul li img, #kiwi .utilityviewlist ul li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
 #kiwi .windowlist ul li img.icon, #kiwi .utilityviewlist ul li img.icon { left:5px; top:2px; height:auto; width:auto;}

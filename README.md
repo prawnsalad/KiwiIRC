@@ -12,14 +12,14 @@
 
     $npm install socket.io-client
     
+* If you're using SSL, create your certificate and key, place it in the server folder.
+
 * Edit the configuration file
 
-    $nano node/config.json
+    $nano server/config.json
     
-* If you're using SSL, create your certificate and key, place it in the node foder.
-
 # Running 
-    $node node/kiwi.js
+    $node server/kiwi.js
 
 # Bugs
 Report bugs using the issue tracker on github: https://github.com/prawnsalad/KiwiIRC/issues

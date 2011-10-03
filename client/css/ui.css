@@ -41,7 +41,7 @@
 
 }
 #kiwi #login input[type=checkbox] { width:auto !important; }
-#kiwi #login .more { border-top: 1px dotted #888888; }
+#kiwi #login .more { border-top: 1px dotted #888888; font-size: 0.9em;}
 #kiwi #login .more_link {
 	font-size:12px;
 	position:relative;

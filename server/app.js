@@ -529,15 +529,25 @@ this.ircSocketDataHandler = function (data, websocket, ircSocket) {
 
 this.httpHandler = function (request, response) {
     var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
-        min = {}, public_http_path, port, ssl, ircuri, pass, target, modifiers, query,
+        min = {}, public_http_path, port, ssl, host, obj, args, ircuri, pass, target, modifiers, query,
         secure = (typeof request.client.encrypted === 'object');
 
     //try {
         if (kiwi.config.handle_http) {
+            // Run through any plugins..
+            args = {request: request, response: response};
+            obj = kiwi.kiwi_mod.run('http', args);
+            if (obj === null) {
+                return;
+            }
+            response = args.response;
+
             uri = url.parse(request.url, true);
             uri_parts = uri.pathname.split('/');
 
             subs = uri.pathname.substr(0, 4);
+            public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
+            
             if (typeof uri.query.ircuri !== 'undefined') {
                 ircuri = url.parse(uri.query.ircuri, true);
                 if (ircuri.protocol === 'irc:') {
@@ -556,7 +566,6 @@ this.httpHandler = function (request, response) {
                 }
             } else if (uri.pathname === '/js/all.js') {
                 if (kiwi.cache.alljs === '') {
-                    public_http_path = kiwi.kiwi_root + '/' + kiwi.config.public_http;
 
                     min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
                     min.util = fs.readFileSync(public_http_path + 'js/util.js');
@@ -608,8 +617,8 @@ this.httpHandler = function (request, response) {
 
                 debug = (typeof uri.query.debug !== 'undefined');
 
-                port = 6667;
-                ssl = false;
+                ssl = (typeof request.socket.pair !== 'undefined');
+                port = ssl ? 6697 : 6667;
                 if (uri_parts[1] !== 'client') {
                     if (uri.query) {
                         server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
@@ -629,6 +638,8 @@ this.httpHandler = function (request, response) {
                         if (port[0] == '+') {
                             port = port.substring(1);
                             ssl = true;
+                        } else {
+                            ssl = false;
                         }
                     }
                     nick = uri.query.nick || '';
@@ -656,7 +667,7 @@ this.httpHandler = function (request, response) {
                     }
                     response.end();
                 } else {
-                    fs.readFile(__dirname + '/client/index.html.jade', 'utf8', function (err, str) {
+                    fs.readFile(public_http_path + 'index.html.jade', 'utf8', function (err, str) {
                         var html, hash2;
                         if (!err) {
                             try {
@@ -672,8 +683,10 @@ this.httpHandler = function (request, response) {
                                 }
                             } catch (e) {
                                 response.statusCode = 500;
+                                console.log(e);
                             }
                         } else {
+                            console.log(err);
                             response.statusCode = 500;
                         }
                         response.end();
@@ -717,6 +730,8 @@ this.websocketListen = function (ports, host, handler, key, cert) {
             hs.listen(port.number, host);
             console.log("Listening on %s:%d without SSL", host, port.number);
         }
+
+        kiwi.httpServers.push(hs);
     });
 
     _.each(kiwi.io, function (io) {

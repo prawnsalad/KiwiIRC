@@ -127,20 +127,23 @@ var plugins = [
     {
         name: "highlight",
         onaddmsg: function (event, opts) {
+            var tab = Tabviews.getTab(event.tabview.toLowerCase());
+
+            // If we have a highlight...
             if (event.msg.toLowerCase().indexOf(kiwi.gateway.nick.toLowerCase()) > -1) {
-                if (kiwi.front.cur_channel.name.toLowerCase() !== kiwi.front.tabviews[event.tabview.toLowerCase()].name) {
-                    kiwi.front.tabviews[event.tabview].highlight();
+                if (Tabview.getCurrentTab() !== tab) {
+                    tab.highlight();
                 }
-                if (kiwi.front.isChannel(kiwi.front.tabviews[event.tabview].name)) {
+                if (kiwi.front.isChannel(tab.name)) {
                     event.msg = '<span style="color:red;">' + event.msg + '</span>';
                 }
             }
 
-            if (
-                !kiwi.front.isChannel(kiwi.front.tabviews[event.tabview].name) && kiwi.front.tabviews[event.tabview].name !== "server"
-                    && kiwi.front.cur_channel.name.toLowerCase() !== kiwi.front.tabviews[event.tabview.toLowerCase()].name
+            // If it's a PM, highlight
+            if (!kiwi.front.isChannel(tab.name) && tab.name !== "server"
+                && Tabview.getCurrentTab().name.toLowerCase() !== tab.name
             ) {
-                kiwi.front.tabviews[event.tabview].highlight();
+                tab.highlight();
             }
 
             return event;
