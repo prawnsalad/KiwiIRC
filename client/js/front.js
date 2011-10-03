@@ -533,6 +533,20 @@ kiwi.front = {
         }(msg));
         
         return msg;
+    },
+    
+    registerProtocolHandler: function () {
+        var state, uri;
+        url = kiwi_server.replace(/\/kiwi$/, '/?ircuri=%s');
+        try {
+            //state = window.navigator.isProtocolHandlerRegistered('irc', url);
+            //if (state !== 'registered') {
+                window.navigator.registerProtocolHandler('irc', url, 'Kiwi IRC');
+            //}
+        } catch (e) {
+            console.log('Unable to register Kiwi IRC as a handler for irc:// links');
+            console.error(e);
+        }
     }
 
 };
