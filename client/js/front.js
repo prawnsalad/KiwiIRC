@@ -1073,12 +1073,14 @@ var Tabview = function (v_name) {
     var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, tmp_tab, userlist_enabled = true;
 
     if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
-    //if (v_name[0] === kiwi.gateway.channel_prefix) {
-        re = new RegExp(kiwi.gateway.channel_prefix, "g");
-        htmlsafe_name = v_name.replace(re, 'pre');
-        htmlsafe_name = "chan_" + htmlsafe_name;
+        htmlsafe_name = v_name.replace(kiwi.gateway.channel_prefix, 'pre');
+        htmlsafe_name = htmlsafe_name.replace(/[^_a-z0-9\u0240-\u0337-]/, 'esc');
+        htmlsafe_name += randomString(3);
+        htmlsafe_name = 'chan_' + htmlsafe_name;
     } else {
-        htmlsafe_name = 'query_' + v_name;
+        htmlsafe_name = v_name.replace(/[^_a-z0-9\u0240-\u0337-]/, 'esc');
+        htmlsafe_name += randomString(3);
+        htmlsafe_name = 'query_' + htmlsafe_name;
         userlist_enabled = false;
     }
 
