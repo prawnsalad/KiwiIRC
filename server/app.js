@@ -645,6 +645,14 @@ this.httpHandler = function (request, response) {
                     nick = uri.query.nick || '';
                 }
 
+                // Set the default nick if one isn't provided
+                if (nick == '') {
+                    nick = 'kiwi_?';
+                }
+
+                // Set any random numbers if needed
+                nick = nick.replace('?', Math.floor(Math.random()*100000).toString());
+
                 response.setHeader('X-Generated-By', 'KiwiIRC');
                 hash = crypto.createHash('md5').update(touchscreen ? 't' : 'f')
                     .update(debug ? 't' : 'f')
