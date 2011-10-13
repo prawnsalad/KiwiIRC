@@ -75,7 +75,8 @@ kiwi.front = {
                 netssl = $('#kiwi .formconnectwindow .ssl'),
                 netpass = $('#kiwi .formconnectwindow .password'),
                 nick = $('#kiwi .formconnectwindow .nick'),
-                tmp;
+                tmp,
+                forwardKeys;
 
             if (nick.val() === '') {
                 nick.val('Nick please!');
@@ -96,7 +97,16 @@ kiwi.front = {
             }
 
             $('#kiwi .connectwindow').slideUp('', kiwi.front.ui.barsShow);
-            $('#windows').click(function () { $('#kiwi_msginput').focus(); });
+            
+            // Listen for keyboard activity on any window, and forward it to the input box so users can type even if the input box is not in focus
+            forwardKeys = function (event) {
+                $('#kiwi_msginput').focus();
+                $('#kiwi_msginput').trigger(event);
+            };
+            $('#kiwi_msginput').attr('tabindex', 0);
+            $('#kiwi_msginput').focus();
+            $('#windows').attr('tabindex',100);
+            $('#windows').keydown(forwardKeys).keypress(forwardKeys).keyup(forwardKeys);
 
             return false;
         });
