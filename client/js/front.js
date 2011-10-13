@@ -91,14 +91,17 @@ kiwi.front = {
 
             kiwi.front.ui.doLayout();
             try {
-                kiwi.front.run('/connect ' + netsel.val() + ' ' + netport.val() + ' ' + (netssl.is(':checked') ? 'true' : 'false') + ' ' + netpass.val());
+                tmp = '/connect ' + netsel.val() + ' ' + netport.val() + ' ';
+                tmp += (netssl.is(':checked') ? 'true' : 'false') + ' ' + netpass.val();
+                kiwi.front.run(tmp);
             } catch (e) {
                 console.log(e);
             }
 
             $('#kiwi .connectwindow').slideUp('', kiwi.front.ui.barsShow);
             
-            // Listen for keyboard activity on any window, and forward it to the input box so users can type even if the input box is not in focus
+            // Listen for keyboard activity on any window, and forward it to the
+            // input box so users can type even if the input box is not in focus
             forwardKeys = function (event) {
                 $('#kiwi_msginput').focus();
                 $('#kiwi_msginput').trigger(event);

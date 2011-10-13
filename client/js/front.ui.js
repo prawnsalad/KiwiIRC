@@ -351,13 +351,17 @@ kiwi.front.ui = {
 
 
     barsShow: function () {
-        $('#kiwi .toolbars').slideDown();
         $('#kiwi .control').slideDown();
+        $('#kiwi .toolbars').slideDown(400, function () {
+            kiwi.front.ui.doLayoutSize();
+        });
     },
 
     barsHide: function () {
-        $('#kiwi .toolbars').slideUp();
         $('#kiwi .control').slideUp();
+        $('#kiwi .toolbars').slideUp(400, function () {
+            kiwi.front.ui.doLayoutSize();
+        });
     },
 
 
