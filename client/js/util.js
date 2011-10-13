@@ -175,7 +175,8 @@ var plugins = [
                     url = 'http://' + url;
                 }
 
-                return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '<div class="tt box"></div></a>';
+                //return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '<div class="tt box"></div></a>';
+                return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>';
             });
 
             return event;
@@ -198,6 +199,8 @@ var plugins = [
     },
 
 
+    /**
+     * Disabled due to many websites closing kiwi with iframe busting
     {
         name: "inBrowser",
         oninit: function (event, opts) {
@@ -257,6 +260,7 @@ var plugins = [
 
 		}
 	},
+    */
 
     {
         name: "nick_colour",
