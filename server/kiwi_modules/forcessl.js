@@ -6,12 +6,12 @@
 var kiwi = require('../kiwi.js');
 
 
-exports.onhttp = function (ev) {
+exports.onhttp = function (ev, opts) {
 	var host, port = null, i;
 
 	// TODO: request.socket.pair seems to only be set in a SSL req, is this
 	// the best way to check for this?
-	if (typeof ev.request.socket.pair === 'undefined') {
+	if (!opts.ssl) {
 	    host = ev.request.headers.host;
 
 	    // Remove the port if one is set

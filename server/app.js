@@ -535,7 +535,7 @@ this.httpHandler = function (request, response) {
     //try {
         if (kiwi.config.handle_http) {
             // Run through any plugins..
-            args = {request: request, response: response};
+            args = {request: request, response: response, ssl: secure};
             obj = kiwi.kiwi_mod.run('http', args);
             if (obj === null) {
                 return;
