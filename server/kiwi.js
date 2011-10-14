@@ -137,8 +137,8 @@ this.httpHandler = function (request, response) {
  */
 this.connections = {};
 this.io = [];
-this.websocketListen = function (port, host, handler, secure, key, cert) {
-    return app.websocketListen(port, host, handler, secure, key, cert);
+this.websocketListen = function (servers, handler) {
+    return app.websocketListen(servers, handler);
 }
 this.websocketConnection = function (websocket) {
     return app.websocketConnection(websocket);
@@ -199,7 +199,7 @@ this.kiwi_mod.printMods();
 
 
 // Start the server up
-this.websocketListen(this.config.ports, this.config.bind_address, this.httpHandler, this.config.ssl_key, this.config.ssl_cert);
+this.websocketListen(this.config.servers, this.httpHandler);
 
 // Now we're listening on the network, set our UID/GIDs if required
 app.changeUser();

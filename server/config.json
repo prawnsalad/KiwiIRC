@@ -1,22 +1,23 @@
 {
-    "ports":            [
+    "servers":            [
                             {
                                 "secure":   true,
-                                "number":   7777
+                                "port":   7777,
+                                "address": "0.0.0.0",
+
+                                "ssl_key": "server.key",
+                                "ssl_cert": "cert.pem"
                             },
                             {
                                 "secure":   false,
-                                "number":   7778
+                                "port":   7778,
+                                "address": "0.0.0.0"
                             }
                             
                         ],
-    "bind_address":     "0.0.0.0",
 
     "user":             "",
     "group":            "",
-
-    "ssl_key":          "server.key",
-    "ssl_cert":         "cert.pem",
 
     "quit_message":     "KiwiIRC",
     "cap_options":      [],

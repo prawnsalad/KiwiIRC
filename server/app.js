@@ -717,7 +717,7 @@ this.httpHandler = function (request, response) {
 
 
 
-this.websocketListen = function (ports, host, handler, key, cert) {
+this.websocketListen = function (servers, handler) {
     if (kiwi.httpServers.length > 0) {
         _.each(kiwi.httpServers, function (hs) {
             hs.close();
@@ -725,18 +725,30 @@ this.websocketListen = function (ports, host, handler, key, cert) {
         kiwi.httpsServers = [];
     }
 
-    _.each(ports, function (port) {
-        var hs;
-        if (port.secure === true) {
-            hs = https.createServer({key: fs.readFileSync(__dirname + '/' + key), cert: fs.readFileSync(__dirname + '/' + cert)}, handler);
+    _.each(servers, function (server) {
+        var hs, opts;
+        if (server.secure === true) {
+            // Start some SSL server up
+            opts = {
+                key: fs.readFileSync(__dirname + '/' + server.ssl_key),
+                cert: fs.readFileSync(__dirname + '/' + server.ssl_cert)
+            };
+
+            // Do we have an intermediate certificate?
+            if (typeof server.ssl_ca !== 'undefined') {
+                opts.ca = fs.readFileSync(__dirname + '/' + server.ssl_ca);
+            }
+
+            hs = https.createServer(opts, handler);
             kiwi.io.push(ws.listen(hs, {secure: true}));
-            hs.listen(port.number, host);
-            console.log("Listening on %s:%d with SSL", host, port.number);
+            hs.listen(server.port, server.address);
+            console.log("Listening on %s:%d with SSL", server.address, server.port);
         } else {
+            // Start some plain-text server up
             hs = http.createServer(handler);
             kiwi.io.push(ws.listen(hs, {secure: false}));
-            hs.listen(port.number, host);
-            console.log("Listening on %s:%d without SSL", host, port.number);
+            hs.listen(server.port, server.address);
+            console.log("Listening on %s:%d without SSL", server.address, server.port);
         }
 
         kiwi.httpServers.push(hs);
@@ -959,7 +971,7 @@ this.rehash = function () {
             case 'bind_address':
             case 'ssl_key':
             case 'ssl_cert':
-                kiwi.websocketListen(kiwi.config.ports, kiwi.config.bind_address, kiwi.httpHandler, kiwi.config.ssl_key, kiwi.config.ssl_cert);
+                kiwi.websocketListen(kiwi.config.servers, kiwi.httpHandler);
                 delete changes.ports;
                 delete changes.bind_address;
                 delete changes.ssl_key;
