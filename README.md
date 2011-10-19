@@ -25,8 +25,8 @@
 Report bugs using the issue tracker on github: https://github.com/prawnsalad/KiwiIRC/issues
 
 # Licence
-
-To be decided
+GNU Affero
+http://www.gnu.org/licenses/agpl.html
 
 
 # Thanks to
