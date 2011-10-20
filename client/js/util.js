@@ -2,11 +2,17 @@
 /*globals $, front, gateway, Utilityview */
 
 // Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
+/**
+*   @namespace
+*/
 var kiwi = {};
 
 
 
-
+/**
+*   Suppresses console.log
+*   @param  {Boolean}   debug   Whether to re-enable console.log or not
+*/
 function manageDebug(debug) {
     var log, consoleBackUp;
     if (window.console) {
@@ -27,7 +33,11 @@ function manageDebug(debug) {
     }
 }
 
-
+/**
+*   Generate a random string of given length
+*   @param      {Number}    string_length   The length of the random string
+*   @returns    {String}                    The random string
+*/
 function randomString(string_length) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
         randomstring = '',
@@ -40,12 +50,21 @@ function randomString(string_length) {
     return randomstring;
 }
 
+/**
+*   String.trim shim
+*/
 if (typeof String.prototype.trim === 'undefined') {
     String.prototype.trim = function () {
         return this.replace(/^\s+|\s+$/g, "");
     };
 }
 
+/**
+*   String.lpad shim
+*   @param      {Number}    length      The length of padding
+*   @param      {String}    characher   The character to pad with
+*   @returns    {String}                The padded string
+*/
 if (typeof String.prototype.lpad === 'undefined') {
     String.prototype.lpad = function (length, character) {
         var padding = "",
@@ -58,7 +77,11 @@ if (typeof String.prototype.lpad === 'undefined') {
 }
 
 
-
+/**
+*   Convert seconds into hours:minutes:seconds
+*   @param      {Number}    secs    The number of seconds to converts
+*   @returns    {Object}            An object representing the hours/minutes/second conversion of secs
+*/
 function secondsToTime(secs) {
     var hours, minutes, seconds, divisor_for_minutes, divisor_for_seconds, obj;
     hours = Math.floor(secs / (60 * 60));
@@ -199,7 +222,7 @@ var plugins = [
     },
 
 
-    /**
+    /*
      * Disabled due to many websites closing kiwi with iframe busting
     {
         name: "inBrowser",
@@ -316,9 +339,19 @@ var plugins = [
 
 
 
-
+/**
+*   @namespace
+*/
 kiwi.plugs = {};
+/**
+*   Loaded plugins
+*/
 kiwi.plugs.loaded = {};
+/**
+*   Load a plugin
+*   @param      {Object}    plugin  The plugin to be loaded
+*   @returns    {Boolean}           True on success, false on failure
+*/
 kiwi.plugs.loadPlugin = function (plugin) {
     var plugin_ret;
     if (typeof plugin.name !== 'string') {
@@ -335,6 +368,10 @@ kiwi.plugs.loadPlugin = function (plugin) {
     return true;
 };
 
+/**
+*   Unload a plugin
+*   @param  {String}    plugin_name The name of the plugin to unload
+*/
 kiwi.plugs.unloadPlugin = function (plugin_name) {
     if (typeof kiwi.plugs.loaded[plugin_name] !== 'object') {
         return;
@@ -346,9 +383,13 @@ kiwi.plugs.unloadPlugin = function (plugin_name) {
 
 
 
-/*
- * Run an event against all loaded plugins
- */
+/**
+*   Run an event against all loaded plugins
+*   @param      {String}    event_name  The name of the event
+*   @param      {Object}    event_data  The data to pass to the plugin
+*   @param      {Object}    opts        Options
+*   @returns    {Object}                Event data, possibly modified by the plugins
+*/
 kiwi.plugs.run = function (event_name, event_data, opts) {
     var ret = event_data,
         ret_tmp,
@@ -386,7 +427,10 @@ kiwi.plugs.run = function (event_name, event_data, opts) {
 
 
 
-
+/**
+*   @constructor
+*   @param  {String}    data_namespace  The namespace for the data store
+*/
 kiwi.dataStore = function (data_namespace) {
     var namespace = data_namespace;
 

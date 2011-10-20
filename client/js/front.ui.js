@@ -1,7 +1,13 @@
 /*jslint browser: true, devel: true, sloppy: true, plusplus: true, nomen: true, forin: true, continue: true */
 /*globals kiwi, $, _, Tabview, Userlist, User, Box */
+/**
+*   @namespace
+*/
 kiwi.front.ui = {
 
+    /**
+    *
+    */
     doLayoutSize: function () {
         var kiwi, toolbars, ul, n_top, n_bottom, nl;
         kiwi = $('#kiwi');
@@ -28,14 +34,18 @@ kiwi.front.ui = {
         nl.css({top: n_top + 'px', bottom: n_bottom + 'px', left: $(document).width() - ul.outerWidth(true)});
     },
 
-
+    /**
+    *
+    */
     doLayout: function () {
         $('#kiwi .msginput .nick a').text(kiwi.gateway.nick);
         $('#kiwi_msginput').val(' ');
         $('#kiwi_msginput').focus();
     },
 
-
+    /**
+    *   Binds keyboard and mouse events to handlers
+    */
     registerKeys: function () {
         var tabcomplete = {active: false, data: [], prefix: ''};
         $('#kiwi_msginput').bind('keydown', function (e) {
@@ -242,7 +252,9 @@ kiwi.front.ui = {
 
     },
 
-
+    /**
+    *   Prompts user for a new nick
+    */
     showChangeNick: function (caption) {
         caption = (typeof caption !== 'undefined') ? caption : '';
 
@@ -278,7 +290,9 @@ kiwi.front.ui = {
     },
 
 
-
+    /**
+    *   Displays the current channel's topic in the topic bar
+    */
     setTopicText: function (new_topic) {
         kiwi.front.cache.original_topic = new_topic;
         $('#kiwi .cur_topic .topic').text(new_topic);
@@ -287,19 +301,27 @@ kiwi.front.ui = {
 
 
 
-
+    /**
+    *   
+    */
     tabviewsNext: function () {
         var wl = $('#kiwi .windowlist ul'),
             next_left = parseInt(wl.css('text-indent').replace('px', ''), 10) + 170;
         wl.css('text-indent', next_left);
     },
 
+    /**
+    *
+    */
     tabviewsPrevious: function () {
         var wl = $('#kiwi .windowlist ul'),
             next_left = parseInt(wl.css('text-indent').replace('px', ''), 10) - 170;
         wl.css('text-indent', next_left);
     },
 
+    /**
+    *   Displays the next tab
+    */
     windowsNext: function () {
         var tab, tabs, curTab, next;
         next = false;
@@ -318,6 +340,9 @@ kiwi.front.ui = {
         }
     },
 
+    /**
+    *   Displays the previous tab
+    */
     windowsPrevious: function () {
         var tab, tabs, curTab, prev_tab, next;
         next = false;
@@ -334,6 +359,10 @@ kiwi.front.ui = {
         }
     },
 
+    /**
+    *   Shows a specific tab
+    *   @param  {Number}    num The index of the tab to show
+    */
     windowsShow: function (num) {
         num = parseInt(num, 10);
         console.log('Showing window ' + num.toString());
@@ -349,7 +378,9 @@ kiwi.front.ui = {
     },
 
 
-
+    /**
+    *   
+    */
     barsShow: function () {
         $('#kiwi .control').slideDown();
         $('#kiwi .toolbars').slideDown(400, function () {
@@ -357,6 +388,9 @@ kiwi.front.ui = {
         });
     },
 
+    /**
+    *
+    */
     barsHide: function () {
         $('#kiwi .control').slideUp();
         $('#kiwi .toolbars').slideUp(400, function () {
@@ -370,7 +404,9 @@ kiwi.front.ui = {
 
 
 
-
+    /**
+    *   Displays the tutorial
+    */
     tutorial: function () {
         var b = $('<div id="tutorial_box" style="border:3px solid blue;"></div>'),
             bounds,
@@ -380,6 +416,9 @@ kiwi.front.ui = {
         b.css({display: 'block', position: 'absolute', height:'100%', width:'100%'});
         $('#kiwi').append(b);
 
+        /**
+        *   @inner
+        */
         bounds = function (el) {
             var b = 3, ret = {};
             ret.top = el.offset().top;
@@ -413,6 +452,9 @@ kiwi.front.ui = {
 
 
         current_s = -1;
+        /**
+        *   @inner
+        */
         next_s = function () {
             current_s++;
             if (typeof s[current_s] === 'function') {
