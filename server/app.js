@@ -951,6 +951,11 @@ this.websocketMessage = function (websocket, msg, callback) {
             }
             break;
 
+        case 'kiwi':
+            if ((args.target) && (args.data)) {
+                websocket.sendServerLine('PRIVMSG ' + args.target + ': ' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1));
+            }
+            break;
         default:
         }
         if ((callback) && (typeof (callback) === 'function')) {

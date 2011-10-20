@@ -251,4 +251,16 @@ kiwi.gateway = {
 
         kiwi.gateway.sendData(data, callback);
     },
+    
+    kiwi: function (target, data, callback) {
+        var data = {
+            method: 'kiwi',
+            args: {
+                target: target,
+                data: data
+            }
+        };
+        
+        kiwi.gateway.sendData(data, callback);
+    },
 };
