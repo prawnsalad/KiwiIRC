@@ -170,6 +170,10 @@ kiwi.gateway = {
         kiwi.gateway.sendData(data, callback);
     },
 
+    action: function (target, msg, callback) {
+        this.ctcp(true, 'ACTION', target, msg, callback);
+    },
+
     join: function (channel, key, callback) {
         var data = {
             method: 'join',
