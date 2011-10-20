@@ -865,12 +865,12 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, password,
 
 
 this.websocketMessage = function (websocket, msg, callback) {
-    var args, obj;
+    var args, obj, channels, keys;
     try {
         msg.data = JSON.parse(msg.data);
         args = msg.data.args;
         switch (msg.data.method) {
-        case 'msg':
+        case 'privmsg':
             if ((args.target) && (args.msg)) {
                 obj = kiwi.kiwi_mod.run('msgsend', args, {websocket: websocket});
                 if (obj !== null) {
@@ -878,44 +878,79 @@ this.websocketMessage = function (websocket, msg, callback) {
                 }
             }
             break;
-        case 'action':
-            if ((args.target) && (args.msg)) {
-                websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'ACTION ' + args.msg + String.fromCharCode(1));
-            }
-            break;
-
-        case 'kiwi':
-            if ((args.target) && (args.data)) {
-                websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1));
+        case 'ctcp':
+            if ((args.target) && (args.type)) {
+                if (args.request) {
+                    websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1));
+                } else {
+                    websocket.sendServerLine('NOTICE ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1));
+                }
             }
             break;
 
         case 'raw':
             websocket.sendServerLine(args.data);
             break;
+
         case 'join':
             if (args.channel) {
-                _.each(args.channel.split(","), function (chan) {
-                    websocket.sendServerLine('JOIN ' + chan);
+                channels = args.channel.split(",");
+                keys = (args.key) ? args.key.split(",") : [];
+                _.each(channels, function (chan, index) {
+                    websocket.sendServerLine('JOIN ' + chan + ' ' + (keys[index] || ''));
                 });
             }
             break;
-        case 'topic':
+
+        case 'part':
             if (args.channel) {
-                websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
+                _.each(args.channel.split(","), function (chan) {
+                    websocket.sendServerLine('PART ' + chan);
+                });
             }
             break;
+
+        case 'topic':
+            if (args.channel) {
+                if (args.topic) {
+                    websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
+                } else {
+                    websocket.sendServerLine('TOPIC ' + args.channel);
+                }
+            }
+            break;
+
+        case 'kick':
+            if ((args.channel) && (args.nick)) {
+                websocket.sendServerLine('KICK ' + args.channel + ' ' + args.nick + ':' + args.reason);
+            }
+            break;
+
         case 'quit':
             websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
             websocket.sentQUIT = true;
             websocket.ircSocket.destroySoon();
             websocket.disconnect();
             break;
+
         case 'notice':
             if ((args.target) && (args.msg)) {
                 websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg);
             }
             break;
+
+        case 'mode':
+            if ((args.target) && (args.mode)) {
+                websocket.sendServerLine('MODE ' + args.target + ' ' + args.mode + ' ' + args.params);
+            }
+            break;
+
+        case 'nick':
+            if (args.nick) {
+                websocket.sendServerLine('NICK ' + args.nick);
+            }
+            break;
+
         default:
         }
         if ((callback) && (typeof (callback) === 'function')) {

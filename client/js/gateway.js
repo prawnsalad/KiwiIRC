@@ -132,96 +132,72 @@ kiwi.gateway = {
 
     sendData: function () {},
 
-    sync: function (callback) {
-        if (this.session_id === null) {
-            return;
-        }
-
+    privmsg: function (target, msg, callback) {
         var data = {
-            method: 'sync',
-            args: {}
-        };
-
-        kiwi.gateway.syncing = true;
-        kiwi.gateway.sendData(data, callback);
-    },
-
-    debug: function (callback) {
-        var data = {
-            method: 'debug',
-            args: {}
-        };
-
-        kiwi.gateway.sendData(data, callback);
-    },
-
-
-    msg: function (s_target, s_msg, callback) {
-        var data = {
-            method: 'msg',
+            method: 'privmsg',
             args: {
-                target: s_target,
-                msg: s_msg
+                target: target,
+                msg: msg
             }
         };
 
         kiwi.gateway.sendData(data, callback);
     },
 
-    action: function (s_target, s_msg, callback) {
-        var data = {
-            method: 'action',
-            args: {
-                target: s_target,
-                msg: s_msg
-            }
-        };
-
-        kiwi.gateway.sendData(data, callback);
-    },
-
-
-    kiwi: function (s_target, s_data, callback) {
-        var data = {
-            method: 'kiwi',
-            args: {
-                target: s_target,
-                data: s_data
-            }
-        };
-        kiwi.gateway.sendData(data, callback);
-    },
-
-
-    notice: function (s_target, s_msg, callback) {
+    notice: function (target, msg, callback) {
         var data = {
             method: 'notice',
             args: {
-                target: s_target,
-                msg: s_msg
+                target: target,
+                msg: msg
             }
         };
 
         kiwi.gateway.sendData(data, callback);
     },
 
+    ctcp: function (request, type, target, params, callback) {
+        var data = {
+            method: 'ctcp',
+            args: {
+                request: request,
+                type: type,
+                target: target,
+                params: params,
+            }
+        };
+        
+        kiwi.gateway.sendData(data, callback);
+    },
 
-    join: function (s_channel, callback) {
+    join: function (channel, key, callback) {
         var data = {
             method: 'join',
             args: {
-                channel: s_channel
+                channel: channel,
+                key: key
             }
         };
 
         kiwi.gateway.sendData(data, callback);
     },
 
-    setTopic: function (s_channel, new_topic, callback) {
+    part: function (channel, callback) {
+        var data = {
+            method: 'part',
+            args: {
+                channel: channel
+            }
+        };
+
+        kiwi.gateway.sendData(data, callback);
+    },
+
+    topic: function (channel, new_topic, callback) {
         var data = {
             method: 'topic',
             args: {
-                channel: s_channel,
+                channel: channel,
                 topic: new_topic
             }
         };
@@ -229,21 +205,20 @@ kiwi.gateway = {
         kiwi.gateway.sendData(data, callback);
     },
 
-
-    raw: function (v_data, callback) {
+    kick: function (channel, nick, reason, callback) {
         var data = {
-            method: 'raw',
+            method: 'kick',
             args: {
-                data: v_data
+                channel: channel,
+                nick: nick,
+                reason: reason
             }
         };
 
         kiwi.gateway.sendData(data, callback);
     },
 
-
     quit: function (msg, callback) {
-        //alert("closing");
         msg = msg || "";
         var data = {
             method: 'quit',
@@ -253,9 +228,27 @@ kiwi.gateway = {
         };
 
         kiwi.gateway.sendData(data, callback);
-    }
+    },
 
+    raw: function (data, callback) {
+        var data = {
+            method: 'raw',
+            args: {
+                data: data
+            }
+        };
 
+        kiwi.gateway.sendData(data, callback);
+    },
 
+    nick: function (new_nick, callback) {
+        var data = {
+            method: 'nick',
+            args: {
+                nick: new_nick
+            }
+        };
 
+        kiwi.gateway.sendData(data, callback);
+    },
 };
