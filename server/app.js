@@ -532,7 +532,7 @@ this.httpHandler = function (request, response) {
         min = {}, public_http_path, port, ssl, host, obj, args, ircuri, pass, target, modifiers, query,
         secure = (typeof request.client.encrypted === 'object');
 
-    //try {
+    try {
         if (kiwi.config.handle_http) {
             // Run through any plugins..
             args = {request: request, response: response, ssl: secure};
@@ -708,10 +708,10 @@ this.httpHandler = function (request, response) {
             }
         }
 
-    //} catch (e) {
-    //    console.log('ERROR app.httpHandler()');
-    //    console.log(e);
-    //}
+    } catch (e) {
+        console.log('ERROR app.httpHandler()');
+        console.log(e);
+    }
 };
 
 

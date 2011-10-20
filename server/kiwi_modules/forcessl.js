@@ -9,9 +9,7 @@ var kiwi = require('../kiwi.js');
 exports.onhttp = function (ev, opts) {
 	var host, port = null, i;
 
-	// TODO: request.socket.pair seems to only be set in a SSL req, is this
-	// the best way to check for this?
-	if (!opts.ssl) {
+	if (!ev.ssl) {
 	    host = ev.request.headers.host;
 
 	    // Remove the port if one is set
@@ -19,9 +17,9 @@ exports.onhttp = function (ev, opts) {
 	        host = host.substring(0, host.search(/:/));
 	    }
 
-    	for (i in kiwi.config.ports) {
-    		if (kiwi.config.ports[i].secure) {
-    			port = kiwi.config.ports[i].number;
+    	for (i in kiwi.config.servers) {
+    		if (kiwi.config.servers[i].secure) {
+    			port = kiwi.config.servers[i].port;
     			break;
     		}
     	}
@@ -35,8 +33,7 @@ exports.onhttp = function (ev, opts) {
 	    if (port !== 443) {
 	    	host += ':' + port.toString();
 	    }
-
-	    console.log('https://' + host + ev.request.url);
+	    
 	    ev.response.writeHead(302, {'Location': 'https://' + host + ev.request.url});
 	    ev.response.end();
 
