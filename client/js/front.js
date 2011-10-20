@@ -181,7 +181,7 @@ kiwi.front = {
             text = $(this).text();
             if (text !== kiwi.front.cache.original_topic) {
                 chan = Tabview.getCurrentTab().name;
-                kiwi.gateway.setTopic(chan, text);
+                kiwi.gateway.topic(chan, text);
             }
         });
 
@@ -223,7 +223,7 @@ kiwi.front = {
 
 
     run: function (msg) {
-        var parts, dest, t, pos, textRange, plugin_event, msg_sliced, tab;
+        var parts, dest, t, pos, textRange, plugin_event, msg_sliced, tab, nick;
 
         // Run through any plugins
         plugin_event = {command: msg};
@@ -272,8 +272,8 @@ kiwi.front = {
                     console.log("calling show nick");
                     kiwi.front.ui.showChangeNick();
                 } else {
-                    console.log("sending raw");
-                    kiwi.gateway.raw(msg.substring(1));
+                    console.log("sending nick");
+                    kiwi.gateway.nick(msg.substring(1));
                 }
                 break;
 
@@ -282,10 +282,10 @@ kiwi.front = {
                     if (Tabview.getCurrentTab().safe_to_close) {
                         Tabview.getCurrentTab().close();
                     } else {
-                        kiwi.gateway.raw(msg.substring(1) + ' ' + Tabview.getCurrentTab().name);
+                        kiwi.gateway.part(Tabview.getCurrentTab().name);
                     }
                 } else {
-                    kiwi.gateway.raw(msg.substring(1));
+                    kiwi.gateway.part(msg.substring(6));
                 }
                 break;
 
@@ -311,7 +311,7 @@ kiwi.front = {
             case '/msg':
                 if (typeof parts[1] !== "undefined") {
                     msg_sliced = msg.split(' ').slice(2).join(' ');
-                    kiwi.gateway.msg(parts[1], msg_sliced);
+                    kiwi.gateway.privmsg(parts[1], msg_sliced);
 
                     tab = Tabview.getTab(parts[1]);
                     if (!tab) {
@@ -326,7 +326,9 @@ kiwi.front = {
                 if (typeof parts[1] === 'undefined') {
                     return;
                 }
-                kiwi.gateway.raw('KICK ' + Tabview.getCurrentTab().name + ' ' + msg.split(' ', 2)[1]);
+                t = msg.split(' ', 3);
+                nick = t[1];
+                kiwi.gateway.kick(Tabview.getCurrentTab().name, nick, t[2]);
                 break;
 
             case '/quote':
@@ -335,8 +337,7 @@ kiwi.front = {
 
             case '/me':
                 tab = Tabview.getCurrentTab();
-                kiwi.gateway.action(tab.name, msg.substring(4));
-                //tab.addMsg(null, ' ', '* '+data.nick+' '+data.msg, 'color:green;');
+                kiwi.gateway.ctcp(true, 'ACTION', tab.name, msg.substring(4));
                 tab.addMsg(null, ' ', '* ' + kiwi.gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
                 break;
 
@@ -372,22 +373,23 @@ kiwi.front = {
                         t.setSelectionRange(pos, pos);
                     }
                 } else {
-                    kiwi.gateway.setTopic(Tabview.getCurrentTab().name, msg.split(' ', 2)[1]);
-                    //kiwi.gateway.raw('TOPIC ' + Tabview.getCurrentTab().name + ' :' + msg.split(' ', 2)[1]);
+                    kiwi.gateway.topic(Tabview.getCurrentTab().name, msg.split(' ', 2)[1]);
                 }
                 break;
 
             case '/kiwi':
-                kiwi.gateway.kiwi(Tabview.getCurrentTab().name, msg.substring(6));
+                kiwi.gateway.ctcp(true, 'KIWI', Tabview.getCurrentTab().name, msg.substring(6));
                 break;
 
             case '/ctcp':
                 parts = parts.slice(1);
                 dest = parts.shift();
+                t = parts.shift();
                 msg = parts.join(' ');
-
-                kiwi.gateway.msg(dest, String.fromCharCode(1) + msg + String.fromCharCode(1));
-                Tabview.getServerTab().addMsg(null, 'CTCP Request', '[to ' + dest + '] ' + msg, 'ctcp');
+                console.log(parts);
+                
+                kiwi.gateway.ctcp(true, t, dest, msg);
+                Tabview.getServerTab().addMsg(null, 'CTCP Request', '[to ' + dest + '] ' + t + ' ' + msg, 'ctcp');
                 break;
             default:
                 //Tabview.getCurrentTab().addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
@@ -401,7 +403,7 @@ kiwi.front = {
                 return;
             }
             if (Tabview.getCurrentTab().name !== 'server') {
-                kiwi.gateway.msg(Tabview.getCurrentTab().name, msg);
+                kiwi.gateway.privmsg(Tabview.getCurrentTab().name, msg);
                 Tabview.getCurrentTab().addMsg(null, kiwi.gateway.nick, msg);
             }
         }

@@ -109,10 +109,10 @@ kiwi.front.events = {
             if (typeof msg[1] === 'undefined') {
                 msg[1] = '';
             }
-            kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'PING ' + msg[1] + String.fromCharCode(1));
+            kiwi.gateway.ctcp(false, 'PING', data.nick, msg[1]);
             break;
         case 'TIME':
-            kiwi.gateway.notice(data.nick, String.fromCharCode(1) + 'TIME ' + (new Date()).toLocaleString() + String.fromCharCode(1));
+            kiwi.gateway.ctcp(false, 'TIME', data.nick, (new Date()).toLocaleString());
             break;
         }
         Tabview.getServerTab().addMsg(null, 'CTCP Request', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
