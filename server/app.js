@@ -50,7 +50,7 @@ this.changeUser = function () {
         try {
             process.setgid(kiwi.config.group);
         } catch (err) {
-            console.log('Failed to set gid: ' + err);
+            kiwi.log('Failed to set gid: ' + err);
             process.exit();
         }
     }
@@ -59,7 +59,7 @@ this.changeUser = function () {
         try {
             process.setuid(kiwi.config.user);
         } catch (e) {
-            console.log('Failed to set uid: ' + e);
+            kiwi.log('Failed to set uid: ' + e);
             process.exit();
         }
     }
@@ -272,7 +272,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             if (i > 0) {
                 websocket.sendClientEvent('userlist', {server: '', "users": nicklist, channel: chan});
             } else {
-                console.log("oops");
+                kiwi.log("oops");
             }
             break;
         case ircNumerics.RPL_ENDOFNAMES:
@@ -287,7 +287,7 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             break;
         case ircNumerics.RPL_BANLIST:
             params = msg.params.split(" ");
-            console.log(params);
+            kiwi.log(params);
             websocket.sendClientEvent('banlist', {server: '', channel: params[1], banned: params[2], banned_by: params[3], banned_at: params[4]});
             break;
         case ircNumerics.RPL_ENDOFBANLIST:
@@ -436,9 +436,9 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
                         ircSocket.addListener('data', listener);
                     });
                 });
-                //console.log(ircSocket);
+                //log(ircSocket);
             } catch (e) {
-                console.log(e);
+                kiwi.log(e);
             }
             break;*/
         case ircNumerics.ERR_CANNOTSENDTOCHAN:
@@ -479,14 +479,14 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             break;
         case ircNumerics.ERR_NOTREGISTERED:
             if (ircSocket.IRC.registered) {
-                console.log('Kiwi thinks user is registered, but the IRC server thinks differently');
+                kiwi.log('Kiwi thinks user is registered, but the IRC server thinks differently');
             }
             break;
         default:
-            console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
+            kiwi.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
         }
     } else {
-        console.log("Malformed IRC line: " + data);
+        kiwi.log("Malformed IRC line: " + data);
     }
 };
 
@@ -559,7 +559,7 @@ this.httpHandler = function (request, response) {
                     nick = _.detect(modifiers, function (mod) {
                         return mod === ',isnick';
                     });
-                    console.log(request.headers);
+                    kiwi.log(request.headers);
                     response.statusCode = 303;
                     response.setHeader('Location', 'http' + ((secure) ? 's' : '') + '://' + request.headers.host + '/client/' + ircuri.host + '/' + ((!nick) ? target : ''));
                     response.end();
@@ -691,10 +691,10 @@ this.httpHandler = function (request, response) {
                                 }
                             } catch (e) {
                                 response.statusCode = 500;
-                                console.log(e);
+                                kiwi.log(e);
                             }
                         } else {
-                            console.log(err);
+                            kiwi.log(err);
                             response.statusCode = 500;
                         }
                         response.end();
@@ -709,8 +709,8 @@ this.httpHandler = function (request, response) {
         }
 
     } catch (e) {
-        console.log('ERROR app.httpHandler()');
-        console.log(e);
+        kiwi.log('ERROR app.httpHandler()');
+        kiwi.log(e);
     }
 };
 
@@ -742,13 +742,13 @@ this.websocketListen = function (servers, handler) {
             hs = https.createServer(opts, handler);
             kiwi.io.push(ws.listen(hs, {secure: true}));
             hs.listen(server.port, server.address);
-            console.log("Listening on %s:%d with SSL", server.address, server.port);
+            kiwi.log("Listening on %s:%d with SSL", server.address, server.port);
         } else {
             // Start some plain-text server up
             hs = http.createServer(handler);
             kiwi.io.push(ws.listen(hs, {secure: false}));
             hs.listen(server.port, server.address);
-            console.log("Listening on %s:%d without SSL", server.address, server.port);
+            kiwi.log("Listening on %s:%d without SSL", server.address, server.port);
         }
 
         kiwi.httpServers.push(hs);
@@ -768,6 +768,7 @@ this.websocketListen = function (servers, handler) {
             callback(null, true);
         }).on('connection', kiwi.websocketConnection);
     });
+    nonExistantFunction();
 };
 
 
@@ -777,7 +778,7 @@ this.websocketListen = function (servers, handler) {
 
 this.websocketConnection = function (websocket) {
     var con;
-    console.log("New connection!");
+    kiwi.log("New connection!");
     websocket.kiwi = {address: websocket.handshake.address.address, buffer: {list: []}};
     con = kiwi.connections[websocket.kiwi.address];
 
@@ -844,7 +845,7 @@ this.websocketIRCConnect = function (websocket, nick, host, port, ssl, password,
     ircSocket.IRC.nick = nick;
     // Send the login data
     dns.reverse(websocket.kiwi.address, function (err, domains) {
-        //console.log(domains);
+        //log(domains);
         websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
         if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
             websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
@@ -962,7 +963,7 @@ this.websocketMessage = function (websocket, msg, callback) {
             callback();
         }
     } catch (e) {
-        console.log("Caught error: " + e);
+        kiwi.log("Caught error: " + e);
     }
 };
 
@@ -1004,7 +1005,7 @@ this.rehash = function () {
     changes = reload_config[1];
 
     if (Object.keys(changes).length !== 0) {
-        console.log('%s config changes: \n', Object.keys(changes).length, changes);
+        kiwi.log('%s config changes: \n', Object.keys(changes).length, changes);
         for (i in changes) {
             switch (i) {
             case 'ports':
@@ -1055,18 +1056,23 @@ this.manageControll = function (data) {
         i;
     switch (parts[0]) {
     case 'rehash':
-        console.log('Rehashing...');
-        console.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
+        kiwi.log('Rehashing...');
+        kiwi.log(kiwi.rehash() ? 'Rehash complete' : 'Rehash failed');
         break;
 
     case 'recode':
-        console.log('Recoding...');
-        console.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
+        kiwi.log('Recoding...');
+        kiwi.log(kiwi.recode() ? 'Recode complete' : 'Recode failed');
         break;
 
     case 'mod':
         if (parts[1] === 'reload') {
-            console.log('Reloading module (' + parts[2] + ')..');
+            if (!parts[2]) {
+                kiwi.log('Usage: mod reload module_name');
+                return;
+            }
+
+            kiwi.log('Reloading module (' + parts[2] + ')..');
             kiwi.kiwi_mod.reloadModule(parts[2]);
         }
         break;
@@ -1075,7 +1081,7 @@ this.manageControll = function (data) {
         if (parts[1] === 'clear') {
             kiwi.cache.html = {};
             kiwi.cache.alljs = '';
-            console.log('HTML cache cleared');
+            kiwi.log('HTML cache cleared');
         }
         break;
 
@@ -1083,10 +1089,10 @@ this.manageControll = function (data) {
         for (i in kiwi.connections) {
             connections_cnt = connections_cnt + parseInt(kiwi.connections[i].count, 10);
         }
-        console.log(connections_cnt.toString() + ' connected clients');
+        kiwi.log(connections_cnt.toString() + ' connected clients');
         break;
 
     default:
-        console.log('Unknown command \'' + parts[0] + '\'');
+        kiwi.log('Unknown command \'' + parts[0] + '\'');
     }
 };

@@ -55,10 +55,10 @@ exports.reloadModule = function (mod_name) {
             kiwi.kiwi_mod.loaded_modules[mod_name] = null;
             kiwi.kiwi_mod.loaded_modules[mod_name] = require(mod_path);
 
-            console.log('Module ' + mod_name + ' reloaded.');
+            kiwi.log('Module ' + mod_name + ' reloaded.');
         } catch (e) {
-            console.log('reloadModule error!');
-            console.log(e);
+            kiwi.log('reloadModule error!');
+            kiwi.log(e);
             return false;
         }
     });
@@ -95,8 +95,8 @@ exports.run = function (event_name, event_data, opts) {
 
 exports.printMods = function () {
     var mod_name;
-    console.log('Loaded Kiwi modules:');
+    kiwi.log('Loaded Kiwi modules:');
     for (mod_name in this.loaded_modules) {
-        console.log(' - ' + mod_name);
+        kiwi.log(' - ' + mod_name);
     }
 };

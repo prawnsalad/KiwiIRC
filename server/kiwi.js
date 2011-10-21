@@ -25,6 +25,13 @@ this.kiwi_root = __dirname;
 
 
 
+// How to handle log output
+this.log = function(str, level) {
+    level = level || 0;
+    console.log(str);
+}
+
+
 /*
  * Configuration and rehashing routines
  */
@@ -52,7 +59,7 @@ this.loadConfig = function () {
                     this.config[j] = nconf[j];
                 }
 
-                console.log('Loaded config file ' + config_dirs[i] + config_filename);
+                this.log('Loaded config file ' + config_dirs[i] + config_filename);
                 break;
             }
         } catch (e) {
@@ -60,7 +67,7 @@ this.loadConfig = function () {
             case 'ENOENT':      // No file/dir
                 break;
             default:
-                console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
+                this.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
                 return false;
             }
             continue;
@@ -68,7 +75,7 @@ this.loadConfig = function () {
     }
     if (Object.keys(this.config).length === 0) {
         if (!found_config) {
-            console.log('Couldn\'t find a config file!');
+            this.log('Couldn\'t find a config file!');
         }
         return false;
     }
@@ -196,6 +203,10 @@ this.kiwi_mod.loadModules(this.kiwi_root, this.config);
 this.kiwi_mod.printMods();
 
 
+// Make sure Kiwi doesn't simply quit on an exception
+process.on('uncaughtException', function (e) {
+    this.log('[Uncaught exception] ' + e);
+});
 
 
 // Start the server up
