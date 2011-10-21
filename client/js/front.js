@@ -1,18 +1,55 @@
 /*jslint white:true, regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global kiwi, _, io, $, iScroll, agent, touchscreen, init_data, plugs, plugins, registerTouches, randomString */
+/**
+*   @namespace
+*/
 kiwi.front = {
-    cur_channel: '',
+    /**
+    *   The current channel
+    *   @type Object
+    */
+    cur_channel: null,
+    /**
+    *   A list of windows
+    *   @type Object
+    */
     windows: {},
+    /**
+    *   A list of Tabviews
+    *   @type Object
+    */
     tabviews: {},
+    /**
+    *   A list of Utilityviews
+    *   @type Object
+    */
     utilityviews: {},
+    /**
+    *   A list of Boxes
+    *   @type Object
+    */
     boxes: {},
 
-    buffer: [],         // Command history
-    buffer_pos: 0,      // Current command history position
+    /**
+    *   The command history
+    *   @type Array
+    */
+    buffer: [],
+    /**
+    *   The current command history position
+    *   @type Number
+    */
+    buffer_pos: 0,
 
-    // Container for misc data (eg. userlist generation)
+    /**
+    *   Container for misc data (eg. userlist generation)
+    *   @type Object
+    */
     cache: {original_topic: '', userlist: {}},
 
+    /**
+    *   Initialisation function
+    */
     init: function () {
         /*global Box, touch_scroll:true, Tabview */
         var about_info, supportsOrientationChange, orientationEvent, scroll_opts, server_tabview;
@@ -100,8 +137,12 @@ kiwi.front = {
 
             $('#kiwi .connectwindow').slideUp('', kiwi.front.ui.barsShow);
             
-            // Listen for keyboard activity on any window, and forward it to the
-            // input box so users can type even if the input box is not in focus
+            /**
+            *   Listen for keyboard activity on any window, and forward it to the
+            *   input box so users can type even if the input box is not in focus
+            *   @inner
+            *   @param  {eventObject}   event   The event to forward
+            */
             forwardKeys = function (event) {
                 $('#kiwi_msginput').focus();
                 $('#kiwi_msginput').trigger(event);
@@ -203,7 +244,10 @@ kiwi.front = {
 
 
 
-
+    /**
+    *   Joins a channel
+    *   @param  {String}    chan_name   The name of the channel to join
+    */
     joinChannel: function (chan_name) {
         var chans = chan_name.split(','),
             i,
@@ -221,7 +265,10 @@ kiwi.front = {
         }
     },
 
-
+    /**
+    *   Parses and executes text and commands entered into the input msg box
+    *   @param  {String}    msg The message string to parse
+    */
     run: function (msg) {
         var parts, dest, t, pos, textRange, plugin_event, msg_sliced, tab, nick;
 
@@ -414,11 +461,19 @@ kiwi.front = {
 
 
 
-
+    /**
+    *   Syncs with the Kiwi server
+    *   Not implemented
+    */
     sync: function () {
         kiwi.gateway.sync();
     },
 
+    /**
+    *   Checks if a given name is the name of a channel
+    *   @param      {String}    name    The name to check
+    *   @returns    {Boolean}           True if name is the name of a channel, false if it is not
+    */
     isChannel: function (name) {
         var prefix, is_chan;
         prefix = name.charAt(0);
@@ -431,6 +486,11 @@ kiwi.front = {
         return is_chan;
     },
 
+    /**
+    *   Formats a message. Adds bold, underline and colouring
+    *   @param      {String}    msg The message to format
+    *   @returns    {String}        The HTML formatted message
+    */
     formatIRCMsg: function (msg) {
         var re, next;
 
@@ -463,13 +523,22 @@ kiwi.front = {
         }
 
         // colour
+        /**
+        *   @inner
+        */
         msg = (function (msg) {
             var replace, colourMatch, col, i, match, to, endCol, fg, bg, str;
             replace = '';
+            /**
+            *   @inner
+            */
             colourMatch = function (str) {
                 var re = /^\x03([0-9][0-5]?)(,([0-9][0-5]?))?/;
                 return re.exec(str);
             };
+            /**
+            *   @inner
+            */
             col = function (num) {
                 switch (parseInt(num, 10)) {
                 case 0:
@@ -512,6 +581,9 @@ kiwi.front = {
                 i = msg.indexOf('\x03');
                 replace = msg.substr(0, i);
                 while (i < msg.length) {
+                    /**
+                    *   @inner
+                    */
                     match = colourMatch(msg.substr(i, 6));
                     if (match) {
                         //console.log(match);
@@ -549,7 +621,10 @@ kiwi.front = {
         
         return msg;
     },
-    
+
+    /**
+    *   Registers Kiwi IRC as a handler for the irc:// protocol in the browser
+    */
     registerProtocolHandler: function () {
         var state, uri;
         url = kiwi_server.replace(/\/kiwi$/, '/?ircuri=%s');
@@ -570,7 +645,9 @@ kiwi.front = {
 
 
 
-
+/**
+*   @constructor
+*/
 var ChannelList = function () {
     /*globals Utilityview */
     var chanList, view, table, obj, renderTable, waiting;
@@ -583,6 +660,9 @@ var ChannelList = function () {
     table = table.appendTo(view.div);
 
     waiting = false;
+    /**
+    *   @inner
+    */
     renderTable = function () {
         var tbody;
         tbody = table.children('tbody:first').detach();
@@ -603,8 +683,14 @@ var ChannelList = function () {
         table = table.append(tbody);
         waiting = false;
     };
-
-    obj = {
+    /**
+    *   @lends ChannelList
+    */
+    return {
+        /**
+        *   Adds a channel or channels to the list
+        *   @param  {Object}    channels    The channel or Array of channels to add
+        */
         addChannel: function (channels) {
             if (!_.isArray(channels)) {
                 channels = [channels];
@@ -623,16 +709,24 @@ var ChannelList = function () {
                 _.defer(renderTable);
             }
         },
+        /**
+        *   Show the {@link UtilityView} that will display this channel list
+        */
         show: function () {
             view.show();
         },
+        /**
+        *   @private
+        */
         prototype: {constructor: this}
     };
-    return obj;
 };
 
 
-
+/**
+*   @constructor
+*   @param  {String}    name    The name of the UserList
+*/
 var UserList = function (name) {
     /*globals User */
     var userlist, list_html, sortUsers;
@@ -643,6 +737,9 @@ var UserList = function (name) {
     list_html = $('#kiwi_userlist_' + name);
     $('a.nick', list_html[0]).live('click', this.clickHandler);
 
+    /**
+    *   @inner
+    */
     sortUsers = function () {
         var parent;
         parent = list_html.parent();
@@ -672,6 +769,12 @@ var UserList = function (name) {
         list_html = list_html.appendTo(parent);
     };
 
+    /**
+    *   Adds a user or users to the UserList.
+    *   Chainable method.
+    *   @param      {Object}    users   The user or Array of users to add
+    *   @returns    {UserList}          This UserList
+    */
     this.addUser = function (users) {
         if (!_.isArray(users)) {
             users = [users];
@@ -687,6 +790,12 @@ var UserList = function (name) {
         return this;
     };
 
+    /**
+    *   Removes a user or users from the UserList.
+    *   Chainable method.
+    *   @param      {String}    nicks   The nick or Array of nicks to remove
+    *   @returns    {UserList}          This UserList
+    */
     this.removeUser = function (nicks) {
         var toRemove;
         if (!_.isArray(nicks)) {
@@ -707,6 +816,13 @@ var UserList = function (name) {
         return this;
     };
 
+    /**
+    *   Renames a user in the UserList.
+    *   Chainable method.
+    *   @param      {String}    oldNick The old nick
+    *   @param      {String}    newNick The new nick
+    *   @returns    {UserList}          This UserList
+    */
     this.renameUser = function (oldNick, newNick) {
         var user = _.detect(userlist, function (u) {
             return u.nick === oldNick;
@@ -721,6 +837,12 @@ var UserList = function (name) {
         return this;
     };
 
+    /**
+    *   Lists the users in this UserList.
+    *   @param      {Boolean}   modesort    True to enable sorting by mode, false for lexicographical sort
+    *   @param      {Array}     mode        If specified, only return those users who have the specified modes
+    *   @returns    {Array}                 The users in the UserList that match the criteria
+    */
     this.listUsers = function (modesort, modes) {
         var users = userlist;
         if (modes) {
@@ -741,12 +863,20 @@ var UserList = function (name) {
         }
     };
 
+    /**
+    *   Remove this UserList from the DOM.
+    */
     this.remove = function () {
         list_html.remove();
         list_html = null;
         userlist = null;
     };
 
+    /**
+    *   Empty the UserList.
+    *   Chainable method.
+    *   @returns    {UserList}  This UserList
+    */
     this.empty = function () {
         list_html.children().remove();
         userlist = [];
@@ -754,12 +884,22 @@ var UserList = function (name) {
         return this;
     };
 
+    /**
+    *   Checks whether a given nick is in the UserList.
+    *   @param      {String}    nick    The nick to search for
+    *   @returns    {Boolean}           True if the nick is in the userlist, false otherwise
+    */
     this.hasUser = function (nick) {
         return _.any(userlist, function (user) {
             return user.nick === nick;
         });
     };
 
+    /**
+    *   Returns the object representing the user with the given nick, if it is in the UserList.
+    *   @param      {String}    nick    The nick to retrieve
+    *   @returns    {Object}            An object representing the user, if it exists, null otherwise
+    */
     this.getUser = function (nick) {
         if (this.hasUser(nick)) {
             return _.detect(userlist, function (user) {
@@ -770,6 +910,12 @@ var UserList = function (name) {
         }
     };
 
+    /**
+    *   Sets the UserList's activity.
+    *   Chainable method.
+    *   @param      {Boolean}   active  If true, sets the UserList to active. If False, sets it to inactive
+    *   @returns    {UserList}          This UserList
+    */
     this.active = function (active) {
         if ((arguments.length === 0) || (active)) {
             list_html.addClass('active');
@@ -782,6 +928,14 @@ var UserList = function (name) {
         return this;
     };
 
+    /**
+    *   Updates a user's mode.
+    *   Chainable method.
+    *   @param      {String}    nick    The nick of the user to modify
+    *   @param      {String}    mode    The mode to add or remove
+    *   @param      {Boolean}   add     Adds the mode if true, removes it otherwise
+    *   @returns    {UserList}          This UserList
+    */
     this.changeUserMode = function (nick, mode, add) {
         var user, prefix;
         if (this.hasUser(nick)) {
@@ -804,7 +958,16 @@ var UserList = function (name) {
         return this;
     };
 };
+/**
+*   @memberOf UserList
+*/
 UserList.prototype.width = 100;     // 0 to disable
+/**
+*   Sets the width of the UserList.
+*   Chainable method.
+*   @param      {Number}    newWidth    The new width of the UserList
+*   @returns    {UserList}              This UserList
+*/
 UserList.prototype.setWidth = function (newWidth) {
     var w, u;
     if (typeof newWidth === 'number') {
@@ -818,7 +981,9 @@ UserList.prototype.setWidth = function (newWidth) {
 
     return this;
 };
-
+/**
+*   The click handler for this UserList
+*/
 UserList.prototype.clickHandler = function () {
     var li = $(this).parent(),
         user = li.data('user');
@@ -846,10 +1011,14 @@ UserList.prototype.clickHandler = function () {
 
 
 
-
+/**
+*   @constructor
+*/
 var User = function (nick, modes) {
     var sortModes;
-
+    /**
+    *   @inner
+    */
     sortModes = function (modes) {
         return modes.sort(function (a, b) {
             var a_idx, b_idx, i;
@@ -975,7 +1144,9 @@ User.compare = function (a, b) {
 /*
  *   MISC VIEW
  */
-
+/**
+*   @constructor
+*/
 var Utilityview = function (name) {
     var rand_name = randomString(15),
         tmp_divname = 'kiwi_window_' + rand_name,
@@ -1082,7 +1253,9 @@ Utilityview.prototype.clearPartImage = function () {
  *
  */
 
-
+/**
+*   @constructor
+*/
 var Tabview = function (v_name) {
     /*global Tabview, UserList */
     var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, tmp_tab, userlist_enabled = true;
@@ -1352,7 +1525,9 @@ Tabview.getCurrentTab = function () {
 
 
 
-
+/**
+*   @constructor
+*/
 var Box = function (classname) {
     this.id = randomString(10);
     var tmp = $('<div id="' + this.id + '" class="box ' + classname + '"><div class="boxarea"></div></div>');

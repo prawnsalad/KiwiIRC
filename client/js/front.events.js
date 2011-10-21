@@ -1,7 +1,13 @@
 /*jslint browser: true, devel: true, sloppy: true, plusplus: true, nomen: true, forin: true, continue: true */
 /*globals kiwi, $, _, Tabview, Userlist, User, Box, init_data */
+/**
+*   @namespace
+*/
 kiwi.front.events = {
 
+    /**
+    *   Binds all of the event handlers to their events
+    */
 	bindAll: function () {
         $(kiwi.gateway).bind("onmsg", this.onMsg);
         $(kiwi.gateway).bind("onnotice", this.onNotice);
@@ -36,7 +42,11 @@ kiwi.front.events = {
         $(kiwi.gateway).bind("onkiwi", this.onKiwi);
 	},
 
-
+    /**
+    *   Handles the msg event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onMsg: function (e, data) {
         var destination, plugin_event, tab;
         // Is this message from a user?
@@ -58,6 +68,11 @@ kiwi.front.events = {
         tab.addMsg(null, plugin_event.nick, plugin_event.msg);
     },
 
+    /**
+    *   Handles the debug event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onDebug: function (e, data) {
         var tab = Tabview.getTab('kiwi_debug');
         if (!tab) {
@@ -66,6 +81,11 @@ kiwi.front.events = {
         tab.addMsg(null, ' ', data.msg);
     },
 
+    /**
+    *   Handles the action event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onAction: function (e, data) {
         var destination, tab;
         // Is this message from a user?
@@ -82,6 +102,11 @@ kiwi.front.events = {
         tab.addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
     },
 
+    /**
+    *   Handles the topic event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onTopic: function (e, data) {
         var tab = Tabview.getTab(data.channel);
         if (tab) {
@@ -89,6 +114,11 @@ kiwi.front.events = {
         }
     },
 
+    /**
+    *   Handles the notice event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onNotice: function (e, data) {
         var nick = (data.nick === undefined) ? '' : data.nick,
             enick = '[' + nick + ']';
@@ -102,6 +132,11 @@ kiwi.front.events = {
         }
     },
 
+    /**
+    *   Handles the CTCP request event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onCTCPRequest: function (e, data) {
         var msg = data.msg.split(" ", 2);
         switch (msg[0]) {
@@ -118,14 +153,29 @@ kiwi.front.events = {
         Tabview.getServerTab().addMsg(null, 'CTCP Request', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
     },
 
+    /**
+    *   Handles the CTCP response event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onCTCPResponse: function (e, data) {
         Tabview.getServerTab().addMsg(null, 'CTCP Reply', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
     },
 
+    /**
+    *   Handles the kiwi event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onKiwi: function (e, data) {
         //console.log(data);
     },
 
+    /**
+    *   Handles the connect event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onConnect: function (e, data) {
         var err_box, channels;
 
@@ -169,11 +219,21 @@ kiwi.front.events = {
             return "Are you sure you leave Kiwi IRC?";
         };
     },
+    /**
+    *   Handles the connectFail event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onConnectFail: function (e, data) {
         var reason = (typeof data.reason === 'string') ? data.reason : '';
         Tabview.getServerTab().addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
         kiwi.plugs.run('connect', {success: false});
     },
+    /**
+    *   Handles the disconnect event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onDisconnect: function (e, data) {
         var tab, tabs;
         tabs = Tabview.getAllTabs();
@@ -182,6 +242,11 @@ kiwi.front.events = {
         }
         kiwi.plugs.run('disconnect', {success: false});
     },
+    /**
+    *   Handles the reconnecting event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onReconnecting: function (e, data) {
         var err_box, f, msg, mins, secs;
 
@@ -190,6 +255,9 @@ kiwi.front.events = {
             return;
         }
 
+        /**
+        *   @inner
+        */
         f = function (num) {
             switch (num) {
             case 1: return 'First';
@@ -214,14 +282,29 @@ kiwi.front.events = {
         
         err_box.text(msg);
     },
+    /**
+    *   Handles the options event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onOptions: function (e, data) {
         if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
             Tabview.getServerTab().setTabText(kiwi.gateway.network_name);
         }
     },
+    /**
+    *   Handles the MOTD event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onMOTD: function (e, data) {
         Tabview.getServerTab().addMsg(null, data.server, data.msg, 'motd');
     },
+    /**
+    *   Handles the whois event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onWhois: function (e, data) {
         /*globals secondsToTime */
         var d, tab, idle_time = '';
@@ -248,6 +331,11 @@ kiwi.front.events = {
             tab.addMsg(null, data.nick, 'idle for ' + idle_time, 'whois');
         }
     },
+    /**
+    *   Handles the mode event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onMode: function (e, data) {
         var tab;
         if ((typeof data.channel === 'string') && (typeof data.effected_nick === 'string')) {
@@ -260,6 +348,11 @@ kiwi.front.events = {
 
         // TODO: Other mode changes that aren't +/- qaohv. - JA
     },
+    /**
+    *   Handles the userList event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onUserList: function (e, data) {
         var tab;
 
@@ -280,6 +373,11 @@ kiwi.front.events = {
         tab.userlist.addUser(data.users);
 
     },
+    /**
+    *   Handles the userListEnd event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onUserListEnd: function (e, data) {
         if (!kiwi.front.cache.userlist) {
             kiwi.front.cache.userlist = {};
@@ -287,25 +385,55 @@ kiwi.front.events = {
         kiwi.front.cache.userlist.updating = false;
     },
 
+    /**
+    *   Handles the channelListStart event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onChannelListStart: function (e, data) {
         /*global ChannelList */
         kiwi.front.cache.list = new ChannelList();
         console.profile('list');
     },
+    /**
+    *   Handles the channelList event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onChannelList: function (e, data) {
         kiwi.front.cache.list.addChannel(data.chans);
     },
+    /**
+    *   Handles the channelListEnd event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onChannelListEnd: function (e, data) {
         kiwi.front.cache.list.show();
         console.profileEnd();
     },
 
+    /**
+    *   Handles the banList event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onBanList: function (e, data) {
     },
 
+    /**
+    *   Handles the banListEnd event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onBanListEnd: function (e, data) {
     },
 
+    /**
+    *   Handles the join event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onJoin: function (e, data) {
         var tab = Tabview.getTab(data.channel);
         if (!tab) {
@@ -320,6 +448,11 @@ kiwi.front.events = {
 
         tab.userlist.addUser({nick: data.nick, modes: []});
     },
+    /**
+    *   Handles the part event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onPart: function (e, data) {
         var tab = Tabview.getTab(data.channel);
         if (tab) {
@@ -334,6 +467,11 @@ kiwi.front.events = {
             tab.userlist.removeUser(data.nick);
         }
     },
+    /**
+    *   Handles the kick event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onKick: function (e, data) {
         var tab = Tabview.getTab(data.channel);
         if (tab) {
@@ -350,6 +488,11 @@ kiwi.front.events = {
             tab.userlist.removeUser(data.nick);
         }
     },
+    /**
+    *   Handles the nick event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onNick: function (e, data) {
         if (data.nick === kiwi.gateway.nick) {
             kiwi.gateway.nick = data.newnick;
@@ -363,6 +506,11 @@ kiwi.front.events = {
             }
         });
     },
+    /**
+    *   Handles the quit event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onQuit: function (e, data) {
         _.each(Tabview.getAllTabs(), function (tab) {
             if (tab.userlist.hasUser(data.nick)) {
@@ -371,6 +519,11 @@ kiwi.front.events = {
             }
         });
     },
+    /**
+    *   Handles the channelRedirect event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onChannelRedirect: function (e, data) {
         var tab = Tabview.getTab(data.from);
         tab.close();
@@ -378,6 +531,11 @@ kiwi.front.events = {
         tab.addMsg(null, ' ', '=== Redirected from ' + data.from, 'action');
     },
 
+    /**
+    *   Handles the IRCError event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onIRCError: function (e, data) {
         var t_view,
             tab = Tabview.getTab(data.channel);
@@ -435,7 +593,11 @@ kiwi.front.events = {
 
 
 
-
+    /**
+    *   Handles the sync event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
     onSync: function (e, data) {
         // Set any settings
         if (data.nick !== undefined) {
