@@ -440,7 +440,7 @@ kiwi.front.events = {
             tab = new Tabview(data.channel.toLowerCase());
         }
 
-        tab.addMsg(null, ' ', '--> ' + data.nick + ' has joined', 'action join', 'color:#009900;');
+        tab.addMsg(null, ' ', '--> ' + data.nick + ' [' + data.ident + '@' + data.hostname + '] has joined', 'action join', 'color:#009900;');
 
         if (data.nick === kiwi.gateway.nick) {
             return; // Not needed as it's already in nicklist

@@ -64,7 +64,7 @@ kiwi.gateway = {
     */
     connect: function (host, port, ssl, password, callback) {
         if (typeof kiwi.gateway.kiwi_server !== 'undefined') {
-            kiwi.gateway.socket = io.connect(kiwi_server, {
+            kiwi.gateway.socket = io.connect(kiwi.gateway.kiwi_server, {
                 'try multiple transports': true,
                 'connect timeout': 3000,
                 'max reconnection attempts': 7,
