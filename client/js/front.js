@@ -1315,6 +1315,7 @@ Tabview.prototype.tab = null;
 Tabview.prototype.topic = "";
 Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
 Tabview.prototype.panel = null;
+Tabview.prototype.msg_count = 0;
 
 Tabview.prototype.show = function () {
     var w, u;
@@ -1452,6 +1453,12 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     // Build up and add the line
     line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
     this.div.append(line_msg);
+
+    this.msg_count++;
+    if (this.msg_count > 250) {
+        $('.msg:first', this.div).remove();
+        this.msg_count--;
+    }
 
     if (!touchscreen) {
         this.scrollBottom();
