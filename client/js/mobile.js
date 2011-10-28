@@ -226,6 +226,7 @@ kiwi.ui = {
             }
             tab = kiwi.objects.MessageView.getCurrent();
             if (tab.title !== 'server') {
+                console.log(tab.title);
                 kiwi.gateway.privmsg(tab.title, msg);
                 tab.addMsg(kiwi.gateway.nick, msg);
             }
@@ -304,6 +305,20 @@ kiwi.init = function () {
         }
         tab.addMsg(data.nick, data.msg);
     });
+    gateway.bind('onjoin', function (e, data) {
+        var tab = kiwi.objects.MessageView.get(data.channel);
+        if (!tab) {
+            tab = new kiwi.objects.MessageView(data.channel);
+        }
+        tab.addMsg('', '--> ' + data.nick + ' has joined', 'join');
+    });
+    gateway.bind('onpart', function (e, data) {
+        var tab = kiwi.objects.MessageView.get(data.channel);
+        if (!tab) {
+            tab = new kiwi.objects.MessageView(data.channel);
+        }
+        tab.addMsg('', '<-- ' + data.nick + ' has left (' + data.message + ')', 'part');
+    });
 };
 
 
@@ -355,17 +370,27 @@ kiwi.objects.MessageView = function (name) {
     kiwi.ui.views[name.toLowerCase()] = this;
 }
 kiwi.objects.MessageView.prototype = new kiwi.objects.View();
-kiwi.objects.MessageView.prototype.addMsg = function (nick, text) {
+kiwi.objects.MessageView.prototype.msg_count = 0;
+kiwi.objects.MessageView.prototype.addMsg = function (nick, text, msg_class) {
     var msg, d = new Date(),
         time;
     
-    msg = $('<div class="msg"><span class="time"></span><span class="nick"></span><span class="body"></span></div>');
+    // The CSS class to use
+    msg_class = msg_class || '';
+
+    msg = $('<div class="msg ' + msg_class + '"><span class="time"></span><span class="nick"></span><span class="body"></span></div>');
     time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
 
     $('.time', msg).text(time);
     $('.nick', msg).text(nick);
     $('.body', msg).text(kiwi.ui.formatIRCMsg(text));
     this.content.append(msg);
+
+    this.msg_count++;
+    if (this.msg_count > 5) {
+        $('.msg:first', this.content).remove();
+        this.msg_count--;
+    }
 
     this.scrollBottom();
 }

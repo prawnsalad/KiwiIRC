@@ -17,7 +17,7 @@
     $(function () {
         console.log('starting');
         kiwi.init();
-        kiwi.gateway.nick = "efhoerufre";
+        kiwi.gateway.nick = "mobwok"+Math.floor(Math.random()*500);
         kiwi.gateway.start('/kiwi');
     });
 
@@ -29,11 +29,11 @@
 <style type='text/css'> 
 * { margin:0px; padding:0px; }
 
-body { font-family:arial; font-size:14px; color:rgb(233,242,237); background:rgb(138,150,143); }
+body { font-family:arial; font-size:14px; color:rgb(233,242,237); background:#EBEBEB; }
 
-.fixed { position:fixed; width:100%; background:rgb(138,150,143); z-index:1; }
+.fixed { position:fixed; width:100%; background:#1B1B1B; top:0px; left:0px; z-index:1; }
 #hover_top { top:0px; }
-#hover_bottom { bottom:0px; background:red; }
+#hover_bottom { bottom:0px; top:auto; padding-top:3px; background:#1B1B1B; }
 
 #nav { padding:10px 1em 0px 1em; }
 #nav a { display:block; float:right; margin-right:1em; }
@@ -49,11 +49,13 @@ body { font-family:arial; font-size:14px; color:rgb(233,242,237); background:rgb
 #msgs { position:absolute; width:100%; top:0px; z-index:0; }
 #msgs > div { display:none; }
 #msgs > div.active { display:block; }
-.msg { border-bottom:1px solid gray; padding:4px 3px; }
-.msg .time { color: gray; display:block; font-size:0.9em; display:none; }
+.msg { border-bottom:1px solid #CCC; padding:4px 3px; }
+.msg .time { color: gray; display:block; font-size:0.9em; color:#777; display:none; }
 .msg .nick { color: rgb(199,199,199); }
-.msg .body { margin-left:2em; white-space:pre-wrap; word-wrap:break-word; }
-
+.msg .body { margin-left:2em; white-space:pre-wrap; word-wrap:break-word; color:#333; }
+.msg.motd .body { color:#666; }
+.msg.join .body { color: #009900; }
+.msg.part .body { color: #990000; }
 #msginp { width:100%; border:0px; margin:0px; padding:5px 3px; }
 </style>  
 </head> 
