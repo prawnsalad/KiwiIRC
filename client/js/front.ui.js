@@ -51,8 +51,12 @@ kiwi.front.ui = {
         $('#kiwi_msginput').bind('keydown', function (e) {
             var windows, meta, num, msg, data, self;
             windows = $('#windows');
-            //var meta = e.altKey;
-            meta = e.ctrlKey;
+
+            if (navigator.appVersion.indexOf("Mac") != -1) {
+                meta = e.ctrlKey;
+            } else {
+                meta = e.altKey;
+            }
 
             if (e.which !== 9) {
                 tabcomplete.active = false;
