@@ -7,7 +7,7 @@ var filters;
 var compiled_regex;
 
 exports.onload = function(){
-	filters = ['sad', 'kill', 'death'];
+	filters = [];
 	compiled_regex = new RegExp(filters.join('|'), 'im');
 }
 

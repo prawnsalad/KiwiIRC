@@ -617,21 +617,21 @@ this.httpHandler = function (request, response) {
 
                 debug = (typeof uri.query.debug !== 'undefined');
 
-                ssl = (typeof request.socket.pair !== 'undefined');
-                port = ssl ? 6697 : 6667;
+                ssl = secure;   // ssl is passed to the client
+                port = ssl ? kiwi.config.client_defaults.port_ssl : kiwi.config.client_defaults.port;
                 if (uri_parts[1] !== 'client') {
                     if (uri.query) {
                         server_set = ((typeof uri.query.server !== 'undefined') && (uri.query.server !== ''));
-                        server = uri.query.server || 'irc.anonnet.org';
+                        server = uri.query.server || kiwi.config.client_defaults.server;
                         nick = uri.query.nick || '';
                     } else {
                         server_set = false;
-                        server = 'irc.anonnet.org';
+                        server = kiwi.config.client_defaults.server;
                         nick = '';
                     }
                 } else {
                     server_set = ((typeof uri_parts[2] !== 'undefined') && (uri_parts[2] !== ''));
-                    server = server_set ? uri_parts[2] : 'irc.anonnet.org';
+                    server = server_set ? uri_parts[2] : kiwi.config.client_defaults.server;
                     if (server.search(/:/) > 0) {
                         port = server.substring(server.search(/:/) + 1);
                         server = server.substring(0, server.search(/:/));
