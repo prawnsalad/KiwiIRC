@@ -742,13 +742,13 @@ this.websocketListen = function (servers, handler) {
             hs = https.createServer(opts, handler);
             kiwi.io.push(ws.listen(hs, {secure: true}));
             hs.listen(server.port, server.address);
-            kiwi.log("Listening on %s:%d with SSL", server.address, server.port);
+            kiwi.log('Listening on ' + server.address + ':' + server.port.toString() + ' with SSL');
         } else {
             // Start some plain-text server up
             hs = http.createServer(handler);
             kiwi.io.push(ws.listen(hs, {secure: false}));
             hs.listen(server.port, server.address);
-            kiwi.log("Listening on %s:%d without SSL", server.address, server.port);
+            kiwi.log('Listening on ' + server.address + ':' + server.port.toString() + ' without SSL');
         }
 
         kiwi.httpServers.push(hs);
