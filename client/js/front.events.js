@@ -215,9 +215,13 @@ kiwi.front.events = {
         }
 
         // Now that we're connected, warn the user if they really want to quit
+        // TODO: disable page refreshing or at least just f5
+        // This brakes the socket.io connection currently :(
+        /*
         window.onbeforeunload = function() {
             return "Are you sure you leave Kiwi IRC?";
         };
+        */
     },
     /**
     *   Handles the connectFail event

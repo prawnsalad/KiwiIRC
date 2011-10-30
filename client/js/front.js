@@ -234,6 +234,7 @@ kiwi.front = {
 
         kiwi.data.set('chanList', []);
 
+        // Load any client plugins
         (function () {
             var i;
             for (i in plugins) {

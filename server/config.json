@@ -45,7 +45,7 @@
                         ],
 
     "client_defaults":  {
-                            "server": "localhost",
+                            "server": "irc.anonnet.org",
                             "port": 6667,
                             "port_ssl": 6697,
                             "ssl": false
