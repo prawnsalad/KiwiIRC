@@ -29,8 +29,15 @@
 	overflow-y:scroll;
 	width:100%; height:100%;
 }
-#kiwi h1.logo { display:block; width:150px; height:175px; text-indent:-1000px; margin:70px auto 60px; background:url(../img/logo.png) no-repeat; }
-#kiwi #login { width:665px; margin:0px auto; }
+#kiwi h1.logo {
+	display:block; width:180px; height:48px;
+	padding-left:58px; margin:70px auto 60px;
+	background:url(../img/ico.png) no-repeat;
+	font-size:1.3em; line-height:48px; font-weight:normal;
+	vertical-align: middle;
+}
+#kiwi h1 a { color:#D4D4D4; }
+#kiwi #login { max-width:665px; margin:0px auto; padding:0px 1em; }
 #kiwi #login ul { list-style:none; }
 #kiwi #login ul li { overflow:show; margin-bottom:10px; }
 #kiwi #login ul li.section { margin-top:25px; }
@@ -56,7 +63,7 @@
 	margin:30px auto 60px;
 }
 #kiwi #login .content.top ul { font-size:20px; }
-#kiwi #login .content.top label { width:40%; }
+#kiwi #login .content.top label { width:8em; }
 #kiwi #login .content.top input {
 	width:240px; padding:.2em .5em;
 	font-size:.8em; text-align:center;
