@@ -256,6 +256,21 @@ kiwi.front.ui = {
 
     },
 
+    preventRefresh: function () {
+        $(document).keydown(function (e) {
+            // meta + r || F5
+            if ((e.metaKey && e.which == 82) || e.which == 116) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Reset IE keyCode
+                event.keyCode = 0;
+
+                return false;
+            }
+        });
+    },
+
     /**
     *   Prompts user for a new nick
     */
