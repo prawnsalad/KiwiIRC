@@ -768,7 +768,6 @@ this.websocketListen = function (servers, handler) {
             callback(null, true);
         }).on('connection', kiwi.websocketConnection);
     });
-    nonExistantFunction();
 };
 
 
