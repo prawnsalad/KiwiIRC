@@ -105,10 +105,9 @@ background-image: -moz-linear-gradient(
 	width: 100px;
 	top:92px; right:0px;
 	bottom: 55px;
-	margin: 5px;
-	overflow-y:auto;
+	overflow-y:auto; overflow-x:hidden;
 }
-#kiwi .userlist ul { display: none; }
+#kiwi .userlist ul { display: none; margin:5px; }
 #kiwi .userlist ul.active { display:block; }
 #kiwi .userlist ul li { padding:1px 2px; cursor:pointer; }
 #kiwi .userlist ul li:hover { background-color:#FAF7D3; }
