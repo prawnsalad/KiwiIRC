@@ -461,6 +461,33 @@ kiwi.front = {
 
 
 
+    /**
+     *  Sort the window list
+     */
+    sortWindowList: function () {
+        var win_list = $('#kiwi .windowlist ul');
+        var listitems = win_list.children('li').get();
+        console.log(Tabview.getServerTab().tab);
+        listitems.sort(function (a, b) {
+            console.log(a);
+            if (a == Tabview.getServerTab().tab) {
+                return 1;
+            }
+            if (b == Tabview.getServerTab().tab) {
+                return -1;
+            }
+            var compA = $(a).text().toUpperCase();
+            var compB = $(b).text().toUpperCase();
+            return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+        })
+
+        $.each(listitems, function(idx, itm) {
+            win_list.append(itm);
+        });
+    },
+
+
+
 
     /**
     *   Syncs with the Kiwi server
@@ -1266,14 +1293,9 @@ var Tabview = function (v_name) {
     var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, tmp_tab, userlist_enabled = true;
 
     if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
-        htmlsafe_name = v_name.replace(kiwi.gateway.channel_prefix, 'pre');
-        htmlsafe_name = htmlsafe_name.replace(/[^_a-z0-9\u0240-\u0337-]/, 'esc');
-        htmlsafe_name += randomString(3);
-        htmlsafe_name = 'chan_' + htmlsafe_name;
+        htmlsafe_name = 'chan_' + randomString(15);
     } else {
-        htmlsafe_name = v_name.replace(/[^_a-z0-9\u0240-\u0337-]/, 'esc');
-        htmlsafe_name += randomString(3);
-        htmlsafe_name = 'query_' + htmlsafe_name;
+        htmlsafe_name = 'query_' + randomString(15);
         userlist_enabled = false;
     }
 
@@ -1282,8 +1304,12 @@ var Tabview = function (v_name) {
     tmp_tabname = 'kiwi_tab_' + htmlsafe_name;
 
     if (!Tabview.tabExists(v_name)) {
+        // Create the window
         $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-        tmp_tab = $('<li id="' + tmp_tabname + '"><span>' + v_name + '</span></li>');
+        
+        // Create the userlist
+        tmp_tab = $('<li id="' + tmp_tabname + '"><span></span></li>');
+        $('span', tmp_tab).text(v_name);
         $('#kiwi .windowlist ul').append(tmp_tab);
         tmp_tab.click(function (e) {
             var tab = Tabview.getTab(v_name);
@@ -1508,22 +1534,29 @@ Tabview.prototype.changeTopic = function (new_topic) {
 };
 // Static functions
 Tabview.tabExists = function (name) {
-    if ((!name) || (typeof name !== 'string')) {
-        return false;
-    }
-    var ret = (typeof kiwi.front.tabviews[name.toLowerCase()] !== 'undefined');
-    return ret;
+    return (Tabview.getTab(name) !== null);
 };
 Tabview.getTab = function (name) {
-    if (Tabview.tabExists(name)) {
-        var ret = kiwi.front.tabviews[name.toLowerCase()];
-        return ret;
-    } else {
-        return null;
-    }
+    var tab;
+
+    // Make sure we actually have a name
+    if (typeof name !== 'string') return null;
+
+    // Go through each tabview and pick out the matching one
+    $.each(kiwi.front.tabviews, function (i, item) {
+        if (item.name == name.toLowerCase()) {
+            tab = item;
+            return false;
+        }
+    });
+
+    // If we we didn't find one, return null instead
+    tab = tab || null;
+
+    return tab;
 };
 Tabview.getServerTab = function () {
-    return kiwi.front.tabviews.server;
+    return Tabview.getTab('server');
 };
 Tabview.getAllTabs = function () {
     return kiwi.front.tabviews;
