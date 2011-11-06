@@ -233,7 +233,7 @@ background-image: -moz-linear-gradient(
 }
 #kiwi .control .msginput {
 	background-color:#fff; margin:3px;
-	position:relative;
+	position:relative; height:1.7em;
 	
 	border-radius:5px;
 	-moz-border-radius:5px;
@@ -241,13 +241,12 @@ background-image: -moz-linear-gradient(
 	-khtml-border-radius:5px;
 	behavior: url(border-radius.htc);
 }
-#kiwi .control .nick { text-align: right; width:11em; float:left; padding:2px; }
+#kiwi .control .nick { text-align: right; width:11em; position:absolute; padding:2px; }
 #kiwi .control .nick a { text-decoration:none; }
 #kiwi .control input {
 	border:none;
-	width:70%; display:block;
-	margin-left:12em;
-	padding: 2px 0px;
+	position:absolute; right:5px; left: 14.2em;
+	padding: 2px 0px; height:1.7em;
 	outline:none;
 }
 #kiwi .control .plugins { margin:3px; margin-top:7px; }
