@@ -987,26 +987,30 @@ UserList.prototype.setWidth = function (newWidth) {
 */
 UserList.prototype.clickHandler = function () {
     var li = $(this).parent(),
-        user = li.data('user');
-
+        user = li.data('user'),
+        userbox;
+    
     // Remove any existing userboxes
     $('#kiwi .userbox').remove();
 
-    if ($(li).data('userbox') === this) {
-        $(li).removeData('userbox');
-    } else {
-        $('#tmpl_user_box').tmpl({nick: user.nick}).appendTo(li);
+    if (li.data('userbox') === true) {
+        // This li already has the userbox, show remove it instead
+        li.removeData('userbox');
 
-        $('#kiwi .userbox .userbox_query').click(function (ev) {
+    } else {
+        // We don't have a userbox so create one
+        userbox = $('#tmpl_user_box').tmpl({nick: user.nick}).appendTo(li);
+
+        $('.userbox_query', userbox).click(function (ev) {
             var nick = $('#kiwi .userbox_nick').val();
             kiwi.front.run('/query ' + nick);
         });
 
-        $('#kiwi .userbox .userbox_whois').click(function (ev) {
+        $('.userbox_whois', userbox).click(function (ev) {
             var nick = $('#kiwi .userbox_nick').val();
             kiwi.front.run('/whois ' + nick);
         });
-        $(li).data('userbox', this);
+        li.data('userbox', true);
     }
 };
 
