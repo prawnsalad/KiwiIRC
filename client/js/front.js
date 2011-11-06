@@ -86,7 +86,7 @@ kiwi.front = {
         $(window).resize(kiwi.front.ui.doLayoutSize);
 
         // Add the resizer for the userlist
-        $('<div id="nicklist_resize" style="position:absolute; cursor:w-resize; width:5px;"></div>').appendTo('#kiwi');
+        $('<div id="nicklist_resize"></div>').appendTo('#kiwi');
         $('#nicklist_resize').draggable({axis: "x", drag: function () {
             var t = $(this),
                 ul = $('#kiwi .userlist'),

@@ -44,7 +44,7 @@ body, html {
 }
 #kiwi .windowlist ul, #kiwi .utilityviewlist ul {
 	overflow: hidden;
-	margin-right: 200px;
+	margin-right: 50px;
 	white-space: nowrap;
 	display:block;
 	/*height: 35px;*/
@@ -117,6 +117,12 @@ background-image: -moz-linear-gradient(
 #kiwi .userlist ul li .userbox { margin:0px 5px 5px 5px; font-size:.9em; }
 #kiwi .userlist ul li .userbox a { display:block; text-decoration:none; border-bottom: 1px dashed #aaa; }
 
+#nicklist_resize {
+	position:absolute; cursor:w-resize; width:5px;
+	background: url(/img/scroll_handle.png) no-repeat;
+	background-position: center;
+}
+
 #kiwi .cur_topic {
 	font-family:Verdana, Geneva, sans-serif;
 	font-size:.85em;
@@ -145,6 +151,7 @@ background-image: -moz-linear-gradient(
 	position: absolute;
 	top:92px; left:0px;
 	right: 110px; bottom:30px;
+	outline: none;
 }
 #kiwi .panel { overflow-y:scroll; height:100%; }
 #panel1 { float:left; width:100%;}
