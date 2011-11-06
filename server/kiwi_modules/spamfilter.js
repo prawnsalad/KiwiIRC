@@ -8,12 +8,15 @@ var compiled_regex;
 
 exports.onload = function(){
 	filters = [];
-	compiled_regex = new RegExp(filters.join('|'), 'im');
+
+	if (filter.length > 0) {
+		compiled_regex = new RegExp(filters.join('|'), 'im');
+	}
 }
 
 
 exports.onmsg = function(msg){
-	if (msg.msg.search(compiled_regex) > -1) {
+	if (typeof compiled_regex !== 'undefined' && msg.msg.search(compiled_regex) > -1) {
 		return null;
 	}
 
