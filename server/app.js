@@ -94,6 +94,8 @@ var ircNumerics = {
     RPL_BANLIST:            '367',
     RPL_ENDOFBANLIST:       '368',
     RPL_MOTD:               '372',
+    RPL_MOTDSTART:          '375',
+    RPL_ENDOFMOTD:          '376',
     RPL_WHOISMODES:         '379',
     ERR_NOSUCHNICK:         '401',
     ERR_CANNOTSENDTOCHAN:   '404',
@@ -245,7 +247,13 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
             websocket.sendClientEvent('whois', rtn);
             break;
         case ircNumerics.RPL_MOTD:
-            websocket.sendClientEvent('motd', {server: '', "msg": msg.trailing});
+            websocket.kiwi.buffer.motd += msg.trailing + '\n';
+            break;
+        case ircNumerics.RPL_MOTDSTART:
+            websocket.kiwi.buffer.motd = '';
+            break;
+        case ircNumerics.RPL_ENDOFMOTD:
+            websocket.sendClientEvent('motd', {server: '', 'msg': websocket.kiwi.buffer.motd});
             break;
         case ircNumerics.RPL_NAMEREPLY:
             params = msg.params.split(" ");
