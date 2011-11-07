@@ -171,7 +171,6 @@ kiwi.front = {
         server_tabview = new Tabview('server');
         server_tabview.userlist.setWidth(0); // Disable the userlist
         server_tabview.setIcon('/img/app_menu.png');
-        console.log($('.icon', server_tabview.tab));
         $('.icon', server_tabview.tab).tipTip({
             delay: 0,
             keepAlive: true,

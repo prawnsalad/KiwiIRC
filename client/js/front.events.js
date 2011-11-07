@@ -9,37 +9,38 @@ kiwi.front.events = {
     *   Binds all of the event handlers to their events
     */
 	bindAll: function () {
-        $(kiwi.gateway).bind("onmsg", this.onMsg);
-        $(kiwi.gateway).bind("onnotice", this.onNotice);
-        $(kiwi.gateway).bind("onaction", this.onAction);
-        $(kiwi.gateway).bind("onmotd", this.onMOTD);
-        $(kiwi.gateway).bind("onoptions", this.onOptions);
-        $(kiwi.gateway).bind("onconnect", this.onConnect);
-        $(kiwi.gateway).bind("onconnect_fail", this.onConnectFail);
-        $(kiwi.gateway).bind("ondisconnect", this.onDisconnect);
-        $(kiwi.gateway).bind("onreconnecting", this.onReconnecting);
-        $(kiwi.gateway).bind("onnick", this.onNick);
-        $(kiwi.gateway).bind("onuserlist", this.onUserList);
-        $(kiwi.gateway).bind("onuserlist_end", this.onUserListEnd);
-        $(kiwi.gateway).bind("onlist_start", this.onChannelListStart);
-        $(kiwi.gateway).bind("onlist_channel", this.onChannelList);
-        $(kiwi.gateway).bind("onlist_end", this.onChannelListEnd);
-        $(kiwi.gateway).bind("banlist", this.onBanList);
-        $(kiwi.gateway).bind("banlist_end", this.onBanListEnd);
-        $(kiwi.gateway).bind("onjoin", this.onJoin);
-        $(kiwi.gateway).bind("ontopic", this.onTopic);
-        $(kiwi.gateway).bind("onpart", this.onPart);
-        $(kiwi.gateway).bind("onkick", this.onKick);
-        $(kiwi.gateway).bind("onquit", this.onQuit);
-        $(kiwi.gateway).bind("onmode", this.onMode);
-        $(kiwi.gateway).bind("onwhois", this.onWhois);
-        $(kiwi.gateway).bind("onsync", this.onSync);
-        $(kiwi.gateway).bind("onchannel_redirect", this.onChannelRedirect);
-        $(kiwi.gateway).bind("ondebug", this.onDebug);
-        $(kiwi.gateway).bind("onctcp_request", this.onCTCPRequest);
-        $(kiwi.gateway).bind("onctcp_response", this.onCTCPResponse);
-        $(kiwi.gateway).bind("onirc_error", this.onIRCError);
-        $(kiwi.gateway).bind("onkiwi", this.onKiwi);
+        $(kiwi.gateway).bind('onmsg', this.onMsg)
+            .bind('onnotice', this.onNotice)
+            .bind('onaction', this.onAction)
+            .bind('onmotd', this.onMOTD)
+            .bind('onoptions', this.onOptions)
+            .bind('onconnect', this.onConnect)
+            .bind('onconnect_fail', this.onConnectFail)
+            .bind('ondisconnect', this.onDisconnect)
+            .bind('onreconnecting', this.onReconnecting)
+            .bind('onnick', this.onNick)
+            .bind('onuserlist', this.onUserList)
+            .bind('onuserlist_end', this.onUserListEnd)
+            .bind('onlist_start', this.onChannelListStart)
+            .bind('onlist_channel', this.onChannelList)
+            .bind('onlist_end', this.onChannelListEnd)
+            .bind('onbanlist', this.onBanList)
+            .bind('onbanlist_end', this.onBanListEnd)
+            .bind('onjoin', this.onJoin)
+            .bind('ontopic', this.onTopic)
+            .bind('ontopicsetby', this.onTopicSetBy)
+            .bind('onpart', this.onPart)
+            .bind('onkick', this.onKick)
+            .bind('onquit', this.onQuit)
+            .bind('onmode', this.onMode)
+            .bind('onwhois', this.onWhois)
+            .bind('onsync', this.onSync)
+            .bind('onchannel_redirect', this.onChannelRedirect)
+            .bind('ondebug', this.onDebug)
+            .bind('onctcp_request', this.onCTCPRequest)
+            .bind('onctcp_response', this.onCTCPResponse)
+            .bind('onirc_error', this.onIRCError)
+            .bind('onkiwi', this.onKiwi);
 	},
 
     /**
@@ -111,6 +112,19 @@ kiwi.front.events = {
         var tab = Tabview.getTab(data.channel);
         if (tab) {
             tab.changeTopic(data.topic);
+        }
+    },
+
+    /**
+    *   Handles the topicsetby event
+    *   @param  {eventObject}   e       The event object
+    *   @param  {Object}        data    The event data
+    */
+    onTopicSetBy: function (e, data) {
+        var when, tab = Tabview.getTab(data.channel);
+        if (tab) {
+            when = new Date(data.when*1000).toLocaleString();
+            tab.addMsg(null, '', 'Topic set by ' + data.nick + ' at ' + when, 'topic');
         }
     },
 

@@ -88,6 +88,7 @@ var ircNumerics = {
     RPL_LISTEND:            '323',
     RPL_NOTOPIC:            '331',
     RPL_TOPIC:              '332',
+    RPL_TOPICWHOTIME:       '333',
     RPL_NAMEREPLY:          '353',
     RPL_ENDOFNAMES:         '366',
     RPL_BANLIST:            '367',
@@ -339,6 +340,16 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
         case ircNumerics.RPL_NOTOPIC:
             obj = {nick: '', channel: msg.params.split(" ")[1], topic: ''};
             websocket.sendClientEvent('topic', obj);
+            break;
+        case ircNumerics.RPL_TOPICWHOTIME:
+            (function () {
+                var parts = msg.params.split(' '),
+                    nick = parts[2],
+                    channel = parts[1],
+                    when = parts[3];
+                    obj = {nick: nick, channel: channel, when: when};
+                    websocket.sendClientEvent('topicsetby', obj);
+            })();
             break;
         case 'MODE':
             opts = msg.params.split(" ");
