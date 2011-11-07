@@ -1544,7 +1544,7 @@ Tabview.getTab = function (name) {
 
     // Go through each tabview and pick out the matching one
     $.each(kiwi.front.tabviews, function (i, item) {
-        if (item.name == name.toLowerCase()) {
+        if (item.name.toLowerCase() == name.toLowerCase()) {
             tab = item;
             return false;
         }
