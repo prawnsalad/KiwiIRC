@@ -470,11 +470,11 @@ kiwi.front = {
         console.log(Tabview.getServerTab().tab);
         listitems.sort(function (a, b) {
             console.log(a);
-            if (a == Tabview.getServerTab().tab) {
-                return 1;
-            }
-            if (b == Tabview.getServerTab().tab) {
+            if (a == Tabview.getServerTab().tab[0]) {
                 return -1;
+            }
+            if (b == Tabview.getServerTab().tab[0]) {
+                return 1;
             }
             var compA = $(a).text().toUpperCase();
             var compB = $(b).text().toUpperCase();
