@@ -466,9 +466,8 @@ kiwi.front = {
     sortWindowList: function () {
         var win_list = $('#kiwi .windowlist ul');
         var listitems = win_list.children('li').get();
-        console.log(Tabview.getServerTab().tab);
+        
         listitems.sort(function (a, b) {
-            console.log(a);
             if (a == Tabview.getServerTab().tab[0]) {
                 return -1;
             }
@@ -1306,7 +1305,7 @@ var Tabview = function (v_name) {
         // Create the window
         $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
         
-        // Create the userlist
+        // Create the window tab
         tmp_tab = $('<li id="' + tmp_tabname + '"><span></span></li>');
         $('span', tmp_tab).text(v_name);
         $('#kiwi .windowlist ul').append(tmp_tab);
@@ -1316,6 +1315,8 @@ var Tabview = function (v_name) {
                 tab.show();
             }
         });
+
+        kiwi.front.sortWindowList();
     }
 
     kiwi.front.tabviews[v_name.toLowerCase()] = this;
