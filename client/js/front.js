@@ -320,7 +320,7 @@ kiwi.front = {
                     kiwi.front.ui.showChangeNick();
                 } else {
                     console.log("sending nick");
-                    kiwi.gateway.nick(msg.substring(1));
+                    kiwi.gateway.changeNick(msg.substring(1));
                 }
                 break;
 

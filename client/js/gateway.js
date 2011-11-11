@@ -364,7 +364,7 @@ kiwi.gateway = {
     *   @param  {String}    new_nick    Our new nickname
     *   @param  {Function}  callback    A callback function
     */
-    nick: function (new_nick, callback) {
+    changeNick: function (new_nick, callback) {
         var data = {
             method: 'nick',
             args: {
