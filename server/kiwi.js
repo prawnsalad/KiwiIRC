@@ -171,8 +171,13 @@ this.parseIRCMessage = function (websocket, ircSocket, data) {
 this.ircSocketDataHandler = function (data, websocket, ircSocket) {
     return app.ircSocketDataHandler(data, websocket, ircSocket);
 }
-
-
+this.IRCConnection = function (websocket, nick, host, port, ssl, password, callback) {
+    return app.IRCConnection.call(this, websocket, nick, host, port, ssl, password, callback);
+}
+util.inherits(this.IRCConnection, events.EventEmitter);
+this.bindIRCCommands = function (irc_connection, websocket) {
+    return app.bindIRCCommands.call(this, irc_connection, websocket);
+}
 
 
 
@@ -203,9 +208,9 @@ this.kiwi_mod.printMods();
 
 
 // Make sure Kiwi doesn't simply quit on an exception
-process.on('uncaughtException', function (e) {
+/*process.on('uncaughtException', function (e) {
     console.log('[Uncaught exception] ' + e);
-});
+});*/
 
 // Start the server up
 this.websocketListen(this.config.servers, this.httpHandler);
