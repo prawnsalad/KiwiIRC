@@ -8,15 +8,14 @@ var tls = require('tls'),
     url = require('url'),
     dns = require('dns'),
     crypto = require('crypto'),
+    events = require("events"),
+    util = require('util'),
     ws = require('socket.io'),
     jsp = require("uglify-js").parser,
     pro = require("uglify-js").uglify,
     _ = require('./lib/underscore.min.js'),
     starttls = require('./lib/starttls.js'),
     app = require(__dirname + '/app.js');
-
-
-
 
 
 // Libraries may need to know kiwi.js path as __dirname
@@ -97,7 +96,7 @@ this.recode = function () {
     app = null;
     app = require(__dirname + '/app.js');
 
-    var objs = {tls:tls, net:net, http:http, https:https, fs:fs, url:url, dns:dns, crypto:crypto, ws:ws, jsp:jsp, pro:pro, _:_, starttls:starttls};
+    var objs = {tls:tls, net:net, http:http, https:https, fs:fs, url:url, dns:dns, crypto:crypto, events:events, util:util, ws:ws, jsp:jsp, pro:pro, _:_, starttls:starttls};
     app.init(objs);
 
     return true;
