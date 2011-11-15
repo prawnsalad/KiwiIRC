@@ -829,13 +829,38 @@ this.websocketConnection = function (websocket) {
 this.IRCConnection = function (websocket, nick, host, port, ssl, password, callback) {
     var ircSocket,
         that = this,
-        regex;
+        regex,
+        onConnectHandler;
 
     events.EventEmitter.call(this);
+    
+    onConnectHandler = function () {
+        that.IRC.nick = nick;
+        // Send the login data
+        dns.reverse(websocket.kiwi.address, function (err, domains) {
+            websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
+            if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
+                websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
+            }
+            if (password) {
+                websocket.sendServerLine('PASS ' + password);
+            }
+            websocket.sendServerLine('CAP LS');
+            websocket.sendServerLine('NICK ' + nick);
+            websocket.sendServerLine('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + nick);
+
+            if ((callback) && (typeof (callback) === 'function')) {
+                //callback();
+            }
+        });
+    
+    };
+    
     if (!ssl) {
         ircSocket = net.createConnection(port, host);
+        ircSocket.on('connect', onConnectHandler);
     } else {
-        ircSocket = tls.connect(port, host);
+        ircSocket = tls.connect(port, host, {}, onConnectHandler);
     }
 
     ircSocket.setEncoding('ascii');
@@ -862,7 +887,6 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     ircSocket.held = '';
     ircSocket.on('data', function (data) {
         var i, msg;
-        console.log('data: ' + data);
         if ((ircSocket.holdLast) && (ircSocket.held !== '')) {
             data = ircSocket.held + data;
             ircSocket.holdLast = false;
@@ -880,7 +904,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
                 }
 
                 // We have a complete line of data, parse it!
-                msg = regex.exec(data);
+                msg = regex.exec(data[i]);
                 console.log('msg: ' + msg);
                 if (msg) {
                     msg = {
@@ -897,7 +921,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
                         console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
                     }
                 } else {
-                    console.log(data);
+                    console.log(data[i]);
                 }
             }
         }
@@ -919,29 +943,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
         ircSocket.destroy();
         that.emit('error', {message: 'Connection timed out'});
     });
-
-    ircSocket.on('connect', function () {
-        console.log('CONNECT');
-        that.IRC.nick = nick;
-        // Send the login data
-        //dns.reverse(websocket.kiwi.address, function (err, domains) {
-            /*websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
-            if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
-                websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
-            }
-            if (password) {
-                websocket.sendServerLine('PASS ' + password);
-            }*/
-            ircSocket.write('CAP LS');
-            ircSocket.write('NICK ' + nick);
-            ircSocket.write('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + nick);
-
-            if ((callback) && (typeof (callback) === 'function')) {
-                //callback();
-            }
-        //});
-    });
-
+    
     this.write = function (data, encoding, callback) {
         console.log('writing: ' + data);
         ircSocket.write(data, encoding, callback);
