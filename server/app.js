@@ -399,7 +399,6 @@ this.bindIRCCommands = function (irc_connection, websocket) {
 
     irc_connection.on('irc_PRIVMSG', function (msg) {
         var tmp, namespace, obj;
-
         if ((msg.trailing.charAt(0) === String.fromCharCode(1)) && (msg.trailing.charAt(msg.trailing.length - 1) === String.fromCharCode(1))) {
             // It's a CTCP request
             if (msg.trailing.substr(1, 6) === 'ACTION') {
@@ -904,8 +903,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
                 }
 
                 // We have a complete line of data, parse it!
-                msg = regex.exec(data[i]);
-                console.log('msg: ' + msg);
+                msg = regex.exec(data[i].replace(/^\r+|\r+$/, ''));
                 if (msg) {
                     msg = {
                         prefix:     msg[1],
@@ -917,11 +915,11 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
                         trailing:   (msg[7]) ? msg[7].trim() : ''
                     };
                     that.emit('irc_' + msg.command.toUpperCase(), msg);
-                    if (that.listeners(msg.command.toUpperCase()).length < 1) {
-                        console.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
+                    if (that.listeners('irc_' + msg.command.toUpperCase()).length < 1) {
+                        kiwi.log("Unknown command (" + String(msg.command).toUpperCase() + ")");
                     }
                 } else {
-                    console.log(data[i]);
+                    kiwi.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
                 }
             }
         }
@@ -945,10 +943,16 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     });
     
     this.write = function (data, encoding, callback) {
-        console.log('writing: ' + data);
         ircSocket.write(data, encoding, callback);
     };
 
+    this.end = function (data, encoding, callback) {
+        ircSocket.end(data, encoding, callback);
+    };
+
+    this.destroySoon = function () {
+        ircSocket.destroySoon();
+    };
     kiwi.bindIRCCommands(this, websocket);
 
 };
@@ -1020,9 +1024,9 @@ this.websocketMessage = function (websocket, msg, callback) {
             break;
 
         case 'quit':
-            websocket.ircSocket.end('QUIT :' + args.message + '\r\n');
+            websocket.ircConnection.end('QUIT :' + args.message + '\r\n');
             websocket.sentQUIT = true;
-            websocket.ircSocket.destroySoon();
+            websocket.ircConnection.destroySoon();
             websocket.disconnect();
             break;
 
