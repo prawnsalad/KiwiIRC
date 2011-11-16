@@ -98,6 +98,7 @@ this.recode = function () {
 
     var objs = {tls:tls, net:net, http:http, https:https, fs:fs, url:url, dns:dns, crypto:crypto, events:events, util:util, ws:ws, jsp:jsp, pro:pro, _:_, starttls:starttls};
     app.init(objs);
+    app.rebindIRCCommands();
 
     return true;
 }
@@ -175,10 +176,13 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     return app.IRCConnection.call(this, websocket, nick, host, port, ssl, password, callback);
 }
 util.inherits(this.IRCConnection, events.EventEmitter);
+
 this.bindIRCCommands = function (irc_connection, websocket) {
     return app.bindIRCCommands.call(this, irc_connection, websocket);
 }
-
+this.rebindIRCCommands = function () {
+    return app.bindIRCCommands.call(this);
+}
 
 
 
