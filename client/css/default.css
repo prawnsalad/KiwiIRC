@@ -242,11 +242,20 @@ background-image: -moz-linear-gradient(
 }
 #kiwi .control .nick { text-align: right; width:11em; position:absolute; padding:2px; }
 #kiwi .control .nick a { text-decoration:none; }
-#kiwi .control input {
+#kiwi .control #kiwi_msginput_wrapper {
 	border:none;
-	position:absolute; right:5px; left: 14.2em;
-	padding: 2px 0px; height:1.7em;
+	position:absolute;
+    right:5px;
+    left: 12.2em;
+	/*padding: 2px 0px;*/
+    height:1.7em;
 	outline:none;
+}
+#kiwi .control input {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border: medium none;
 }
 #kiwi .control .plugins { margin:3px; margin-top:7px; }
 #kiwi .control .plugins ul li {
