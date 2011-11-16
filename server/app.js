@@ -907,6 +907,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
             websocket.sendServerLine('NICK ' + nick);
             websocket.sendServerLine('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + nick);
 
+            that.connected = true;
             that.emit('connect');
         });
     };
@@ -930,7 +931,9 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     });
 
     ircSocket.on('error', function (e) {
+        that.connected = false;
         that.emit('error', e);
+        that.destroySoon();
     });
 
     if (typeof callback === 'function') {
@@ -986,15 +989,18 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     }
 
     ircSocket.on('end', function () {
+        that.connected = false;
         that.emit('disconnect', false);
     });
 
     ircSocket.on('close', function (had_error) {
+        that.connected = false;
         that.emit('disconnect', had_error);
     });
 
     ircSocket.on('timeout', function () {
         ircSocket.destroy();
+        that.connected = false;
         that.emit('error', {message: 'Connection timed out'});
     });
 
@@ -1003,6 +1009,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     };
 
     this.end = function (data, encoding, callback) {
+        that.connected = false;
         ircSocket.end(data, encoding, callback);
     };
 
@@ -1131,11 +1138,11 @@ this.websocketMessage = function (websocket, msg, callback) {
 this.websocketDisconnect = function (websocket) {
     var con;
 
-    if ((!websocket.sentQUIT) && (websocket.ircSocket)) {
+    if ((!websocket.sentQUIT) && (websocket.ircConnection.connected)) {
         try {
-            websocket.ircSocket.end('QUIT :' + kiwi.config.quit_message + '\r\n');
+            websocket.ircConnection.end('QUIT :' + kiwi.config.quit_message + '\r\n');
             websocket.sentQUIT = true;
-            websocket.ircSocket.destroySoon();
+            websocket.ircConnection.destroySoon();
         } catch (e) {
         }
     }
