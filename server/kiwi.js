@@ -181,7 +181,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
     return app.bindIRCCommands.call(this, irc_connection, websocket);
 }
 this.rebindIRCCommands = function () {
-    return app.bindIRCCommands.call(this);
+    return app.rebindIRCCommands.call(this);
 }
 
 
