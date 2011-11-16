@@ -1,22 +1,22 @@
 /*jslint sloppy: true, continue: true, forin: true, regexp: true, undef: false, node: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
 /*globals kiwi_root */
 /* Fuck you, git. */
-var tls = null;
-var net = null;
-var http = null;
-var https = null;
-var fs = null;
-var url = null;
-var dns = null;
-var crypto = null;
-var events = require('events');
-var util = require('util');
-var ws = null;
-var jsp = null;
-var pro = null;
-var _ = null;
-var starttls = null;
-var kiwi = null;
+var tls = null,
+    net = null,
+    http = null,
+    https = null,
+    fs = null,
+    url = null,
+    dns = null,
+    crypto = null,
+    events = null,
+    util = null,
+    ws = null,
+    jsp = null,
+    pro = null,
+    _ = null,
+    starttls = null,
+    kiwi = null;
 
 this.init = function (objs) {
     tls = objs.tls;
@@ -35,6 +35,8 @@ this.init = function (objs) {
     _ = objs._;
     starttls = objs.starttls;
     kiwi = require('./kiwi.js');
+
+    util.inherits(this.IRCConnection, events.EventEmitter);
 };
 
 
@@ -120,12 +122,12 @@ var ircNumerics = {
 
 
 this.bindIRCCommands = function (irc_connection, websocket) {
-    var boundEvents = [];
+    var bound_events = [];
 
     irc_connection.on('irc_PING', function (msg) {
         websocket.sendServerLine('PONG ' + msg.trailing);
     });
-    boundEvents.push('irc_PING');
+    bound_events.push('irc_PING');
 
     irc_connection.on('irc_' + ircNumerics.RPL_WELCOME, function (msg) {
         if (irc_connection.IRC.CAP.negotiating) {
@@ -137,7 +139,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
         var nick =  msg.params.split(' ')[0];
         websocket.sendClientEvent('connect', {connected: true, host: null, nick: nick});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WELCOME);
+    bound_events.push('irc_' + ircNumerics.RPL_WELCOME);
 
     irc_connection.on('irc_' + ircNumerics.RPL_ISUPPORT, function (msg) {
         var opts = msg.params.split(" "),
@@ -170,43 +172,43 @@ this.bindIRCCommands = function (irc_connection, websocket) {
 
         websocket.sendClientEvent('options', {server: '', "options": irc_connection.IRC.options});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_ISUPPORT);
+    bound_events.push('irc_' + ircNumerics.RPL_ISUPPORT);
 
     irc_connection.on('irc_' + ircNumerics.RPL_ENDOFWHOIS, function (msg) {
         websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: true});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_ENDOFWHOIS);
+    bound_events.push('irc_' + ircNumerics.RPL_ENDOFWHOIS);
 
     irc_connection.on('irc_' + ircNumerics.RPL_WHOISUSER, function (msg) {
         websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WHOISUSER);
+    bound_events.push('irc_' + ircNumerics.RPL_WHOISUSER);
 
     irc_connection.on('irc_' + ircNumerics.RPL_WHOISSERVER, function (msg) {
         websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WHOISSERVER);
+    bound_events.push('irc_' + ircNumerics.RPL_WHOISSERVER);
 
     irc_connection.on('irc_' + ircNumerics.RPL_WHOISOPERATOR, function (msg) {
         websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WHOISOPERATOR);
+    bound_events.push('irc_' + ircNumerics.RPL_WHOISOPERATOR);
 
     irc_connection.on('irc_' + ircNumerics.RPL_WHOISCHANNELS, function (msg) {
         websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WHOISCHANNELS);
+    bound_events.push('irc_' + ircNumerics.RPL_WHOISCHANNELS);
 
     irc_connection.on('irc_' + ircNumerics.RPL_WHOISMODES, function (msg) {
         websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WHOISMODES);
+    bound_events.push('irc_' + ircNumerics.RPL_WHOISMODES);
 
     irc_connection.on('irc_' + ircNumerics.RPL_LISTSTART, function (msg) {
         websocket.sendClientEvent('list_start', {server: ''});
         websocket.kiwi.buffer.list = [];
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_LISTSTART);
+    bound_events.push('irc_' + ircNumerics.RPL_LISTSTART);
 
     irc_connection.on('irc_' + ircNumerics.RPL_LISTEND, function (msg) {
         if (websocket.kiwi.buffer.list.length > 0) {
@@ -218,7 +220,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
         }
         websocket.sendClientEvent('list_end', {server: ''});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_LISTEND);
+    bound_events.push('irc_' + ircNumerics.RPL_LISTEND);
 
     irc_connection.on('irc_' + ircNumerics.RPL_LIST, function (msg) {
         var parts, channel, num_users, topic;
@@ -245,7 +247,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             websocket.kiwi.buffer.list = [];
         }
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_LIST);
+    bound_events.push('irc_' + ircNumerics.RPL_LIST);
 
     irc_connection.on('irc_' + ircNumerics.RPL_WHOISIDLE, function (msg) {
         var params = msg.params.split(" ", 4),
@@ -255,22 +257,22 @@ this.bindIRCCommands = function (irc_connection, websocket) {
         }
         websocket.sendClientEvent('whois', rtn);
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_WHOISIDLE);
+    bound_events.push('irc_' + ircNumerics.RPL_WHOISIDLE);
 
     irc_connection.on('irc_' + ircNumerics.RPL_MOTD, function (msg) {
         websocket.kiwi.buffer.motd += msg.trailing + '\n';
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_MOTD);
+    bound_events.push('irc_' + ircNumerics.RPL_MOTD);
 
     irc_connection.on('irc_' + ircNumerics.RPL_MOTDSTART, function (msg) {
         websocket.kiwi.buffer.motd = '';
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_MOTDSTART);
+    bound_events.push('irc_' + ircNumerics.RPL_MOTDSTART);
 
     irc_connection.on('irc_' + ircNumerics.RPL_ENDOFMOTD, function (msg) {
         websocket.sendClientEvent('motd', {server: '', 'msg': websocket.kiwi.buffer.motd});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_ENDOFMOTD);
+    bound_events.push('irc_' + ircNumerics.RPL_ENDOFMOTD);
 
     irc_connection.on('irc_' + ircNumerics.RPL_NAMEREPLY, function (msg) {
         var params = msg.params.split(" "),
@@ -301,35 +303,35 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             kiwi.log("oops");
         }
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_NAMEREPLY);
+    bound_events.push('irc_' + ircNumerics.RPL_NAMEREPLY);
 
     irc_connection.on('irc_' + ircNumerics.RPL_ENDOFNAMES, function (msg) {
         websocket.sendClientEvent('userlist_end', {server: '', channel: msg.params.split(" ")[1]});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_ENDOFNAMES);
+    bound_events.push('irc_' + ircNumerics.RPL_ENDOFNAMES);
 
     irc_connection.on('irc_' + ircNumerics.ERR_LINKCHANNEL, function (msg) {
         var params = msg.params.split(" ");
         websocket.sendClientEvent('channel_redirect', {from: params[1], to: params[2]});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_LINKCHANNEL);
+    bound_events.push('irc_' + ircNumerics.ERR_LINKCHANNEL);
 
     irc_connection.on('irc_' + ircNumerics.ERR_NOSUCHNICK, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'no_such_nick', nick: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_NOSUCHNICK);
+    bound_events.push('irc_' + ircNumerics.ERR_NOSUCHNICK);
 
     irc_connection.on('irc_' + ircNumerics.RPL_BANLIST, function (msg) {
         var params = msg.params.split(" ");
         kiwi.log(params);
         websocket.sendClientEvent('banlist', {server: '', channel: params[1], banned: params[2], banned_by: params[3], banned_at: params[4]});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_BANLIST);
+    bound_events.push('irc_' + ircNumerics.RPL_BANLIST);
 
     irc_connection.on('irc_' + ircNumerics.RPL_ENDOFBANLIST, function (msg) {
         websocket.sendClientEvent('banlist_end', {server: '', channel: msg.params.split(" ")[1]});
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_ENDOFBANLIST);
+    bound_events.push('irc_' + ircNumerics.RPL_ENDOFBANLIST);
 
     irc_connection.on('irc_JOIN', function (msg) {
         var channel;
@@ -347,23 +349,23 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             websocket.sendServerLine('NAMES ' + msg.trailing);
         }
     });
-    boundEvents.push('irc_JOIN');
+    bound_events.push('irc_JOIN');
 
     irc_connection.on('irc_PART', function (msg) {
         websocket.sendClientEvent('part', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), message: msg.trailing});
     });
-    boundEvents.push('irc_PART');
+    bound_events.push('irc_PART');
 
     irc_connection.on('irc_KICK', function (msg) {
         var params = msg.params.split(" ");
         websocket.sendClientEvent('kick', {kicked: params[1], nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: params[0].trim(), message: msg.trailing});
     });
-    boundEvents.push('irc_KICK');
+    bound_events.push('irc_KICK');
 
     irc_connection.on('irc_QUIT', function (msg) {
         websocket.sendClientEvent('quit', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, message: msg.trailing});
     });
-    boundEvents.push('irc_QUIT');
+    bound_events.push('irc_QUIT');
 
     irc_connection.on('irc_NOTICE', function (msg) {
         if ((msg.trailing.charAt(0) === String.fromCharCode(1)) && (msg.trailing.charAt(msg.trailing.length - 1) === String.fromCharCode(1))) {
@@ -373,30 +375,30 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             websocket.sendClientEvent('notice', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, target: msg.params.trim(), msg: msg.trailing});
         }
     });
-    boundEvents.push('irc_NOTICE');
+    bound_events.push('irc_NOTICE');
 
     irc_connection.on('irc_NICK', function (msg) {
         websocket.sendClientEvent('nick', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, newnick: msg.trailing});
     });
-    boundEvents.push('irc_NICK');
+    bound_events.push('irc_NICK');
 
     irc_connection.on('irc_TOPIC', function (msg) {
         var obj = {nick: msg.nick, channel: msg.params, topic: msg.trailing};
         websocket.sendClientEvent('topic', obj);
     });
-    boundEvents.push('irc_TOPIC');
+    bound_events.push('irc_TOPIC');
 
     irc_connection.on('irc_' + ircNumerics.RPL_TOPIC, function (msg) {
         var obj = {nick: '', channel: msg.params.split(" ")[1], topic: msg.trailing};
         websocket.sendClientEvent('topic', obj);
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_TOPIC);
+    bound_events.push('irc_' + ircNumerics.RPL_TOPIC);
 
     irc_connection.on('irc_' + ircNumerics.RPL_NOTOPIC, function (msg) {
         var obj = {nick: '', channel: msg.params.split(" ")[1], topic: ''};
         websocket.sendClientEvent('topic', obj);
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_NOTOPIC);
+    bound_events.push('irc_' + ircNumerics.RPL_NOTOPIC);
 
     irc_connection.on('irc_' + ircNumerics.RPL_TOPICWHOTIME, function (msg) {
         var parts = msg.params.split(' '),
@@ -406,7 +408,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             obj = {nick: nick, channel: channel, when: when};
         websocket.sendClientEvent('topicsetby', obj);
     });
-    boundEvents.push('irc_' + ircNumerics.RPL_TOPICWHOTIME);
+    bound_events.push('irc_' + ircNumerics.RPL_TOPICWHOTIME);
 
     irc_connection.on('irc_MODE', function (msg) {
         var opts = msg.params.split(" "),
@@ -429,7 +431,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
         }
         websocket.sendClientEvent('mode', params);
     });
-    boundEvents.push('irc_MODE');
+    bound_events.push('irc_MODE');
 
     irc_connection.on('irc_PRIVMSG', function (msg) {
         var tmp, namespace, obj;
@@ -452,7 +454,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             websocket.sendClientEvent('msg', obj);
         }
     });
-    boundEvents.push('irc_PRIVMSG');
+    bound_events.push('irc_PRIVMSG');
 
     irc_connection.on('irc_CAP', function (msg) {
         var caps = kiwi.config.cap_options,
@@ -497,7 +499,7 @@ this.bindIRCCommands = function (irc_connection, websocket) {
             break;
         }
     });
-    boundEvents.push('irc_CAP');
+    bound_events.push('irc_CAP');
         /*case ircNumerics.RPL_STARTTLS:
             try {
                 IRC = ircSocket.IRC;
@@ -521,69 +523,69 @@ this.bindIRCCommands = function (irc_connection, websocket) {
     irc_connection.on('irc_' + ircNumerics.ERR_CANNOTSENDTOCHAN, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'cannot_send_to_chan', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_CANNOTSENDTOCHAN);
+    bound_events.push('irc_' + ircNumerics.ERR_CANNOTSENDTOCHAN);
 
     irc_connection.on('irc_' + ircNumerics.ERR_TOOMANYCHANNELS, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'too_many_channels', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_TOOMANYCHANNELS);
+    bound_events.push('irc_' + ircNumerics.ERR_TOOMANYCHANNELS);
 
     irc_connection.on('irc_' + ircNumerics.ERR_USERNOTINCHANNEL, function (msg) {
         var params = msg.params.split(" ");
         websocket.sendClientEvent('irc_error', {error: 'user_not_in_channel', nick: params[0], channel: params[1], reason: msg.trainling});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_USERNOTINCHANNEL);
+    bound_events.push('irc_' + ircNumerics.ERR_USERNOTINCHANNEL);
 
     irc_connection.on('irc_' + ircNumerics.ERR_NOTONCHANNEL, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'not_on_channel', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_NOTONCHANNEL);
+    bound_events.push('irc_' + ircNumerics.ERR_NOTONCHANNEL);
 
     irc_connection.on('irc_' + ircNumerics.ERR_CHANNELISFULL, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'channel_is_full', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_CHANNELISFULL);
+    bound_events.push('irc_' + ircNumerics.ERR_CHANNELISFULL);
 
     irc_connection.on('irc_' + ircNumerics.ERR_INVITEONLYCHAN, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'invite_only_channel', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_INVITEONLYCHAN);
+    bound_events.push('irc_' + ircNumerics.ERR_INVITEONLYCHAN);
 
     irc_connection.on('irc_' + ircNumerics.ERR_BANNEDFROMCHAN, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'banned_from_channel', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_BANNEDFROMCHAN);
+    bound_events.push('irc_' + ircNumerics.ERR_BANNEDFROMCHAN);
 
     irc_connection.on('irc_' + ircNumerics.ERR_BADCHANNELKEY, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'bad_channel_key', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_BADCHANNELKEY);
+    bound_events.push('irc_' + ircNumerics.ERR_BADCHANNELKEY);
 
     irc_connection.on('irc_' + ircNumerics.ERR_CHANOPRIVSNEEDED, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'chanop_privs_needed', channel: msg.params.split(" ")[1], reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_CHANOPRIVSNEEDED);
+    bound_events.push('irc_' + ircNumerics.ERR_CHANOPRIVSNEEDED);
 
     irc_connection.on('irc_' + ircNumerics.ERR_NICKNAMEINUSE, function (msg) {
         websocket.sendClientEvent('irc_error', {error: 'nickname_in_use', nick: _.last(msg.params.split(" ")), reason: msg.trailing});
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_NICKNAMEINUSE);
+    bound_events.push('irc_' + ircNumerics.ERR_NICKNAMEINUSE);
 
     irc_connection.on('irc_ERROR', function (msg) {
         irc_connection.end();
         websocket.sendClientEvent('irc_error', {error: 'error', reason: msg.trailing});
         websocket.disconnect();
     });
-    boundEvents.push('irc_ERROR');
+    bound_events.push('irc_ERROR');
 
     irc_connection.on('irc_' + ircNumerics.ERR_NOTREGISTERED, function (msg) {
         if (irc_connection.IRC.registered) {
             kiwi.log('Kiwi thinks user is registered, but the IRC server thinks differently');
         }
     });
-    boundEvents.push('irc_' + ircNumerics.ERR_NOTREGISTERED);
+    bound_events.push('irc_' + ircNumerics.ERR_NOTREGISTERED);
 
-    return boundEvents;
+    return bound_events;
 };
 
 this.rebindIRCCommands = function () {
@@ -888,7 +890,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
         that = this,
         regex,
         onConnectHandler,
-        boundEvents;
+        bound_events;
 
     events.EventEmitter.call(this);
 
@@ -1017,18 +1019,16 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
         ircSocket.destroySoon();
     };
 
-    boundEvents = kiwi.bindIRCCommands(this, websocket);
+    bound_events = kiwi.bindIRCCommands(this, websocket);
 
     this.rebindIRCCommands = function () {
-        _.each(boundEvents, function (event) {
+        _.each(bound_events, function (event) {
             that.removeAllListeners(event);
         });
-        boundEvents = kiwi.bindIRCCommands(that, websocket);
+        bound_events = kiwi.bindIRCCommands(that, websocket);
     };
 };
-util.inherits(this.IRCConnection, events.EventEmitter);
 
-//this.IRCConnection.prototype = events.EventEmitter;
 
 
 this.websocketMessage = function (websocket, msg, callback) {
