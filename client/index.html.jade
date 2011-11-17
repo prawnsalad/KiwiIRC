@@ -33,7 +33,7 @@ html(lang="en-gb")
                             ul
                                 li
                                     label(for="nick") Your nickname:
-                                    input(type="text", id="nick", name="nick", class="nick", placeholder="Your nick..", value=nick)
+                                    input#nick.nick(type="text", name="nick", placeholder="Your nick..", value=nick)
                             a.connect(href="") Connect...
 
                         - var display
@@ -47,22 +47,22 @@ html(lang="en-gb")
                                 ul
                                     li
                                         label(for="channel") Channel:
-                                        input(type="text", id="channel", name="channel", class="channel", value="#kiwiirc")
+                                        input#channel.channel(type="text", name="channel", value="#kiwiirc")
                                     li
                                         label(for="network") Server:
-                                        input(type="text", id="network", name="network", class="network", value=server)
+                                        input#network.network(type="text", name="network", value=server)
                                     li(class="section")
                                         label(for="port") Port:
-                                        input(type="text", id="port", name="port", class="port", value=port)
+                                        input#port.port(type="text", name="port", value=port)
                                     li
                                         label(for="password") Password:
-                                        input(type="text", id="password", name="password", class="password")
+                                        input#password.password(type="text", name="password")
                                     li
                                         label(for="ssl") SSL:
                                         - if (ssl)
-                                            input(type="checkbox", id="ssl", name="ssl", class="ssl", checked)
+                                            input#ssl.ssl(type="checkbox", name="ssl", checked)
                                         - else
-                                            input(type="checkbox", id="ssl", name="ssl", class="ssl")
+                                            input#ssl.ssl(type="checkbox", name="ssl")
                                         
                                 a.connect(href="") Connect...
 
@@ -78,14 +78,6 @@ html(lang="en-gb")
                     ul
 
                 div.cur_topic(contenteditable="true", spellcheck="true")
-                    //
-                        ul.edit(style="float:right;")
-                            li
-                                img(src="img/more.png")
-                                    ul#kiwi_menu
-                                        li Item 1
-                                        li Item 2
-                                        li Item 3
                     div.topic(style="margin-right:5em; overflow:hidden; white-space: pre-wrap; word-wrap: break-word;")
 
             div.userlist
