@@ -921,7 +921,7 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
         ircSocket = tls.connect(port, host, {}, onConnectHandler);
     }
 
-    ircSocket.setEncoding('ascii');
+    ircSocket.setEncoding('utf-8');
     this.IRC = {options: {}, CAP: {negotiating: true, requested: [], enabled: []}, registered: false};
 
     this.on('error', function (e) {
