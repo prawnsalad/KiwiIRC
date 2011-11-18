@@ -868,11 +868,15 @@ this.websocketConnection = function (websocket) {
             websocket.emit('message', data);
         };
 
-        websocket.sendServerLine = function (data, eol) {
-            eol = (typeof eol === 'undefined') ? '\r\n' : eol;
+        websocket.sendServerLine = function (data, eol, callback) {
+            if ((arguments.length < 3) && (typeof eol === 'function')) {
+                callback = eol;
+                eol = '\r\n';
+            }
+            eol = ((typeof eol === 'undefined') || (typeof eol === 'null')) ? '\r\n' : eol;
 
             try {
-                websocket.ircConnection.write(data + eol);
+                websocket.ircConnection.write(data + eol, 'utf-8', callback);
             } catch (e) { }
         };
 
@@ -1006,6 +1010,10 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
         that.emit('error', {message: 'Connection timed out'});
     });
 
+    ircSocket.on('drain', function () {
+        that.emit('drain');
+    });
+
     this.write = function (data, encoding, callback) {
         ircSocket.write(data, encoding, callback);
     };
@@ -1034,6 +1042,9 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
 this.websocketMessage = function (websocket, msg, callback) {
     var args, obj, channels, keys;
     try {
+        if ((callback) && (typeof (callback) !== 'function')) {
+            callback = null;
+        }
         msg.data = JSON.parse(msg.data);
         args = msg.data.args;
         switch (msg.data.method) {
@@ -1041,22 +1052,22 @@ this.websocketMessage = function (websocket, msg, callback) {
             if ((args.target) && (args.msg)) {
                 obj = kiwi.kiwi_mod.run('msgsend', args, {websocket: websocket});
                 if (obj !== null) {
-                    websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + args.msg);
+                    websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + args.msg, callback);
                 }
             }
             break;
         case 'ctcp':
             if ((args.target) && (args.type)) {
                 if (args.request) {
-                    websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1));
+                    websocket.sendServerLine('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1), callback);
                 } else {
-                    websocket.sendServerLine('NOTICE ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1));
+                    websocket.sendServerLine('NOTICE ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1), callback);
                 }
             }
             break;
 
         case 'raw':
-            websocket.sendServerLine(args.data);
+            websocket.sendServerLine(args.data, callback);
             break;
 
         case 'join':
@@ -1064,7 +1075,7 @@ this.websocketMessage = function (websocket, msg, callback) {
                 channels = args.channel.split(",");
                 keys = (args.key) ? args.key.split(",") : [];
                 _.each(channels, function (chan, index) {
-                    websocket.sendServerLine('JOIN ' + chan + ' ' + (keys[index] || ''));
+                    websocket.sendServerLine('JOIN ' + chan + ' ' + (keys[index] || ''), callback);
                 });
             }
             break;
@@ -1072,7 +1083,7 @@ this.websocketMessage = function (websocket, msg, callback) {
         case 'part':
             if (args.channel) {
                 _.each(args.channel.split(","), function (chan) {
-                    websocket.sendServerLine('PART ' + chan);
+                    websocket.sendServerLine('PART ' + chan, callback);
                 });
             }
             break;
@@ -1080,16 +1091,16 @@ this.websocketMessage = function (websocket, msg, callback) {
         case 'topic':
             if (args.channel) {
                 if (args.topic) {
-                    websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic);
+                    websocket.sendServerLine('TOPIC ' + args.channel + ' :' + args.topic, callback);
                 } else {
-                    websocket.sendServerLine('TOPIC ' + args.channel);
+                    websocket.sendServerLine('TOPIC ' + args.channel, callback);
                 }
             }
             break;
 
         case 'kick':
             if ((args.channel) && (args.nick)) {
-                websocket.sendServerLine('KICK ' + args.channel + ' ' + args.nick + ':' + args.reason);
+                websocket.sendServerLine('KICK ' + args.channel + ' ' + args.nick + ':' + args.reason, callback);
             }
             break;
 
@@ -1102,31 +1113,28 @@ this.websocketMessage = function (websocket, msg, callback) {
 
         case 'notice':
             if ((args.target) && (args.msg)) {
-                websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg);
+                websocket.sendServerLine('NOTICE ' + args.target + ' :' + args.msg, callback);
             }
             break;
 
         case 'mode':
             if ((args.target) && (args.mode)) {
-                websocket.sendServerLine('MODE ' + args.target + ' ' + args.mode + ' ' + args.params);
+                websocket.sendServerLine('MODE ' + args.target + ' ' + args.mode + ' ' + args.params, callback);
             }
             break;
 
         case 'nick':
             if (args.nick) {
-                websocket.sendServerLine('NICK ' + args.nick);
+                websocket.sendServerLine('NICK ' + args.nick, callback);
             }
             break;
 
         case 'kiwi':
             if ((args.target) && (args.data)) {
-                websocket.sendServerLine('PRIVMSG ' + args.target + ': ' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1));
+                websocket.sendServerLine('PRIVMSG ' + args.target + ': ' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1), callback);
             }
             break;
         default:
-        }
-        if ((callback) && (typeof (callback) === 'function')) {
-            callback();
         }
     } catch (e) {
         kiwi.log("Caught error: " + e);
@@ -1240,6 +1248,8 @@ this.manageControll = function (data) {
 
             kiwi.log('Reloading module (' + parts[2] + ')..');
             kiwi.kiwi_mod.reloadModule(parts[2]);
+        } else if (parts[1] === 'list') {
+            kiwi.kiwi_mod.printMods();
         }
         break;
 
