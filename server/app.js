@@ -871,9 +871,8 @@ this.websocketConnection = function (websocket) {
         websocket.sendServerLine = function (data, eol, callback) {
             if ((arguments.length < 3) && (typeof eol === 'function')) {
                 callback = eol;
-                eol = '\r\n';
             }
-            eol = ((typeof eol === 'undefined') || (eol === null)) ? '\r\n' : eol;
+            eol = (typeof eol !== 'string') ? '\r\n' : eol;
 
             try {
                 websocket.ircConnection.write(data + eol, 'utf-8', callback);
