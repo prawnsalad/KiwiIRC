@@ -873,7 +873,7 @@ this.websocketConnection = function (websocket) {
                 callback = eol;
                 eol = '\r\n';
             }
-            eol = ((typeof eol === 'undefined') || (typeof eol === 'null')) ? '\r\n' : eol;
+            eol = ((typeof eol === 'undefined') || (eol === null)) ? '\r\n' : eol;
 
             try {
                 websocket.ircConnection.write(data + eol, 'utf-8', callback);
