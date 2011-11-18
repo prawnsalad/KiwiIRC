@@ -464,20 +464,20 @@ kiwi.front = {
      *  Sort the window list
      */
     sortWindowList: function () {
-        var win_list = $('#kiwi .windowlist ul');
-        var listitems = win_list.children('li').get();
+        var win_list = $('#kiwi .windowlist ul'),
+            listitems = win_list.children('li').get();
         
         listitems.sort(function (a, b) {
-            if (a == Tabview.getServerTab().tab[0]) {
+            if (a === Tabview.getServerTab().tab[0]) {
                 return -1;
             }
-            if (b == Tabview.getServerTab().tab[0]) {
+            if (b === Tabview.getServerTab().tab[0]) {
                 return 1;
             }
-            var compA = $(a).text().toUpperCase();
-            var compB = $(b).text().toUpperCase();
+            var compA = $(a).text().toUpperCase(),
+                compB = $(b).text().toUpperCase();
             return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-        })
+        });
 
         $.each(listitems, function(idx, itm) {
             win_list.append(itm);
@@ -1540,11 +1540,13 @@ Tabview.getTab = function (name) {
     var tab;
 
     // Make sure we actually have a name
-    if (typeof name !== 'string') return null;
+    if (typeof name !== 'string') {
+        return null;
+    }
 
     // Go through each tabview and pick out the matching one
     $.each(kiwi.front.tabviews, function (i, item) {
-        if (item.name.toLowerCase() == name.toLowerCase()) {
+        if (item.name.toLowerCase() === name.toLowerCase()) {
             tab = item;
             return false;
         }

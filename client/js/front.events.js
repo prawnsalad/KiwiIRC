@@ -123,7 +123,7 @@ kiwi.front.events = {
     onTopicSetBy: function (e, data) {
         var when, tab = Tabview.getTab(data.channel);
         if (tab) {
-            when = new Date(data.when*1000).toLocaleString();
+            when = new Date(data.when * 1000).toLocaleString();
             tab.addMsg(null, '', 'Topic set by ' + data.nick + ' at ' + when, 'topic');
         }
     },
@@ -291,7 +291,7 @@ kiwi.front.events = {
         } else {
             msg = f(data.attempts) + ' attempt at reconnecting in ' + secs + ' second' + (((secs > 1) || (secs === 0)) ? 's' : '') + '...';
         }
-        
+
         err_box.text(msg);
     },
     /**

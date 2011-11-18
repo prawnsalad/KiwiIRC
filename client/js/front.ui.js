@@ -52,7 +52,7 @@ kiwi.front.ui = {
             var windows, meta, num, msg, data, self;
             windows = $('#windows');
 
-            if (navigator.appVersion.indexOf("Mac") != -1) {
+            if (navigator.appVersion.indexOf("Mac") !== -1) {
                 meta = e.ctrlKey;
             } else {
                 meta = e.altKey;
@@ -259,7 +259,7 @@ kiwi.front.ui = {
     preventRefresh: function () {
         $(document).keydown(function (e) {
             // meta + r || F5
-            if ((e.metaKey && e.which == 82) || e.which == 116) {
+            if ((e.metaKey && e.which === 82) || e.which === 116) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -432,7 +432,7 @@ kiwi.front.ui = {
             s,
             current_s,
             next_s;
-        b.css({display: 'block', position: 'absolute', height:'100%', width:'100%'});
+        b.css({display: 'block', position: 'absolute', height: '100%', width: '100%'});
         $('#kiwi').append(b);
 
         /**
@@ -442,29 +442,29 @@ kiwi.front.ui = {
             var b = 3, ret = {};
             ret.top = el.offset().top;
             ret.left = el.offset().left;
-            ret.width = parseInt(el.outerWidth(true), 10) - (b*2);
-            ret.height = parseInt(el.outerHeight(true), 10) - (b*2);
+            ret.width = parseInt(el.outerWidth(true), 10) - (b * 2);
+            ret.height = parseInt(el.outerHeight(true), 10) - (b * 2);
             return ret;
         };
 
         s = [
-            function(){
+            function () {
                 b.animate(bounds($('#kiwi .msginput')), 2000, '', next_s);
             },
 
-            function(){
+            function () {
                 b.animate(bounds($('#kiwi .userlist')), 2000, '', next_s);
             },
 
-            function(){
+            function () {
                 b.animate(bounds($('#panel1')), 2000, '', next_s);
             },
 
-            function(){
+            function () {
                 b.animate(bounds($('#kiwi .cur_topic')), 2000, '', next_s);
             },
 
-            function(){
+            function () {
                 b.animate(bounds($('#kiwi .windowlist')), 2000, '', next_s);
             }
         ];

@@ -238,10 +238,10 @@ kiwi.gateway = {
                 request: request,
                 type: type,
                 target: target,
-                params: params,
+                params: params
             }
         };
-        
+
         kiwi.gateway.sendData(data, callback);
     },
 
@@ -349,7 +349,7 @@ kiwi.gateway = {
     *   @param  {Function}  callback    A callback function
     */
     raw: function (data, callback) {
-        var data = {
+        data = {
             method: 'raw',
             args: {
                 data: data
@@ -382,14 +382,14 @@ kiwi.gateway = {
     *   @param  {Function}  callback    A callback function
     */
     kiwi: function (target, data, callback) {
-        var data = {
+        data = {
             method: 'kiwi',
             args: {
                 target: target,
                 data: data
             }
         };
-        
+
         kiwi.gateway.sendData(data, callback);
-    },
+    }
 };
