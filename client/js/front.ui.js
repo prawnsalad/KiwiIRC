@@ -256,6 +256,9 @@ kiwi.front.ui = {
 
     },
 
+    /**
+    *   Prevents the user from accidentally refreshing the page by pressing F5 or <meta> + R
+    */
     preventRefresh: function () {
         $(document).keydown(function (e) {
             // meta + r || F5

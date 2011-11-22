@@ -1043,6 +1043,9 @@ UserList.prototype.clickHandler = function () {
 
 /**
 *   @constructor
+*   The User class. Represents a user on a channel.
+*   @param      {String}    nick    The user's nickname
+*   @param      {Array}     modes   An array of channel user modes
 */
 var User = function (nick, modes) {
     var sortModes;
@@ -1077,6 +1080,9 @@ var User = function (nick, modes) {
     this.modes = sortModes(this.modes);
     this.prefix = User.getPrefix(this.modes);
 
+    /**
+    *   @inner
+    */
     this.addMode = function (mode) {
         this.modes.push(mode);
         this.modes = sortModes(this.modes);
@@ -1085,6 +1091,11 @@ var User = function (nick, modes) {
     };
 };
 
+/**
+*   Removes a channel mode from the user
+*   @param      {String}    mode    The mode(s) to remove
+*   @returns    {User}              Returns the User object to allow chaining
+*/
 User.prototype.removeMode = function (mode) {
     this.modes = _.reject(this.modes, function (m) {
         return m === mode;
@@ -1093,11 +1104,20 @@ User.prototype.removeMode = function (mode) {
     return this;
 };
 
+/**
+*   Checks to see if the user is an op on the channel
+*   @returns    {Boolean}   True if the user is an op, false otherwise
+*/
 User.prototype.isOp = function () {
     // return true if this.mode[0] > o
     return false;
 };
 
+/**
+*   Returns the highest user prefix (e.g.~, @, or +) that matches the modes given
+*   @param      {Array} modes   An array of mode letters
+*   @returns    {String}        The user's prefix
+*/
 User.getPrefix = function (modes) {
     var prefix = '';
     if (typeof modes[0] !== 'undefined') {
@@ -1109,6 +1129,11 @@ User.getPrefix = function (modes) {
     return prefix;
 };
 
+/**
+*   Returns the user's nick without the mode prefix
+*   @param      {String}    nick    The nick to strip the prefix from
+*   @returns    {String}            The nick without the prefix
+*/
 User.stripPrefix = function (nick) {
     var tmp = nick, i, j, k;
     i = 0;
@@ -1124,6 +1149,12 @@ User.stripPrefix = function (nick) {
     return tmp.substr(i);
 };
 
+/**
+*   Comparison function to order nicks based on their modes and/or nicks
+*   @param      {User}      a   The first User to evaluate
+*   @param      {User}      b   The second User to evaluate
+*   @returns    {Number}        -1 if a should be sorted before b, 1 if b should be sorted before a, and 0 if the two Users are the same.
+*/
 User.compare = function (a, b) {
     var i, a_idx, b_idx, a_nick, b_nick;
     // Try to sort by modes first
@@ -1176,6 +1207,8 @@ User.compare = function (a, b) {
  */
 /**
 *   @constructor
+*   A tab to show non-channel and non-query windows to the user
+*   @param  {String}    name    The name of the view
 */
 var Utilityview = function (name) {
     var rand_name = randomString(15),
@@ -1212,6 +1245,9 @@ Utilityview.prototype.div = null;
 Utilityview.prototype.tab = null;
 Utilityview.prototype.topic = ' ';
 Utilityview.prototype.panel = null;
+/**
+*   Brings this view to the foreground
+*/
 Utilityview.prototype.show = function () {
     $('.messages', this.panel).removeClass("active");
     $('#kiwi .userlist ul').removeClass("active");
@@ -1233,14 +1269,19 @@ Utilityview.prototype.show = function () {
         touch_scroll.refresh();
     }
 };
-
+/**
+*   Sets a new panel to be this view's parent
+*   @param  {JQuery}    new_panel   The new parent
+*/
 Utilityview.prototype.setPanel = function (new_panel) {
     this.div.detach();
     this.panel = new_panel;
     this.panel.append(this.div);
     this.show();
 };
-
+/**
+*   Removes the panel from the UI and destroys its contents
+*/
 Utilityview.prototype.close = function () {
     this.div.remove();
     this.tab.remove();
@@ -1250,7 +1291,9 @@ Utilityview.prototype.close = function () {
     }
     delete kiwi.front.utilityviews[this.name.toLowerCase()];
 };
-
+/**
+*   Adds the close image to the tab
+*/
 Utilityview.prototype.addPartImage = function () {
     this.clearPartImage();
 
@@ -1268,7 +1311,9 @@ Utilityview.prototype.addPartImage = function () {
         }
     });
 };
-
+/**
+*   Removes the close image from the tab
+*/
 Utilityview.prototype.clearPartImage = function () {
     $('#kiwi .toolbars .tab_part').remove();
 };
@@ -1285,6 +1330,8 @@ Utilityview.prototype.clearPartImage = function () {
 
 /**
 *   @constructor
+*   A tab to show a channel or query window
+*   @param  {String}    v_name  The window's target's name (i.e. channel name or nickname)
 */
 var Tabview = function (v_name) {
     /*global Tabview, UserList */
@@ -1347,7 +1394,9 @@ Tabview.prototype.topic = "";
 Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
 Tabview.prototype.panel = null;
 Tabview.prototype.msg_count = 0;
-
+/**
+*   Brings this view to the foreground
+*/
 Tabview.prototype.show = function () {
     var w, u;
 
@@ -1393,7 +1442,9 @@ Tabview.prototype.show = function () {
         $('#kiwi_msginput').focus();
     }
 };
-
+/**
+*   Removes the panel from the UI and destroys its contents
+*/
 Tabview.prototype.close = function () {
     this.div.remove();
     this.userlist.remove();
@@ -1405,7 +1456,9 @@ Tabview.prototype.close = function () {
     }
     delete kiwi.front.tabviews[this.name.toLowerCase()];
 };
-
+/**
+*   Adds the close image to the tab
+*/
 Tabview.prototype.addPartImage = function () {
     this.clearPartImage();
 
@@ -1428,20 +1481,35 @@ Tabview.prototype.addPartImage = function () {
         }
     });
 };
-
+/**
+*   Removes the close image from the tab
+*/
 Tabview.prototype.clearPartImage = function () {
     $('#kiwi .toolbars .tab_part').remove();
 };
-
+/**
+*   Sets the tab's icon
+*   @param  {String}    url     The URL of the icon to display
+*/
 Tabview.prototype.setIcon = function (url) {
     this.tab.prepend('<img src="' + url + '" class="icon" />');
     this.tab.css('padding-left', '33px');
 };
-
+/**
+*   Sets the tab's label
+*/
 Tabview.prototype.setTabText = function (text) {
     $('span', this.tab).text(text);
 };
-
+/**
+*   Adds a message to the window.
+*   This method will automatically format the message (bold, underline, colours etc.)
+*   @param      {Date}      time    The timestamp of the message. May be null.
+*   @param      {String}    nick    The origin of the message
+*   @param      {String}    msg     The message to display
+*   @param      {String}    type    The CSS class to assign to the whole message line
+*   @param      {String}    style   Extra CSS commands to apply just to the msg
+*/
 Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
     var self, tmp, d, re, line_msg;
 
@@ -1502,12 +1570,18 @@ Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
         //}
     }
 };
-
+/**
+*   Scroll to the bottom of the window
+*/
 Tabview.prototype.scrollBottom = function () {
     var panel = this.panel;
     panel[0].scrollTop = panel[0].scrollHeight;
 };
-
+/**
+*   Change a user's nick on the channel
+*   @param      {String}    newNick     The new nick
+*   @param      {String}    oldNick     The old nick
+*/
 Tabview.prototype.changeNick = function (newNick, oldNick) {
     var inChan = this.userlist.hasUser(oldNick);
     if (inChan) {
@@ -1515,16 +1589,29 @@ Tabview.prototype.changeNick = function (newNick, oldNick) {
         this.addMsg(null, ' ', '=== ' + oldNick + ' is now known as ' + newNick, 'action changenick');
     }
 };
+/**
+*   Highlight the tab
+*/
 Tabview.prototype.highlight = function () {
     this.tab.addClass('highlight');
 };
+/**
+*   Indicate activity on the tab
+*/
 Tabview.prototype.activity = function () {
     this.tab.addClass('activity');
 };
+/**
+*   Clear the tab's highlight
+*/
 Tabview.prototype.clearHighlight = function () {
     this.tab.removeClass('highlight');
     this.tab.removeClass('activity');
 };
+/**
+*   Change the channel's topic
+*   @param      {String}    new_topic   The new channel topic
+*/
 Tabview.prototype.changeTopic = function (new_topic) {
     this.topic = new_topic;
     this.addMsg(null, ' ', '=== Topic for ' + this.name + ' is: ' + new_topic, 'topic');
@@ -1533,9 +1620,19 @@ Tabview.prototype.changeTopic = function (new_topic) {
     }
 };
 // Static functions
+/**
+*   Checks to see if a tab by the given name exists
+*   @param      {String}    name    The name to check
+*   @returns    {Boolean}           True if the tab exists, false otherwise
+*/
 Tabview.tabExists = function (name) {
     return (Tabview.getTab(name) !== null);
 };
+/**
+*   Returns the tab which has the given name
+*   @param      {String}    name    The name of the tab to return
+*   @returns    {Tabview}           The Tabview with the given name, or null if it does not exist
+*/
 Tabview.getTab = function (name) {
     var tab;
 
@@ -1557,12 +1654,24 @@ Tabview.getTab = function (name) {
 
     return tab;
 };
+/**
+*   Returns the tab that corresponds to the server
+*   @retruns    {Tabview}       The server Tabview
+*/
 Tabview.getServerTab = function () {
     return Tabview.getTab('server');
 };
+/**
+*   Returns all tabs
+*   @returns    {Array}         All of the tabs
+*/
 Tabview.getAllTabs = function () {
     return kiwi.front.tabviews;
 };
+/**
+*   Returns the tab that's currently showing
+*   @returns    {Tabview}       The tab that's currently showing
+*/
 Tabview.getCurrentTab = function () {
     return kiwi.front.cur_channel;
 };
@@ -1574,6 +1683,8 @@ Tabview.getCurrentTab = function () {
 
 /**
 *   @constructor
+*   Floating message box
+*   @param      {String}    classname   The CSS classname to apply to the box
 */
 var Box = function (classname) {
     this.id = randomString(10);
