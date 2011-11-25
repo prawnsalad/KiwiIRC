@@ -753,7 +753,7 @@ this.websocketListen = function (servers, handler) {
 
     _.each(servers, function (server) {
         var hs, opts;
-        if (server.secure === true) {
+        if (server.insecure !== true) {
             // Start some SSL server up
             opts = {
                 key: fs.readFileSync(__dirname + '/' + server.ssl_key),
@@ -1137,10 +1137,7 @@ this.rehash = function () {
         kiwi.log('%s config changes: \n', Object.keys(changes).length, changes);
         for (i in changes) {
             switch (i) {
-            case 'ports':
-            case 'bind_address':
-            case 'ssl_key':
-            case 'ssl_cert':
+            case 'servers':
                 kiwi.websocketListen(kiwi.config.servers, kiwi.httpHandler);
                 delete changes.ports;
                 delete changes.bind_address;

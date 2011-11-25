@@ -1,7 +1,7 @@
 {
     "servers":            [
                             {
-                                "secure":   true,
+                                "insecure":   false,
                                 "port":   7777,
                                 "address": "0.0.0.0",
 
@@ -9,7 +9,7 @@
                                 "ssl_cert": "cert.pem"
                             },
                             {
-                                "secure":   false,
+                                "insecure":   true,
                                 "port":   7778,
                                 "address": "0.0.0.0"
                             }
