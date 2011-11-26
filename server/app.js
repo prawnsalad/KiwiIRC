@@ -753,7 +753,7 @@ this.websocketListen = function (servers, handler) {
 
     _.each(servers, function (server) {
         var hs, opts;
-        if (server.insecure !== true) {
+        if (server.secure === true) {
             // Start some SSL server up
             opts = {
                 key: fs.readFileSync(__dirname + '/' + server.ssl_key),
