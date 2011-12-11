@@ -119,6 +119,7 @@ kiwi.gateway = {
             kiwi.gateway.socket.on('reconnect_failed', function () {
                 console.log("kiwi.gateway.socket.on('reconnect_failed')");
             });
+            kiwi.gateway.socket.on('error', console.log);
         }
     },
 
