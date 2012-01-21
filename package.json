@@ -1,0 +1,20 @@
+{
+    "scripts": {
+        "start": "node server/kiwi.js"
+    },
+    "name": "KiwiIRC",
+    "version": "0.1.0-dev",
+    "homepage": "http://kiwiirc.com",
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/prawnsalad/KiwiIRC.git"
+    },
+    "dependencies": {
+        "jade": ">=0.16.2",
+        "node-static": ">=0.5.9",
+        "uglify-js": ">=1.1.1",
+        "socket.io": ">=0.8.5",
+        "socket.io-client": ">=0.8.5"
+    },
+    "private": true
+}
