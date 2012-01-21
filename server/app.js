@@ -793,6 +793,7 @@ this.websocketListen = function (servers, handler) {
             }
             callback(null, true);
         }).on('connection', kiwi.websocketConnection);
+        io.of('/kiwi').on('error', console.log);
     });
 };
 
@@ -840,6 +841,7 @@ this.websocketConnection = function (websocket) {
         });
         websocket.on('message', kiwi.websocketMessage);
         websocket.on('disconnect', kiwi.websocketDisconnect);
+        websocket.on('error', console.log);
     }
 };
 
@@ -990,6 +992,9 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
         });
         bound_events = kiwi.bindIRCCommands(that, websocket);
     };
+    
+    that.on('error', console.log);
+    
 };
 
 
