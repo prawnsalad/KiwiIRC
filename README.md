@@ -1,25 +1,23 @@
 # Installation
 
-* Install the dependencies
+* Download the Kiwi source or clone the git repository:
 
-    $npm install jade
+    $ git clone git@github.com:prawnsalad/KiwiIRC.git
 
-    $npm install node-static
+* Install the dependancies:
 
-    $npm install uglify-js
-
-    $npm install socket.io
-
-    $npm install socket.io-client
+    $ npm install
     
 * If you're using SSL, create your certificate and key, place it in the server folder.
 
-* Edit the configuration file
+* Edit the configuration file as needed:
 
-    $nano server/config.json
+    $ nano server/config.json
     
 # Running 
-    $node server/kiwi.js
+From the source folder:
+
+    $ node server/kiwi.js
 
 # Bugs
 Report bugs using the issue tracker on github: https://github.com/prawnsalad/KiwiIRC/issues

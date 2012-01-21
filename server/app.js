@@ -753,7 +753,7 @@ this.websocketListen = function (servers, handler) {
 
     _.each(servers, function (server) {
         var hs, opts;
-        if (server.insecure !== true) {
+        if (server.secure === true) {
             // Start some SSL server up
             opts = {
                 key: fs.readFileSync(__dirname + '/' + server.ssl_key),
@@ -1001,11 +1001,16 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
 
 this.websocketMessage = function (websocket, msg, callback) {
     var args, obj, channels, keys;
-    try {
+    //try {
         if ((callback) && (typeof (callback) !== 'function')) {
             callback = null;
         }
-        msg.data = JSON.parse(msg.data);
+        try {
+            msg.data = JSON.parse(msg.data);
+        } catch (e) {
+            kiwi.log('[app.websocketMessage] JSON parsing error ' + msg.data);
+            return;
+        }
         args = msg.data.args;
         switch (msg.data.method) {
         case 'privmsg':
@@ -1096,9 +1101,9 @@ this.websocketMessage = function (websocket, msg, callback) {
             break;
         default:
         }
-    } catch (e) {
-        kiwi.log("Caught error: " + e);
-    }
+    //} catch (e) {
+    //    kiwi.log("Caught error (app.websocketMessage): " + e);
+    //}
 };
 
 
