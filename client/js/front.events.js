@@ -595,7 +595,7 @@ kiwi.front.events = {
             break;
         default:
             // We don't know what data contains, so don't do anything with it.
-            console.log(e, data);
+            //kiwi.front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
         }
     },
 
