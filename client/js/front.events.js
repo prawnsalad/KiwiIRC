@@ -8,7 +8,7 @@ kiwi.front.events = {
     /**
     *   Binds all of the event handlers to their events
     */
-	bindAll: function () {
+    bindAll: function () {
         $(kiwi.gateway).bind('onmsg', this.onMsg)
             .bind('onnotice', this.onNotice)
             .bind('onaction', this.onAction)
@@ -41,7 +41,7 @@ kiwi.front.events = {
             .bind('onctcp_response', this.onCTCPResponse)
             .bind('onirc_error', this.onIRCError)
             .bind('onkiwi', this.onKiwi);
-	},
+    },
 
     /**
     *   Handles the msg event
@@ -67,6 +67,11 @@ kiwi.front.events = {
             tab = new Tabview(plugin_event.destination);
         }
         tab.addMsg(null, plugin_event.nick, plugin_event.msg);
+        
+        var chan = kiwi.bbchans.detect(function (c) {
+            return c.get("name") === plugin_event.destination;
+        });
+        chan.addMsg(null, plugin_event.nick, plugin_event.msg);
     },
 
     /**
@@ -454,6 +459,9 @@ kiwi.front.events = {
 
         tab.addMsg(null, ' ', '--> ' + data.nick + ' [' + data.ident + '@' + data.hostname + '] has joined', 'action join', 'color:#009900;');
 
+        var c = new kiwi.model.Channel({"name": data.channel.toLowerCase()});
+        c.get("members").add(new kiwi.model.Member({"nick": data.nick, "modes": []}));
+        kiwi.bbchans.add(c);
         if (data.nick === kiwi.gateway.nick) {
             return; // Not needed as it's already in nicklist
         }

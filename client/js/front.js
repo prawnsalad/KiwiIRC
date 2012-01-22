@@ -168,6 +168,10 @@ kiwi.front = {
         kiwi.front.ui.doLayout();
         kiwi.front.ui.barsHide();
 
+        kiwi.bbchans = new kiwi.model.ChannelList();
+        kiwi.bbtabs = new kiwi.view.Tabs({"el": $('#kiwi .windowlist ul')[0], "model": kiwi.bbchans});
+        
+        
         server_tabview = new Tabview('server');
         server_tabview.userlist.setWidth(0); // Disable the userlist
         server_tabview.setIcon('/img/app_menu.png');
@@ -747,7 +751,6 @@ var ChannelList = function () {
         prototype: {constructor: this}
     };
 };
-
 
 /**
 *   @constructor
@@ -1353,6 +1356,7 @@ var Tabview = function (v_name) {
         $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
         
         // Create the window tab
+        
         tmp_tab = $('<li id="' + tmp_tabname + '"><span></span></li>');
         $('span', tmp_tab).text(v_name);
         $('#kiwi .windowlist ul').append(tmp_tab);

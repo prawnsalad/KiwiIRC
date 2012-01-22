@@ -595,12 +595,15 @@ this.httpHandler = function (request, response) {
 
                     min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
                     min.util = fs.readFileSync(public_http_path + 'js/util.js');
+                    min.backbone = fs.readFileSync(public_http_path + 'js/backbone-0.5.3-min.js');
                     min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
+                    min.model = fs.readFileSync(public_http_path + 'js/model.js');
+                    min.view = fs.readFileSync(public_http_path + 'js/view.js');
                     min.front = fs.readFileSync(public_http_path + 'js/front.js');
                     min.front_events = fs.readFileSync(public_http_path + 'js/front.events.js');
                     min.front_ui = fs.readFileSync(public_http_path + 'js/front.ui.js');
                     min.iscroll = fs.readFileSync(public_http_path + 'js/iscroll.js');
-                    min.ast = jsp.parse(min.underscore + min.util + min.gateway + min.front + min.front_events + min.front_ui + min.iscroll);
+                    min.ast = jsp.parse(min.underscore + min.util + min.backbone + min.gateway + min.model + min.view + min.front + min.front_events + min.front_ui + min.iscroll);
                     min.ast = pro.ast_mangle(min.ast);
                     min.ast = pro.ast_squeeze(min.ast);
                     min.final_code = pro.gen_code(min.ast);

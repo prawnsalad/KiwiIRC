@@ -281,8 +281,8 @@ var plugins = [
             }
             return false;
 
-		}
-	},
+        }
+    },
     */
 
     {
@@ -321,16 +321,16 @@ var plugins = [
         }
     },
 
-	{
-		name: "kiwitest",
-		oninit: function (event, opts) {
-			console.log('registering namespace');
-			$(gateway).bind("kiwi.lol.browser", function (e, data) {
-				console.log('YAY kiwitest');
-				console.log(data);
-			});
-		}
-	}
+    {
+        name: "kiwitest",
+        oninit: function (event, opts) {
+            console.log('registering namespace');
+            $(gateway).bind("kiwi.lol.browser", function (e, data) {
+                console.log('YAY kiwitest');
+                console.log(data);
+            });
+        }
+    }
 ];
 
 
