@@ -32,7 +32,8 @@ kiwi.view.Channel = Backbone.View.extend({
     },
     initialize: function (options) {
         this.htmlsafe_name = 'chan_' + randomString(15);
-        $(this.el).attr("id", 'kiwi_window_' + this.htmlsafe_name);
+        $(this.el).attr("id", 'kiwi_window_' + this.htmlsafe_name).css('display', 'none');
+        this.el = $(this.el).appendTo('#panel1 .scroller')[0];
         this.model.bind('msg', this.newMsg, this);
         this.msg_count = 0;
         this.model.set({"view": this}, {"silent": true});
@@ -63,6 +64,10 @@ kiwi.view.Channel = Backbone.View.extend({
     },
     chanClick: function (x) {
         console.log(x);
+    },
+    show: function () {
+        $('#panel1 .scroller').children().css('display','none');
+        $(this.el).css('display', 'block');
     }
 });
 
@@ -80,19 +85,19 @@ kiwi.view.Tabs = Backbone.View.extend({
         $this.empty();
         this.model.forEach(function (tab) {
             var tabname = $(tab.get("view").el).attr("id");
-            $this.append($('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>'));
+            $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('chan', tab).appendTo($this)
         });
     },
     addTab: function (tab) {
         var tabname = $(tab.get("view").el).attr("id"),
             $this = $(this.el);
-        $this.append($('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>'));
+        $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('chan', tab).appendTo($this)
     },
     removeTab: function (tab) {
         $('#tab_' + $(tab.get("view").el).attr("id")).remove();
     },
-    tabClick: function (x) {
-        console.log(x);
+    tabClick: function (e) {
+        $(e.currentTarget).data('chan').view.show();
     }
 });
 

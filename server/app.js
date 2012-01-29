@@ -595,7 +595,7 @@ this.httpHandler = function (request, response) {
 
                     min.underscore = fs.readFileSync(public_http_path + 'js/underscore.min.js');
                     min.util = fs.readFileSync(public_http_path + 'js/util.js');
-                    min.backbone = fs.readFileSync(public_http_path + 'js/backbone-0.5.3-min.js');
+                    min.backbone = fs.readFileSync(public_http_path + 'js/backbone-git.js');
                     min.gateway = fs.readFileSync(public_http_path + 'js/gateway.js');
                     min.model = fs.readFileSync(public_http_path + 'js/model.js');
                     min.view = fs.readFileSync(public_http_path + 'js/view.js');

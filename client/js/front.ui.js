@@ -345,7 +345,7 @@ kiwi.front.ui = {
     *   Displays the next tab
     */
     windowsNext: function () {
-        var tab, tabs, curTab, next;
+        /*var tab, tabs, curTab, next;
         next = false;
         tabs = Tabview.getAllTabs();
         curTab = Tabview.getCurrentTab();
@@ -359,14 +359,14 @@ kiwi.front.ui = {
                 tabs[tab].show();
                 return;
             }
-        }
+        }*/
     },
 
     /**
     *   Displays the previous tab
     */
     windowsPrevious: function () {
-        var tab, tabs, curTab, prev_tab, next;
+        /*var tab, tabs, curTab, prev_tab, next;
         next = false;
         tabs = Tabview.getAllTabs();
         curTab = Tabview.getCurrentTab();
@@ -378,7 +378,7 @@ kiwi.front.ui = {
                 return;
             }
             prev_tab = tabs[tab];
-        }
+        }*/
     },
 
     /**
@@ -386,7 +386,7 @@ kiwi.front.ui = {
     *   @param  {Number}    num The index of the tab to show
     */
     windowsShow: function (num) {
-        num = parseInt(num, 10);
+        /*num = parseInt(num, 10);
         console.log('Showing window ' + num.toString());
         var i = 0, tab, tabs;
         tabs = Tabview.getAllTabs();
@@ -396,7 +396,7 @@ kiwi.front.ui = {
                 return;
             }
             i++;
-        }
+        }*/
     },
 
 

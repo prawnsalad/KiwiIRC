@@ -172,15 +172,15 @@ kiwi.front = {
         kiwi.bbtabs = new kiwi.view.Tabs({"el": $('#kiwi .windowlist ul')[0], "model": kiwi.bbchans});
         
         
-        server_tabview = new Tabview('server');
-        server_tabview.userlist.setWidth(0); // Disable the userlist
-        server_tabview.setIcon('/img/app_menu.png');
-        $('.icon', server_tabview.tab).tipTip({
-            delay: 0,
-            keepAlive: true,
-            content: $('#tmpl_network_menu').tmpl({}).html(),
-            activation: 'click'
-        });
+        //server_tabview = new Tabview('server');
+        //server_tabview.userlist.setWidth(0); // Disable the userlist
+        //server_tabview.setIcon('/img/app_menu.png');
+        //$('.icon', server_tabview.tab).tipTip({
+        //    delay: 0,
+        //    keepAlive: true,
+        //    content: $('#tmpl_network_menu').tmpl({}).html(),
+        //    activation: 'click'
+        //});
 
         // Any pre-defined nick?
         if (typeof window.init_data.nick === "string") {
@@ -224,8 +224,8 @@ kiwi.front = {
             var chan, text;
             text = $(this).text();
             if (text !== kiwi.front.cache.original_topic) {
-                chan = Tabview.getCurrentTab().name;
-                kiwi.gateway.topic(chan, text);
+                //chan = Tabview.getCurrentTab().name;
+                //kiwi.gateway.topic(chan, text);
             }
         });
 
@@ -259,13 +259,13 @@ kiwi.front = {
             tab;
         for (i in chans) {
             chan = chans[i];
-            tab = Tabview.getTab(chan);
-            if ((!tab) || (tab.safe_to_close === true)) {
+            //tab = Tabview.getTab(chan);
+            //if ((!tab) || (tab.safe_to_close === true)) {
                 kiwi.gateway.join(chan);
-                tab = new Tabview(chan);
-            } else {
-                tab.show();
-            }
+                //tab = new Tabview(chan);
+            //} else {
+            //    tab.show();
+            //}
         }
     },
 
@@ -313,7 +313,8 @@ kiwi.front = {
                     parts[3] = true;
                 }
 
-                Tabview.getCurrentTab().addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + (parts[3] ? ' using SSL' : '') + '...', 'status');
+                //Tabview.getCurrentTab().addMsg(null, ' ', '=== Connecting to ' + parts[1] + ' on port ' + parts[2] + (parts[3] ? ' using SSL' : '') + '...', 'status');
+                console.log('Connecting to ' + parts[1] + ' on port ' + parts[2] + (parts[3] ? ' using SSL' : '') + '...');
                 kiwi.gateway.connect(parts[1], parts[2], parts[3], parts[4]);
                 break;
 
@@ -330,11 +331,11 @@ kiwi.front = {
 
             case '/part':
                 if (typeof parts[1] === "undefined") {
-                    if (Tabview.getCurrentTab().safe_to_close) {
-                        Tabview.getCurrentTab().close();
-                    } else {
-                        kiwi.gateway.part(Tabview.getCurrentTab().name);
-                    }
+                    //if (Tabview.getCurrentTab().safe_to_close) {
+                    //    Tabview.getCurrentTab().close();
+                    //} else {
+                    //    kiwi.gateway.part(Tabview.getCurrentTab().name);
+                    //}
                 } else {
                     kiwi.gateway.part(msg.substring(6));
                 }
@@ -353,7 +354,7 @@ kiwi.front = {
             case '/q':
             case '/query':
                 if (typeof parts[1] !== "undefined") {
-                    tab = new Tabview(parts[1]);
+                    //tab = new Tabview(parts[1]);
                 }
                 break;
 
@@ -364,11 +365,11 @@ kiwi.front = {
                     msg_sliced = msg.split(' ').slice(2).join(' ');
                     kiwi.gateway.privmsg(parts[1], msg_sliced);
 
-                    tab = Tabview.getTab(parts[1]);
-                    if (!tab) {
-                        tab = new Tabview(parts[1]);
-                    }
-                    tab.addMsg(null, kiwi.gateway.nick, msg_sliced);
+                    //tab = Tabview.getTab(parts[1]);
+                    //if (!tab) {
+                    //    tab = new Tabview(parts[1]);
+                    //}
+                    //tab.addMsg(null, kiwi.gateway.nick, msg_sliced);
                 }
                 break;
 
@@ -379,7 +380,7 @@ kiwi.front = {
                 }
                 t = msg.split(' ', 3);
                 nick = t[1];
-                kiwi.gateway.kick(Tabview.getCurrentTab().name, nick, t[2]);
+                //kiwi.gateway.kick(Tabview.getCurrentTab().name, nick, t[2]);
                 break;
 
             case '/quote':
@@ -387,9 +388,9 @@ kiwi.front = {
                 break;
 
             case '/me':
-                tab = Tabview.getCurrentTab();
-                kiwi.gateway.ctcp(true, 'ACTION', tab.name, msg.substring(4));
-                tab.addMsg(null, ' ', '* ' + kiwi.gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
+                //tab = Tabview.getCurrentTab();
+                //kiwi.gateway.ctcp(true, 'ACTION', tab.name, msg.substring(4));
+                //tab.addMsg(null, ' ', '* ' + kiwi.gateway.nick + ' ' + msg.substring(4), 'action', 'color:#555;');
                 break;
 
             case '/notice':
@@ -424,12 +425,12 @@ kiwi.front = {
                         t.setSelectionRange(pos, pos);
                     }
                 } else {
-                    kiwi.gateway.topic(Tabview.getCurrentTab().name, msg.split(' ', 2)[1]);
+                    //kiwi.gateway.topic(Tabview.getCurrentTab().name, msg.split(' ', 2)[1]);
                 }
                 break;
 
             case '/kiwi':
-                kiwi.gateway.ctcp(true, 'KIWI', Tabview.getCurrentTab().name, msg.substring(6));
+                //kiwi.gateway.ctcp(true, 'KIWI', Tabview.getCurrentTab().name, msg.substring(6));
                 break;
 
             case '/ctcp':
@@ -440,7 +441,7 @@ kiwi.front = {
                 console.log(parts);
                 
                 kiwi.gateway.ctcp(true, t, dest, msg);
-                Tabview.getServerTab().addMsg(null, 'CTCP Request', '[to ' + dest + '] ' + t + ' ' + msg, 'ctcp');
+                //Tabview.getServerTab().addMsg(null, 'CTCP Request', '[to ' + dest + '] ' + t + ' ' + msg, 'ctcp');
                 break;
             default:
                 //Tabview.getCurrentTab().addMsg(null, ' ', '--> Invalid command: '+parts[0].substring(1));
@@ -453,10 +454,10 @@ kiwi.front = {
             if (msg.trim() === '') {
                 return;
             }
-            if (Tabview.getCurrentTab().name !== 'server') {
-                kiwi.gateway.privmsg(Tabview.getCurrentTab().name, msg);
-                Tabview.getCurrentTab().addMsg(null, kiwi.gateway.nick, msg);
-            }
+            //if (Tabview.getCurrentTab().name !== 'server') {
+            //    kiwi.gateway.privmsg(Tabview.getCurrentTab().name, msg);
+            //    Tabview.getCurrentTab().addMsg(null, kiwi.gateway.nick, msg);
+            //}
         }
     },
 
@@ -471,7 +472,7 @@ kiwi.front = {
         var win_list = $('#kiwi .windowlist ul'),
             listitems = win_list.children('li').get();
         
-        listitems.sort(function (a, b) {
+        /*listitems.sort(function (a, b) {
             if (a === Tabview.getServerTab().tab[0]) {
                 return -1;
             }
@@ -485,7 +486,7 @@ kiwi.front = {
 
         $.each(listitems, function(idx, itm) {
             win_list.append(itm);
-        });
+        });*/
     },
 
 
@@ -752,459 +753,6 @@ var ChannelList = function () {
     };
 };
 
-/**
-*   @constructor
-*   @param  {String}    name    The name of the UserList
-*/
-var UserList = function (name) {
-    /*globals User */
-    var userlist, list_html, sortUsers;
-
-    userlist = [];
-
-    $('#kiwi .userlist').append($('<ul id="kiwi_userlist_' + name + '"></ul>'));
-    list_html = $('#kiwi_userlist_' + name);
-    $('a.nick', list_html[0]).live('click', this.clickHandler);
-
-    /**
-    *   @inner
-    */
-    sortUsers = function () {
-        var parent;
-        parent = list_html.parent();
-        list_html = list_html.detach();
-
-        // Not sure this is needed. 
-        // It's O(n^2) as well, so need to test to see if it works without.
-        // Alternative to test: list_html.children('li').detach();
-        list_html.children().each(function (child) {
-            var i, nick;
-            child = $(child);
-            nick = child.data('nick');
-            for (i = 0; i < userlist.length; i++) {
-                if (userlist[i].nick === nick) {
-                    userlist[i].html = child.detach();
-                    break;
-                }
-            }
-        });
-
-        userlist.sort(User.compare);
-
-        _.each(userlist, function (user) {
-            user.html = user.html.appendTo(list_html);
-        });
-
-        list_html = list_html.appendTo(parent);
-    };
-
-    /**
-    *   Adds a user or users to the UserList.
-    *   Chainable method.
-    *   @param      {Object}    users   The user or Array of users to add
-    *   @returns    {UserList}          This UserList
-    */
-    this.addUser = function (users) {
-        if (!_.isArray(users)) {
-            users = [users];
-        }
-        _.each(users, function (user) {
-            user = new User(user.nick, user.modes);
-            user.html = $('<li><a class="nick">' + user.prefix + user.nick + '</a></li>');
-            user.html.data('user', user);
-            userlist.push(user);
-        });
-        sortUsers();
-
-        return this;
-    };
-
-    /**
-    *   Removes a user or users from the UserList.
-    *   Chainable method.
-    *   @param      {String}    nicks   The nick or Array of nicks to remove
-    *   @returns    {UserList}          This UserList
-    */
-    this.removeUser = function (nicks) {
-        var toRemove;
-        if (!_.isArray(nicks)) {
-            nicks = [nicks];
-        }
-        toRemove = _.select(userlist, function (user) {
-            return _.any(nicks, function (n) {
-                return n === user.nick;
-            });
-        });
-
-        _.each(toRemove, function (user) {
-            user.html.remove();
-        });
-
-        userlist = _.difference(userlist, toRemove);
-
-        return this;
-    };
-
-    /**
-    *   Renames a user in the UserList.
-    *   Chainable method.
-    *   @param      {String}    oldNick The old nick
-    *   @param      {String}    newNick The new nick
-    *   @returns    {UserList}          This UserList
-    */
-    this.renameUser = function (oldNick, newNick) {
-        var user = _.detect(userlist, function (u) {
-            return u.nick === oldNick;
-        });
-        if (user) {
-            user.nick = newNick;
-            user.html.text(User.getPrefix(user.modes) + newNick);
-        }
-
-        sortUsers();
-
-        return this;
-    };
-
-    /**
-    *   Lists the users in this UserList.
-    *   @param      {Boolean}   modesort    True to enable sorting by mode, false for lexicographical sort
-    *   @param      {Array}     mode        If specified, only return those users who have the specified modes
-    *   @returns    {Array}                 The users in the UserList that match the criteria
-    */
-    this.listUsers = function (modesort, modes) {
-        var users = userlist;
-        if (modes) {
-            users = _.select(users, function (user) {
-                return _.any(modes, function (m) {
-                    return _.any(user.modes, function (um) {
-                        return m === um;
-                    });
-                });
-            });
-        }
-        if ((modesort === true) || (typeof modesort === undefined)) {
-            return users;
-        } else {
-            return _.sortBy(users, function (user) {
-                return user.nick;
-            });
-        }
-    };
-
-    /**
-    *   Remove this UserList from the DOM.
-    */
-    this.remove = function () {
-        list_html.remove();
-        list_html = null;
-        userlist = null;
-    };
-
-    /**
-    *   Empty the UserList.
-    *   Chainable method.
-    *   @returns    {UserList}  This UserList
-    */
-    this.empty = function () {
-        list_html.children().remove();
-        userlist = [];
-
-        return this;
-    };
-
-    /**
-    *   Checks whether a given nick is in the UserList.
-    *   @param      {String}    nick    The nick to search for
-    *   @returns    {Boolean}           True if the nick is in the userlist, false otherwise
-    */
-    this.hasUser = function (nick) {
-        return _.any(userlist, function (user) {
-            return user.nick === nick;
-        });
-    };
-
-    /**
-    *   Returns the object representing the user with the given nick, if it is in the UserList.
-    *   @param      {String}    nick    The nick to retrieve
-    *   @returns    {Object}            An object representing the user, if it exists, null otherwise
-    */
-    this.getUser = function (nick) {
-        if (this.hasUser(nick)) {
-            return _.detect(userlist, function (user) {
-                return user.nick === nick;
-            });
-        } else {
-            return null;
-        }
-    };
-
-    /**
-    *   Sets the UserList's activity.
-    *   Chainable method.
-    *   @param      {Boolean}   active  If true, sets the UserList to active. If False, sets it to inactive
-    *   @returns    {UserList}          This UserList
-    */
-    this.active = function (active) {
-        if ((arguments.length === 0) || (active)) {
-            list_html.addClass('active');
-            list_html.show();
-        } else {
-            list_html.removeClass('active');
-            list_html.hide();
-        }
-
-        return this;
-    };
-
-    /**
-    *   Updates a user's mode.
-    *   Chainable method.
-    *   @param      {String}    nick    The nick of the user to modify
-    *   @param      {String}    mode    The mode to add or remove
-    *   @param      {Boolean}   add     Adds the mode if true, removes it otherwise
-    *   @returns    {UserList}          This UserList
-    */
-    this.changeUserMode = function (nick, mode, add) {
-        var user, prefix;
-        if (this.hasUser(nick)) {
-            user = _.detect(userlist, function (u) {
-                return u.nick === nick;
-            });
-
-            prefix = user.prefix;
-            if ((arguments.length < 3) || (add)) {
-                user.addMode(mode);
-            } else {
-                user.removeMode(mode);
-            }
-            if (prefix !== user.prefix) {
-                user.html.children('a:first').text(user.prefix + user.nick);
-            }
-            sortUsers();
-        }
-
-        return this;
-    };
-};
-/**
-*   @memberOf UserList
-*/
-UserList.prototype.width = 100;     // 0 to disable
-/**
-*   Sets the width of the UserList.
-*   Chainable method.
-*   @param      {Number}    newWidth    The new width of the UserList
-*   @returns    {UserList}              This UserList
-*/
-UserList.prototype.setWidth = function (newWidth) {
-    var w, u;
-    if (typeof newWidth === 'number') {
-        this.width = newWidth;
-    }
-
-    w = $('#windows');
-    u = $('#kiwi .userlist');
-
-    u.width(this.width);
-
-    return this;
-};
-/**
-*   The click handler for this UserList
-*/
-UserList.prototype.clickHandler = function () {
-    var li = $(this).parent(),
-        user = li.data('user'),
-        userbox;
-    
-    // Remove any existing userboxes
-    $('#kiwi .userbox').remove();
-
-    if (li.data('userbox') === true) {
-        // This li already has the userbox, show remove it instead
-        li.removeData('userbox');
-
-    } else {
-        // We don't have a userbox so create one
-        userbox = $('#tmpl_user_box').tmpl({nick: user.nick}).appendTo(li);
-
-        $('.userbox_query', userbox).click(function (ev) {
-            var nick = $('#kiwi .userbox_nick').val();
-            kiwi.front.run('/query ' + nick);
-        });
-
-        $('.userbox_whois', userbox).click(function (ev) {
-            var nick = $('#kiwi .userbox_nick').val();
-            kiwi.front.run('/whois ' + nick);
-        });
-        li.data('userbox', true);
-    }
-};
-
-
-
-/**
-*   @constructor
-*   The User class. Represents a user on a channel.
-*   @param      {String}    nick    The user's nickname
-*   @param      {Array}     modes   An array of channel user modes
-*/
-var User = function (nick, modes) {
-    var sortModes;
-    /**
-    *   @inner
-    */
-    sortModes = function (modes) {
-        return modes.sort(function (a, b) {
-            var a_idx, b_idx, i;
-            for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-                if (kiwi.gateway.user_prefixes[i].mode === a) {
-                    a_idx = i;
-                }
-            }
-            for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-                if (kiwi.gateway.user_prefixes[i].mode === b) {
-                    b_idx = i;
-                }
-            }
-            if (a_idx < b_idx) {
-                return -1;
-            } else if (a_idx > b_idx) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-    };
-
-    this.nick = User.stripPrefix(nick);
-    this.modes = modes || [];
-    this.modes = sortModes(this.modes);
-    this.prefix = User.getPrefix(this.modes);
-
-    /**
-    *   @inner
-    */
-    this.addMode = function (mode) {
-        this.modes.push(mode);
-        this.modes = sortModes(this.modes);
-        this.prefix = User.getPrefix(this.modes);
-        return this;
-    };
-};
-
-/**
-*   Removes a channel mode from the user
-*   @param      {String}    mode    The mode(s) to remove
-*   @returns    {User}              Returns the User object to allow chaining
-*/
-User.prototype.removeMode = function (mode) {
-    this.modes = _.reject(this.modes, function (m) {
-        return m === mode;
-    });
-    this.prefix = User.getPrefix(this.modes);
-    return this;
-};
-
-/**
-*   Checks to see if the user is an op on the channel
-*   @returns    {Boolean}   True if the user is an op, false otherwise
-*/
-User.prototype.isOp = function () {
-    // return true if this.mode[0] > o
-    return false;
-};
-
-/**
-*   Returns the highest user prefix (e.g.~, @, or +) that matches the modes given
-*   @param      {Array} modes   An array of mode letters
-*   @returns    {String}        The user's prefix
-*/
-User.getPrefix = function (modes) {
-    var prefix = '';
-    if (typeof modes[0] !== 'undefined') {
-        prefix = _.detect(kiwi.gateway.user_prefixes, function (prefix) {
-            return prefix.mode === modes[0];
-        });
-        prefix = (prefix) ? prefix.symbol : '';
-    }
-    return prefix;
-};
-
-/**
-*   Returns the user's nick without the mode prefix
-*   @param      {String}    nick    The nick to strip the prefix from
-*   @returns    {String}            The nick without the prefix
-*/
-User.stripPrefix = function (nick) {
-    var tmp = nick, i, j, k;
-    i = 0;
-    for (j = 0; j < nick.length; j++) {
-        for (k = 0; k < kiwi.gateway.user_prefixes.length; k++) {
-            if (nick.charAt(j) === kiwi.gateway.user_prefixes[k].symbol) {
-                i++;
-                break;
-            }
-        }
-    }
-
-    return tmp.substr(i);
-};
-
-/**
-*   Comparison function to order nicks based on their modes and/or nicks
-*   @param      {User}      a   The first User to evaluate
-*   @param      {User}      b   The second User to evaluate
-*   @returns    {Number}        -1 if a should be sorted before b, 1 if b should be sorted before a, and 0 if the two Users are the same.
-*/
-User.compare = function (a, b) {
-    var i, a_idx, b_idx, a_nick, b_nick;
-    // Try to sort by modes first
-    if (a.modes.length > 0) {
-        // a has modes, but b doesn't so a should appear first
-        if (b.modes.length === 0) {
-            return -1;
-        }
-        a_idx = b_idx = -1;
-        // Compare the first (highest) mode
-        for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-            if (kiwi.gateway.user_prefixes[i].mode === a.modes[0]) {
-                a_idx = i;
-            }
-        }
-        for (i = 0; i < kiwi.gateway.user_prefixes.length; i++) {
-            if (kiwi.gateway.user_prefixes[i].mode === b.modes[0]) {
-                b_idx = i;
-            }
-        }
-        if (a_idx < b_idx) {
-            return -1;
-        } else if (a_idx > b_idx) {
-            return 1;
-        }
-        // If we get to here both a and b have the same highest mode so have to resort to lexicographical sorting
-
-    } else if (b.modes.length > 0) {
-        // b has modes but a doesn't so b should appear first
-        return 1;
-    }
-    a_nick = a.nick.toLocaleUpperCase();
-    b_nick = b.nick.toLocaleUpperCase();
-    // Lexicographical sorting
-    if (a_nick < b_nick) {
-        return -1;
-    } else if (a_nick > b_nick) {
-        return 1;
-    } else {
-        // This should never happen; both users have the same nick.
-        console.log('Something\'s gone wrong somewhere - two users have the same nick!');
-        return 0;
-    }
-};
-
-
-
 /*
  *   MISC VIEW
  */
@@ -1320,370 +868,6 @@ Utilityview.prototype.addPartImage = function () {
 Utilityview.prototype.clearPartImage = function () {
     $('#kiwi .toolbars .tab_part').remove();
 };
-
-
-
-
-
-/*
- *
- *   TABVIEWS
- *
- */
-
-/**
-*   @constructor
-*   A tab to show a channel or query window
-*   @param  {String}    v_name  The window's target's name (i.e. channel name or nickname)
-*/
-var Tabview = function (v_name) {
-    /*global Tabview, UserList */
-    var re, htmlsafe_name, tmp_divname, tmp_userlistname, tmp_tabname, tmp_tab, userlist_enabled = true;
-
-    if (v_name.charAt(0) === kiwi.gateway.channel_prefix) {
-        htmlsafe_name = 'chan_' + randomString(15);
-    } else {
-        htmlsafe_name = 'query_' + randomString(15);
-        userlist_enabled = false;
-    }
-
-    tmp_divname = 'kiwi_window_' + htmlsafe_name;
-    tmp_userlistname = 'kiwi_userlist_' + htmlsafe_name;
-    tmp_tabname = 'kiwi_tab_' + htmlsafe_name;
-
-    if (!Tabview.tabExists(v_name)) {
-        // Create the window
-        $('#kiwi .windows .scroller').append('<div id="' + tmp_divname + '" class="messages"></div>');
-        
-        // Create the window tab
-        
-        tmp_tab = $('<li id="' + tmp_tabname + '"><span></span></li>');
-        $('span', tmp_tab).text(v_name);
-        $('#kiwi .windowlist ul').append(tmp_tab);
-        tmp_tab.click(function (e) {
-            var tab = Tabview.getTab(v_name);
-            if (tab) {
-                tab.show();
-            }
-        });
-
-        kiwi.front.sortWindowList();
-    }
-
-    kiwi.front.tabviews[v_name.toLowerCase()] = this;
-    this.name = v_name;
-    this.div = $('#' + tmp_divname);
-    this.userlist = new UserList(htmlsafe_name);
-    this.tab = $('#' + tmp_tabname);
-    this.panel = $('#panel1');
-
-    if (!userlist_enabled) {
-        this.userlist.setWidth(0);
-    }
-    this.show();
-
-    if (typeof registerTouches === "function") {
-        //alert("Registering touch interface");
-        //registerTouches($('#'+tmp_divname));
-        registerTouches(document.getElementById(tmp_divname));
-    }
-
-    kiwi.front.ui.doLayoutSize();
-};
-Tabview.prototype.name = null;
-Tabview.prototype.div = null;
-Tabview.prototype.userlist = null;
-Tabview.prototype.tab = null;
-Tabview.prototype.topic = "";
-Tabview.prototype.safe_to_close = false;                // If we have been kicked/banned/etc from this channel, don't wait for a part message
-Tabview.prototype.panel = null;
-Tabview.prototype.msg_count = 0;
-/**
-*   Brings this view to the foreground
-*/
-Tabview.prototype.show = function () {
-    var w, u;
-
-    $('.messages', this.panel).removeClass("active");
-    $('#kiwi .userlist ul').removeClass("active");
-    $('#kiwi .toolbars ul li').removeClass("active");
-
-    w = $('#windows');
-    u = $('#kiwi .userlist');
-
-    this.panel.css('overflow-y', 'scroll');
-
-    // Set the window size accordingly
-    if (this.userlist.width > 0) {
-        this.userlist.setWidth();
-        w.css('right', u.outerWidth(true));
-        this.userlist.active(true);
-        // Enable the userlist resizer
-        $('#nicklist_resize').css('display', 'block');
-    } else {
-        w.css('right', 0);
-        // Disable the userlist resizer
-        $('#nicklist_resize').css('display', 'none');
-    }
-
-    this.div.addClass('active');
-    this.tab.addClass('active');
-
-    // Add the part image to the tab
-    this.addPartImage();
-
-    this.clearHighlight();
-    kiwi.front.ui.setTopicText(this.topic);
-    kiwi.front.cur_channel = this;
-
-    // If we're using fancy scrolling, refresh it
-    if (touch_scroll) {
-        touch_scroll.refresh();
-    }
-
-    this.scrollBottom();
-    if (!touchscreen) {
-        $('#kiwi_msginput').focus();
-    }
-};
-/**
-*   Removes the panel from the UI and destroys its contents
-*/
-Tabview.prototype.close = function () {
-    this.div.remove();
-    this.userlist.remove();
-    this.userlist = null;
-    this.tab.remove();
-
-    if (kiwi.front.cur_channel === this) {
-        kiwi.front.tabviews.server.show();
-    }
-    delete kiwi.front.tabviews[this.name.toLowerCase()];
-};
-/**
-*   Adds the close image to the tab
-*/
-Tabview.prototype.addPartImage = function () {
-    this.clearPartImage();
-
-    // We can't close this tab, so don't have the close image
-    if (this.name === 'server') {
-        return;
-    }
-
-    var del_html = '<img src="/img/redcross.png" class="tab_part" />';
-    this.tab.append(del_html);
-
-    $('.tab_part', this.tab).click(function () {
-        if (kiwi.front.isChannel($(this).parent().text())) {
-            kiwi.front.run("/part");
-        } else {
-            // Make sure we don't close the server tab
-            if (kiwi.front.cur_channel.name !== 'server') {
-                kiwi.front.cur_channel.close();
-            }
-        }
-    });
-};
-/**
-*   Removes the close image from the tab
-*/
-Tabview.prototype.clearPartImage = function () {
-    $('#kiwi .toolbars .tab_part').remove();
-};
-/**
-*   Sets the tab's icon
-*   @param  {String}    url     The URL of the icon to display
-*/
-Tabview.prototype.setIcon = function (url) {
-    this.tab.prepend('<img src="' + url + '" class="icon" />');
-    this.tab.css('padding-left', '33px');
-};
-/**
-*   Sets the tab's label
-*/
-Tabview.prototype.setTabText = function (text) {
-    $('span', this.tab).text(text);
-};
-/**
-*   Adds a message to the window.
-*   This method will automatically format the message (bold, underline, colours etc.)
-*   @param      {Date}      time    The timestamp of the message. May be null.
-*   @param      {String}    nick    The origin of the message
-*   @param      {String}    msg     The message to display
-*   @param      {String}    type    The CSS class to assign to the whole message line
-*   @param      {String}    style   Extra CSS commands to apply just to the msg
-*/
-Tabview.prototype.addMsg = function (time, nick, msg, type, style) {
-    var self, tmp, d, re, line_msg;
-
-    self = this;
-
-    tmp = {msg: msg, time: time, nick: nick, tabview: this.name};
-    tmp = kiwi.plugs.run('addmsg', tmp);
-    if (!tmp) {
-        return;
-    }
-
-
-    msg = tmp.msg;
-    time = tmp.time;
-    nick = tmp.nick;
-
-    if (time === null) {
-        d = new Date();
-        time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
-    }
-
-    // The CSS class (action, topic, notice, etc)
-    if (typeof type !== "string") {
-        type = '';
-    }
-
-    // Make sure we don't have NaN or something
-    if (typeof msg !== "string") {
-        msg = '';
-    }
-
-    // Make the channels clickable
-    re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
-    msg = msg.replace(re, function (match) {
-        return '<a class="chan">' + match + '</a>';
-    });
-
-    msg = kiwi.front.formatIRCMsg(msg);
-
-    // Build up and add the line
-    line_msg = $('<div class="msg ' + type + '"><div class="time">' + time + '</div><div class="nick">' + nick + '</div><div class="text" style="' + style + '">' + msg + ' </div></div>');
-    this.div.append(line_msg);
-
-    this.msg_count++;
-    if (this.msg_count > 250) {
-        $('.msg:first', this.div).remove();
-        this.msg_count--;
-    }
-
-    if (!touchscreen) {
-        this.scrollBottom();
-    } else {
-        touch_scroll.refresh();
-        //console.log(this.div.attr("scrollHeight") +" - "+ $('#windows').height());
-        this.scrollBottom();
-        //if(this.div.attr("scrollHeight") > $('#windows').height()){
-        //    touch_scroll.scrollTo(0, this.div.height());
-        //}
-    }
-};
-/**
-*   Scroll to the bottom of the window
-*/
-Tabview.prototype.scrollBottom = function () {
-    var panel = this.panel;
-    panel[0].scrollTop = panel[0].scrollHeight;
-};
-/**
-*   Change a user's nick on the channel
-*   @param      {String}    newNick     The new nick
-*   @param      {String}    oldNick     The old nick
-*/
-Tabview.prototype.changeNick = function (newNick, oldNick) {
-    var inChan = this.userlist.hasUser(oldNick);
-    if (inChan) {
-        this.userlist.renameUser(oldNick, newNick);
-        this.addMsg(null, ' ', '=== ' + oldNick + ' is now known as ' + newNick, 'action changenick');
-    }
-};
-/**
-*   Highlight the tab
-*/
-Tabview.prototype.highlight = function () {
-    this.tab.addClass('highlight');
-};
-/**
-*   Indicate activity on the tab
-*/
-Tabview.prototype.activity = function () {
-    this.tab.addClass('activity');
-};
-/**
-*   Clear the tab's highlight
-*/
-Tabview.prototype.clearHighlight = function () {
-    this.tab.removeClass('highlight');
-    this.tab.removeClass('activity');
-};
-/**
-*   Change the channel's topic
-*   @param      {String}    new_topic   The new channel topic
-*/
-Tabview.prototype.changeTopic = function (new_topic) {
-    this.topic = new_topic;
-    this.addMsg(null, ' ', '=== Topic for ' + this.name + ' is: ' + new_topic, 'topic');
-    if (kiwi.front.cur_channel.name === this.name) {
-        kiwi.front.ui.setTopicText(new_topic);
-    }
-};
-// Static functions
-/**
-*   Checks to see if a tab by the given name exists
-*   @param      {String}    name    The name to check
-*   @returns    {Boolean}           True if the tab exists, false otherwise
-*/
-Tabview.tabExists = function (name) {
-    return (Tabview.getTab(name) !== null);
-};
-/**
-*   Returns the tab which has the given name
-*   @param      {String}    name    The name of the tab to return
-*   @returns    {Tabview}           The Tabview with the given name, or null if it does not exist
-*/
-Tabview.getTab = function (name) {
-    var tab;
-
-    // Make sure we actually have a name
-    if (typeof name !== 'string') {
-        return null;
-    }
-
-    // Go through each tabview and pick out the matching one
-    $.each(kiwi.front.tabviews, function (i, item) {
-        if (item.name.toLowerCase() === name.toLowerCase()) {
-            tab = item;
-            return false;
-        }
-    });
-
-    // If we we didn't find one, return null instead
-    tab = tab || null;
-
-    return tab;
-};
-/**
-*   Returns the tab that corresponds to the server
-*   @retruns    {Tabview}       The server Tabview
-*/
-Tabview.getServerTab = function () {
-    return Tabview.getTab('server');
-};
-/**
-*   Returns all tabs
-*   @returns    {Array}         All of the tabs
-*/
-Tabview.getAllTabs = function () {
-    return kiwi.front.tabviews;
-};
-/**
-*   Returns the tab that's currently showing
-*   @returns    {Tabview}       The tab that's currently showing
-*/
-Tabview.getCurrentTab = function () {
-    return kiwi.front.cur_channel;
-};
-
-
-
-
-
 
 /**
 *   @constructor

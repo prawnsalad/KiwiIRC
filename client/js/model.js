@@ -133,13 +133,15 @@ kiwi.model.ChannelList = Backbone.Collection.extend({
     }
 });
 
+// TODO: Channel modes
 kiwi.model.Channel = Backbone.Model.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "";
         this.set({
             "members": new kiwi.model.MemberList(),
             "name": name,
-            "backscroll": []
+            "backscroll": [],
+            "topic": ""
         }, {"silent": true});
         this.view = new kiwi.view.Channel({"model": this, "name": name});
     },
