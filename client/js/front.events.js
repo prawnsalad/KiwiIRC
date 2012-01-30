@@ -117,6 +117,7 @@ kiwi.front.events = {
         });
         if (chan) {
             chan.set({"topic": data.topic});
+            chan.trigger("topic");
         }
     },
 
@@ -357,11 +358,6 @@ kiwi.front.events = {
     onMode: function (e, data) {
         var tab, mem;
         if ((typeof data.channel === 'string') && (typeof data.effected_nick === 'string')) {
-        //    tab = Tabview.getTab(data.channel);
-        //    tab.addMsg(null, ' ', '[' + data.mode + '] ' + data.effected_nick + ' by ' + data.nick, 'mode', '');
-        //    if (tab.userlist.hasUser(data.effected_nick)) {
-        //        tab.userlist.changeUserMode(data.effected_nick, data.mode.substr(1), (data.mode[0] === '+'));
-        //    }
             chan = kiwi.bbchans.detect(function (c) {
                 return c.get("name") === data.channel;
             });
@@ -388,27 +384,21 @@ kiwi.front.events = {
     */
     onUserList: function (e, data) {
         var tab, chan;
-
-        //tab = Tabview.getTab(data.channel);
-        //if (!tab) {
-        //    return;
-        //}
-
         chan = kiwi.bbchans.detect(function (c) {
             return c.get("name") === data.channel;
         });
-        if ((!kiwi.front.cache.userlist) || (!kiwi.front.cache.userlist.updating)) {
-            if (!kiwi.front.cache.userlist) {
-                kiwi.front.cache.userlist = {updating: true};
-            } else {
-                kiwi.front.cache.userlist.updating = true;
-            }
-            chan.get("members").reset();
-        }
-
-        //tab.userlist.addUser(data.users);
         if (chan) {
-            chan.get("members").add(data.users, {"silent": true});
+            if ((!kiwi.front.cache.userlist) || (!kiwi.front.cache.userlist.updating)) {
+                if (!kiwi.front.cache.userlist) {
+                    kiwi.front.cache.userlist = {updating: true};
+                } else {
+                    kiwi.front.cache.userlist.updating = true;
+                }
+                chan.get("members").reset([],{"silent": true});
+            }
+            _.forEach(data.users, function (u) {
+                chan.get("members").add(new kiwi.model.Member(u), {"silent": true});
+            });
         }
     },
     /**
@@ -417,6 +407,7 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onUserListEnd: function (e, data) {
+        var chan;
         if (!kiwi.front.cache.userlist) {
             kiwi.front.cache.userlist = {};
         }
@@ -479,30 +470,18 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onJoin: function (e, data) {
-        //var tab = Tabview.getTab(data.channel);
-        //if (!tab) {
-        //    tab = new Tabview(data.channel.toLowerCase());
-        //}
-
-        //tab.addMsg(null, ' ', '--> ' + data.nick + ' [' + data.ident + '@' + data.hostname + '] has joined', 'action join', 'color:#009900;');
-
+        var chan;
         chan = kiwi.bbchans.detect(function (c) {
             return c.get("name") === data.channel;
         });
         if (!chan) {
             chan = new kiwi.model.Channel({"name": data.channel.toLowerCase()});
-            chan.get("members").add(new kiwi.model.Member({"nick": data.nick, "modes": []}));
             kiwi.bbchans.add(chan);
+            // No need to add ourselves to the MemberList as RPL_NAMESREPLY will be next
         } else {
-            chan.get("members").add(data.users, {"silent": true});
+            chan.get("members").add(new kiwi.model.Member({"nick": data.nick, "modes": [], "ident": data.ident, "hostname": data.hostname}));
         }
         chan.view.show();
-
-        //if (data.nick === kiwi.gateway.nick) {
-        //    return; // Not needed as it's already in nicklist
-        //}
-
-        //tab.userlist.addUser({nick: data.nick, modes: []});
     },
     /**
     *   Handles the part event
@@ -510,19 +489,7 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onPart: function (e, data) {
-        var chan, members;
-        //var tab = Tabview.getTab(data.channel);
-        //if (tab) {
-            // If this is us, close the tabview
-        //    if (data.nick === kiwi.gateway.nick) {
-        //        tab.close();
-        //        Tabview.getServerTab().show();
-        //        return;
-        //    }
-
-        //    tab.addMsg(null, ' ', '<-- ' + data.nick + ' has left (' + data.message + ')', 'action part', 'color:#990000;');
-        //    tab.userlist.removeUser(data.nick);
-        //}
+        var chan, members, cid;
         chan = kiwi.bbchans.detect(function (c) {
             return c.get("name") === data.channel;
         });
@@ -530,11 +497,10 @@ kiwi.front.events = {
             if (data.nick === kiwi.gateway.nick) {
                 chan.trigger("close");
             } else {
-                chan.addMsg(null, ' ', '<-- ' + data.nick + ' has left (' + data.message + ')', 'action part', 'color:#990000;');
                 members = chan.get("members");
-                members.remove(_.detect(members, function (m) {
+                members.remove(members.detect(function (m) {
                     return data.nick === m.get("nick");
-                }));
+                }).cid, {"message": data.message})
             }
         }
     },
@@ -583,12 +549,17 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onQuit: function (e, data) {
-        //_.each(Tabview.getAllTabs(), function (tab) {
-        //    if (tab.userlist.hasUser(data.nick)) {
-        //        tab.userlist.removeUser(data.nick);
-        //        tab.addMsg(null, ' ', '<-- ' + data.nick + ' has quit (' + data.message + ')', 'action quit', 'color:#990000;');
-        //    }
-        //});
+        var chan, members, member;
+        kiwi.bbchans.forEach(function (chan) {
+            members = chan.get("members");
+            member = members.detect(function (m) {
+                return data.nick === m.get("nick");
+            });
+            if (member) {
+                members.trigger("quit", {"member": member, "message": data.message});
+                members.remove(member.cid);
+            }
+        });
     },
     /**
     *   Handles the channelRedirect event

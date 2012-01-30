@@ -49,6 +49,9 @@ kiwi.model.MemberList = Backbone.Collection.extend({
             console.log('Something\'s gone wrong somewhere - two users have the same nick!');
             return 0;
         }
+    },
+    initialize: function (options) {
+        this.view = new kiwi.view.MemberList({"model": this, "name": options.name});
     }
 });
 
@@ -81,8 +84,7 @@ kiwi.model.Member = Backbone.Model.extend({
 
         modes = this.get("modes");
         modes = modes || [];
-        modes.sort(this.sortModes);
-
+        this.sortModes(modes);
         this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes)}, {silent: true});
     },
     addMode: function (mode) {
@@ -136,19 +138,31 @@ kiwi.model.ChannelList = Backbone.Collection.extend({
 // TODO: Channel modes
 kiwi.model.Channel = Backbone.Model.extend({
     initialize: function (attributes) {
-        var name = this.get("name") || "";
+        var name = this.get("name") || "",
+            members;
+        this.view = new kiwi.view.Channel({"model": this, "name": name});
         this.set({
-            "members": new kiwi.model.MemberList(),
+            "members": new kiwi.model.MemberList({"name": this.view.htmlsafe_name}),
             "name": name,
             "backscroll": [],
             "topic": ""
         }, {"silent": true});
-        this.view = new kiwi.view.Channel({"model": this, "name": name});
+        this.addMsg(null, ' ', '--> You have joined ' + name, 'action join', 'color:#009900;');
+        members = this.get("members");
+        members.bind("add", function (member) {
+            this.addMsg(null, ' ', '--> ' + member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + '] has joined', 'action join', 'color:#009900;');
+        }, this);
+        members.bind("remove", function (member, options) {
+            this.addMsg(null, ' ', '<-- ' + member.get("nick") + ' has left ' + ((options.message) ? '(' + options.message + ')' : ''), 'action join', 'color:#009900;');
+        }, this);
+        members.bind("quit", function (args) {
+            this.addMsg(null, ' ', '<-- ' + args.member.get("nick") + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action join', 'color:#009900;');
+        }, this);
     },
     addMsg: function (time, nick, msg, type, style) {
         var tmp, bs;
 
-        tmp = {"msg": msg, "time": time, "nick": nick, "chan": this.get("name")};
+        tmp = {"msg": msg, "time": time, "nick": nick, "chan": this.get("name"), "style": style};
         tmp = kiwi.plugs.run('addmsg', tmp);
         if (!tmp) {
             return;

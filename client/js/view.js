@@ -10,17 +10,22 @@ kiwi.view.MemberList = Backbone.View.extend({
     },
     initialize: function (options) {
         $(this.el).attr("id", 'kiwi_userlist_' + options.name);
-        this.model.get("members").bind('change', this.render, this);
+        this.model.bind('all', this.render, this);
+        $(this.el).appendTo('#kiwi .userlist');
     },
     render: function () {
         var $this = $(this.el);
         $this.empty();
-        this.model.get("members").forEach(function (member) {
-            $this.append('<li><a class="nick"><span class="prefix">' + user.prefix + user.nick + '</a></li>');
+        this.model.forEach(function (member) {
+            $('<li><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>').appendTo($this).data('member', member);
         });
     },
     nickClick: function (x) {
         console.log(x);
+    },
+    show: function () {
+        $('#kiwi .userlist').children().css('display', 'none');
+        $(this.el).css('display', 'block');
     }
 });
 
@@ -35,8 +40,10 @@ kiwi.view.Channel = Backbone.View.extend({
         $(this.el).attr("id", 'kiwi_window_' + this.htmlsafe_name).css('display', 'none');
         this.el = $(this.el).appendTo('#panel1 .scroller')[0];
         this.model.bind('msg', this.newMsg, this);
+        this.model.bind('topic', this.topic, this);
         this.msg_count = 0;
         this.model.set({"view": this}, {"silent": true});
+        this.visible = false;
     },
     render: function () {
         var $this = $(this.el);
@@ -44,6 +51,7 @@ kiwi.view.Channel = Backbone.View.extend({
         this.model.get("backscroll").forEach(this.newMsg);
     },
     newMsg: function (msg) {
+        // TODO: make sure that the message pane is scrolled to the bottom
         var re, line_msg, $this = $(this.el);
         // Make the channels clickable
         re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
@@ -68,6 +76,17 @@ kiwi.view.Channel = Backbone.View.extend({
     show: function () {
         $('#panel1 .scroller').children().css('display','none');
         $(this.el).css('display', 'block');
+        this.model.get("members").view.show();
+        kiwi.front.ui.setTopicText(this.model.get("topic"))
+    },
+    topic: function (topic) {
+        if (!topic) {
+            topic = this.model.get("topic");
+        }
+        this.model.addMsg(null, ' ', '=== Topic for ' + this.model.get("name") + ' is: ' + topic, 'topic');
+        if ($(this.el).css('display') === 'block') {
+            kiwi.front.ui.setTopicText(this.model.get("topic"))
+        }
     }
 });
 

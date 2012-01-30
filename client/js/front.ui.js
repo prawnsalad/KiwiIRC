@@ -396,7 +396,7 @@ kiwi.front.ui = {
                 return;
             }
             i++;
-        }*/
+        }
     },
 
 
