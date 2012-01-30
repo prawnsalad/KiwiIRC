@@ -43,7 +43,6 @@ kiwi.view.Channel = Backbone.View.extend({
         this.model.bind('topic', this.topic, this);
         this.msg_count = 0;
         this.model.set({"view": this}, {"silent": true});
-        this.visible = false;
     },
     render: function () {
         var $this = $(this.el);
