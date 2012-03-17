@@ -147,8 +147,6 @@ kiwi.gateway = {
     */
     parse: function (item) {
         if (item.event !== undefined) {
-            $(kiwi.gateway).trigger('on' + item.event, item);
-
             switch (item.event) {
             case 'options':
                 $.each(item.options, function (name, value) {
@@ -177,6 +175,8 @@ kiwi.gateway = {
                 $(kiwi.gateway).trigger('kiwi.' + item.namespace, item.data);
                 break;
             }
+
+            $(kiwi.gateway).trigger('on' + item.event, item);
         }
     },
 

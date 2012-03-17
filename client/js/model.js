@@ -52,6 +52,11 @@ kiwi.model.MemberList = Backbone.Collection.extend({
     },
     initialize: function (options) {
         this.view = new kiwi.view.MemberList({"model": this, "name": options.name});
+    },
+    getByNick: function (nick) {
+        return this.find(function (m) {
+            return nick === m.get("nick");
+        });
     }
 });
 
@@ -128,36 +133,33 @@ kiwi.model.Member = Backbone.Model.extend({
     }
 });
 
-kiwi.model.ChannelList = Backbone.Collection.extend({
-    model: kiwi.model.Channel,
+kiwi.model.PanelList = Backbone.Collection.extend({
+    model: kiwi.model.Panel,
     comparator: function (chan) {
         return chan.get("name");
+    },
+    initialize: function () {
+        this.server = new kiwi.model.Server({"name": kiwi.gateway.network_name});
+        this.view = new kiwi.view.Tabs({"el": $('#kiwi .windowlist ul')[0], "model": this});
+        kiwi.currentPanel = this.server;
+    },
+    getByName: function (name) {
+        return this.find(function (c) {
+            return name === c.get("name");
+        });
     }
 });
 
-// TODO: Channel modes
-kiwi.model.Channel = Backbone.Model.extend({
+kiwi.model.Panel = Backbone.Model.extend({
     initialize: function (attributes) {
-        var name = this.get("name") || "",
-            members;
-        this.view = new kiwi.view.Channel({"model": this, "name": name});
+        var name = this.get("name") || "";
+        this.view = new kiwi.view.Panel({"model": this, "name": name});
         this.set({
-            "members": new kiwi.model.MemberList({"name": this.view.htmlsafe_name}),
-            "name": name,
             "backscroll": [],
-            "topic": ""
+            "name": name
         }, {"silent": true});
-        this.addMsg(null, ' ', '--> You have joined ' + name, 'action join', 'color:#009900;');
-        members = this.get("members");
-        members.bind("add", function (member) {
-            this.addMsg(null, ' ', '--> ' + member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + '] has joined', 'action join', 'color:#009900;');
-        }, this);
-        members.bind("remove", function (member, options) {
-            this.addMsg(null, ' ', '<-- ' + member.get("nick") + ' has left ' + ((options.message) ? '(' + options.message + ')' : ''), 'action join', 'color:#009900;');
-        }, this);
-        members.bind("quit", function (args) {
-            this.addMsg(null, ' ', '<-- ' + args.member.get("nick") + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action join', 'color:#009900;');
-        }, this);
+
+        this.isChannel = false;
     },
     addMsg: function (time, nick, msg, type, style) {
         var tmp, bs;
@@ -186,5 +188,45 @@ kiwi.model.Channel = Backbone.Model.extend({
         bs.push(tmp)
         this.set({"backscroll": bs}, {silent:true});
         this.trigger("msg", tmp);
+    }
+});
+
+kiwi.model.Server = kiwi.model.Panel.extend({
+    initialize: function (attributes) {
+        var name = "Server";
+        this.view = new kiwi.view.Panel({"model": this, "name": name});
+        this.set({
+            "backscroll": [],
+            "name": name
+        }, {"silent": true});
+        this.isChannel = false;
+    }
+});
+
+// TODO: Channel modes
+kiwi.model.Channel = kiwi.model.Panel.extend({
+    initialize: function (attributes) {
+        var name = this.get("name") || "",
+            members;
+        this.view = new kiwi.view.Panel({"model": this, "name": name});
+        this.set({
+            "members": new kiwi.model.MemberList({"name": this.view.htmlsafe_name}),
+            "name": name,
+            "backscroll": [],
+            "topic": ""
+        }, {"silent": true});
+        this.addMsg(null, ' ', '--> You have joined ' + name, 'action join', 'color:#009900;');
+        members = this.get("members");
+        members.bind("add", function (member) {
+            this.addMsg(null, ' ', '--> ' + member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + '] has joined', 'action join', 'color:#009900;');
+        }, this);
+        members.bind("remove", function (member, options) {
+            this.addMsg(null, ' ', '<-- ' + member.get("nick") + ' has left ' + ((options.message) ? '(' + options.message + ')' : ''), 'action join', 'color:#009900;');
+        }, this);
+        members.bind("quit", function (args) {
+            this.addMsg(null, ' ', '<-- ' + args.member.get("nick") + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action join', 'color:#009900;');
+        }, this);
+
+        this.isChannel = true;
     }
 });

@@ -29,18 +29,17 @@ kiwi.view.MemberList = Backbone.View.extend({
     }
 });
 
-kiwi.view.Channel = Backbone.View.extend({
+kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
     className: "messages",
     events: {
         "click .chan": "chanClick"
     },
     initialize: function (options) {
-        this.htmlsafe_name = 'chan_' + randomString(15);
-        $(this.el).attr("id", 'kiwi_window_' + this.htmlsafe_name).css('display', 'none');
+        this.htmlsafe_name = 'panel_' + randomString(15);
+        $(this.el).attr("id", 'kiwi_panel_' + this.htmlsafe_name).css('display', 'none');
         this.el = $(this.el).appendTo('#panel1 .scroller')[0];
         this.model.bind('msg', this.newMsg, this);
-        this.model.bind('topic', this.topic, this);
         this.msg_count = 0;
         this.model.set({"view": this}, {"silent": true});
     },
@@ -73,12 +72,35 @@ kiwi.view.Channel = Backbone.View.extend({
         console.log(x);
     },
     show: function () {
+        var $this = $(this.el);
         $('#panel1 .scroller').children().css('display','none');
-        $(this.el).css('display', 'block');
-        this.model.get("members").view.show();
-        kiwi.front.ui.setTopicText(this.model.get("topic"))
+        $this.css('display', 'block');
+        var members = this.model.get("members");
+        if (members) {
+            members.view.show();
+        } else {
+            $('#kiwi .userlist').children().css('display', 'none');
+        }
+        kiwi.front.ui.setTopicText(this.model.get("topic") || "")
+        // TODO: Have Kiwi remember the scoll locations of each panel
+        $('#panel1').scrollTop($this.height());
+        kiwi.currentPanel = this.model;
+    }
+});
+
+kiwi.view.Channel = kiwi.view.Panel.extend({
+    initialize: function (options) {
+        this.htmlsafe_name = 'chan_' + randomString(15);
+        $(this.el).attr("id", 'kiwi_window_' + this.htmlsafe_name).css('display', 'none');
+        this.el = $(this.el).appendTo('#panel1 .scroller')[0];
+        this.model.bind('msg', this.newMsg, this);
+        this.model.bind('change[topic]', this.topic, this);
+        this.msg_count = 0;
+        this.model.set({"view": this}, {"silent": true});
+        this.show();
     },
     topic: function (topic) {
+        console.log(topic);
         if (!topic) {
             topic = this.model.get("topic");
         }
@@ -97,25 +119,27 @@ kiwi.view.Tabs = Backbone.View.extend({
         this.model.bind("add", this.addTab, this);
         this.model.bind("remove", this.removeTab, this);
         this.model.bind("reset", this.render, this);
+        this.model.server.bind("change", this.render, this);
     },
     render: function () {
         $this = $(this.el);
         $this.empty();
+        $('<li id="tab_server"><span>' + kiwi.gateway.network_name + '</span></li>').data('pane', this.model.server).appendTo($this);
         this.model.forEach(function (tab) {
             var tabname = $(tab.get("view").el).attr("id");
-            $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('chan', tab).appendTo($this)
+            $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('pane', tab).appendTo($this);
         });
     },
     addTab: function (tab) {
         var tabname = $(tab.get("view").el).attr("id"),
             $this = $(this.el);
-        $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('chan', tab).appendTo($this)
+        $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('pane', tab).appendTo($this);
     },
     removeTab: function (tab) {
         $('#tab_' + $(tab.get("view").el).attr("id")).remove();
     },
     tabClick: function (e) {
-        $(e.currentTarget).data('chan').view.show();
+        $(e.currentTarget).data('pane').view.show();
     }
 });
 

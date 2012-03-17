@@ -63,9 +63,7 @@ kiwi.front.events = {
             return;
         }
         
-        var chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === plugin_event.destination;
-        });
+        var chan = kiwi.channels.getByName(plugin_event.destination);
         if (chan) {
             chan.addMsg(null, plugin_event.nick, plugin_event.msg);
         }
@@ -98,11 +96,11 @@ kiwi.front.events = {
             destination = data.channel;
         }
 
-        var chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === plugin_event.destination;
-        });
+        var chan = kiwi.channels.getByName(destination);
         if (chan) {
             chan.addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
+        } else {
+            kiwi.channels.server.addMsg(null, ' ', '* ' + data.nick + ' ' + data.msg, 'action', 'color:#555;');
         }
     },
 
@@ -112,12 +110,10 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onTopic: function (e, data) {
-        var chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === data.channel;
-        });
+        var chan = kiwi.channels.getByName(data.channel);
         if (chan) {
             chan.set({"topic": data.topic});
-            chan.trigger("topic");
+            chan.addMsg(null, ' ', '=== Topic for ' + data.channel + ' is: ' + data.topic, 'topic');
         }
     },
 
@@ -128,11 +124,11 @@ kiwi.front.events = {
     */
     onTopicSetBy: function (e, data) {
         var when,
-            chan = kiwi.bbchans.detect(function (c) {
-                return c.get("name") === data.channel;
-            });
-        when = new Date(data.when * 1000).toLocaleString();
-        chan.addMsg(null, '', 'Topic set by ' + data.nick + ' at ' + when, 'topic');
+            chan = kiwi.channels.getByName(data.channel);
+        if (chan) {
+            when = new Date(data.when * 1000).toLocaleString();
+            chan.addMsg(null, '', 'Topic set by ' + data.nick + ' at ' + when, 'topic');
+        }
     },
 
     /**
@@ -145,11 +141,11 @@ kiwi.front.events = {
             enick = '[' + nick + ']',
             chan;
 
-        chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === data.channel;
-        });
+        chan = kiwi.channels.getByName(data.channel);
         if (chan) {
             chan.addMsg(null, enick, data.msg, 'notice');
+        } else {
+            kiwi.channels.server.addMsg(null, enick, data.msg, 'notice');
         }
     },
 
@@ -171,7 +167,8 @@ kiwi.front.events = {
             kiwi.gateway.ctcp(false, 'TIME', data.nick, (new Date()).toLocaleString());
             break;
         }
-        Tabview.getServerTab().addMsg(null, 'CTCP Request', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
+        kiwi.channels.server.addMsg(null, 'CTCP Request', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
+        
     },
 
     /**
@@ -180,7 +177,7 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onCTCPResponse: function (e, data) {
-        Tabview.getServerTab().addMsg(null, 'CTCP Reply', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
+        kiwi.channels.server.addMsg(null, 'CTCP Reply', '[from ' + data.nick + '] ' + data.msg, 'ctcp');
     },
 
     /**
@@ -225,13 +222,13 @@ kiwi.front.events = {
                 kiwi.front.ui.doLayout();
             }
 
-            //Tabview.getServerTab().addMsg(null, ' ', '=== Connected OK :)', 'status');
-            //if (typeof init_data.channel === "string") {
-            //    kiwi.front.joinChannel(init_data.channel);
-            //}
+            kiwi.channels.server.addMsg(null, ' ', '=== Connected OK :)', 'status');
+            if (typeof init_data.channel === "string") {
+                kiwi.front.joinChannel(init_data.channel);
+            }
             kiwi.plugs.run('connect', {success: true});
         } else {
-            //Tabview.getServerTab().addMsg(null, ' ', '=== Failed to connect :(', 'status');
+            kiwi.channels.server.addMsg(null, ' ', '=== Failed to connect :(', 'status');
             kiwi.plugs.run('connect', {success: false});
         }
 
@@ -245,7 +242,7 @@ kiwi.front.events = {
     */
     onConnectFail: function (e, data) {
         var reason = (typeof data.reason === 'string') ? data.reason : '';
-        //Tabview.getServerTab().addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
+        kiwi.channels.server.addMsg(null, '', 'There\'s a problem connecting! (' + reason + ')', 'error');
         kiwi.plugs.run('connect', {success: false});
     },
     /**
@@ -308,7 +305,7 @@ kiwi.front.events = {
     */
     onOptions: function (e, data) {
         if (typeof kiwi.gateway.network_name === "string" && kiwi.gateway.network_name !== "") {
-            //Tabview.getServerTab().setTabText(kiwi.gateway.network_name);
+            kiwi.channels.server.set({"name": kiwi.gateway.network_name});
         }
     },
     /**
@@ -317,7 +314,7 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onMOTD: function (e, data) {
-        //Tabview.getServerTab().addMsg(null, data.server, data.msg, 'motd');
+        kiwi.channels.server.addMsg(null, data.server, data.msg, 'motd');
     },
     /**
     *   Handles the whois event
@@ -337,18 +334,18 @@ kiwi.front.events = {
             idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
         }
 
-        //tab = Tabview.getCurrentTab();
-        //if (data.msg) {
-        //    tab.addMsg(null, data.nick, data.msg, 'whois');
-        //} else if (data.logon) {
-        //    d = new Date();
-        //    d.setTime(data.logon * 1000);
-        //    d = d.toLocaleString();
+        tab = kiwi.currentPanel;
+        if (data.msg) {
+            tab.addMsg(null, data.nick, data.msg, 'whois');
+        } else if (data.logon) {
+            d = new Date();
+            d.setTime(data.logon * 1000);
+            d = d.toLocaleString();
 
-        //    tab.addMsg(null, data.nick, 'idle for ' + idle_time + ', signed on ' + d, 'whois');
-        //} else {
-        //    tab.addMsg(null, data.nick, 'idle for ' + idle_time, 'whois');
-        //}
+            tab.addMsg(null, data.nick, 'idle for ' + idle_time + ', signed on ' + d, 'whois');
+        } else {
+            tab.addMsg(null, data.nick, 'idle for ' + idle_time, 'whois');
+        }
     },
     /**
     *   Handles the mode event
@@ -358,9 +355,7 @@ kiwi.front.events = {
     onMode: function (e, data) {
         var tab, mem;
         if ((typeof data.channel === 'string') && (typeof data.effected_nick === 'string')) {
-            chan = kiwi.bbchans.detect(function (c) {
-                return c.get("name") === data.channel;
-            });
+            chan = kiwi.channels.getByName(data.channel);
             if (chan) {
                 chan.addMsg(null, ' ', '[' + data.mode + '] ' + data.effected_nick + ' by ' + data.nick, 'mode', '');
                 mem = _.detect(chan.get("members"), function (m) {
@@ -384,9 +379,7 @@ kiwi.front.events = {
     */
     onUserList: function (e, data) {
         var tab, chan;
-        chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === data.channel;
-        });
+        chan = kiwi.channels.getByName(data.channel);
         if (chan) {
             if ((!kiwi.front.cache.userlist) || (!kiwi.front.cache.userlist.updating)) {
                 if (!kiwi.front.cache.userlist) {
@@ -412,9 +405,7 @@ kiwi.front.events = {
             kiwi.front.cache.userlist = {};
         }
         kiwi.front.cache.userlist.updating = false;
-        chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === data.channel;
-        });
+        chan = kiwi.channels.getByName(data.channel);
         if (chan) {
             chan.get("members").trigger("change");
         }
@@ -470,18 +461,15 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onJoin: function (e, data) {
-        var chan;
-        chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === data.channel;
-        });
+        var chan = kiwi.channels.getByName(data.channel);
         if (!chan) {
             chan = new kiwi.model.Channel({"name": data.channel.toLowerCase()});
-            kiwi.bbchans.add(chan);
+            kiwi.channels.add(chan);
             // No need to add ourselves to the MemberList as RPL_NAMESREPLY will be next
+            chan.view.show();
         } else {
             chan.get("members").add(new kiwi.model.Member({"nick": data.nick, "modes": [], "ident": data.ident, "hostname": data.hostname}));
         }
-        chan.view.show();
     },
     /**
     *   Handles the part event
@@ -490,9 +478,7 @@ kiwi.front.events = {
     */
     onPart: function (e, data) {
         var chan, members, cid;
-        chan = kiwi.bbchans.detect(function (c) {
-            return c.get("name") === data.channel;
-        });
+        chan = kiwi.channels.getByName(data.channel);
         if (chan) {
             if (data.nick === kiwi.gateway.nick) {
                 chan.trigger("close");
@@ -510,20 +496,18 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onKick: function (e, data) {
-        //var tab = Tabview.getTab(data.channel);
-        //if (tab) {
-        //    // If this is us, close the tabview
-        //    if (data.kicked === kiwi.gateway.nick) {
-        //        //tab.close();
-        //        tab.addMsg(null, ' ', '=== You have been kicked from ' + data.channel + '. ' + data.message, 'status kick');
-        //        tab.safe_to_close = true;
-        //        tab.userlist.remove();
-        //        return;
-        //    }
+        var panel = kiwi.channels.getByName(data.channel);
+        if (panel) {
+            // If this is us, close the panel
+            if (data.kicked === kiwi.gateway.nick) {
+                kiwi.channels.remove(panel);
+                kiwi.channels.server.addMsg(null, ' ', '=== You have been kicked from ' + data.channel + '. ' + data.message, 'status kick');
+                return;
+            }
 
-        //    tab.addMsg(null, ' ', '<-- ' + data.kicked + ' kicked by ' + data.nick + '(' + data.message + ')', 'action kick', 'color:#990000;');
-        //    tab.userlist.removeUser(data.nick);
-        //}
+            panel.addMsg(null, ' ', '<-- ' + data.kicked + ' kicked by ' + data.nick + '(' + data.message + ')', 'action kick', 'color:#990000;');
+            panel.userlist.removeUser(data.nick);
+        }
     },
     /**
     *   Handles the nick event
@@ -531,17 +515,20 @@ kiwi.front.events = {
     *   @param  {Object}        data    The event data
     */
     onNick: function (e, data) {
-        //if (data.nick === kiwi.gateway.nick) {
-        //    kiwi.gateway.nick = data.newnick;
-        //    kiwi.front.ui.doLayout();
-        //}
+        if (data.nick === kiwi.gateway.nick) {
+            kiwi.gateway.nick = data.newnick;
+            kiwi.front.ui.doLayout();
+        }
 
-        //_.each(Tabview.getAllTabs(), function (tab) {
-        //    if (tab.userlist.hasUser(data.nick)) {
-        //        tab.userlist.renameUser(data.nick, data.newnick);
-        //        tab.addMsg(null, ' ', '=== ' + data.nick + ' is now known as ' + data.newnick, 'action changenick');
-        //    }
-        //});
+        kiwi.channels.each(function (panel) {
+            if (panel.isChannel) {
+                var member = panel.get("members").getByNick(data.nick);
+                if (member) {
+                    member.set({"nick": data.newnick});
+                    panel.addMsg(null, ' ', '=== ' + data.nick + ' is now known as ' + data.newnick, 'action changenick');
+                }
+            }
+        });
     },
     /**
     *   Handles the quit event
@@ -550,7 +537,7 @@ kiwi.front.events = {
     */
     onQuit: function (e, data) {
         var chan, members, member;
-        kiwi.bbchans.forEach(function (chan) {
+        kiwi.channels.forEach(function (chan) {
             members = chan.get("members");
             member = members.detect(function (m) {
                 return data.nick === m.get("nick");

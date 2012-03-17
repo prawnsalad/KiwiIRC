@@ -139,9 +139,9 @@ var plugins = [
     {
         name: "activity",
         onaddmsg: function (event, opts) {
-            if (kiwi.front.cur_channel.name.toLowerCase() !== kiwi.front.tabviews[event.tabview.toLowerCase()].name) {
-                kiwi.front.tabviews[event.tabview].activity();
-            }
+            //if (kiwi.front.cur_channel.name.toLowerCase() !== kiwi.front.tabviews[event.tabview.toLowerCase()].name) {
+            //    kiwi.front.tabviews[event.tabview].activity();
+            //}
 
             return event;
         }
@@ -150,24 +150,24 @@ var plugins = [
     {
         name: "highlight",
         onaddmsg: function (event, opts) {
-            var tab = Tabviews.getTab(event.tabview.toLowerCase());
+            //var tab = Tabviews.getTab(event.tabview.toLowerCase());
 
             // If we have a highlight...
-            if (event.msg.toLowerCase().indexOf(kiwi.gateway.nick.toLowerCase()) > -1) {
-                if (Tabview.getCurrentTab() !== tab) {
-                    tab.highlight();
-                }
-                if (kiwi.front.isChannel(tab.name)) {
-                    event.msg = '<span style="color:red;">' + event.msg + '</span>';
-                }
-            }
+            //if (event.msg.toLowerCase().indexOf(kiwi.gateway.nick.toLowerCase()) > -1) {
+            //    if (Tabview.getCurrentTab() !== tab) {
+            //        tab.highlight();
+            //    }
+            //    if (kiwi.front.isChannel(tab.name)) {
+            //        event.msg = '<span style="color:red;">' + event.msg + '</span>';
+            //    }
+            //}
 
             // If it's a PM, highlight
-            if (!kiwi.front.isChannel(tab.name) && tab.name !== "server"
-                && Tabview.getCurrentTab().name.toLowerCase() !== tab.name
-            ) {
-                tab.highlight();
-            }
+            //if (!kiwi.front.isChannel(tab.name) && tab.name !== "server"
+            //    && Tabview.getCurrentTab().name.toLowerCase() !== tab.name
+            //) {
+            //    tab.highlight();
+            //}
 
             return event;
         }
@@ -292,15 +292,16 @@ var plugins = [
                 return event;
             }
 
-            if (typeof kiwi.front.tabviews[event.tabview].nick_colours === 'undefined') {
-                kiwi.front.tabviews[event.tabview].nick_colours = {};
-            }
+            //if (typeof kiwi.front.tabviews[event.tabview].nick_colours === 'undefined') {
+            //    kiwi.front.tabviews[event.tabview].nick_colours = {};
+            //}
 
-            if (typeof kiwi.front.tabviews[event.tabview].nick_colours[event.nick] === 'undefined') {
-                kiwi.front.tabviews[event.tabview].nick_colours[event.nick] = this.randColour();
-            }
+            //if (typeof kiwi.front.tabviews[event.tabview].nick_colours[event.nick] === 'undefined') {
+            //    kiwi.front.tabviews[event.tabview].nick_colours[event.nick] = this.randColour();
+            //}
 
-            var c = kiwi.front.tabviews[event.tabview].nick_colours[event.nick];
+            //var c = kiwi.front.tabviews[event.tabview].nick_colours[event.nick];
+            var c = this.randColour();
             event.nick = '<span style="color:' + c + ';">' + event.nick + '</span>';
 
             return event;
