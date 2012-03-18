@@ -130,8 +130,8 @@ if (this.config.handle_http) {
     this.cache = {alljs: '', html: []};
 }
 this.httpServers = [];
-this.httpHandler = function (request, response) {
-    return app.httpHandler(request, response);
+this.httpHandler = function (request, response, server) {
+    return app.httpHandler(request, response, server);
 }
 
 

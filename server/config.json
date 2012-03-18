@@ -2,6 +2,7 @@
     "servers":            [
                             {
                                 "secure":   true,
+                                "hsts": true,
                                 "port":   7777,
                                 "address": "0.0.0.0",
 

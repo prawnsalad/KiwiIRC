@@ -553,10 +553,10 @@ this.rebindIRCCommands = function () {
 };
 
 
-this.httpHandler = function (request, response) {
-    var uri, uri_parts, subs, useragent, agent, server_set, server, nick, debug, touchscreen, hash,
+this.httpHandler = function (request, response, serverconf) {
+    var uri, uri_parts, subs, useragent, agent, server_set, serverconf, nick, debug, touchscreen, hash,
         min = {}, public_http_path, port, ssl, obj, args, ircuri, target, modifiers, query,
-        secure = (typeof request.client.encrypted === 'object');
+        secure = serverconf.secure || false;
 
     try {
         if (kiwi.config.handle_http) {
@@ -616,6 +616,9 @@ this.httpHandler = function (request, response) {
                 } else {
                     response.setHeader('Content-type', 'application/javascript');
                     response.setHeader('ETag', kiwi.cache.alljs_hash);
+                    if ((secure) && (serverconf.hsts)) {
+                        response.setHeader("Strict-Transport-Security", "max-age=604 800");
+                    }
                     response.write(kiwi.cache.alljs);
                 }
                 response.end();
@@ -700,6 +703,9 @@ this.httpHandler = function (request, response) {
                     } else {
                         response.setHeader('Etag', kiwi.cache.html[hash].hash);
                         response.setHeader('Content-type', 'text/html');
+                        if ((secure) && (serverconf.hsts)) {
+                            response.setHeader("Strict-Transport-Security", "max-age=604 800");
+                        }
                         response.write(kiwi.cache.html[hash].html);
                     }
                     response.end();
@@ -716,6 +722,9 @@ this.httpHandler = function (request, response) {
                                 } else {
                                     response.setHeader('Etag', hash2);
                                     response.setHeader('Content-type', 'text/html');
+                                    if ((secure) && (serverconf.hsts)) {
+                                        response.setHeader("Strict-Transport-Security", "max-age=604 800");
+                                    }
                                     response.write(html);
                                 }
                             } catch (e) {
@@ -768,13 +777,17 @@ this.websocketListen = function (servers, handler) {
                 opts.ca = fs.readFileSync(__dirname + '/' + server.ssl_ca);
             }
 
-            hs = https.createServer(opts, handler);
+            hs = https.createServer(opts, function (request, response) {
+                handler(request, response, server);
+            });
             kiwi.io.push(ws.listen(hs, {secure: true}));
             hs.listen(server.port, server.address);
             kiwi.log('Listening on ' + server.address + ':' + server.port.toString() + ' with SSL');
         } else {
             // Start some plain-text server up
-            hs = http.createServer(handler);
+            hs = http.createServer(function (request, response) {
+                handler(request, response, server);
+            });
             kiwi.io.push(ws.listen(hs, {secure: false}));
             hs.listen(server.port, server.address);
             kiwi.log('Listening on ' + server.address + ':' + server.port.toString() + ' without SSL');
