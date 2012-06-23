@@ -2,6 +2,8 @@
 /*global kiwi */
 kiwi.model = {};
 
+
+
 kiwi.model.MemberList = Backbone.Collection.extend({
     model: kiwi.model.Member,
     comparator: function (a, b) {
@@ -52,8 +54,16 @@ kiwi.model.MemberList = Backbone.Collection.extend({
     },
     initialize: function (options) {
         this.view = new kiwi.view.MemberList({"model": this, "name": options.name});
+    },
+    getByNick: function (nick) {
+        return this.find(function (m) {
+            return nick === m.get("nick");
+        });
     }
 });
+
+
+
 
 kiwi.model.Member = Backbone.Model.extend({
     sortModes: function (modes) {
@@ -128,12 +138,22 @@ kiwi.model.Member = Backbone.Model.extend({
     }
 });
 
+
+
+
+
+
+
+
+
 kiwi.model.ChannelList = Backbone.Collection.extend({
     model: kiwi.model.Channel,
     comparator: function (chan) {
         return chan.get("name");
     }
 });
+
+
 
 // TODO: Channel modes
 kiwi.model.Channel = Backbone.Model.extend({
@@ -186,5 +206,98 @@ kiwi.model.Channel = Backbone.Model.extend({
         bs.push(tmp)
         this.set({"backscroll": bs}, {silent:true});
         this.trigger("msg", tmp);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+kiwi.model.PanelList = Backbone.Collection.extend({
+    model: kiwi.model.Panel,
+    comparator: function (chan) {
+        return chan.get("name");
+    },
+    initialize: function () {
+        this.server = new kiwi.model.Server({"name": kiwi.gateway.network_name});
+        this.view = new kiwi.view.Tabs({"el": $('#toolbar .panellist')[0], "model": this});
+
+        kiwi.currentPanel = this.server;
+    },
+    getByName: function (name) {
+        return this.find(function (c) {
+            return name === c.get("name");
+        });
+    }
+});
+
+
+
+
+kiwi.model.Panel = Backbone.Model.extend({
+    initialize: function (attributes) {
+        var name = this.get("name") || "";
+        this.view = new kiwi.view.Panel({"model": this, "name": name});
+        this.set({
+            "backscroll": [],
+            "name": name
+        }, {"silent": true});
+
+        this.isChannel = false;
+    },
+
+    addMsg: function (nick, msg, type, opts) {
+        var message_obj, bs, d;
+
+        opts = opts || {};
+
+        // Time defaults to now
+        if (!opts || typeof opts.time === 'undefined') {
+            d = new Date();
+            opts.time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
+        }
+
+        // CSS style defaults to empty string
+        if (!opts || typeof opts.style === 'undefined') {
+            opts.style = '';
+        }
+
+        // Run through the plugins
+        message_obj = {"msg": msg, "time": opts.time, "nick": nick, "chan": this.get("name"), "style": opts.style};
+        //tmp = kiwi.plugs.run('addmsg', message_obj);
+        if (!message_obj) {
+            return;
+        }
+
+        // The CSS class (action, topic, notice, etc)
+        if (typeof message_obj.type !== "string") {
+            message_obj.type = '';
+        }
+
+        // Make sure we don't have NaN or something
+        if (typeof message_obj.msg !== "string") {
+            message_obj.msg = '';
+        }
+
+        // Update the scrollback
+        bs = this.get("backscroll");
+        bs.push(message_obj)
+        this.set({"backscroll": bs}, {silent:true});
+
+        this.trigger("msg", message_obj);
     }
 });

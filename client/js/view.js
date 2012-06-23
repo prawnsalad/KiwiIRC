@@ -3,6 +3,8 @@
 
 kiwi.view = {};
 
+
+
 kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
     events: {
@@ -28,6 +30,12 @@ kiwi.view.MemberList = Backbone.View.extend({
         $(this.el).css('display', 'block');
     }
 });
+
+
+
+
+
+
 
 kiwi.view.Channel = Backbone.View.extend({
     tagName: "div",
@@ -89,6 +97,12 @@ kiwi.view.Channel = Backbone.View.extend({
     }
 });
 
+
+
+
+
+
+
 kiwi.view.Tabs = Backbone.View.extend({
     events: {
         "click li": "tabClick"
@@ -97,25 +111,27 @@ kiwi.view.Tabs = Backbone.View.extend({
         this.model.bind("add", this.addTab, this);
         this.model.bind("remove", this.removeTab, this);
         this.model.bind("reset", this.render, this);
+        this.model.server.bind("change", this.render, this);
     },
     render: function () {
         $this = $(this.el);
         $this.empty();
+        $('<li id="tab_server"><span>' + kiwi.gateway.network_name + '</span></li>').data('pane', this.model.server).appendTo($this);
         this.model.forEach(function (tab) {
             var tabname = $(tab.get("view").el).attr("id");
-            $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('chan', tab).appendTo($this)
+            $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('pane', tab).appendTo($this);
         });
     },
     addTab: function (tab) {
         var tabname = $(tab.get("view").el).attr("id"),
             $this = $(this.el);
-        $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('chan', tab).appendTo($this)
+        $('<li id="tab_' + tabname + '"><span>' + tab.get("name") + '</span></li>').data('pane', tab).appendTo($this);
     },
     removeTab: function (tab) {
         $('#tab_' + $(tab.get("view").el).attr("id")).remove();
     },
     tabClick: function (e) {
-        $(e.currentTarget).data('chan').view.show();
+        $(e.currentTarget).data('pane').view.show();
     }
 });
 
