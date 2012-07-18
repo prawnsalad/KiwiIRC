@@ -34,6 +34,10 @@ kiwi.view.Panel = Backbone.View.extend({
     events: {
         "click .chan": "chanClick"
     },
+
+    // The container this panel is within
+    $container: null,
+
     initialize: function (options) {
         this.initializePanel(options);
     },
@@ -41,7 +45,12 @@ kiwi.view.Panel = Backbone.View.extend({
     initializePanel: function (options) {
         this.$el.css('display', 'none');
 
-        this.$container = $('#panels .container1');
+        if (options.container) {
+            this.$container = $(options.container);
+        } else {
+            this.$container = $('#panels .container1');
+        }
+
         this.$el.appendTo(this.$container);
 
         this.model.bind('msg', this.newMsg, this);
@@ -51,8 +60,7 @@ kiwi.view.Panel = Backbone.View.extend({
     },
 
     render: function () {
-        var $this = $(this.el);
-        $this.empty();
+        this.$el.empty();
         this.model.get("backscroll").forEach(this.newMsg);
     },
     newMsg: function (msg) {
@@ -70,9 +78,7 @@ kiwi.view.Panel = Backbone.View.extend({
         line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
-        // Scroll to the bottom of the channel
-        // TODO: Don't scroll down if we're scrolled up the channel a little
-        $this[0].scrollTop = $this[0].scrollHeight;
+        this.scrollToBottom();
 
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
@@ -105,9 +111,18 @@ kiwi.view.Panel = Backbone.View.extend({
             kiwi.app.setCurrentTopic(this.model.get("topic") || "");
         }
 
+        this.scrollToBottom();
+
         kiwi.current_panel = this.model;
 
         this.trigger('active', this.model);
+    },
+
+
+    // Scroll to the bottom of the panel
+    scrollToBottom: function () {
+        // TODO: Don't scroll down if we're scrolled up the panel a little
+        this.$container[0].scrollTop = this.$container[0].scrollHeight;
     }
 });
 
