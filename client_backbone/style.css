@@ -132,12 +132,16 @@ body {
 }
 #controlbox .input .nick { text-align: right; width:11em; left:0px; position:absolute; padding:2px; }
 #controlbox .input .nick a { text-decoration:none; }
-#controlbox .input input {
+#controlbox .input .input_wrap {
     position:absolute;
-    right:5px; left: 12.2em;
+    right:7px; left: 12.2em;
     height:1.7em;
+}
+#controlbox .input input {
     border: medium none;
     outline:none;
+    position:relative;
+    height:100%; width:100%;
 }
 
 
