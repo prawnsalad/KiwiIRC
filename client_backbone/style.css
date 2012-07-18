@@ -15,9 +15,9 @@ body {
 /**
  * Main layout blocks
  */
-#toolbar { border-bottom:1px solid red; position:absolute; top:0px; width:100%; background-color:#1B1B1B; font-size:0.9em; }
-#panels { border:1px green solid; position:absolute; left:0px; right:200px; bottom:100px; top:100px; overflow-y:scroll; }
-#memberlists { border:1px blue solid; position:absolute; right:0px; width:200px; bottom:100px; top:100px; }
+#toolbar { position:absolute; top:0px; width:100%; background-color:#1B1B1B; font-size:0.9em; }
+#panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; overflow-y:scroll; }
+#memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; }
 #controlbox { position: absolute; bottom:0px; width:100%; background-color:#1B1B1B; }
 
 
@@ -75,6 +75,7 @@ body {
 
 .messages {
     overflow-x:wrap;
+    overflow-y:scroll;
     border:none; display: none;
     height: 100%;
 }

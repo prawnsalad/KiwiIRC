@@ -227,6 +227,23 @@ kiwi.model.Panel = Backbone.Model.extend({
         this.set({"scrollback": bs}, {silent: true});
 
         this.trigger("msg", message_obj);
+    },
+
+    close: function () {
+        this.view.remove();
+        delete this.view;
+
+        var members = this.get('members');
+        if (members) {
+            members.reset([]);
+            this.unset('members');
+        }
+
+        this.destroy();
+
+        if (this.cid === kiwi.current_panel.cid) {
+            kiwi.app.panels.server.view.show();
+        }
     }
 });
 

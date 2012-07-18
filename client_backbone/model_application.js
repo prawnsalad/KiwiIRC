@@ -80,6 +80,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             channel = that.panels.getByName(event.channel);
             if (!channel) return;
 
+            // If this is us, close the panel
+            if (event.nick === kiwi.gateway.get('nick')) {
+                channel.close();
+                return;
+            }
+
             members = channel.get('members');
             if (!members) return;
 
@@ -163,6 +169,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
      * Bind to certain commands that may be typed into the control box
      */
     this.bindControllboxCommands = function (controlbox) {
+        controlbox.on('unknown_command', this.unknownCommand);
+
         controlbox.on('command', this.allCommands);
         controlbox.on('command_msg', this.msgCommand);
 
@@ -183,6 +191,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             });
         });
     };
+
+    this.unknownCommand = function (ev) {
+        kiwi.gateway.raw(ev.command + ' ' + ev.params.join(' '));
+    };
+
     this.allCommands = function (ev) {
         console.log('allCommands', ev);
     };

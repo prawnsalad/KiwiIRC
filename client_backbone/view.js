@@ -70,6 +70,10 @@ kiwi.view.Panel = Backbone.View.extend({
         line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
+        // Scroll to the bottom of the channel
+        // TODO: Don't scroll down if we're scrolled up the channel a little
+        $this[0].scrollTop = $this[0].scrollHeight;
+
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
         if (this.msg_count > 250) {
@@ -102,6 +106,8 @@ kiwi.view.Panel = Backbone.View.extend({
         }
 
         kiwi.current_panel = this.model;
+
+        this.trigger('active', this.model);
     }
 });
 
@@ -117,17 +123,21 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
         }
         
         this.model.addMsg('', '=== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
-        if ($(this.el).css('display') === 'block') {
-            // TODO: Update the active topic bar
-            //kiwi.front.ui.setTopicText(this.model.get("topic"));
+
+        // If this is the active channel then update the topic bar
+        if (kiwi.current_panel === this) {
+            kiwi.app.setCurrentTopic(this.model.get("topic"));
         }
     }
 });
 
+// Model for this = kiwi.model.PanelList
 kiwi.view.Tabs = Backbone.View.extend({
     events: {
-        "click li": "tabClick"
+        "click li": "tabClick",
+        'click li img': 'partClick'
     },
+
     initialize: function () {
         this.model.on("add", this.panelAdded, this);
         this.model.on("remove", this.panelRemoved, this);
@@ -144,7 +154,7 @@ kiwi.view.Tabs = Backbone.View.extend({
             .appendTo($this);
 
         this.model.forEach(function (panel) {
-            // If this si the server panel, ignor as it's already added
+            // If this is the server panel, ignore as it's already added
             if (panel == that.model.server) return;
 
             $('<li><span>' + panel.get("name") + '</span></li>')
@@ -154,27 +164,40 @@ kiwi.view.Tabs = Backbone.View.extend({
     },
 
     panelAdded: function (panel) {
+        // Add a tab to the panel
         panel.tab = $('<li><span>' + panel.get("name") + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
             .appendTo(this.$el);
+
+        panel.view.on('active', this.panelActive, this);
     },
     panelRemoved: function (panel) {
-        $(panel.tab).remove();
-        panel.view.remove();
-        panel.destroy();
+        panel.tab.remove();
+        delete panel.tab;
+    },
+
+    panelActive: function (panel) {
+        // Remove any existing tabs or part images
+        $('img', this.$el).remove();
+        this.$el.children().removeClass('active');
+
+        panel.tab.addClass('active');
+        panel.tab.append('<img src="img/redcross.png" />');
     },
 
     tabClick: function (e) {
-        this.$el.children().removeClass('active');
-
         var panel = this.model.getByCid($(e.currentTarget).data('panel_id'));
         if (!panel) {
             // A panel wasn't found for this tab... wadda fuck
             return;
         }
 
-        panel.tab.addClass('active');
         panel.view.show();
+    },
+
+    partClick: function (e) {
+        var panel = this.model.getByCid($(e.currentTarget).parent().data('panel_id'));
+        kiwi.gateway.part(panel.get('name'));
     }
 });
 
@@ -219,7 +242,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
                 }
                 break;
 
-            case (ev.keyCode === 40):
+            case (ev.keyCode === 40):              // down
                 if (this.buffer_pos < this.buffer.length) {
                     this.buffer_pos++;
                     inp.val(this.buffer[this.buffer_pos]);
@@ -243,6 +266,12 @@ kiwi.view.ControlBox = Backbone.View.extend({
         // Trigger the command events
         this.trigger('command', {command: command, params: params});
         this.trigger('command_' + command, {command: command, params: params});
+
+        // If we didn't have any listeners for this event, fire a special case
+        // TODO: This feels dirty. Should this really be done..?
+        if (!this._callbacks['command' + command]) {
+            this.trigger('unknown_command', {command: command, params: params});
+        }
     }
 });
 
