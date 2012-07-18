@@ -1,0 +1,51 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+
+<title> KiwiIRC </title>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+<body>
+    <div id="kiwi">
+        <div id="toolbar">
+            <ul class="panellist channels"></ul>
+
+            <div id="topic">
+                <input type="text" />
+            </div>
+        </div>
+
+        <div id="panels">
+            <div class="container1"></div>
+        </div>
+
+        <div id="memberlists"></div>
+
+        <div id="controlbox">
+            <div class="input">
+                <span class="nick"> </span>
+                <input type="text" class="inp" />
+            </div>
+        </div>
+    </div>
+
+    <script src="jquery-1.7.1.min.js"></script>
+    <script src="underscore-min.js"></script>
+    <script src="backbone-git.js"></script>
+    <script src="http://localhost:7778/socket.io/socket.io.js"></script>
+
+    <script src="utils.js"></script>
+    <script src="model.js"></script>
+    <script src="model_application.js"></script>
+    <script src="model_gateway.js"></script>
+    <script src="view.js"></script>
+
+<script>
+    $(function () {
+        kiwi.app = new kiwi.model.Application({container: $('body')[0]});
+    });
+</script>
+</body>
+</html>
