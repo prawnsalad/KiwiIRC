@@ -16,17 +16,51 @@ kiwi.view.MemberList = Backbone.View.extend({
         var $this = $(this.el);
         $this.empty();
         this.model.forEach(function (member) {
-            $('<li><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>').appendTo($this).data('member', member);
+            $('<li><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
+                .appendTo($this)
+                .data('member', member);
         });
     },
     nickClick: function (x) {
-        console.log(x);
+        var target = $(x.currentTarget).parent('li'),
+            member = target.data('member'),
+            userbox = new kiwi.view.UserBox();
+        
+        userbox.member = member;
+        $('.userbox', this.$el).remove();
+        target.append(userbox.$el);
     },
     show: function () {
         $('#memberlists').children().removeClass('active');
         $(this.el).addClass('active');
     }
 });
+
+
+kiwi.view.UserBox = Backbone.View.extend({
+    // Member this userbox is relating to
+    member: {},
+
+    events: {
+        'click .query': 'queryClick',
+        'click .info': 'infoClick'
+    },
+
+    initialize: function () {
+        this.$el = $($('#tmpl_userbox').html());
+    },
+
+    queryClick: function (event) {
+        var panel = new kiwi.model.Channel({name: this.member.get('nick')});
+        kiwi.app.panels.add(panel);
+        panel.view.show();
+    },
+
+    infoClick: function (event) {
+        kiwi.gateway.raw('WHOIS ' + this.member.get('nick'));
+    }
+});
+
 
 kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
@@ -45,6 +79,7 @@ kiwi.view.Panel = Backbone.View.extend({
     initializePanel: function (options) {
         this.$el.css('display', 'none');
 
+        // Containing element for this panel
         if (options.container) {
             this.$container = $(options.container);
         } else {
@@ -212,7 +247,13 @@ kiwi.view.Tabs = Backbone.View.extend({
 
     partClick: function (e) {
         var panel = this.model.getByCid($(e.currentTarget).parent().data('panel_id'));
-        kiwi.gateway.part(panel.get('name'));
+
+        // Only need to part if it's a channel
+        if (panel.isChannel()) {
+            kiwi.gateway.part(panel.get('name'));
+        } else {
+            panel.close();
+        }
     }
 });
 

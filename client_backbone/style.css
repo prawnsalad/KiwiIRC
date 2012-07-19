@@ -1,5 +1,6 @@
 * { margin:0px; padding:0px; }
 html, body { height:100%; }
+a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
@@ -116,8 +117,9 @@ body {
 #memberlists ul.active { display:block; }
 #memberlists ul li { padding: 0.2em 1em; overflow-y:auto; overflow-x:hidden; cursor:pointer; }
 #memberlists ul li:hover { background-color:#FAF7D3; }
+#memberlists ul li a.nick { display:block; color:black; }
 
-#memberlists ul li .userbox { margin:0px 5px 5px 5px; font-size:.9em; }
+#memberlists ul li .userbox { margin:0 1em 5px 1em; font-size:.9em; }
 #memberlists ul li .userbox a { display:block; text-decoration:none; border-bottom: 1px dashed #aaa; }
 
 
@@ -131,7 +133,7 @@ body {
     -khtml-border-radius:5px;
 }
 #controlbox .input .nick { text-align: right; width:11em; left:0px; position:absolute; padding:2px; }
-#controlbox .input .nick a { text-decoration:none; }
+#controlbox .input .nick a { text-decoration:none; color:black; }
 #controlbox .input .input_wrap {
     position:absolute;
     right:7px; left: 12.2em;

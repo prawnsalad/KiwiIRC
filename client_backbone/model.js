@@ -172,8 +172,6 @@ kiwi.model.Panel = Backbone.Model.extend({
             "scrollback": [],
             "name": name
         }, {"silent": true});
-
-        this.isChannel = false;
     },
 
     addMsg: function (nick, msg, type, opts) {
@@ -244,6 +242,14 @@ kiwi.model.Panel = Backbone.Model.extend({
         if (this.cid === kiwi.current_panel.cid) {
             kiwi.app.panels.server.view.show();
         }
+    },
+
+    isChannel: function () {
+        var channel_prefix = kiwi.gateway.get('channel_prefix'),
+            this_name = this.get('name');
+
+        if (!this_name) return false;
+        return (channel_prefix.indexOf(this_name[0]) > -1);
     }
 });
 
@@ -255,13 +261,13 @@ kiwi.model.Server = kiwi.model.Panel.extend({
             "scrollback": [],
             "name": name
         }, {"silent": true});
-        this.isChannel = false;
 
         this.addMsg(' ', '--> Kiwi IRC: Such an awesome IRC client', '', {style: 'color:#009900;'});
     }
 });
 
 // TODO: Channel modes
+// TODO: Listen to gateway events for anythign related to this channel
 kiwi.model.Channel = kiwi.model.Panel.extend({
     initialize: function (attributes) {
         var that = this,
@@ -293,7 +299,5 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
             var disp = member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + ']';
             this.addMsg(' ', '<-- ' + disp + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action quit');
         }, this);
-
-        this.isChannel = true;
     }
 });
