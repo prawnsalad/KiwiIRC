@@ -18,7 +18,7 @@ body {
  */
 #toolbar { position:absolute; top:0px; width:100%; background-color:#1B1B1B; font-size:0.9em; }
 #panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
-#memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; }
+#memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:scroll; }
 #controlbox { position: absolute; bottom:0px; width:100%; background-color:#1B1B1B; }
 
 

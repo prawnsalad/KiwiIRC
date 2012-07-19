@@ -142,24 +142,32 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
 
         gw.on('onuserlist', function (event) {
-            // TODO: This *SHOULD NOT* simply replace the current nicklist!
-            // 1. Set a flag to mark the nicklist is changing.
-            // 2. If the flag is not set, clear the list.
-            // 3. On a userlist_end event, clear the flag
-            var channel, users;
+            var channel;
             channel = that.panels.getByName(event.channel);
 
             // If we didn't find a channel for this, may aswell leave
             if (!channel) return;
 
-            users = [];
+            channel.temp_userlist = channel.temp_userlist || [];
             _.each(event.users, function (item) {
                 var user = new kiwi.model.Member({nick: item.nick, modes: item.modes});
-                users.push(user);
+                channel.temp_userlist.push(user);
             });
+        });
+
+
+        gw.on('onuserlist_end', function (event) {
+            var channel;
+            channel = that.panels.getByName(event.channel);
+
+            // If we didn't find a channel for this, may aswell leave
+            if (!channel) return;
 
             // Update the members list with the new list
-            channel.get('members').reset(users);
+            channel.get('members').reset(channel.temp_userlist || []);
+
+            // Clear the temporary userlist
+            delete channel.temp_userlist;
         });
     };
 
