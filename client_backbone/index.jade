@@ -1,0 +1,31 @@
+html
+    head
+        meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+        title KiwiIRC 
+        link(rel='stylesheet', type='text/css', href='/css/style.css')
+        script
+            document.write(unescape('%3Cscript type="text/javascript" src="' + document.location.protocol + '//' + document.location.host + '/socket.io/socket.io.js"%3E%3C/script%3E'));
+    body
+        #kiwi
+            #toolbar
+                ul.panellist.channels
+                #topic
+                    input(type='text')
+            #panels
+                .panel_container.container1
+            #memberlists
+            #controlbox
+                .input
+                    span.nick    
+                    .input_wrap
+                        input.inp(type='text')
+        script#tmpl_userbox(type='text/x-jquery-tmpl')
+            <div class="userbox">
+            <a class="query">Message</a>
+            <a class="info">Info</a>
+            </div>
+        script(src='all.js')
+        script
+            $(function () {
+                kiwi.app = new kiwi.model.Application({container: $('body')[0]});
+            });

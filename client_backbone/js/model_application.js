@@ -13,7 +13,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.initializeClient();
 
         kiwi.gateway.set('nick', 'kiwi_' + Math.ceil(Math.random() * 10000).toString());
-        kiwi.gateway.connect('ate.anonnet.org', 6667, false, false, function () {
+        kiwi.gateway.connect('localhost', 6667, false, false, function () {
             console.log('gateway connected');
         });
 

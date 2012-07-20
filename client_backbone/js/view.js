@@ -157,7 +157,9 @@ kiwi.view.Panel = Backbone.View.extend({
     // Scroll to the bottom of the panel
     scrollToBottom: function () {
         // TODO: Don't scroll down if we're scrolled up the panel a little
-        this.$container[0].scrollTop = this.$container[0].scrollHeight;
+        if (this.$container[0]) {
+            this.$container[0].scrollTop = this.$container[0].scrollHeight;
+        }
     }
 });
 
@@ -325,9 +327,9 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?
-        if (!this._callbacks['command' + command]) {
+        /*if (!this._callbacks['command' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
-        }
+        }*/
     }
 });
 
@@ -356,8 +358,10 @@ kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if (ev.srcElement.tagName.toLowerCase() === 'input') {
-            return;
+        if (ev.secElement) {
+            if (ev.srcElement.tagName.toLowerCase() === 'input') {
+                return;
+            }
         }
 
         $('#controlbox .inp').focus();

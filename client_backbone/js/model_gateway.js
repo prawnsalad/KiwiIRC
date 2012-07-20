@@ -37,7 +37,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         *   @type   String
         */
         //kiwi_server: '//kiwi'
-        kiwi_server: 'http://localhost:7778/kiwi'
+        kiwi_server: document.location.protocol + '//' + document.location.host + '/kiwi'
     };
 
 
@@ -48,9 +48,9 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
 
-        // Redundant perhaps? Legacy
-        this.session_id = '';
+        this.server_num = null;
 
+        // Global variable? ~Jack
         network = this;
     };
 
@@ -90,15 +90,25 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         });
 
         this.socket.on('connect', function () {
-            this.emit('irc connect', that.get('nick'), host, port, ssl, password, callback);
-            console.log("kiwi.gateway.socket.on('connect')");
+            //{command: 'connect', nick: kiwi.gateway.nick, hostname: host, port: port, ssl: ssl, password: password}
+            this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
+                console.log('err, server_num', err, server_num);
+                if (!err) {
+                    that.server_num = server_num;
+                    console.log("kiwi.gateway.socket.on('connect')");
+                } else {
+                    console.log("kiwi.gateway.socket.on('error')", {reason: err});
+                }
+            });
         });
 
         this.socket.on('too_many_connections', function () {
             this.emit("connect_fail", {reason: 'too_many_connections'});
         });
 
-        this.socket.on('message', this.parse);
+        this.socket.on('irc', function (data, callback) {
+            that.parse(data.command, data.data);
+        });
 
         this.socket.on('disconnect', function () {
             this.emit("disconnect", {});
@@ -142,18 +152,18 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     /**
     *   Parses the response from the server
     */
-    this.parse = function (item) {
-        console.log('gateway event', item);
-        if (item.event !== undefined) {
-            that.trigger('on' + item.event, item);
+    this.parse = function (command, data) {
+        console.log('gateway event', command, data);
+        if (command !== undefined) {
+            that.trigger('on' + command, data);
 
-            switch (item.event) {
+            switch (command) {
             case 'options':
-                $.each(item.options, function (name, value) {
+                $.each(data.options, function (name, value) {
                     switch (name) {
                     case 'CHANTYPES':
                         // TODO: Check this. Why is it only getting the first char?
-                        that.set('channel_prefix', value.charAt(0));
+                        that.set('channel_prefix', value.join('').charAt(0));
                         break;
                     case 'NETWORK':
                         that.set('name', value);
@@ -166,11 +176,11 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
                 break;
 
             case 'connect':
-                that.set('nick', item.nick);
+                that.set('nick', data.nick);
                 break;
 
             case 'nick':
-                that.set('nick', item.newnick);
+                that.set('nick', data.newnick);
                 break;
             /*
             case 'sync':
@@ -182,7 +192,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
             */
 
             case 'kiwi':
-                this.emit('kiwi.' + item.namespace, item.data);
+                this.emit('kiwi.' + data.namespace, data);
                 break;
             }
         }
@@ -195,7 +205,9 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     *   @param  {Function}  callback    A callback function
     */
     this.sendData = function (data, callback) {
-        this.socket.emit('message', {sid: this.session_id, data: JSON.stringify(data)}, callback);
+        //this.socket.emit('message', {sid: this.session_id, data: JSON.stringify(data)}, callback);
+        //kiwi.gateway.socket.emit('irc', {server: this.server_num, data: $.toJSON(data)}, callback);
+        this.socket.emit('irc', {server: this.server_num, data: JSON.stringify(data)}, callback);
     };
 
     /**
@@ -208,8 +220,8 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'privmsg',
             args: {
-                target: target,
-                msg: msg
+                params: [target],
+                trailing: msg
             }
         };
 
@@ -226,8 +238,8 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'notice',
             args: {
-                target: target,
-                msg: msg
+                params: [target],
+                trailing: msg
             }
         };
 
@@ -275,8 +287,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'join',
             args: {
-                channel: channel,
-                key: key
+                params: [channel, key]
             }
         };
 
@@ -292,7 +303,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'part',
             args: {
-                channel: channel
+                params: channel
             }
         };
 
@@ -309,8 +320,8 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'topic',
             args: {
-                channel: channel,
-                topic: new_topic
+                params: [channel],
+                trailing: new_topic
             }
         };
 
@@ -328,9 +339,8 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'kick',
             args: {
-                channel: channel,
-                nick: nick,
-                reason: reason
+                params: [channel, nick],
+                trailing: reason
             }
         };
 
@@ -347,7 +357,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'quit',
             args: {
-                message: msg
+                trailing: msg
             }
         };
 
@@ -379,7 +389,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         var data = {
             method: 'nick',
             args: {
-                nick: new_nick
+                params: [new_nick]
             }
         };
 
