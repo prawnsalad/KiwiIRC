@@ -64,6 +64,10 @@ var IRC_command = function (command, callback) {
     
     command.data = JSON.parse(command.data);
     
+    if (!_.isArray(command.data.args.params)){
+        command.data.args.params = [command.data.args.params];
+    }
+    
     if (command.data.method === 'ctcp') {
         if (command.data.args.request) {
             str += 'PRIVMSG ';
