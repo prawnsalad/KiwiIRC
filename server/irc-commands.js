@@ -327,7 +327,7 @@ var listeners = {
 				command.command = 'NICK';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('nick', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, newnick: msg.trailing});
-                this.client.sendIRCCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.trailing});
+                this.client.sendIRCCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.params[0]});
             },
     'TOPIC':                function (command) {
 				/*command.server = this.con_num;
