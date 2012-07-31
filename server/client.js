@@ -73,19 +73,20 @@ var IRC_command = function (command, callback) {
         str += command.data.args.target + ' :'
         str += String.fromCharCode(1) + command.data.args.type + ' ';
         str += command.data.args.params + String.fromCharCode(1);
-        this.IRC_connections[command.server].send(str);
+        this.IRC_connections[command.server].write(str);
     } else if (command.data.method === 'raw') {
-        this.IRC_connections[command.server].send(command.data.args.data);
+        this.IRC_connections[command.server].write(command.data.args.data);
     } else if (command.data.method === 'kiwi') {
         // do special Kiwi stuff here
     } else {
         method = command.data.method;
         command.data = command.data.args;
-        this.IRC_connections[command.server].send(method + ((command.data.params) ? ' ' + command.data.params.join(' ') : '') + ((command.data.trailing) ? ' :' + command.data.trailing : ''), callback);
+        this.IRC_connections[command.server].write(method + ((command.data.params) ? ' ' + command.data.params.join(' ') : '') + ((command.data.trailing) ? ' :' + command.data.trailing : ''), callback);
     }
 };
 
 var kiwi_command = function (command, callback) {
+    var that = this;
     console.log(typeof callback);
     if (typeof callback !== 'function') {
         callback = function () {};
@@ -111,6 +112,10 @@ var kiwi_command = function (command, callback) {
 				con.on('error', function (err) {
 					this.websocket.sendKiwiCommand('error', {server: con_num, error: err});
 				});
+                
+                con.on('close', function () {
+                    that.IRC_connections[con_num] = null;
+                });
 			} else {
 				return callback('Hostname, port and nickname must be specified');
 			}
@@ -127,6 +132,12 @@ var extension_command = function (command, callback) {
 };
 
 var disconnect = function () {
+    _.each(this.IRC_connections, function (irc_connection, i, cons) {
+        if (irc_connection) {
+            irc_connection.end('QUIT :Kiwi IRC');
+            cons[i] = null;
+        }
+    });
     this.emit('destroy');
 };
 

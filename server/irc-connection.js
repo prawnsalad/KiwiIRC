@@ -28,6 +28,10 @@ var IRCConnection = function (hostname, port, ssl, nick, user, pass, webirc) {
         parse.apply(that, arguments);
     });
     
+    this.socket.on('close', function () {
+        that.emit('close');
+    });
+    
     this.connected = false;
     this.registered = false;
     this.nick = nick;
@@ -42,27 +46,37 @@ var IRCConnection = function (hostname, port, ssl, nick, user, pass, webirc) {
 };
 util.inherits(IRCConnection, events.EventEmitter);
 
-IRCConnection.prototype.send = function (data, callback) {
+IRCConnection.prototype.write = function (data, callback) {
     console.log('S<--', data);
     write.call(this, data + '\r\n', 'utf-8', callback);
 };
 
+IRCConnection.prototype.end = function (data, callback) {
+    console.log('S<--', data);
+    console.log('Closing docket');
+    end.call(this, data + '\r\n', 'utf-8', callback);
+}
+
 var write = function (data, encoding, callback) {
     this.socket.write(data, encoding, callback);
+};
+
+var end = function (data, encoding, callback) {
+    this.socket.end(data, encoding, callback);
 };
 
 module.exports.IRCConnection = IRCConnection;
 
 var connect_handler = function () {
     if (this.webirc) {
-        this.send('WEBIRC ' + webirc.pass + ' KiwiIRC ' + this.user.hostname + ' ' + this.user.address);
+        this.write('WEBIRC ' + webirc.pass + ' KiwiIRC ' + this.user.hostname + ' ' + this.user.address);
     }
     if (this.password) {
-        this.send('PASS ' + password);
+        this.write('PASS ' + password);
     }
-    //this.send('CAP LS');
-    this.send('NICK ' + this.nick);
-    this.send('USER kiwi_' + this.nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + this.nick);
+    //this.write('CAP LS');
+    this.write('NICK ' + this.nick);
+    this.write('USER kiwi_' + this.nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + this.nick);
     
     this.connected = true;
     console.log("IRCConnection.emit('connected')");

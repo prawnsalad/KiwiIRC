@@ -88,7 +88,7 @@ var listeners = {
 						} else if (option[0] === 'CHANMODES') {
 							this.irc_connection.options.CHANMODES = option[1].split(',');
                         } else if (option[0] === 'NAMESX') {
-                            this.irc_connection.send('PROTOCTL NAMESX');
+                            this.irc_connection.write('PROTOCTL NAMESX');
                         }
                     }
                 }
@@ -268,7 +268,7 @@ var listeners = {
                 this.client.sendIRCCommand('topicsetby', {server: this.con_num, nick: command.params[2], channel: command.params[1], when: command.params[3]});
             },
     'PING':                 function (command) {
-                this.irc_connection.send('PONG ' + command.trailing);
+                this.irc_connection.write('PONG ' + command.trailing);
             },
     'JOIN':                 function (command) {
 				var channel;
@@ -285,7 +285,7 @@ var listeners = {
                 this.client.sendIRCCommand('join', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: channel});
                 
                 if (command.nick === this.nick) {
-                    this.irc_connection.send('NAMES ' + channel);
+                    this.irc_connection.write('NAMES ' + channel);
                 }
             },
     'PART':                 function (command) {
@@ -372,7 +372,7 @@ var listeners = {
                         namespace = tmp.split(' ', 1)[0];
                         this.client.sendIRCCommand('kiwi', {server: this.con_num, namespace: namespace, data: tmp.substr(namespace.length + 1)});
                     } else if (msg.trailing.substr(1, 7) === 'VERSION') {
-                        this.irc_connection.send('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
+                        this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
                     } else {
                         this.client.sendIRCCommand('ctcp_request', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(1, command.trailing.length - 2)});
                     }
