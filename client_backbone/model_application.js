@@ -1,6 +1,9 @@
 kiwi.model.Application = Backbone.Model.extend(new (function () {
     var that = this;
 
+    /** Instance of kiwi.model.PanelList */
+    this.panels = null;
+
     this.initialize = function () {
         // Update `that` with this new Model object
         that = this;
@@ -28,7 +31,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
 
     this.initializeClient = function () {
-        this.view = new kiwi.view.Application({model: this, el: this.get('container')})
+        this.view = new kiwi.view.Application({model: this, el: this.get('container')});
 
         
         /**
@@ -57,7 +60,6 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
 
         gw.on('onjoin', function (event) {
-            console.log(event);
             var c, members, user;
             c = that.panels.getByName(event.channel);
             if (!c) {
@@ -192,6 +194,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             kiwi.gateway.changeNick(ev.params[0]);
         });
 
+        controlbox.on('command_topic', this.topicCommand);
+
         controlbox.on('command_css', function (ev) {
             var queryString = '?reload=' + new Date().getTime();
             $('link[rel="stylesheet"]').each(function () {
@@ -231,12 +235,34 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         //kiwi.app.panels.remove(kiwi.current_panel);
     };
 
+    this.topicCommand = function (ev) {
+        var channel_name;
+
+        if (ev.params.length === 0) return;
+
+        if (that.isChannelName(ev.params[0])) {
+            channel_name = ev.params[0];
+            ev.params.shift();
+        } else {
+            channel_name = kiwi.current_panel.get('name');
+        }
+
+        kiwi.gateway.topic(channel_name, ev.params.join(' '));
+    };
+
 
 
 
 
     this.setCurrentTopic = function (new_topic) {
         $('#topic input').val(new_topic);
+    };
+
+    this.isChannelName = function (channel_name) {
+        var channel_prefix = kiwi.gateway.get('channel_prefix');
+
+        if (!channel_name || !channel_name.length) return false;
+        return (channel_prefix.indexOf(channel_name[0]) > -1);
     };
 
 })());
