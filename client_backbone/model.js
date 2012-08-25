@@ -115,7 +115,7 @@ kiwi.model.Member = Backbone.Model.extend({
         modes = _.reject(modes, function (m) {
             return (modes_to_remove.indexOf(m) !== -1);
         });
-        
+
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
     },
     getPrefix: function (modes) {
@@ -145,6 +145,17 @@ kiwi.model.Member = Backbone.Model.extend({
         }
 
         return tmp.substr(i);
+    },
+    displayNick: function (full) {
+        var display = this.get('nick');
+
+        if (full) {
+            if (this.get("ident")) {
+                display += ' [' + this.get("ident") + '@' + this.get("hostname") + ']';
+            }
+        }
+
+        return display;
     }
 });
 
@@ -290,22 +301,17 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
             "topic": ""
         }, {"silent": true});
 
-        //this.addMsg(' ', '--> You have joined ' + name, 'action join', {style: 'color:#009900;'});
-
         members = this.get("members");
         members.bind("add", function (member) {
-            var disp = member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + ']';
-            this.addMsg(' ', '--> ' + disp + ' has joined', 'action join');
+            this.addMsg(' ', '--> ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 
         members.bind("remove", function (member, options) {
-            var disp = member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + ']';
-            this.addMsg(' ', '<-- ' + disp + ' has left ' + ((options.message) ? '(' + options.message + ')' : ''), 'action part');
+            this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has left ' + ((options.message) ? '(' + options.message + ')' : ''), 'action part');
         }, this);
 
         members.bind("quit", function (args) {
-            var disp = member.get("nick") + ' [' + member.get("ident") + '@' + member.get("hostname") + ']';
-            this.addMsg(' ', '<-- ' + disp + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action quit');
+            this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action quit');
         }, this);
     }
 });
