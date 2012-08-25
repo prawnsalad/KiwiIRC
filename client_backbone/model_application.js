@@ -143,6 +143,16 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         });
 
 
+        gw.on('ontopicsetby', function (event) {
+            var c, when;
+            c = that.panels.getByName(event.channel);
+            if (!c) return;
+
+            when = new Date(event.when * 1000).toLocaleString();
+            c.addMsg('', 'Topic set by ' + event.nick + ' at ' + when, 'topic');
+        });
+
+
         gw.on('onuserlist', function (event) {
             var channel;
             channel = that.panels.getByName(event.channel);
