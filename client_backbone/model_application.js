@@ -235,10 +235,26 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     };
 
     this.joinCommand = function (ev) {
-        var c = new kiwi.model.Channel({name: ev.params[0]});
-        kiwi.app.panels.add(c);
-        c.view.show();
-        kiwi.gateway.join(ev.params[0]);
+        var channel, channel_names;
+
+        channel_names = ev.params.join(' ').split(',');
+
+        $.each(channel_names, function (index, channel_name) {
+            // Trim any whitespace off the name
+            channel_name = channel_name.trim();
+
+            // Check if we have the panel already. If not, create it
+            channel = that.panels.getByName(channel_name);
+            if (!channel) {
+                channel = new kiwi.model.Channel({name: channel_name});
+                kiwi.app.panels.add(channel);
+            }
+
+            kiwi.gateway.join(channel_name);
+        });
+
+        if (channel) channel.view.show();
+        
     };
 
     this.msgCommand = function (ev) {
