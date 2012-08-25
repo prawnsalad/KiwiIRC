@@ -170,7 +170,9 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
                 break;
 
             case 'nick':
-                that.set('nick', item.newnick);
+                if (item.nick === that.get('nick')) {
+                    that.set('nick', item.newnick);
+                }
                 break;
             /*
             case 'sync':

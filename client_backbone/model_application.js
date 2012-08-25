@@ -191,7 +191,21 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             } else if (event.mode[0] === '-') {
                 member.removeMode(event.mode.substr(1));
             }
+        });
 
+
+        gw.on('onnick', function (event) {
+            var member;
+
+            $.each(that.panels.models, function (index, panel) {
+                if (!panel.isChannel()) return;
+
+                member = panel.get('members').getByNick(event.nick);
+                if (member) {
+                    member.set('nick', event.newnick);
+                    panel.addMsg('', '== ' + event.nick + ' is now known as ' + event.newnick, 'action nick');
+                }
+            });
         });
     };
 
