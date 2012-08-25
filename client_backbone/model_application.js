@@ -124,7 +124,16 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
 
         gw.on('onnotice', function (event) {
-            kiwi.app.panels.server.addMsg('', event.msg, 'notice');
+            var panel;
+
+            // If a panel isn't found for this channel, reroute to the
+            // server panel
+            panel = that.panels.getByName(event.target);
+            if (!panel) {
+                panel = that.panels.server;
+            }
+
+            panel.addMsg('[' + (event.nick||'') + ']', event.msg);
         });
 
 
@@ -242,6 +251,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         controlbox.on('command_topic', this.topicCommand);
 
+        controlbox.on('command_notice', this.noticeCommand);
+
         controlbox.on('command_css', function (ev) {
             var queryString = '?reload=' + new Date().getTime();
             $('link[rel="stylesheet"]').each(function () {
@@ -310,6 +321,18 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         }
 
         kiwi.gateway.topic(channel_name, ev.params.join(' '));
+    };
+
+    this.noticeCommand = function (ev) {
+        var destination;
+
+        // Make sure we have a destination and some sort of message
+        if (ev.params.length <= 1) return;
+
+        destination = ev.params[0];
+        ev.params.shift();
+
+        kiwi.gateway.notice(destination, ev.params.join(' '));
     };
 
 
