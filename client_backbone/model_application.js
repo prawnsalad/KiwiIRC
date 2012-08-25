@@ -171,6 +171,28 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             // Clear the temporary userlist
             delete channel.temp_userlist;
         });
+
+
+        gw.on('onmode', function (event) {
+            var channel, members, member;
+
+            if (!event.channel) return;
+            channel = that.panels.getByName(event.channel);
+            if (!channel) return;
+
+            members = channel.get('members');
+            if (!members) return;
+
+            member = members.getByNick(event.effected_nick);
+            if (!member) return;
+
+            if (event.mode[0] === '+') {
+                member.addMode(event.mode.substr(1));
+            } else if (event.mode[0] === '-') {
+                member.removeMode(event.mode.substr(1));
+            }
+
+        });
     };
 
 

@@ -96,18 +96,26 @@ kiwi.model.Member = Backbone.Model.extend({
         this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes)}, {silent: true});
     },
     addMode: function (mode) {
-        var modes, prefix;
+        var modes_to_add = mode.split(''),
+            modes, prefix;
+
         modes = this.get("modes");
-        modes.push(mode);
+        $.each(modes_to_add, function (index, item) {
+            modes.push(item);
+        });
+        
         modes = this.sortModes(modes);
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
     },
     removeMode: function (mode) {
-        var modes, prefix;
+        var modes_to_remove = mode.split(''),
+            modes, prefix;
+
         modes = this.get("modes");
         modes = _.reject(modes, function (m) {
-            return m === mode;
+            return (modes_to_remove.indexOf(m) !== -1);
         });
+        
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
     },
     getPrefix: function (modes) {
