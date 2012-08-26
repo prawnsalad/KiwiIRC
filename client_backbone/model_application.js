@@ -47,7 +47,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         // Populate the server select box with defaults
         this.panels.server.server_login.populateFields({
             'nick': getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
-            'server': getQueryVariable('server') || 'irc.kiwiirc.net',
+            'server': getQueryVariable('server') || 'irc.kiwiirc.com',
             'channel': window.location.hash || '#test'
         });
     };
@@ -130,9 +130,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         gw.on('onnotice', function (event) {
             var panel;
 
-            // If a panel isn't found for this channel, reroute to the
-            // server panel
-            panel = that.panels.getByName(event.target);
+            // Find a panel for the destination(channel) or who its from
+            panel = that.panels.getByName(event.target) || that.panels.getByName(event.nick);
             if (!panel) {
                 panel = that.panels.server;
             }
@@ -253,6 +252,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             kiwi.gateway.changeNick(ev.params[0]);
         });
 
+        controlbox.on('command_query', this.queryCommand);
+        controlbox.on('command_q', this.queryCommand);
+
         controlbox.on('command_topic', this.topicCommand);
 
         controlbox.on('command_notice', this.noticeCommand);
@@ -265,8 +267,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         });
     };
 
+    // A fallback action. Send a raw command to the server
     this.unknownCommand = function (ev) {
-        kiwi.gateway.raw(ev.command + ' ' + ev.params.join(' '));
+        var raw_cmd = ev.command + ' ' + ev.params.join(' ');
+        console.log('RAW: ' + raw_cmd);
+        kiwi.gateway.raw(raw_cmd);
     };
 
     this.allCommands = function (ev) {
@@ -296,9 +301,30 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         
     };
 
+    this.queryCommand = function (ev) {
+        var destination, panel;
+
+        destination = ev.params[0];
+
+        // Check if we have the panel already. If not, create it
+        panel = that.panels.getByName(destination);
+        if (!panel) {
+            panel = new kiwi.model.Channel({name: destination});
+            kiwi.app.panels.add(panel);
+        }
+
+        if (panel) panel.view.show();
+        
+    };
+
     this.msgCommand = function (ev) {
-        kiwi.current_panel.addMsg(kiwi.gateway.get('nick'), ev.params.join(' '));
-        kiwi.gateway.privmsg(kiwi.current_panel.get('name'), ev.params.join(' '));
+        var destination = ev.params[0],
+            panel = that.panels.getByName(destination) || that.panels.server;
+
+        ev.params.shift();
+
+        panel.addMsg(kiwi.gateway.get('nick'), ev.params.join(' '));
+        kiwi.gateway.privmsg(destination, ev.params.join(' '));
     };
 
     this.partCommand = function (ev) {

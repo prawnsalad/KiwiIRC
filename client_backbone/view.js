@@ -396,7 +396,9 @@ kiwi.view.ControlBox = Backbone.View.extend({
             command = params[0].substr(1).toLowerCase();
             params = params.splice(1);
         } else {
+            // Default command
             command = 'msg';
+            params.unshift(kiwi.current_panel.get('name'));
         }
 
         // Trigger the command events
@@ -405,7 +407,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?
-        if (!this._callbacks['command' + command]) {
+        if (!this._callbacks['command_' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
     }
