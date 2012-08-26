@@ -160,9 +160,15 @@ body {
 
 
 
-.server_select { width:300px; margin: 2em auto; }
+.server_select { width:270px; padding:3em 0 2em 0; margin: 0 auto; }
 .server_select .more { display: none; }
-.server_select button { padding:3px 7px; margin-left: 178px; }
-.server_select input { margin-bottom:5px; padding:3px 7px; }
-.server_select label { width:5em; float:left; margin-right:1em; }
-.server_select .basic .show_more { display: block; border-bottom: 1px dashed gray; margin:10px 0; }
+.server_select button { float:right; padding:3px 7px; }
+.server_select input { float:right; margin-bottom:5px; padding:3px 7px; }
+.server_select label { float:left; width:5em; padding-top:3px }
+.server_select br { clear:both; }
+.server_select .basic .show_more { display: block; border-bottom: 1px dashed gray; margin:10px 0; font-size:0.8em; }
+.server_select .status { text-align: center; font-weight: bold; padding:1em; }
+.server_select .status .ok {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}

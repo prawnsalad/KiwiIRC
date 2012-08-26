@@ -20,9 +20,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
             kiwi.gateway.set('nick', event.nick);
             kiwi.gateway.connect(event.server, 6667, false, false, function () {
-                console.log('gateway connected');
                 that.view.barsShow();
-                form.hide();
             });
         });
 
@@ -49,7 +47,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         // Populate the server select box with defaults
         this.panels.server.server_login.populateFields({
             'nick': getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
-            'server': getQueryVariable('server') || 'irc.anonnet.org',
+            'server': getQueryVariable('server') || 'irc.kiwiirc.net',
             'channel': window.location.hash || '#test'
         });
     };

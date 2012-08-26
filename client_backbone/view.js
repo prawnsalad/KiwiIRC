@@ -74,6 +74,9 @@ kiwi.view.ServerSelect = Backbone.View.extend({
         that = this;
 
         this.$el = $($('#tmpl_server_select').html());
+
+        kiwi.gateway.on('onconnect', this.networkConnected);
+        kiwi.gateway.on('connecting', this.networkConnecting);
     },
 
     submitLogin: function (event) {
@@ -110,7 +113,28 @@ kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     show: function () {
-        this.$el.slideDown();
+        this.$el.show();
+        $('.nick', that.$el).focus();
+    },
+
+    setStatus: function (text, class_name) {
+        $('.status', this.$el)
+            .text(text)
+            .attr('class', 'status')
+            .addClass(class_name)
+            .show();
+    },
+    clearStatus: function () {
+        $('.status', this.$el).hide();
+    },
+
+    networkConnected: function (event) {
+        that.setStatus('Connected :)', 'ok');
+        $('form', this.$el).hide();
+    },
+
+    networkConnecting: function (event) {
+        that.setStatus('Connecting..', 'ok');
     }
 });
 
@@ -189,9 +213,11 @@ kiwi.view.Panel = Backbone.View.extend({
         var members = this.model.get("members");
         if (members) {
             members.view.show();
+            this.$container.parent().css('right', '200px');
         } else {
             // Memberlist not found for this panel, hide any active ones
             $('#memberlists').children().removeClass('active');
+            this.$container.parent().css('right', '0');
         }
 
         // TODO: Why is kiwi.app not defined when this is fist called :/
@@ -441,8 +467,8 @@ kiwi.view.Application = Backbone.View.extend({
             $('#toolbar').slideUp();
             $('#controlbox').slideUp(function () { that.doLayout(); });
         } else {
-            $('#toolbar').hide();
-            $('#controlbox').hide();
+            $('#toolbar').slideUp(0);
+            $('#controlbox').slideUp(0);
         }
     },
 
@@ -453,8 +479,8 @@ kiwi.view.Application = Backbone.View.extend({
             $('#toolbar').slideDown();
             $('#controlbox').slideDown(function () { that.doLayout(); });
         } else {
-            $('#toolbar').hide();
-            $('#controlbox').hide();
+            $('#toolbar').slideDown(0);
+            $('#controlbox').slideDown(0);
             this.doLayout();
         }
     }
