@@ -273,6 +273,8 @@ kiwi.model.Panel = Backbone.Model.extend({
 });
 
 kiwi.model.Server = kiwi.model.Panel.extend({
+    server_login: null,
+
     initialize: function (attributes) {
         var name = "Server";
         this.view = new kiwi.view.Panel({"model": this, "name": name});
@@ -281,7 +283,10 @@ kiwi.model.Server = kiwi.model.Panel.extend({
             "name": name
         }, {"silent": true});
 
-        this.addMsg(' ', '--> Kiwi IRC: Such an awesome IRC client', '', {style: 'color:#009900;'});
+        //this.addMsg(' ', '--> Kiwi IRC: Such an awesome IRC client', '', {style: 'color:#009900;'});
+
+        this.server_login = new kiwi.view.ServerSelect();
+        this.view.$el.append(this.server_login.$el);
     }
 });
 

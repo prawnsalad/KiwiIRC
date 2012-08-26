@@ -38,6 +38,27 @@
         </div>
     </script>
 
+    <script type="text/x-jquery-tmpl" id="tmpl_server_select">
+        <div class="server_select">
+            <form>
+                <div class="basic">
+                    <label for="server_select_nick">Nickname</label>
+                    <input type="text" class="nick" id="server_select_nick"> <br />
+
+                    <button type="submit">Connect..</button>
+                    <a class="show_more">More</a>
+                </div>
+
+                <div class="more">
+                    <label for="server_select_server">Server</label>
+                    <input type="text" class="server" id="server_select_server"> <br />
+                    <label for="server_select_channel">Channel</label>
+                    <input type="text" class="channel" id="server_select_channel"> <br />
+                </div>
+            </form>
+        </div>
+    </script>
+
     <script src="jquery-1.7.1.min.js"></script>
     <script src="underscore-min.js"></script>
     <script src="backbone-git.js"></script>
@@ -51,7 +72,7 @@
 
 <script>
     $(function () {
-        kiwi.app = new kiwi.model.Application({container: $('body')[0]});
+        kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
     });
 </script>
 </body>

@@ -154,3 +154,15 @@ body {
     top:2; bottom:2px; left:0; width:100%;
     text-align: center;
 }
+
+
+
+
+
+
+.server_select { width:300px; margin: 2em auto; }
+.server_select .more { display: none; }
+.server_select button { padding:3px 7px; margin-left: 178px; }
+.server_select input { margin-bottom:5px; padding:3px 7px; }
+.server_select label { width:5em; float:left; margin-right:1em; }
+.server_select .basic .show_more { display: block; border-bottom: 1px dashed gray; margin:10px 0; }

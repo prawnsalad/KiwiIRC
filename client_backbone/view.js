@@ -62,6 +62,59 @@ kiwi.view.UserBox = Backbone.View.extend({
 });
 
 
+kiwi.view.ServerSelect = Backbone.View.extend({
+    that: null,
+
+    events: {
+        'submit form': 'submitLogin',
+        'click .show_more': 'showMore'
+    },
+
+    initialize: function () {
+        that = this;
+
+        this.$el = $($('#tmpl_server_select').html());
+    },
+
+    submitLogin: function (event) {
+        var values = {
+            nick: $('.nick', this.$el).val(),
+            server: $('.server', this.$el).val(),
+            channel: $('.channel', this.$el).val()
+        };
+
+        that.trigger('server_connect', values);
+        return false;
+    },
+
+    showMore: function (event) {
+        $('.more', this.$el).slideDown('fast');
+    },
+
+    populateFields: function (defaults) {
+        var nick, server, channel;
+
+        defaults = defaults || {};
+
+        nick = defaults.nick || '';
+        server = defaults.server || '';
+        channel = defaults.channel || '';
+
+        $('.nick', this.$el).val(nick);
+        $('.server', this.$el).val(server);
+        $('.channel', this.$el).val(channel);
+    },
+
+    hide: function () {
+        this.$el.slideUp();
+    },
+
+    show: function () {
+        this.$el.slideDown();
+    }
+});
+
+
 kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
     className: "messages",
@@ -270,10 +323,11 @@ kiwi.view.ControlBox = Backbone.View.extend({
     },
 
     initialize: function () {
+        var cb = this; // TODO: Why is `that` not recognised in the below closure?
         that = this;
 
         kiwi.gateway.bind('change:nick', function () {
-            $('.nick', that.$el).text(this.get('nick'));
+            $('.nick', cb.$el).text(this.get('nick'));
         });
     },
 
@@ -377,5 +431,31 @@ kiwi.view.Application = Backbone.View.extend({
 
         el_panels.css(css_heights);
         el_memberlists.css(css_heights);
+    },
+
+
+    barsHide: function (instant) {
+        var that = this;
+
+        if (!instant) {
+            $('#toolbar').slideUp();
+            $('#controlbox').slideUp(function () { that.doLayout(); });
+        } else {
+            $('#toolbar').hide();
+            $('#controlbox').hide();
+        }
+    },
+
+    barsShow: function (instant) {
+        var that = this;
+
+        if (!instant) {
+            $('#toolbar').slideDown();
+            $('#controlbox').slideDown(function () { that.doLayout(); });
+        } else {
+            $('#toolbar').hide();
+            $('#controlbox').hide();
+            this.doLayout();
+        }
     }
 });

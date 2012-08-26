@@ -12,21 +12,20 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         kiwi.gateway = new kiwi.model.Gateway();
         this.bindGatewayCommands(kiwi.gateway);
 
-        //this.initializeLogin();
         this.initializeClient();
+        this.view.barsHide(true);
 
-        kiwi.gateway.set('nick', 'kiwi_' + Math.ceil(Math.random() * 10000).toString());
-        kiwi.gateway.connect('ate.anonnet.org', 6667, false, false, function () {
-            console.log('gateway connected');
+        this.panels.server.server_login.on('server_connect', function (event) {
+            var form = this;
+
+            kiwi.gateway.set('nick', event.nick);
+            kiwi.gateway.connect(event.server, 6667, false, false, function () {
+                console.log('gateway connected');
+                that.view.barsShow();
+                form.hide();
+            });
         });
 
-
-    };
-
-    this.initializeLogin = function () {
-        // TODO: this
-        // Show the server selection/login screen.
-        // Once connected and logged in, then open the client screen (initializeClient)
     };
 
 
@@ -46,6 +45,13 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         // Rejigg the UI sizes
         this.view.doLayout();
+
+        // Populate the server select box with defaults
+        this.panels.server.server_login.populateFields({
+            'nick': getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
+            'server': getQueryVariable('server') || 'irc.anonnet.org',
+            'channel': window.location.hash || '#test'
+        });
     };
 
 
