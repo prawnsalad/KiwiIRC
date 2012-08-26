@@ -56,6 +56,7 @@ kiwi.model.MemberList = Backbone.Collection.extend({
     },
     getByNick: function (nick) {
         return this.find(function (m) {
+            if (typeof m !== 'string') return;
             return nick.toLowerCase() === m.get('nick').toLowerCase();
         });
     }
@@ -178,6 +179,7 @@ kiwi.model.PanelList = Backbone.Collection.extend({
     },
     getByName: function (name) {
         return this.find(function (c) {
+            if (typeof c !== 'string') return;
             return name.toLowerCase() === c.get('name').toLowerCase();
         });
     }
