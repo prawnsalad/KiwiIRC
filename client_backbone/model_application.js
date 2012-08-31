@@ -81,7 +81,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
 
         gw.on('onpart', function (event) {
-            var channel, members, user;
+            var channel, members, user,
+                part_options = {};
+
+            part_options.type = 'part';
+            part_options.message = event.message || '';
 
             channel = that.panels.getByName(event.channel);
             if (!channel) return;
@@ -98,7 +102,25 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             user = members.getByNick(event.nick);
             if (!user) return;
 
-            members.remove(user);
+            members.remove(user, part_options);
+        });
+
+
+        gw.on('onquit', function (event) {
+            var member, members,
+                quit_options = {};
+
+            quit_options.type = 'quit';
+            quit_options.message = event.message || '';
+
+            $.each(that.panels.models, function (index, panel) {
+                if (!panel.isChannel()) return;
+
+                member = panel.get('members').getByNick(event.nick);
+                if (member) {
+                    panel.get('members').remove(member, quit_options);
+                }
+            });
         });
 
 

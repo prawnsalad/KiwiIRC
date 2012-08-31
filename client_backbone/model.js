@@ -315,12 +315,14 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
             this.addMsg(' ', '--> ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 
-        members.bind("remove", function (member, options) {
-            this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has left ' + ((options.message) ? '(' + options.message + ')' : ''), 'action part');
-        }, this);
+        members.bind("remove", function (member, members, options) {
+            var msg = (options.message) ? '(' + options.message + ')' : '';
 
-        members.bind("quit", function (args) {
-            this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has quit ' + ((args.message) ? '(' + args.message + ')' : ''), 'action quit');
+            if (options.type === 'quit') {
+                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+            } else {
+                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has left ' + msg, 'action part');
+            }
         }, this);
     }
 });
