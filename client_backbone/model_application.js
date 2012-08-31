@@ -1,6 +1,9 @@
 kiwi.model.Application = Backbone.Model.extend(new (function () {
     var that = this;
 
+    // The auto connect details entered into the server select box
+    var auto_connect_details = {};
+
     /** Instance of kiwi.model.PanelList */
     this.panels = null;
 
@@ -18,10 +21,10 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.panels.server.server_login.on('server_connect', function (event) {
             var form = this;
 
+            auto_connect_details = event;
+
             kiwi.gateway.set('nick', event.nick);
-            kiwi.gateway.connect(event.server, 6667, false, false, function () {
-                that.view.barsShow();
-            });
+            kiwi.gateway.connect(event.server, 6667, false, false, function () {});
         });
 
     };
@@ -60,7 +63,13 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         });
 
 
-        gw.on('onconnect', function (event) {});
+        gw.on('onconnect', function (event) {
+            that.view.barsShow();
+            
+            if (auto_connect_details.channel) {
+                kiwi.gateway.join(auto_connect_details.channel);
+            }
+        });
 
 
         gw.on('onjoin', function (event) {
