@@ -162,6 +162,31 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         });
 
 
+        gw.on('onaction', function (event) {
+            var panel,
+                is_pm = (event.channel == kiwi.gateway.get('nick'));
+
+            if (is_pm) {
+                // If a panel isn't found for this PM, create one
+                panel = that.panels.getByName(event.nick);
+                if (!panel) {
+                    panel = new kiwi.model.Channel({name: event.nick});
+                    that.panels.add(panel);
+                }
+
+            } else {
+                // If a panel isn't found for this channel, reroute to the
+                // server panel
+                panel = that.panels.getByName(event.channel);
+                if (!panel) {
+                    panel = that.panels.server;
+                }
+            }
+
+            panel.addMsg('', '* ' + event.nick + ' ' + event.msg, 'action');
+        });
+
+
         gw.on('ontopic', function (event) {
             var c;
             c = that.panels.getByName(event.channel);
@@ -264,6 +289,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         controlbox.on('command', this.allCommands);
         controlbox.on('command_msg', this.msgCommand);
 
+        controlbox.on('command_action', this.actionCommand);
+        controlbox.on('command_me', this.actionCommand);
+
         controlbox.on('command_join', this.joinCommand);
         controlbox.on('command_j', this.joinCommand);
 
@@ -347,6 +375,16 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         panel.addMsg(kiwi.gateway.get('nick'), ev.params.join(' '));
         kiwi.gateway.privmsg(destination, ev.params.join(' '));
+    };
+
+    this.actionCommand = function (ev) {
+        if (kiwi.current_panel === kiwi.app.panels.server) {
+            return;
+        }
+
+        var panel = kiwi.current_panel;
+        panel.addMsg('', '* ' + kiwi.gateway.get('nick') + ' ' + ev.params.join(' '), 'action');
+        kiwi.gateway.action(panel.get('name'), ev.params.join(' '));
     };
 
     this.partCommand = function (ev) {
