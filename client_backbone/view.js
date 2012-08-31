@@ -358,31 +358,36 @@ kiwi.view.ControlBox = Backbone.View.extend({
     },
 
     process: function (ev) {
-        var inp = $(ev.currentTarget);
+        var inp = $(ev.currentTarget),
+            inp_val = inp.val();
 
         switch (true) {
-            case (ev.keyCode === 13):              // return
+        case (ev.keyCode === 13):              // return
+            inp_val = inp_val.trim();
+
+            if (inp_val) {
                 this.processInput(inp.val());
 
                 this.buffer.push(inp.val());
                 this.buffer_pos = this.buffer.length;
+            }
+            
+            inp.val('');
 
-                inp.val('');
+            break;
 
-                break;
+        case (ev.keyCode === 38):              // up
+            if (this.buffer_pos > 0) {
+                this.buffer_pos--;
+                inp.val(this.buffer[this.buffer_pos]);
+            }
+            break;
 
-            case (ev.keyCode === 38):              // up
-                if (this.buffer_pos > 0) {
-                    this.buffer_pos--;
-                    inp.val(this.buffer[this.buffer_pos]);
-                }
-                break;
-
-            case (ev.keyCode === 40):              // down
-                if (this.buffer_pos < this.buffer.length) {
-                    this.buffer_pos++;
-                    inp.val(this.buffer[this.buffer_pos]);
-                }
+        case (ev.keyCode === 40):              // down
+            if (this.buffer_pos < this.buffer.length) {
+                this.buffer_pos++;
+                inp.val(this.buffer[this.buffer_pos]);
+            }
         }
     },
 
