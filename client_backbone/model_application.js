@@ -20,9 +20,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.initializeClient();
         this.view.barsHide(true);
 
-        this.panels.server.server_login.on('server_connect', function (event) {
-            var form = this;
-
+        this.panels.server.server_login.bind('server_connect', function (event) {
             auto_connect_details = event;
 
             kiwi.gateway.set('nick', event.nick);
@@ -39,13 +37,14 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         /**
          * Set the UI components up
          */
+        this.panels = new kiwi.model.PanelList();
+
         this.controlbox = new kiwi.view.ControlBox({el: $('#controlbox')[0]});
         this.bindControllboxCommands(this.controlbox);
 
         this.topicbar = new kiwi.view.TopicBar({el: $('#topic')[0]});
 
-        // Container for the channels
-        this.panels = new kiwi.model.PanelList();
+        
         this.panels.server.view.show();
 
         // Rejigg the UI sizes

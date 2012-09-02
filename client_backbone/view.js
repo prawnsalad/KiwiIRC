@@ -63,20 +63,16 @@ kiwi.view.UserBox = Backbone.View.extend({
 
 
 kiwi.view.ServerSelect = Backbone.View.extend({
-    that: null,
-
     events: {
         'submit form': 'submitLogin',
         'click .show_more': 'showMore'
     },
 
     initialize: function () {
-        that = this;
-
         this.$el = $($('#tmpl_server_select').html());
 
-        kiwi.gateway.on('onconnect', this.networkConnected);
-        kiwi.gateway.on('connecting', this.networkConnecting);
+        kiwi.gateway.bind('onconnect', this.networkConnected, this);
+        kiwi.gateway.bind('connecting', this.networkConnecting, this);
     },
 
     submitLogin: function (event) {
@@ -86,7 +82,7 @@ kiwi.view.ServerSelect = Backbone.View.extend({
             channel: $('.channel', this.$el).val()
         };
 
-        that.trigger('server_connect', values);
+        this.trigger('server_connect', values);
         return false;
     },
 
@@ -114,7 +110,7 @@ kiwi.view.ServerSelect = Backbone.View.extend({
 
     show: function () {
         this.$el.show();
-        $('.nick', that.$el).focus();
+        $('.nick', this.$el).focus();
     },
 
     setStatus: function (text, class_name) {
@@ -129,12 +125,12 @@ kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     networkConnected: function (event) {
-        that.setStatus('Connected :)', 'ok');
+        this.setStatus('Connected :)', 'ok');
         $('form', this.$el).hide();
     },
 
     networkConnecting: function (event) {
-        that.setStatus('Connecting..', 'ok');
+        this.setStatus('Connecting..', 'ok');
     }
 });
 
@@ -219,8 +215,6 @@ kiwi.view.Panel = Backbone.View.extend({
             $('#memberlists').children().removeClass('active');
             this.$container.parent().css('right', '0');
         }
-
-        kiwi.app.topicbar.setCurrentTopic(this.model.get("topic") || "");
 
         this.scrollToBottom();
 
@@ -340,6 +334,9 @@ kiwi.view.TopicBar = Backbone.View.extend({
     },
 
     initialize: function () {
+        kiwi.app.panels.bind('active', function (active_panel) {
+            this.setCurrentTopic(active_panel.get('topic'));
+        }, this);
     },
 
     process: function (ev) {
