@@ -93,10 +93,11 @@ body {
 .messages .msg .text { margin-left:15em; white-space:pre-wrap; word-wrap:break-word; font-family:monospace;  }
 
 .messages .msg.action .nick { display:none; }
-.messages .msg.action .text { margin-left:9em; }
+.messages .msg.action .text { margin-left:9em; color:#009900; font-style:italic; }
 .messages .msg.action.join { color:#009900; }
 .messages .msg.action.part .text { color:#900; }
 .messages .msg.action.quit .text { color:#900; }
+.messages .msg.action.kick .text { color:#900; }
 .messages .msg.status .nick { display:none; }
 .messages .msg.status .text { color:#990000; margin-left:9em; font-weight:bold; }
 .messages .msg.topic .nick { display:none; }

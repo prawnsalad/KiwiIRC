@@ -23,6 +23,8 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
 
             if (options.type === 'quit') {
                 this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+            } else if(options.type === 'kick') {
+                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
             } else {
                 this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has left ' + msg, 'action part');
             }

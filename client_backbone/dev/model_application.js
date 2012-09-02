@@ -143,6 +143,32 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         });
 
 
+        gw.on('onkick', function (event) {
+            var channel, members, user,
+                part_options = {};
+
+            part_options.type = 'kick';
+            part_options.by = event.nick;
+            part_options.message = event.message || '';
+
+            channel = that.panels.getByName(event.channel);
+            if (!channel) return;
+
+            members = channel.get('members');
+            if (!members) return;
+
+            user = members.getByNick(event.kicked);
+            if (!user) return;
+
+            members.remove(user, part_options);
+
+            if (event.kicked === kiwi.gateway.get('nick')) {
+                members.reset([]);
+            }
+            
+        });
+
+
         gw.on('onmsg', function (event) {
             var panel,
                 is_pm = (event.channel == kiwi.gateway.get('nick'));
