@@ -87,10 +87,17 @@
         // If in debug mode, load each development script
         if (getQueryVariable('debug')) {
             scripts = scripts.concat([
-                'dev/utils.js',
-                'dev/model.js',
+                'dev/app.js',
                 'dev/model_application.js',
                 'dev/model_gateway.js',
+                'dev/model_member.js',
+                'dev/model_memberlist.js',
+                'dev/model_panel.js',
+                'dev/model_panellist.js',
+                'dev/model_channel.js',
+                'dev/model_server.js',
+
+                'dev/utils.js',
                 'dev/view.js'
             ]);
         } else {
@@ -100,12 +107,6 @@
 
         // Run after all dependancies have been loaded
         function startApp () {    
-            // Only debug if set in the querystring
-            if (!getQueryVariable('debug')) {
-                manageDebug(false);
-            } else {
-                manageDebug(true);
-            }
             kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
             kiwi.app.start();
         }

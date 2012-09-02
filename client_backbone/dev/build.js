@@ -5,32 +5,41 @@ var FILE_ENCODING = 'utf-8',
     EOL = '\n';
 
 
-function concat(opts) {
-    var file_list = opts.src;
-    var dist_path = opts.dest;
+function concat(src) {
+    var file_list = src;
     var out = file_list.map(function(file_path){
-        return fs.readFileSync(file_path, FILE_ENCODING);
+        return fs.readFileSync(file_path, FILE_ENCODING) + '\n\n';
     });
 
-    fs.writeFileSync(dist_path, out.join(EOL), FILE_ENCODING);
+    return out.join(EOL);
 }
 
-concat({
-    src : [
-        'utils.js',
-        'model.js',
-        'model_application.js',
-        'model_gateway.js',
-        'view.js'
-    ],
-    dest : '../kiwi.js'
-});
+var src = concat([
+    __dirname + '/app.js',
+    __dirname + '/model_application.js',
+    __dirname + '/model_gateway.js',
+    __dirname + '/model_member.js',
+    __dirname + '/model_memberlist.js',
+    __dirname + '/model_panel.js',
+    __dirname + '/model_panellist.js',
+    __dirname + '/model_channel.js',
+    __dirname + '/model_server.js',
+
+    __dirname + '/utils.js',
+    __dirname + '/view.js'
+]);
 
 
-ast = uglyfyJS.parser.parse(fs.readFileSync('../kiwi.js', FILE_ENCODING));
-ast = uglyfyJS.uglify.ast_mangle(ast);
-ast = uglyfyJS.uglify.ast_squeeze(ast);
-fs.writeFileSync('../kiwi.min.js', uglyfyJS.uglify.gen_code(ast), FILE_ENCODING);
+src = '(function (window) {\n\n' + src + '\n\n})(window);';
+
+
+fs.writeFileSync(__dirname + '/../kiwi.js', src, FILE_ENCODING);
+
+
+src = uglyfyJS.parser.parse(src);
+src = uglyfyJS.uglify.ast_mangle(src);
+src = uglyfyJS.uglify.ast_squeeze(src);
+fs.writeFileSync(__dirname + '/../kiwi.min.js', uglyfyJS.uglify.gen_code(src), FILE_ENCODING);
 
 
 

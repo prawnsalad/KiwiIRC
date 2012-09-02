@@ -13,6 +13,13 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     };
 
     this.start = function () {
+        // Only debug if set in the querystring
+        if (!getQueryVariable('debug')) {
+            manageDebug(false);
+        } else {
+            manageDebug(true);
+        }
+        
         // Set the gateway up
         kiwi.gateway = new kiwi.model.Gateway();
         this.bindGatewayCommands(kiwi.gateway);

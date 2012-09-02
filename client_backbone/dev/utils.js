@@ -1,12 +1,6 @@
 /*jslint devel: true, browser: true, continue: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4, nomen: true, regexp: true*/
 /*globals $, front, gateway, Utilityview */
 
-// Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
-/**
-*   @namespace
-*/
-var kiwi = {};
-
 
 
 /**
