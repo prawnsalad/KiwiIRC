@@ -189,6 +189,11 @@ kiwi.view.Panel = Backbone.View.extend({
         msg.msg = msg.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]*))?/gi, function (url) {
             var nice;
 
+            // Add the http is no protoocol was found
+            if (url.match(/^www\./)) {
+                url = 'http://' + url;
+            }
+
             nice = url;
             if (nice.length > 100) {
                 nice = nice.substr(0, 100) + '...';
