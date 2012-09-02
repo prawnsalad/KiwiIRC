@@ -366,11 +366,10 @@ kiwi.view.ControlBox = Backbone.View.extend({
     },
 
     initialize: function () {
-        var cb = this; // TODO: Why is `that` not recognised in the below closure?
-        that = this;
+        var that = this;
 
         kiwi.gateway.bind('change:nick', function () {
-            $('.nick', cb.$el).text(this.get('nick'));
+            $('.nick', that.$el).text(this.get('nick'));
         });
     },
 

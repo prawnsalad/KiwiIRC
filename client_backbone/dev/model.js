@@ -304,8 +304,7 @@ kiwi.model.Server = kiwi.model.Panel.extend({
 // TODO: Listen to gateway events for anythign related to this channel
 kiwi.model.Channel = kiwi.model.Panel.extend({
     initialize: function (attributes) {
-        var that = this,
-            name = this.get("name") || "",
+        var name = this.get("name") || "",
             members;
 
         this.view = new kiwi.view.Channel({"model": this, "name": name});
