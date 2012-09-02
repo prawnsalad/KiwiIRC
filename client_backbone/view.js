@@ -222,7 +222,7 @@ kiwi.view.Panel = Backbone.View.extend({
 
         // TODO: Why is kiwi.app not defined when this is fist called :/
         if (kiwi.app) {
-            kiwi.app.setCurrentTopic(this.model.get("topic") || "");
+            kiwi.app.topicbar.setCurrentTopic(this.model.get("topic") || "");
         }
 
         this.scrollToBottom();
@@ -255,7 +255,7 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 
         // If this is the active channel then update the topic bar
         if (kiwi.current_panel === this) {
-            kiwi.app.setCurrentTopic(this.model.get("topic"));
+            kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
         }
     }
 });
@@ -338,9 +338,33 @@ kiwi.view.Tabs = Backbone.View.extend({
 
 
 
-kiwi.view.ControlBox = Backbone.View.extend({
-    that: this,
+kiwi.view.TopicBar = Backbone.View.extend({
+    events: {
+        'keydown input': 'process'
+    },
 
+    initialize: function () {
+    },
+
+    process: function (ev) {
+        var inp = $(ev.currentTarget),
+            inp_val = inp.val();
+
+        if (ev.keyCode !== 13) return;
+
+        if (kiwi.current_panel.isChannel && kiwi.current_panel.isChannel()) {
+            kiwi.gateway.topic(kiwi.current_panel.get('name'), inp_val);
+        }
+    },
+
+    setCurrentTopic: function (new_topic) {
+        $('input', this.$el).val(new_topic);
+    }
+});
+
+
+
+kiwi.view.ControlBox = Backbone.View.extend({
     buffer: [],  // Stores previously run commands
     buffer_pos: 0,  // The current position in the buffer
 
@@ -371,7 +395,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
                 this.buffer.push(inp.val());
                 this.buffer_pos = this.buffer.length;
             }
-            
+
             inp.val('');
 
             break;

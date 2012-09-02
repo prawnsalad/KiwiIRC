@@ -40,6 +40,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.controlbox = new kiwi.view.ControlBox({el: $('#controlbox')[0]});
         this.bindControllboxCommands(this.controlbox);
 
+        this.topicbar = new kiwi.view.TopicBar({el: $('#topic')[0]});
+
         // Container for the channels
         this.panels = new kiwi.model.PanelList();
         this.panels.server.view.show();
@@ -206,7 +208,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
             // If this is the active channel, update the topic bar too
             if (c.get('name') === kiwi.current_panel.get('name')) {
-                that.setCurrentTopic(event.topic);
+                that.topicbar.setCurrentTopic(event.topic);
             }
         });
 
@@ -404,6 +406,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 kiwi.gateway.part(channel);
             });
         }
+        // TODO: More responsive = close tab now, more accurate = leave until part event
         //kiwi.app.panels.remove(kiwi.current_panel);
     };
 
@@ -437,10 +440,6 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
 
 
-
-    this.setCurrentTopic = function (new_topic) {
-        $('#topic input').val(new_topic);
-    };
 
     this.isChannelName = function (channel_name) {
         var channel_prefix = kiwi.gateway.get('channel_prefix');
