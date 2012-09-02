@@ -173,7 +173,8 @@ kiwi.view.Panel = Backbone.View.extend({
     },
     newMsg: function (msg) {
         // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
-        var re, line_msg, $this = this.$el;
+        var re, line_msg, $this = this.$el,
+            nick_colour_hex;
 
         // Escape any HTML that may be in here
         msg.msg =  $('<div />').text(msg.msg).html();
@@ -206,8 +207,22 @@ kiwi.view.Panel = Backbone.View.extend({
         // Convert IRC formatting into HTML formatting
         msg.msg = formatIRCMsg(msg.msg);
 
+
+        // Add some colours to the nick (Method based on IRSSIs nickcolor.pl)
+        nick_colour_hex = (function (nick) {
+            var nick_int = 0, rgb;
+
+            nick.split('').map(function (i) { nick_int += i.charCodeAt(0); });
+            rgb = hsl2rgb(nick_int % 255, 70, 35);
+            rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
+
+            return '#' + rgb.toString(16);
+        })(msg.nick);
+
+        msg.nick_style = 'color:' + nick_colour_hex + ';';
+
         // Build up and add the line
-        line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
         this.scrollToBottom();
