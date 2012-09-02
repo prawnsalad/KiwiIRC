@@ -185,6 +185,19 @@ kiwi.view.Panel = Backbone.View.extend({
         });
 
 
+        // Make links clickable
+        msg.msg = msg.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]*))?/gi, function (url) {
+            var nice;
+
+            nice = url;
+            if (nice.length > 100) {
+                nice = nice.substr(0, 100) + '...';
+            }
+
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>';
+        });
+
+
         // Convert IRC formatting into HTML formatting
         msg.msg = formatIRCMsg(msg.msg);
 
