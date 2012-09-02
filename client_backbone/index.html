@@ -73,6 +73,13 @@
     <script src="view.js"></script>
 
 <script>
+    // Only debug if set in the querystring
+    if (!getQueryVariable('debug')) {
+        manageDebug(false);
+    } else {
+        manageDebug(true);
+    }
+    
     $(function () {
         kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
     });

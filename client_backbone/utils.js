@@ -14,7 +14,6 @@ var kiwi = {};
 *   @param  {Boolean}   debug   Whether to re-enable console.log or not
 */
 function manageDebug(debug) {
-    return;
     var log, consoleBackUp;
     if (window.console) {
         consoleBackUp = window.console.log;
