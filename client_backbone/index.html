@@ -61,29 +61,75 @@
         </div>
     </script>
 
-    <script src="jquery-1.7.1.min.js"></script>
-    <script src="underscore-min.js"></script>
-    <script src="backbone-git.js"></script>
-    <script src="http://localhost:7778/socket.io/socket.io.js"></script>
-
-    <script src="utils.js"></script>
-    <script src="model.js"></script>
-    <script src="model_application.js"></script>
-    <script src="model_gateway.js"></script>
-    <script src="view.js"></script>
-
 <script>
-    // Only debug if set in the querystring
-    if (!getQueryVariable('debug')) {
-        manageDebug(false);
-    } else {
-        manageDebug(true);
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (decodeURIComponent(pair[0]) == variable) {
+                return decodeURIComponent(pair[1]);
+            }
+        }
     }
-    
-    $(function () {
-        kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
-        kiwi.app.start();
-    });
+
+    window.onload = function () {
+
+        // Common dependancies that are required at all times
+        var scripts = [
+            'jquery-1.7.1.min.js',
+            'underscore-min.js',
+            'backbone-git.js',
+            'http://localhost:7778/socket.io/socket.io.js',
+        ];
+
+        // If in debug mode, load each development script
+        if (getQueryVariable('debug')) {
+            scripts = scripts.concat([
+                'dev/utils.js',
+                'dev/model.js',
+                'dev/model_application.js',
+                'dev/model_gateway.js',
+                'dev/view.js'
+            ]);
+        } else {
+            scripts.push('kiwi.min.js');
+        }
+
+
+        // Run after all dependancies have been loaded
+        function startApp () {    
+            // Only debug if set in the querystring
+            if (!getQueryVariable('debug')) {
+                manageDebug(false);
+            } else {
+                manageDebug(true);
+            }
+            kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
+            kiwi.app.start();
+        }
+
+
+        // Load each script
+        var cur_script = 0;
+        function loadNextScript () {
+            if (cur_script === scripts.length) {
+                startApp();
+                return;
+            }
+
+            var el = document.createElement('script');
+            el.onload = loadNextScript;
+            el.src = scripts[cur_script];
+            document.getElementsByTagName('head')[0].appendChild(el);
+
+            cur_script++;
+        }
+
+        // Start loading scripts
+        loadNextScript();
+    };
 </script>
 </body>
 </html>
