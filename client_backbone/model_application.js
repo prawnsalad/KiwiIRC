@@ -10,7 +10,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     this.initialize = function () {
         // Update `that` with this new Model object
         that = this;
+    };
 
+    this.start = function () {
         // Set the gateway up
         kiwi.gateway = new kiwi.model.Gateway();
         this.bindGatewayCommands(kiwi.gateway);
@@ -207,7 +209,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             c.set('topic', event.topic);
 
             // If this is the active channel, update the topic bar too
-            if (c.get('name') === kiwi.current_panel.get('name')) {
+            if (c.get('name') === kiwi.app.panels.active.get('name')) {
                 that.topicbar.setCurrentTopic(event.topic);
             }
         });
@@ -389,25 +391,25 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     };
 
     this.actionCommand = function (ev) {
-        if (kiwi.current_panel === kiwi.app.panels.server) {
+        if (kiwi.app.panels.active === kiwi.app.panels.server) {
             return;
         }
 
-        var panel = kiwi.current_panel;
+        var panel = kiwi.app.panels.active;
         panel.addMsg('', '* ' + kiwi.gateway.get('nick') + ' ' + ev.params.join(' '), 'action');
         kiwi.gateway.action(panel.get('name'), ev.params.join(' '));
     };
 
     this.partCommand = function (ev) {
         if (ev.params.length === 0) {
-            kiwi.gateway.part(kiwi.current_panel.get('name'));
+            kiwi.gateway.part(kiwi.app.panels.active.get('name'));
         } else {
             _.each(ev.params, function (channel) {
                 kiwi.gateway.part(channel);
             });
         }
         // TODO: More responsive = close tab now, more accurate = leave until part event
-        //kiwi.app.panels.remove(kiwi.current_panel);
+        //kiwi.app.panels.remove(kiwi.app.panels.active);
     };
 
     this.topicCommand = function (ev) {
@@ -419,7 +421,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             channel_name = ev.params[0];
             ev.params.shift();
         } else {
-            channel_name = kiwi.current_panel.get('name');
+            channel_name = kiwi.app.panels.active.get('name');
         }
 
         kiwi.gateway.topic(channel_name, ev.params.join(' '));

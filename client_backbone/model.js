@@ -162,6 +162,10 @@ kiwi.model.Member = Backbone.Model.extend({
 
 kiwi.model.PanelList = Backbone.Collection.extend({
     model: kiwi.model.Panel,
+
+    // Holds the active panel
+    active: null,
+
     comparator: function (chan) {
         return chan.get("name");
     },
@@ -173,8 +177,9 @@ kiwi.model.PanelList = Backbone.Collection.extend({
         kiwi.gateway.on('change:name', this.view.render, this.view);
         this.add(this.server);
 
-        // Set the default view to the server tab
-        kiwi.current_panel = this.server;
+        this.bind('active', function (active_panel) {
+            this.active = active_panel;
+        }, this);
 
     },
     getByName: function (name) {
@@ -260,7 +265,8 @@ kiwi.model.Panel = Backbone.Model.extend({
 
         this.destroy();
 
-        if (this.cid === kiwi.current_panel.cid) {
+        // If closing the active panel, switch to the server panel
+        if (this.cid === kiwi.app.panels.active.cid) {
             kiwi.app.panels.server.view.show();
         }
     },

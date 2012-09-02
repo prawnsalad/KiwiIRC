@@ -220,16 +220,12 @@ kiwi.view.Panel = Backbone.View.extend({
             this.$container.parent().css('right', '0');
         }
 
-        // TODO: Why is kiwi.app not defined when this is fist called :/
-        if (kiwi.app) {
-            kiwi.app.topicbar.setCurrentTopic(this.model.get("topic") || "");
-        }
+        kiwi.app.topicbar.setCurrentTopic(this.model.get("topic") || "");
 
         this.scrollToBottom();
 
-        kiwi.current_panel = this.model;
-
         this.trigger('active', this.model);
+        kiwi.app.panels.trigger('active', this.model);
     },
 
 
@@ -254,7 +250,7 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
         this.model.addMsg('', '=== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
 
         // If this is the active channel then update the topic bar
-        if (kiwi.current_panel === this) {
+        if (kiwi.app.panels.active === this) {
             kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
         }
     }
@@ -352,8 +348,8 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
         if (ev.keyCode !== 13) return;
 
-        if (kiwi.current_panel.isChannel && kiwi.current_panel.isChannel()) {
-            kiwi.gateway.topic(kiwi.current_panel.get('name'), inp_val);
+        if (kiwi.app.panels.active.isChannel()) {
+            kiwi.gateway.topic(kiwi.app.panels.active.get('name'), inp_val);
         }
     },
 
@@ -427,7 +423,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
         } else {
             // Default command
             command = 'msg';
-            params.unshift(kiwi.current_panel.get('name'));
+            params.unshift(kiwi.app.panels.active.get('name'));
         }
 
         // Trigger the command events
