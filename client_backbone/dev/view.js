@@ -175,12 +175,18 @@ kiwi.view.Panel = Backbone.View.extend({
         // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
         var re, line_msg, $this = this.$el;
 
+        // Escape any HTML that may be in here
+        msg.msg =  $('<div />').text(msg.msg).html();
+
         // Make the channels clickable
-        // TODO: HTML parsing may be going into the model.. move this?
-        re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
+        re = new RegExp('\\B([' + kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
         msg.msg = msg.msg.replace(re, function (match) {
             return '<a class="chan">' + match + '</a>';
         });
+
+
+        // Convert IRC formatting into HTML formatting
+        msg.msg = formatIRCMsg(msg.msg);
 
         // Build up and add the line
         line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
@@ -196,7 +202,7 @@ kiwi.view.Panel = Backbone.View.extend({
         }
     },
     chanClick: function (x) {
-        console.log(x);
+        kiwi.gateway.join($(x.srcElement).text());
     },
     show: function () {
         var $this = this.$el;
@@ -351,7 +357,11 @@ kiwi.view.TopicBar = Backbone.View.extend({
     },
 
     setCurrentTopic: function (new_topic) {
-        $('input', this.$el).val(new_topic);
+        new_topic = new_topic || '';
+
+        // We only want a plain text version
+        new_topic = $('<div>').html(formatIRCMsg(new_topic));
+        $('input', this.$el).val(new_topic.text());
     }
 });
 

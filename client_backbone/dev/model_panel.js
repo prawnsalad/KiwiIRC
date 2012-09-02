@@ -24,10 +24,6 @@ kiwi.model.Panel = Backbone.Model.extend({
             opts.style = '';
         }
 
-        // Escape any HTML that may be in here
-        // This doesn't seem right to be here.. should be in view (??)
-        msg =  $('<div />').text(msg).html();
-
         // Run through the plugins
         message_obj = {"msg": msg, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
         //tmp = kiwi.plugs.run('addmsg', message_obj);
@@ -44,9 +40,6 @@ kiwi.model.Panel = Backbone.Model.extend({
         if (typeof message_obj.msg !== "string") {
             message_obj.msg = '';
         }
-
-        // Convert IRC formatting into HTML formatting
-        message_obj.msg = formatIRCMsg(message_obj.msg);
 
         // Update the scrollback
         bs = this.get("scrollback");
