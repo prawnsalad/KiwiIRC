@@ -425,6 +425,9 @@ kiwi.view.ControlBox = Backbone.View.extend({
     buffer: [],  // Stores previously run commands
     buffer_pos: 0,  // The current position in the buffer
 
+    // Hold tab autocomplete data
+    tabcomplete: {active: false, data: [], prefix: ''},
+
     events: {
         'keydown input': 'process'
     },
@@ -438,7 +441,8 @@ kiwi.view.ControlBox = Backbone.View.extend({
     },
 
     process: function (ev) {
-        var inp = $(ev.currentTarget),
+        var that = this,
+            inp = $(ev.currentTarget),
             inp_val = inp.val(),
             meta;
 
@@ -446,6 +450,13 @@ kiwi.view.ControlBox = Backbone.View.extend({
             meta = ev.ctrlKey;
         } else {
             meta = ev.altKey;
+        }
+
+        // If not a tab key, reset the tabcomplete data
+        if (this.tabcomplete.active && ev.keyCode !== 9) {
+            this.tabcomplete.active = false;
+            this.tabcomplete.data = [];
+            this.tabcomplete.prefix = '';
         }
         
         switch (true) {
@@ -480,12 +491,66 @@ kiwi.view.ControlBox = Backbone.View.extend({
         case (ev.keyCode === 37 && meta):            // left
             kiwi.app.panels.view.prev();
             return false;
-            break;
 
         case (ev.keyCode === 39 && meta):            // right
             kiwi.app.panels.view.next();
             return false;
-            break;
+
+        case (ev.keyCode === 9):                     // tab
+            this.tabcomplete.active = true;
+            if (_.isEqual(this.tabcomplete.data, [])) {
+                // Get possible autocompletions
+                var ac_data = [];
+                $.each(kiwi.app.panels.active.get('members').models, function (i, member) {
+                    if (!member) return;
+                    ac_data.push(member.get('nick'));
+                });
+                ac_data = _.sortBy(ac_data, function (nick) {
+                    return nick;
+                });
+                this.tabcomplete.data = ac_data;
+            }
+
+            if (inp_val[inp[0].selectionStart - 1] === ' ') {
+                return false;
+            }
+            
+            (function () {
+                var tokens = inp_val.substring(0, inp[0].selectionStart).split(' '),
+                    val,
+                    p1,
+                    newnick,
+                    range,
+                    nick = tokens[tokens.length - 1];
+                if (this.tabcomplete.prefix === '') {
+                    this.tabcomplete.prefix = nick;
+                }
+
+                this.tabcomplete.data = _.select(this.tabcomplete.data, function (n) {
+                    return (n.toLowerCase().indexOf(that.tabcomplete.prefix.toLowerCase()) === 0);
+                });
+
+                if (this.tabcomplete.data.length > 0) {
+                    p1 = inp[0].selectionStart - (nick.length);
+                    val = inp_val.substr(0, p1);
+                    newnick = this.tabcomplete.data.shift();
+                    this.tabcomplete.data.push(newnick);
+                    val += newnick;
+                    val += inp_val.substr(inp[0].selectionStart);
+                    inp.val(val);
+
+                    if (inp[0].setSelectionRange) {
+                        inp[0].setSelectionRange(p1 + newnick.length, p1 + newnick.length);
+                    } else if (inp[0].createTextRange) { // not sure if this bit is actually needed....
+                        range = inp[0].createTextRange();
+                        range.collapse(true);
+                        range.moveEnd('character', p1 + newnick.length);
+                        range.moveStart('character', p1 + newnick.length);
+                        range.select();
+                    }
+                }
+            }).apply(this);
+            return false;
         }
     },
 
