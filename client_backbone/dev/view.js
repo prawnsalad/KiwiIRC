@@ -300,24 +300,31 @@ kiwi.view.Tabs = Backbone.View.extend({
         this.model.on("add", this.panelAdded, this);
         this.model.on("remove", this.panelRemoved, this);
         this.model.on("reset", this.render, this);
+
+        this.model.on('active', this.panelActive, this);
+
+        kiwi.gateway.on('change:name', function (gateway, new_val) {
+            $('span', this.model.server.tab).text(new_val);
+        }, this);
     },
     render: function () {
         var that = this;
-        $this = $(this.el);
-        $this.empty();
+
+        this.$el.empty();
         
         // Add the server tab first
-        $('<li><span>' + kiwi.gateway.get('name') + '</span></li>')
+        this.model.server.tab
             .data('panel_id', this.model.server.cid)
-            .appendTo($this);
+            .appendTo(this.$el);
 
+        // Go through each panel adding its tab
         this.model.forEach(function (panel) {
             // If this is the server panel, ignore as it's already added
             if (panel == that.model.server) return;
 
-            $('<li><span>' + panel.get("name") + '</span></li>')
+            panel.tab
                 .data('panel_id', panel.cid)
-                .appendTo($this);
+                .appendTo(this.$el);
         });
     },
 
@@ -326,8 +333,6 @@ kiwi.view.Tabs = Backbone.View.extend({
         panel.tab = $('<li><span>' + panel.get("name") + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
             .appendTo(this.$el);
-
-        panel.view.on('active', this.panelActive, this);
     },
     panelRemoved: function (panel) {
         panel.tab.remove();
@@ -344,7 +349,9 @@ kiwi.view.Tabs = Backbone.View.extend({
     },
 
     tabClick: function (e) {
-        var panel = this.model.getByCid($(e.currentTarget).data('panel_id'));
+        var tab = $(e.currentTarget);
+
+        var panel = this.model.getByCid(tab.data('panel_id'));
         if (!panel) {
             // A panel wasn't found for this tab... wadda fuck
             return;
@@ -354,7 +361,8 @@ kiwi.view.Tabs = Backbone.View.extend({
     },
 
     partClick: function (e) {
-        var panel = this.model.getByCid($(e.currentTarget).parent().data('panel_id'));
+        var tab = $(e.currentTarget).parent();
+        var panel = this.model.getByCid(tab.data('panel_id'));
 
         // Only need to part if it's a channel
         if (panel.isChannel()) {
@@ -362,6 +370,19 @@ kiwi.view.Tabs = Backbone.View.extend({
         } else {
             panel.close();
         }
+    },
+
+    next: function () {
+        var next = kiwi.app.panels.active.tab.next();
+        if (!next.length) next = $('li:first', this.$el);
+
+        next.click();
+    },
+    prev: function () {
+        var prev = kiwi.app.panels.active.tab.prev();
+        if (!prev.length) prev = $('li:last', this.$el);
+
+        prev.click();
     }
 });
 
@@ -418,8 +439,15 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
     process: function (ev) {
         var inp = $(ev.currentTarget),
-            inp_val = inp.val();
+            inp_val = inp.val(),
+            meta;
 
+        if (navigator.appVersion.indexOf("Mac") !== -1) {
+            meta = ev.ctrlKey;
+        } else {
+            meta = ev.altKey;
+        }
+        
         switch (true) {
         case (ev.keyCode === 13):              // return
             inp_val = inp_val.trim();
@@ -447,6 +475,17 @@ kiwi.view.ControlBox = Backbone.View.extend({
                 this.buffer_pos++;
                 inp.val(this.buffer[this.buffer_pos]);
             }
+            break;
+
+        case (ev.keyCode === 37 && meta):            // left
+            kiwi.app.panels.view.prev();
+            return false;
+            break;
+
+        case (ev.keyCode === 39 && meta):            // right
+            kiwi.app.panels.view.next();
+            return false;
+            break;
         }
     },
 

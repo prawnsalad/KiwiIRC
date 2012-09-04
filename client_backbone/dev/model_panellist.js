@@ -11,10 +11,10 @@ kiwi.model.PanelList = Backbone.Collection.extend({
         this.view = new kiwi.view.Tabs({"el": $('#toolbar .panellist')[0], "model": this});
 
         // Automatically create a server tab
-        this.server = new kiwi.model.Server({'name': kiwi.gateway.get('name')});
-        kiwi.gateway.on('change:name', this.view.render, this.view);
-        this.add(this.server);
+        this.add(new kiwi.model.Server({'name': kiwi.gateway.get('name')}));
+        this.server = this.getByName(kiwi.gateway.get('name'));
 
+        // Keep a tab on the active panel
         this.bind('active', function (active_panel) {
             this.active = active_panel;
         }, this);
