@@ -19,9 +19,15 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     /** Instance of kiwi.model.PanelList */
     this.panels = null;
 
+    /* Address for the kiwi server */
+    this.kiwi_server = null;
+
     this.initialize = function () {
         // Update `that` with this new Model object
         that = this;
+
+        // Best guess at where the kiwi server is
+        this.detectKiwiServer();
     };
 
     this.start = function () {
@@ -40,12 +46,38 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.view.barsHide(true);
 
         this.panels.server.server_login.bind('server_connect', function (event) {
-            auto_connect_details = event;
+            var server_login = this;
+            server_login.networkConnecting();
 
-            kiwi.gateway.set('nick', event.nick);
-            kiwi.gateway.connect(event.server, 6667, false, false, function () {});
+            // Attempt to load the transport scripts from the kiwi_server
+            loadScript(that.kiwi_server + '/socket.io/socket.io.js', function () {
+                auto_connect_details = event;
+
+                kiwi.gateway.set('nick', event.nick);
+                kiwi.gateway.connect(event.server, 6667, false, false, function () {});
+            }, function (error) {
+                console.log('Failed to load transport scripts from Kiwi server', error);
+                server_login.showError();
+            });
         });
 
+    };
+
+
+    this.detectKiwiServer = function () {
+        // If running from file, default to localhost:7777 by default
+        if (window.location.protocol === 'file') {
+            this.kiwi_server = 'http://localhost:7777';
+
+        } else {
+            // Assume the kiwi server is on the same server
+            var proto = window.location.protocol === 'https' ?
+                'https' :
+                'http';
+
+            this.kiwi_server = proto + '://' + window.location.host + ':' + window.location.port;
+        }
+        
     };
 
 
@@ -152,6 +184,32 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                     panel.get('members').remove(member, quit_options);
                 }
             });
+        });
+
+
+        gw.on('onkick', function (event) {
+            var channel, members, user,
+                part_options = {};
+
+            part_options.type = 'kick';
+            part_options.by = event.nick;
+            part_options.message = event.message || '';
+
+            channel = that.panels.getByName(event.channel);
+            if (!channel) return;
+
+            members = channel.get('members');
+            if (!members) return;
+
+            user = members.getByNick(event.kicked);
+            if (!user) return;
+
+            members.remove(user, part_options);
+
+            if (event.kicked === kiwi.gateway.get('nick')) {
+                members.reset([]);
+            }
+            
         });
 
 
@@ -617,7 +675,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     *   Parses the response from the server
     */
     this.parse = function (item) {
-        console.log('gateway event', item);
+        //console.log('gateway event', item);
         if (item.event !== undefined) {
             that.trigger('on' + item.event, item);
 
@@ -1068,10 +1126,6 @@ kiwi.model.Panel = Backbone.Model.extend({
             opts.style = '';
         }
 
-        // Escape any HTML that may be in here
-        // This doesn't seem right to be here.. should be in view (??)
-        msg =  $('<div />').text(msg).html();
-
         // Run through the plugins
         message_obj = {"msg": msg, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
         //tmp = kiwi.plugs.run('addmsg', message_obj);
@@ -1088,9 +1142,6 @@ kiwi.model.Panel = Backbone.Model.extend({
         if (typeof message_obj.msg !== "string") {
             message_obj.msg = '';
         }
-
-        // Convert IRC formatting into HTML formatting
-        message_obj.msg = formatIRCMsg(message_obj.msg);
 
         // Update the scrollback
         bs = this.get("scrollback");
@@ -1146,10 +1197,10 @@ kiwi.model.PanelList = Backbone.Collection.extend({
         this.view = new kiwi.view.Tabs({"el": $('#toolbar .panellist')[0], "model": this});
 
         // Automatically create a server tab
-        this.server = new kiwi.model.Server({'name': kiwi.gateway.get('name')});
-        kiwi.gateway.on('change:name', this.view.render, this.view);
-        this.add(this.server);
+        this.add(new kiwi.model.Server({'name': kiwi.gateway.get('name')}));
+        this.server = this.getByName(kiwi.gateway.get('name'));
 
+        // Keep a tab on the active panel
         this.bind('active', function (active_panel) {
             this.active = active_panel;
         }, this);
@@ -1189,6 +1240,8 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
 
             if (options.type === 'quit') {
                 this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+            } else if(options.type === 'kick') {
+                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
             } else {
                 this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has left ' + msg, 'action part');
             }
@@ -1312,6 +1365,51 @@ function secondsToTime(secs) {
         "s": seconds
     };
     return obj;
+}
+
+
+
+
+/**
+ * Convert HSL to RGB formatted colour
+ */
+function hsl2rgb(h, s, l) {
+    var m1, m2, hue;
+    var r, g, b
+    s /=100;
+    l /= 100;
+    if (s == 0)
+        r = g = b = (l * 255);
+    else {
+        function HueToRgb(m1, m2, hue) {
+            var v;
+            if (hue < 0)
+                hue += 1;
+            else if (hue > 1)
+                hue -= 1;
+
+            if (6 * hue < 1)
+                v = m1 + (m2 - m1) * hue * 6;
+            else if (2 * hue < 1)
+                v = m2;
+            else if (3 * hue < 2)
+                v = m1 + (m2 - m1) * (2/3 - hue) * 6;
+            else
+                v = m1;
+
+            return 255 * v;
+        }
+        if (l <= 0.5)
+            m2 = l * (s + 1);
+        else
+            m2 = l + s - l * s;
+        m1 = l * 2 - m2;
+        hue = h / 360;
+        r = HueToRgb(m1, m2, hue + 1/3);
+        g = HueToRgb(m1, m2, hue);
+        b = HueToRgb(m1, m2, hue - 1/3);
+    }
+    return [r,g,b];
 }
 
 
@@ -1949,6 +2047,11 @@ kiwi.view.ServerSelect = Backbone.View.extend({
 
     networkConnecting: function (event) {
         this.setStatus('Connecting..', 'ok');
+    },
+
+    showError: function (event) {
+        this.setStatus('Error connecting', 'error');
+        $('form', this.$el).show();
     }
 });
 
@@ -1991,17 +2094,56 @@ kiwi.view.Panel = Backbone.View.extend({
     },
     newMsg: function (msg) {
         // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
-        var re, line_msg, $this = this.$el;
+        var re, line_msg, $this = this.$el,
+            nick_colour_hex;
+
+        // Escape any HTML that may be in here
+        msg.msg =  $('<div />').text(msg.msg).html();
 
         // Make the channels clickable
-        // TODO: HTML parsing may be going into the model.. move this?
-        re = new RegExp('\\B(' + kiwi.gateway.channel_prefix + '[^ ,.\\007]+)', 'g');
+        re = new RegExp('\\B([' + kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
         msg.msg = msg.msg.replace(re, function (match) {
             return '<a class="chan">' + match + '</a>';
         });
 
+
+        // Make links clickable
+        msg.msg = msg.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]*))?/gi, function (url) {
+            var nice;
+
+            // Add the http is no protoocol was found
+            if (url.match(/^www\./)) {
+                url = 'http://' + url;
+            }
+
+            nice = url;
+            if (nice.length > 100) {
+                nice = nice.substr(0, 100) + '...';
+            }
+
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>';
+        });
+
+
+        // Convert IRC formatting into HTML formatting
+        msg.msg = formatIRCMsg(msg.msg);
+
+
+        // Add some colours to the nick (Method based on IRSSIs nickcolor.pl)
+        nick_colour_hex = (function (nick) {
+            var nick_int = 0, rgb;
+
+            nick.split('').map(function (i) { nick_int += i.charCodeAt(0); });
+            rgb = hsl2rgb(nick_int % 255, 70, 35);
+            rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
+
+            return '#' + rgb.toString(16);
+        })(msg.nick);
+
+        msg.nick_style = 'color:' + nick_colour_hex + ';';
+
         // Build up and add the line
-        line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
         this.scrollToBottom();
@@ -2014,7 +2156,7 @@ kiwi.view.Panel = Backbone.View.extend({
         }
     },
     chanClick: function (x) {
-        console.log(x);
+        kiwi.gateway.join($(x.srcElement).text());
     },
     show: function () {
         var $this = this.$el;
@@ -2079,24 +2221,31 @@ kiwi.view.Tabs = Backbone.View.extend({
         this.model.on("add", this.panelAdded, this);
         this.model.on("remove", this.panelRemoved, this);
         this.model.on("reset", this.render, this);
+
+        this.model.on('active', this.panelActive, this);
+
+        kiwi.gateway.on('change:name', function (gateway, new_val) {
+            $('span', this.model.server.tab).text(new_val);
+        }, this);
     },
     render: function () {
         var that = this;
-        $this = $(this.el);
-        $this.empty();
+
+        this.$el.empty();
         
         // Add the server tab first
-        $('<li><span>' + kiwi.gateway.get('name') + '</span></li>')
+        this.model.server.tab
             .data('panel_id', this.model.server.cid)
-            .appendTo($this);
+            .appendTo(this.$el);
 
+        // Go through each panel adding its tab
         this.model.forEach(function (panel) {
             // If this is the server panel, ignore as it's already added
             if (panel == that.model.server) return;
 
-            $('<li><span>' + panel.get("name") + '</span></li>')
+            panel.tab
                 .data('panel_id', panel.cid)
-                .appendTo($this);
+                .appendTo(this.$el);
         });
     },
 
@@ -2105,8 +2254,6 @@ kiwi.view.Tabs = Backbone.View.extend({
         panel.tab = $('<li><span>' + panel.get("name") + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
             .appendTo(this.$el);
-
-        panel.view.on('active', this.panelActive, this);
     },
     panelRemoved: function (panel) {
         panel.tab.remove();
@@ -2123,7 +2270,9 @@ kiwi.view.Tabs = Backbone.View.extend({
     },
 
     tabClick: function (e) {
-        var panel = this.model.getByCid($(e.currentTarget).data('panel_id'));
+        var tab = $(e.currentTarget);
+
+        var panel = this.model.getByCid(tab.data('panel_id'));
         if (!panel) {
             // A panel wasn't found for this tab... wadda fuck
             return;
@@ -2133,7 +2282,8 @@ kiwi.view.Tabs = Backbone.View.extend({
     },
 
     partClick: function (e) {
-        var panel = this.model.getByCid($(e.currentTarget).parent().data('panel_id'));
+        var tab = $(e.currentTarget).parent();
+        var panel = this.model.getByCid(tab.data('panel_id'));
 
         // Only need to part if it's a channel
         if (panel.isChannel()) {
@@ -2141,6 +2291,19 @@ kiwi.view.Tabs = Backbone.View.extend({
         } else {
             panel.close();
         }
+    },
+
+    next: function () {
+        var next = kiwi.app.panels.active.tab.next();
+        if (!next.length) next = $('li:first', this.$el);
+
+        next.click();
+    },
+    prev: function () {
+        var prev = kiwi.app.panels.active.tab.prev();
+        if (!prev.length) prev = $('li:last', this.$el);
+
+        prev.click();
     }
 });
 
@@ -2169,7 +2332,11 @@ kiwi.view.TopicBar = Backbone.View.extend({
     },
 
     setCurrentTopic: function (new_topic) {
-        $('input', this.$el).val(new_topic);
+        new_topic = new_topic || '';
+
+        // We only want a plain text version
+        new_topic = $('<div>').html(formatIRCMsg(new_topic));
+        $('input', this.$el).val(new_topic.text());
     }
 });
 
@@ -2178,6 +2345,9 @@ kiwi.view.TopicBar = Backbone.View.extend({
 kiwi.view.ControlBox = Backbone.View.extend({
     buffer: [],  // Stores previously run commands
     buffer_pos: 0,  // The current position in the buffer
+
+    // Hold tab autocomplete data
+    tabcomplete: {active: false, data: [], prefix: ''},
 
     events: {
         'keydown input': 'process'
@@ -2192,9 +2362,24 @@ kiwi.view.ControlBox = Backbone.View.extend({
     },
 
     process: function (ev) {
-        var inp = $(ev.currentTarget),
-            inp_val = inp.val();
+        var that = this,
+            inp = $(ev.currentTarget),
+            inp_val = inp.val(),
+            meta;
 
+        if (navigator.appVersion.indexOf("Mac") !== -1) {
+            meta = ev.ctrlKey;
+        } else {
+            meta = ev.altKey;
+        }
+
+        // If not a tab key, reset the tabcomplete data
+        if (this.tabcomplete.active && ev.keyCode !== 9) {
+            this.tabcomplete.active = false;
+            this.tabcomplete.data = [];
+            this.tabcomplete.prefix = '';
+        }
+        
         switch (true) {
         case (ev.keyCode === 13):              // return
             inp_val = inp_val.trim();
@@ -2222,6 +2407,71 @@ kiwi.view.ControlBox = Backbone.View.extend({
                 this.buffer_pos++;
                 inp.val(this.buffer[this.buffer_pos]);
             }
+            break;
+
+        case (ev.keyCode === 37 && meta):            // left
+            kiwi.app.panels.view.prev();
+            return false;
+
+        case (ev.keyCode === 39 && meta):            // right
+            kiwi.app.panels.view.next();
+            return false;
+
+        case (ev.keyCode === 9):                     // tab
+            this.tabcomplete.active = true;
+            if (_.isEqual(this.tabcomplete.data, [])) {
+                // Get possible autocompletions
+                var ac_data = [];
+                $.each(kiwi.app.panels.active.get('members').models, function (i, member) {
+                    if (!member) return;
+                    ac_data.push(member.get('nick'));
+                });
+                ac_data = _.sortBy(ac_data, function (nick) {
+                    return nick;
+                });
+                this.tabcomplete.data = ac_data;
+            }
+
+            if (inp_val[inp[0].selectionStart - 1] === ' ') {
+                return false;
+            }
+            
+            (function () {
+                var tokens = inp_val.substring(0, inp[0].selectionStart).split(' '),
+                    val,
+                    p1,
+                    newnick,
+                    range,
+                    nick = tokens[tokens.length - 1];
+                if (this.tabcomplete.prefix === '') {
+                    this.tabcomplete.prefix = nick;
+                }
+
+                this.tabcomplete.data = _.select(this.tabcomplete.data, function (n) {
+                    return (n.toLowerCase().indexOf(that.tabcomplete.prefix.toLowerCase()) === 0);
+                });
+
+                if (this.tabcomplete.data.length > 0) {
+                    p1 = inp[0].selectionStart - (nick.length);
+                    val = inp_val.substr(0, p1);
+                    newnick = this.tabcomplete.data.shift();
+                    this.tabcomplete.data.push(newnick);
+                    val += newnick;
+                    val += inp_val.substr(inp[0].selectionStart);
+                    inp.val(val);
+
+                    if (inp[0].setSelectionRange) {
+                        inp[0].setSelectionRange(p1 + newnick.length, p1 + newnick.length);
+                    } else if (inp[0].createTextRange) { // not sure if this bit is actually needed....
+                        range = inp[0].createTextRange();
+                        range.collapse(true);
+                        range.moveEnd('character', p1 + newnick.length);
+                        range.moveStart('character', p1 + newnick.length);
+                        range.select();
+                    }
+                }
+            }).apply(this);
+            return false;
         }
     },
 

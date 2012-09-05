@@ -63,6 +63,14 @@
 
 <script>
 
+    function loadScript (src, fn_ok, fn_err) {
+        var el = document.createElement('script');
+        if (typeof fn_ok === 'function') el.onload = fn_ok;
+        if (typeof fn_err === 'function') el.onerror = fn_err;
+        el.src = src;
+        document.getElementsByTagName('head')[0].appendChild(el);
+    }
+
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
         var vars = query.split('&');
@@ -81,7 +89,6 @@
             'jquery-1.7.1.min.js',
             'underscore-min.js',
             'backbone-git.js',
-            'http://localhost:7778/socket.io/socket.io.js',
         ];
 
         // If in debug mode, load each development script
@@ -108,6 +115,11 @@
         // Run after all dependancies have been loaded
         function startApp () {    
             kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
+
+            // Override the kiwi_server to use. (Think: running on standalone client..)
+            kiwi.app.kiwi_server = 'http://localhost:7778';
+
+            // Start everything going
             kiwi.app.start();
         }
 
@@ -120,10 +132,7 @@
                 return;
             }
 
-            var el = document.createElement('script');
-            el.onload = loadNextScript;
-            el.src = scripts[cur_script];
-            document.getElementsByTagName('head')[0].appendChild(el);
+            loadScript(scripts[cur_script], loadNextScript);
 
             cur_script++;
         }

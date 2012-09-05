@@ -7,9 +7,15 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     /** Instance of kiwi.model.PanelList */
     this.panels = null;
 
+    /* Address for the kiwi server */
+    this.kiwi_server = null;
+
     this.initialize = function () {
         // Update `that` with this new Model object
         that = this;
+
+        // Best guess at where the kiwi server is
+        this.detectKiwiServer();
     };
 
     this.start = function () {
@@ -28,12 +34,38 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.view.barsHide(true);
 
         this.panels.server.server_login.bind('server_connect', function (event) {
-            auto_connect_details = event;
+            var server_login = this;
+            server_login.networkConnecting();
 
-            kiwi.gateway.set('nick', event.nick);
-            kiwi.gateway.connect(event.server, 6667, false, false, function () {});
+            // Attempt to load the transport scripts from the kiwi_server
+            loadScript(that.kiwi_server + '/socket.io/socket.io.js', function () {
+                auto_connect_details = event;
+
+                kiwi.gateway.set('nick', event.nick);
+                kiwi.gateway.connect(event.server, 6667, false, false, function () {});
+            }, function (error) {
+                console.log('Failed to load transport scripts from Kiwi server', error);
+                server_login.showError();
+            });
         });
 
+    };
+
+
+    this.detectKiwiServer = function () {
+        // If running from file, default to localhost:7777 by default
+        if (window.location.protocol === 'file') {
+            this.kiwi_server = 'http://localhost:7777';
+
+        } else {
+            // Assume the kiwi server is on the same server
+            var proto = window.location.protocol === 'https' ?
+                'https' :
+                'http';
+
+            this.kiwi_server = proto + '://' + window.location.host + ':' + window.location.port;
+        }
+        
     };
 
 

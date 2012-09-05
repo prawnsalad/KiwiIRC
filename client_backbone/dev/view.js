@@ -131,6 +131,11 @@ kiwi.view.ServerSelect = Backbone.View.extend({
 
     networkConnecting: function (event) {
         this.setStatus('Connecting..', 'ok');
+    },
+
+    showError: function (event) {
+        this.setStatus('Error connecting', 'error');
+        $('form', this.$el).show();
     }
 });
 
