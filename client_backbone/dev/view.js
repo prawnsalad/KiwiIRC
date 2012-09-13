@@ -599,7 +599,7 @@ kiwi.view.Application = Backbone.View.extend({
 
         this.doLayout();
 
-        $(window).keydown(this.setKeyFocus);
+        $(document).keydown(this.setKeyFocus);
     },
 
 
@@ -611,7 +611,7 @@ kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if (ev.srcElement.tagName.toLowerCase() === 'input') {
+        if (ev.target.tagName.toLowerCase() === 'input') {
             return;
         }
 
