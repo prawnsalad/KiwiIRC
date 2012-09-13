@@ -52,7 +52,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 }
                 kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                 kiwi.gateway.set('nick', event.nick);
-                kiwi.gateway.connect(event.server, 6667, false, false, function () {});
+                
+                kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function () {});
             });
         });
 
@@ -105,9 +106,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         // Populate the server select box with defaults
         this.panels.server.server_login.populateFields({
-            'nick': getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
-            'server': getQueryVariable('server') || 'irc.kiwiirc.com',
-            'channel': window.location.hash || '#test'
+            nick: getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
+            server: getQueryVariable('server') || 'irc.kiwiirc.com',
+            port: 6667,
+            ssl: false,
+            channel: window.location.hash || '#test'
         });
     };
 

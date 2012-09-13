@@ -79,6 +79,9 @@ kiwi.view.ServerSelect = Backbone.View.extend({
         var values = {
             nick: $('.nick', this.$el).val(),
             server: $('.server', this.$el).val(),
+            port: $('.port', this.$el).val(),
+            ssl: $('.ssl', this.$el).prop('checked'),
+            password: $('.password', this.$el).val(),
             channel: $('.channel', this.$el).val()
         };
 
@@ -97,10 +100,16 @@ kiwi.view.ServerSelect = Backbone.View.extend({
 
         nick = defaults.nick || '';
         server = defaults.server || '';
+        port = defaults.port || 6667;
+        ssl = defaults.ssl || 0;
+        password = defaults.password || '';
         channel = defaults.channel || '';
 
         $('.nick', this.$el).val(nick);
         $('.server', this.$el).val(server);
+        $('.port', this.$el).val(port);
+        $('.ssl', this.$el).prop('checked', ssl);
+        $('.password', this.$el).val(password);
         $('.channel', this.$el).val(channel);
     },
 

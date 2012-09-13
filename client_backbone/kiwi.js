@@ -10,6 +10,25 @@ kiwi.model = {};
 kiwi.view = {};
 
 
+/**
+ * A global container for third party access
+ * Will be used to access a limited subset of kiwi functionality
+ * and data
+ */
+if (typeof global === 'undefined') {
+	global = {};
+}
+
+global.kiwi = {
+	gateway: undefined,
+	user: undefined,
+	server: undefined,
+	channels: undefined,
+
+	utils: undefined // Re-usable methods
+};
+
+
 kiwi.model.Application = Backbone.Model.extend(new (function () {
     var that = this;
 
@@ -18,6 +37,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
     /** Instance of kiwi.model.PanelList */
     this.panels = null;
+
+    /** kiwi.view.Application */
+    this.view;
+
+    /** kiwi.view.StatusMessage */
+    this.message;
 
     /* Address for the kiwi server */
     this.kiwi_server = null;
@@ -58,7 +83,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 }
                 kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                 kiwi.gateway.set('nick', event.nick);
-                kiwi.gateway.connect(event.server, 6667, false, false, function () {});
+                
+                kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function () {});
             });
         });
 
@@ -101,6 +127,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         this.topicbar = new kiwi.view.TopicBar({el: $('#topic')[0]});
 
+        this.message = new kiwi.view.StatusMessage({el: $('#status_message')[0]});
+
         
         this.panels.server.view.show();
 
@@ -109,9 +137,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         // Populate the server select box with defaults
         this.panels.server.server_login.populateFields({
-            'nick': getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
-            'server': getQueryVariable('server') || 'irc.kiwiirc.com',
-            'channel': window.location.hash || '#test'
+            nick: getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
+            server: getQueryVariable('server') || 'irc.kiwiirc.com',
+            port: 6667,
+            ssl: false,
+            channel: window.location.hash || '#test'
         });
     };
 
@@ -130,6 +160,25 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 kiwi.gateway.join(auto_connect_details.channel);
             }
         });
+
+
+        (function () {
+            var gw_stat = 0;
+
+            gw.on('disconnect', function (event) {
+                that.message.text('You have been disconnected. Attempting to reconnect..');
+                gw_stat = 1;
+            });
+            gw.on('reconnecting', function (event) {
+                that.message.text('You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..');
+            });
+            gw.on('connect', function (event) {
+                if (gw_stat !== 1) return;
+
+                that.message.text('It\'s OK, you\'re connected again :)', {timeout: 5000});
+                gw_stat = 0;
+            });
+        })();
 
 
         gw.on('onjoin', function (event) {
@@ -629,7 +678,8 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
 
         this.socket.on('connect', function () {
             this.emit('irc connect', that.get('nick'), host, port, ssl, password, callback);
-            console.log("kiwi.gateway.socket.on('connect')");
+            that.trigger('connect', {});
+            console.log("kiwi.gateway.socket.on('connect')", host, port);
         });
 
         this.socket.on('too_many_connections', function () {
@@ -639,7 +689,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         this.socket.on('message', this.parse);
 
         this.socket.on('disconnect', function () {
-            this.emit("disconnect", {});
+            that.trigger("disconnect", {});
             console.log("kiwi.gateway.socket.on('disconnect')");
         });
 
@@ -649,7 +699,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
 
         this.socket.on('reconnecting', function (reconnectionDelay, reconnectionAttempts) {
             console.log("kiwi.gateway.socket.on('reconnecting')");
-            this.emit("reconnecting", {delay: reconnectionDelay, attempts: reconnectionAttempts});
+            that.trigger("reconnecting", {delay: reconnectionDelay, attempts: reconnectionAttempts});
         });
 
         this.socket.on('reconnect_failed', function () {
@@ -681,7 +731,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     *   Parses the response from the server
     */
     this.parse = function (item) {
-        //console.log('gateway event', item);
+        console.log('gateway event', item);
         if (item.event !== undefined) {
             that.trigger('on' + item.event, item);
 
@@ -2001,9 +2051,12 @@ kiwi.view.ServerSelect = Backbone.View.extend({
         var values = {
             nick: $('.nick', this.$el).val(),
             server: $('.server', this.$el).val(),
+            port: $('.port', this.$el).val(),
+            ssl: $('.ssl', this.$el).prop('checked'),
+            password: $('.password', this.$el).val(),
             channel: $('.channel', this.$el).val()
         };
-        
+
         this.trigger('server_connect', values);
         return false;
     },
@@ -2018,11 +2071,17 @@ kiwi.view.ServerSelect = Backbone.View.extend({
         defaults = defaults || {};
 
         nick = defaults.nick || '';
-        server = defaults.server || 'irc.kiwiirc.com';
-        channel = defaults.channel || '#kiwiirc';
+        server = defaults.server || '';
+        port = defaults.port || 6667;
+        ssl = defaults.ssl || 0;
+        password = defaults.password || '';
+        channel = defaults.channel || '';
 
         $('.nick', this.$el).val(nick);
         $('.server', this.$el).val(server);
+        $('.port', this.$el).val(port);
+        $('.ssl', this.$el).prop('checked', ssl);
+        $('.password', this.$el).val(password);
         $('.channel', this.$el).val(channel);
     },
 
@@ -2511,8 +2570,50 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
 
 
+kiwi.view.StatusMessage = Backbone.View.extend({
+    /* Timer for hiding the message */
+    tmr: null,
 
-// This *may* be needed in future
+    initialize: function () {
+        this.$el.hide();
+    },
+
+    text: function (text, opt) {
+        // Defaults
+        opt = opt || {};
+        opt.type = opt.type || '';
+
+        this.$el.text(text).attr('class', opt.type);
+        this.$el.slideDown(kiwi.app.view.doLayout);
+
+        if (opt.timeout) this.doTimeout(opt.timeout);
+    },
+
+    html: function (html, opt) {
+        // Defaults
+        opt = opt || {};
+        opt.type = opt.type || '';
+
+        this.$el.html(text).attr('class', opt.type);
+        this.$el.slideDown(kiwi.app.view.doLayout);
+
+        if (opt.timeout) this.doTimeout(opt.timeout);
+    },
+
+    hide: function () {
+        this.$el.slideUp(kiwi.app.view.doLayout);
+    },
+
+    doTimeout: function (length) {
+        if (this.tmr) clearTimeout(this.tmr);
+        var that = this;
+        this.tmr = setTimeout(function () { that.hide(); }, length);
+    }
+});
+
+
+
+
 kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         $(window).resize(this.doLayout);
@@ -2521,7 +2622,7 @@ kiwi.view.Application = Backbone.View.extend({
 
         this.doLayout();
 
-        $(window).keydown(this.setKeyFocus);
+        $(document).keydown(this.setKeyFocus);
     },
 
 
@@ -2533,7 +2634,7 @@ kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if (ev.srcElement.tagName.toLowerCase() === 'input') {
+        if (ev.target.tagName.toLowerCase() === 'input') {
             return;
         }
 

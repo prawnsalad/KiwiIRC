@@ -93,7 +93,6 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         this.socket.on('connect', function () {
             this.emit('irc connect', that.get('nick'), host, port, ssl, password, callback);
             that.trigger('connect', {});
-            console.log("kiwi.gateway.socket.on('connect')");
         });
 
         this.socket.on('too_many_connections', function () {
