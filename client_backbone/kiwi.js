@@ -33,9 +33,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     this.start = function () {
         // Only debug if set in the querystring
         if (!getQueryVariable('debug')) {
-            manageDebug(false);
+            //manageDebug(false);
         } else {
-            manageDebug(true);
+            //manageDebug(true);
         }
         
         // Set the gateway up
@@ -47,21 +47,27 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         this.panels.server.server_login.bind('server_connect', function (event) {
             var server_login = this;
+            auto_connect_details = event;
+
             server_login.networkConnecting();
-
-            // Attempt to load the transport scripts from the kiwi_server
-            loadScript(that.kiwi_server + '/socket.io/socket.io.js', function () {
-                auto_connect_details = event;
-
+            
+            $script(that.kiwi_server + '/socket.io/socket.io.js?ts='+(new Date().getTime()), function () {
+                if (!window.io) {
+                    kiwiServerNotFound();
+                    return;
+                }
+                kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                 kiwi.gateway.set('nick', event.nick);
                 kiwi.gateway.connect(event.server, 6667, false, false, function () {});
-            }, function (error) {
-                console.log('Failed to load transport scripts from Kiwi server', error);
-                server_login.showError();
             });
         });
 
     };
+
+
+    function kiwiServerNotFound (e) {
+        that.panels.server.server_login.showError();
+    }
 
 
     this.detectKiwiServer = function () {
@@ -75,7 +81,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 'https' :
                 'http';
 
-            this.kiwi_server = proto + '://' + window.location.host + ':' + window.location.port;
+            this.kiwi_server = proto + '://' + window.location.host + ':' + (window.location.port || '80');
         }
         
     };
@@ -992,7 +998,7 @@ kiwi.model.Member = Backbone.Model.extend({
 
         modes = this.get("modes");
         modes = _.reject(modes, function (m) {
-            return (modes_to_remove.indexOf(m) !== -1);
+            return (_.indexOf(modes_to_remove, m) !== -1);
         });
 
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
@@ -1997,7 +2003,7 @@ kiwi.view.ServerSelect = Backbone.View.extend({
             server: $('.server', this.$el).val(),
             channel: $('.channel', this.$el).val()
         };
-
+        
         this.trigger('server_connect', values);
         return false;
     },
@@ -2012,8 +2018,8 @@ kiwi.view.ServerSelect = Backbone.View.extend({
         defaults = defaults || {};
 
         nick = defaults.nick || '';
-        server = defaults.server || '';
-        channel = defaults.channel || '';
+        server = defaults.server || 'irc.kiwiirc.com';
+        channel = defaults.channel || '#kiwiirc';
 
         $('.nick', this.$el).val(nick);
         $('.server', this.$el).val(server);
@@ -2133,7 +2139,7 @@ kiwi.view.Panel = Backbone.View.extend({
         nick_colour_hex = (function (nick) {
             var nick_int = 0, rgb;
 
-            nick.split('').map(function (i) { nick_int += i.charCodeAt(0); });
+            _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
             rgb = hsl2rgb(nick_int % 255, 70, 35);
             rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
 

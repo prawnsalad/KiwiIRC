@@ -217,7 +217,7 @@ kiwi.view.Panel = Backbone.View.extend({
         nick_colour_hex = (function (nick) {
             var nick_int = 0, rgb;
 
-            nick.split('').map(function (i) { nick_int += i.charCodeAt(0); });
+            _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
             rgb = hsl2rgb(nick_int % 255, 70, 35);
             rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
 

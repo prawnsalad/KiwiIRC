@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
@@ -61,15 +62,13 @@
         </div>
     </script>
 
-<script>
 
-    function loadScript (src, fn_ok, fn_err) {
-        var el = document.createElement('script');
-        if (typeof fn_ok === 'function') el.onload = fn_ok;
-        if (typeof fn_err === 'function') el.onerror = fn_err;
-        el.src = src;
-        document.getElementsByTagName('head')[0].appendChild(el);
-    }
+<script>
+/* Script loader (https://github.com/ded/script.js) */
+(function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)
+
+
+
 
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -86,26 +85,35 @@
 
         // Common dependancies that are required at all times
         var scripts = [
-            'jquery-1.7.1.min.js',
-            'underscore-min.js',
-            'backbone-git.js',
+            ['jquery-1.7.1.min.js', 'underscore-min.js'],
+            'backbone-git.js'
         ];
 
         // If in debug mode, load each development script
         if (getQueryVariable('debug')) {
+            console.log('Loading debugging scripts');
             scripts = scripts.concat([
                 'dev/app.js',
-                'dev/model_application.js',
-                'dev/model_gateway.js',
-                'dev/model_member.js',
-                'dev/model_memberlist.js',
-                'dev/model_panel.js',
-                'dev/model_panellist.js',
-                'dev/model_channel.js',
-                'dev/model_server.js',
+                [
+                    'dev/model_application.js',
+                    'dev/model_gateway.js'
+                ],
+                [
+                    'dev/model_panellist.js',
+                    'dev/model_panel.js',
+                    'dev/model_member.js',
+                    'dev/model_memberlist.js'
+                ],
+                
+                [
+                    'dev/model_channel.js',
+                    'dev/model_server.js'
+                ],
 
-                'dev/utils.js',
-                'dev/view.js'
+                [
+                    'dev/utils.js',
+                    'dev/view.js'
+                ]
             ]);
         } else {
             scripts.push('kiwi.min.js');
@@ -117,7 +125,8 @@
             kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
 
             // Override the kiwi_server to use. (Think: running on standalone client..)
-            kiwi.app.kiwi_server = 'http://localhost:7778';
+            kiwi.app.kiwi_server = 'http://192.168.1.13:7778';
+            //kiwi.app.kiwi_server = 'http://localhost:7778';
 
             // Start everything going
             kiwi.app.start();
@@ -132,7 +141,7 @@
                 return;
             }
 
-            loadScript(scripts[cur_script], loadNextScript);
+            $script(scripts[cur_script], loadNextScript);
 
             cur_script++;
         }

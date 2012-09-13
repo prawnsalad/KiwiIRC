@@ -144,7 +144,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     *   Parses the response from the server
     */
     this.parse = function (item) {
-        console.log('gateway event', item);
+        //console.log('gateway event', item);
         if (item.event !== undefined) {
             that.trigger('on' + item.event, item);
 

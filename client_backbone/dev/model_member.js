@@ -50,7 +50,7 @@ kiwi.model.Member = Backbone.Model.extend({
 
         modes = this.get("modes");
         modes = _.reject(modes, function (m) {
-            return (modes_to_remove.indexOf(m) !== -1);
+            return (_.indexOf(modes_to_remove, m) !== -1);
         });
 
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
