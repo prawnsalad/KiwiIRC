@@ -92,6 +92,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
 
         this.socket.on('connect', function () {
             this.emit('irc connect', that.get('nick'), host, port, ssl, password, callback);
+            that.trigger('connect', {});
             console.log("kiwi.gateway.socket.on('connect')");
         });
 
@@ -102,7 +103,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         this.socket.on('message', this.parse);
 
         this.socket.on('disconnect', function () {
-            this.emit("disconnect", {});
+            that.trigger("disconnect", {});
             console.log("kiwi.gateway.socket.on('disconnect')");
         });
 
@@ -112,7 +113,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
 
         this.socket.on('reconnecting', function (reconnectionDelay, reconnectionAttempts) {
             console.log("kiwi.gateway.socket.on('reconnecting')");
-            this.emit("reconnecting", {delay: reconnectionDelay, attempts: reconnectionAttempts});
+            that.trigger("reconnecting", {delay: reconnectionDelay, attempts: reconnectionAttempts});
         });
 
         this.socket.on('reconnect_failed', function () {

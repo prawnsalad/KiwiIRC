@@ -589,8 +589,50 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
 
 
+kiwi.view.StatusMessage = Backbone.View.extend({
+    /* Timer for hiding the message */
+    tmr: null,
 
-// This *may* be needed in future
+    initialize: function () {
+        this.$el.hide();
+    },
+
+    text: function (text, opt) {
+        // Defaults
+        opt = opt || {};
+        opt.type = opt.type || '';
+
+        this.$el.text(text).attr('class', opt.type);
+        this.$el.slideDown(kiwi.app.view.doLayout);
+
+        if (opt.timeout) this.doTimeout(opt.timeout);
+    },
+
+    html: function (html, opt) {
+        // Defaults
+        opt = opt || {};
+        opt.type = opt.type || '';
+
+        this.$el.html(text).attr('class', opt.type);
+        this.$el.slideDown(kiwi.app.view.doLayout);
+
+        if (opt.timeout) this.doTimeout(opt.timeout);
+    },
+
+    hide: function () {
+        this.$el.slideUp(kiwi.app.view.doLayout);
+    },
+
+    doTimeout: function (length) {
+        if (this.tmr) clearTimeout(this.tmr);
+        var that = this;
+        this.tmr = setTimeout(function () { that.hide(); }, length);
+    }
+});
+
+
+
+
 kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         $(window).resize(this.doLayout);

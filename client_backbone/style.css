@@ -72,6 +72,14 @@ body {
 #toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
 
 
+#status_message {
+    background: #FEEFB3; color: #9F6000;
+    border-bottom: 1px solid;
+    padding: 0.9em;
+    text-align: center; font-size:1.1em;
+}
+#status_message.err { color:#D8000C; background:#FFBABA; }
+
 
 .panel_container { overflow-y:scroll; height:100%; }
 

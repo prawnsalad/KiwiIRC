@@ -7,6 +7,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     /** Instance of kiwi.model.PanelList */
     this.panels = null;
 
+    /** kiwi.view.Application */
+    this.view;
+
+    /** kiwi.view.StatusMessage */
+    this.message;
+
     /* Address for the kiwi server */
     this.kiwi_server = null;
 
@@ -89,6 +95,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         this.topicbar = new kiwi.view.TopicBar({el: $('#topic')[0]});
 
+        this.message = new kiwi.view.StatusMessage({el: $('#status_message')[0]});
+
         
         this.panels.server.view.show();
 
@@ -118,6 +126,25 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 kiwi.gateway.join(auto_connect_details.channel);
             }
         });
+
+
+        (function () {
+            var gw_stat = 0;
+
+            gw.on('disconnect', function (event) {
+                that.message.text('You have been disconnected. Attempting to reconnect..');
+                gw_stat = 1;
+            });
+            gw.on('reconnecting', function (event) {
+                that.message.text('You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..');
+            });
+            gw.on('connect', function (event) {
+                if (gw_stat !== 1) return;
+
+                that.message.text('It\'s OK, you\'re connected again :)', {timeout: 5000});
+                gw_stat = 0;
+            });
+        })();
 
 
         gw.on('onjoin', function (event) {
