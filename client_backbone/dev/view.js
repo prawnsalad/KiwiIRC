@@ -395,7 +395,8 @@ kiwi.view.Tabs = Backbone.View.extend({
         var panel = this.model.getByCid(tab.data('panel_id'));
 
         // Only need to part if it's a channel
-        if (panel.isChannel()) {
+        // If the nicklist is empty, we haven't joined the channel as yet
+        if (panel.isChannel() && panel.get('members').models.length > 0) {
             kiwi.gateway.part(panel.get('name'));
         } else {
             panel.close();
