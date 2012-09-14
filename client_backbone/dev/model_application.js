@@ -417,6 +417,56 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
             }
         });
+
+
+        gw.on('onirc_error', function (data) {
+            var panel, tmp;
+
+            if (data.channel !== undefined && !(panel = kiwi.app.panels.getByName(data.channel))) {
+                panel = kiwi.app.panels.server;
+            }
+
+            switch (data.error) {
+            case 'banned_from_channel':
+                panel.addMsg(' ', '=== You are banned from ' + data.channel + '. ' + data.reason, 'status');
+                kiwi.app.message.text('You are banned from ' + data.channel + '. ' + data.reason);
+                break;
+            case 'bad_channel_key':
+                panel.addMsg(' ', '=== Bad channel key for ' + data.channel, 'status');
+                kiwi.app.message.text('Bad channel key or password for ' + data.channel);
+                break;
+            case 'invite_only_channel':
+                panel.addMsg(' ', '=== ' + data.channel + ' is invite only.', 'status');
+                kiwi.app.message.text(data.channel + ' is invite only');
+                break;
+            case 'channel_is_full':
+                panel.addMsg(' ', '=== ' + data.channel + ' is full.', 'status');
+                kiwi.app.message.text(data.channel + ' is full');
+                break;
+            case 'chanop_privs_needed':
+                panel.addMsg(' ', '=== ' + data.reason, 'status');
+                kiwi.app.message.text(data.reason + ' (' + data.channel + ')');
+                break;
+            case 'no_such_nick':
+                tmp = kiwi.app.panels.getByName(data.nick);
+                if (tmp) {
+                    tmp.addMsg(' ', '=== ' + data.nick + ': ' + data.reason, 'status');
+                } else {
+                    kiwi.app.panels.server.addMsg(' ', '=== ' + data.nick + ': ' + data.reason, 'status');
+                }
+                break;
+            case 'nickname_in_use':
+                kiwi.app.panels.server.addMsg(' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
+                if (kiwi.app.panels.server !== kiwi.app.panels.active) {
+                    kiwi.app.message.text('The nickname "' + data.nick + '" is already in use. Please select a new nickname');
+                }
+                // TODO: Show a nick change box or something
+                break;
+            default:
+                // We don't know what data contains, so don't do anything with it.
+                //kiwi.front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
+            }
+        });
     };
 
 

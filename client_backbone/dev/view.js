@@ -626,6 +626,7 @@ kiwi.view.StatusMessage = Backbone.View.extend({
         // Defaults
         opt = opt || {};
         opt.type = opt.type || '';
+        opt.timeout = opt.timeout || 5000;
 
         this.$el.text(text).attr('class', opt.type);
         this.$el.slideDown(kiwi.app.view.doLayout);
@@ -637,6 +638,7 @@ kiwi.view.StatusMessage = Backbone.View.extend({
         // Defaults
         opt = opt || {};
         opt.type = opt.type || '';
+        opt.timeout = opt.timeout || 5000;
 
         this.$el.html(text).attr('class', opt.type);
         this.$el.slideDown(kiwi.app.view.doLayout);
