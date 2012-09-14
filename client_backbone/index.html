@@ -130,21 +130,23 @@
 
 
         // Run after all dependancies have been loaded
-        function startApp () {    
-            kiwi.app = new kiwi.model.Application({container: $('#kiwi')});
+        function startApp () {
+            var opts = {
+                container: $('#kiwi'),
 
-            // Override the kiwi_server to use. (Think: running on standalone client..)
-            kiwi.app.kiwi_server = 'http://192.168.1.13:7778';
-            //kiwi.app.kiwi_server = 'http://localhost:7778';
+                // Override the kiwi_server to use. (Think: running on standalone client..)
+                kiwi_server: 'http://192.168.1.13:7778'
+            };
 
-            // Start everything going
-            kiwi.app.start();
+            // Start the app by either the dev or closed environment
+            (kiwi && kiwi.global && kiwi.global.start(opts)) || (kiwi && kiwi.start(opts));
         }
 
 
         // Load each script
         var cur_script = 0;
         function loadNextScript () {
+            // Start the kiwi app if all scripts have been loaded
             if (cur_script === scripts.length) {
                 startApp();
                 return;

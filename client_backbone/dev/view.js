@@ -1,8 +1,6 @@
 /*jslint white:true, regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global kiwi */
 
-kiwi.view = {};
-
 kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
     events: {

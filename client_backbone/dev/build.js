@@ -30,7 +30,7 @@ var src = concat([
 ]);
 
 
-src = '(function (window) {\n\n' + src + '\n\n})(window);';
+src = '(function (global) {\n\n' + src + '\n\n})(window);';
 
 
 fs.writeFileSync(__dirname + '/../kiwi.js', src, FILE_ENCODING);

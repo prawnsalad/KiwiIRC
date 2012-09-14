@@ -1,10 +1,10 @@
-(function (window) {
+(function (global) {
 
 // Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
 /**
 *   @namespace
 */
-var kiwi = window.kiwi = {};
+var kiwi = {};
 
 kiwi.model = {};
 kiwi.view = {};
@@ -13,20 +13,38 @@ kiwi.view = {};
 /**
  * A global container for third party access
  * Will be used to access a limited subset of kiwi functionality
- * and data
+ * and data (think: plugins)
  */
-if (typeof global === 'undefined') {
-	global = {};
-}
-
-global.kiwi = {
+kiwi.global = {
 	gateway: undefined,
 	user: undefined,
 	server: undefined,
 	channels: undefined,
 
+	// Entry point to start the kiwi application
+	start: function (opts) {
+		opts = opts || {};
+
+		kiwi.app = new kiwi.model.Application(opts);
+
+		if (opts.kiwi_server) {
+			kiwi.app.kiwi_server = opts.kiwi_server;
+		}
+
+		kiwi.app.start();
+
+		return true;
+	},
+
 	utils: undefined // Re-usable methods
 };
+
+
+
+// If within a closure, expose the kiwi globals
+if (typeof global !== 'undefined') {
+	global.kiwi = kiwi.global;
+}
 
 
 kiwi.model.Application = Backbone.Model.extend(new (function () {
@@ -679,7 +697,6 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
         this.socket.on('connect', function () {
             this.emit('irc connect', that.get('nick'), host, port, ssl, password, callback);
             that.trigger('connect', {});
-            console.log("kiwi.gateway.socket.on('connect')", host, port);
         });
 
         this.socket.on('too_many_connections', function () {
@@ -731,7 +748,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     *   Parses the response from the server
     */
     this.parse = function (item) {
-        console.log('gateway event', item);
+        //console.log('gateway event', item);
         if (item.event !== undefined) {
             that.trigger('on' + item.event, item);
 
@@ -1972,8 +1989,6 @@ kiwi.data = new kiwi.dataStore('kiwi');
 
 /*jslint white:true, regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global kiwi */
-
-kiwi.view = {};
 
 kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
