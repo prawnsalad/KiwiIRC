@@ -13,7 +13,7 @@
         <div id="toolbar">
             <div id="tabs">
                 <ul class="panellist channels"></ul>
-                <ul class="panellist misc"></ul>
+                <ul class="panellist applets"></ul>
             </div>
 
             <div id="topic">
@@ -74,6 +74,16 @@
         </div>
     </script>
 
+    <script type="text/x-jquery-tmpl" id="tmpl_applet_settings">
+        <div>
+            <select class="theme">
+                <option value="default">Default</option>
+                <option value="relaxed">Relaxed</option>
+            </select>
+            <button class="save">Save</button>
+        </div>
+    </script>
+
 
 <script>
 /* Script loader (https://github.com/ded/script.js) */
@@ -120,8 +130,10 @@
                 [
                     'dev/model_channel.js',
                     'dev/model_server.js',
-                    'dev/model_misc.js'
+                    'dev/model_applet.js'
                 ],
+
+                ['dev/applet_settings.js'],
 
                 [
                     'dev/utils.js',
@@ -129,7 +141,7 @@
                 ]
             ]);
         } else {
-            scripts.push('kiwi.min.js');
+            scripts.push('kiwi.js');
         }
 
 

@@ -24,6 +24,9 @@ var src = concat([
     __dirname + '/model_panellist.js',
     __dirname + '/model_channel.js',
     __dirname + '/model_server.js',
+    __dirname + '/model_applet.js',
+
+    __dirname + '/applet_settings.js',
 
     __dirname + '/utils.js',
     __dirname + '/view.js'

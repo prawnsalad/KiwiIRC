@@ -507,7 +507,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             });
         });
 
-        controlbox.on('command_theme', this.themeCommand);
+        controlbox.on('command_js', function (ev) {
+            if (!ev.params[0]) return;
+            $script(ev.params[0] + '?' + (new Date().getTime()));
+        });
+
+        controlbox.on('command_settings', this.settingsCommand);
     };
 
     // A fallback action. Send a raw command to the server
@@ -619,16 +624,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         kiwi.gateway.notice(destination, ev.params.join(' '));
     };
 
-    this.themeCommand = function (ev) {
-        var theme = ev.params[0] || false,
-            containers = $('#panels > .panel_container');
-
-        // Clear any current theme
-        containers.removeClass(function (i, css) {
-            return (css.match (/\btheme_\S+/g) || []).join(' ');
-        });
-
-        if (theme) containers.addClass('theme_' + theme);
+    this.settingsCommand = function (ev) {
+        var panel = new kiwi.model.Applet();
+        panel.load(new kiwi.applets.Settings());
+        
+        kiwi.app.panels.add(panel);
+        panel.view.show();
     };
 
 

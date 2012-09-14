@@ -8,6 +8,7 @@ var kiwi = {};
 
 kiwi.model = {};
 kiwi.view = {};
+kiwi.applets = {};
 
 
 /**
@@ -466,6 +467,56 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
             }
         });
+
+
+        gw.on('onirc_error', function (data) {
+            var panel, tmp;
+
+            if (data.channel !== undefined && !(panel = kiwi.app.panels.getByName(data.channel))) {
+                panel = kiwi.app.panels.server;
+            }
+
+            switch (data.error) {
+            case 'banned_from_channel':
+                panel.addMsg(' ', '=== You are banned from ' + data.channel + '. ' + data.reason, 'status');
+                kiwi.app.message.text('You are banned from ' + data.channel + '. ' + data.reason);
+                break;
+            case 'bad_channel_key':
+                panel.addMsg(' ', '=== Bad channel key for ' + data.channel, 'status');
+                kiwi.app.message.text('Bad channel key or password for ' + data.channel);
+                break;
+            case 'invite_only_channel':
+                panel.addMsg(' ', '=== ' + data.channel + ' is invite only.', 'status');
+                kiwi.app.message.text(data.channel + ' is invite only');
+                break;
+            case 'channel_is_full':
+                panel.addMsg(' ', '=== ' + data.channel + ' is full.', 'status');
+                kiwi.app.message.text(data.channel + ' is full');
+                break;
+            case 'chanop_privs_needed':
+                panel.addMsg(' ', '=== ' + data.reason, 'status');
+                kiwi.app.message.text(data.reason + ' (' + data.channel + ')');
+                break;
+            case 'no_such_nick':
+                tmp = kiwi.app.panels.getByName(data.nick);
+                if (tmp) {
+                    tmp.addMsg(' ', '=== ' + data.nick + ': ' + data.reason, 'status');
+                } else {
+                    kiwi.app.panels.server.addMsg(' ', '=== ' + data.nick + ': ' + data.reason, 'status');
+                }
+                break;
+            case 'nickname_in_use':
+                kiwi.app.panels.server.addMsg(' ', '=== The nickname ' + data.nick + ' is already in use. Please select a new nickname', 'status');
+                if (kiwi.app.panels.server !== kiwi.app.panels.active) {
+                    kiwi.app.message.text('The nickname "' + data.nick + '" is already in use. Please select a new nickname');
+                }
+                // TODO: Show a nick change box or something
+                break;
+            default:
+                // We don't know what data contains, so don't do anything with it.
+                //kiwi.front.tabviews.server.addMsg(null, ' ', '=== ' + data, 'status');
+            }
+        });
     };
 
 
@@ -506,7 +557,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             });
         });
 
-        controlbox.on('command_theme', this.themeCommand);
+        controlbox.on('command_js', function (ev) {
+            if (!ev.params[0]) return;
+            $script(ev.params[0] + '?' + (new Date().getTime()));
+        });
+
+        controlbox.on('command_settings', this.settingsCommand);
     };
 
     // A fallback action. Send a raw command to the server
@@ -618,16 +674,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         kiwi.gateway.notice(destination, ev.params.join(' '));
     };
 
-    this.themeCommand = function (ev) {
-        var theme = ev.params[0] || false,
-            containers = $('#panels > .panel_container');
-
-        // Clear any current theme
-        containers.removeClass(function (i, css) {
-            return (css.match (/\btheme_\S+/g) || []).join(' ');
-        });
-
-        if (theme) containers.addClass('theme_' + theme);
+    this.settingsCommand = function (ev) {
+        var panel = new kiwi.model.Applet();
+        panel.load(new kiwi.applets.Settings());
+        
+        kiwi.app.panels.add(panel);
+        panel.view.show();
     };
 
 
@@ -790,7 +842,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
     *   Parses the response from the server
     */
     this.parse = function (item) {
-        //console.log('gateway event', item);
+        console.log('gateway event', item);
         if (item.event !== undefined) {
             that.trigger('on' + item.event, item);
 
@@ -1293,12 +1345,12 @@ kiwi.model.Panel = Backbone.Model.extend({
         var channel_prefix = kiwi.gateway.get('channel_prefix'),
             this_name = this.get('name');
 
-        if (!this.isMisc || !this_name) return false;
+        if (this.isApplet() || !this_name) return false;
         return (channel_prefix.indexOf(this_name[0]) > -1);
     },
 
-    isMisc: function () {
-        return this.misc ? true : false;
+    isApplet: function () {
+        return this.applet ? true : false;
     }
 });
 
@@ -1386,6 +1438,77 @@ kiwi.model.Server = kiwi.model.Panel.extend({
         
         this.view.$el.append(this.server_login.$el);
         this.server_login.show();
+    }
+});
+
+
+kiwi.model.Applet = kiwi.model.Panel.extend({
+    // Used to determine if this is an applet panel. Applet panel tabs are treated
+    // differently than others
+    applet: true,
+
+    initialize: function (attributes) {
+        // Temporary name
+        var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
+        this.view = new kiwi.view.Applet({model: this, name: name});
+
+        this.set({
+            "name": name
+        }, {"silent": true});
+    },
+
+    // Load an applet within this panel
+    load: function (applet_object, applet_name) {
+        if (typeof applet_object === 'object') {
+            this.set('title', applet_object.title || 'Something..');
+            this.view.$el.html('');
+            this.view.$el.append(applet_object.$el);
+
+        } else if (typeof applet_object === 'string') {
+            // Treat this as a URL to an applet script and load it
+            this.loadFromUrl(applet_object, applet_name);
+        }
+    },
+
+    loadFromUrl: function(applet_url, applet_name) {
+        var that = this;
+
+        this.view.$el.html('Loading..');
+        $script(applet_url, function () {
+            // Check if the applet loaded OK
+            if (!kiwi.applets[applet_name]) {
+                that.view.$el.html('Not found');
+                return;
+            }
+
+            // Load a new instance of this applet
+            that.load(new kiwi.applets[applet_name]());
+        });
+    }
+});
+
+
+kiwi.applets.Settings = Backbone.View.extend({
+    events: {
+        'click .save': 'saveSettings'
+    },
+
+    initialize: function (options) {
+        this.$el = $($('#tmpl_applet_settings').html());
+        this.title = 'Settings';
+        window.s = this;
+    },
+    
+    saveSettings: function () {
+        var theme = $('.theme', this.$el).val(),
+            containers = $('#panels > .panel_container');
+
+        // Clear any current theme
+        containers.removeClass(function (i, css) {
+            return (css.match (/\btheme_\S+/g) || []).join(' ');
+        });
+
+        if (theme) containers.addClass('theme_' + theme);
     }
 });
 
@@ -2198,6 +2321,7 @@ kiwi.view.Panel = Backbone.View.extend({
 
     initializePanel: function (options) {
         this.$el.css('display', 'none');
+        options = options || {};
 
         // Containing element for this panel
         if (options.container) {
@@ -2316,8 +2440,11 @@ kiwi.view.Panel = Backbone.View.extend({
     }
 });
 
-kiwi.view.Misc = kiwi.view.Panel.extend({
-    className: 'misc'
+kiwi.view.Applet = kiwi.view.Panel.extend({
+    className: 'applet',
+    initialize: function (options) {
+        this.initializePanel(options);
+    }
 });
 
 kiwi.view.Channel = kiwi.view.Panel.extend({
@@ -2342,7 +2469,7 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 
 // Model for this = kiwi.model.PanelList
 kiwi.view.Tabs = Backbone.View.extend({
-    tabs_misc: null,
+    tabs_applets: null,
     tabs_msg: null,
 
     events: {
@@ -2357,7 +2484,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
-        this.tabs_misc = $('ul.misc', this.$el);
+        this.tabs_applets = $('ul.applets', this.$el);
         this.tabs_msg = $('ul.channels', this.$el);
         window.t = this;
 
@@ -2382,7 +2509,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
             panel.tab
                 .data('panel_id', panel.cid)
-                .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
+                .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
         });
 
         kiwi.app.view.doLayout();
@@ -2392,7 +2519,7 @@ kiwi.view.Tabs = Backbone.View.extend({
         // Add a tab to the panel
         panel.tab = $('<li><span>' + (panel.get("title") || panel.get("name")) + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
-            .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
+            .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
         kiwi.app.view.doLayout();
     },
@@ -2406,7 +2533,7 @@ kiwi.view.Tabs = Backbone.View.extend({
     panelActive: function (panel) {
         // Remove any existing tabs or part images
         $('img', this.$el).remove();
-        this.tabs_misc.children().removeClass('active');
+        this.tabs_applets.children().removeClass('active');
         this.tabs_msg.children().removeClass('active');
 
         panel.tab.addClass('active');
@@ -2430,7 +2557,8 @@ kiwi.view.Tabs = Backbone.View.extend({
         var panel = this.model.getByCid(tab.data('panel_id'));
 
         // Only need to part if it's a channel
-        if (panel.isChannel()) {
+        // If the nicklist is empty, we haven't joined the channel as yet
+        if (panel.isChannel() && panel.get('members').models.length > 0) {
             kiwi.gateway.part(panel.get('name'));
         } else {
             panel.close();
@@ -2661,6 +2789,7 @@ kiwi.view.StatusMessage = Backbone.View.extend({
         // Defaults
         opt = opt || {};
         opt.type = opt.type || '';
+        opt.timeout = opt.timeout || 5000;
 
         this.$el.text(text).attr('class', opt.type);
         this.$el.slideDown(kiwi.app.view.doLayout);
@@ -2672,6 +2801,7 @@ kiwi.view.StatusMessage = Backbone.View.extend({
         // Defaults
         opt = opt || {};
         opt.type = opt.type || '';
+        opt.timeout = opt.timeout || 5000;
 
         this.$el.html(text).attr('class', opt.type);
         this.$el.slideDown(kiwi.app.view.doLayout);

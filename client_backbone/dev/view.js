@@ -163,6 +163,7 @@ kiwi.view.Panel = Backbone.View.extend({
 
     initializePanel: function (options) {
         this.$el.css('display', 'none');
+        options = options || {};
 
         // Containing element for this panel
         if (options.container) {
@@ -281,8 +282,11 @@ kiwi.view.Panel = Backbone.View.extend({
     }
 });
 
-kiwi.view.Misc = kiwi.view.Panel.extend({
-    className: 'misc'
+kiwi.view.Applet = kiwi.view.Panel.extend({
+    className: 'applet',
+    initialize: function (options) {
+        this.initializePanel(options);
+    }
 });
 
 kiwi.view.Channel = kiwi.view.Panel.extend({
@@ -307,7 +311,7 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 
 // Model for this = kiwi.model.PanelList
 kiwi.view.Tabs = Backbone.View.extend({
-    tabs_misc: null,
+    tabs_applets: null,
     tabs_msg: null,
 
     events: {
@@ -322,7 +326,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
-        this.tabs_misc = $('ul.misc', this.$el);
+        this.tabs_applets = $('ul.applets', this.$el);
         this.tabs_msg = $('ul.channels', this.$el);
         window.t = this;
 
@@ -347,7 +351,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
             panel.tab
                 .data('panel_id', panel.cid)
-                .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
+                .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
         });
 
         kiwi.app.view.doLayout();
@@ -357,7 +361,7 @@ kiwi.view.Tabs = Backbone.View.extend({
         // Add a tab to the panel
         panel.tab = $('<li><span>' + (panel.get("title") || panel.get("name")) + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
-            .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
+            .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
         kiwi.app.view.doLayout();
     },
@@ -371,7 +375,7 @@ kiwi.view.Tabs = Backbone.View.extend({
     panelActive: function (panel) {
         // Remove any existing tabs or part images
         $('img', this.$el).remove();
-        this.tabs_misc.children().removeClass('active');
+        this.tabs_applets.children().removeClass('active');
         this.tabs_msg.children().removeClass('active');
 
         panel.tab.addClass('active');

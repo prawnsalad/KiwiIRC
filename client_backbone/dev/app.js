@@ -6,6 +6,7 @@ var kiwi = {};
 
 kiwi.model = {};
 kiwi.view = {};
+kiwi.applets = {};
 
 
 /**
