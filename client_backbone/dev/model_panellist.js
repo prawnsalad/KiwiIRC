@@ -8,7 +8,7 @@ kiwi.model.PanelList = Backbone.Collection.extend({
         return chan.get("name");
     },
     initialize: function () {
-        this.view = new kiwi.view.Tabs({"el": $('#toolbar .panellist')[0], "model": this});
+        this.view = new kiwi.view.Tabs({"el": $('#tabs')[0], "model": this});
 
         // Automatically create a server tab
         this.add(new kiwi.model.Server({'name': kiwi.gateway.get('name')}));

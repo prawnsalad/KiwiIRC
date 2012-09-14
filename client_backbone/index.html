@@ -11,7 +11,10 @@
 <body>
     <div id="kiwi">
         <div id="toolbar">
-            <ul class="panellist channels"></ul>
+            <div id="tabs">
+                <ul class="panellist channels"></ul>
+                <ul class="panellist misc"></ul>
+            </div>
 
             <div id="topic">
                 <input type="text" />
@@ -116,7 +119,8 @@
                 
                 [
                     'dev/model_channel.js',
-                    'dev/model_server.js'
+                    'dev/model_server.js',
+                    'dev/model_misc.js'
                 ],
 
                 [

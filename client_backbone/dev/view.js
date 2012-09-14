@@ -281,6 +281,10 @@ kiwi.view.Panel = Backbone.View.extend({
     }
 });
 
+kiwi.view.Misc = kiwi.view.Panel.extend({
+    className: 'misc'
+});
+
 kiwi.view.Channel = kiwi.view.Panel.extend({
     initialize: function (options) {
         this.initializePanel(options);
@@ -303,8 +307,11 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 
 // Model for this = kiwi.model.PanelList
 kiwi.view.Tabs = Backbone.View.extend({
+    tabs_misc: null,
+    tabs_msg: null,
+
     events: {
-        "click li": "tabClick",
+        'click li': 'tabClick',
         'click li img': 'partClick'
     },
 
@@ -315,6 +322,10 @@ kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
+        this.tabs_misc = $('ul.misc', this.$el);
+        this.tabs_msg = $('ul.channels', this.$el);
+        window.t = this;
+
         kiwi.gateway.on('change:name', function (gateway, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
@@ -322,12 +333,12 @@ kiwi.view.Tabs = Backbone.View.extend({
     render: function () {
         var that = this;
 
-        this.$el.empty();
+        this.tabs_msg.empty();
         
         // Add the server tab first
         this.model.server.tab
             .data('panel_id', this.model.server.cid)
-            .appendTo(this.$el);
+            .appendTo(this.tabs_msg);
 
         // Go through each panel adding its tab
         this.model.forEach(function (panel) {
@@ -336,25 +347,32 @@ kiwi.view.Tabs = Backbone.View.extend({
 
             panel.tab
                 .data('panel_id', panel.cid)
-                .appendTo(this.$el);
+                .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
         });
+
+        kiwi.app.view.doLayout();
     },
 
     panelAdded: function (panel) {
         // Add a tab to the panel
-        panel.tab = $('<li><span>' + panel.get("name") + '</span></li>');
+        panel.tab = $('<li><span>' + (panel.get("title") || panel.get("name")) + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
-            .appendTo(this.$el);
+            .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
+
+        kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
         panel.tab.remove();
         delete panel.tab;
+
+        kiwi.app.view.doLayout();
     },
 
     panelActive: function (panel) {
         // Remove any existing tabs or part images
         $('img', this.$el).remove();
-        this.$el.children().removeClass('active');
+        this.tabs_misc.children().removeClass('active');
+        this.tabs_msg.children().removeClass('active');
 
         panel.tab.addClass('active');
         panel.tab.append('<img src="img/redcross.png" />');
@@ -386,13 +404,13 @@ kiwi.view.Tabs = Backbone.View.extend({
 
     next: function () {
         var next = kiwi.app.panels.active.tab.next();
-        if (!next.length) next = $('li:first', this.$el);
+        if (!next.length) next = $('li:first', this.tabs_msgs);
 
         next.click();
     },
     prev: function () {
         var prev = kiwi.app.panels.active.tab.prev();
-        if (!prev.length) prev = $('li:last', this.$el);
+        if (!prev.length) prev = $('li:last', this.tabs_msgs);
 
         prev.click();
     }

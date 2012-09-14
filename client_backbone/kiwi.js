@@ -438,6 +438,34 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 }
             });
         });
+
+
+        gw.on('onwhois', function (event) {
+            /*globals secondsToTime */
+            var logon_date, idle_time = '', panel;
+
+            if (event.end) {
+                return;
+            }
+
+            if (typeof event.idle !== 'undefined') {
+                idle_time = secondsToTime(parseInt(event.idle, 10));
+                idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
+            }
+
+            panel = kiwi.app.panels.active;
+            if (event.msg) {
+                panel.addMsg(event.nick, event.msg, 'whois');
+            } else if (event.logon) {
+                logon_date = new Date();
+                logon_date.setTime(event.logon * 1000);
+                logon_date = logon_date.toLocaleString();
+
+                panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
+            } else {
+                panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
+            }
+        });
     };
 
 
@@ -477,6 +505,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 this.href = this.href.replace(/\?.*|$/, queryString);
             });
         });
+
+        controlbox.on('command_theme', this.themeCommand);
     };
 
     // A fallback action. Send a raw command to the server
@@ -586,6 +616,18 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         ev.params.shift();
 
         kiwi.gateway.notice(destination, ev.params.join(' '));
+    };
+
+    this.themeCommand = function (ev) {
+        var theme = ev.params[0] || false,
+            containers = $('#panels > .panel_container');
+
+        // Clear any current theme
+        containers.removeClass(function (i, css) {
+            return (css.match (/\btheme_\S+/g) || []).join(' ');
+        });
+
+        if (theme) containers.addClass('theme_' + theme);
     };
 
 
@@ -1251,8 +1293,12 @@ kiwi.model.Panel = Backbone.Model.extend({
         var channel_prefix = kiwi.gateway.get('channel_prefix'),
             this_name = this.get('name');
 
-        if (!this_name) return false;
+        if (!this.isMisc || !this_name) return false;
         return (channel_prefix.indexOf(this_name[0]) > -1);
+    },
+
+    isMisc: function () {
+        return this.misc ? true : false;
     }
 });
 
@@ -1267,7 +1313,7 @@ kiwi.model.PanelList = Backbone.Collection.extend({
         return chan.get("name");
     },
     initialize: function () {
-        this.view = new kiwi.view.Tabs({"el": $('#toolbar .panellist')[0], "model": this});
+        this.view = new kiwi.view.Tabs({"el": $('#tabs')[0], "model": this});
 
         // Automatically create a server tab
         this.add(new kiwi.model.Server({'name': kiwi.gateway.get('name')}));
@@ -2231,7 +2277,7 @@ kiwi.view.Panel = Backbone.View.extend({
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
         if (this.msg_count > 250) {
-            $('.msg:first', this.div).remove();
+            $('.msg:first', this.$el).remove();
             this.msg_count--;
         }
     },
@@ -2270,6 +2316,10 @@ kiwi.view.Panel = Backbone.View.extend({
     }
 });
 
+kiwi.view.Misc = kiwi.view.Panel.extend({
+    className: 'misc'
+});
+
 kiwi.view.Channel = kiwi.view.Panel.extend({
     initialize: function (options) {
         this.initializePanel(options);
@@ -2292,8 +2342,11 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 
 // Model for this = kiwi.model.PanelList
 kiwi.view.Tabs = Backbone.View.extend({
+    tabs_misc: null,
+    tabs_msg: null,
+
     events: {
-        "click li": "tabClick",
+        'click li': 'tabClick',
         'click li img': 'partClick'
     },
 
@@ -2304,6 +2357,10 @@ kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
+        this.tabs_misc = $('ul.misc', this.$el);
+        this.tabs_msg = $('ul.channels', this.$el);
+        window.t = this;
+
         kiwi.gateway.on('change:name', function (gateway, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
@@ -2311,12 +2368,12 @@ kiwi.view.Tabs = Backbone.View.extend({
     render: function () {
         var that = this;
 
-        this.$el.empty();
+        this.tabs_msg.empty();
         
         // Add the server tab first
         this.model.server.tab
             .data('panel_id', this.model.server.cid)
-            .appendTo(this.$el);
+            .appendTo(this.tabs_msg);
 
         // Go through each panel adding its tab
         this.model.forEach(function (panel) {
@@ -2325,25 +2382,32 @@ kiwi.view.Tabs = Backbone.View.extend({
 
             panel.tab
                 .data('panel_id', panel.cid)
-                .appendTo(this.$el);
+                .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
         });
+
+        kiwi.app.view.doLayout();
     },
 
     panelAdded: function (panel) {
         // Add a tab to the panel
-        panel.tab = $('<li><span>' + panel.get("name") + '</span></li>');
+        panel.tab = $('<li><span>' + (panel.get("title") || panel.get("name")) + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
-            .appendTo(this.$el);
+            .appendTo(panel.isMisc() ? this.tabs_misc : this.tabs_msg);
+
+        kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
         panel.tab.remove();
         delete panel.tab;
+
+        kiwi.app.view.doLayout();
     },
 
     panelActive: function (panel) {
         // Remove any existing tabs or part images
         $('img', this.$el).remove();
-        this.$el.children().removeClass('active');
+        this.tabs_misc.children().removeClass('active');
+        this.tabs_msg.children().removeClass('active');
 
         panel.tab.addClass('active');
         panel.tab.append('<img src="img/redcross.png" />');
@@ -2375,13 +2439,13 @@ kiwi.view.Tabs = Backbone.View.extend({
 
     next: function () {
         var next = kiwi.app.panels.active.tab.next();
-        if (!next.length) next = $('li:first', this.$el);
+        if (!next.length) next = $('li:first', this.tabs_msgs);
 
         next.click();
     },
     prev: function () {
         var prev = kiwi.app.panels.active.tab.prev();
-        if (!prev.length) prev = $('li:last', this.$el);
+        if (!prev.length) prev = $('li:last', this.tabs_msgs);
 
         prev.click();
     }

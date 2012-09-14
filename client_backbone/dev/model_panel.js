@@ -76,7 +76,11 @@ kiwi.model.Panel = Backbone.Model.extend({
         var channel_prefix = kiwi.gateway.get('channel_prefix'),
             this_name = this.get('name');
 
-        if (!this_name) return false;
+        if (this.isMisc() || !this_name) return false;
         return (channel_prefix.indexOf(this_name[0]) > -1);
+    },
+
+    isMisc: function () {
+        return this.misc ? true : false;
     }
 });
