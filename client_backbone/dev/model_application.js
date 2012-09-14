@@ -389,6 +389,34 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 }
             });
         });
+
+
+        gw.on('onwhois', function (event) {
+            /*globals secondsToTime */
+            var logon_date, idle_time = '', panel;
+
+            if (event.end) {
+                return;
+            }
+
+            if (typeof event.idle !== 'undefined') {
+                idle_time = secondsToTime(parseInt(event.idle, 10));
+                idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
+            }
+
+            panel = kiwi.app.panels.active;
+            if (event.msg) {
+                panel.addMsg(event.nick, event.msg, 'whois');
+            } else if (event.logon) {
+                logon_date = new Date();
+                logon_date.setTime(event.logon * 1000);
+                logon_date = logon_date.toLocaleString();
+
+                panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
+            } else {
+                panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
+            }
+        });
     };
 
 
