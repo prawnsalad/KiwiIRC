@@ -512,6 +512,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             $script(ev.params[0] + '?' + (new Date().getTime()));
         });
 
+        controlbox.on('command_applet', this.appletCommand);
         controlbox.on('command_settings', this.settingsCommand);
     };
 
@@ -627,6 +628,28 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     this.settingsCommand = function (ev) {
         var panel = new kiwi.model.Applet();
         panel.load(new kiwi.applets.Settings());
+        
+        kiwi.app.panels.add(panel);
+        panel.view.show();
+    };
+
+    this.appletCommand = function (ev) {
+        if (!ev.params[0]) return;
+
+        var panel = new kiwi.model.Applet();
+
+        if (ev.params[1]) {
+            // Url and name given
+            panel.load(ev.params[0], ev.params[1]);
+        } else {
+            // Load a pre-loaded applet
+            if (kiwi.applets[ev.params[0]]) {
+                panel.load(new kiwi.applets[ev.params[0]]);
+            } else {
+                kiwi.app.panels.server.addMsg('', 'Applet "' + ev.params[0] + '" does not exist');
+                return;
+            }
+        }
         
         kiwi.app.panels.add(panel);
         panel.view.show();
