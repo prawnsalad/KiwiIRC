@@ -357,12 +357,17 @@ kiwi.view.Tabs = Backbone.View.extend({
         kiwi.app.view.doLayout();
     },
 
+    updateTabTitle: function (panel, new_title) {
+        $('span', panel.tab).text(new_title);
+    },
+
     panelAdded: function (panel) {
         // Add a tab to the panel
-        panel.tab = $('<li><span>' + (panel.get("title") || panel.get("name")) + '</span></li>');
+        panel.tab = $('<li><span>' + (panel.get('title') || panel.get('name')) + '</span></li>');
         panel.tab.data('panel_id', panel.cid)
             .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
+        panel.bind('change:title', this.updateTabTitle);
         kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
