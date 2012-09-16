@@ -9,15 +9,14 @@
         },
         
         saveSettings: function () {
-            var theme = $('.theme', this.$el).val(),
-                containers = $('#panels > .panel_container');
+            var theme = $('.theme', this.$el).val();
 
             // Clear any current theme
-            containers.removeClass(function (i, css) {
+            kiwi.app.view.$el.removeClass(function (i, css) {
                 return (css.match (/\btheme_\S+/g) || []).join(' ');
             });
 
-            if (theme) containers.addClass('theme_' + theme);
+            if (theme) kiwi.app.view.$el.addClass('theme_' + theme);
         }
     });
 
@@ -27,7 +26,6 @@
         initialize: function () {
             this.set('title', 'Settings');
             this.view = new View();
-            window.s = this;
         }
     });
 })();
