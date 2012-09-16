@@ -507,6 +507,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         controlbox.on('command_notice', this.noticeCommand);
 
+        controlbox.on('command_quote', this.quoteCommand);
+
+
         controlbox.on('command_css', function (ev) {
             var queryString = '?reload=' + new Date().getTime();
             $('link[rel="stylesheet"]').each(function () {
@@ -630,6 +633,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         ev.params.shift();
 
         kiwi.gateway.notice(destination, ev.params.join(' '));
+    };
+
+    this.quoteCommand = function (ev) {
+        var raw = ev.params.join(' ');
+        kiwi.gateway.raw(raw);
     };
 
     this.settingsCommand = function (ev) {
