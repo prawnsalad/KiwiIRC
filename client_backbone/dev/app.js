@@ -15,9 +15,13 @@ kiwi.applets = {};
  * and data (think: plugins)
  */
 kiwi.global = {
+	utils: undefined, // Re-usable methods
 	gateway: undefined,
 	user: undefined,
 	server: undefined,
+	command: undefined,  // The control box
+
+	// TODO: think of a better term for this as it will also refer to queries
 	channels: undefined,
 
 	// Entry point to start the kiwi application
@@ -33,9 +37,7 @@ kiwi.global = {
 		kiwi.app.start();
 
 		return true;
-	},
-
-	utils: undefined // Re-usable methods
+	}
 };
 
 

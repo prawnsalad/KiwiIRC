@@ -27,6 +27,7 @@ var src = concat([
     __dirname + '/model_applet.js',
 
     __dirname + '/applet_settings.js',
+    __dirname + '/applet_nickserv.js',
 
     __dirname + '/utils.js',
     __dirname + '/view.js'

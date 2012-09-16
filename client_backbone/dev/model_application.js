@@ -37,6 +37,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         this.bindGatewayCommands(kiwi.gateway);
 
         this.initializeClient();
+        this.initializeGlobals();
+
         this.view.barsHide(true);
 
         this.panels.server.server_login.bind('server_connect', function (event) {
@@ -112,6 +114,11 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             ssl: false,
             channel: window.location.hash || '#test'
         });
+    };
+
+
+    this.initializeGlobals = function () {
+        kiwi.global.control = this.controlbox;
     };
 
 
@@ -644,7 +651,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         } else {
             // Load a pre-loaded applet
             if (kiwi.applets[ev.params[0]]) {
-                panel.load(new kiwi.applets[ev.params[0]]);
+                panel.load(new kiwi.applets[ev.params[0]]());
             } else {
                 kiwi.app.panels.server.addMsg('', 'Applet "' + ev.params[0] + '" does not exist');
                 return;
