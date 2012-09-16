@@ -509,6 +509,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         controlbox.on('command_quote', this.quoteCommand);
 
+        controlbox.on('command_k', this.kickCommand);
+        controlbox.on('command_kick', this.kickCommand);
+
 
         controlbox.on('command_css', function (ev) {
             var queryString = '?reload=' + new Date().getTime();
@@ -638,6 +641,20 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     this.quoteCommand = function (ev) {
         var raw = ev.params.join(' ');
         kiwi.gateway.raw(raw);
+    };
+
+    this.kickCommand = function (ev) {
+        var nick, panel = kiwi.app.panels.active;
+
+        if (!panel.isChannel()) return;
+
+        // Make sure we have a nick
+        if (ev.params.length === 0) return;
+
+        nick = ev.params[0];
+        ev.params.shift();
+
+        kiwi.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
     };
 
     this.settingsCommand = function (ev) {
