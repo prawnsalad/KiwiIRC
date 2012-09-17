@@ -154,6 +154,9 @@ kiwi.view.Panel = Backbone.View.extend({
         "click .chan": "chanClick"
     },
 
+    // none=0, action=1, activity=2, highlight=3
+    alert_level: 0,
+
     // The container this panel is within
     $container: null,
 
@@ -238,6 +241,14 @@ kiwi.view.Panel = Backbone.View.extend({
         line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
+        if (msg.type === 'action') {
+            this.alert('action');
+        } else if (msg.msg.indexOf(kiwi.gateway.get('nick')) > -1) {
+            this.alert('highlight');
+        } else {
+            this.alert('activity');
+        }
+
         this.scrollToBottom();
 
         // Make sure our DOM isn't getting too large (Acts as scrollback)
@@ -270,9 +281,47 @@ kiwi.view.Panel = Backbone.View.extend({
         }
 
         this.scrollToBottom();
+        this.alert('none');
 
         this.trigger('active', this.model);
         kiwi.app.panels.trigger('active', this.model);
+    },
+
+
+    alert: function (level) {
+        // No need to highlight if this si the active panel
+        if (this.model == kiwi.app.panels.active) return;
+
+        var types, type_idx;
+        var types = ['none', 'action', 'activity', 'highlight'];
+
+        // Default alert level
+        level = level || 'none';
+
+        // If this alert level does not exist, assume clearing current level
+        type_idx = _.indexOf(types, level);
+        if (!type_idx) {
+            level = 'none';
+            type_idx = 0;
+        }
+
+        // Only 'upgrade' the alert. Never down (unless clearing)
+        console.log(type_idx, this.alert_level);
+        if (type_idx !== 0 && type_idx <= this.alert_level) {
+            return;
+        }
+
+        // Clear any existing levels
+        this.model.tab.removeClass(function (i, css) {
+            return (css.match (/\balert_\S+/g) || []).join(' ');
+        });
+
+        // Add the new level if there is one
+        if (level !== 'none') {
+            this.model.tab.addClass('alert_' + level);
+        }
+
+        this.alert_level = type_idx;
     },
 
 
