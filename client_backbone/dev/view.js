@@ -260,11 +260,12 @@ kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
+            $('#memberlists').show();
             members.view.show();
             this.$container.parent().css('right', '200px');
         } else {
             // Memberlist not found for this panel, hide any active ones
-            $('#memberlists').children().removeClass('active');
+            $('#memberlists').hide().children().removeClass('active');
             this.$container.parent().css('right', '0');
         }
 
