@@ -482,26 +482,30 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
      * Bind to certain commands that may be typed into the control box
      */
     this.bindControllboxCommands = function (controlbox) {
+        $.extend(controlbox.preprocessor.aliases, {
+            '/p': '/part $1+',
+            '/me': '/action $1+',
+            '/j': '/join $1+',
+            '/q': '/query $1+',
+            '/k': '/kick $1+',
+        });
+
         controlbox.on('unknown_command', this.unknownCommand);
 
         controlbox.on('command', this.allCommands);
         controlbox.on('command_msg', this.msgCommand);
 
         controlbox.on('command_action', this.actionCommand);
-        controlbox.on('command_me', this.actionCommand);
 
         controlbox.on('command_join', this.joinCommand);
-        controlbox.on('command_j', this.joinCommand);
 
         controlbox.on('command_part', this.partCommand);
-        controlbox.on('command_p', this.partCommand);
 
         controlbox.on('command_nick', function (ev) {
             kiwi.gateway.changeNick(ev.params[0]);
         });
 
         controlbox.on('command_query', this.queryCommand);
-        controlbox.on('command_q', this.queryCommand);
 
         controlbox.on('command_topic', this.topicCommand);
 
@@ -509,7 +513,6 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         controlbox.on('command_quote', this.quoteCommand);
 
-        controlbox.on('command_k', this.kickCommand);
         controlbox.on('command_kick', this.kickCommand);
 
 
@@ -523,6 +526,33 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         controlbox.on('command_js', function (ev) {
             if (!ev.params[0]) return;
             $script(ev.params[0] + '?' + (new Date().getTime()));
+        });
+
+        controlbox.on('command_alias', function (ev) {
+            // No parameters passed so list them
+            if (!ev.params[1]) {
+                $.each(controlbox.preprocessor.aliases, function (name, rule) {
+                    kiwi.app.panels.server.addMsg(' ', name + '   =>   ' + rule);
+                });
+                return;
+            }
+
+            // Deleting an alias?
+            if (ev.params[0] === 'del' || ev.params[0] === 'delete') {
+                var name = ev.params[1];
+                if (name[0] !== '/') name = '/' + name;
+                delete controlbox.preprocessor.aliases[name];
+                return;
+            }
+
+            // Add the alias
+            var name = ev.params[0];
+            ev.params.shift();
+            var rule = ev.params.join(' ');
+
+            if (name[0] !== '/') name = '/' + name;
+            console.log('added', name, 'as', rule);
+            controlbox.preprocessor.aliases[name] = rule;
         });
 
         controlbox.on('command_applet', this.appletCommand);

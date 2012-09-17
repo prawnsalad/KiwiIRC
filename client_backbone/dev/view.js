@@ -468,12 +468,18 @@ kiwi.view.ControlBox = Backbone.View.extend({
     // Hold tab autocomplete data
     tabcomplete: {active: false, data: [], prefix: ''},
 
+    // Instance of InputPreProcessor
+    preprocessor: null,
+
     events: {
         'keydown input': 'process'
     },
 
     initialize: function () {
         var that = this;
+
+        this.preprocessor = new InputPreProcessor();
+        this.preprocessor.recursive_depth = 5;
 
         kiwi.gateway.bind('change:nick', function () {
             $('.nick', that.$el).text(this.get('nick'));
@@ -596,10 +602,22 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
 
     processInput: function (command_raw) {
-        var command,
-            params = command_raw.split(' ');
+        var command, params,
+            pre_processed;
         
+        // The default command
+        if (command_raw[0] !== '/') {
+            command_raw = '/msg ' + kiwi.app.panels.active.get('name') + ' ' + command_raw;
+        }
+
+        // Process the raw command for any aliases
+        this.preprocessor.vars.server = kiwi.gateway.get('name');
+        this.preprocessor.vars.channel = kiwi.app.panels.active.get('name');
+        this.preprocessor.vars.destination = this.preprocessor.vars.channel;
+        command_raw = this.preprocessor.process(command_raw);
+
         // Extract the command and parameters
+        params = command_raw.split(' ');
         if (params[0][0] === '/') {
             command = params[0].substr(1).toLowerCase();
             params = params.splice(1);
