@@ -1,12 +1,6 @@
 /*jslint devel: true, browser: true, continue: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4, nomen: true, regexp: true*/
 /*globals $, front, gateway, Utilityview */
 
-// Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
-/**
-*   @namespace
-*/
-var kiwi = {};
-
 
 
 /**
@@ -14,7 +8,6 @@ var kiwi = {};
 *   @param  {Boolean}   debug   Whether to re-enable console.log or not
 */
 function manageDebug(debug) {
-    return;
     var log, consoleBackUp;
     if (window.console) {
         consoleBackUp = window.console.log;
@@ -101,6 +94,235 @@ function secondsToTime(secs) {
     return obj;
 }
 
+
+
+
+
+
+/* Command input Alias + re-writing */
+function InputPreProcessor () {
+    this.recursive_depth = 3;
+
+    this.aliases = {};
+    this.vars = {version: 1};
+
+    // Current recursive depth
+    var depth = 0;
+
+
+    // Takes an array of words to process!
+    this.processInput = function (input) {
+        var words = input || [],
+            alias = this.aliases[words[0]],
+            alias_len,
+            current_alias_word = '',
+            compiled = [];
+
+        // If an alias wasn't found, return the original input
+        if (!alias) return input;
+
+        // Split the alias up into useable words
+        alias = alias.split(' ');
+        alias_len = alias.length;
+
+        // Iterate over each word and pop them into the final compiled array.
+        // Any $ words are processed with the result ending into the compiled array.
+        for (var i=0; i<alias_len; i++) {
+            current_alias_word = alias[i];
+
+            // Non $ word
+            if (current_alias_word[0] !== '$') {
+                compiled.push(current_alias_word);
+                continue;
+            }
+
+            // Refering to an input word ($N)
+            if (!isNaN(current_alias_word[1])) {
+                var num = current_alias_word.match(/\$(\d+)(\+)?(\d+)?/);
+
+                // Did we find anything or does the word it refers to non-existant?
+                if (!num || !words[num[1]]) continue;
+                
+                if (num[2] === '+' && num[3]) {
+                    // Add X number of words
+                    compiled = compiled.concat(words.slice(parseInt(num[1], 10), parseInt(num[1], 10) + parseInt(num[3], 10)));
+                } else if (num[2] === '+') {
+                    // Add the remaining of the words
+                    compiled = compiled.concat(words.slice(parseInt(num[1], 10)));
+                } else {
+                    // Add a single word
+                    compiled.push(words[parseInt(num[1], 10)]);
+                }
+
+                continue;
+            }
+
+
+            // Refering to a variable
+            if (typeof this.vars[current_alias_word.substr(1)] !== 'undefined') {
+
+                // Get the variable
+                compiled.push(this.vars[current_alias_word.substr(1)]);
+
+                continue;
+            }
+
+        }
+
+        return compiled;
+    };
+
+
+    this.process = function (input) {
+        input = input || '';
+
+        var words = input.split(' ');
+
+        depth++;
+        if (depth >= this.recursive_depth) {
+            depth--;
+            return input;
+        }
+
+        if (this.aliases[words[0]]) {
+            words = this.processInput(words);
+            
+            if (this.aliases[words[0]]) {
+                words = this.process(words.join(' ')).split(' ');
+            }
+
+        }
+
+        depth--;
+        return words.join(' ');
+    };
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function ChannelList () {
+    /*globals Utilityview */
+    var chanList, view, table, obj, renderTable, waiting;
+    chanList = [];
+
+    view = $($('#tmpl_channel_list').html());
+    table = view; //$('table', view);
+
+    waiting = false;
+    /**
+    *   @inner
+    */
+    renderTable = function () {
+        var tbody;
+        tbody = table.children('tbody:first').detach();
+        /*tbody.children().each(function (child) {
+            var i, chan;
+            child = $(child);
+            chan = child.children('td:first').text();
+            for (i = 0; i < chanList.length; i++) {
+                if (chanList[i].channel === chan) {
+                    chanList[i].html = child.detach();
+                    break;
+                }
+            }
+        });*/
+        _.each(chanList, function (chan) {
+            chan.html = $(chan.html).appendTo(tbody);
+        });
+        table = table.append(tbody);
+        waiting = false;
+    };
+    /**
+    *   @lends ChannelList
+    */
+    return {
+        /**
+        *   Adds a channel or channels to the list
+        *   @param  {Object}    channels    The channel or Array of channels to add
+        */
+        addChannel: function (channels) {
+            if (!_.isArray(channels)) {
+                channels = [channels];
+            }
+            _.each(channels, function (chan) {
+                var html, channel;
+                html = $('<tr><td><a class="chan">' + chan.channel + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(chan.topic) + '</td></tr>');
+                chan.html = html;
+                chanList.push(chan);
+            });
+            chanList.sort(function (a, b) {
+                return b.num_users - a.num_users;
+            });
+            if (!waiting) {
+                waiting = true;
+                _.defer(renderTable);
+            }
+        },
+
+        view: view
+    };
+}
+
+
+
+
+
+
+
+/**
+ * Convert HSL to RGB formatted colour
+ */
+function hsl2rgb(h, s, l) {
+    var m1, m2, hue;
+    var r, g, b
+    s /=100;
+    l /= 100;
+    if (s == 0)
+        r = g = b = (l * 255);
+    else {
+        function HueToRgb(m1, m2, hue) {
+            var v;
+            if (hue < 0)
+                hue += 1;
+            else if (hue > 1)
+                hue -= 1;
+
+            if (6 * hue < 1)
+                v = m1 + (m2 - m1) * hue * 6;
+            else if (2 * hue < 1)
+                v = m2;
+            else if (3 * hue < 2)
+                v = m1 + (m2 - m1) * (2/3 - hue) * 6;
+            else
+                v = m1;
+
+            return 255 * v;
+        }
+        if (l <= 0.5)
+            m2 = l * (s + 1);
+        else
+            m2 = l + s - l * s;
+        m1 = l * 2 - m2;
+        hue = h / 360;
+        r = HueToRgb(m1, m2, hue + 1/3);
+        g = HueToRgb(m1, m2, hue);
+        b = HueToRgb(m1, m2, hue - 1/3);
+    }
+    return [r,g,b];
+}
 
 
 
