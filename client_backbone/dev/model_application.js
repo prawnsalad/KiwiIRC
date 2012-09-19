@@ -78,7 +78,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 'https' :
                 'http';
 
-            this.kiwi_server = proto + '://' + window.location.host + ':' + (window.location.port || '80');
+            this.kiwi_server = proto + '://' + window.location.hostname + ':' + (window.location.port || '80');
         }
         
     };
