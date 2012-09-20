@@ -65,7 +65,7 @@ var listeners = {
     'RPL_WELCOME':            function (command) {
                 var nick =  command.params[0];
                 this.irc_connection.registered = true;
-                this.client.sendKiwiCommand({server: this.con_num, command: 'connect', nick: nick});
+                this.client.sendIRCCommand('connect', {server: this.con_num, nick: nick});
             },
     'RPL_ISUPPORT':           function (command) {
                 var options, i, option, matches, j;
