@@ -125,7 +125,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
     this.bindGatewayCommands = function (gw) {
         gw.on('onmotd', function (event) {
-            that.panels.server.addMsg(event.server, event.msg, 'motd');
+            that.panels.server.addMsg(kiwi.gateway.get('name'), event.msg, 'motd');
         });
 
 
