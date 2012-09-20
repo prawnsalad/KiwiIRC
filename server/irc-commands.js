@@ -169,7 +169,7 @@ var listeners = {
 				/*command.server = this.con_num;
 				command.command = 'RPL_LIST';
 				this.client.sendIRCCommand(command);*/
-                this.client.buffer.list.push({server: this.con_num, channel: command.params[1], num_users: parseInt(command.params[2]), topic: command.trailing});
+                this.client.buffer.list.push({server: this.con_num, channel: command.params[1], num_users: parseInt(command.params[2], 10), topic: command.trailing});
                 if (this.client.buffer.list.length > 200){
                     this.client.buffer.list = _.sortBy(this.client.buffer.list, function (channel) {
                         return channel.num_users;
@@ -300,7 +300,7 @@ var listeners = {
 				command.command = 'KICK';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('kick', {kicked: params[1], nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: params[0].trim(), message: msg.trailing});
-                this.client.sendIRCCommand('kick', {server: this.con_num, kicked: command.params[1], nick: command.nick, ident: command.ident, hostname: command.hostname, channel: params[0], message: command.trailing});
+                this.client.sendIRCCommand('kick', {server: this.con_num, kicked: command.params[1], nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], message: command.trailing});
             },
     'QUIT':                 function (command) {
 				/*command.server = this.con_num;
@@ -327,20 +327,20 @@ var listeners = {
 				command.command = 'NICK';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('nick', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, newnick: msg.trailing});
-                this.client.sendIRCCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.params[0]});
+                this.client.sendIRCCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.trailing});
             },
     'TOPIC':                function (command) {
 				/*command.server = this.con_num;
 				command.command = 'TOPIC';
 				this.client.sendIRCCommand(command);*/
                 //{nick: msg.nick, channel: msg.params, topic: msg.trailing};
-                this.client.sendIRCCommand('topic', {server: this.con_num, nick: command.nick, channel: msg.params[0], topic: command.trailing});
+                this.client.sendIRCCommand('topic', {server: this.con_num, nick: command.nick, channel: command.params[0], topic: command.trailing});
             },
     'MODE':                 function (command) {
 				/*command.server = this.con_num;
 				command.command = 'MODE';
 				this.client.sendIRCCommand(command);*/
-                var ret = { server: this.con_num, nick: command.nick }
+                var ret = { server: this.con_num, nick: command.nick };
                 switch (command.params.length) {
                     case 1:
                         ret.affected_nick = command.params[0];
@@ -368,10 +368,10 @@ var listeners = {
                     if (command.trailing.substr(1, 6) === 'ACTION') {
                         this.client.sendIRCCommand('action', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(7, command.trailing.length - 2)});
                     } else if (command.trailing.substr(1, 4) === 'KIWI') {
-                        tmp = msg.trailing.substr(6, msg.trailing.length - 2);
+                        tmp = command.trailing.substr(6, command.trailing.length - 2);
                         namespace = tmp.split(' ', 1)[0];
                         this.client.sendIRCCommand('kiwi', {server: this.con_num, namespace: namespace, data: tmp.substr(namespace.length + 1)});
-                    } else if (msg.trailing.substr(1, 7) === 'VERSION') {
+                    } else if (command.trailing.substr(1, 7) === 'VERSION') {
                         this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
                     } else {
                         this.client.sendIRCCommand('ctcp_request', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(1, command.trailing.length - 2)});
