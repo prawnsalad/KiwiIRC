@@ -24,7 +24,7 @@
     "cap_options":      [],
 
     "handle_http":      true,
-    "public_http":      "./../client/",
+    "public_http":      "client_backbone/",
 
     "max_client_conns": 2,
 
