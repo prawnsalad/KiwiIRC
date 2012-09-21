@@ -1,7 +1,8 @@
-var util            = require('util'),
-    events          = require('events'),
-    IRCConnection   = require('./irc-connection.js').IRCConnection;
-    IRCCommands     = require('./irc-commands.js');
+var util             = require('util'),
+    events           = require('events'),
+    IRCConnection    = require('./irc-connection.js').IRCConnection;
+    IRCCommands      = require('./irc-commands.js'),
+    ClientCommandset = require('./client-commands.js').ClientCommandset;
 
 var Client = function (websocket) {
     var c = this;
@@ -17,8 +18,11 @@ var Client = function (websocket) {
         motd: ''
     };
     
+    // Handler for any commands sent from the client
+    this.client_commands = new ClientCommandset(this);
+
     websocket.on('irc', function () {
-        IRC_command.apply(c, arguments);
+        handleClientMessage.apply(c, arguments);
     });
     websocket.on('kiwi', function () {
         kiwi_command.apply(c, arguments);
@@ -50,44 +54,36 @@ Client.prototype.sendKiwiCommand = function (command, callback) {
     this.websocket.emit('kiwi', command, callback);
 };
 
-var IRC_command = function (command, callback) {
-    console.log('C-->', command);
-    var method, str = '';
-    if (typeof callback !== 'function') {
-        callback = function () {};
-    }
-    if ((command.server === null) || (typeof command.server !== 'number')) {
+var handleClientMessage = function (msg, callback) {
+    var server, args, obj, channels, keys;
+
+    // Make sure we have a server number specified
+    if ((msg.server === null) || (typeof msg.server !== 'number')) {
         return callback('server not specified');
-    } else if (!this.IRC_connections[command.server]) {
+    } else if (!this.IRC_connections[msg.server]) {
         return callback('not connected to server');
     }
-    
-    command.data = JSON.parse(command.data);
-    
-    if (!_.isArray(command.data.args.params)){
-        command.data.args.params = [command.data.args.params];
+
+    // The server this command is directed to
+    server = this.IRC_connections[msg.server];
+
+    if (typeof callback !== 'function') {
+        callback = null;
     }
-    
-    if (command.data.method === 'ctcp') {
-        if (command.data.args.request) {
-            str += 'PRIVMSG ';
-        } else {
-            str += 'NOTICE ';
-        }
-        str += command.data.args.target + ' :'
-        str += String.fromCharCode(1) + command.data.args.type + ' ';
-        str += command.data.args.params + String.fromCharCode(1);
-        this.IRC_connections[command.server].write(str);
-    } else if (command.data.method === 'raw') {
-        this.IRC_connections[command.server].write(command.data.args.data);
-    } else if (command.data.method === 'kiwi') {
-        // do special Kiwi stuff here
-    } else {
-        method = command.data.method;
-        command.data = command.data.args;
-        this.IRC_connections[command.server].write(method + ((command.data.params) ? ' ' + command.data.params.join(' ') : '') + ((command.data.trailing) ? ' :' + command.data.trailing : ''), callback);
+
+    try {
+        msg.data = JSON.parse(msg.data);
+    } catch (e) {
+        kiwi.log('[handleClientMessage] JSON parsing error ' + msg.data);
+        return;
     }
+
+    // Run the client command
+    this.client_commands.run(msg.data.method, msg.data.args, server, callback);
 };
+
+
+
 
 var kiwi_command = function (command, callback) {
     var that = this;
