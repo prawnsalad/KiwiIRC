@@ -543,7 +543,8 @@ kiwi.view.ControlBox = Backbone.View.extend({
     preprocessor: null,
 
     events: {
-        'keydown input': 'process'
+        'keydown input': 'process',
+        'click .nick': 'showNickChange'
     },
 
     initialize: function () {
@@ -555,6 +556,10 @@ kiwi.view.ControlBox = Backbone.View.extend({
         kiwi.gateway.bind('change:nick', function () {
             $('.nick', that.$el).text(this.get('nick'));
         });
+    },
+
+    showNickChange: function (ev) {
+        (new kiwi.view.NickChangeBox()).render();
     },
 
     process: function (ev) {
