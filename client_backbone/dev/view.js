@@ -59,6 +59,27 @@ kiwi.view.UserBox = Backbone.View.extend({
     }
 });
 
+kiwi.view.NickChangeBox = Backbone.View.extend({
+    events: {
+        'click .btn_nickchange': 'changeNick'
+    },
+    
+    initialize: function () {
+        this.$el = $($('#tmpl_nickchange').html());
+    },
+    
+    render: function () {
+        $('#controlbox').prepend(this.$el);
+        this.$el.css('bottom', $('#controlbox').height());
+    },
+    
+    changeNick: function (event) {;
+        var el = this.$el;
+        kiwi.gateway.changeNick($('#nickchange', this.$el).val(), function (err, val) {
+            el.remove();
+        });
+    }
+});
 
 kiwi.view.ServerSelect = Backbone.View.extend({
     events: {
@@ -293,7 +314,7 @@ kiwi.view.Panel = Backbone.View.extend({
         if (this.model == kiwi.app.panels.active) return;
 
         var types, type_idx;
-        var types = ['none', 'action', 'activity', 'highlight'];
+        types = ['none', 'action', 'activity', 'highlight'];
 
         // Default alert level
         level = level || 'none';
@@ -313,7 +334,7 @@ kiwi.view.Panel = Backbone.View.extend({
 
         // Clear any existing levels
         this.model.tab.removeClass(function (i, css) {
-            return (css.match (/\balert_\S+/g) || []).join(' ');
+            return (css.match(/\balert_\S+/g) || []).join(' ');
         });
 
         // Add the new level if there is one

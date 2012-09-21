@@ -496,7 +496,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 if (kiwi.app.panels.server !== kiwi.app.panels.active) {
                     kiwi.app.message.text('The nickname "' + data.nick + '" is already in use. Please select a new nickname');
                 }
-                // TODO: Show a nick change box or something
+                (new kiwi.view.NickChangeBox()).render();
                 break;
             default:
                 // We don't know what data contains, so don't do anything with it.
