@@ -155,6 +155,11 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
     height:100%; width:100%;
 }
 
+#controlbox .nickchange {
+    position: absolute;
+    left: 0px;
+}
+
 
 
 #topic { background-color:#1B1B1B; height:2em; position:relative; }
