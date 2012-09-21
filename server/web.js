@@ -6,7 +6,7 @@ var ws          = require('socket.io'),
     fs          = require('fs'),
     dns         = require('dns'),
     _           = require('underscore'),
-    Client   = require('./client.js').Client;
+    Client   = require('./client.js').Client,
     HTTPHandler = require('./http-handler.js').HTTPHandler;
 
 var WebListener = function (config, transports) {

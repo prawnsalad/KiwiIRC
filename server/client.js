@@ -1,6 +1,7 @@
 var util             = require('util'),
     events           = require('events'),
-    IRCConnection    = require('./irc-connection.js').IRCConnection;
+    _                = require('underscore'),
+    IRCConnection    = require('./irc-connection.js').IRCConnection,
     IRCCommands      = require('./irc-commands.js'),
     ClientCommandset = require('./client-commands.js').ClientCommandset;
 

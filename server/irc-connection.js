@@ -55,7 +55,7 @@ IRCConnection.prototype.end = function (data, callback) {
     console.log('S<--', data);
     console.log('Closing docket');
     end.call(this, data + '\r\n', 'utf-8', callback);
-}
+};
 
 var write = function (data, encoding, callback) {
     this.socket.write(data, encoding, callback);
