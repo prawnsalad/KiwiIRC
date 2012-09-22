@@ -61,7 +61,8 @@ kiwi.view.UserBox = Backbone.View.extend({
 
 kiwi.view.NickChangeBox = Backbone.View.extend({
     events: {
-        'click .btn_nickchange': 'changeNick'
+        'submit': 'changeNick',
+        'click .cancel': 'close'
     },
     
     initialize: function () {
@@ -69,15 +70,24 @@ kiwi.view.NickChangeBox = Backbone.View.extend({
     },
     
     render: function () {
-        $('#controlbox').prepend(this.$el);
-        this.$el.css('bottom', $('#controlbox').height());
+        // Add the UI component and give it focus
+        kiwi.app.controlbox.$el.prepend(this.$el);
+        this.$el.find('input').focus();
+
+        this.$el.css('bottom', kiwi.app.controlbox.$el.outerHeight(true));
     },
     
-    changeNick: function (event) {;
-        var el = this.$el;
-        kiwi.gateway.changeNick($('#nickchange', this.$el).val(), function (err, val) {
-            el.remove();
+    close: function () {
+        this.$el.remove();
+
+    },
+
+    changeNick: function (event) {
+        var that = this;
+        kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
+            that.close();
         });
+        return false;
     }
 });
 
@@ -327,7 +337,6 @@ kiwi.view.Panel = Backbone.View.extend({
         }
 
         // Only 'upgrade' the alert. Never down (unless clearing)
-        console.log(type_idx, this.alert_level);
         if (type_idx !== 0 && type_idx <= this.alert_level) {
             return;
         }
@@ -543,7 +552,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
     preprocessor: null,
 
     events: {
-        'keydown input': 'process',
+        'keydown input.inp': 'process',
         'click .nick': 'showNickChange'
     },
 
