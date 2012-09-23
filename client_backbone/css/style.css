@@ -184,7 +184,8 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 .server_select input { float:right; margin-bottom:5px; padding:3px 7px; }
 .server_select label { float:left; width:5em; padding-top:3px }
 .server_select br { clear:both; }
-.server_select .basic .show_more { display: block; border-bottom: 1px dashed gray; margin:10px 0; font-size:0.8em; }
+.server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
+.server_select .basic .show_more { display: block; width:40px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
 .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 .server_select .status .ok {
     border:1px solid #A33F3F; background-color:#D28A8A;
