@@ -1,5 +1,7 @@
-kiwi.model.Gateway = Backbone.Model.extend(new (function () {
-    var that = this;
+kiwi.model.Gateway = function () {
+
+    // Set to a reference to this object within initialize()
+    var that = null;
 
     this.defaults = {
         /**
@@ -41,16 +43,10 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
 
 
     this.initialize = function () {
-        // Update `that` with this new Model object
         that = this;
-
+        
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
-
-        // Redundant perhaps? Legacy
-        this.session_id = '';
-
-        network = this;
     };
 
 
@@ -75,23 +71,28 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
             console.log("kiwi.gateway.socket.on('connect_failed')");
             //kiwi.front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
             this.socket.disconnect();
-            this.emit("connect_fail", {reason: reason});
+            this.trigger("connect_fail", {reason: reason});
         });
 
         this.socket.on('error', function (e) {
-            this.emit("connect_fail", {reason: e});
+            this.trigger("connect_fail", {reason: e});
             console.log("kiwi.gateway.socket.on('error')", {reason: e});
         });
 
         this.socket.on('connecting', function (transport_type) {
             console.log("kiwi.gateway.socket.on('connecting')");
-            this.emit("connecting");
             that.trigger("connecting");
         });
 
+        /**
+         * Once connected to the kiwi server send the IRC connect command along
+         * with the IRC server details.
+         * A `connect` event is sent from the kiwi server once connected to the
+         * IRCD and the nick has been accepted.
+         */
         this.socket.on('connect', function () {
             this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
-                console.log('err, server_num', err, server_num);
+                console.log('err', err, 'server_num', server_num);
                 if (!err) {
                     that.server_num = server_num;
                     console.log("kiwi.gateway.socket.on('connect')");
@@ -99,11 +100,10 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
                     console.log("kiwi.gateway.socket.on('error')", {reason: err});
                 }
             });
-            that.trigger('connect', {});
         });
 
         this.socket.on('too_many_connections', function () {
-            this.emit("connect_fail", {reason: 'too_many_connections'});
+            this.trigger("connect_fail", {reason: 'too_many_connections'});
         });
 
         this.socket.on('irc', function (data, callback) {
@@ -415,4 +415,7 @@ kiwi.model.Gateway = Backbone.Model.extend(new (function () {
 
         this.sendData(data, callback);
     };
-})());
+
+
+    return new (Backbone.Model.extend(this))(arguments);
+};
