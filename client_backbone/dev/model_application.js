@@ -72,16 +72,10 @@ kiwi.model.Application = function () {
         // If running from file, default to localhost:7777 by default
         if (window.location.protocol === 'file') {
             this.kiwi_server = 'http://localhost:7777';
-
         } else {
             // Assume the kiwi server is on the same server
-            var proto = window.location.protocol === 'https' ?
-                'https' :
-                'http';
-
-            this.kiwi_server = proto + '://' + window.location.host;
+            this.kiwi_server = window.location.protocol + '//' + window.location.host;
         }
-        
     };
 
 
