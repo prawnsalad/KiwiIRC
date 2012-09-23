@@ -61,7 +61,8 @@ kiwi.view.UserBox = Backbone.View.extend({
 
 kiwi.view.NickChangeBox = Backbone.View.extend({
     events: {
-        'click .btn_nickchange': 'changeNick'
+        'submit': 'changeNick',
+        'click .cancel': 'close'
     },
     
     initialize: function () {
@@ -69,103 +70,156 @@ kiwi.view.NickChangeBox = Backbone.View.extend({
     },
     
     render: function () {
-        $('#controlbox').prepend(this.$el);
-        this.$el.css('bottom', $('#controlbox').height());
+        // Add the UI component and give it focus
+        kiwi.app.controlbox.$el.prepend(this.$el);
+        this.$el.find('input').focus();
+
+        this.$el.css('bottom', kiwi.app.controlbox.$el.outerHeight(true));
     },
     
-    changeNick: function (event) {;
-        var el = this.$el;
-        kiwi.gateway.changeNick($('#nickchange', this.$el).val(), function (err, val) {
-            el.remove();
+    close: function () {
+        this.$el.remove();
+
+    },
+
+    changeNick: function (event) {
+        var that = this;
+        kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
+            that.close();
         });
-    }
-});
-
-kiwi.view.ServerSelect = Backbone.View.extend({
-    events: {
-        'submit form': 'submitLogin',
-        'click .show_more': 'showMore'
-    },
-
-    initialize: function () {
-        this.$el = $($('#tmpl_server_select').html());
-
-        kiwi.gateway.bind('onconnect', this.networkConnected, this);
-        kiwi.gateway.bind('connecting', this.networkConnecting, this);
-    },
-
-    submitLogin: function (event) {
-        var values = {
-            nick: $('.nick', this.$el).val(),
-            server: $('.server', this.$el).val(),
-            port: $('.port', this.$el).val(),
-            ssl: $('.ssl', this.$el).prop('checked'),
-            password: $('.password', this.$el).val(),
-            channel: $('.channel', this.$el).val()
-        };
-
-        this.trigger('server_connect', values);
         return false;
-    },
-
-    showMore: function (event) {
-        $('.more', this.$el).slideDown('fast');
-    },
-
-    populateFields: function (defaults) {
-        var nick, server, channel;
-
-        defaults = defaults || {};
-
-        nick = defaults.nick || '';
-        server = defaults.server || '';
-        port = defaults.port || 6667;
-        ssl = defaults.ssl || 0;
-        password = defaults.password || '';
-        channel = defaults.channel || '';
-
-        $('.nick', this.$el).val(nick);
-        $('.server', this.$el).val(server);
-        $('.port', this.$el).val(port);
-        $('.ssl', this.$el).prop('checked', ssl);
-        $('.password', this.$el).val(password);
-        $('.channel', this.$el).val(channel);
-    },
-
-    hide: function () {
-        this.$el.slideUp();
-    },
-
-    show: function () {
-        this.$el.show();
-        $('.nick', this.$el).focus();
-    },
-
-    setStatus: function (text, class_name) {
-        $('.status', this.$el)
-            .text(text)
-            .attr('class', 'status')
-            .addClass(class_name)
-            .show();
-    },
-    clearStatus: function () {
-        $('.status', this.$el).hide();
-    },
-
-    networkConnected: function (event) {
-        this.setStatus('Connected :)', 'ok');
-        $('form', this.$el).hide();
-    },
-
-    networkConnecting: function (event) {
-        this.setStatus('Connecting..', 'ok');
-    },
-
-    showError: function (event) {
-        this.setStatus('Error connecting', 'error');
-        $('form', this.$el).show();
     }
 });
+
+kiwi.view.ServerSelect = function () {
+    // Are currently showing all the controlls or just a nick_change box?
+    var state = 'all';
+
+    var model = Backbone.View.extend({
+        events: {
+            'submit form': 'submitForm',
+            'click .show_more': 'showMore'
+        },
+
+        initialize: function () {
+            this.$el = $($('#tmpl_server_select').html());
+
+            kiwi.gateway.bind('onconnect', this.networkConnected, this);
+            kiwi.gateway.bind('connecting', this.networkConnecting, this);
+
+            kiwi.gateway.bind('onirc_error', function (data) {
+                if (data.error == 'nickname_in_use') {
+                    this.setStatus('Nickname already taken');
+                    this.show('nick_change');
+                }
+            }, this);
+        },
+
+        submitForm: function (event) {
+            if (state === 'nick_change') {
+                this.submitNickChange(event);
+            } else {
+                this.submitLogin(event);
+            }
+
+            return false;
+        },
+
+        submitLogin: function (event) {
+            var values = {
+                nick: $('.nick', this.$el).val(),
+                server: $('.server', this.$el).val(),
+                port: $('.port', this.$el).val(),
+                ssl: $('.ssl', this.$el).prop('checked'),
+                password: $('.password', this.$el).val(),
+                channel: $('.channel', this.$el).val()
+            };
+
+            this.trigger('server_connect', values);
+        },
+
+        submitNickChange: function (event) {
+            kiwi.gateway.changeNick($('.nick', this.$el).val());
+            this.networkConnecting();
+        },
+
+        showMore: function (event) {
+            $('.more', this.$el).slideDown('fast');
+        },
+
+        populateFields: function (defaults) {
+            var nick, server, channel;
+
+            defaults = defaults || {};
+
+            nick = defaults.nick || '';
+            server = defaults.server || '';
+            port = defaults.port || 6667;
+            ssl = defaults.ssl || 0;
+            password = defaults.password || '';
+            channel = defaults.channel || '';
+
+            $('.nick', this.$el).val(nick);
+            $('.server', this.$el).val(server);
+            $('.port', this.$el).val(port);
+            $('.ssl', this.$el).prop('checked', ssl);
+            $('.password', this.$el).val(password);
+            $('.channel', this.$el).val(channel);
+        },
+
+        hide: function () {
+            this.$el.slideUp();
+        },
+
+        show: function (new_state) {
+            new_state = new_state || 'all';
+
+            this.$el.show();
+
+            if (new_state === 'all') {
+                $('.show_more', this.$el).show();
+                $('.nick', this.$el).focus();
+
+            } else if (new_state === 'more') {
+                $('.more', this.$el).slideDown('fast');
+
+            } else if (new_state === 'nick_change') {
+                $('.more', this.$el).hide();
+                $('.show_more', this.$el).hide();
+            }
+
+            state = new_state;
+        },
+
+        setStatus: function (text, class_name) {
+            $('.status', this.$el)
+                .text(text)
+                .attr('class', 'status')
+                .addClass(class_name)
+                .show();
+        },
+        clearStatus: function () {
+            $('.status', this.$el).hide();
+        },
+
+        networkConnected: function (event) {
+            this.setStatus('Connected :)', 'ok');
+            $('form', this.$el).hide();
+        },
+
+        networkConnecting: function (event) {
+            this.setStatus('Connecting..', 'ok');
+        },
+
+        showError: function (event) {
+            this.setStatus('Error connecting', 'error');
+            this.show();
+        }
+    });
+
+
+    return new model(arguments);
+};
 
 
 kiwi.view.Panel = Backbone.View.extend({
@@ -327,7 +381,6 @@ kiwi.view.Panel = Backbone.View.extend({
         }
 
         // Only 'upgrade' the alert. Never down (unless clearing)
-        console.log(type_idx, this.alert_level);
         if (type_idx !== 0 && type_idx <= this.alert_level) {
             return;
         }
@@ -543,7 +596,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
     preprocessor: null,
 
     events: {
-        'keydown input': 'process',
+        'keydown input.inp': 'process',
         'click .nick': 'showNickChange'
     },
 

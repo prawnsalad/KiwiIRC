@@ -1,5 +1,7 @@
-kiwi.model.Application = Backbone.Model.extend(new (function () {
-    var that = this;
+kiwi.model.Application = function () {
+
+    // Set to a reference to this object within initialize()
+    var that = null;
 
     // The auto connect details entered into the server select box
     var auto_connect_details = {};
@@ -8,16 +10,15 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     this.panels = null;
 
     /** kiwi.view.Application */
-    this.view;
+    this.view = null;
 
     /** kiwi.view.StatusMessage */
-    this.message;
+    this.message = null;
 
     /* Address for the kiwi server */
     this.kiwi_server = null;
 
     this.initialize = function () {
-        // Update `that` with this new Model object
         that = this;
 
         // Best guess at where the kiwi server is
@@ -27,9 +28,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
     this.start = function () {
         // Only debug if set in the querystring
         if (!getQueryVariable('debug')) {
-            //manageDebug(false);
+            manageDebug(false);
         } else {
-            //manageDebug(true);
+            manageDebug(true);
         }
         
         // Set the gateway up
@@ -78,7 +79,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 'https' :
                 'http';
 
-            this.kiwi_server = proto + '://' + window.location.hostname + ':' + (window.location.port || '80');
+            this.kiwi_server = proto + '://' + window.location.host;
         }
         
     };
@@ -92,6 +93,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
          * Set the UI components up
          */
         this.panels = new kiwi.model.PanelList();
+        console.log('panels', this.panels);
 
         this.controlbox = new kiwi.view.ControlBox({el: $('#controlbox')[0]});
         this.bindControllboxCommands(this.controlbox);
@@ -142,16 +144,35 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             var gw_stat = 0;
 
             gw.on('disconnect', function (event) {
-                that.message.text('You have been disconnected. Attempting to reconnect..');
+                var msg = 'You have been disconnected. Attempting to reconnect for you..';
+                that.message.text(msg, {timeout: 10000});
+
+                // Mention the disconnection on every channel
+                $.each(kiwi.app.panels.models, function (idx, panel) {
+                    if (!panel || !panel.isChannel()) return;
+                    panel.addMsg('', msg, 'action quit');
+                });
+                kiwi.app.panels.server.addMsg('', msg, 'action quit');
+
                 gw_stat = 1;
             });
             gw.on('reconnecting', function (event) {
-                that.message.text('You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..');
+                msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
+                kiwi.app.panels.server.addMsg('', msg, 'action quit');
             });
             gw.on('connect', function (event) {
                 if (gw_stat !== 1) return;
 
-                that.message.text('It\'s OK, you\'re connected again :)', {timeout: 5000});
+                var msg = 'It\'s OK, you\'re connected again :)';
+                that.message.text(msg, {timeout: 5000});
+
+                // Mention the disconnection on every channel
+                $.each(kiwi.app.panels.models, function (idx, panel) {
+                    if (!panel || !panel.isChannel()) return;
+                    panel.addMsg('', msg, 'action join');
+                });
+                kiwi.app.panels.server.addMsg('', msg, 'action join');
+
                 gw_stat = 0;
             });
         })();
@@ -496,7 +517,12 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                 if (kiwi.app.panels.server !== kiwi.app.panels.active) {
                     kiwi.app.message.text('The nickname "' + data.nick + '" is already in use. Please select a new nickname');
                 }
-                (new kiwi.view.NickChangeBox()).render();
+
+                // Only show the nickchange component if the controlbox is open
+                if (that.controlbox.$el.css('display') !== 'none') {
+                    (new kiwi.view.NickChangeBox()).render();
+                }
+
                 break;
             default:
                 // We don't know what data contains, so don't do anything with it.
@@ -511,38 +537,39 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
      * Bind to certain commands that may be typed into the control box
      */
     this.bindControllboxCommands = function (controlbox) {
+        // Default aliases
         $.extend(controlbox.preprocessor.aliases, {
             '/p': '/part $1+',
             '/me': '/action $1+',
             '/j': '/join $1+',
             '/q': '/query $1+',
-            '/k': '/kick $1+',
+            '/k': '/kick $1+'
         });
 
-        controlbox.on('unknown_command', this.unknownCommand);
+        controlbox.on('unknown_command', unknownCommand);
 
-        controlbox.on('command', this.allCommands);
-        controlbox.on('command_msg', this.msgCommand);
+        controlbox.on('command', allCommands);
+        controlbox.on('command_msg', msgCommand);
 
-        controlbox.on('command_action', this.actionCommand);
+        controlbox.on('command_action', actionCommand);
 
-        controlbox.on('command_join', this.joinCommand);
+        controlbox.on('command_join', joinCommand);
 
-        controlbox.on('command_part', this.partCommand);
+        controlbox.on('command_part', partCommand);
 
         controlbox.on('command_nick', function (ev) {
             kiwi.gateway.changeNick(ev.params[0]);
         });
 
-        controlbox.on('command_query', this.queryCommand);
+        controlbox.on('command_query', queryCommand);
 
-        controlbox.on('command_topic', this.topicCommand);
+        controlbox.on('command_topic', topicCommand);
 
-        controlbox.on('command_notice', this.noticeCommand);
+        controlbox.on('command_notice', noticeCommand);
 
-        controlbox.on('command_quote', this.quoteCommand);
+        controlbox.on('command_quote', quoteCommand);
 
-        controlbox.on('command_kick', this.kickCommand);
+        controlbox.on('command_kick', kickCommand);
 
 
         controlbox.on('command_css', function (ev) {
@@ -558,6 +585,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         });
 
         controlbox.on('command_alias', function (ev) {
+            var name, rule;
+
             // No parameters passed so list them
             if (!ev.params[1]) {
                 $.each(controlbox.preprocessor.aliases, function (name, rule) {
@@ -568,38 +597,38 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
             // Deleting an alias?
             if (ev.params[0] === 'del' || ev.params[0] === 'delete') {
-                var name = ev.params[1];
+                name = ev.params[1];
                 if (name[0] !== '/') name = '/' + name;
                 delete controlbox.preprocessor.aliases[name];
                 return;
             }
 
             // Add the alias
-            var name = ev.params[0];
+            name = ev.params[0];
             ev.params.shift();
-            var rule = ev.params.join(' ');
+            rule = ev.params.join(' ');
 
+            // Make sure the name starts with a slash
             if (name[0] !== '/') name = '/' + name;
-            console.log('added', name, 'as', rule);
+
+            // Now actually add the alias
             controlbox.preprocessor.aliases[name] = rule;
         });
 
-        controlbox.on('command_applet', this.appletCommand);
-        controlbox.on('command_settings', this.settingsCommand);
+        controlbox.on('command_applet', appletCommand);
+        controlbox.on('command_settings', settingsCommand);
     };
 
     // A fallback action. Send a raw command to the server
-    this.unknownCommand = function (ev) {
+    function unknownCommand (ev) {
         var raw_cmd = ev.command + ' ' + ev.params.join(' ');
         console.log('RAW: ' + raw_cmd);
         kiwi.gateway.raw(raw_cmd);
-    };
+    }
 
-    this.allCommands = function (ev) {
-        console.log('allCommands', ev);
-    };
+    function allCommands (ev) {}
 
-    this.joinCommand = function (ev) {
+    function joinCommand (ev) {
         var channel, channel_names;
 
         channel_names = ev.params.join(' ').split(',');
@@ -620,9 +649,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         if (channel) channel.view.show();
         
-    };
+    }
 
-    this.queryCommand = function (ev) {
+    function queryCommand (ev) {
         var destination, panel;
 
         destination = ev.params[0];
@@ -636,9 +665,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         if (panel) panel.view.show();
         
-    };
+    }
 
-    this.msgCommand = function (ev) {
+    function msgCommand (ev) {
         var destination = ev.params[0],
             panel = that.panels.getByName(destination) || that.panels.server;
 
@@ -646,9 +675,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         panel.addMsg(kiwi.gateway.get('nick'), ev.params.join(' '));
         kiwi.gateway.privmsg(destination, ev.params.join(' '));
-    };
+    }
 
-    this.actionCommand = function (ev) {
+    function actionCommand (ev) {
         if (kiwi.app.panels.active === kiwi.app.panels.server) {
             return;
         }
@@ -656,9 +685,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         var panel = kiwi.app.panels.active;
         panel.addMsg('', '* ' + kiwi.gateway.get('nick') + ' ' + ev.params.join(' '), 'action');
         kiwi.gateway.action(panel.get('name'), ev.params.join(' '));
-    };
+    }
 
-    this.partCommand = function (ev) {
+    function partCommand (ev) {
         if (ev.params.length === 0) {
             kiwi.gateway.part(kiwi.app.panels.active.get('name'));
         } else {
@@ -668,9 +697,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         }
         // TODO: More responsive = close tab now, more accurate = leave until part event
         //kiwi.app.panels.remove(kiwi.app.panels.active);
-    };
+    }
 
-    this.topicCommand = function (ev) {
+    function topicCommand (ev) {
         var channel_name;
 
         if (ev.params.length === 0) return;
@@ -683,9 +712,9 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         }
 
         kiwi.gateway.topic(channel_name, ev.params.join(' '));
-    };
+    }
 
-    this.noticeCommand = function (ev) {
+    function noticeCommand (ev) {
         var destination;
 
         // Make sure we have a destination and some sort of message
@@ -695,14 +724,14 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         ev.params.shift();
 
         kiwi.gateway.notice(destination, ev.params.join(' '));
-    };
+    }
 
-    this.quoteCommand = function (ev) {
+    function quoteCommand (ev) {
         var raw = ev.params.join(' ');
         kiwi.gateway.raw(raw);
-    };
+    }
 
-    this.kickCommand = function (ev) {
+    function kickCommand (ev) {
         var nick, panel = kiwi.app.panels.active;
 
         if (!panel.isChannel()) return;
@@ -714,17 +743,17 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         ev.params.shift();
 
         kiwi.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
-    };
+    }
 
-    this.settingsCommand = function (ev) {
+    function settingsCommand (ev) {
         var panel = new kiwi.model.Applet();
         panel.load(new kiwi.applets.Settings());
         
         kiwi.app.panels.add(panel);
         panel.view.show();
-    };
+    }
 
-    this.appletCommand = function (ev) {
+    function appletCommand (ev) {
         if (!ev.params[0]) return;
 
         var panel = new kiwi.model.Applet();
@@ -744,7 +773,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         
         kiwi.app.panels.add(panel);
         panel.view.show();
-    };
+    }
 
 
 
@@ -757,4 +786,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         return (channel_prefix.indexOf(channel_name[0]) > -1);
     };
 
-})());
+
+
+    return new (Backbone.Model.extend(this))(arguments);
+};
