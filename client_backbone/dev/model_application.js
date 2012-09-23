@@ -142,16 +142,36 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             var gw_stat = 0;
 
             gw.on('disconnect', function (event) {
-                that.message.text('You have been disconnected. Attempting to reconnect..');
+                var msg = 'You have been disconnected. Attempting to reconnect for you..';
+                that.message.text(msg, {timeout: 10000});
+
+                // Mention the disconnection on every channel
+                $.each(kiwi.app.panels.models, function (idx, panel) {
+                    console.log(arguments);
+                    if (!panel || !panel.isChannel()) return;
+                    panel.addMsg('', msg, 'action quit');
+                });
+                kiwi.app.panels.server.addMsg('', msg, 'action quit');
+
                 gw_stat = 1;
             });
             gw.on('reconnecting', function (event) {
-                that.message.text('You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..');
+                msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
+                kiwi.app.panels.server.addMsg('', msg, 'action quit');
             });
             gw.on('connect', function (event) {
                 if (gw_stat !== 1) return;
 
-                that.message.text('It\'s OK, you\'re connected again :)', {timeout: 5000});
+                var msg = 'It\'s OK, you\'re connected again :)';
+                that.message.text(msg, {timeout: 5000});
+
+                // Mention the disconnection on every channel
+                $.each(kiwi.app.panels.models, function (idx, panel) {
+                    if (!panel || !panel.isChannel()) return;
+                    panel.addMsg('', msg, 'action join');
+                });
+                kiwi.app.panels.server.addMsg('', msg, 'action join');
+
                 gw_stat = 0;
             });
         })();
