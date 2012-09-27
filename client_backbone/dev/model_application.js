@@ -378,22 +378,43 @@ kiwi.model.Application = function () {
 
 
         gw.on('onmode', function (event) {
-            var channel, members, member;
-
-            if (!event.channel) return;
-            channel = that.panels.getByName(event.channel);
-            if (!channel) return;
-
-            members = channel.get('members');
-            if (!members) return;
-
-            member = members.getByNick(event.effected_nick);
-            if (!member) return;
-
-            if (event.mode[0] === '+') {
-                member.addMode(event.mode.substr(1));
-            } else if (event.mode[0] === '-') {
-                member.removeMode(event.mode.substr(1));
+            var channel, i, prefixes, members, member, find_prefix;
+            
+            channel = that.panels.getByName(event.target);
+            if (channel) {
+                prefixes = kiwi.gateway.get('user_prefixes');
+                find_prefix = function (p) {
+                    return event.modes[i].mode[1] === p.mode;
+                };
+                for (i = 0; i < event.modes.length; i++) {
+                    if (_.any(prefixes, find_prefix)) {
+                        if (!members) {
+                            members = channel.get('members');
+                        }
+                        member = members.getByNick(event.modes[i].param);
+                        if (!member) {
+                            console.log('MODE command recieved for unknown member %s on channel %s', event.modes[i].param, event.target);
+                            return;
+                        } else {
+                            if (event.modes[i].mode[0] === '+') {
+                                member.addMode(event.modes[i].mode[1]);
+                            } else if (event.modes[i].mode[0] === '-') {
+                                member.removeMode(event.modes[i].mode[1]);
+                            }
+                            channel.addMsg(event.nick, 'set mode ' + event.modes[i].mode + ' ' + event.modes[i].param, 'mode');
+                        }
+                    } else {
+                        // TODO: Store this somewhere?
+                        channel.addMsg(event.nick, 'set mode ' + event.modes[i].mode + ' on ' + event.target, 'mode');
+                    }
+                }
+            } else {
+                // This is probably a mode being set on us.
+                if (event.target.toLowerCase() === kiwi.gateway.get("nick").toLowerCase()) {
+                    that.panels.server.addMsg(event.nick, 'set mode ' + event.modes[i].mode + ' on ' + event.target, 'mode');
+                } else {
+                   console.log('MODE command recieved for unknown target %s: ', event.target, event.modes[i].mode,); 
+                }
             }
         });
 

@@ -336,27 +336,56 @@ var listeners = {
                 //{nick: msg.nick, channel: msg.params, topic: msg.trailing};
                 this.client.sendIRCCommand('topic', {server: this.con_num, nick: command.nick, channel: command.params[0], topic: command.trailing});
             },
-    'MODE':                 function (command) {
-				/*command.server = this.con_num;
-				command.command = 'MODE';
-				this.client.sendIRCCommand(command);*/
-                var ret = { server: this.con_num, nick: command.nick };
-                switch (command.params.length) {
-                    case 1:
-                        ret.affected_nick = command.params[0];
-                        ret.mode = command.trailing;
-                        break;
-                    case 2:
-                        ret.channel = command.params[0];
-                        ret.mode = command.params[1];
-                        break;
-                    default:
-                        ret.channel = command.params[0];
-                        ret.mode = command.params[1];
-                        ret.affected_nick = command.params[2];
-                        break;
+    'MODE':                 function (command) {                
+                var chanmodes = this.irc_connection.options.CHANMODES,
+                    prefixes = this.irc_connection.options.PREFIX,
+                    always_param = chanmodes[0].concat(chanmodes[1]),
+                    modes = [],
+                    has_param, i, j, add;
+                
+                prefixes = _.reduce(prefixes, function (list, prefix) {
+                    list.push(prefix.mode);
+                    return list;
+                }, []);
+                always_param = always_param.split('').concat(prefixes);
+                
+                has_param = function (mode, add) {
+                    if (_.find(always_param, function (m) {
+                        return m === mode;
+                    })) {
+                        return true;
+                    } else if (add && _.find(chanmodes[2].split(''), function (m) {
+                        return m === mode;
+                    })) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                };
+                
+                if (!command.params[1]) {
+                    command.params[1] = command.trailing;
                 }
-                this.client.sendIRCCommand('mode', ret);
+                j = 0;
+                for (i = 0; i < command.params[1].length; i++) {
+                    switch (command.params[1][i]) {
+                        case '+':
+                            add = true;
+                            break;
+                        case '-':
+                            add = false;
+                            break;
+                        default:
+                            if (has_param(command.params[1][i], add)) {
+                                modes.push({mode: (add ? '+' : '-') + command.params[1][i], param: command.params[2 + j]});
+                                j++;
+                            } else {
+                                modes.push({mode: (add ? '+' : '-') + command.params[1][i], param: null});
+                            }
+                    }
+                }
+                
+                this.client.sendIRCCommand('mode', {server: this.con_num, target: command.params[0], nick: command.nick, modes: modes});
             },
     'PRIVMSG':              function (command) {
 				/*command.server = this.con_num;
