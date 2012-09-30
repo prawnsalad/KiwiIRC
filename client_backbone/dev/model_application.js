@@ -380,6 +380,42 @@ kiwi.model.Application = function () {
         gw.on('onmode', function (event) {
             var channel, i, prefixes, members, member, find_prefix;
             
+            // Build a nicely formatted string to be displayed to a regular human
+            function friendlyModeString (event_modes, alt_target) {
+                var modes = {}, return_string;
+
+                // If no default given, use the main event info
+                if (!event_modes) {
+                    event_modes = event.modes;
+                    alt_target = event.target;
+                }
+
+                // Reformat the mode object to make it easier to work with
+                _.each(event_modes, function (mode){
+                    var param = mode.param || alt_target || '';
+
+                    // Make sure we have some modes for this param
+                    if (!modes[param]) {
+                        modes[param] = {'+':'', '-':''};
+                    }
+
+                    modes[param][mode.mode[0]] += mode.mode.substr(1);
+                });
+
+                // Put the string together from each mode
+                return_string = [];
+                _.each(modes, function (modeset, param) {
+                    var str = '';
+                    if (modeset['+']) str += '+' + modeset['+'];
+                    if (modeset['-']) str += '-' + modeset['-'];
+                    return_string.push(str + ' ' + param);
+                });
+                return_string = return_string.join(', ');
+
+                return return_string;
+            }
+
+
             channel = that.panels.getByName(event.target);
             if (channel) {
                 prefixes = kiwi.gateway.get('user_prefixes');
@@ -401,19 +437,22 @@ kiwi.model.Application = function () {
                             } else if (event.modes[i].mode[0] === '-') {
                                 member.removeMode(event.modes[i].mode[1]);
                             }
-                            channel.addMsg(event.nick, 'set mode ' + event.modes[i].mode + ' ' + event.modes[i].param, 'mode');
+                            //channel.addMsg('', '=== ' + event.nick + ' set mode ' + event.modes[i].mode + ' ' + event.modes[i].param, 'action mode');
                         }
                     } else {
+                        // Channel mode being set
                         // TODO: Store this somewhere?
-                        channel.addMsg(event.nick, 'set mode ' + event.modes[i].mode + ' on ' + event.target, 'mode');
+                        //channel.addMsg('', 'CHANNEL === ' + event.nick + ' set mode ' + event.modes[i].mode + ' on ' + event.target, 'action mode');
                     }
                 }
+
+                channel.addMsg('', '=== ' + event.nick + ' sets mode ' + friendlyModeString(), 'action mode');
             } else {
                 // This is probably a mode being set on us.
                 if (event.target.toLowerCase() === kiwi.gateway.get("nick").toLowerCase()) {
-                    that.panels.server.addMsg(event.nick, 'set mode ' + event.modes[i].mode + ' on ' + event.target, 'mode');
+                    that.panels.server.addMsg('', '=== ' + event.nick + ' set mode ' + friendlyModeString(), 'action mode');
                 } else {
-                   console.log('MODE command recieved for unknown target %s: ', event.target, event.modes[i].mode,); 
+                   console.log('MODE command recieved for unknown target %s: ', event.target, event);
                 }
             }
         });
