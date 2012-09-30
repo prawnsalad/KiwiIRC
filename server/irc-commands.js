@@ -385,7 +385,12 @@ var listeners = {
                     }
                 }
                 
-                this.client.sendIRCCommand('mode', {server: this.con_num, target: command.params[0], nick: command.nick, modes: modes});
+                this.client.sendIRCCommand('mode', {
+                    server: this.con_num,
+                    target: command.params[0],
+                    nick: command.nick || command.prefix || '',
+                    modes: modes
+                });
             },
     'PRIVMSG':              function (command) {
 				/*command.server = this.con_num;

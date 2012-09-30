@@ -47,7 +47,7 @@ module.exports.Client = Client;
 
 Client.prototype.sendIRCCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    console.log('C<--', c);
+    //console.log('C<--', c);
     this.websocket.emit('irc', c, callback);
 };
 

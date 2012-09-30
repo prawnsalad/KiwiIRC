@@ -83,8 +83,8 @@ var connect_handler = function () {
     this.emit('connected');
 };
 
-//parse_regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
-alt_regex   = /(?::(([0-9a-z][\x2d0-9a-z]*[0-9a-z]*(?:\x2e[0-9a-z][\x2d0-9a-z]*[0-9a-z]*)*|[\x5b-\x7d][\x2d0-9\x5b-\x7d]{0,8})(?:(?:!([\x01-\t\v\f\x0e-\x1f!-\x3f\x5b-\xff]+))?@([0-9a-z][\x2d0-9a-z]*[0-9a-z]*(?:\x2e[0-9a-z][\x2d0-9a-z]*[0-9a-z]*)*|\d{1,3}\x2e\d{1,3}\x2e\d{1,3}\x2e\d{1,3}|[0-9a-f]+(?::[0-9a-f]+){7}|0:0:0:0:0:(?:0|ffff):\d{1,3}\x2e\d{1,3}\x2e\d{1,3}\x2e\d{1,3}))?)\x20)?([a-z]+|\d{3})((?:\x20[\x01-\t\v\f\x0e-\x1f!-9;-@\x5b-\xff][\x01-\t\v\f\x0e-\x1f!-@\x5b-\xff]*){0,14}(?:\x20:[\x01-\t\v\f\x0e-@\x5b-\xff]*)?|(?:\x20[\x01-\t\v\f\x0e-\x1f!-9;-@\x5b-\xff][\x01-\t\v\f\x0e-\x1f!-@\x5b-\xff]*){14}(?:\x20:?[\x01-\t\v\f\x0e-@\x5b-\xff]*)?)?/i;
+parse_regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+//alt_regex   = /(?::(([0-9a-z][\x2d0-9a-z]*[0-9a-z]*(?:\x2e[0-9a-z][\x2d0-9a-z]*[0-9a-z]*)*|[\x5b-\x7d][\x2d0-9\x5b-\x7d]{0,8})(?:(?:!([\x01-\t\v\f\x0e-\x1f!-\x3f\x5b-\xff]+))?@([0-9a-z][\x2d0-9a-z]*[0-9a-z]*(?:\x2e[0-9a-z][\x2d0-9a-z]*[0-9a-z]*)*|\d{1,3}\x2e\d{1,3}\x2e\d{1,3}\x2e\d{1,3}|[0-9a-f]+(?::[0-9a-f]+){7}|0:0:0:0:0:(?:0|ffff):\d{1,3}\x2e\d{1,3}\x2e\d{1,3}\x2e\d{1,3}))?)\x20)?([a-z]+|\d{3})((?:\x20[\x01-\t\v\f\x0e-\x1f!-9;-@\x5b-\xff][\x01-\t\v\f\x0e-\x1f!-@\x5b-\xff]*){0,14}(?:\x20:[\x01-\t\v\f\x0e-@\x5b-\xff]*)?|(?:\x20[\x01-\t\v\f\x0e-\x1f!-9;-@\x5b-\xff][\x01-\t\v\f\x0e-\x1f!-@\x5b-\xff]*){14}(?:\x20:?[\x01-\t\v\f\x0e-@\x5b-\xff]*)?)?/i;
 
 var parse = function (data) {
     var i,
@@ -109,26 +109,24 @@ var parse = function (data) {
             }
 
             // We have a complete line of data, parse it!
-            //msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
-			msg2 = alt_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
-			//console.log(msg2);
-            if (msg2) {
+            msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
+			//msg2 = alt_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
+			console.log('S-->', data[i]);
+            console.log('Matches', msg);
+            if (msg) {
                 msg = {
-                    prefix:     msg2[1],
-                    nick:       msg2[2],
-                    ident:      msg2[3],
-                    hostname:   msg2[4],
-                    command:    msg2[5]
+                    prefix:     msg[1],
+                    nick:       msg[2],
+                    ident:      msg[3],
+                    hostname:   msg[4] || '',
+                    command:    msg[5],
+                    params:     msg[6] || '',
+                    trailing:   (msg[7]) ? msg[7].trim() : ''
                 };
-				trm = msg2[6].indexOf(':');
-				if (trm !== -1){
-					msg.params = msg2[6].substr(0, trm - 1).trim().split(" ");
-					msg.trailing = msg2[6].substr(trm + 1).trim();
-				} else {
-					msg.params = msg2[6].trim().split(" ");
-				}
-                console.log('S-->', data[i]);
-				//console.log(msg);
+                msg.params = msg.params.split(' ');
+
+				console.log('Parsed', msg);
+
                 this.emit('irc_' + msg.command.toUpperCase(), msg);
             } else {
                 console.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
