@@ -134,7 +134,7 @@ kiwi.model.Application = function () {
             that.view.barsShow();
             
             if (auto_connect_details.channel) {
-                kiwi.gateway.join(auto_connect_details.channel);
+                that.controlbox.processInput('/JOIN ' + auto_connect_details.channel);
             }
         });
 
