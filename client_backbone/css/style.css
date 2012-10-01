@@ -170,6 +170,7 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 #topic input {
     position:absolute;
     top:2; bottom:2px; left:0; width:100%;
+    padding: 0.2em 1em;
     text-align: center;
 }
 
@@ -178,12 +179,15 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
-.server_select { width:270px; padding:3em 0 2em 0; margin: 0 auto; }
-.server_select .more { display: none; }
-.server_select button { float:right; padding:3px 7px; }
-.server_select input { float:right; margin-bottom:5px; padding:3px 7px; }
+.server_select { width:320px;  padding:3em 0 2em 0; margin: 0 auto; }
+.server_select .more { display: none; width:270px; margin:0 auto; }
+.server_select button { float:right; padding:3px 7px; margin-top:10px; }
+.server_select input { float:right; margin-bottom:5px; padding:3px 7px; width:150px; }
 .server_select label { float:left; width:5em; padding-top:3px }
 .server_select br { clear:both; }
+.server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
+.server_select .basic input { width:170px; }
+.server_select .basic label { font-size:1.3em; margin-top:4px; }
 .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
 .server_select .basic .show_more { display: block; width:40px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
 .server_select .status { text-align: center; font-weight: bold; padding:1em; }
