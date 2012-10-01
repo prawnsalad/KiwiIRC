@@ -1,4 +1,4 @@
-kiwi.model.Application = function () {
+kiwi.model.Application = Backbone.Model.extend(new (function () {
 
     // Set to a reference to this object within initialize()
     var that = null;
@@ -86,13 +86,11 @@ kiwi.model.Application = function () {
 
     this.initializeClient = function () {
         this.view = new kiwi.view.Application({model: this, el: this.get('container')});
-
         
         /**
          * Set the UI components up
          */
         this.panels = new kiwi.model.PanelList();
-        console.log('panels', this.panels);
 
         this.controlbox = new kiwi.view.ControlBox({el: $('#controlbox')[0]});
         this.bindControllboxCommands(this.controlbox);
@@ -846,6 +844,4 @@ kiwi.model.Application = function () {
     };
 
 
-
-    return new (Backbone.Model.extend(this))(arguments);
-};
+})());
