@@ -69,10 +69,10 @@ module.exports.IRCConnection = IRCConnection;
 
 var connect_handler = function () {
     if (this.webirc) {
-        this.write('WEBIRC ' + webirc.pass + ' KiwiIRC ' + this.user.hostname + ' ' + this.user.address);
+        this.write('WEBIRC ' + this.webirc.pass + ' KiwiIRC ' + this.user.hostname + ' ' + this.user.address);
     }
     if (this.password) {
-        this.write('PASS ' + password);
+        this.write('PASS ' + this.password);
     }
     //this.write('CAP LS');
     this.write('NICK ' + this.nick);
