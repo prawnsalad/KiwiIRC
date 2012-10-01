@@ -16,10 +16,10 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 /**
  * Main layout blocks
  */
-#toolbar { position:absolute; top:0px; width:100%; background-color:#1B1B1B; font-size:0.9em; }
+#toolbar { position:absolute; top:0px; width:100%; background-color:#1B1B1B; font-size:0.9em; display:none; }
 #panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
 #memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
-#controlbox { position: absolute; bottom:0px; width:100%; background-color:#1B1B1B; }
+#controlbox { position: absolute; bottom:0px; width:100%; background-color:#1B1B1B; display:none; }
 
 
 

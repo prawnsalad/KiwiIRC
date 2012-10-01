@@ -865,11 +865,12 @@ kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideUp();
-            $('#controlbox').slideUp(function () { that.doLayout(); });
+            $('#toolbar').slideUp({queue: false, duration: 400, step: this.doLayout});
+            $('#controlbox').slideUp({queue: false, duration: 400, step: this.doLayout});
         } else {
             $('#toolbar').slideUp(0);
             $('#controlbox').slideUp(0);
+            this.doLayout();
         }
     },
 
@@ -877,8 +878,8 @@ kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideDown();
-            $('#controlbox').slideDown(function () { that.doLayout(); });
+            $('#toolbar').slideDown({queue: false, duration: 400, step: this.doLayout});
+            $('#controlbox').slideDown({queue: false, duration: 400, step: this.doLayout});
         } else {
             $('#toolbar').slideDown(0);
             $('#controlbox').slideDown(0);
