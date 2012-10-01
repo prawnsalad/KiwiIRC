@@ -81,7 +81,7 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 #status_message.err { color:#D8000C; background:#FFBABA; }
 
 
-.panel_container { overflow-y:scroll; height:100%; }
+.panel_container { overflow-y:auto; height:100%; }
 
 
 
