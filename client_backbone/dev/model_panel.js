@@ -54,9 +54,11 @@ kiwi.model.Panel = Backbone.Model.extend({
         this.trigger("msg", message_obj);
     },
 
-    close: function () {
-        this.view.remove();
-        delete this.view;
+    closePanel: function () {
+        if (this.view) {
+            this.view.remove();
+            delete this.view;
+        }
 
         var members = this.get('members');
         if (members) {
@@ -64,12 +66,18 @@ kiwi.model.Panel = Backbone.Model.extend({
             this.unset('members');
         }
 
+        this.unbind();
         this.destroy();
 
         // If closing the active panel, switch to the server panel
         if (this.cid === kiwi.app.panels.active.cid) {
             kiwi.app.panels.server.view.show();
         }
+    },
+
+    // Alias to closePanel() for child objects to override
+    close: function () {
+        return this.closePanel();
     },
 
     isChannel: function () {

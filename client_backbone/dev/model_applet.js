@@ -61,5 +61,14 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
             // Load a new instance of this applet
             that.load(new kiwi.applets[applet_name]());
         });
+    },
+
+    close: function () {
+        this.view.$el.remove();
+        this.destroy();
+        
+        this.view = undefined;
+
+        this.closePanel();
     }
 });

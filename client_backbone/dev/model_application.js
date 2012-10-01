@@ -515,7 +515,7 @@ kiwi.model.Application = function () {
             
             kiwi.app.panels.add(panel);
             panel.view.show();
-
+            
             kiwi.app.channel_list = list;
         });
 
