@@ -23,9 +23,9 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
+#toolbar #tabs { margin-right: 200px; }
 #toolbar .panellist {
     overflow: hidden;
-    margin-right: 50px;
     white-space: nowrap;
     display:block;
     /*height: 35px;*/
@@ -195,7 +195,18 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
+.server_select .kiwi_logo h1 {
+    font-size:20px;
+    line-height:48px; vertical-align: middle;
+    color: #1B1B1B;
+}
+.server_select .kiwi_logo img { float:left; margin-right:0.7em; }
 
+
+
+#toolbar .kiwi_logo { float:right; width:200px; padding-left:10px; color:#D4D4D4; }
+#toolbar .kiwi_logo h2 { font-weight:normal; font-size:14px; line-height:36px; vertical-align:middle; }
+#toolbar .kiwi_logo img { height:25px; width:25px; float:left; margin: 6px 0.7em 0 0; }
 
 
 
