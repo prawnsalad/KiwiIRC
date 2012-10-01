@@ -145,6 +145,7 @@ kiwi.view.ServerSelect = function () {
 
         showMore: function (event) {
             $('.more', this.$el).slideDown('fast');
+            $('.server', this.$el).select();
         },
 
         populateFields: function (defaults) {
@@ -178,7 +179,6 @@ kiwi.view.ServerSelect = function () {
 
             if (new_state === 'all') {
                 $('.show_more', this.$el).show();
-                $('.nick', this.$el).focus();
 
             } else if (new_state === 'more') {
                 $('.more', this.$el).slideDown('fast');

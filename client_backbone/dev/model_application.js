@@ -60,6 +60,8 @@ kiwi.model.Application = function () {
             });
         });
 
+        // TODO: Shouldn't really be here but it's not working in the view.. :/
+        this.panels.server.server_login.$el.find('.nick').select();
     };
 
 
