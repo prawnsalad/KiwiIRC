@@ -346,7 +346,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             c = that.panels.getByName(event.channel);
             if (!c) return;
 
-            when = new Date(event.when * 1000).toLocaleString();
+            when = formatDate(new Date(event.when * 1000));
             c.addMsg('', 'Topic set by ' + event.nick + ' at ' + when, 'topic');
         });
 
@@ -497,7 +497,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             } else if (event.logon) {
                 logon_date = new Date();
                 logon_date.setTime(event.logon * 1000);
-                logon_date = logon_date.toLocaleString();
+                logon_date = formateDate(logon_date);
 
                 panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
             } else {

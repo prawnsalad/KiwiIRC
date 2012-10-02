@@ -467,6 +467,14 @@ function formatIRCMsg (msg) {
 
 
 
+function formatDate (d) {
+    d = d || new Date();
+    return d.toLocaleDateString() + ', ' + d.getHours().toString() + ':' + d.getMinutes().toString() + ':' + d.getSeconds().toString();
+}
+
+
+
+
 
 
 
