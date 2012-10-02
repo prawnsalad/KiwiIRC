@@ -133,7 +133,6 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             parts.shift();
 
             if (parts.length > 0 && parts[0]) {
-                console.log(3);
                 // TODO: Extract the port from this hostname
                 defaults.server = parts[0];
                 parts.shift();

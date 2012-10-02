@@ -92,7 +92,6 @@ kiwi.model.Gateway = function () {
          */
         this.socket.on('connect', function () {
             this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
-                console.log('err', err, 'server_num', server_num);
                 if (!err) {
                     that.server_num = server_num;
                     console.log("kiwi.gateway.socket.on('connect')");
