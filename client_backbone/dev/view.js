@@ -108,6 +108,8 @@ kiwi.view.ServerSelect = function () {
             kiwi.gateway.bind('connecting', this.networkConnecting, this);
 
             kiwi.gateway.bind('onirc_error', function (data) {
+                $('button', this.$el).attr('disabled', null);
+
                 if (data.error == 'nickname_in_use') {
                     this.setStatus('Nickname already taken');
                     this.show('nick_change');
@@ -122,10 +124,14 @@ kiwi.view.ServerSelect = function () {
                 this.submitLogin(event);
             }
 
+            $('button', this.$el).attr('disabled', 1);
             return false;
         },
 
         submitLogin: function (event) {
+            // If submitting is disabled, don't do anything
+            if ($('button', this.$el).attr('disabled')) return;
+            
             var values = {
                 nick: $('.nick', this.$el).val(),
                 server: $('.server', this.$el).val(),
@@ -213,6 +219,7 @@ kiwi.view.ServerSelect = function () {
 
         showError: function (event) {
             this.setStatus('Error connecting', 'error');
+            $('button', this.$el).attr('disabled', null);
             this.show();
         }
     });
