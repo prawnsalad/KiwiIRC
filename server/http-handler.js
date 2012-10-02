@@ -13,6 +13,11 @@ var StaticFileServer = function (public_html) {
 };
 
 StaticFileServer.prototype.serve = function (request, response) {
+    // Any requests for /client to load the index file
+    if (request.url.match(/^\/client/)) {
+        request.url = '/';
+    }
+
     this.fileServer.serve(request, response, function (err) {
         if (err) {
             response.writeHead(err.status, err.headers);

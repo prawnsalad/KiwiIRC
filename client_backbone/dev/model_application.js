@@ -30,7 +30,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         if (!getQueryVariable('debug')) {
             manageDebug(false);
         } else {
-            manageDebug(true);
+            //manageDebug(true);
         }
         
         // Set the gateway up
@@ -106,14 +106,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         // Rejigg the UI sizes
         this.view.doLayout();
 
-        // Populate the server select box with defaults
-        this.panels.server.server_login.populateFields({
-            nick: getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
-            server: getQueryVariable('server') || 'irc.kiwiirc.com',
-            port: 6667,
-            ssl: false,
-            channel: window.location.hash || '#test'
-        });
+        this.populateDefaultServerSettings();
     };
 
 
@@ -121,6 +114,43 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
         kiwi.global.control = this.controlbox;
     };
 
+
+    this.populateDefaultServerSettings = function () {
+        var parts;
+        var defaults = {
+            nick: getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
+            server: 'irc.kiwiirc.com',
+            port: 6667,
+            ssl: false,
+            channel: window.location.hash || '#kiwiirc'
+        };
+
+        // Process the URL part by part, extracting as we go
+        parts = window.location.pathname.toString().split('/');
+        parts.shift();
+
+        if (parts.length > 0 && parts[0].toLowerCase() === 'client') {
+            parts.shift();
+
+            if (parts.length > 0 && parts[0]) {
+                console.log(3);
+                // TODO: Extract the port from this hostname
+                defaults.server = parts[0];
+                parts.shift();
+            }
+
+            if (parts.length > 0 && parts[0]) {
+                defaults.channel = '#' + parts[0];
+                parts.shift();
+            }
+        }
+
+        // Set any random numbers if needed
+        defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
+
+        // Populate the server select box with defaults
+        this.panels.server.server_login.populateFields(defaults);
+    };
 
 
     this.bindGatewayCommands = function (gw) {
