@@ -99,6 +99,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         this.message = new kiwi.view.StatusMessage({el: $('#status_message')[0]});
 
+        this.resize_handle = new kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
         
         this.panels.server.view.show();
 

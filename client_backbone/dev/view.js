@@ -348,12 +348,12 @@ kiwi.view.Panel = Backbone.View.extend({
         if (members) {
             $('#memberlists').show();
             members.view.show();
-            this.$container.parent().css('right', '200px');
         } else {
             // Memberlist not found for this panel, hide any active ones
             $('#memberlists').hide().children().removeClass('active');
-            this.$container.parent().css('right', '0');
         }
+
+        kiwi.app.view.doLayout();
 
         this.scrollToBottom();
         this.alert('none');
@@ -817,6 +817,38 @@ kiwi.view.StatusMessage = Backbone.View.extend({
 
 
 
+kiwi.view.ResizeHandler = Backbone.View.extend({
+    events: {
+        'mousedown': 'startDrag',
+        'mouseup': 'stopDrag'
+    },
+
+    dragging: false,
+    starting_width: {},
+
+    initialize: function () {
+        $(window).on('mousemove', $.proxy(this.onDrag, this));
+    },
+
+    startDrag: function (event) {
+        this.dragging = true;
+    },
+
+    stopDrag: function (event) {
+        this.dragging = false;
+    },
+
+    onDrag: function (event) {
+        if (!this.dragging) return;
+
+        this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2));
+        $('#memberlists').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
+        kiwi.app.view.doLayout();
+    }
+});
+
+
+
 kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         $(window).resize(this.doLayout);
@@ -850,6 +882,7 @@ kiwi.view.Application = Backbone.View.extend({
         var el_memberlists = $('#memberlists');
         var el_toolbar = $('#toolbar');
         var el_controlbox = $('#controlbox');
+        var el_resize_handle = $('#memberlists_resize_handle');
 
         var css_heights = {
             top: el_toolbar.outerHeight(true),
@@ -858,6 +891,17 @@ kiwi.view.Application = Backbone.View.extend({
 
         el_panels.css(css_heights);
         el_memberlists.css(css_heights);
+        el_resize_handle.css(css_heights);
+
+        if (el_memberlists.css('display') != 'none') {
+            // Handle + panels to the side of the memberlist
+            el_panels.css('right', el_memberlists.outerWidth(true) + el_resize_handle.outerWidth(true));
+            el_resize_handle.css('left', el_memberlists.position().left - el_resize_handle.outerWidth(true));
+        } else {
+            // Memberlist is hidden so handle + panels to the right edge
+            el_panels.css('right', el_resize_handle.outerWidth(true));
+            el_resize_handle.css('left', el_panels.outerWidth(true));
+        }
     },
 
 

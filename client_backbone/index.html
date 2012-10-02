@@ -27,6 +27,8 @@
             <div id="status_message"></div>
         </div>
 
+        <div id="memberlists_resize_handle"></div>
+
         <div id="panels">
             <div class="panel_container container1"></div>
         </div>
@@ -186,7 +188,7 @@
                 // Override the kiwi_server to use. (Think: running on standalone client..)
                 //kiwi_server: 'http://kiwiirc.com:80'
             };
-            
+
             // Start the app by either the dev or closed environment
             (kiwi && kiwi.global && kiwi.global.start(opts)) || (kiwi && kiwi.start(opts));
         }
