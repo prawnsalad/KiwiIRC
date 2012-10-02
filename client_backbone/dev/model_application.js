@@ -441,6 +441,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
                             } else if (event.modes[i].mode[0] === '-') {
                                 member.removeMode(event.modes[i].mode[1]);
                             }
+                            members.sort();
                             //channel.addMsg('', '=== ' + event.nick + ' set mode ' + event.modes[i].mode + ' ' + event.modes[i].param, 'action mode');
                         }
                     } else {
