@@ -60,9 +60,9 @@ var handleClientMessage = function (msg, callback) {
 
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
-        return callback('server not specified');
+        return (typeof callback === 'function') ? callback('server not specified') : undefined;
     } else if (!this.IRC_connections[msg.server]) {
-        return callback('not connected to server');
+        return (typeof callback === 'function') ? callback('not connected to server') : undefined;
     }
 
     // The server this command is directed to
