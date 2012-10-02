@@ -90,5 +90,9 @@ kiwi.model.Panel = Backbone.Model.extend({
 
     isApplet: function () {
         return this.applet ? true : false;
+    },
+
+    isServer: function () {
+        return this.server ? true : false;
     }
 });

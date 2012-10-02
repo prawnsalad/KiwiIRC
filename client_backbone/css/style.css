@@ -74,7 +74,8 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 #toolbar .panellist li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
 #toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
 
-
+#toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
+#toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:block; }
 #status_message {
     background: #FEEFB3; color: #9F6000;
     border-bottom: 1px solid;

@@ -459,7 +459,6 @@ kiwi.view.Tabs = Backbone.View.extend({
 
         this.tabs_applets = $('ul.applets', this.$el);
         this.tabs_msg = $('ul.channels', this.$el);
-        window.t = this;
 
         kiwi.gateway.on('change:name', function (gateway, new_val) {
             $('span', this.model.server.tab).text(new_val);
@@ -495,6 +494,11 @@ kiwi.view.Tabs = Backbone.View.extend({
     panelAdded: function (panel) {
         // Add a tab to the panel
         panel.tab = $('<li><span>' + (panel.get('title') || panel.get('name')) + '</span></li>');
+
+        if (panel.isServer()) {
+            panel.tab.addClass('server');
+        }
+
         panel.tab.data('panel_id', panel.cid)
             .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
@@ -515,7 +519,11 @@ kiwi.view.Tabs = Backbone.View.extend({
         this.tabs_msg.children().removeClass('active');
 
         panel.tab.addClass('active');
-        panel.tab.append('<img src="img/redcross.png" />');
+
+        // Only show the part image on non-server tabs
+        if (!panel.isServer()) {
+            panel.tab.append('<img src="img/redcross.png" />');
+        }
     },
 
     tabClick: function (e) {
