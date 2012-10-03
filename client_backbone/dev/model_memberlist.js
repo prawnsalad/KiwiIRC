@@ -42,8 +42,6 @@ kiwi.model.MemberList = Backbone.Collection.extend({
         } else if (a_nick > b_nick) {
             return 1;
         } else {
-            // This should never happen; both users have the same nick.
-            console.log('Something\'s gone wrong somewhere - two users have the same nick!');
             return 0;
         }
     },
