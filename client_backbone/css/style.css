@@ -11,7 +11,7 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
     height:100%;
     font-family:Arial, Helvetica, sans-serif;
     font-size:14px; line-height:1.4em;
-    background: url(http://www.origin.com/ui/skin/oauth/img/background-light.png) left top repeat-x #E3E3E3;
+    background: url(../img/background-light.png) left top repeat-x #E3E3E3;
     color: #555555;
 }
 
