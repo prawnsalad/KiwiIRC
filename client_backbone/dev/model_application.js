@@ -75,8 +75,8 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
     this.detectKiwiServer = function () {
         // If running from file, default to localhost:7777 by default
-        if (window.location.protocol === 'file') {
-            this.kiwi_server = 'http://localhost:7777';
+        if (window.location.protocol === 'file:') {
+            this.kiwi_server = 'http://localhost:7778';
         } else {
             // Assume the kiwi server is on the same server
             this.kiwi_server = window.location.protocol + '//' + window.location.host;
