@@ -59,35 +59,47 @@
 
     <script type="text/x-jquery-tmpl" id="tmpl_server_select">
         <div class="server_select">
-            <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
-                <h1><img src="img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> Powered by Kiwi IRC</h1>
-            </a>
 
-            <div class="status"></div>
+            <div style="position:relative;float:left;width:320px;padding-right:3em;margin-top:50px;">
+                <div class="status">Think of a nickname..</div>
 
-            <form>
-                <div class="basic">
-                    <label for="server_select_nick">Nickname</label>
-                    <input type="text" class="nick" id="server_select_nick"> <br />
+                <form>
+                    <div class="basic">
+                        <label for="server_select_nick">Nickname</label>
+                        <input type="text" class="nick" id="server_select_nick"> <br />
 
-                    <button type="submit">Connect..</button> <br />
-                    <a href="" onclick="return false;" class="show_more">More</a>
-                </div>
+                        <button type="submit">Start..</button> <br />
+                        <a href="" onclick="return false;" class="show_more">More</a>
+                    </div>
 
-                <div class="more">
-                    <label for="server_select_server">Server</label>
-                    <input type="text" class="server" id="server_select_server"> <br />
-                    <label for="server_select_channel">Channel</label>
-                    <input type="text" class="channel" id="server_select_channel"> <br />
-                    <br />
-                    <label for="server_select_port">Port</label>
-                    <input type="text" class="port" id="server_select_port"> <br />
-                    <label for="server_select_password">Password</label>
-                    <input type="text" class="password" id="server_select_password"> <br />
-                    <label for="server_select_ssl">SSL</label>
-                    <input type="checkbox" class="ssl" id="server_select_ssl">
-                </div>
-            </form>
+                    <div class="more">
+                        <label for="server_select_server">Server</label>
+                        <input type="text" class="server" id="server_select_server"> <br />
+                        <label for="server_select_channel">Channel</label>
+                        <input type="text" class="channel" id="server_select_channel"> <br />
+                        <br />
+                        <label for="server_select_port">Port</label>
+                        <input type="text" class="port" id="server_select_port"> <br />
+                        <label for="server_select_password">Password</label>
+                        <input type="text" class="password" id="server_select_password"> <br />
+                        <label for="server_select_ssl">SSL</label>
+                        <input type="checkbox" class="ssl" id="server_select_ssl">
+                    </div>
+                </form>
+
+                <div class="divider-verticle"></div>
+            </div>
+
+            <div style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
+                <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
+                    <img src="img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
+                    <h1>Powered by Kiwi IRC</h1>
+                </a>
+
+                <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
+
+                <p style="font-size:0.9em;margin-top:2em;">This network of people may not be associated with Kiwi IRC itself. <a href="http://www.kiwiirc.com/">Kiwi IRC homepage</a> for more information. Looking for open source? try <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a>.</p>
+            </div>
         </div>
     </script>
 

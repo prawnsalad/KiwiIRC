@@ -1,5 +1,6 @@
 * { margin:0px; padding:0px; }
 html, body { height:100%; }
+p { margin:0.5em 0; }
 a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
@@ -10,7 +11,16 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
     height:100%;
     font-family:Arial, Helvetica, sans-serif;
     font-size:14px; line-height:1.4em;
-    background:#EBEBEB;
+    background: url(http://www.origin.com/ui/skin/oauth/img/background-light.png) left top repeat-x #E3E3E3;
+    color: #555555;
+}
+
+
+
+#kiwi input {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 3px;
 }
 
 /**
@@ -93,6 +103,7 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
     overflow-x:wrap;
     border:none; display: none;
     height: 100%;
+    color: #333333;
 }
 .messages a {
     text-decoration:none;
@@ -154,6 +165,8 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 }
 #controlbox .input input {
     border: medium none;
+    box-shadow: none;
+    border-radius: 0;
     outline:none;
     position:relative;
     height:100%; width:100%;
@@ -176,6 +189,8 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
     top:2; bottom:2px; left:0; width:100%;
     padding: 0.2em 1em;
     text-align: center;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 
@@ -183,7 +198,7 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
-.server_select { width:320px;  padding:3em 0 2em 0; margin: 0 auto; }
+.server_select { width:730px;  padding:3em 0 2em 0; margin: 0 auto; overflow:hidden; }
 .server_select .more { display: none; width:270px; margin:0 auto; }
 .server_select button { float:right; padding:3px 7px; margin-top:10px; }
 .server_select input { float:right; margin-bottom:5px; padding:3px 7px; width:150px; }
@@ -203,12 +218,13 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
+.server_select .kiwi_logo { text-align: center; display:block; }
 .server_select .kiwi_logo h1 {
     font-size:20px;
     line-height:48px; vertical-align: middle;
-    color: #1B1B1B;
+    color: #555555;
 }
-.server_select .kiwi_logo img { float:left; margin-right:0.7em; }
+.server_select .kiwi_logo img { }
 
 
 
@@ -220,6 +236,27 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
 
 
 
+/**
+ * Reusable componants
+ */
+
+.divider-verticle {
+    border-left: 1px solid #CFCFCF;
+    border-right: 1px solid #FFFFFF;
+    position: absolute;
+    top:25px; bottom:25px;
+    right:0;
+    width:0;
+}
+
+.divider-horizontal {
+    border-top: 1px solid #CFCFCF;
+    border-bottom: 1px solid #FFFFFF;
+    position: absolute;
+    left:25px; right:25px;
+    bottom:0;
+    height:0;
+}
 
 
 
