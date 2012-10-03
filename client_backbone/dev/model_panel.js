@@ -66,6 +66,8 @@ kiwi.model.Panel = Backbone.Model.extend({
             this.unset('members');
         }
 
+        kiwi.app.panels.remove(this);
+
         this.unbind();
         this.destroy();
 
