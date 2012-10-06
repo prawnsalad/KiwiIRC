@@ -4,6 +4,7 @@ var irc_numerics = {
     RPL_WELCOME:            '001',
     RPL_MYINFO:             '004',
     RPL_ISUPPORT:           '005',
+    RPL_WHOISREGNICK:       '307',
     RPL_WHOISUSER:          '311',
     RPL_WHOISSERVER:        '312',
     RPL_WHOISOPERATOR:      '313',
@@ -148,6 +149,9 @@ var listeners = {
                 } else {
                     this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], idle: command.params[2], end: false});
                 }
+            },
+    'RPL_WHOISREGNICK':       function (command) {
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: false});
             },
     'RPL_LISTSTART':          function (command) {
 				/*command.server = this.con_num;
