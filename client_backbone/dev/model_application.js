@@ -532,7 +532,7 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             } else if (event.logon) {
                 logon_date = new Date();
                 logon_date.setTime(event.logon * 1000);
-                logon_date = logon_date.toLocaleDateString() + ', ' + logon_date.getHours().toString() + ':' + logon_date.getMinutes().toString() + ':' + logon_date.getSeconds().toString();
+                logon_date = formatDate(logon_date);
 
                 panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
             } else {
