@@ -56,7 +56,9 @@ kiwi.model.Panel = Backbone.Model.extend({
 
     closePanel: function () {
         if (this.view) {
+            this.view.unbind();
             this.view.remove();
+            this.view = undefined;
             delete this.view;
         }
 

@@ -537,29 +537,30 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
 
         gw.on('onlist_start', function (data) {
             if (kiwi.app.channel_list) {
-                kiwi.app.channel_list.view.remove();
+                kiwi.app.channel_list.close();
                 delete kiwi.app.channel_list;
             }
 
             var panel = new kiwi.model.Applet(),
-                list = new ChannelList();
+                applet = new kiwi.applets.Chanlist();
 
-            panel.set('title', 'Channel List');
-            panel.view.$el.append(list.view);
+            panel.load(applet);
             
             kiwi.app.panels.add(panel);
             panel.view.show();
             
-            kiwi.app.channel_list = list;
+            kiwi.app.channel_list = applet;
         });
 
 
         gw.on('onlist_channel', function (data) {
+            // TODO: Put this listener within the applet itself
             kiwi.app.channel_list.addChannel(data.chans);
         });
 
 
         gw.on('onlist_end', function (data) {
+            // TODO: Put this listener within the applet itself
             delete kiwi.app.channel_list;
         });
 

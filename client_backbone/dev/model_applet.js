@@ -3,7 +3,6 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
     // differently than others
     applet: true,
 
-    loaded_applet: null,
 
     initialize: function (attributes) {
         // Temporary name
@@ -13,6 +12,9 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
         this.set({
             "name": name
         }, {"silent": true});
+
+        // Holds the loaded applet
+        this.loaded_applet = null;
     },
 
     // Load an applet within this panel
@@ -68,6 +70,11 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
         this.destroy();
         
         this.view = undefined;
+
+        // Call the applets dispose method if it has one
+        if (this.loaded_applet && this.loaded_applet.dispose) {
+            this.loaded_applet.dispose();
+        }
 
         this.closePanel();
     }

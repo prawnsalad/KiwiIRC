@@ -152,7 +152,7 @@ kiwi.model.Gateway = function () {
     *   Parses the response from the server
     */
     this.parse = function (command, data) {
-        console.log('gateway event', command, data);
+        //console.log('gateway event', command, data);
         if (command !== undefined) {
             that.trigger('on' + command, data);
 
