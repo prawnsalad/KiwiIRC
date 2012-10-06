@@ -521,12 +521,18 @@ kiwi.model.Application = Backbone.Model.extend(new (function () {
             }
 
             panel = kiwi.app.panels.active;
-            if (event.msg) {
+            if (event.ident) {
+                panel.addMsg(event.nick, 'is ' + event.nick + '!' + event.ident + '@' + event.host + ' * ' + event.msg, 'whois');
+            } else if (event.chans) {
+                panel.addMsg(event.nick, 'on ' + event.chans, 'whois');
+            } else if (event.server) {
+                panel.addMsg(event.nick, 'using ' + event.server, 'whois');
+            } else if (event.msg) {
                 panel.addMsg(event.nick, event.msg, 'whois');
             } else if (event.logon) {
                 logon_date = new Date();
                 logon_date.setTime(event.logon * 1000);
-                logon_date = formateDate(logon_date);
+                logon_date = logon_date.toLocaleDateString() + ', ' + logon_date.getHours().toString() + ':' + logon_date.getMinutes().toString() + ':' + logon_date.getSeconds().toString();
 
                 panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
             } else {

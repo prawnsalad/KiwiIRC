@@ -101,49 +101,53 @@ var listeners = {
 				command.command = 'RPL_ENDOFWHOIS';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: true});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: true});
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: true});
             },
     'RPL_WHOISUSER':          function (command) {
 				/*command.server = this.con_num;
 				command.command = 'RPL_WHOISUSER';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: false});
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], ident: command.params[2], host: command.params[3], msg: command.trailing, end: false});
             },
     'RPL_WHOISSERVER':        function (command) {
 				/*command.server = this.con_num;
 				command.command = 'RPL_WHOISSERVER';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: false});
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], server: command.params[2], end: false});
             },
     'RPL_WHOISOPERATOR':      function (command) {
 				/*command.server = this.con_num;
 				command.command = 'RPL_WHOISOPERATOR';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: false});
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: false});
             },
     'RPL_WHOISCHANNELS':      function (command) {
 				/*command.server = this.con_num;
 				command.command = 'RPL_WHOISCHANNELS';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: false});
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], chans: command.trailing, end: false});
             },
     'RPL_WHOISMODES':         function (command) {
 				/*command.server = this.con_num;
 				command.command = 'RPL_WHOISMODES';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: false});
+                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: false});
             },
     'RPL_WHOISIDLE':          function (command) {
 				/*command.server = this.con_num;
 				command.command = 'RPL_WHOISIDLE';
 				this.client.sendIRCCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[0], msg: command.trailing, end: false});
+                if (command.params[3]) {
+                    this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], idle: command.params[2], logon: command.params[3], end: false});
+                } else {
+                    this.client.sendIRCCommand('whois', {server: this.con_num, nick: command.params[1], idle: command.params[2], end: false});
+                }
             },
     'RPL_LISTSTART':          function (command) {
 				/*command.server = this.con_num;
