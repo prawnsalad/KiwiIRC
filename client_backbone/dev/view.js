@@ -317,7 +317,7 @@ kiwi.view.Panel = Backbone.View.extend({
         line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
-        if (msg.type === 'action') {
+        if (msg.type.match(/^action /)) {
             this.alert('action');
         } else if (msg.msg.indexOf(kiwi.gateway.get('nick')) > -1) {
             this.alert('highlight');

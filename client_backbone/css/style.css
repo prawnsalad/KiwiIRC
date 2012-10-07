@@ -80,6 +80,7 @@ a { color:#36C; text-decoration:none; cursor:pointer; }
     font-weight: bold;
 }
 #toolbar .panellist .alert_activity { font-weight: bold; background: #009900; }
+#toolbar .panellist .alert_action { font-weight: bold; }
 
 #toolbar .panellist li img { width:1em; height:1em; top:7px; right:5px; position:absolute; }
 #toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
