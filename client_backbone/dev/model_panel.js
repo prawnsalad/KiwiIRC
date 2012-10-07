@@ -98,5 +98,9 @@ kiwi.model.Panel = Backbone.Model.extend({
 
     isServer: function () {
         return this.server ? true : false;
+    },
+
+    isActive: function () {
+        return (kiwi.app.panels.active === this);
     }
 });
