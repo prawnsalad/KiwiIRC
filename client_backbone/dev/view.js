@@ -35,10 +35,8 @@ kiwi.view.MemberList = Backbone.View.extend({
 });
 
 
-kiwi.view.UserBox = Backbone.View.extend({
-    // Member this userbox is relating to
-    member: {},
 
+kiwi.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick'
@@ -236,12 +234,6 @@ kiwi.view.Panel = Backbone.View.extend({
         "click .chan": "chanClick"
     },
 
-    // none=0, action=1, activity=2, highlight=3
-    alert_level: 0,
-
-    // The container this panel is within
-    $container: null,
-
     initialize: function (options) {
         this.initializePanel(options);
     },
@@ -258,6 +250,8 @@ kiwi.view.Panel = Backbone.View.extend({
         }
 
         this.$el.appendTo(this.$container);
+
+        this.alert_level = 0;
 
         this.model.bind('msg', this.newMsg, this);
         this.msg_count = 0;
@@ -442,9 +436,6 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 
 // Model for this = kiwi.model.PanelList
 kiwi.view.Tabs = Backbone.View.extend({
-    tabs_applets: null,
-    tabs_msg: null,
-
     events: {
         'click li': 'tabClick',
         'click li img': 'partClick'
@@ -601,15 +592,6 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
 
 kiwi.view.ControlBox = Backbone.View.extend({
-    buffer: [],  // Stores previously run commands
-    buffer_pos: 0,  // The current position in the buffer
-
-    // Hold tab autocomplete data
-    tabcomplete: {active: false, data: [], prefix: ''},
-
-    // Instance of InputPreProcessor
-    preprocessor: null,
-
     events: {
         'keydown input.inp': 'process',
         'click .nick': 'showNickChange'
@@ -618,8 +600,14 @@ kiwi.view.ControlBox = Backbone.View.extend({
     initialize: function () {
         var that = this;
 
+        this.buffer = [];  // Stores previously run commands
+        this.buffer_pos = 0;  // The current position in the buffer
+
         this.preprocessor = new InputPreProcessor();
         this.preprocessor.recursive_depth = 5;
+
+        // Hold tab autocomplete data
+        this.tabcomplete = {active: false, data: [], prefix: ''};
 
         kiwi.gateway.bind('change:nick', function () {
             $('.nick', that.$el).text(this.get('nick'));
@@ -787,11 +775,11 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
 
 kiwi.view.StatusMessage = Backbone.View.extend({
-    /* Timer for hiding the message */
-    tmr: null,
-
     initialize: function () {
         this.$el.hide();
+
+        // Timer for hiding the message after X seconds
+        this.tmr = null;
     },
 
     text: function (text, opt) {
@@ -838,10 +826,10 @@ kiwi.view.ResizeHandler = Backbone.View.extend({
         'mouseup': 'stopDrag'
     },
 
-    dragging: false,
-    starting_width: {},
-
     initialize: function () {
+        this.dragging = false;
+        this.starting_width = {};
+
         $(window).on('mousemove', $.proxy(this.onDrag, this));
     },
 

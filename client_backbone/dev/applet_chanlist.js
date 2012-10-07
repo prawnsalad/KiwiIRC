@@ -40,9 +40,9 @@
                 });
             }
 
-            //_.each(this.channels, function (chan) {
-            //    tbody.append(chan.html);
-            //});
+            _.each(this.channels, function (chan) {
+                tbody.append(chan.html);
+            });
             table.append(tbody);
         }
     });

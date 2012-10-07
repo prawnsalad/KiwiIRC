@@ -2,8 +2,6 @@ kiwi.model.Server = kiwi.model.Panel.extend({
     // Used to determine if this is a server panel
     server: true,
 
-    server_login: null,
-
     initialize: function (attributes) {
         var name = "Server";
         this.view = new kiwi.view.Panel({"model": this, "name": name});

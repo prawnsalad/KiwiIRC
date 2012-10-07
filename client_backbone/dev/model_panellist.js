@@ -1,9 +1,6 @@
 kiwi.model.PanelList = Backbone.Collection.extend({
     model: kiwi.model.Panel,
 
-    // Holds the active panel
-    active: null,
-
     comparator: function (chan) {
         return chan.get("name");
     },
@@ -13,6 +10,9 @@ kiwi.model.PanelList = Backbone.Collection.extend({
         // Automatically create a server tab
         this.add(new kiwi.model.Server({'name': kiwi.gateway.get('name')}));
         this.server = this.getByName(kiwi.gateway.get('name'));
+
+        // Holds the active panel
+        this.active = null;
 
         // Keep a tab on the active panel
         this.bind('active', function (active_panel) {
