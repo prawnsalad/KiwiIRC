@@ -639,7 +639,10 @@ kiwi.model.Application = function () {
                 '/me': '/action $1+',
                 '/j': '/join $1+',
                 '/q': '/query $1+',
-                '/k': '/kick $1+'
+                '/k': '/kick $1+',
+
+                '/slap': '/me throws the juciest, sweetest kiwi at $1. Hits right in the kisser!',
+                '/throw': '/slap $1+'
             });
 
             controlbox.on('unknown_command', unknownCommand);
