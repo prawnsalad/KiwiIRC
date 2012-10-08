@@ -15,18 +15,18 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
 
         members = this.get("members");
         members.bind("add", function (member) {
-            this.addMsg(' ', '--> ' + member.displayNick(true) + ' has joined', 'action join');
+            this.addMsg(' ', '== ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 
         members.bind("remove", function (member, members, options) {
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
             if (options.type === 'quit') {
-                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+                this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
             } else if(options.type === 'kick') {
-                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
+                this.addMsg(' ', '== ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
             } else {
-                this.addMsg(' ', '<-- ' + member.displayNick(true) + ' has left ' + msg, 'action part');
+                this.addMsg(' ', '== ' + member.displayNick(true) + ' has left ' + msg, 'action part');
             }
         }, this);
     }
