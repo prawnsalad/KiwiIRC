@@ -63,7 +63,8 @@ kiwi.model.Gateway = function () {
             'try multiple transports': true,
             'connect timeout': 3000,
             'max reconnection attempts': 7,
-            'reconnection delay': 2000
+            'reconnection delay': 2000,
+            'sync disconnect on unload': false
         });
         this.socket.on('connect_failed', function (reason) {
             // TODO: When does this even actually get fired? I can't find a case! ~Darren
@@ -126,6 +127,12 @@ kiwi.model.Gateway = function () {
         this.socket.on('reconnect_failed', function () {
             console.log("kiwi.gateway.socket.on('reconnect_failed')");
         });
+    };
+
+
+
+    this.isConnected = function () {
+        return this.socket.socket.connected;
     };
 
 
