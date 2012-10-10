@@ -127,7 +127,6 @@ if (!this.loadConfig()) {
  */
 if (this.config.handle_http) {
     this.fileServer = new (require('node-static').Server)(__dirname + this.config.public_http);
-    this.jade = require('jade');
     this.cache = {alljs: '', html: []};
 }
 this.httpServers = [];
