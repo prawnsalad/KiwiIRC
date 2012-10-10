@@ -19,8 +19,12 @@ kiwi.model.Application = function () {
         /* Address for the kiwi server */
         this.kiwi_server = null;
 
-        this.initialize = function () {
+        this.initialize = function (options) {
             that = this;
+
+            if (options[0].container) {
+                this.set('container', options[0].container);
+            }
 
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
