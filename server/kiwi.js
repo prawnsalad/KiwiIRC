@@ -4,6 +4,7 @@ var tls = require('tls'),
     net = require('net'),
     http = require('http'),
     https = require('https'),
+    node_static = require('node-static'),
     fs = require('fs'),
     url = require('url'),
     dns = require('dns'),
@@ -96,7 +97,7 @@ this.recode = function () {
     app = null;
     app = require(__dirname + '/app.js');
 
-    var objs = {tls:tls, net:net, http:http, https:https, fs:fs, url:url, dns:dns, crypto:crypto, events:events, util:util, ws:ws, jsp:jsp, pro:pro, _:_, starttls:starttls};
+    var objs = {tls:tls, net:net, http:http, https:https, node_static:node_static, fs:fs, url:url, dns:dns, crypto:crypto, events:events, util:util, ws:ws, jsp:jsp, pro:pro, _:_, starttls:starttls};
     app.init(objs);
     app.rebindIRCCommands();
 
@@ -126,7 +127,6 @@ if (!this.loadConfig()) {
  */
 if (this.config.handle_http) {
     this.fileServer = new (require('node-static').Server)(__dirname + this.config.public_http);
-    this.jade = require('jade');
     this.cache = {alljs: '', html: []};
 }
 this.httpServers = [];
@@ -155,6 +155,9 @@ this.websocketDisconnect = function () {
 }
 this.websocketMessage = function (msg, callback) {
     return app.websocketMessage(this, msg, callback);
+}
+this.websocketKiwiMessage = function (msg, callback) {
+    return app.websocketKiwiMessage(this, msg, callback);
 }
 this.websocketIRCConnect = function (nick, host, port, ssl, callback) {
     return app.websocketIRCConnect(this, nick, host, port, ssl, callback);
@@ -212,9 +215,9 @@ this.kiwi_mod.printMods();
 
 
 // Make sure Kiwi doesn't simply quit on an exception
-process.on('uncaughtException', function (e) {
-    console.log('[Uncaught exception] ' + e);
-});
+//process.on('uncaughtException', function (e) {
+//    console.log('[Uncaught exception] ' + e);
+//});
 
 // Start the server up
 this.websocketListen(this.config.servers, this.httpHandler);

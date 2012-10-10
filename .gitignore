@@ -1,3 +1,6 @@
 *.DS_*
 node/node_modules/
 node_modules/
+doc/
+client/kiwi.js
+client/kiwi.min.js
