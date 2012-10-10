@@ -2,7 +2,6 @@
     "servers":            [
                             {
                                 "secure":   true,
-                                "hsts": true,
                                 "port":   7777,
                                 "address": "0.0.0.0",
 
@@ -24,7 +23,7 @@
     "cap_options":      [],
 
     "handle_http":      true,
-    "public_http":      "client_backbone/",
+    "public_http":      "./../client/",
 
     "max_client_conns": 2,
 
