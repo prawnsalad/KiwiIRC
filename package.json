@@ -1,6 +1,9 @@
 {
   "name": "KiwiIRC",
   "version": "0.5.0",
+  "scripts": {
+    "postinstall": "node client/dev/build.js"
+  },
   "dependencies": {
     "node-static": "0.5.9",
     "uglify-js": "1.2.3",
