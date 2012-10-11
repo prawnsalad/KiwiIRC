@@ -340,8 +340,13 @@ kiwi.view.Panel = Backbone.View.extend({
             this.msg_count--;
         }
     },
-    chanClick: function (x) {
-        kiwi.gateway.join($(x.srcElement).text());
+    chanClick: function (event) {
+        if (event.target) {
+            kiwi.gateway.join($(event.target).text());
+        } else {
+            // IE...
+            kiwi.gateway.join($(event.srcElement).text());
+        }
     },
     show: function () {
         var $this = this.$el;
