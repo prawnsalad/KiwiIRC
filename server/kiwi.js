@@ -215,9 +215,9 @@ this.kiwi_mod.printMods();
 
 
 // Make sure Kiwi doesn't simply quit on an exception
-//process.on('uncaughtException', function (e) {
-//    console.log('[Uncaught exception] ' + e);
-//});
+process.on('uncaughtException', function (e) {
+    console.log('[Uncaught exception] ' + e);
+});
 
 // Start the server up
 this.websocketListen(this.config.servers, this.httpHandler);
