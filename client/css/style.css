@@ -2,6 +2,7 @@
 html, body { height:100%; }
 p { margin:0.5em 0; }
 a { color:#36C; text-decoration:none; cursor:pointer; }
+a img { border:none; }
 
 
 
