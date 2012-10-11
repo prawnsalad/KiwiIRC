@@ -138,8 +138,21 @@ kiwi.model.Application = function () {
                 parts.shift();
 
                 if (parts.length > 0 && parts[0]) {
-                    // TODO: Extract the port from this hostname
-                    defaults.server = parts[0];
+                    // Extract the port+ssl if we find one
+                    if (parts[0].search(/:/) > 0) {
+                        defaults.port = parts[0].substring(parts[0].search(/:/) + 1);
+                        defaults.server = parts[0].substring(0, parts[0].search(/:/));
+                        if (defaults.port[0] === '+') {
+                            defaults.port = parseInt(defaults.port.substring(1), 10);
+                            defaults.ssl = true;
+                        } else {
+                            defaults.ssl = false;
+                        }
+
+                    } else {
+                        defaults.server = parts[0];
+                    }
+
                     parts.shift();
                 }
 
