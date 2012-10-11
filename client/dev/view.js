@@ -449,7 +449,7 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
 kiwi.view.Tabs = Backbone.View.extend({
     events: {
         'click li': 'tabClick',
-        'click li img': 'partClick'
+        'click li .part': 'partClick'
     },
 
     initialize: function () {
@@ -516,7 +516,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
     panelActive: function (panel) {
         // Remove any existing tabs or part images
-        $('img', this.$el).remove();
+        $('.part', this.$el).remove();
         this.tabs_applets.children().removeClass('active');
         this.tabs_msg.children().removeClass('active');
 
@@ -524,7 +524,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
         // Only show the part image on non-server tabs
         if (!panel.isServer()) {
-            panel.tab.append('<img src="img/redcross.png" />');
+            panel.tab.append('<span class="part"></span>');
         }
     },
 
