@@ -76,8 +76,8 @@ kiwi.model.Gateway = function () {
         });
 
         this.socket.on('error', function (e) {
-            this.trigger("connect_fail", {reason: e});
             console.log("kiwi.gateway.socket.on('error')", {reason: e});
+            that.trigger("connect_fail", {reason: e});
         });
 
         this.socket.on('connecting', function (transport_type) {
@@ -103,7 +103,7 @@ kiwi.model.Gateway = function () {
         });
 
         this.socket.on('too_many_connections', function () {
-            this.trigger("connect_fail", {reason: 'too_many_connections'});
+            that.trigger("connect_fail", {reason: 'too_many_connections'});
         });
 
         this.socket.on('irc', function (data, callback) {
