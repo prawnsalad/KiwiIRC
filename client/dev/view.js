@@ -984,7 +984,7 @@ kiwi.view.Application = Backbone.View.extend({
 
                     // Some browsers don't always update the last title correctly
                     // Wait a few seconds and then reset
-                    setTimeout(this.reset, 2000);
+                    setTimeout(that.reset, 2000);
                 });
 
                 $(window).blur(function (event) {
