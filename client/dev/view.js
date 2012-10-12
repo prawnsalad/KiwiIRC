@@ -653,9 +653,9 @@ kiwi.view.ControlBox = Backbone.View.extend({
             inp_val = inp_val.trim();
 
             if (inp_val) {
-                this.processInput(inp.val());
+                this.processInput(inp_val);
 
-                this.buffer.push(inp.val());
+                this.buffer.push(inp_val);
                 this.buffer_pos = this.buffer.length;
             }
 
@@ -763,7 +763,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
         params = command_raw.split(' ');
         if (params[0][0] === '/') {
             command = params[0].substr(1).toLowerCase();
-            params = params.splice(1);
+            params = params.splice(1, params.length - 1);
         } else {
             // Default command
             command = 'msg';
