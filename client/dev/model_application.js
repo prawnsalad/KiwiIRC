@@ -652,12 +652,22 @@ kiwi.model.Application = function () {
         this.bindControllboxCommands = function (controlbox) {
             // Default aliases
             $.extend(controlbox.preprocessor.aliases, {
+                // General aliases
                 '/p': '/part $1+',
                 '/me': '/action $1+',
                 '/j': '/join $1+',
                 '/q': '/query $1+',
+
+                // Op related aliases
+                '/op': '/quote mode $channel +o $1+',
+                '/deop': '/quote mode $channel -o $1+',
+                '/hop': '/quote mode $channel +h $1+',
+                '/dehop': '/quote mode $channel -h $1+',
+                '/voice': '/quote mode $channel +v $1+',
+                '/devoice': '/quote mode $channel -v $1+',
                 '/k': '/kick $1+',
 
+                // Misc aliases
                 '/slap': '/me throws the juciest, sweetest kiwi at $1. Hits right in the kisser!',
                 '/throw': '/slap $1+'
             });
