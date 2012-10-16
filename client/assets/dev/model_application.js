@@ -26,6 +26,9 @@ kiwi.model.Application = function () {
                 this.set('container', options[0].container);
             }
 
+            // The base url to the kiwi server
+            this.set('base_path', options[0].base_path ? options[0].base_path : '/client');
+
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
         };
@@ -131,10 +134,9 @@ kiwi.model.Application = function () {
             };
 
             // Process the URL part by part, extracting as we go
-            parts = window.location.pathname.toString().split('/');
-            parts.shift();
+            parts = window.location.pathname.toString().replace(this.get('base_path'), '').split('/');
 
-            if (parts.length > 0 && parts[0].toLowerCase() === 'client') {
+            if (parts.length > 0) {
                 parts.shift();
 
                 if (parts.length > 0 && parts[0]) {

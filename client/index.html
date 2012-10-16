@@ -6,14 +6,14 @@
 
 <title> KiwiIRC </title>
 
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/client/assets/css/style.css" />
 
 </head>
 <body>
     <div id="kiwi">
         <div id="toolbar">
             <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
-                <h2><img src="/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> Powered by Kiwi IRC</h2>
+                <h2><img src="/client/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> Powered by Kiwi IRC</h2>
             </a>
 
             <div id="tabs">
@@ -92,7 +92,7 @@
 
             <div style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
                 <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
-                    <img src="/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
+                    <img src="/client/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
                     <h1>Powered by Kiwi IRC</h1>
                 </a>
 
@@ -154,45 +154,45 @@
 
         // Common dependancies that are required at all times
         var scripts = [
-            ['/jquery-1.7.1.min.js', '/underscore-min.js'],
-            '/backbone-git.js'
+            ['jquery-1.7.1.min.js', 'underscore-min.js'],
+            'backbone-git.js'
         ];
 
         // If in debug mode, load each development script
         if (getQueryVariable('debug')) {
             console.log('Loading debugging scripts');
             scripts = scripts.concat([
-                '/dev/app.js',
+                'dev/app.js',
                 [
-                    '/dev/model_application.js',
-                    '/dev/model_gateway.js'
+                    'dev/model_application.js',
+                    'dev/model_gateway.js'
                 ],
                 [
-                    '/dev/model_panellist.js',
-                    '/dev/model_panel.js',
-                    '/dev/model_member.js',
-                    '/dev/model_memberlist.js'
+                    'dev/model_panellist.js',
+                    'dev/model_panel.js',
+                    'dev/model_member.js',
+                    'dev/model_memberlist.js'
                 ],
                 
                 [
-                    '/dev/model_channel.js',
-                    '/dev/model_server.js',
-                    '/dev/model_applet.js'
+                    'dev/model_channel.js',
+                    'dev/model_server.js',
+                    'dev/model_applet.js'
                 ],
 
                 [
-                    '/dev/applet_settings.js',
-                    '/dev/applet_nickserv.js',
-                    '/dev/applet_chanlist.js'
+                    'dev/applet_settings.js',
+                    'dev/applet_nickserv.js',
+                    'dev/applet_chanlist.js'
                 ],
 
                 [
-                    '/dev/utils.js',
-                    '/dev/view.js'
+                    'dev/utils.js',
+                    'dev/view.js'
                 ]
             ]);
         } else {
-            scripts.push('/kiwi.js');
+            scripts.push('kiwi.js');
         }
 
 
@@ -200,6 +200,7 @@
         function startApp () {
             var opts = {
                 container: $('#kiwi'),
+                base_path: base_path
 
                 // Override the kiwi_server to use. (Think: running on standalone client..)
                 //kiwi_server: 'http://kiwiirc.com:80'
@@ -213,16 +214,31 @@
         // Load each script
         var cur_script = 0;
         function loadNextScript () {
+            var to_load,
+                base = base_path + '/assets/';
+
             // Start the kiwi app if all scripts have been loaded
             if (cur_script === scripts.length) {
                 startApp();
                 return;
             }
 
-            $script(scripts[cur_script], loadNextScript);
+            if (typeof scripts[cur_script] === 'string') {
+                to_load = base + scripts[cur_script];
+            } else {
+                to_load = [];
+                for(var idx in scripts[cur_script]) {
+                    to_load.push(base + scripts[cur_script][idx]);
+                }
+            }
+            
+            $script(to_load, loadNextScript);
 
             cur_script++;
         }
+
+        // Entry path for the kiwi application
+        var base_path = '/client';
 
         // Start loading scripts
         loadNextScript();

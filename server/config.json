@@ -24,6 +24,7 @@
 
     "handle_http":      true,
     "public_http":      "./../client/",
+    "http_base_path":   "/client",
 
     "max_client_conns": 2,
 

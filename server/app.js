@@ -84,8 +84,15 @@ function StaticFileServer(public_html) {
 }
 
 StaticFileServer.prototype.serve = function (request, response) {
+    // The incoming requests root directory (ie. /kiwiclient/)
+    var root_path = kiwi.config.http_base_path || '/client',
+        root_path_regex = root_path.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+    // Any asset request to head into the asset dir
+    request.url = request.url.replace(root_path + '/assets/', '/assets/');
+
     // Any requests for /client to load the index file
-    if (request.url.match(/^\/client/)) {
+    if (request.url.match(new RegExp('^' + root_path_regex, 'i'))) {
         request.url = '/';
     }
 
