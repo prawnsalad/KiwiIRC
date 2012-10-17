@@ -84,9 +84,32 @@ function StaticFileServer(public_html) {
 }
 
 StaticFileServer.prototype.serve = function (request, response) {
+    // The incoming requests root directory (ie. /kiwiclient/)
+    var root_path = kiwi.config.http_base_path || '/client',
+        root_path_regex = root_path.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+    // Any asset request to head into the asset dir
+    request.url = request.url.replace(root_path + '/assets/', '/assets/');
+
     // Any requests for /client to load the index file
-    if (request.url.match(/^\/client/)) {
+    if (request.url.match(new RegExp('^' + root_path_regex, 'i'))) {
         request.url = '/';
+    }
+
+    // If a forwarded-for header is found, switch the source address
+    if (request.headers['x-forwarded-for']) {
+        // Check we're connecting from a whitelisted proxy
+        if (!kiwi.config.http_proxies
+            || kiwi.config.http_proxies.indexOf(request.connection.remoteAddress) < 0)
+        {
+            console.log('Unlisted proxy:', request.connection.remoteAddress);
+            response.writeHead(503);
+            response.end();
+            return;
+        }
+
+        // We're sent from a whitelisted proxy, replace the hosts
+        request.connection.remoteAddress = request.headers['x-forwarded-for'];
     }
 
     this.file_server.serve(request, response, function (err) {
