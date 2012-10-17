@@ -37,6 +37,7 @@
                             "irc.example.com":  "examplepassword",
                             "127.0.0.1":        "foobar"
                         },
+    "ip_as_realname": [],
 
     "transports":       [
                             "websocket",

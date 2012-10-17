@@ -787,19 +787,32 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     events.EventEmitter.call(this);
 
     onConnectHandler = function () {
+        var realname = nick;
+
         that.IRC.nick = nick;
         // Send the login data
         dns.reverse(websocket.kiwi.address, function (err, domains) {
             websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
+
+            // Check if we need to pass the users IP as its realname
+            if (kiwi.config.ip_as_realname && kiwi.config.ip_as_realname.indexOf(host) > -1) {
+                realname = websocket.kiwi.address;
+            }
+
+            // Do we have a WEBIRC password for this?
             if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
                 websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
             }
+
+            // If the user specified a password
             if (password) {
                 websocket.sendServerLine('PASS ' + password);
             }
+
             websocket.sendServerLine('CAP LS');
             websocket.sendServerLine('NICK ' + nick);
-            websocket.sendServerLine('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + nick);
+            console.log('SENDING ', 'USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + realname);
+            websocket.sendServerLine('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + realname);
 
             that.connected = true;
             that.emit('connect');
