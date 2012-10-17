@@ -96,6 +96,22 @@ StaticFileServer.prototype.serve = function (request, response) {
         request.url = '/';
     }
 
+    // If a forwarded-for header is found, switch the source address
+    if (request.headers['x-forwarded-for']) {
+        // Check we're connecting from a whitelisted proxy
+        if (!kiwi.config.http_proxies
+            || kiwi.config.http_proxies.indexOf(request.connection.remoteAddress) < 0)
+        {
+            console.log('Unlisted proxy:', request.connection.remoteAddress);
+            response.writeHead(503);
+            response.end();
+            return;
+        }
+
+        // We're sent from a whitelisted proxy, replace the hosts
+        request.connection.remoteAddress = request.headers['x-forwarded-for'];
+    }
+
     this.file_server.serve(request, response, function (err) {
         if (err) {
             response.writeHead(err.status, err.headers);
