@@ -275,8 +275,8 @@ a img { border:none; }
     border-left: 1px solid #6A6A6A;
 }
 #kiwi #memberlists ul li:hover {
-    /* border-left: 5px solid #88C56A; */
-    background: #88C56A;
+    border-left: 5px solid #88C56A;
+    /* background: #88C56A; */
     -webkit-transition: 0.2s ease;
     -moz-transition: 0.2s ease;
     -ms-transition: 0.2s ease;
