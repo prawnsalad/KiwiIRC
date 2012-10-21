@@ -46,7 +46,7 @@ module.exports.Client = Client;
 // error MUST otherwise be a truthy value and SHOULD be a string where the cause of the error is known.
 // response MAY be given even if error is truthy
 
-Client.prototype.sendIRCCommand = function (command, data, callback) {
+Client.prototype.sendIrcCommand = function (command, data, callback) {
     var c = {command: command, data: data};
     //console.log('C<--', c);
     this.websocket.emit('irc', c, callback);

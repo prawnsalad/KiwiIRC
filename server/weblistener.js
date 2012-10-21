@@ -8,7 +8,7 @@ var ws          = require('socket.io'),
     url         = require('url'),
     _           = require('underscore'),
     Client   = require('./client.js').Client,
-    HttpHandler = require('./http-handler.js').HttpHandler;
+    HttpHandler = require('./httphandler.js').HttpHandler;
 
 // Instance of HttpHandler
 var http_handler;
