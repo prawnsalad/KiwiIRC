@@ -1,8 +1,12 @@
 var fs          = require('fs'),
     _           = require('underscore'),
-    WebListener = require('./web.js').WebListener;
+    WebListener = require('./weblistener.js');
 
-//load config
+
+
+/*
+ * Config loading
+ */
 
 var config_filename = 'config.json',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
@@ -27,6 +31,7 @@ for (var i in config_dirs) {
     }
 }
 
+// Make sure we have a valid config file and at least 1 server
 if (Object.keys(config).length === 0) {
     console.log('Couldn\'t find a valid config file!');
     process.exit(1);
@@ -37,9 +42,20 @@ if ((!config.servers) || (config.servers.length < 1)) {
     process.exit(2);
 }
 
-//Create web listeners
 
+
+
+
+/*
+ * Web listeners
+ */
+
+// Holder for all the connected clients
+// TODO: Change from an array to an object. Generate sha1 hash within the client
+// and use that as the key. (Much less work involved in removing a client)
 var clients = [];
+
+// Start up a weblistener for each found in the config
 _.each(config.servers, function (server) {
     var wl = new WebListener(server, config.transports);
     wl.on('connection', function (client) {
@@ -53,10 +69,17 @@ _.each(config.servers, function (server) {
 });
 
 
-//Set process title
-process.title = 'Kiwi IRC';
 
-//Change UID/GID
+
+
+/*
+ * Process settings
+ */
+
+// Set process title
+process.title = 'kiwiirc';
+
+// Change UID/GID
 if ((config.user) && (config.user !== '')) {
     process.setuid(config.user);
 }
@@ -64,8 +87,22 @@ if ((config.group) && (config.group !== '')) {
     process.setgid(config.group);
 }
 
-//Listen to STDIN
+
+
+/*
+ * Listen for runtime commands
+ */
+
 process.stdin.resume();
-process.stdin.on('data', function (data) {
-    console.log(data.toString());
+process.stdin.on('data', function (buffered) {
+    var data = buffered.toString().trim();
+
+    switch (data) {
+        case 'stats':
+            console.log('Connected clients: ' + _.size(clients).toString());
+            break;
+
+        default:
+            console.log('Unrecognised command: ' + data);
+    }
 });
