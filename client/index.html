@@ -2,18 +2,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-<base href="/" target="_blank">
+<base target="_blank">
 
 <title> KiwiIRC </title>
 
-<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="/client/assets/css/style.css" />
 
 </head>
 <body>
     <div id="kiwi">
         <div id="toolbar">
             <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
-                <h2><img src="img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> Powered by Kiwi IRC</h2>
+                <h2><img src="/client/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> Powered by Kiwi IRC</h2>
             </a>
 
             <div id="tabs">
@@ -44,20 +44,28 @@
         </div>
     </div>
 
-    <script type="text/x-jquery-tmpl" id="tmpl_userbox">
+
+
+
+
+    
+    <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
             <a class="query">Message</a>
             <a class="info">Info</a>
+            <a class="slap">Slap!</a>
+
+            <div class="divider-horizontal"></div>
         </div>
     </script>
     
-    <script type="text/x-jquery-tmpl" id="tmpl_nickchange">
+    <script type="text/html" id="tmpl_nickchange">
         <form class="nickchange">
             <label for="nickchange">New nick:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button>Change</button> <a class="cancel">Cancel</a>
         </form>
     </script>
 
-    <script type="text/x-jquery-tmpl" id="tmpl_server_select">
+    <script type="text/html" id="tmpl_server_select">
         <div class="server_select">
 
             <div style="position:relative;float:left;width:320px;padding-right:3em;margin-top:50px;">
@@ -92,7 +100,7 @@
 
             <div style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
                 <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
-                    <img src="img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
+                    <img src="/client/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
                     <h1>Powered by Kiwi IRC</h1>
                 </a>
 
@@ -103,7 +111,7 @@
         </div>
     </script>
 
-    <script type="text/x-jquery-tmpl" id="tmpl_applet_settings">
+    <script type="text/html" id="tmpl_applet_settings">
         <div>
             <select class="theme">
                 <option value="default">Default</option>
@@ -115,7 +123,7 @@
     </script>
 
 
-    <script type="text/x=x-jquery-tmpl" id="tmpl_channel_list">
+    <script type="text/html" id="tmpl_channel_list">
         <div>
             <table style="margin:1em 2em;">
                 <thead style="font-weight: bold;">
@@ -200,6 +208,7 @@
         function startApp () {
             var opts = {
                 container: $('#kiwi'),
+                base_path: base_path
 
                 // Override the kiwi_server to use. (Think: running on standalone client..)
                 //kiwi_server: 'http://kiwiirc.com:80'
@@ -213,16 +222,31 @@
         // Load each script
         var cur_script = 0;
         function loadNextScript () {
+            var to_load,
+                base = base_path + '/assets/';
+
             // Start the kiwi app if all scripts have been loaded
             if (cur_script === scripts.length) {
                 startApp();
                 return;
             }
 
-            $script(scripts[cur_script], loadNextScript);
+            if (typeof scripts[cur_script] === 'string') {
+                to_load = base + scripts[cur_script];
+            } else {
+                to_load = [];
+                for(var idx in scripts[cur_script]) {
+                    to_load.push(base + scripts[cur_script][idx]);
+                }
+            }
+            
+            $script(to_load, loadNextScript);
 
             cur_script++;
         }
+
+        // Entry path for the kiwi application
+        var base_path = '/client';
 
         // Start loading scripts
         loadNextScript();
