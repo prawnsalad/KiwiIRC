@@ -59,8 +59,8 @@ var WebListener = function (config, transports) {
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
 
-    this.ws.of('/kiwi').authorization(authorisation).on('connection', function () {
-        connection.apply(that, arguments);
+    this.ws.of('/kiwi').authorization(authoriseConnection).on('connection', function () {
+        newConnection.apply(that, arguments);
     });
     this.ws.of('/kiwi').on('error', console.log);
 };
@@ -78,14 +78,14 @@ function handleHttpRequest(request, response) {
 }
 
 
-var authorisation = function (handshakeData, callback) {
+function authoriseConnection(handshakeData, callback) {
     dns.reverse(handshakeData.address.address, function (err, domains) {
         handshakeData.revdns = (err) ? handshakeData.address.address : _.first(domains);
         callback(null, true);
     });
 };
 
-var connection = function (websocket) {
+function newConnection(websocket) {
     //console.log(websocket);
     this.emit('connection', new Client(websocket));
 };

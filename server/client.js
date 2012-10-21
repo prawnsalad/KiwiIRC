@@ -1,17 +1,18 @@
 var util             = require('util'),
     events           = require('events'),
     _                = require('underscore'),
-    IRCConnection    = require('./irc-connection.js').IRCConnection,
-    IRCCommands      = require('./irc-commands.js'),
+    IrcConnection    = require('./ircconnection.js').IrcConnection,
+    IrcCommands      = require('./irc-commands.js'),
     ClientCommandset = require('./client-commands.js').ClientCommandset;
 
+
 var Client = function (websocket) {
-    var c = this;
+    var that = this;
     
     events.EventEmitter.call(this);
     this.websocket = websocket;
     
-    this.IRC_connections = [];
+    this.irc_connections = [];
     this.next_connection = 0;
     
     this.buffer = {
@@ -23,16 +24,16 @@ var Client = function (websocket) {
     this.client_commands = new ClientCommandset(this);
 
     websocket.on('irc', function () {
-        handleClientMessage.apply(c, arguments);
+        handleClientMessage.apply(that, arguments);
     });
     websocket.on('kiwi', function () {
-        kiwi_command.apply(c, arguments);
+        kiwiCommand.apply(that, arguments);
     });
     websocket.on('disconnect', function () {
-        disconnect.apply(c, arguments);
+        websocketDisconnect.apply(that, arguments);
     });
     websocket.on('error', function () {
-        error.apply(c, arguments);
+        websocketError.apply(that, arguments);
     });
 };
 util.inherits(Client, events.EventEmitter);
@@ -55,18 +56,18 @@ Client.prototype.sendKiwiCommand = function (command, callback) {
     this.websocket.emit('kiwi', command, callback);
 };
 
-var handleClientMessage = function (msg, callback) {
+function handleClientMessage(msg, callback) {
     var server, args, obj, channels, keys;
 
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
         return (typeof callback === 'function') ? callback('server not specified') : undefined;
-    } else if (!this.IRC_connections[msg.server]) {
+    } else if (!this.irc_connections[msg.server]) {
         return (typeof callback === 'function') ? callback('not connected to server') : undefined;
     }
 
     // The server this command is directed to
-    server = this.IRC_connections[msg.server];
+    server = this.irc_connections[msg.server];
 
     if (typeof callback !== 'function') {
         callback = null;
@@ -86,23 +87,23 @@ var handleClientMessage = function (msg, callback) {
 
 
 
-var kiwi_command = function (command, callback) {
+function kiwiCommand(command, callback) {
     var that = this;
-    console.log(typeof callback);
+    
     if (typeof callback !== 'function') {
         callback = function () {};
     }
     switch (command.command) {
 		case 'connect':
 			if ((command.hostname) && (command.port) && (command.nick)) {
-				var con = new IRCConnection(command.hostname, command.port, command.ssl,
+				var con = new IrcConnection(command.hostname, command.port, command.ssl,
 					command.nick, {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.address.address},
 					command.password, null);
 
 				var con_num = this.next_connection++;
-				this.IRC_connections[con_num] = con;
+				this.irc_connections[con_num] = con;
 
-				var binder = new IRCCommands.Binder(con, con_num, this);
+				var binder = new IrcCommands.Binder(con, con_num, this);
 				binder.bind_irc_commands();
 				
 				con.on('connected', function () {
@@ -115,7 +116,7 @@ var kiwi_command = function (command, callback) {
 				});
                 
                 con.on('close', function () {
-                    that.IRC_connections[con_num] = null;
+                    that.irc_connections[con_num] = null;
                 });
 			} else {
 				return callback('Hostname, port and nickname must be specified');
@@ -126,14 +127,10 @@ var kiwi_command = function (command, callback) {
     }
 };
 
-var extension_command = function (command, callback) {
-    if (typeof callback === 'function') {
-        callback('not implemented');
-    }
-};
 
-var disconnect = function () {
-    _.each(this.IRC_connections, function (irc_connection, i, cons) {
+// Websocket has disconnected, so quit all the IRC connections
+function websocketDisconnect() {
+    _.each(this.irc_connections, function (irc_connection, i, cons) {
         if (irc_connection) {
             irc_connection.end('QUIT :Kiwi IRC');
             cons[i] = null;
@@ -142,6 +139,8 @@ var disconnect = function () {
     this.emit('destroy');
 };
 
-var error = function () {
+
+// TODO: Should this close all the websocket connections too?
+function websocketError() {
     this.emit('destroy');
 };
