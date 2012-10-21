@@ -23,7 +23,7 @@ var WebListener = function (config, transports) {
     
     http_handler = new HttpHandler(config);
     
-    if (config.secure) {
+    if (config.ssl) {
         opts = {
             key: fs.readFileSync(__dirname + '/' + config.ssl_key),
             cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)
@@ -38,7 +38,7 @@ var WebListener = function (config, transports) {
         hs = https.createServer(opts, handleHttpRequest);
         
         // Start socket.io listening on this weblistener
-        this.ws = ws.listen(hs, {secure: true});
+        this.ws = ws.listen(hs, {ssl: true});
         hs.listen(config.port, config.address);
 
         console.log('Listening on ' + config.address + ':' + config.port.toString() + ' with SSL');
@@ -48,7 +48,7 @@ var WebListener = function (config, transports) {
         hs = http.createServer(handleHttpRequest);
 
         // Start socket.io listening on this weblistener
-        this.ws = ws.listen(hs, {secure: false});
+        this.ws = ws.listen(hs, {ssl: false});
         hs.listen(config.port, config.address);
 
         console.log('Listening on ' + config.address + ':' + config.port.toString() + ' without SSL');

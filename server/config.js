@@ -8,22 +8,22 @@ conf.group = "";
 // Server listen blocks
 conf.servers = [];
 
+// Example plain-text server block
+conf.servers.push({
+    port:   7778,
+    address: "0.0.0.0"
+});
+
 // Example SSL server block
 conf.servers.push({
     port:     7777,
     address: "0.0.0.0",
 
-    secure:   true,
+    ssl:   true,
     ssl_key: "server.key",
     ssl_cert: "cert.pem"
 });
 
-// Example plain-text server block
-conf.servers.push({
-    secure:   false,
-    port:   7778,
-    address: "0.0.0.0"
-});
 
 // Where the client files are
 conf.public_http = "client/";
