@@ -42,15 +42,16 @@ var irc_numerics = {
 };
 
 
-var Binder = function (irc_connection, con_num, client) {
+var IrcCommands = function (irc_connection, con_num, client) {
     this.irc_connection = irc_connection;
     this.con_num = con_num;
     this.client = client;
 };
-module.exports.Binder = Binder;
+module.exports = IrcCommands;
 
-Binder.prototype.bind_irc_commands = function () {
+IrcCommands.prototype.bindEvents = function () {
     var that = this;
+
     _.each(listeners, function (listener, command) {
         var s = command.substr(0, 4);
         if ((s === 'RPL_') || (s === 'ERR_')) {
@@ -61,6 +62,8 @@ Binder.prototype.bind_irc_commands = function () {
         });
     });
 };
+
+
 
 var listeners = {
     'RPL_WELCOME':            function (command) {

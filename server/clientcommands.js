@@ -3,12 +3,12 @@ var _ = require('underscore');
 
 
 
-var ClientCommandset = function (client) {
+var ClientCommands = function (client) {
     this.client = client;
 };
-module.exports.ClientCommandset = ClientCommandset;
+module.exports = ClientCommands;
 
-ClientCommandset.prototype.run = function (command, args, irc_connection, callback) {
+ClientCommands.prototype.run = function (command, args, irc_connection, callback) {
     // Do we have a function to handle this command?
     if (!listeners[command.toUpperCase()]) {
         return;

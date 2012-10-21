@@ -1,9 +1,9 @@
 var util             = require('util'),
     events           = require('events'),
     _                = require('underscore'),
-    IrcConnection    = require('./ircconnection.js').IrcConnection,
-    IrcCommands      = require('./irc-commands.js'),
-    ClientCommandset = require('./client-commands.js').ClientCommandset;
+    IrcConnection    = require('./irc/connection.js').IrcConnection,
+    IrcCommands      = require('./irc/commands.js'),
+    ClientCommands = require('./clientcommands.js');
 
 
 var Client = function (websocket) {
@@ -21,7 +21,7 @@ var Client = function (websocket) {
     };
     
     // Handler for any commands sent from the client
-    this.client_commands = new ClientCommandset(this);
+    this.client_commands = new ClientCommands(this);
 
     websocket.on('irc', function () {
         handleClientMessage.apply(that, arguments);
@@ -95,7 +95,7 @@ function kiwiCommand(command, callback) {
     }
     switch (command.command) {
 		case 'connect':
-			if ((command.hostname) && (command.port) && (command.nick)) {
+			if (command.hostname && command.port && command.nick) {
 				var con = new IrcConnection(command.hostname, command.port, command.ssl,
 					command.nick, {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.address.address},
 					command.password, null);
@@ -103,8 +103,8 @@ function kiwiCommand(command, callback) {
 				var con_num = this.next_connection++;
 				this.irc_connections[con_num] = con;
 
-				var binder = new IrcCommands.Binder(con, con_num, this);
-				binder.bind_irc_commands();
+				var irc_commands = new IrcCommands(con, con_num, this);
+				irc_commands.bindEvents();
 				
 				con.on('connected', function () {
                     console.log("con.on('connected')");
