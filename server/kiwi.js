@@ -8,28 +8,46 @@ var fs          = require('fs'),
  * Config loading
  */
 
-var config_filename = 'config.json',
+var config_filename = 'config.js',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/'];
 
-var config = Object.create(null);
-for (var i in config_dirs) {
-    try {
-        if (fs.lstatSync(config_dirs[i] + config_filename).isDirectory() === false) {
-            config = JSON.parse(fs.readFileSync(config_dirs[i] + config_filename, 'utf-8'));
-            console.log('Loaded config file ' + config_dirs[i] + config_filename);
-            break;
+var config;
+
+function loadConfig() {
+    var new_config,
+        conf_filepath;
+
+    // Loop through the possible config paths and find a usable one
+    for (var i in config_dirs) {
+        conf_filepath = config_dirs[i] + config_filename;
+
+        try {
+            if (fs.lstatSync(conf_filepath).isFile() === true) {
+                // Clear the loaded config cache
+                delete require.cache[require.resolve(conf_filepath)];
+
+                // Try load the new config file
+                new_config = require(conf_filepath).production;
+                console.log('Loaded config file ' + config_dirs[i] + config_filename);
+                break;
+            }
+        } catch (e) {
+            switch (e.code) {
+            case 'ENOENT':      // No file/dir
+                break;
+            default:
+                console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
+                return false;
+            }
+            continue;
         }
-    } catch (e) {
-        switch (e.code) {
-        case 'ENOENT':      // No file/dir
-            break;
-        default:
-            console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
-            return false;
-        }
-        continue;
     }
+
+    return new_config;
 }
+
+
+config = loadConfig() || Object.create(null);
 
 // Make sure we have a valid config file and at least 1 server
 if (Object.keys(config).length === 0) {
@@ -100,6 +118,19 @@ process.stdin.on('data', function (buffered) {
     switch (data) {
         case 'stats':
             console.log('Connected clients: ' + _.size(clients).toString());
+            break;
+
+        case 'reconfig':
+            (function () {
+                var new_conf = loadConfig();
+                if (new_conf) {
+                    config = new_conf;
+                    console.log('New config file loaded');
+                } else {
+                    console.log("No new config file was loaded");
+                }
+            })();
+
             break;
 
         default:
