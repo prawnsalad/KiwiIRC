@@ -27,7 +27,7 @@ kiwi.model.Application = function () {
             }
 
             // The base url to the kiwi server
-            this.set('base_path', options[0].base_path ? options[0].base_path : '/client');
+            this.set('base_path', options[0].base_path ? options[0].base_path : '/kiwi');
 
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
@@ -51,12 +51,16 @@ kiwi.model.Application = function () {
             this.view.barsHide(true);
 
             this.panels.server.server_login.bind('server_connect', function (event) {
-                var server_login = this;
+                var server_login = this,
+                    transport_path = '';
                 auto_connect_details = event;
 
                 server_login.networkConnecting();
                 
-                $script(that.kiwi_server + '/socket.io/socket.io.js?ts='+(new Date().getTime()), function () {
+                // Path to get the socket.io transport code
+                transport_path = that.kiwi_server + that.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
+                
+                $script(transport_path, function () {
                     if (!window.io) {
                         kiwiServerNotFound();
                         return;

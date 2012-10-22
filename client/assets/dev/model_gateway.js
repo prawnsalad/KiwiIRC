@@ -59,7 +59,20 @@ kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (host, port, ssl, password, callback) {
+        var resource;
+
+        // Work out the resource URL for socket.io
+        if (kiwi.app.get('base_path').substr(0, 1) === '/') {
+            resource = kiwi.app.get('base_path');
+            resource = resource.substr(1, resource.length-1);
+            resource += '/transport';
+        } else {
+            resource = kiwi.app.get('base_path') + '/transport';
+        }
+
         this.socket = io.connect(this.get('kiwi_server'), {
+            'resource': resource,
+            
             'try multiple transports': true,
             'connect timeout': 3000,
             'max reconnection attempts': 7,

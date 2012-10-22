@@ -7,6 +7,7 @@ var ws          = require('socket.io'),
     dns         = require('dns'),
     url         = require('url'),
     _           = require('underscore'),
+    config      = require('./configuration.js'),
     Client   = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler;
 
@@ -14,24 +15,24 @@ var ws          = require('socket.io'),
 var http_handler;
 
 
-var WebListener = function (config, transports) {
+var WebListener = function (web_config, transports) {
     var hs,
         opts,
         that = this;
 
     events.EventEmitter.call(this);
     
-    http_handler = new HttpHandler(config);
+    http_handler = new HttpHandler(web_config);
     
-    if (config.ssl) {
+    if (web_config.ssl) {
         opts = {
-            key: fs.readFileSync(__dirname + '/' + config.ssl_key),
-            cert: fs.readFileSync(__dirname + '/' + config.ssl_cert)
+            key: fs.readFileSync(__dirname + '/' + web_config.ssl_key),
+            cert: fs.readFileSync(__dirname + '/' + web_config.ssl_cert)
         };
 
         // Do we have an intermediate certificate?
-        if (typeof config.ssl_ca !== 'undefined') {
-            opts.ca = fs.readFileSync(__dirname + '/' + config.ssl_ca);
+        if (typeof web_config.ssl_ca !== 'undefined') {
+            opts.ca = fs.readFileSync(__dirname + '/' + web_config.ssl_ca);
         }
 
 
@@ -39,9 +40,9 @@ var WebListener = function (config, transports) {
         
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, {ssl: true});
-        hs.listen(config.port, config.address);
+        hs.listen(web_config.port, web_config.address);
 
-        console.log('Listening on ' + config.address + ':' + config.port.toString() + ' with SSL');
+        console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' with SSL');
     } else {
 
         // Start some plain-text server up
@@ -49,15 +50,16 @@ var WebListener = function (config, transports) {
 
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, {ssl: false});
-        hs.listen(config.port, config.address);
+        hs.listen(web_config.port, web_config.address);
 
-        console.log('Listening on ' + config.address + ':' + config.port.toString() + ' without SSL');
+        console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
     
     this.ws.set('log level', 1);
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
+    this.ws.set('resource', (config.get().http_base_path || '') + '/transport');
 
     this.ws.of('/kiwi').authorization(authoriseConnection).on('connection', function () {
         newConnection.apply(that, arguments);
