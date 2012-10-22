@@ -1,6 +1,7 @@
 var util             = require('util'),
     events           = require('events'),
     _                = require('underscore'),
+    config           = require('./configuration.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     IrcCommands      = require('./irc/commands.js'),
     ClientCommands = require('./clientcommands.js');
@@ -132,7 +133,7 @@ function kiwiCommand(command, callback) {
 function websocketDisconnect() {
     _.each(this.irc_connections, function (irc_connection, i, cons) {
         if (irc_connection) {
-            irc_connection.end('QUIT :Kiwi IRC');
+            irc_connection.end('QUIT :' + (config.get().quit_message || ''));
             cons[i] = null;
         }
     });

@@ -72,7 +72,7 @@ conf.transports = [
 
 
 // Default quit message
-conf.quit_message = "KiwiIRC";
+conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
 
 
