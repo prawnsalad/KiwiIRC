@@ -70,6 +70,9 @@ conf.transports = [
     "jsonp-polling"
 ];
 
+// Base HTTP path to the KIWI IRC client (eg. /kiwi)
+conf.http_base_path = "/kiwi";
+
 
 // Default quit message
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
