@@ -16,10 +16,8 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, webirc) {
         });
     }
     
-    this.socket.on('error', function () {
-        var a = Array.prototype.slice.call(arguments);
-        a.unshift('error');
-        that.emit.apply(this, a);
+    this.socket.on('error', function (event) {
+        that.emit('error', event);
     });
     
     this.socket.setEncoding('utf-8');

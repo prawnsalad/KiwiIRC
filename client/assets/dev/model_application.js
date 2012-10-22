@@ -68,7 +68,11 @@ kiwi.model.Application = function () {
                     kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                     kiwi.gateway.set('nick', event.nick);
                     
-                    kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function () {});
+                    kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function (error) {
+                        if (error) {
+                            kiwiServerNotFound();
+                        }
+                    });
                 });
             });
 

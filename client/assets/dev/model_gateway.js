@@ -80,10 +80,6 @@ kiwi.model.Gateway = function () {
             'sync disconnect on unload': false
         });
         this.socket.on('connect_failed', function (reason) {
-            // TODO: When does this even actually get fired? I can't find a case! ~Darren
-            console.debug('Unable to connect Socket.IO', reason);
-            console.log("kiwi.gateway.socket.on('connect_failed')");
-            //kiwi.front.tabviews.server.addMsg(null, ' ', 'Unable to connect to Kiwi IRC.\n' + reason, 'error');
             this.socket.disconnect();
             this.trigger("connect_fail", {reason: reason});
         });
@@ -111,6 +107,7 @@ kiwi.model.Gateway = function () {
                     console.log("kiwi.gateway.socket.on('connect')");
                 } else {
                     console.log("kiwi.gateway.socket.on('error')", {reason: err});
+                    callback(err);
                 }
             });
         });
@@ -121,6 +118,10 @@ kiwi.model.Gateway = function () {
 
         this.socket.on('irc', function (data, callback) {
             that.parse(data.command, data.data);
+        });
+
+        this.socket.on('kiwi', function (data, callback) {
+            that.parseKiwi(data.command, data.data);
         });
 
         this.socket.on('disconnect', function () {
@@ -149,6 +150,10 @@ kiwi.model.Gateway = function () {
     };
 
 
+
+    this.parseKiwi = function (command, data) {
+        console.log('kiwi event', command, data);
+    };
     /*
         Events:
             msg
@@ -172,7 +177,7 @@ kiwi.model.Gateway = function () {
     *   Parses the response from the server
     */
     this.parse = function (command, data) {
-        console.log('gateway event', command, data);
+        //console.log('gateway event', command, data);
         if (command !== undefined) {
             that.trigger('on' + command, data);
 

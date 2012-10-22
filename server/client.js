@@ -49,12 +49,12 @@ module.exports.Client = Client;
 
 Client.prototype.sendIrcCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    //console.log('C<--', c);
     this.websocket.emit('irc', c, callback);
 };
 
-Client.prototype.sendKiwiCommand = function (command, callback) {
-    this.websocket.emit('kiwi', command, callback);
+Client.prototype.sendKiwiCommand = function (command, data, callback) {
+    var c = {command: command, data: data};
+    this.websocket.emit('kiwi', c, callback);
 };
 
 function handleClientMessage(msg, callback) {
@@ -83,7 +83,7 @@ function handleClientMessage(msg, callback) {
 
     // Run the client command
     this.client_commands.run(msg.data.method, msg.data.args, server, callback);
-};
+}
 
 
 
@@ -113,7 +113,9 @@ function kiwiCommand(command, callback) {
 				});
 				
 				con.on('error', function (err) {
-					this.websocket.sendKiwiCommand('error', {server: con_num, error: err});
+                    // TODO: Once multiple servers implemented, specify which server failed
+                    //that.sendKiwiCommand('error', {server: con_num, error: err});
+                    return callback(err.code, null);
 				});
                 
                 con.on('close', function () {
