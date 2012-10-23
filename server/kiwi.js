@@ -1,7 +1,8 @@
 var fs          = require('fs'),
     _           = require('underscore'),
     WebListener = require('./weblistener.js'),
-    config      = require('./configuration.js');
+    config      = require('./configuration.js'),
+    rehash      = require('./rehash.js');
 
 
 
@@ -87,6 +88,15 @@ process.stdin.on('data', function (buffered) {
                 } else {
                     console.log("No new config file was loaded");
                 }
+            })();
+
+            break;
+
+
+        case 'rehash':
+            (function () {
+                rehash.rehashAll();
+                console.log('Rehashed');
             })();
 
             break;

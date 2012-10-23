@@ -8,8 +8,17 @@ var ws          = require('socket.io'),
     url         = require('url'),
     _           = require('underscore'),
     config      = require('./configuration.js'),
-    Client   = require('./client.js').Client,
+    Client      = require('./client.js').Client,
+    HttpHandler = require('./httphandler.js').HttpHandler,
+    rehash      = require('./rehash.js');
+
+
+
+rehash.on('rehashed', function (files) {
+    Client = require('./client.js').Client;
     HttpHandler = require('./httphandler.js').HttpHandler;
+});
+
 
 // Instance of HttpHandler
 var http_handler;
