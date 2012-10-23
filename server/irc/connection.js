@@ -1,9 +1,11 @@
 var net     = require('net'),
     tls     = require('tls'),
     events  = require('events'),
-    util    = require('util');
+    util    = require('util'),
+    _       = require('underscore'),
+    config  = require('../configuration.js');
 
-var IrcConnection = function (hostname, port, ssl, nick, user, pass, webirc) {
+var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     var that = this;
     events.EventEmitter.call(this);
     
@@ -34,10 +36,10 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, webirc) {
     this.registered = false;
     this.nick = nick;
     this.user = user;
+    this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
     this.options = Object.create(null);
     
-    this.webirc = webirc;
     this.password = pass;
     this.hold_last = false;
     this.held_data = '';
@@ -66,23 +68,71 @@ var end = function (data, encoding, callback) {
 
 
 var connect_handler = function () {
-    if (this.webirc) {
-        this.write('WEBIRC ' + this.webirc.pass + ' KiwiIRC ' + this.user.hostname + ' ' + this.user.address);
+    var that = this,
+        connect_data;
+
+    // Build up data to be used for webirc/etc detection
+    connect_data = {
+        user: this.user,
+        nick: this.nick,
+        realname: '[www.kiwiirc.com] ' + this.nick,
+        username: this.nick.replace(/[^0-9a-zA-Z\-_.]/, ''),
+        irc_host: this.irc_host
+    };
+
+    // Let the webirc/etc detection modify any required parameters
+    connect_data = findWebIrc(connect_data);
+
+    // Send any initial data for webirc/etc
+    if (connect_data.prepend_data) {
+        _.each(connect_data.prepend_data, function(data) {
+            that.write(data);
+        });
     }
+
     if (this.password) {
         this.write('PASS ' + this.password);
     }
-    //this.write('CAP LS');
-    this.write('NICK ' + this.nick);
-    this.write('USER kiwi_' + this.nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + this.nick);
+    
+    this.write('NICK ' + connect_data.nick);
+    this.write('USER ' + connect_data.username + ' 0 0 :' + connect_data.realname);
     
     this.connected = true;
     console.log("IrcConnection.emit('connected')");
     this.emit('connected');
 };
 
-parse_regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
+
+
+function findWebIrc(connect_data) {
+    var webirc_pass = config.get().webirc_pass;
+    var ip_as_username = config.get().ip_as_username;
+    var tmp;
+
+    // Do we have a WEBIRC password for this?
+    if (webirc_pass && webirc_pass[connect_data.irc_host.hostname]) {
+        tmp = 'WEBIRC ' + webirc_pass[connect_data.irc_host.hostname] + ' KiwiIRC ';
+        tmp += connect_data.user.hostname + ' ' + connect_data.user.address;
+        connect_data.prepend_data = [tmp];
+    }
+
+
+    // Check if we need to pass the users IP as its username/ident
+    if (ip_as_username && ip_as_username.indexOf(connect_data.irc_host.hostname) > -1) {
+        // Get a hex value of the clients IP
+        connect_data.username = connect_data.user.address.split('.').map(function(i, idx){
+            return parseInt(i, 10).toString(16);
+        }).join('');
+
+    }
+
+    return connect_data;
+}
+
+
+
+parse_regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 var parse = function (data) {
     var i,
         msg,

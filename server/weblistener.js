@@ -80,17 +80,26 @@ function handleHttpRequest(request, response) {
 }
 
 
+/**
+ * Get the reverse DNS entry for this connection.
+ * Used later on for webirc, etc functionality
+ */
 function authoriseConnection(handshakeData, callback) {
     dns.reverse(handshakeData.address.address, function (err, domains) {
-        handshakeData.revdns = (err) ? handshakeData.address.address : _.first(domains);
+        if (err || domains.length === 0) {
+            handshakeData.revdns = handshakeData.address.address;
+        } else {
+            handshakeData.revdns = _.first(domains);
+        }
+        
         callback(null, true);
     });
-};
+}
 
 function newConnection(websocket) {
     //console.log(websocket);
     this.emit('connection', new Client(websocket));
-};
+}
 
 
 

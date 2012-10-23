@@ -99,7 +99,7 @@ function kiwiCommand(command, callback) {
 			if (command.hostname && command.port && command.nick) {
 				var con = new IrcConnection(command.hostname, command.port, command.ssl,
 					command.nick, {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.address.address},
-					command.password, null);
+					command.password);
 
 				var con_num = this.next_connection++;
 				this.irc_connections[con_num] = con;
