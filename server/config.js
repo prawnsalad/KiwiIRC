@@ -61,6 +61,9 @@ conf.ip_as_username = [
 
 
 
+// Whitelisted HTTP proxies
+conf.http_proxies = ["127.0.0.1"];
+
 // Enabled transports for the client to use
 conf.transports = [
     "websocket",

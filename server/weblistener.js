@@ -70,9 +70,11 @@ var WebListener = function (web_config, transports) {
     this.ws.set('transports', transports);
     this.ws.set('resource', (config.get().http_base_path || '') + '/transport');
 
-    this.ws.of('/kiwi').authorization(authoriseConnection).on('connection', function () {
-        newConnection.apply(that, arguments);
-    });
+    this.ws.of('/kiwi').authorization(authoriseConnection)
+        .on('connection', function () {
+            newConnection.apply(that, arguments);
+        }
+    );
     this.ws.of('/kiwi').on('error', console.log);
 };
 util.inherits(WebListener, events.EventEmitter);
@@ -94,13 +96,29 @@ function handleHttpRequest(request, response) {
  * Used later on for webirc, etc functionality
  */
 function authoriseConnection(handshakeData, callback) {
-    dns.reverse(handshakeData.address.address, function (err, domains) {
+    var address = handshakeData.address.address;
+
+    // If a forwarded-for header is found, switch the source address
+    if (handshakeData.headers['x-forwarded-for']) {
+        // Check we're connecting from a whitelisted proxy
+        if (!config.get().http_proxies || config.get().http_proxies.indexOf(address) < 0) {
+            console.log('Unlisted proxy:', address);
+            callback(null, false);
+            return;
+        }
+
+        // We're sent from a whitelisted proxy, replace the hosts
+        address = handshakeData.headers['x-forwarded-for'];
+    }
+
+    dns.reverse(address, function (err, domains) {
         if (err || domains.length === 0) {
-            handshakeData.revdns = handshakeData.address.address;
+            handshakeData.revdns = address;
         } else {
-            handshakeData.revdns = _.first(domains);
+            handshakeData.revdns = _.first(domains) || address;
         }
         
+        // All is well, authorise the connection
         callback(null, true);
     });
 }
