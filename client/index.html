@@ -7,14 +7,18 @@
 <title> KiwiIRC </title>
 
 <link rel="stylesheet" type="text/css" href="/kiwi/assets/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/kiwi/assets/css/font-awesome.css" />
 
 </head>
 <body>
     <div id="kiwi">
         <div id="toolbar">
-            <a class="kiwi_logo" href="http://www.kiwiirc.com/" target="_blank">
-                <h2><img src="/kiwi/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> Powered by Kiwi IRC</h2>
-            </a>
+            <div class="app_tools">
+                <ul class="main">
+                    <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
+                    <li><a href="http://kiwiirc.com/" target="_blank"><img src="/kiwi/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
+                </ul>
+            </div>
 
             <div id="tabs">
                 <ul class="panellist channels"></ul>
@@ -51,9 +55,9 @@
     
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="query">Message</a>
-            <a class="info">Info</a>
-            <a class="slap">Slap!</a>
+            <a class="query"><i class="icon-comment"></i>Message</a>
+            <a class="info"><i class="icon-info-sign"></i>Info</a>
+            <a class="slap"><i class="icon-user-md"></i>Slap!</a>
 
             <div class="divider-horizontal"></div>
         </div>

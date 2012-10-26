@@ -869,6 +869,23 @@ kiwi.view.ResizeHandler = Backbone.View.extend({
 
 
 
+kiwi.view.AppToolbar = Backbone.View.extend({
+    events: {
+        'click .settings': 'clickSettings'
+    },
+
+    initialize: function () {
+        console.log('apptoolbar created', this.$el);
+    },
+
+    clickSettings: function (event) {
+        console.log('clicked');
+        kiwi.app.controlbox.processInput('/settings');
+    }
+});
+
+
+
 kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         $(window).resize(this.doLayout);

@@ -146,8 +146,8 @@ a img { border:none; }
 #memberlists ul li a.nick { display:block; color:black; }
 
 #memberlists ul li .userbox { position:relative; margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
-#memberlists ul li .userbox a { display:block; text-decoration:none; }
-#memberlists ul li .userbox a:before { content:"> "; }
+#memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
 #controlbox .input {
@@ -230,9 +230,18 @@ a img { border:none; }
 
 
 
-#toolbar .kiwi_logo { float:right; width:200px; padding-left:10px; color:#D4D4D4; }
-#toolbar .kiwi_logo h2 { font-weight:normal; font-size:14px; line-height:36px; vertical-align:middle; }
-#toolbar .kiwi_logo img { height:25px; width:25px; float:left; margin: 6px 0.7em 0 0; }
+#toolbar .app_tools { float:right; width:200px; padding-left:10px; color:#D4D4D4; }
+#toolbar .app_tools ul li {
+    display:inline;
+    font-size:26px;
+    cursor:pointer;
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    transition: all .3s ease;
+    margin-left:10px;
+}
+#toolbar .app_tools ul li:hover { color:#88C56A; }
+#toolbar .app_tools img { height:25px; width:25px; margin: 6px 0.7em 0 0; }
 
 
 

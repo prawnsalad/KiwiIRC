@@ -113,6 +113,8 @@ kiwi.model.Application = function () {
 
             this.topicbar = new kiwi.view.TopicBar({el: $('#topic')[0]});
 
+            new kiwi.view.AppToolbar({el: $('#toolbar .app_tools')[0]});
+
             this.message = new kiwi.view.StatusMessage({el: $('#status_message')[0]});
 
             this.resize_handle = new kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
