@@ -680,8 +680,7 @@ kiwi.model.Application = function () {
                 '/k': '/kick $1+',
 
                 // Misc aliases
-                '/slap': '/me throws the juciest, sweetest kiwi at $1. Hits right in the kisser!',
-                '/throw': '/slap $1+'
+                '/slap': '/me slaps $1 around a bit with a large trout'
             });
 
             controlbox.on('unknown_command', unknownCommand);
