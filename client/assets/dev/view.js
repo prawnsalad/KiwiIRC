@@ -921,7 +921,7 @@ kiwi.view.Application = Backbone.View.extend({
     // Globally shift focus to the command input box on a keypress
     setKeyFocus: function (ev) {
         // If we're copying text, don't shift focus
-        if (ev.ctrlKey || ev.altKey) {
+        if (ev.ctrlKey || ev.altKey || ev.metaKey) {
             return;
         }
 
