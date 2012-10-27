@@ -186,13 +186,15 @@ a img { border:none; }
 
 
 #topic { background-color:#1B1B1B; height:2em; position:relative; }
-#topic input {
+#topic div {
     position:absolute;
     top:2; bottom:2px; left:0; width:100%;
     padding: 0.2em 1em;
     text-align: center;
     box-shadow: none;
     border-radius: 0;
+    background-color:#FFF;
+    height: 1.5em;
 }
 
 

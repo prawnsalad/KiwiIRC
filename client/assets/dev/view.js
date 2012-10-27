@@ -577,7 +577,7 @@ kiwi.view.Tabs = Backbone.View.extend({
 
 kiwi.view.TopicBar = Backbone.View.extend({
     events: {
-        'keydown input': 'process'
+        'keydown div': 'process'
     },
 
     initialize: function () {
@@ -588,21 +588,22 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
     process: function (ev) {
         var inp = $(ev.currentTarget),
-            inp_val = inp.val();
-
-        if (ev.keyCode !== 13) return;
-
+            inp_val = inp.text();
+        
         if (kiwi.app.panels.active.isChannel()) {
+            if (ev.keyCode !== 13) return;
+
             kiwi.gateway.topic(kiwi.app.panels.active.get('name'), inp_val);
         }
+        
+        return false;
     },
 
     setCurrentTopic: function (new_topic) {
         new_topic = new_topic || '';
 
         // We only want a plain text version
-        new_topic = $('<div>').html(formatIRCMsg(new_topic));
-        $('input', this.$el).val(new_topic.text());
+        $('div', this.$el).html(formatIRCMsg(_.escape(new_topic)));
     }
 });
 
@@ -896,7 +897,7 @@ kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if (ev.target.tagName.toLowerCase() === 'input') {
+        if ((ev.target.tagName.toLowerCase() === 'input') || (ev.target.id === 'edittopic')) {
             return;
         }
 
