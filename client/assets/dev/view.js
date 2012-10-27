@@ -582,7 +582,16 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
     initialize: function () {
         kiwi.app.panels.bind('active', function (active_panel) {
-            this.setCurrentTopic(active_panel.get('topic'));
+            // If it's a channel topic, update and make editable
+            if (active_panel.isChannel()) {
+                this.setCurrentTopic(active_panel.get('topic') || '');
+                this.$el.find('div').attr('contentEditable', true);
+
+            } else {
+                // Not a channel topic.. clear and make uneditable
+                this.$el.find('div').attr('contentEditable', false)
+                    .text('');
+            }
         }, this);
     },
 
@@ -590,13 +599,16 @@ kiwi.view.TopicBar = Backbone.View.extend({
         var inp = $(ev.currentTarget),
             inp_val = inp.text();
         
-        if (kiwi.app.panels.active.isChannel()) {
-            if (ev.keyCode !== 13) return;
-
-            kiwi.gateway.topic(kiwi.app.panels.active.get('name'), inp_val);
+        // Only allow topic editing if this is a channel panel
+        if (!kiwi.app.panels.active.isChannel()) {
+            return false;
         }
-        
-        return false;
+
+        // If hit return key, update the current topic
+        if (ev.keyCode === 13) {
+            kiwi.gateway.topic(kiwi.app.panels.active.get('name'), inp_val);
+            return false;
+        }
     },
 
     setCurrentTopic: function (new_topic) {
@@ -897,7 +909,7 @@ kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if ((ev.target.tagName.toLowerCase() === 'input') || (ev.target.id === 'edittopic')) {
+        if ((ev.target.tagName.toLowerCase() === 'input') || $(ev.target).attr('contenteditable')) {
             return;
         }
 
