@@ -788,6 +788,7 @@ kiwi.model.Application = function () {
             panel = that.panels.getByName(destination);
             if (!panel) {
                 panel = new kiwi.model.Channel({name: destination});
+                panel.set('members', undefined);
                 kiwi.app.panels.add(panel);
             }
 

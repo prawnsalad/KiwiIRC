@@ -721,6 +721,23 @@ this.websocketListen = function (servers, handler) {
 
         io.of('/kiwi').authorization(function (handshakeData, callback) {
             var address = handshakeData.address.address;
+
+            // If a forwarded-for header is found, switch the source address
+            if (handshakeData.headers['x-forwarded-for']) {
+                // Check we're connecting from a whitelisted proxy
+                if (!kiwi.config.http_proxies
+                    || kiwi.config.http_proxies.indexOf(address) < 0)
+                {
+                    console.log('Unlisted proxy:', address);
+                    websocket.disconnect();
+                    return;
+                }
+
+                // We're sent from a whitelisted proxy, replace the hosts
+                address = handshakeData.headers['x-forwarded-for'];
+            }
+
+    
             if (typeof kiwi.connections[address] === 'undefined') {
                 kiwi.connections[address] = {count: 0, sockets: []};
             }
@@ -736,9 +753,28 @@ this.websocketListen = function (servers, handler) {
 
 
 this.websocketConnection = function (websocket) {
-    var con;
-    kiwi.log("New connection!");
-    websocket.kiwi = {address: websocket.handshake.address.address, buffer: {list: []}};
+    var con, address;
+
+    address = websocket.handshake.address.address;
+
+    // If a forwarded-for header is found, switch the source address
+    if (websocket.handshake.headers['x-forwarded-for']) {
+        // Check we're connecting from a whitelisted proxy
+        if (!kiwi.config.http_proxies
+            || kiwi.config.http_proxies.indexOf(address) < 0)
+        {
+            console.log('Unlisted proxy:', address);
+            websocket.disconnect();
+            return;
+        }
+
+        // We're sent from a whitelisted proxy, replace the hosts
+        address = websocket.handshake.headers['x-forwarded-for'];
+    }
+
+    kiwi.log('New connection! ' + address);
+
+    websocket.kiwi = {address: address, buffer: {list: []}};
     con = kiwi.connections[websocket.kiwi.address];
 
     if (con.count >= kiwi.config.max_client_conns) {
@@ -787,19 +823,38 @@ this.IRCConnection = function (websocket, nick, host, port, ssl, password, callb
     events.EventEmitter.call(this);
 
     onConnectHandler = function () {
+        // Inspired by:
+        // <dux0r> y4ry65yer56ytr
+        var realname = '[www.kiwiirc.com] ' + nick;
+        var username = nick.replace(/[^0-9a-zA-Z\-_.]/, '');
+
         that.IRC.nick = nick;
         // Send the login data
         dns.reverse(websocket.kiwi.address, function (err, domains) {
             websocket.kiwi.hostname = (err) ? websocket.kiwi.address : _.first(domains);
+
+            // Check if we need to pass the users IP as its realname
+            if (kiwi.config.ip_as_username && kiwi.config.ip_as_username.indexOf(host) > -1) {
+                // Get a hex value of the clients IP
+                username = websocket.kiwi.address.split('.').map(function(i, idx){
+                    return parseInt(i, 10).toString(16);
+                }).join('');
+            }
+
+            // Do we have a WEBIRC password for this?
             if ((kiwi.config.webirc) && (kiwi.config.webirc_pass[host])) {
                 websocket.sendServerLine('WEBIRC ' + kiwi.config.webirc_pass[host] + ' KiwiIRC ' + websocket.kiwi.hostname + ' ' + websocket.kiwi.address);
             }
+
+            // If the user specified a password
             if (password) {
                 websocket.sendServerLine('PASS ' + password);
             }
+
             websocket.sendServerLine('CAP LS');
             websocket.sendServerLine('NICK ' + nick);
-            websocket.sendServerLine('USER kiwi_' + nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + nick);
+            websocket.sendServerLine('USER ' + username + ' 0 0 :' + realname);
+        console.log('Username:', username, 'Realname:', realname);
 
             that.connected = true;
             that.emit('connect');

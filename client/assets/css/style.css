@@ -143,12 +143,11 @@ a img { border:none; }
 #memberlists ul { list-style: none; display:none; }
 #memberlists ul.active { display:block; }
 #memberlists ul li { padding: 0.2em 1em; overflow-y:auto; overflow-x:hidden; cursor:pointer; }
-#memberlists ul li:hover { background-color:#FAF7D3; }
 #memberlists ul li a.nick { display:block; color:black; }
 
-#memberlists ul li .userbox { margin:0 1em 5px 1em; font-size:.9em; }
-#memberlists ul li .userbox a { display:block; text-decoration:none; border-bottom: 1px dashed #aaa; }
-
+#memberlists ul li .userbox { position:relative; margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#memberlists ul li .userbox a { display:block; text-decoration:none; }
+#memberlists ul li .userbox a:before { content:"> "; }
 
 
 #controlbox .input {
@@ -268,6 +267,24 @@ a img { border:none; }
 /**
  * Themes
  */
+
+
+/* Default */
+#kiwi #memberlists {
+    background-color: #DADADA;
+    border-left: 1px solid #6A6A6A;
+}
+#kiwi #memberlists ul li:hover {
+    border-left: 5px solid #88C56A;
+    /* background: #88C56A; */
+    -webkit-transition: 0.2s ease;
+    -moz-transition: 0.2s ease;
+    -ms-transition: 0.2s ease;
+    -o-transition: 0.2s ease;
+    transition: 0.2s ease; 
+}
+
+
 
 
 /* Relaxed theme */

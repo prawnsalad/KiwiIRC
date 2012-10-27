@@ -39,7 +39,8 @@ kiwi.view.MemberList = Backbone.View.extend({
 kiwi.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
-        'click .info': 'infoClick'
+        'click .info': 'infoClick',
+        'click .slap': 'slapClick'
     },
 
     initialize: function () {
@@ -48,12 +49,17 @@ kiwi.view.UserBox = Backbone.View.extend({
 
     queryClick: function (event) {
         var panel = new kiwi.model.Channel({name: this.member.get('nick')});
+        panel.set('members', undefined);
         kiwi.app.panels.add(panel);
         panel.view.show();
     },
 
     infoClick: function (event) {
-        kiwi.gateway.raw('WHOIS ' + this.member.get('nick'));
+        kiwi.app.controlbox.processInput('/whois ' + this.member.get('nick'));
+    },
+
+    slapClick: function (event) {
+        kiwi.app.controlbox.processInput('/slap ' + this.member.get('nick'));
     }
 });
 
