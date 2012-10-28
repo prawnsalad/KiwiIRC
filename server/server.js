@@ -1,10 +1,10 @@
-var kiwi_app = './server/kiwi.js';
+var kiwi_app = './kiwi.js';
 
 
 var daemon = require('daemonize2').setup({
     main: kiwi_app,
     name: 'kiwiirc',
-    pidfile: 'kiwiirc.pid'
+    pidfile: '../kiwiirc.pid'
 });
 
 switch (process.argv[2]) {
