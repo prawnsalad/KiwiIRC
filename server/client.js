@@ -57,6 +57,11 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
     this.websocket.emit('kiwi', c, callback);
 };
 
+Client.prototype.dispose = function () {
+    websocketDisconnect.apply(this);
+    this.removeAllListeners();
+};
+
 function handleClientMessage(msg, callback) {
     var server, args, obj, channels, keys;
 
@@ -128,7 +133,7 @@ function kiwiCommand(command, callback) {
 		default:
 			callback();
     }
-};
+}
 
 
 // Websocket has disconnected, so quit all the IRC connections
@@ -136,14 +141,15 @@ function websocketDisconnect() {
     _.each(this.irc_connections, function (irc_connection, i, cons) {
         if (irc_connection) {
             irc_connection.end('QUIT :' + (config.get().quit_message || ''));
+            irc_connection.dispose();
             cons[i] = null;
         }
     });
     this.emit('destroy');
-};
+}
 
 
 // TODO: Should this close all the websocket connections too?
 function websocketError() {
     this.emit('destroy');
-};
+}

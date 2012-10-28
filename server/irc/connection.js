@@ -58,6 +58,11 @@ IrcConnection.prototype.end = function (data, callback) {
     end.call(this, data + '\r\n', 'utf-8', callback);
 };
 
+IrcConnection.prototype.dispose = function () {
+    this.removeAllListeners();
+};
+
+
 var write = function (data, encoding, callback) {
     this.socket.write(data, encoding, callback);
 };

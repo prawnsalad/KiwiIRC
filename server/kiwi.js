@@ -42,7 +42,12 @@ _.each(config.get().servers, function (server) {
     });
     wl.on('destroy', function (client) {
         clients = _.reject(clients, function (c) {
-            return client === c;
+            if (client === c) {
+                c.dispose();
+                return true;
+            }
+
+            return false;
         });
     });
 });

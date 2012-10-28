@@ -63,6 +63,10 @@ IrcCommands.prototype.bindEvents = function () {
     });
 };
 
+IrcCommands.prototype.dispose = function () {
+    this.removeAllListeners();
+};
+
 
 
 var listeners = {
