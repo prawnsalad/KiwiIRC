@@ -25,14 +25,21 @@ var http_handler;
 
 
 var WebListener = function (web_config, transports) {
-    var hs,
-        opts,
+    var hs, opts, ws_opts,
         that = this;
+
 
     events.EventEmitter.call(this);
     
     http_handler = new HttpHandler(web_config);
     
+    // Standard options for the socket.io connections
+    ws_opts = {
+        'log level': 0,
+        'log colors': 0
+    };
+
+
     if (web_config.ssl) {
         opts = {
             key: fs.readFileSync(__dirname + '/' + web_config.ssl_key),
@@ -48,7 +55,7 @@ var WebListener = function (web_config, transports) {
         hs = https.createServer(opts, handleHttpRequest);
         
         // Start socket.io listening on this weblistener
-        this.ws = ws.listen(hs, {ssl: true});
+        this.ws = ws.listen(hs, _.extend({ssl: true}, ws_opts));
         hs.listen(web_config.port, web_config.address);
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' with SSL');
@@ -58,14 +65,12 @@ var WebListener = function (web_config, transports) {
         hs = http.createServer(handleHttpRequest);
 
         // Start socket.io listening on this weblistener
-        this.ws = ws.listen(hs, {ssl: false});
+        this.ws = ws.listen(hs, _.extend({ssl: false}, ws_opts));
         hs.listen(web_config.port, web_config.address);
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
     
-    this.ws.set('log level', 0);
-    this.ws.set('log color', false);
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
