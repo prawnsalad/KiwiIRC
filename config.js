@@ -5,6 +5,10 @@ conf.user = "";
 conf.group = "";
 
 
+// Log file location
+conf.log = "kiwi.log";
+
+
 // Server listen blocks
 conf.servers = [];
 

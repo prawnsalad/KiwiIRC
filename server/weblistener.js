@@ -64,7 +64,8 @@ var WebListener = function (web_config, transports) {
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
     
-    this.ws.set('log level', 1);
+    this.ws.set('log level', 0);
+    this.ws.set('log color', false);
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);

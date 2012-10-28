@@ -1,9 +1,9 @@
 var fs = require('fs');
 
 var config_filename = 'config.js',
-    config_dirs = ['/etc/kiwiirc/', __dirname + '/'],
+    config_dirs = ['/etc/kiwiirc/', __dirname + '/../'],
     environment = 'production',
-	loaded_config = Object.create(null);
+    loaded_config = Object.create(null);
 
 
 function loadConfig() {
@@ -21,7 +21,6 @@ function loadConfig() {
 
                 // Try load the new config file
                 new_config = require(conf_filepath);
-                console.log('Loaded config file ' + config_dirs[i] + config_filename);
                 break;
             }
         } catch (e) {
@@ -37,24 +36,24 @@ function loadConfig() {
     }
 
     if (new_config) {
-    	loaded_config = new_config;
-    	return loaded_config;
+        loaded_config = new_config;
+        return loaded_config;
     } else {
-    	return false;
+        return false;
     }
 }
 
 
 
 module.exports.setEnvironment = function (new_environment) {
-	environment = new_environment;
+    environment = new_environment;
 };
 
 // Get the current config. Optionally for a different environment than currently set
 module.exports.get = function (specific_environment) {
-	specific_environment = specific_environment || environment;
-	
-	return loaded_config[specific_environment];
+    specific_environment = specific_environment || environment;
+    
+    return loaded_config[specific_environment];
 };
 
 module.exports.loadConfig = loadConfig;

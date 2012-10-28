@@ -6,9 +6,40 @@ var fs          = require('fs'),
 
 
 
-
-
+process.chdir(__dirname + '/../');
 config.loadConfig();
+
+
+// If we're not running in the forground and we have a log file.. switch
+// console.log to output to a file
+if (process.argv.indexOf('-f') === -1 && config.get().log) {
+    (function () {
+        var log_file_name = config.get().log;
+
+        if (log_file_name[0] !== '/') {
+            log_file_name = __dirname + '/../' + log_file_name;
+        }
+
+
+
+        console.log = function() {
+            var logfile = fs.openSync(log_file_name, 'a'),
+                out;
+
+            out = Array.prototype.join.apply(arguments, [' ']);
+
+            // Make sure we out somthing to log and we have an open file
+            if (!out || !logfile) return;
+
+            out += '\n';
+            fs.writeSync(logfile, out, null);
+
+            fs.closeSync(logfile);
+        };
+    })();
+}
+
+
 
 // Make sure we have a valid config file and at least 1 server
 if (Object.keys(config.get()).length === 0) {
