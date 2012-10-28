@@ -64,11 +64,11 @@ _.each(config.get().servers, function (server) {
 process.title = 'kiwiirc';
 
 // Change UID/GID
-if ((config.get().user) && (config.get().user !== '')) {
-    process.setuid(config.user);
-}
 if ((config.get().group) && (config.get().group !== '')) {
-    process.setgid(config.group);
+    process.setgid(config.get().group);
+}
+if ((config.get().user) && (config.get().user !== '')) {
+    process.setuid(config.get().user);
 }
 
 
