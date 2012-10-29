@@ -623,7 +623,7 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
 kiwi.view.ControlBox = Backbone.View.extend({
     events: {
-        'keydown input.inp': 'process',
+        'keydown .inp': 'process',
         'click .nick': 'showNickChange'
     },
 
@@ -672,13 +672,16 @@ kiwi.view.ControlBox = Backbone.View.extend({
             inp_val = inp_val.trim();
 
             if (inp_val) {
-                this.processInput(inp_val);
+                $.each(inp_val.split('\n'), function (idx, line) {
+                    that.processInput(line);
+                });
 
                 this.buffer.push(inp_val);
                 this.buffer_pos = this.buffer.length;
             }
 
             inp.val('');
+            return false;
 
             break;
 

@@ -10,15 +10,18 @@ a img { border:none; }
 #kiwi {
     overflow:hidden; position:relative; 
     height:100%;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:14px; line-height:1.4em;
     background: url(../img/background-light.png) left top repeat-x #E3E3E3;
     color: #555555;
 }
 
+#kiwi, #kiwi input, #kiwi textarea {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px; line-height:1.4em;
+}
 
 
-#kiwi input {
+
+#kiwi input, textarea {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
     border: none;
     border-radius: 3px;
@@ -165,11 +168,12 @@ a img { border:none; }
     right:7px; left: 12.2em;
     height:1.7em;
 }
-#controlbox .input input {
+#controlbox .input .inp {
     border: medium none;
     box-shadow: none;
     border-radius: 0;
-    outline:none;
+    outline:none; resize:none;
+    overflow:hidden;
     position:relative;
     height:100%; width:100%;
 }
