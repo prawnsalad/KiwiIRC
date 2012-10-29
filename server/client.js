@@ -65,7 +65,7 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 };
 
 Client.prototype.dispose = function () {
-    websocketDisconnect.apply(this);
+    this.emit('destroy');
     this.removeAllListeners();
 };
 
@@ -152,12 +152,12 @@ function websocketDisconnect() {
             cons[i] = null;
         }
     });
-    this.emit('destroy');
+    
+    this.dispose();
 }
 
 
 // TODO: Should this close all the websocket connections too?
 function websocketError() {
-    this.emit('destroy');
     this.dispose();
 }
