@@ -18,7 +18,11 @@ var Client = function (websocket) {
     this.real_address = this.websocket.handshake.real_address;
 
     // A hash to identify this client instance
-    this.hash = crypto.createHash('sha256').update(this.real_address).update('' + Date.now()).digest('hex');
+    this.hash = crypto.createHash('sha256')
+        .update(this.real_address)
+        .update('' + Date.now())
+        .update(Math.floor(Math.random() * 100000).toString())
+        .digest('hex');
     
     this.irc_connections = [];
     this.next_connection = 0;
@@ -120,11 +124,11 @@ function kiwiCommand(command, callback) {
 				irc_commands.bindEvents();
 				
 				con.on('connected', function () {
-                    console.log("con.on('connected')");
 					return callback(null, con_num);
 				});
 				
 				con.on('error', function (err) {
+                    console.log('irc_connection error (' + command.hostname + '):', err);
                     // TODO: Once multiple servers implemented, specify which server failed
                     //that.sendKiwiCommand('error', {server: con_num, error: err});
                     return callback(err.code, null);

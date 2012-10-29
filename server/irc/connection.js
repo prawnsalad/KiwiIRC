@@ -54,7 +54,6 @@ IrcConnection.prototype.write = function (data, callback) {
 };
 
 IrcConnection.prototype.end = function (data, callback) {
-    console.log('Closing IRC socket');
     end.call(this, data + '\r\n', 'utf-8', callback);
 };
 
@@ -103,7 +102,6 @@ var connect_handler = function () {
     this.write('USER ' + connect_data.username + ' 0 0 :' + connect_data.realname);
     
     this.connected = true;
-    console.log("IrcConnection.emit('connected')");
     this.emit('connected');
 };
 
