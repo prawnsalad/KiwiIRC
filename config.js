@@ -32,7 +32,7 @@ conf.servers.push({
 // Where the client files are
 conf.public_http = "client/";
 
-// Max connections per connection
+// Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
 // Enabled CAP extensions (See ENTER URL TO CAP INFO HERE PLS)

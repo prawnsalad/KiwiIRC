@@ -119,10 +119,13 @@ function authoriseConnection(handshakeData, callback) {
 
     handshakeData.real_address = address;
     
-    if (global.clients.numOnAddress(address) + 1 > config.get().max_client_conns) {
-        return callback(null, false);
+    // If enabled, don't go over the connection limit
+    if (config.get().max_client_conns && config.get().max_client_conns > 0) {
+        if (global.clients.numOnAddress(address) + 1 > config.get().max_client_conns) {
+            return callback(null, false);
+        }
     }
-    
+        
     dns.reverse(address, function (err, domains) {
         if (err || domains.length === 0) {
             handshakeData.revdns = address;
