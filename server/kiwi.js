@@ -99,7 +99,7 @@ global.clients = {
 // Start up a weblistener for each found in the config
 _.each(config.get().servers, function (server) {
     var wl = new WebListener(server, config.get().transports);
-    
+
     wl.on('connection', function (client) {
         clients.add(client);
     });
@@ -140,7 +140,8 @@ process.stdin.on('data', function (buffered) {
 
     switch (data) {
         case 'stats':
-            console.log('Connected clients: ' + _.size(clients).toString());
+            console.log('Connected clients: ' + _.size(global.clients.clients).toString());
+            console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
             break;
 
         case 'reconfig':
