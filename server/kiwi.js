@@ -56,13 +56,11 @@ if ((!config.get().servers) || (config.get().servers.length < 1)) {
 
 
 
-/*
- * Web listeners
- */
-
 // Holder for all the connected clients
-global.clients = { clients: Object.create(null),
+global.clients = {
+    clients: Object.create(null),
     addresses: Object.create(null),
+
     add: function (client) {
         this.clients[client.hash] = client;
         if (typeof this.addresses[client.real_address] === 'undefined') {
@@ -70,6 +68,7 @@ global.clients = { clients: Object.create(null),
         }
         this.addresses[client.real_address][client.hash] = client;
     },
+
     remove: function (client) {
         if (typeof this.clients[client.hash] !== 'undefined') {
             delete this.clients[client.hash];
@@ -79,6 +78,7 @@ global.clients = { clients: Object.create(null),
             }
         }
     },
+
     numOnAddress: function (addr) {
         if (typeof this.addresses[addr] !== 'undefined') {
             return Object.keys(this.addresses[addr]).length;
@@ -88,17 +88,24 @@ global.clients = { clients: Object.create(null),
     }
 };
 
+
+
+
+/*
+ * Web listeners
+ */
+
+
 // Start up a weblistener for each found in the config
 _.each(config.get().servers, function (server) {
     var wl = new WebListener(server, config.get().transports);
+    
     wl.on('connection', function (client) {
         clients.add(client);
-        console.log(clients);
     });
+
     wl.on('destroy', function (client) {
         clients.remove(client);
-        //client.dispose();
-        console.log(clients);
     });
 });
 

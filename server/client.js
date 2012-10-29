@@ -13,7 +13,11 @@ var Client = function (websocket) {
     
     events.EventEmitter.call(this);
     this.websocket = websocket;
+
+    // Clients address
     this.real_address = this.websocket.handshake.real_address;
+
+    // A hash to identify this client instance
     this.hash = crypto.createHash('sha256').update(this.real_address).update('' + Date.now()).digest('hex');
     
     this.irc_connections = [];
