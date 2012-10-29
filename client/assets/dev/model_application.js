@@ -677,7 +677,7 @@ kiwi.model.Application = function () {
                 '/dehop': '/quote mode $channel -h $1+',
                 '/voice': '/quote mode $channel +v $1+',
                 '/devoice': '/quote mode $channel -v $1+',
-                '/k': '/kick $1+',
+                '/k': '/kick $channel $1+',
 
                 // Misc aliases
                 '/slap': '/me slaps $1 around a bit with a large trout'
