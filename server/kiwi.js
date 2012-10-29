@@ -61,25 +61,44 @@ if ((!config.get().servers) || (config.get().servers.length < 1)) {
  */
 
 // Holder for all the connected clients
-// TODO: Change from an array to an object. Generate sha1 hash within the client
-// and use that as the key. (Much less work involved in removing a client)
-var clients = [];
+global.clients = { clients: Object.create(null),
+    addresses: Object.create(null),
+    add: function (client) {
+        this.clients[client.hash] = client;
+        if (typeof this.addresses[client.real_address] === 'undefined') {
+            this.addresses[client.real_address] = Object.create(null);
+        }
+        this.addresses[client.real_address][client.hash] = client;
+    },
+    remove: function (client) {
+        if (typeof this.clients[client.hash] !== 'undefined') {
+            delete this.clients[client.hash];
+            delete this.addresses[client.real_address][client.hash];
+            if (Object.keys(this.addresses[client.real_address]).length < 1) {
+                delete this.addresses[client.real_address];
+            }
+        }
+    },
+    numOnAddress: function (addr) {
+        if (typeof this.addresses[addr] !== 'undefined') {
+            return Object.keys(this.addresses[addr]).length;
+        } else {
+            return 0;
+        }
+    }
+};
 
 // Start up a weblistener for each found in the config
 _.each(config.get().servers, function (server) {
     var wl = new WebListener(server, config.get().transports);
     wl.on('connection', function (client) {
-        clients.push(client);
+        clients.add(client);
+        console.log(clients);
     });
     wl.on('destroy', function (client) {
-        clients = _.reject(clients, function (c) {
-            if (client === c) {
-                c.dispose();
-                return true;
-            }
-
-            return false;
-        });
+        clients.remove(client);
+        //client.dispose();
+        console.log(clients);
     });
 });
 

@@ -1,10 +1,11 @@
 var util             = require('util'),
     events           = require('events'),
+    crypto           = require('crypto'),
     _                = require('underscore'),
     config           = require('./configuration.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     IrcCommands      = require('./irc/commands.js'),
-    ClientCommands = require('./clientcommands.js');
+    ClientCommands   = require('./clientcommands.js');
 
 
 var Client = function (websocket) {
@@ -12,6 +13,8 @@ var Client = function (websocket) {
     
     events.EventEmitter.call(this);
     this.websocket = websocket;
+    this.real_address = this.websocket.handshake.real_address;
+    this.hash = crypto.createHash('sha256').update(this.real_address).update('' + Date.now()).digest('hex');
     
     this.irc_connections = [];
     this.next_connection = 0;
@@ -152,4 +155,5 @@ function websocketDisconnect() {
 // TODO: Should this close all the websocket connections too?
 function websocketError() {
     this.emit('destroy');
+    this.dispose();
 }

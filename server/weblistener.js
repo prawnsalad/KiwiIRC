@@ -117,6 +117,12 @@ function authoriseConnection(handshakeData, callback) {
         address = handshakeData.headers['x-forwarded-for'];
     }
 
+    handshakeData.real_address = address;
+    
+    if (global.clients.numOnAddress(address) + 1 > config.get().max_client_conns) {
+        return callback(null, false);
+    }
+    
     dns.reverse(address, function (err, domains) {
         if (err || domains.length === 0) {
             handshakeData.revdns = address;
@@ -130,8 +136,12 @@ function authoriseConnection(handshakeData, callback) {
 }
 
 function newConnection(websocket) {
-    //console.log(websocket);
-    this.emit('connection', new Client(websocket));
+    var client, that = this;
+    client = new Client(websocket);
+    client.on('destroy', function () {
+        that.emit('destroy', this);
+    });
+    this.emit('connection', client);
 }
 
 
