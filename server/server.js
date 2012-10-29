@@ -34,7 +34,11 @@ switch (process.argv[2]) {
             console.log('Daemon is not running.');
         break;
 
+    case 'reconfig':
+        console.log('Loading new config..');
+        daemon.sendSignal("SIGUSR1");
+        break;
 
     default:
-        console.log('Usage: [-f|start|stop|restart|status]');
+        console.log('Usage: [-f|start|stop|restart|status|reconfig]');
 }

@@ -129,6 +129,16 @@ if ((config.get().user) && (config.get().user !== '')) {
 }
 
 
+process.on('SIGUSR1', function() {
+    if (config.loadConfig()) {
+        console.log('New config file loaded');
+    } else {
+        console.log("No new config file was loaded");
+    }
+});
+
+
+
 
 /*
  * Listen for runtime commands
@@ -145,13 +155,11 @@ process.stdin.on('data', function (buffered) {
             break;
 
         case 'reconfig':
-            (function () {
-                if (config.loadConfig()) {
-                    console.log('New config file loaded');
-                } else {
-                    console.log("No new config file was loaded");
-                }
-            })();
+            if (config.loadConfig()) {
+                console.log('New config file loaded');
+            } else {
+                console.log("No new config file was loaded");
+            }
 
             break;
 
