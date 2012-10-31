@@ -151,7 +151,7 @@ function kiwiCommand(command, callback) {
 function websocketDisconnect() {
     _.each(this.irc_connections, function (irc_connection, i, cons) {
         if (irc_connection) {
-            irc_connection.end('QUIT :' + (config.get().quit_message || ''));
+            irc_connection.end('QUIT :' + (global.config.quit_message || ''));
             irc_connection.dispose();
             cons[i] = null;
         }

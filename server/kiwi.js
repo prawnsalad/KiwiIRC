@@ -12,9 +12,9 @@ config.loadConfig();
 
 // If we're not running in the forground and we have a log file.. switch
 // console.log to output to a file
-if (process.argv.indexOf('-f') === -1 && config.get().log) {
+if (process.argv.indexOf('-f') === -1 && global.config.log) {
     (function () {
-        var log_file_name = config.get().log;
+        var log_file_name = global.config.log;
 
         if (log_file_name[0] !== '/') {
             log_file_name = __dirname + '/../' + log_file_name;
@@ -42,12 +42,12 @@ if (process.argv.indexOf('-f') === -1 && config.get().log) {
 
 
 // Make sure we have a valid config file and at least 1 server
-if (Object.keys(config.get()).length === 0) {
+if (Object.keys(global.config).length === 0) {
     console.log('Couldn\'t find a valid config file!');
     process.exit(1);
 }
 
-if ((!config.get().servers) || (config.get().servers.length < 1)) {
+if ((!global.config.servers) || (global.config.servers.length < 1)) {
     console.log('No servers defined in config file');
     process.exit(2);
 }
@@ -97,8 +97,8 @@ global.clients = {
 
 
 // Start up a weblistener for each found in the config
-_.each(config.get().servers, function (server) {
-    var wl = new WebListener(server, config.get().transports);
+_.each(global.config.servers, function (server) {
+    var wl = new WebListener(server, global.config.transports);
 
     wl.on('connection', function (client) {
         clients.add(client);
@@ -121,11 +121,11 @@ _.each(config.get().servers, function (server) {
 process.title = 'kiwiirc';
 
 // Change UID/GID
-if ((config.get().group) && (config.get().group !== '')) {
-    process.setgid(config.get().group);
+if ((global.config.group) && (global.config.group !== '')) {
+    process.setgid(global.config.group);
 }
-if ((config.get().user) && (config.get().user !== '')) {
-    process.setuid(config.get().user);
+if ((global.config.user) && (global.config.user !== '')) {
+    process.setuid(global.config.user);
 }
 
 

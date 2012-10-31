@@ -74,7 +74,7 @@ var WebListener = function (web_config, transports) {
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
-    this.ws.set('resource', (config.get().http_base_path || '') + '/transport');
+    this.ws.set('resource', (global.config.http_base_path || '') + '/transport');
 
     this.ws.of('/kiwi').authorization(authoriseConnection)
         .on('connection', function () {
@@ -107,7 +107,7 @@ function authoriseConnection(handshakeData, callback) {
     // If a forwarded-for header is found, switch the source address
     if (handshakeData.headers['x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
-        if (!config.get().http_proxies || config.get().http_proxies.indexOf(address) < 0) {
+        if (!global.config.http_proxies || global.config.http_proxies.indexOf(address) < 0) {
             console.log('Unlisted proxy:', address);
             callback(null, false);
             return;
@@ -120,8 +120,8 @@ function authoriseConnection(handshakeData, callback) {
     handshakeData.real_address = address;
     
     // If enabled, don't go over the connection limit
-    if (config.get().max_client_conns && config.get().max_client_conns > 0) {
-        if (global.clients.numOnAddress(address) + 1 > config.get().max_client_conns) {
+    if (global.config.max_client_conns && global.config.max_client_conns > 0) {
+        if (global.clients.numOnAddress(address) + 1 > global.config.max_client_conns) {
             return callback(null, false);
         }
     }
