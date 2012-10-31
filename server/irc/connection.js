@@ -109,8 +109,8 @@ var connect_handler = function () {
 
 
 function findWebIrc(connect_data) {
-    var webirc_pass = config.get().webirc_pass;
-    var ip_as_username = config.get().ip_as_username;
+    var webirc_pass = global.config.webirc_pass;
+    var ip_as_username = global.config.ip_as_username;
     var tmp;
 
     // Do we have a WEBIRC password for this?

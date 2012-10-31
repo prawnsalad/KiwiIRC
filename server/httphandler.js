@@ -15,7 +15,7 @@ module.exports.HttpHandler = HttpHandler;
 
 HttpHandler.prototype.serve = function (request, response) {
     // The incoming requests base path (ie. /kiwiclient)
-    var base_path = config.get().http_base_path || '/kiwi',
+    var base_path = global.config.http_base_path || '/kiwi',
         base_path_regex;
 
     // Trim of any trailing slashes

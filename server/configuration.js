@@ -37,6 +37,7 @@ function loadConfig() {
 
     if (new_config) {
         loaded_config = new_config;
+        global.config = new_config[environment];
         return loaded_config;
     } else {
         return false;
