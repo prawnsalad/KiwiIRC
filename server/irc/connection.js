@@ -10,7 +10,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     events.EventEmitter.call(this);
     
     if (ssl) {
-        this.socket = tls.connect(port, hostname, {}, connect_handler);
+        this.socket = tls.connect({host: hostname, port: port, rejectUnauthorized: global.config.reject_unauthorised_certificates}, connect_handler);
     } else {
         this.socket = net.createConnection(port, hostname);
         this.socket.on('connect', function () {

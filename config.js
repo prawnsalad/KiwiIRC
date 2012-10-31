@@ -62,7 +62,8 @@ conf.ip_as_username = [
 	"127.0.0.1"
 ];
 
-
+// Whether to verify IRC servers' SSL certificates against built-in well-known certificate authorities
+conf.reject_unauthorised_certificates = false;
 
 
 // Whitelisted HTTP proxies
