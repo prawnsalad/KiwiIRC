@@ -137,12 +137,15 @@ function findWebIrc(connect_data) {
 
 
 
-parse_regex = /^(?::(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 var parse = function (data) {
     var i,
         msg,
-		msg2,
-		trm;
+        msg2,
+        trm,
+        j,
+        tags = [],
+        tag;
     
     if ((this.hold_last) && (this.held_data !== '')) {
         data = this.held_data + data;
@@ -163,14 +166,22 @@ var parse = function (data) {
             // We have a complete line of data, parse it!
             msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
             if (msg) {
+                if (msg[1]) {
+                    tags = msg[1].split(';');
+                    for (j = 0; j < tags.length; j++) {
+                        tag = tags[j].split('=');
+                        tags[j] = {tag: tag[0], value: tag[1]};
+                    }
+                }
                 msg = {
-                    prefix:     msg[1],
-                    nick:       msg[2],
-                    ident:      msg[3],
-                    hostname:   msg[4] || '',
-                    command:    msg[5],
-                    params:     msg[6] || '',
-                    trailing:   (msg[7]) ? msg[7].trim() : ''
+                    tags:       tags,
+                    prefix:     msg[2],
+                    nick:       msg[3],
+                    ident:      msg[4],
+                    hostname:   msg[5] || '',
+                    command:    msg[6],
+                    params:     msg[7] || '',
+                    trailing:   (msg[8]) ? msg[8].trim() : ''
                 };
                 msg.params = msg.params.split(' ');
 
