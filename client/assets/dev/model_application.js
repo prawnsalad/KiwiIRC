@@ -555,7 +555,7 @@ kiwi.model.Application = function () {
                     panel.addMsg(event.nick, 'is ' + event.nick + '!' + event.ident + '@' + event.host + ' * ' + event.msg, 'whois');
                 } else if (event.chans) {
                     panel.addMsg(event.nick, 'on ' + event.chans, 'whois');
-                } else if (event.server) {
+                } else if (event.irc_server) {
                     panel.addMsg(event.nick, 'using ' + event.server, 'whois');
                 } else if (event.msg) {
                     panel.addMsg(event.nick, event.msg, 'whois');

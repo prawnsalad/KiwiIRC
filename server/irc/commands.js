@@ -123,7 +123,7 @@ var listeners = {
 				command.command = 'RPL_WHOISSERVER';
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('whois', {server: '', nick: msg.params.split(" ", 3)[1], "msg": msg.trailing, end: false});
-                this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], server: command.params[2], end: false});
+                this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], irc_server: command.params[2], end: false});
             },
     'RPL_WHOISOPERATOR':      function (command) {
 				/*command.server = this.con_num;
