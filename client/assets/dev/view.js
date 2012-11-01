@@ -949,10 +949,22 @@ kiwi.view.Application = Backbone.View.extend({
             bottom: el_controlbox.outerHeight(true)
         };
 
+
+        // If any elements are not visible, full size the panals instead
+        if (!el_toolbar.is(':visible')) {
+            css_heights.top = 0;
+        }
+
+        if (!el_controlbox.is(':visible')) {
+            css_heights.bottom = 0;
+        }
+
+        // Apply the CSS sizes
         el_panels.css(css_heights);
         el_memberlists.css(css_heights);
         el_resize_handle.css(css_heights);
 
+        // Set the panels width depending on the memberlist visibility
         if (el_memberlists.css('display') != 'none') {
             // Handle + panels to the side of the memberlist
             el_panels.css('right', el_memberlists.outerWidth(true) + el_resize_handle.outerWidth(true));

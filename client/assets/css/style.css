@@ -169,6 +169,8 @@ a img { border:none; }
     height:1.7em;
 }
 #controlbox .input .inp {
+    line-height:1.7em;
+    display: block;
     border: medium none;
     box-shadow: none;
     border-radius: 0;
@@ -199,6 +201,7 @@ a img { border:none; }
     border-radius: 0;
     background-color:#FFF;
     height: 1.5em;
+    overflow: hidden;
 }
 
 
