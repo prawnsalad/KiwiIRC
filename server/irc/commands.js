@@ -73,6 +73,8 @@ var listeners = {
     'RPL_WELCOME':            function (command) {
                 var nick =  command.params[0];
                 this.irc_connection.registered = true;
+                this.cap_negotation = false;
+                console.log(this.irc_connection.cap.enabled);
                 this.client.sendIrcCommand('connect', {server: this.con_num, nick: nick});
             },
     'RPL_ISUPPORT':           function (command) {
@@ -95,7 +97,7 @@ var listeners = {
 							this.irc_connection.options.CHANTYPES = this.irc_connection.options.CHANTYPES.split('');
 						} else if (option[0] === 'CHANMODES') {
 							this.irc_connection.options.CHANMODES = option[1].split(',');
-                        } else if (option[0] === 'NAMESX') {
+                        } else if ((option[0] === 'NAMESX') && (!_.contains(this.irc_connection.cap.enabled, 'multi-prefix'))) {
                             this.irc_connection.write('PROTOCTL NAMESX');
                         }
                     }
@@ -428,6 +430,48 @@ var listeners = {
                 } else {
                     //{nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing}
                     this.client.sendIrcCommand('msg', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing});
+                }
+            },
+    'CAP':                  function (command) {
+                // TODO: capability modifiers
+                // i.e. - for disable, ~ for requires ACK, = for sticky
+                var capabilities = command.trailing.replace(/[\-~=]/, '').split(' ');
+                var want = ['multi-prefix'];
+                var request;
+                
+                switch (command.params[1]) {
+                    case 'LS':
+                        request = _.intersection(capabilities, want);
+                        if (request.length > 0) {
+                            this.irc_connection.cap.requested = request;
+                            this.irc_connection.write('CAP REQ :' + request.join(' '));
+                        } else {
+                            this.irc_connection.write('CAP END');
+                            this.irc_connection.cap_negotation = false;
+                        }
+                        break;
+                    case 'ACK':
+                        if (capabilities.length > 0) {
+                            this.irc_connection.cap.enabled = capabilities;
+                            this.irc_connection.cap.requested = _.difference(this.irc_connection.cap.requested, capabilities);
+                        }
+                        if (this.irc_connection.cap.requested.length > 0) {
+                            this.irc_connection.write('CAP END');
+                            this.irc_connection.cap_negotation = false;
+                        }
+                        break;
+                    case 'NAK':
+                        if (capabilities.length > 0) {
+                            this.irc_connection.cap.requested = _.difference(this.irc_connection.cap.requested, capabilities);
+                        }
+                        if (this.irc_connection.cap.requested.length > 0) {
+                            this.irc_connection.write('CAP END');
+                            this.irc_connection.cap_negotation = false;
+                        }
+                        break;
+                    case 'LIST':
+                        // should we do anything here?
+                        break;
                 }
             },
     'ERROR':                function (command) {

@@ -33,11 +33,13 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     
     this.connected = false;
     this.registered = false;
+    this.cap_negotiation = true;
     this.nick = nick;
     this.user = user;
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
     this.options = Object.create(null);
+    this.cap = {requested: [], enabled: []};
     
     this.password = pass;
     this.hold_last = false;
@@ -97,6 +99,7 @@ var connect_handler = function () {
         this.write('PASS ' + this.password);
     }
     
+    this.write('CAP LS');
     this.write('NICK ' + connect_data.nick);
     this.write('USER ' + connect_data.username + ' 0 0 :' + connect_data.realname);
     
