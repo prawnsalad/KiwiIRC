@@ -2,8 +2,7 @@ var net     = require('net'),
     tls     = require('tls'),
     events  = require('events'),
     util    = require('util'),
-    _       = require('underscore'),
-    config  = require('../configuration.js');
+    _       = require('underscore');
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     var that = this;

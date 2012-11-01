@@ -7,7 +7,6 @@ var ws          = require('socket.io'),
     dns         = require('dns'),
     url         = require('url'),
     _           = require('underscore'),
-    config      = require('./configuration.js'),
     Client      = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler,
     rehash      = require('./rehash.js');
