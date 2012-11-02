@@ -2,7 +2,6 @@ var util             = require('util'),
     events           = require('events'),
     crypto           = require('crypto'),
     _                = require('underscore'),
-    config           = require('./configuration.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     IrcCommands      = require('./irc/commands.js'),
     ClientCommands   = require('./clientcommands.js');

@@ -1,6 +1,5 @@
 var url         = require('url'),
-    node_static = require ('node-static'),
-    config      = require('./configuration.js');
+    node_static = require ('node-static');
 
 
 
