@@ -514,6 +514,7 @@ var listeners = {
     'RPL_SASLAUTHENTICATED':function (command) {
                 this.irc_connection.write('CAP END');
                 this.irc_connection.cap_negotation = false;
+                this.irc_connection.sasl = true;
                 this.irc_connection.register();
             },
     'RPL_SASLLOGGEDIN':     function (command) {
@@ -522,11 +523,10 @@ var listeners = {
     'ERR_SASLNOTAUTHORISED':function (command) {
                 this.irc_connection.write('CAP END');
                 this.irc_connection.cap_negotation = false;
-                this.irc_connection.cap.enabled = _.without(this.irc_connection.cap.enabled, 'sasl');
                 this.irc_connection.register();
             },
     'ERR_SASLABORTED':      function (command) {
-                this.irc_connection.cap.enabled = _.without(this.irc_connection.cap.enabled, 'sasl');
+                // noop
             },
     'ERR_SASLALREADYAUTHED':function (command) {
                 // noop

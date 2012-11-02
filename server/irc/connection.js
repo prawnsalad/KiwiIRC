@@ -111,7 +111,7 @@ IrcConnection.prototype.register = function () {
         clearTimeout(this.registeration_timeout);
         this.registration_timeout = null;
     }
-    if ((this.password) && (!_.contains(this.cap.enabled, 'sasl'))) {
+    if ((this.password) && (!this.sasl)) {
         this.write('PASS ' + this.password);
     }
     this.write('NICK ' + this.nick);
