@@ -10,15 +10,18 @@ a img { border:none; }
 #kiwi {
     overflow:hidden; position:relative; 
     height:100%;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size:14px; line-height:1.4em;
     background: url(../img/background-light.png) left top repeat-x #E3E3E3;
     color: #555555;
 }
 
+#kiwi, #kiwi input, #kiwi textarea {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px; line-height:1.4em;
+}
 
 
-#kiwi input {
+
+#kiwi input, textarea {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
     border: none;
     border-radius: 3px;
@@ -146,8 +149,8 @@ a img { border:none; }
 #memberlists ul li a.nick { display:block; color:black; }
 
 #memberlists ul li .userbox { position:relative; margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
-#memberlists ul li .userbox a { display:block; text-decoration:none; }
-#memberlists ul li .userbox a:before { content:"> "; }
+#memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
 #controlbox .input {
@@ -165,11 +168,14 @@ a img { border:none; }
     right:7px; left: 12.2em;
     height:1.7em;
 }
-#controlbox .input input {
+#controlbox .input .inp {
+    line-height:1.7em;
+    display: block;
     border: medium none;
     box-shadow: none;
     border-radius: 0;
-    outline:none;
+    outline:none; resize:none;
+    overflow:hidden;
     position:relative;
     height:100%; width:100%;
 }
@@ -195,6 +201,7 @@ a img { border:none; }
     border-radius: 0;
     background-color:#FFF;
     height: 1.5em;
+    overflow: hidden;
 }
 
 
@@ -232,9 +239,18 @@ a img { border:none; }
 
 
 
-#toolbar .kiwi_logo { float:right; width:200px; padding-left:10px; color:#D4D4D4; }
-#toolbar .kiwi_logo h2 { font-weight:normal; font-size:14px; line-height:36px; vertical-align:middle; }
-#toolbar .kiwi_logo img { height:25px; width:25px; float:left; margin: 6px 0.7em 0 0; }
+#toolbar .app_tools { float:right; width:200px; padding-left:10px; color:#D4D4D4; }
+#toolbar .app_tools ul li {
+    display:inline;
+    font-size:26px;
+    cursor:pointer;
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    transition: all .3s ease;
+    margin-left:10px;
+}
+#toolbar .app_tools ul li:hover { color:#88C56A; }
+#toolbar .app_tools img { height:25px; width:25px; margin: 6px 0.7em 0 0; }
 
 
 
@@ -274,7 +290,7 @@ a img { border:none; }
 /* Default */
 #kiwi #memberlists {
     background-color: #DADADA;
-    border-left: 1px solid #6A6A6A;
+    border-left: 1px solid #8A8A8A;
 }
 #kiwi #memberlists ul li:hover {
     border-left: 5px solid #88C56A;

@@ -4,3 +4,5 @@ node_modules/
 doc/
 client/assets/kiwi.js
 client/assets/kiwi.min.js
+kiwi.log
+kiwiirc.pid
