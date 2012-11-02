@@ -625,7 +625,7 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
 kiwi.view.ControlBox = Backbone.View.extend({
     events: {
-        'keydown input.inp': 'process',
+        'keydown .inp': 'process',
         'click .nick': 'showNickChange'
     },
 
@@ -674,13 +674,16 @@ kiwi.view.ControlBox = Backbone.View.extend({
             inp_val = inp_val.trim();
 
             if (inp_val) {
-                this.processInput(inp_val);
+                $.each(inp_val.split('\n'), function (idx, line) {
+                    that.processInput(line);
+                });
 
                 this.buffer.push(inp_val);
                 this.buffer_pos = this.buffer.length;
             }
 
             inp.val('');
+            return false;
 
             break;
 
@@ -884,6 +887,23 @@ kiwi.view.ResizeHandler = Backbone.View.extend({
 
 
 
+kiwi.view.AppToolbar = Backbone.View.extend({
+    events: {
+        'click .settings': 'clickSettings'
+    },
+
+    initialize: function () {
+        console.log('apptoolbar created', this.$el);
+    },
+
+    clickSettings: function (event) {
+        console.log('clicked');
+        kiwi.app.controlbox.processInput('/settings');
+    }
+});
+
+
+
 kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         $(window).resize(this.doLayout);
@@ -906,7 +926,7 @@ kiwi.view.Application = Backbone.View.extend({
     // Globally shift focus to the command input box on a keypress
     setKeyFocus: function (ev) {
         // If we're copying text, don't shift focus
-        if (ev.ctrlKey || ev.altKey) {
+        if (ev.ctrlKey || ev.altKey || ev.metaKey) {
             return;
         }
 
@@ -931,10 +951,22 @@ kiwi.view.Application = Backbone.View.extend({
             bottom: el_controlbox.outerHeight(true)
         };
 
+
+        // If any elements are not visible, full size the panals instead
+        if (!el_toolbar.is(':visible')) {
+            css_heights.top = 0;
+        }
+
+        if (!el_controlbox.is(':visible')) {
+            css_heights.bottom = 0;
+        }
+
+        // Apply the CSS sizes
         el_panels.css(css_heights);
         el_memberlists.css(css_heights);
         el_resize_handle.css(css_heights);
 
+        // Set the panels width depending on the memberlist visibility
         if (el_memberlists.css('display') != 'none') {
             // Handle + panels to the side of the memberlist
             el_panels.css('right', el_memberlists.outerWidth(true) + el_resize_handle.outerWidth(true));

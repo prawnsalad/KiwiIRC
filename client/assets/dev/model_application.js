@@ -27,7 +27,7 @@ kiwi.model.Application = function () {
             }
 
             // The base url to the kiwi server
-            this.set('base_path', options[0].base_path ? options[0].base_path : '/client');
+            this.set('base_path', options[0].base_path ? options[0].base_path : '/kiwi');
 
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
@@ -51,12 +51,16 @@ kiwi.model.Application = function () {
             this.view.barsHide(true);
 
             this.panels.server.server_login.bind('server_connect', function (event) {
-                var server_login = this;
+                var server_login = this,
+                    transport_path = '';
                 auto_connect_details = event;
 
                 server_login.networkConnecting();
                 
-                $script(that.kiwi_server + '/socket.io/socket.io.js?ts='+(new Date().getTime()), function () {
+                // Path to get the socket.io transport code
+                transport_path = that.kiwi_server + that.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
+                
+                $script(transport_path, function () {
                     if (!window.io) {
                         kiwiServerNotFound();
                         return;
@@ -64,7 +68,11 @@ kiwi.model.Application = function () {
                     kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                     kiwi.gateway.set('nick', event.nick);
                     
-                    kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function () {});
+                    kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function (error) {
+                        if (error) {
+                            kiwiServerNotFound();
+                        }
+                    });
                 });
             });
 
@@ -104,6 +112,8 @@ kiwi.model.Application = function () {
             this.bindControllboxCommands(this.controlbox);
 
             this.topicbar = new kiwi.view.TopicBar({el: $('#topic')[0]});
+
+            new kiwi.view.AppToolbar({el: $('#toolbar .app_tools')[0]});
 
             this.message = new kiwi.view.StatusMessage({el: $('#status_message')[0]});
 
@@ -545,7 +555,7 @@ kiwi.model.Application = function () {
                     panel.addMsg(event.nick, 'is ' + event.nick + '!' + event.ident + '@' + event.host + ' * ' + event.msg, 'whois');
                 } else if (event.chans) {
                     panel.addMsg(event.nick, 'on ' + event.chans, 'whois');
-                } else if (event.server) {
+                } else if (event.irc_server) {
                     panel.addMsg(event.nick, 'using ' + event.server, 'whois');
                 } else if (event.msg) {
                     panel.addMsg(event.nick, event.msg, 'whois');
@@ -667,11 +677,10 @@ kiwi.model.Application = function () {
                 '/dehop': '/quote mode $channel -h $1+',
                 '/voice': '/quote mode $channel +v $1+',
                 '/devoice': '/quote mode $channel -v $1+',
-                '/k': '/kick $1+',
+                '/k': '/kick $channel $1+',
 
                 // Misc aliases
-                '/slap': '/me throws the juciest, sweetest kiwi at $1. Hits right in the kisser!',
-                '/throw': '/slap $1+'
+                '/slap': '/me slaps $1 around a bit with a large trout'
             });
 
             controlbox.on('unknown_command', unknownCommand);

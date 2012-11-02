@@ -1,0 +1,11 @@
+#!/bin/sh
+basedir=`dirname "$0"`
+
+case `uname` in
+    *CYGWIN*) basedir=`cygpath -w "$basedir"`;;
+esac
+
+node server/server.js $@
+ret=$?
+
+exit $ret
