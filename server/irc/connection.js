@@ -40,6 +40,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     this.ssl = !(!ssl);
     this.options = Object.create(null);
     this.cap = {requested: [], enabled: []};
+    this.sasl = false;
     
     this.password = pass;
     this.hold_last = false;
@@ -95,18 +96,30 @@ var connect_handler = function () {
         });
     }
 
-    if (this.password) {
-        this.write('PASS ' + this.password);
-    }
-    
     this.write('CAP LS');
-    this.write('NICK ' + connect_data.nick);
-    this.write('USER ' + connect_data.username + ' 0 0 :' + connect_data.realname);
+
+    this.registration_timeout = setTimeout(function () {
+        that.register.call(that);
+    }, 1000);
     
     this.connected = true;
     this.emit('connected');
 };
 
+IrcConnection.prototype.register = function () {
+    if (this.registration_timeout !== null) {
+        clearTimeout(this.registeration_timeout);
+        this.registration_timeout = null;
+    }
+    if ((this.password) && (!_.contains(this.cap.enabled, 'sasl'))) {
+        this.write('PASS ' + this.password);
+    }
+    this.write('NICK ' + this.nick);
+    this.write('USER ' + this.nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
+    if (this.cap_negotation) {
+        this.write('CAP END');
+    }
+};
 
 
 

@@ -38,7 +38,14 @@ var irc_numerics = {
     ERR_BANNEDFROMCHAN:     '474',
     ERR_BADCHANNELKEY:      '475',
     ERR_CHANOPRIVSNEEDED:   '482',
-    RPL_STARTTLS:           '670'
+    RPL_STARTTLS:           '670',
+    RPL_SASLAUTHENTICATED:  '900',
+    RPL_SASLLOGGEDIN:       '903',
+    ERR_SASLNOTAUTHORISED:  '904',
+    ERR_SASLNOTAUTHORISED:  '905',
+    ERR_SASLABORTED:        '906',
+    ERR_SASLALREADYAUTHED:  '907'
+    
 };
 
 
@@ -74,7 +81,6 @@ var listeners = {
                 var nick =  command.params[0];
                 this.irc_connection.registered = true;
                 this.cap_negotation = false;
-                console.log(this.irc_connection.cap.enabled);
                 this.client.sendIrcCommand('connect', {server: this.con_num, nick: nick});
             },
     'RPL_ISUPPORT':           function (command) {
@@ -436,8 +442,12 @@ var listeners = {
                 // TODO: capability modifiers
                 // i.e. - for disable, ~ for requires ACK, = for sticky
                 var capabilities = command.trailing.replace(/[\-~=]/, '').split(' ');
-                var want = ['multi-prefix'];
                 var request;
+                var want = ['multi-prefix'];
+                
+                if (this.irc_connection.password) {
+                    want.push('sasl');
+                }
                 
                 switch (command.params[1]) {
                     case 'LS':
@@ -448,6 +458,7 @@ var listeners = {
                         } else {
                             this.irc_connection.write('CAP END');
                             this.irc_connection.cap_negotation = false;
+                            this.irc_connection.register();
                         }
                         break;
                     case 'ACK':
@@ -456,8 +467,14 @@ var listeners = {
                             this.irc_connection.cap.requested = _.difference(this.irc_connection.cap.requested, capabilities);
                         }
                         if (this.irc_connection.cap.requested.length > 0) {
-                            this.irc_connection.write('CAP END');
-                            this.irc_connection.cap_negotation = false;
+                            if (_.contains(this.irc_connection.cap.enabled, 'sasl')) {
+                                this.irc_connection.sasl = true;
+                                this.irc_connection.write('AUTHENTICATE PLAIN');
+                            } else {
+                                this.irc_connection.write('CAP END');
+                                this.irc_connection.cap_negotation = false;
+                                this.irc_connection.register();
+                            }
                         }
                         break;
                     case 'NAK':
@@ -467,12 +484,52 @@ var listeners = {
                         if (this.irc_connection.cap.requested.length > 0) {
                             this.irc_connection.write('CAP END');
                             this.irc_connection.cap_negotation = false;
+                            this.irc_connection.register();
                         }
                         break;
                     case 'LIST':
                         // should we do anything here?
                         break;
                 }
+            },
+    'AUTHENTICATE':         function (command) {
+                var b = new Buffer(this.irc_connection.nick + "\0" + this.irc_connection.nick + "\0" + this.irc_connection.password, 'utf8');
+                var b64 = b.toString('base64');
+                if (command.params[0] === '+') {
+                    while (b64.length >= 400) {
+                        this.irc_connection.write('AUTHENTICATE ' + b64.slice(0, 399));
+                        b64 = b64.slice(399);
+                    }
+                    if (b64.length > 0) {
+                        this.irc_connection.write('AUTHENTICATE ' + b64);
+                    } else {
+                        this.irc_connection.write('AUTHENTICATE +');
+                    }
+                } else {
+                    this.irc_connection.write('CAP END');
+                    this.irc_connection.cap_negotation = false;
+                    this.irc_connection.register();
+                }
+            },
+    'RPL_SASLAUTHENTICATED':function (command) {
+                this.irc_connection.write('CAP END');
+                this.irc_connection.cap_negotation = false;
+                this.irc_connection.register();
+            },
+    'RPL_SASLLOGGEDIN':     function (command) {
+                // noop
+            },
+    'ERR_SASLNOTAUTHORISED':function (command) {
+                this.irc_connection.write('CAP END');
+                this.irc_connection.cap_negotation = false;
+                this.irc_connection.cap.enabled = _.without(this.irc_connection.cap.enabled, 'sasl');
+                this.irc_connection.register();
+            },
+    'ERR_SASLABORTED':      function (command) {
+                this.irc_connection.cap.enabled = _.without(this.irc_connection.cap.enabled, 'sasl');
+            },
+    'ERR_SASLALREADYAUTHED':function (command) {
+                // noop
             },
     'ERROR':                function (command) {
 				/*command.server = this.con_num;
