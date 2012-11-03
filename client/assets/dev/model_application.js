@@ -140,8 +140,10 @@ kiwi.model.Application = function () {
                 server: 'irc.kiwiirc.com',
                 port: 6667,
                 ssl: false,
-                channel: window.location.hash || '#kiwiirc'
+                channel: window.location.hash || '#kiwiirc',
+                channel_key: ''
             };
+            var uricheck;
 
             // Process the URL part by part, extracting as we go
             parts = window.location.pathname.toString().replace(this.get('base_path'), '').split('/');
@@ -150,22 +152,56 @@ kiwi.model.Application = function () {
                 parts.shift();
 
                 if (parts.length > 0 && parts[0]) {
-                    // Extract the port+ssl if we find one
-                    if (parts[0].search(/:/) > 0) {
-                        defaults.port = parts[0].substring(parts[0].search(/:/) + 1);
-                        defaults.server = parts[0].substring(0, parts[0].search(/:/));
-                        if (defaults.port[0] === '+') {
-                            defaults.port = parseInt(defaults.port.substring(1), 10);
-                            defaults.ssl = true;
+                    // Check to see if we're dealing with an irc: uri, or whether we need to extract the server/channel info from the HTTP URL path.
+                    uricheck = parts[0].substr(0, 7).toLowerCase();
+                    if ((uricheck === 'ircs%3a') || (uricheck.substr(0,6) === 'irc%3a')) {
+                        parts[0] = decodeURIComponent(parts[0]);
+                        // irc[s]://<host>[:<port>]/[<channel>[?<password>]]
+                        uricheck = /^irc(s)?:(?:\/\/?)?([^:\/]+)(?::([0-9]+))?(?:(?:\/)([^\?]*)(?:(?:\?)(.*))?)?$/.exec(parts[0]);
+                        /*
+                            uricheck[1] = ssl (optional)
+                            uricheck[2] = host
+                            uricheck[3] = port (optional)
+                            uricheck[4] = channel (optional)
+                            uricheck[5] = channel key (optional, channel must also be set)
+                        */
+                        if (uricheck) {
+                            if (typeof uricheck[1] !== 'undefined') {
+                                defaults.ssl = true;
+                                if (defaults.port === 6667) {
+                                    defaults.port = 6697;
+                                }
+                            }
+                            defaults.server = uricheck[2];
+                            if (typeof uricheck[3] !== 'undefined') {
+                                defaults.port = uricheck[3];
+                            }
+                            if (typeof uricheck[4] !== 'undefined') {
+                                defaults.channel = '#' + uricheck[4];
+                                if (typeof uricheck[5] !== 'undefined') {
+                                    defaults.channel_key = uricheck[5];
+                                }
+                            }
+                        }
+                        parts = [];
+                    } else {
+                        // Extract the port+ssl if we find one
+                        if (parts[0].search(/:/) > 0) {
+                            defaults.port = parts[0].substring(parts[0].search(/:/) + 1);
+                            defaults.server = parts[0].substring(0, parts[0].search(/:/));
+                            if (defaults.port[0] === '+') {
+                                defaults.port = parseInt(defaults.port.substring(1), 10);
+                                defaults.ssl = true;
+                            } else {
+                                defaults.ssl = false;
+                            }
+
                         } else {
-                            defaults.ssl = false;
+                            defaults.server = parts[0];
                         }
 
-                    } else {
-                        defaults.server = parts[0];
+                        parts.shift();
                     }
-
-                    parts.shift();
                 }
 
                 if (parts.length > 0 && parts[0]) {
@@ -192,7 +228,7 @@ kiwi.model.Application = function () {
                 that.view.barsShow();
                 
                 if (auto_connect_details.channel) {
-                    that.controlbox.processInput('/JOIN ' + auto_connect_details.channel);
+                    that.controlbox.processInput('/JOIN ' + auto_connect_details.channel + ' ' + auto_connect_details.channel_key);
                 }
             });
 
