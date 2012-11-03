@@ -891,11 +891,9 @@ kiwi.view.AppToolbar = Backbone.View.extend({
     },
 
     initialize: function () {
-        console.log('apptoolbar created', this.$el);
     },
 
     clickSettings: function (event) {
-        console.log('clicked');
         kiwi.app.controlbox.processInput('/settings');
     }
 });
