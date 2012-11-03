@@ -152,32 +152,37 @@ kiwi.model.Application = function () {
                 parts.shift();
 
                 if (parts.length > 0 && parts[0]) {
+                    // Check to see if we're dealing with an irc: uri, or whether we need to extract the server/channel info from the HTTP URL path.
                     uricheck = parts[0].substr(0, 7).toLowerCase();
                     if ((uricheck === 'ircs%3a') || (uricheck.substr(0,6) === 'irc%3a')) {
                         parts[0] = decodeURIComponent(parts[0]);
-                        console.log(parts[0]);
                         // irc[s]://<host>[:<port>]/[<channel>[?<password>]]
                         uricheck = /^irc(s)?:(?:\/\/?)?([^:\/]+)(?::([0-9]+))?(?:(?:\/)([^\?]*)(?:(?:\?)(.*))?)?$/.exec(parts[0]);
-                        console.log(uricheck);
+                        /*
+                            uricheck[1] = ssl (optional)
+                            uricheck[2] = host
+                            uricheck[3] = port (optional)
+                            uricheck[4] = channel (optional)
+                            uricheck[5] = channel key (optional, channel must also be set)
+                        */
                         if (uricheck) {
-                            if (uricheck[1]) {
+                            if (typeof uricheck[1] !== 'undefined') {
                                 defaults.ssl = true;
                                 if (defaults.port === 6667) {
                                     defaults.port = 6697;
                                 }
                             }
                             defaults.server = uricheck[2];
-                            if (uricheck[3]) {
+                            if (typeof uricheck[3] !== 'undefined') {
                                 defaults.port = uricheck[3];
                             }
-                            if (uricheck[4]) {
+                            if (typeof uricheck[4] !== 'undefined') {
                                 defaults.channel = '#' + uricheck[4];
-                                if (uricheck[5]) {
+                                if (typeof uricheck[5] !== 'undefined') {
                                     defaults.channel_key = uricheck[5];
                                 }
                             }
                         }
-                        console.log(defaults);
                         parts = [];
                     } else {
                         // Extract the port+ssl if we find one
