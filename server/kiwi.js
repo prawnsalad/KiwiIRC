@@ -129,6 +129,12 @@ if ((global.config.user) && (global.config.user !== '')) {
 }
 
 
+// Make sure Kiwi doesn't simply quit on an exception
+process.on('uncaughtException', function (e) {
+    console.log('[Uncaught exception] ' + e);
+});
+
+
 process.on('SIGUSR1', function() {
     if (config.loadConfig()) {
         console.log('New config file loaded');
