@@ -110,7 +110,7 @@ var listeners = {
                 }
                 //this.client.sendIrcCommand({server: this.con_num, command: 'RPL_ISUPPORT', options: this.irc_connection.options});
                 //websocket.sendClientEvent('options', {server: '', "options": irc_connection.IRC.options});
-                this.client.sendIrcCommand('options', {server: this.con_num, options: this.irc_connection.options});
+                this.client.sendIrcCommand('options', {server: this.con_num, options: this.irc_connection.options, cap: this.irc_connections.cap.enabled});
             },
     'RPL_ENDOFWHOIS':         function (command) {
 				/*command.server = this.con_num;
