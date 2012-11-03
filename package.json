@@ -1,8 +1,8 @@
 {
   "name": "KiwiIRC",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "scripts": {
-    "postinstall": "node client/dev/build.js"
+    "postinstall": "node client/assets/dev/build.js"
   },
   "dependencies": {
     "node-static": "0.5.9",
