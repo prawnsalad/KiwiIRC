@@ -141,7 +141,8 @@ kiwi.view.ServerSelect = function () {
                 port: $('.port', this.$el).val(),
                 ssl: $('.ssl', this.$el).prop('checked'),
                 password: $('.password', this.$el).val(),
-                channel: $('.channel', this.$el).val()
+                channel: $('.channel', this.$el).val(),
+                channel_key: $('.channel_key', this.$el).val()
             };
 
             this.trigger('server_connect', values);
@@ -158,7 +159,7 @@ kiwi.view.ServerSelect = function () {
         },
 
         populateFields: function (defaults) {
-            var nick, server, channel;
+            var nick, server, port, channel, channel_key, ssl, password;
 
             defaults = defaults || {};
 
@@ -168,6 +169,7 @@ kiwi.view.ServerSelect = function () {
             ssl = defaults.ssl || 0;
             password = defaults.password || '';
             channel = defaults.channel || '';
+            channel_key = defaults.channel_key || '';
 
             $('.nick', this.$el).val(nick);
             $('.server', this.$el).val(server);
@@ -175,6 +177,7 @@ kiwi.view.ServerSelect = function () {
             $('.ssl', this.$el).prop('checked', ssl);
             $('.password', this.$el).val(password);
             $('.channel', this.$el).val(channel);
+            $('.channel_key', this.$el).val(channel_key);
         },
 
         hide: function () {
