@@ -22,6 +22,7 @@ var src = concat([
     __dirname + '/model_memberlist.js',
     __dirname + '/model_panel.js',
     __dirname + '/model_panellist.js',
+    __dirname + '/model_query.js',
     __dirname + '/model_channel.js',
     __dirname + '/model_server.js',
     __dirname + '/model_applet.js',

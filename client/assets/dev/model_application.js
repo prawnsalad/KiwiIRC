@@ -330,7 +330,7 @@ kiwi.model.Application = function () {
                     // If a panel isn't found for this PM, create one
                     panel = that.panels.getByName(event.nick);
                     if (!panel) {
-                        panel = new kiwi.model.Channel({name: event.nick});
+                        panel = new kiwi.model.Query({name: event.nick});
                         that.panels.add(panel);
                     }
 
@@ -796,8 +796,7 @@ kiwi.model.Application = function () {
             // Check if we have the panel already. If not, create it
             panel = that.panels.getByName(destination);
             if (!panel) {
-                panel = new kiwi.model.Channel({name: destination});
-                panel.set('members', undefined);
+                panel = new kiwi.model.Query({name: destination});
                 kiwi.app.panels.add(panel);
             }
 
