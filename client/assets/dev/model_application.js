@@ -31,6 +31,9 @@ kiwi.model.Application = function () {
 
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
+
+            // Load the plugin manager
+            this.plugins = new kiwi.model.PluginManager();
         };
 
         this.start = function () {

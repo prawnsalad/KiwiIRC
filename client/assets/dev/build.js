@@ -40,6 +40,7 @@ var src = concat([
     __dirname + '/model_channel.js',
     __dirname + '/model_server.js',
     __dirname + '/model_applet.js',
+    __dirname + '/model_pluginmanager.js',
 
     __dirname + '/applet_settings.js',
     __dirname + '/applet_nickserv.js',
