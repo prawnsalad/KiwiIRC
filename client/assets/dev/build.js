@@ -1,5 +1,7 @@
-var fs = require('fs');
-var uglyfyJS = require('uglify-js');
+var fs        = require('fs'),
+    uglyfyJS  = require('uglify-js'),
+    _         = require('underscore'),
+    config    = require('./../../../server/configuration.js');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -13,6 +15,18 @@ function concat(src) {
 
     return out.join(EOL);
 }
+
+
+
+config.loadConfig();
+
+
+
+
+
+/**
+ * Build the kiwi.js files
+ */
 
 var src = concat([
     __dirname + '/app.js',
@@ -50,4 +64,32 @@ fs.writeFileSync(__dirname + '/../kiwi.min.js', uglyfyJS.uglify.gen_code(src), F
 
 
 
-console.log(' kiwi.js and kiwi.min.js built');
+console.log('kiwi.js and kiwi.min.js built');
+
+
+
+
+
+
+
+
+
+
+/**
+ * Build the index.html file
+ */
+
+var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
+var vars = {
+    base_path: config.get().http_base_path,
+    cache_buster: Math.ceil(Math.random() * 9000).toString()
+};
+
+_.each(vars, function(value, key) {
+    index_src = index_src.replace(new RegExp('<%' + key + '%>', 'g'), value);
+});
+
+fs.writeFileSync(__dirname + '/../../index.html', index_src, FILE_ENCODING);
+
+
+console.log('index.html built');
