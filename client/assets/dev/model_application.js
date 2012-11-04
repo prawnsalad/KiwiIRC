@@ -570,6 +570,17 @@ kiwi.model.Application = function () {
                 }
             });
 
+            gw.on('onaway', function (event) {
+                $.each(that.panels.models, function (index, panel) {
+                    if (!panel.isChannel()) return;
+
+                    member = panel.get('members').getByNick(event.nick);
+                    if (member) {
+                        member.set('away', !(!event.trailing));
+                    }
+                });
+            });
+
 
             gw.on('onlist_start', function (data) {
                 if (kiwi.app.channel_list) {

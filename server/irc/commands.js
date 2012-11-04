@@ -443,7 +443,7 @@ var listeners = {
                 // i.e. - for disable, ~ for requires ACK, = for sticky
                 var capabilities = command.trailing.replace(/[\-~=]/, '').split(' ');
                 var request;
-                var want = ['multi-prefix'];
+                var want = ['multi-prefix', 'away-notify'];
                 
                 if (this.irc_connection.password) {
                     want.push('sasl');
@@ -510,6 +510,9 @@ var listeners = {
                     this.irc_connection.cap_negotation = false;
                     this.irc_connection.register();
                 }
+            },
+    'AWAY':                 function (command) {
+                this.client.sendIrcCommand('away', {server: this.con_num, nick: command.nick, msg: command.trailing});
             },
     'RPL_SASLAUTHENTICATED':function (command) {
                 this.irc_connection.write('CAP END');
