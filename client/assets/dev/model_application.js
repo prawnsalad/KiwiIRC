@@ -757,6 +757,32 @@ _kiwi.model.Application = function () {
                 $script(ev.params[0] + '?' + (new Date().getTime()));
             });
 
+            
+            controlbox.on('command_set', function (ev) {
+                if (!ev.params[0]) return;
+
+                var setting = ev.params[0],
+                    value;
+
+                // Do we have a second param to set a value?
+                if (ev.params[1]) {
+                    ev.params.shift();
+
+                    value = ev.params.join(' ');
+                    _kiwi.global.settings.set(setting, value);
+                }
+
+                // Read the value to the user
+                _kiwi.app.panels.active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting));
+            });
+
+
+            controlbox.on('command_save', function (ev) {
+                _kiwi.global.settings.save();
+                _kiwi.app.panels.active.addMsg('', 'Settings have been saved');
+            });
+
+
             controlbox.on('command_alias', function (ev) {
                 var name, rule;
 
