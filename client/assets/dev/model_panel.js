@@ -1,7 +1,7 @@
-kiwi.model.Panel = Backbone.Model.extend({
+_kiwi.model.Panel = Backbone.Model.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "";
-        this.view = new kiwi.view.Panel({"model": this, "name": name});
+        this.view = new _kiwi.view.Panel({"model": this, "name": name});
         this.set({
             "scrollback": [],
             "name": name
@@ -26,7 +26,7 @@ kiwi.model.Panel = Backbone.Model.extend({
 
         // Run through the plugins
         message_obj = {"msg": msg, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
-        //tmp = kiwi.plugs.run('addmsg', message_obj);
+        //tmp = _kiwi.plugs.run('addmsg', message_obj);
         if (!message_obj) {
             return;
         }
@@ -68,14 +68,14 @@ kiwi.model.Panel = Backbone.Model.extend({
             this.unset('members');
         }
 
-        kiwi.app.panels.remove(this);
+        _kiwi.app.panels.remove(this);
 
         this.unbind();
         this.destroy();
 
         // If closing the active panel, switch to the server panel
-        if (this.cid === kiwi.app.panels.active.cid) {
-            kiwi.app.panels.server.view.show();
+        if (this.cid === _kiwi.app.panels.active.cid) {
+            _kiwi.app.panels.server.view.show();
         }
     },
 
@@ -85,7 +85,7 @@ kiwi.model.Panel = Backbone.Model.extend({
     },
 
     isChannel: function () {
-        var channel_prefix = kiwi.gateway.get('channel_prefix'),
+        var channel_prefix = _kiwi.gateway.get('channel_prefix'),
             this_name = this.get('name');
 
         if (this.isApplet() || !this_name) return false;
@@ -101,6 +101,6 @@ kiwi.model.Panel = Backbone.Model.extend({
     },
 
     isActive: function () {
-        return (kiwi.app.panels.active === this);
+        return (_kiwi.app.panels.active === this);
     }
 });

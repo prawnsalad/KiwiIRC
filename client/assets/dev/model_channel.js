@@ -1,13 +1,13 @@
 // TODO: Channel modes
 // TODO: Listen to gateway events for anythign related to this channel
-kiwi.model.Channel = kiwi.model.Panel.extend({
+_kiwi.model.Channel = _kiwi.model.Panel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;
 
-        this.view = new kiwi.view.Channel({"model": this, "name": name});
+        this.view = new _kiwi.view.Channel({"model": this, "name": name});
         this.set({
-            "members": new kiwi.model.MemberList(),
+            "members": new _kiwi.model.MemberList(),
             "name": name,
             "scrollback": [],
             "topic": ""

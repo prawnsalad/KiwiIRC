@@ -1,4 +1,4 @@
-kiwi.model.Applet = kiwi.model.Panel.extend({
+_kiwi.model.Applet = _kiwi.model.Panel.extend({
     // Used to determine if this is an applet panel. Applet panel tabs are treated
     // differently than others
     applet: true,
@@ -7,7 +7,7 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
     initialize: function (attributes) {
         // Temporary name
         var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
-        this.view = new kiwi.view.Applet({model: this, name: name});
+        this.view = new _kiwi.view.Applet({model: this, name: name});
 
         this.set({
             "name": name
@@ -55,13 +55,13 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
         this.view.$el.html('Loading..');
         $script(applet_url, function () {
             // Check if the applet loaded OK
-            if (!kiwi.applets[applet_name]) {
+            if (!_kiwi.applets[applet_name]) {
                 that.view.$el.html('Not found');
                 return;
             }
 
             // Load a new instance of this applet
-            that.load(new kiwi.applets[applet_name]());
+            that.load(new _kiwi.applets[applet_name]());
         });
     },
 

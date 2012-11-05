@@ -50,7 +50,7 @@
 
 
 
-    kiwi.applets.Chanlist = Backbone.Model.extend({
+    _kiwi.applets.Chanlist = Backbone.Model.extend({
         initialize: function () {
             this.set('title', 'Channel List');
             this.view = new View();

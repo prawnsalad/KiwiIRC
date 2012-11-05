@@ -223,8 +223,8 @@
                 //kiwi_server: 'http://kiwiirc.com:80'
             };
 
-            // Start the app by either the dev or closed environment
-            (kiwi && kiwi.global && kiwi.global.start(opts)) || (kiwi && kiwi.start(opts));
+            // Start the app
+            kiwi.start(opts);
         }
 
 

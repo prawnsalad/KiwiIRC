@@ -25,7 +25,7 @@ config.loadConfig();
 
 
 /**
- * Build the kiwi.js files
+ * Build the _kiwi.js files
  */
 
 var src = concat([
@@ -51,7 +51,7 @@ var src = concat([
 ]);
 
 
-src = '(function (global) {\n\n' + src + '\n\n})(window);';
+src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
 
 fs.writeFileSync(__dirname + '/../kiwi.js', src, FILE_ENCODING);

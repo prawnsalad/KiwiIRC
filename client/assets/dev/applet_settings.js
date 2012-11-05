@@ -12,17 +12,17 @@
             var theme = $('.theme', this.$el).val();
 
             // Clear any current theme
-            kiwi.app.view.$el.removeClass(function (i, css) {
+            _kiwi.app.view.$el.removeClass(function (i, css) {
                 return (css.match (/\btheme_\S+/g) || []).join(' ');
             });
 
-            if (theme) kiwi.app.view.$el.addClass('theme_' + theme);
+            if (theme) _kiwi.app.view.$el.addClass('theme_' + theme);
         }
     });
 
 
 
-    kiwi.applets.Settings = Backbone.Model.extend({
+    _kiwi.applets.Settings = Backbone.Model.extend({
         initialize: function () {
             this.set('title', 'Settings');
             this.view = new View();

@@ -1,12 +1,12 @@
-// Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
+// Holds anything kiwi client specific (ie. front, gateway, _kiwi.plugs..)
 /**
 *   @namespace
 */
-var kiwi = {};
+var _kiwi = {};
 
-kiwi.model = {};
-kiwi.view = {};
-kiwi.applets = {};
+_kiwi.model = {};
+_kiwi.view = {};
+_kiwi.applets = {};
 
 
 /**
@@ -14,7 +14,7 @@ kiwi.applets = {};
  * Will be used to access a limited subset of kiwi functionality
  * and data (think: plugins)
  */
-kiwi.global = {
+_kiwi.global = {
 	utils: undefined, // Re-usable methods
 	gateway: undefined,
 	user: undefined,
@@ -28,13 +28,13 @@ kiwi.global = {
 	start: function (opts) {
 		opts = opts || {};
 
-		kiwi.app = new kiwi.model.Application(opts);
+		_kiwi.app = new _kiwi.model.Application(opts);
 
 		if (opts.kiwi_server) {
-			kiwi.app.kiwi_server = opts.kiwi_server;
+			_kiwi.app.kiwi_server = opts.kiwi_server;
 		}
 
-		kiwi.app.start();
+		_kiwi.app.start();
 
 		return true;
 	}
@@ -44,5 +44,8 @@ kiwi.global = {
 
 // If within a closure, expose the kiwi globals
 if (typeof global !== 'undefined') {
-	global.kiwi = kiwi.global;
+	global.kiwi = _kiwi.global;
+} else {
+	// Not within a closure so set a var in the current scope
+	var kiwi = _kiwi.global;
 }
