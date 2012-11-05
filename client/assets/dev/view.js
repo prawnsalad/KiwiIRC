@@ -14,7 +14,7 @@ kiwi.view.MemberList = Backbone.View.extend({
         var $this = $(this.el);
         $this.empty();
         this.model.forEach(function (member) {
-            $('<li><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
+            $('<li><a class="nick' + ((member.get("away")) ? ' away' : '' ) + '"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
                 .appendTo($this)
                 .data('member', member);
         });

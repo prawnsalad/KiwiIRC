@@ -8,6 +8,7 @@ var irc_numerics = {
     RPL_WHOISUSER:          '311',
     RPL_WHOISSERVER:        '312',
     RPL_WHOISOPERATOR:      '313',
+    RPL_ENDOFWHO:           '315',
     RPL_WHOISIDLE:          '317',
     RPL_ENDOFWHOIS:         '318',
     RPL_WHOISCHANNELS:      '319',
@@ -17,6 +18,7 @@ var irc_numerics = {
     RPL_NOTOPIC:            '331',
     RPL_TOPIC:              '332',
     RPL_TOPICWHOTIME:       '333',
+    RPL_WHOREPLY :          '352',
     RPL_NAMEREPLY:          '353',
     RPL_ENDOFNAMES:         '366',
     RPL_BANLIST:            '367',
@@ -247,6 +249,14 @@ var listeners = {
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('userlist_end', {server: '', channel: msg.params.split(" ")[1]});
                 this.client.sendIrcCommand('userlist_end', {server: this.con_num, channel: command.params[1]});
+            },
+    'RPL_WHOREPLY':           function (command) {
+                // "<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ] :<hopcount> <real name>"
+                var trail = command.trailing.split(' ', 2);
+                this.client.sendIrcCommand('who_reply', {server: this.con_num, channel: command.params[1], user: command.params[2], host: command.params[3], who_server: command.params[4], nick: command.params[5], flags: command.params[6], hopcount: trail[0], real_name: trail[1]});
+            },
+    'RPL_ENDOFWHO':           function (command) {
+                this.client.sendIrcCommand('who_reply_end', {server: this.con_num});
             },
     'RPL_BANLIST':            function (command) {
 				/*command.server = this.con_num;

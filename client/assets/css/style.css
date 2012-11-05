@@ -147,6 +147,7 @@ a img { border:none; }
 #memberlists ul.active { display:block; }
 #memberlists ul li { padding: 0.2em 1em; overflow-y:auto; overflow-x:hidden; cursor:pointer; }
 #memberlists ul li a.nick { display:block; color:black; }
+#memberlists ul li a.nick.away { color:gray; }
 
 #memberlists ul li .userbox { position:relative; margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
 #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
