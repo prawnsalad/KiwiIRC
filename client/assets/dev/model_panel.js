@@ -9,7 +9,8 @@ _kiwi.model.Panel = Backbone.Model.extend({
     },
 
     addMsg: function (nick, msg, type, opts) {
-        var message_obj, bs, d;
+        var message_obj, bs, d,
+            scrollback = (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250);
 
         opts = opts || {};
 
@@ -46,8 +47,8 @@ _kiwi.model.Panel = Backbone.Model.extend({
         bs.push(message_obj);
 
         // Keep the scrolback limited
-        if (bs.length > 250) {
-            bs.splice(250);
+        if (bs.length > scrollback) {
+            bs.splice(scrollback);
         }
         this.set({"scrollback": bs}, {silent: true});
 

@@ -343,7 +343,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
-        if (this.msg_count > 250) {
+        if (this.msg_count > (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250)) {
             $('.msg:first', this.$el).remove();
             this.msg_count--;
         }
