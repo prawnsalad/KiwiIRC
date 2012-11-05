@@ -281,6 +281,13 @@ kiwi.model.Application = function () {
                     c = new kiwi.model.Channel({name: event.channel});
                     that.panels.add(c);
                 }
+                
+                if (event.nick === kiwi.gateway.get('nick')) {
+                    gw.raw('WHO ' + event.channel);
+                    c.whopoll = setInterval(function () {
+                        gw.raw('WHO ' + event.channel);
+                    }, 60000);
+                }
 
                 members = c.get('members');
                 if (!members) return;
@@ -303,6 +310,10 @@ kiwi.model.Application = function () {
 
                 // If this is us, close the panel
                 if (event.nick === kiwi.gateway.get('nick')) {
+                    if (channel.whopoll) {
+                        clearInterval(channel.whopoll);
+                        channel.whopoll = null;
+                    }
                     channel.close();
                     return;
                 }
@@ -355,6 +366,10 @@ kiwi.model.Application = function () {
                 members.remove(user, part_options);
 
                 if (event.kicked === kiwi.gateway.get('nick')) {
+                    if (channel.whopoll) {
+                        clearInterval(channel.whopoll);
+                        channel.whopoll = null;
+                    }
                     members.reset([]);
                 }
                 
@@ -606,6 +621,17 @@ kiwi.model.Application = function () {
                     panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
                 } else {
                     panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
+                }
+            });
+            
+            gw.on('onwho_reply', function (data) {
+                var channel, members;
+                channel = that.panels.getByName(data.channel);
+                if (channel) {
+                    members = channel.get("members").where({nick: data.nick});
+                    if (members.length > 0) {
+                        members[0].set("away", (data.flags.indexOf('G') !== -1));
+                    }
                 }
             });
 

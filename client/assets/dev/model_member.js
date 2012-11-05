@@ -30,7 +30,7 @@ kiwi.model.Member = Backbone.Model.extend({
         modes = this.get("modes");
         modes = modes || [];
         this.sortModes(modes);
-        this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes)}, {silent: true});
+        this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes), away: false}, {silent: true});
     },
     addMode: function (mode) {
         var modes_to_add = mode.split(''),
