@@ -5,18 +5,19 @@
         },
 
         initialize: function (options) {
+            var settings = _kiwi.global.settings;
+
             this.$el = $($('#tmpl_applet_settings').html());
+
+            this.$el.find('.theme').val(settings.get('theme'));
         },
         
         saveSettings: function () {
-            var theme = $('.theme', this.$el).val();
+            var settings = _kiwi.global.settings;
 
-            // Clear any current theme
-            _kiwi.app.view.$el.removeClass(function (i, css) {
-                return (css.match (/\btheme_\S+/g) || []).join(' ');
-            });
+            settings.set('theme', $('.theme', this.$el).val());
 
-            if (theme) _kiwi.app.view.$el.addClass('theme_' + theme);
+            settings.save();
         }
     });
 

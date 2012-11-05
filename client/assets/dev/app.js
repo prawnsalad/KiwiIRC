@@ -15,6 +15,7 @@ _kiwi.applets = {};
  * and data (think: plugins)
  */
 _kiwi.global = {
+	settings: undefined,
 	utils: undefined, // Re-usable methods
 	gateway: undefined,
 	user: undefined,
@@ -28,12 +29,20 @@ _kiwi.global = {
 	start: function (opts) {
 		opts = opts || {};
 
+        // Load the plugin manager
+        _kiwi.global.plugins = new _kiwi.model.PluginManager();
+
+        // Set up the settings datastore
+        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
+        _kiwi.global.settings.load();
+
 		_kiwi.app = new _kiwi.model.Application(opts);
 
 		if (opts.kiwi_server) {
 			_kiwi.app.kiwi_server = opts.kiwi_server;
 		}
 
+		// Start the client up
 		_kiwi.app.start();
 
 		return true;

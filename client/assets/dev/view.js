@@ -908,6 +908,10 @@ _kiwi.view.Application = Backbone.View.extend({
         $('#toolbar').resize(this.doLayout);
         $('#controlbox').resize(this.doLayout);
 
+        // Change the theme when the config is changed
+        _kiwi.global.settings.on('change:theme', this.updateTheme, this);
+        this.updateTheme();
+
         this.doLayout();
 
         $(document).keydown(this.setKeyFocus);
@@ -918,6 +922,26 @@ _kiwi.view.Application = Backbone.View.extend({
                 return 'This will close all KiwiIRC conversations. Are you sure you want to close this window?';
             }
         };
+    },
+
+
+
+    updateTheme: function (theme_name) {
+        // If called by the settings callback, get the correct new_value
+        if (theme_name === _kiwi.global.settings) {
+            theme_name = arguments[1];
+        }
+
+        // If we have no theme specified, get it from the settings
+        if (!theme_name) theme_name = _kiwi.global.settings.get('theme');
+
+        // Clear any current theme
+        this.$el.removeClass(function (i, css) {
+            return (css.match (/\btheme_\S+/g) || []).join(' ');
+        });
+
+        // Apply the new theme
+        this.$el.addClass('theme_' + (theme_name || 'default'));
     },
 
 
