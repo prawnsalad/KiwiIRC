@@ -16,14 +16,15 @@ _kiwi.applets = {};
  */
 _kiwi.global = {
 	settings: undefined,
-	utils: undefined, // Re-usable methods
-	gateway: undefined,
-	user: undefined,
-	server: undefined,
+	plugins: undefined,
+	utils: undefined, // TODO: Re-usable methods
+	gateway: undefined, // TODO: Access to gateway
+	user: undefined, // TODO: Limited user methods
+	server: undefined, // TODO: Limited server methods
 	command: undefined,  // The control box
 
 	// TODO: think of a better term for this as it will also refer to queries
-	channels: undefined,
+	channels: undefined, // TODO: Limited access to panels list
 
 	// Entry point to start the kiwi application
 	start: function (opts) {

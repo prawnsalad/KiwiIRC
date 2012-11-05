@@ -15,10 +15,20 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
         members = this.get("members");
         members.bind("add", function (member) {
+            var show_message = _kiwi.global.settings.get('show_join_parts');
+            if (show_message === false) {
+                return;
+            }
+            
             this.addMsg(' ', '== ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 
         members.bind("remove", function (member, members, options) {
+            var show_message = _kiwi.global.settings.get('show_join_parts');
+            if (show_message === false) {
+                return;
+            }
+
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
             if (options.type === 'quit') {

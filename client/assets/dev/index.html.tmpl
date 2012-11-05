@@ -119,13 +119,30 @@
     </script>
 
     <script type="text/html" id="tmpl_applet_settings">
-        <div>
-            <select class="theme">
-                <option value="default">Default</option>
-                <option value="relaxed">Relaxed</option>
-                <option value="cli">CLI</option>
-            </select>
-            <button class="save">Save</button>
+        <div class="settings">
+            ​<table>
+                <tr>
+                    <td>Theme</td>
+                    <td>
+                        <select class="setting-theme">
+                            <option value="default">Default</option>
+                            <option value="relaxed">Relaxed</option>
+                            <option value="cli">CLI</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Scrollback</td>
+                    <td><input type="text" class="setting-scrollback" value="150" /></td>
+                </tr>
+
+                <tr>
+                    <td>Auto-reconnect</td>
+                    <td><input type="checkbox" class="setting-reconnect" /></td>
+                </tr>
+            </table>
+
+            <button class="save">Save</button>​​​​​​​​​
         </div>
     </script>
 

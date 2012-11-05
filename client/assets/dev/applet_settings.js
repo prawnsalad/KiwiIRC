@@ -9,13 +9,15 @@
 
             this.$el = $($('#tmpl_applet_settings').html());
 
-            this.$el.find('.theme').val(settings.get('theme'));
+            this.$el.find('.setting-theme').val(settings.get('theme'));
+            this.$el.find('.setting-scrollback').val(settings.get('scrollback'));
         },
         
         saveSettings: function () {
             var settings = _kiwi.global.settings;
 
-            settings.set('theme', $('.theme', this.$el).val());
+            settings.set('theme', $('.setting-theme', this.$el).val());
+            settings.set('scrollback', $('.setting-scrollback', this.$el).val());
 
             settings.save();
         }
