@@ -222,6 +222,15 @@ var listeners = {
                 var member_list = [];
                 var that = this;
                 var i = 0;
+                var chan = _.find(this.connection.channels, function (c) {
+                    return c.name === command.params[2];
+                });
+                if (!this.irc_connection.during_names) {
+                    this.irc_connection.during_names = true;
+                    if (chan) {
+                        chan.members = [];
+                    }
+                }
                 _.each(members, function (member) {
                     var j, k, modes = [];
                     for (j = 0; j < member.length; j++) {
@@ -233,6 +242,9 @@ var listeners = {
                         }
                     }
                     member_list.push({nick: member, modes: modes});
+                    if (chan) {
+                        chan.members.push({nick: member, away: false});
+                    }
                     if (i++ >= 50) {
                         that.client.sendIrcCommand('userlist', {server: that.con_num, users: member_list, channel: command.params[2]});
                         member_list = [];
@@ -249,11 +261,25 @@ var listeners = {
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('userlist_end', {server: '', channel: msg.params.split(" ")[1]});
                 this.client.sendIrcCommand('userlist_end', {server: this.con_num, channel: command.params[1]});
+                this.irc_connection.during_names = false;
+                this.irc_connection.write('WHO ' + command.params[1]);
             },
     'RPL_WHOREPLY':           function (command) {
                 // "<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ] :<hopcount> <real name>"
                 var trail = command.trailing.split(' ', 2);
                 this.client.sendIrcCommand('who_reply', {server: this.con_num, channel: command.params[1], user: command.params[2], host: command.params[3], who_server: command.params[4], nick: command.params[5], flags: command.params[6], hopcount: trail[0], real_name: trail[1]});
+                
+                var chan = _.find(this.irc_connection.channels, function (c) {
+                    return c.name === command.params[1];
+                });
+                if (chan) {
+                    var member = _.find(chan.members, function (m) {
+                        return m.nick === command.params[5];
+                    });
+                    if (member) {
+                        member.away = (command.params[6].indexOf('G') !== -1);
+                    }
+                }
             },
     'RPL_ENDOFWHO':           function (command) {
                 this.client.sendIrcCommand('who_reply_end', {server: this.con_num});
@@ -309,8 +335,14 @@ var listeners = {
                 //websocket.sendClientEvent('join', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: channel});
                 this.client.sendIrcCommand('join', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: channel});
                 
-                if (command.nick === this.nick) {
+                if (command.nick === this.irc_connection.nick) {
+                    this.irc_connection.channels.push({name: channel, members: [{nick: this.irc_connection.nick, away: false}]});
+                    this.irc_connection.write('WHO ' + channel);
                     this.irc_connection.write('NAMES ' + channel);
+                } else {
+                    _.find(this.irc_connection.channels, function (c) {
+                        return c.name === channel;
+                    }).members.push({nick: command.nick, away: false});
                 }
             },
     'PART':                 function (command) {
@@ -319,6 +351,19 @@ var listeners = {
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('part', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), message: msg.trailing});
                 this.client.sendIrcCommand('part', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], message: command.trailing});
+                
+                if (command.nick === this.irc_connection.nick) {
+                    this.irc_connection.channels = _.reject(this.irc_connection.channels, function (c) {
+                        return c.name === command.params[0];
+                    });
+                } else {
+                    var chan = _.find(this.irc_connection.channels, function (c) {
+                        return c.name === channel;
+                    });
+                    chan.members = _.reject(chan.members, function (m) {
+                        return m.nick === command.nick;
+                    });
+                }
             },
     'KICK':                 function (command) {
 				/*command.server = this.con_num;
@@ -326,6 +371,19 @@ var listeners = {
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('kick', {kicked: params[1], nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: params[0].trim(), message: msg.trailing});
                 this.client.sendIrcCommand('kick', {server: this.con_num, kicked: command.params[1], nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], message: command.trailing});
+                
+                if (command.nick === this.irc_connection.nick) {
+                    this.irc_connection.channels = _.reject(this.irc_connection.channels, function (c) {
+                        return c.name === command.params[0];
+                    });
+                } else {
+                    var chan = _.find(this.irc_connection.channels, function (c) {
+                        return c.name === channel;
+                    });
+                    chan.members = _.reject(chan.members, function (m) {
+                        return m.nick === command.nick;
+                    });
+                }
             },
     'QUIT':                 function (command) {
 				/*command.server = this.con_num;
@@ -333,6 +391,11 @@ var listeners = {
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('quit', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, message: msg.trailing});
                 this.client.sendIrcCommand('quit', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, message: command.trailing});
+                this.irc_connection.channels.forEach(function (c) {
+                    c.members = _.reject(c.members, function (m) {
+                        return m.nick === command.nick;
+                    });
+                });
             },
     'NOTICE':               function (command) {
 				/*command.server = this.con_num;
@@ -353,6 +416,17 @@ var listeners = {
 				this.client.sendIrcCommand(command);*/
                 //websocket.sendClientEvent('nick', {nick: msg.nick, ident: msg.ident, hostname: msg.hostname, newnick: msg.trailing});
                 this.client.sendIrcCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.trailing});
+                if (command.nick === this.irc_connection.nick) {
+                    this.irc_connection.nick = command.trailing;
+                }
+                this.irc_connection.channels.forEach(function (c) {
+                    var member = _.find(c.members, function (m) {
+                        return m.nick === command.nick;
+                    });
+                    if (member) {
+                        member.nick = command.trailing;
+                    }
+                });
             },
     'TOPIC':                function (command) {
 				/*command.server = this.con_num;

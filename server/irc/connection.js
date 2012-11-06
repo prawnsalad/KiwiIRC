@@ -48,6 +48,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     this.password = pass;
     this.hold_last = false;
     this.held_data = '';
+    
+    this.channels = [];
+    this.during_names = false;
 };
 util.inherits(IrcConnection, events.EventEmitter);
 
