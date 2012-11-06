@@ -239,7 +239,9 @@ _kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
     className: "messages",
     events: {
-        "click .chan": "chanClick"
+        "click .chan": "chanClick",
+        'mouseenter .msg .nick': 'msgEnter',
+        'mouseleave .msg .nick': 'msgLeave'
     },
 
     initialize: function (options) {
@@ -274,7 +276,7 @@ _kiwi.view.Panel = Backbone.View.extend({
     newMsg: function (msg) {
         // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
         var re, line_msg, $this = this.$el,
-            nick_colour_hex;
+            nick_colour_hex, nick_hex;
 
         // Escape any HTML that may be in here
         msg.msg =  $('<div />').text(msg.msg).html();
@@ -321,8 +323,17 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         msg.nick_style = 'color:' + nick_colour_hex + ';';
 
+        // Generate a hex string from the nick to be used as a CSS class name
+        nick_hex = msg.nick_css_class = '';
+        if (msg.nick) {
+            _.map(msg.nick.split(''), function (char) {
+                nick_hex += char.charCodeAt(0).toString(16);
+            });
+            msg.nick_css_class = 'nick_' + nick_hex;
+        }
+
         // Build up and add the line
-        line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        line_msg = '<div class="msg <%= type %> <%= nick_css_class %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
         // Activity/alerts based on the type of new message
@@ -356,6 +367,39 @@ _kiwi.view.Panel = Backbone.View.extend({
             _kiwi.gateway.join($(event.srcElement).text());
         }
     },
+
+    msgEnter: function (event) {
+        var nick_class;
+
+        // Find a valid class that this element has
+        _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
+            if (css_class.match(/^nick_[a-z0-9]+/i)) {
+                nick_class = css_class;
+            }
+        });
+
+        // If no class was found..
+        if (!nick_class) return;
+
+        $('.'+nick_class).addClass('global_nick_highlight');
+    },
+
+    msgLeave: function (event) {
+        var nick_class;
+
+        // Find a valid class that this element has
+        _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
+            if (css_class.match(/^nick_[a-z0-9]+/i)) {
+                nick_class = css_class;
+            }
+        });
+
+        // If no class was found..
+        if (!nick_class) return;
+
+        $('.'+nick_class).removeClass('global_nick_highlight');
+    },
+
     show: function () {
         var $this = this.$el;
 
