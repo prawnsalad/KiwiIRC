@@ -50,7 +50,7 @@
 
 
 
-    kiwi.applets.Chanlist = Backbone.Model.extend({
+    _kiwi.applets.Chanlist = Backbone.Model.extend({
         initialize: function () {
             this.set('title', 'Channel List');
             this.view = new View();
@@ -65,7 +65,7 @@
             }
             _.each(channels, function (chan) {
                 var html, channel;
-                html = '<tr><td><a class="chan">' + chan.channel + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(chan.topic) + '</td></tr>';
+                html = '<tr><td><a class="chan">' + _.escape(chan.channel) + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(_.escape(chan.topic)) + '</td></tr>';
                 chan.html = html;
                 that.view.channels.push(chan);
             });

@@ -1,8 +1,8 @@
-kiwi.model.MemberList = Backbone.Collection.extend({
-    model: kiwi.model.Member,
+_kiwi.model.MemberList = Backbone.Collection.extend({
+    model: _kiwi.model.Member,
     comparator: function (a, b) {
         var i, a_modes, b_modes, a_idx, b_idx, a_nick, b_nick;
-        var user_prefixes = kiwi.gateway.get('user_prefixes');
+        var user_prefixes = _kiwi.gateway.get('user_prefixes');
         a_modes = a.get("modes");
         b_modes = b.get("modes");
         // Try to sort by modes first
@@ -46,7 +46,7 @@ kiwi.model.MemberList = Backbone.Collection.extend({
         }
     },
     initialize: function (options) {
-        this.view = new kiwi.view.MemberList({"model": this});
+        this.view = new _kiwi.view.MemberList({"model": this});
     },
     getByNick: function (nick) {
         if (typeof nick !== 'string') return;

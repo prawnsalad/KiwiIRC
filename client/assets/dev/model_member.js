@@ -1,8 +1,8 @@
-kiwi.model.Member = Backbone.Model.extend({
+_kiwi.model.Member = Backbone.Model.extend({
     sortModes: function (modes) {
         return modes.sort(function (a, b) {
             var a_idx, b_idx, i;
-            var user_prefixes = kiwi.gateway.get('user_prefixes');
+            var user_prefixes = _kiwi.gateway.get('user_prefixes');
 
             for (i = 0; i < user_prefixes.length; i++) {
                 if (user_prefixes[i].mode === a) {
@@ -57,7 +57,7 @@ kiwi.model.Member = Backbone.Model.extend({
     },
     getPrefix: function (modes) {
         var prefix = '';
-        var user_prefixes = kiwi.gateway.get('user_prefixes');
+        var user_prefixes = _kiwi.gateway.get('user_prefixes');
 
         if (typeof modes[0] !== 'undefined') {
             prefix = _.detect(user_prefixes, function (prefix) {
@@ -69,7 +69,7 @@ kiwi.model.Member = Backbone.Model.extend({
     },
     stripPrefix: function (nick) {
         var tmp = nick, i, j, k;
-        var user_prefixes = kiwi.gateway.get('user_prefixes');
+        var user_prefixes = _kiwi.gateway.get('user_prefixes');
         i = 0;
 
         for (j = 0; j < nick.length; j++) {
