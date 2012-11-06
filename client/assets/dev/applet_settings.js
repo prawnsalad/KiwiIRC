@@ -5,12 +5,21 @@
         },
 
         initialize: function (options) {
-            var settings = _kiwi.global.settings;
-
             this.$el = $($('#tmpl_applet_settings').html());
 
-            this.$el.find('.setting-theme').val(settings.get('theme'));
-            this.$el.find('.setting-scrollback').val(settings.get('scrollback'));
+            // Incase any settings change while we have this open, update them
+            _kiwi.global.settings.on('change', this.loadSettings, this);
+
+            // Now actually show the current settings
+            this.loadSettings();
+        },
+        
+
+        loadSettings: function () {
+            var settings = _kiwi.global.settings;
+
+            this.$el.find('.setting-theme').val(settings.get('theme') || 'relaxed');
+            this.$el.find('.setting-scrollback').val(settings.get('scrollback') || '250');
 
             if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
                 this.$el.find('.setting-show_joins_parts').attr('checked', true);
@@ -18,7 +27,8 @@
                 this.$el.find('.setting-show_joins_parts').attr('checked', false);
             }
         },
-        
+
+
         saveSettings: function () {
             var settings = _kiwi.global.settings;
 
