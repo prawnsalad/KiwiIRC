@@ -443,8 +443,8 @@ var plugins = [
     {
         name: "activity",
         onaddmsg: function (event, opts) {
-            //if (kiwi.front.cur_channel.name.toLowerCase() !== kiwi.front.tabviews[event.tabview.toLowerCase()].name) {
-            //    kiwi.front.tabviews[event.tabview].activity();
+            //if (_kiwi.front.cur_channel.name.toLowerCase() !== _kiwi.front.tabviews[event.tabview.toLowerCase()].name) {
+            //    _kiwi.front.tabviews[event.tabview].activity();
             //}
 
             return event;
@@ -457,17 +457,17 @@ var plugins = [
             //var tab = Tabviews.getTab(event.tabview.toLowerCase());
 
             // If we have a highlight...
-            //if (event.msg.toLowerCase().indexOf(kiwi.gateway.nick.toLowerCase()) > -1) {
+            //if (event.msg.toLowerCase().indexOf(_kiwi.gateway.nick.toLowerCase()) > -1) {
             //    if (Tabview.getCurrentTab() !== tab) {
             //        tab.highlight();
             //    }
-            //    if (kiwi.front.isChannel(tab.name)) {
+            //    if (_kiwi.front.isChannel(tab.name)) {
             //        event.msg = '<span style="color:red;">' + event.msg + '</span>';
             //    }
             //}
 
             // If it's a PM, highlight
-            //if (!kiwi.front.isChannel(tab.name) && tab.name !== "server"
+            //if (!_kiwi.front.isChannel(tab.name) && tab.name !== "server"
             //    && Tabview.getCurrentTab().name.toLowerCase() !== tab.name
             //) {
             //    tab.highlight();
@@ -551,7 +551,7 @@ var plugins = [
                 tooltip;
 
             if (tt.text() === '') {
-                tooltip = $('<a class="link_ext_browser">Open in Kiwi..</a>');
+                tooltip = $('<a class="link_ext_browser">Open in _kiwi..</a>');
                 tt.append(tooltip);
             }
 
@@ -596,15 +596,15 @@ var plugins = [
                 return event;
             }
 
-            //if (typeof kiwi.front.tabviews[event.tabview].nick_colours === 'undefined') {
-            //    kiwi.front.tabviews[event.tabview].nick_colours = {};
+            //if (typeof _kiwi.front.tabviews[event.tabview].nick_colours === 'undefined') {
+            //    _kiwi.front.tabviews[event.tabview].nick_colours = {};
             //}
 
-            //if (typeof kiwi.front.tabviews[event.tabview].nick_colours[event.nick] === 'undefined') {
-            //    kiwi.front.tabviews[event.tabview].nick_colours[event.nick] = this.randColour();
+            //if (typeof _kiwi.front.tabviews[event.tabview].nick_colours[event.nick] === 'undefined') {
+            //    _kiwi.front.tabviews[event.tabview].nick_colours[event.nick] = this.randColour();
             //}
 
-            //var c = kiwi.front.tabviews[event.tabview].nick_colours[event.nick];
+            //var c = _kiwi.front.tabviews[event.tabview].nick_colours[event.nick];
             var c = this.randColour();
             event.nick = '<span style="color:' + c + ';">' + event.nick + '</span>';
 
@@ -630,7 +630,7 @@ var plugins = [
         name: "kiwitest",
         oninit: function (event, opts) {
             console.log('registering namespace');
-            $(gateway).bind("kiwi.lol.browser", function (e, data) {
+            $(gateway).bind("_kiwi.lol.browser", function (e, data) {
                 console.log('YAY kiwitest');
                 console.log(data);
             });
@@ -644,99 +644,12 @@ var plugins = [
 
 
 
-/**
-*   @namespace
-*/
-kiwi.plugs = {};
-/**
-*   Loaded plugins
-*/
-kiwi.plugs.loaded = {};
-/**
-*   Load a plugin
-*   @param      {Object}    plugin  The plugin to be loaded
-*   @returns    {Boolean}           True on success, false on failure
-*/
-kiwi.plugs.loadPlugin = function (plugin) {
-    var plugin_ret;
-    if (typeof plugin.name !== 'string') {
-        return false;
-    }
-
-    plugin_ret = kiwi.plugs.run('plugin_load', {plugin: plugin});
-    if (typeof plugin_ret === 'object') {
-        kiwi.plugs.loaded[plugin_ret.plugin.name] = plugin_ret.plugin;
-        kiwi.plugs.loaded[plugin_ret.plugin.name].local_data = new kiwi.dataStore('kiwi_plugin_' + plugin_ret.plugin.name);
-    }
-    kiwi.plugs.run('init', {}, {run_only: plugin_ret.plugin.name});
-
-    return true;
-};
-
-/**
-*   Unload a plugin
-*   @param  {String}    plugin_name The name of the plugin to unload
-*/
-kiwi.plugs.unloadPlugin = function (plugin_name) {
-    if (typeof kiwi.plugs.loaded[plugin_name] !== 'object') {
-        return;
-    }
-
-    kiwi.plugs.run('unload', {}, {run_only: plugin_name});
-    delete kiwi.plugs.loaded[plugin_name];
-};
-
-
-
-/**
-*   Run an event against all loaded plugins
-*   @param      {String}    event_name  The name of the event
-*   @param      {Object}    event_data  The data to pass to the plugin
-*   @param      {Object}    opts        Options
-*   @returns    {Object}                Event data, possibly modified by the plugins
-*/
-kiwi.plugs.run = function (event_name, event_data, opts) {
-    var ret = event_data,
-        ret_tmp,
-        plugin_name;
-
-    // Set some defaults if not provided
-    event_data = (typeof event_data === 'undefined') ? {} : event_data;
-    opts = (typeof opts === 'undefined') ? {} : opts;
-
-    for (plugin_name in kiwi.plugs.loaded) {
-        // If we're only calling 1 plugin, make sure it's that one
-        if (typeof opts.run_only === 'string' && opts.run_only !== plugin_name) {
-            continue;
-        }
-
-        if (typeof kiwi.plugs.loaded[plugin_name]['on' + event_name] === 'function') {
-            try {
-                ret_tmp = kiwi.plugs.loaded[plugin_name]['on' + event_name](ret, opts);
-                if (ret_tmp === null) {
-                    return null;
-                }
-                ret = ret_tmp;
-
-                if (typeof ret.event_bubbles === 'boolean' && ret.event_bubbles === false) {
-                    delete ret.event_bubbles;
-                    return ret;
-                }
-            } catch (e) {
-            }
-        }
-    }
-
-    return ret;
-};
-
-
 
 /**
 *   @constructor
 *   @param  {String}    data_namespace  The namespace for the data store
 */
-kiwi.dataStore = function (data_namespace) {
+_kiwi.dataStore = function (data_namespace) {
     var namespace = data_namespace;
 
     this.get = function (key) {
@@ -748,7 +661,7 @@ kiwi.dataStore = function (data_namespace) {
     };
 };
 
-kiwi.data = new kiwi.dataStore('kiwi');
+_kiwi.data = new _kiwi.dataStore('kiwi');
 
 
 

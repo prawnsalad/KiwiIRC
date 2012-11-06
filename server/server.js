@@ -39,6 +39,10 @@ switch (process.argv[2]) {
         daemon.sendSignal("SIGUSR1");
         break;
 
+    case 'build':
+        require('../client/assets/dev/build.js');
+        break;
+        
     default:
-        console.log('Usage: [-f|start|stop|restart|status|reconfig]');
+        console.log('Usage: [-f|start|stop|restart|status|reconfig|build]');
 }

@@ -1,12 +1,12 @@
-// Holds anything kiwi client specific (ie. front, gateway, kiwi.plugs..)
+// Holds anything kiwi client specific (ie. front, gateway, _kiwi.plugs..)
 /**
 *   @namespace
 */
-var kiwi = {};
+var _kiwi = {};
 
-kiwi.model = {};
-kiwi.view = {};
-kiwi.applets = {};
+_kiwi.model = {};
+_kiwi.view = {};
+_kiwi.applets = {};
 
 
 /**
@@ -14,27 +14,37 @@ kiwi.applets = {};
  * Will be used to access a limited subset of kiwi functionality
  * and data (think: plugins)
  */
-kiwi.global = {
-	utils: undefined, // Re-usable methods
-	gateway: undefined,
-	user: undefined,
-	server: undefined,
+_kiwi.global = {
+	settings: undefined,
+	plugins: undefined,
+	utils: undefined, // TODO: Re-usable methods
+	gateway: undefined, // TODO: Access to gateway
+	user: undefined, // TODO: Limited user methods
+	server: undefined, // TODO: Limited server methods
 	command: undefined,  // The control box
 
 	// TODO: think of a better term for this as it will also refer to queries
-	channels: undefined,
+	channels: undefined, // TODO: Limited access to panels list
 
 	// Entry point to start the kiwi application
 	start: function (opts) {
 		opts = opts || {};
 
-		kiwi.app = new kiwi.model.Application(opts);
+        // Load the plugin manager
+        _kiwi.global.plugins = new _kiwi.model.PluginManager();
+
+        // Set up the settings datastore
+        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
+        _kiwi.global.settings.load();
+
+		_kiwi.app = new _kiwi.model.Application(opts);
 
 		if (opts.kiwi_server) {
-			kiwi.app.kiwi_server = opts.kiwi_server;
+			_kiwi.app.kiwi_server = opts.kiwi_server;
 		}
 
-		kiwi.app.start();
+		// Start the client up
+		_kiwi.app.start();
 
 		return true;
 	}
@@ -44,5 +54,8 @@ kiwi.global = {
 
 // If within a closure, expose the kiwi globals
 if (typeof global !== 'undefined') {
-	global.kiwi = kiwi.global;
+	global.kiwi = _kiwi.global;
+} else {
+	// Not within a closure so set a var in the current scope
+	var kiwi = _kiwi.global;
 }

@@ -1,15 +1,15 @@
-kiwi.model.PanelList = Backbone.Collection.extend({
-    model: kiwi.model.Panel,
+_kiwi.model.PanelList = Backbone.Collection.extend({
+    model: _kiwi.model.Panel,
 
     comparator: function (chan) {
         return chan.get("name");
     },
     initialize: function () {
-        this.view = new kiwi.view.Tabs({"el": $('#tabs')[0], "model": this});
+        this.view = new _kiwi.view.Tabs({"el": $('#tabs')[0], "model": this});
 
         // Automatically create a server tab
-        this.add(new kiwi.model.Server({'name': kiwi.gateway.get('name')}));
-        this.server = this.getByName(kiwi.gateway.get('name'));
+        this.add(new _kiwi.model.Server({'name': _kiwi.gateway.get('name')}));
+        this.server = this.getByName(_kiwi.gateway.get('name'));
 
         // Holds the active panel
         this.active = null;
