@@ -374,12 +374,12 @@ _kiwi.view.Panel = Backbone.View.extend({
         }
 
         _kiwi.app.view.doLayout();
-
-        this.scrollToBottom();
         this.alert('none');
 
         this.trigger('active', this.model);
         _kiwi.app.panels.trigger('active', this.model);
+
+        this.scrollToBottom(true);
     },
 
 
@@ -420,9 +420,14 @@ _kiwi.view.Panel = Backbone.View.extend({
 
 
     // Scroll to the bottom of the panel
-    scrollToBottom: function () {
-        // TODO: Don't scroll down if we're scrolled up the panel a little
-        this.$container[0].scrollTop = this.$container[0].scrollHeight;
+    scrollToBottom: function (force_down) {
+        // If this isn't the active panel, don't scroll
+        if (this.model !== _kiwi.app.panels.active) return;
+
+        // Don't scroll down if we're scrolled up the panel a little
+        if (force_down || this.$container.scrollTop() + this.$container.height() > this.$el.outerHeight() - 150) {
+            this.$container[0].scrollTop = this.$container[0].scrollHeight;
+        }
     }
 });
 
