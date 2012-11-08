@@ -56,7 +56,9 @@ var WebListener = function (web_config, transports) {
         
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: true}, ws_opts));
-        hs.listen(web_config.port, web_config.address);
+        hs.listen(web_config.port, web_config.address, function () {
+            that.emit('listening');
+        });
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' with SSL');
     } else {
@@ -66,7 +68,9 @@ var WebListener = function (web_config, transports) {
 
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: false}, ws_opts));
-        hs.listen(web_config.port, web_config.address);
+        hs.listen(web_config.port, web_config.address, function () {
+            that.emit('listening');
+        });
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
