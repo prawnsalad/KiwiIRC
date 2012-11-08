@@ -990,7 +990,7 @@ _kiwi.view.Application = Backbone.View.extend({
         });
 
         // Apply the new theme
-        this.$el.addClass('theme_' + (theme_name || 'default'));
+        this.$el.addClass('theme_' + (theme_name || 'relaxed'));
     },
 
 
