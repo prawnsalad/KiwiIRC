@@ -9,7 +9,8 @@ var ws          = require('socket.io'),
     _           = require('underscore'),
     Client      = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler,
-    rehash      = require('./rehash.js');
+    rehash      = require('./rehash.js'),
+    range_check = require('range_check');
 
 
 
@@ -104,9 +105,9 @@ function authoriseConnection(handshakeData, callback) {
     var address = handshakeData.address.address;
 
     // If a forwarded-for header is found, switch the source address
-    if (handshakeData.headers['x-forwarded-for']) {
+    if (handshakeData.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
-        if (!global.config.http_proxies || global.config.http_proxies.indexOf(address) < 0) {
+        if (!global.config.http_proxies || !range_check.in_range(address, global.config.http_proxies)) {
             console.log('Unlisted proxy:', address);
             callback(null, false);
             return;

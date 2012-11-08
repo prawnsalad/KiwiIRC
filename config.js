@@ -90,6 +90,9 @@ conf.reject_unauthorised_certificates = false;
 // Whitelisted HTTP proxies
 conf.http_proxies = ["127.0.0.1"];
 
+// Header that contains the real-ip from the HTTP proxy
+conf.http_proxy_ip_header = "x-forwarded-for";
+
 // Enabled transports for the client to use
 conf.transports = [
     "websocket",
