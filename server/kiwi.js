@@ -42,8 +42,8 @@ if (process.argv.indexOf('-f') === -1 && global.config.log) {
 
 
 // Make sure we have a valid config file and at least 1 server
-if (Object.keys(global.config).length === 0) {
-    console.log('Couldn\'t find a valid config file!');
+if (!global.config || Object.keys(global.config).length === 0) {
+    console.log('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
     process.exit(1);
 }
 

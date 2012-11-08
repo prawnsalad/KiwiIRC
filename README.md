@@ -17,7 +17,9 @@ For more information see http://kiwiirc.com or an example of the application can
 
     `$ node client/assets/dev/build.js`
 
-3. Edit the configuration file as needed:
+3. Copy and edit the configuration file as needed:
+
+    `$ cp config.example.js config.js`
 
     `$ nano config.js`
 
