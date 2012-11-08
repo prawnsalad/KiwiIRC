@@ -93,7 +93,7 @@ var connect_handler = function () {
     };
 
     // Let the webirc/etc detection modify any required parameters
-    connect_data = findWebIrc(connect_data);
+    connect_data = findWebIrc.call(this, connect_data);
 
     // Send any initial data for webirc/etc
     if (connect_data.prepend_data) {
@@ -145,7 +145,7 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(connect_data.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        connect_data.username = connect_data.user.address.split('.').map(function(i, idx){
+        this.user = connect_data.user.address.split('.').map(function(i, idx){
             return parseInt(i, 10).toString(16);
         }).join('');
 
