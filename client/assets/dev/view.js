@@ -285,7 +285,13 @@ _kiwi.view.Panel = Backbone.View.extend({
     newMsg: function (msg) {
         // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
         var re, line_msg, $this = this.$el,
-            nick_colour_hex, nick_hex;
+            nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
+
+        // Nick highlight detecting
+        if ((new RegExp('\\b' + _kiwi.gateway.get('nick') + '\\b', 'i')).test(msg.msg)) {
+            is_highlight = true;
+            msg_css_classes += ' highlight';
+        }
 
         // Escape any HTML that may be in here
         msg.msg =  $('<div />').text(msg.msg).html();
@@ -338,17 +344,18 @@ _kiwi.view.Panel = Backbone.View.extend({
             _.map(msg.nick.split(''), function (char) {
                 nick_hex += char.charCodeAt(0).toString(16);
             });
-            msg.nick_css_class = 'nick_' + nick_hex;
+            msg_css_classes += ' nick_' + nick_hex;
         }
 
         // Build up and add the line
-        line_msg = '<div class="msg <%= type %> <%= nick_css_class %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        msg.msg_css_classes = msg_css_classes;
+        line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
         // Activity/alerts based on the type of new message
         if (msg.type.match(/^action /)) {
             this.alert('action');
-        } else if (msg.msg.indexOf(_kiwi.gateway.get('nick')) > -1) {
+        } else if (is_highlight) {
             _kiwi.app.view.alertWindow('* People are talking!');
             this.alert('highlight');
         } else {
