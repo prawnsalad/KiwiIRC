@@ -242,7 +242,6 @@ _kiwi.model.Application = function () {
                     defaults.nick = this.server_settings.connection.nick;
                 }
             }
-console.log('defaults', defaults, this.server_settings);
 
             // Set any random numbers if needed
             defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
