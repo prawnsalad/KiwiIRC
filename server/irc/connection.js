@@ -121,7 +121,7 @@ IrcConnection.prototype.register = function () {
         this.write('PASS ' + this.password);
     }
     this.write('NICK ' + this.nick);
-    this.write('USER ' + this.nick.replace(/[^0-9a-zA-Z\-_.]/, '') + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
+    this.write('USER ' + this.user + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
     if (this.cap_negotation) {
         this.write('CAP END');
     }
