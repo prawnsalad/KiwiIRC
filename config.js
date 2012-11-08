@@ -44,6 +44,18 @@ conf.public_http = "client/";
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
+
+/*
+ * Client side plugins
+ * Array of URLs that will be loaded into the browser when the client first loads up
+ * See http://github.com/prawnsalad/KiwiIRC/wiki/Client-plugins
+ */
+conf.client_plugins = [
+    // "http://server.com/kiwi/plugins/myplugin.html"
+];
+
+
+
 // Enabled CAP extensions (See ENTER URL TO CAP INFO HERE PLS)
 conf.cap_options = [];
 

@@ -85,9 +85,11 @@ var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
 var vars = {
     base_path: config.get().http_base_path,
     cache_buster: Math.ceil(Math.random() * 9000).toString(),
-    server_settings: '{}'
+    server_settings: '{}',
+    client_plugins: '[]'
 };
 
+// Any restricted server mode set?
 if (config.get().restrict_server) {
     vars.server_settings = JSON.stringify({
         connection: {
@@ -99,6 +101,11 @@ if (config.get().restrict_server) {
             allow_change: false
         }
     });
+}
+
+// Any client plugins?
+if (config.get().client_plugins && config.get().client_plugins.length > 0) {
+    vars.client_plugins = JSON.stringify(config.get().client_plugins);
 }
 
 _.each(vars, function(value, key) {
