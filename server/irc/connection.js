@@ -105,7 +105,7 @@ var connect_handler = function () {
     this.write('CAP LS');
 
     this.registration_timeout = setTimeout(function () {
-        that.register.call(that);
+        that.register();
     }, 1000);
     
     this.connected = true;
