@@ -29,6 +29,9 @@ _kiwi.model.Application = function () {
             // The base url to the kiwi server
             this.set('base_path', options[0].base_path ? options[0].base_path : '/kiwi');
 
+            // Any options sent down from the server
+            this.server_settings = options[0].server_settings || {};
+
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
         };
@@ -216,6 +219,30 @@ _kiwi.model.Application = function () {
                     parts.shift();
                 }
             }
+
+            // If any settings have been given by the server.. override any auto detected settings
+            if (this.server_settings && this.server_settings.connection) {
+                if (this.server_settings.connection.server) {
+                    defaults.server = this.server_settings.connection.server;
+                }
+
+                if (this.server_settings.connection.port) {
+                    defaults.port = this.server_settings.connection.port;
+                }
+
+                if (this.server_settings.connection.ssl) {
+                    defaults.ssl = this.server_settings.connection.ssl;
+                }
+
+                if (this.server_settings.connection.channel) {
+                    defaults.channel = this.server_settings.connection.channel;
+                }
+
+                if (this.server_settings.connection.nick) {
+                    defaults.nick = this.server_settings.connection.nick;
+                }
+            }
+console.log('defaults', defaults, this.server_settings);
 
             // Set any random numbers if needed
             defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());

@@ -95,7 +95,13 @@ conf.http_base_path = "/kiwi";
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
 
-
+// If not empty, the client may only connect to this 1 IRC server
+//conf.restrict_server = "irc.kiwiirc.com";
+//conf.restrict_server_port = 6667;
+//conf.restrict_server_ssl = false;
+//conf.restrict_server_channel = "#kiwiirc";
+//conf.restrict_server_password = "";
+//conf.restrict_server_nick = "kiwi_";
 
 
 /*

@@ -235,10 +235,12 @@
         function startApp () {
             var opts = {
                 container: $('#kiwi'),
-                base_path: base_path
+                base_path: base_path,
 
                 // Override the kiwi_server to use. (Think: running on standalone client..)
-                //kiwi_server: 'http://kiwiirc.com:80'
+                //kiwi_server: 'http://kiwiirc.com:80',
+
+                server_settings: <%server_settings%>
             };
 
             // Start the app

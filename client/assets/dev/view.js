@@ -107,6 +107,15 @@ _kiwi.view.ServerSelect = function () {
         initialize: function () {
             this.$el = $($('#tmpl_server_select').html());
 
+            // Remove the 'more' link if the server has disabled server changing
+            if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
+                if (!_kiwi.app.server_settings.connection.allow_change) {
+                    this.$el.find('.show_more').remove();
+                    this.$el.addClass('single_server');
+                }
+            }
+
+
             _kiwi.gateway.bind('onconnect', this.networkConnected, this);
             _kiwi.gateway.bind('connecting', this.networkConnecting, this);
 

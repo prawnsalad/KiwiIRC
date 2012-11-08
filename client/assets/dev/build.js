@@ -84,8 +84,22 @@ console.log('kiwi.js and kiwi.min.js built');
 var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
 var vars = {
     base_path: config.get().http_base_path,
-    cache_buster: Math.ceil(Math.random() * 9000).toString()
+    cache_buster: Math.ceil(Math.random() * 9000).toString(),
+    server_settings: '{}'
 };
+
+if (config.get().restrict_server) {
+    vars.server_settings = JSON.stringify({
+        connection: {
+            server: config.get().restrict_server,
+            port: config.get().restrict_server_port || 6667,
+            ssl: config.get().restrict_server_ssl,
+            channel: config.get().restrict_server_channel,
+            nick: config.get().restrict_server_nick,
+            allow_change: false
+        }
+    });
+}
 
 _.each(vars, function(value, key) {
     index_src = index_src.replace(new RegExp('<%' + key + '%>', 'g'), value);
