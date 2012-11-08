@@ -9,10 +9,15 @@ conf.group = "";
 conf.log = "kiwi.log";
 
 
-// Server listen blocks
+
+/*
+ * Server listen blocks
+ */
+
+// Do not edit this line!
 conf.servers = [];
 
-// Example plain-text server block
+// Example server block
 conf.servers.push({
     port:   7778,
     address: "0.0.0.0"
@@ -27,6 +32,10 @@ conf.servers.push({
 //    ssl_key: "server.key",
 //    ssl_cert: "cert.pem"
 //});
+
+
+
+
 
 
 // Where the client files are
