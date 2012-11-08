@@ -838,7 +838,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             pre_processed;
         
         // The default command
-        if (command_raw[0] !== '/') {
+        if (command_raw[0] !== '/' || command_raw.substr(0, 2) === '//') {
+            // Remove any slash escaping at the start (ie. //)
+            command_raw = command_raw.replace(/^\/\//, '/');
+
+            // Prepend the default command
             command_raw = '/msg ' + _kiwi.app.panels.active.get('name') + ' ' + command_raw;
         }
 
