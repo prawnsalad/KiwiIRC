@@ -87,13 +87,24 @@ conf.ip_as_username = [
 conf.reject_unauthorised_certificates = false;
 
 
-// Whitelisted HTTP proxies
-conf.http_proxies = ["127.0.0.1"];
+
+/*
+ * Reverse proxy settings
+ * Reverse proxies that have been reported to work can be found at:
+ *     http://github.com/prawnsalad/KiwiIRC/wiki/Running-behind-a-proxy
+ */
+// Whitelisted HTTP proxies in CIDR format
+conf.http_proxies = ["127.0.0.1/32"];
 
 // Header that contains the real-ip from the HTTP proxy
 conf.http_proxy_ip_header = "x-forwarded-for";
 
-// Enabled transports for the client to use
+// Base HTTP path to the KIWI IRC client (eg. /kiwi)
+conf.http_base_path = "/kiwi";
+
+
+
+// Enabled transports for the browser to use
 conf.transports = [
     "websocket",
     "flashsocket",
@@ -102,8 +113,7 @@ conf.transports = [
     "jsonp-polling"
 ];
 
-// Base HTTP path to the KIWI IRC client (eg. /kiwi)
-conf.http_base_path = "/kiwi";
+
 
 
 // Default quit message
