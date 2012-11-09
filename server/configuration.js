@@ -37,7 +37,7 @@ function loadConfig() {
 
     if (new_config) {
         loaded_config = new_config;
-        global.config = new_config[environment];
+        global.config = new_config[environment] || {};
         return loaded_config;
     } else {
         return false;
@@ -54,7 +54,7 @@ module.exports.setEnvironment = function (new_environment) {
 module.exports.get = function (specific_environment) {
     specific_environment = specific_environment || environment;
     
-    return loaded_config[specific_environment];
+    return loaded_config[specific_environment] || {};
 };
 
 module.exports.loadConfig = loadConfig;

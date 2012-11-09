@@ -83,7 +83,7 @@ console.log('kiwi.js and kiwi.min.js built');
 
 var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
 var vars = {
-    base_path: config.get().http_base_path,
+    base_path: config.get().http_base_path || '/kiwi',
     cache_buster: Math.ceil(Math.random() * 9000).toString(),
     server_settings: '{}',
     client_plugins: '[]'
