@@ -42,6 +42,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     this.cap_negotiation = true;
     this.nick = nick;
     this.user = user;
+    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.]/, ''),
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
     this.options = Object.create(null);
@@ -88,7 +89,7 @@ var connect_handler = function () {
         user: this.user,
         nick: this.nick,
         realname: '[www.kiwiirc.com] ' + this.nick,
-        username: this.nick.replace(/[^0-9a-zA-Z\-_.]/, ''),
+        username: this.username,
         irc_host: this.irc_host
     };
 
@@ -121,7 +122,7 @@ IrcConnection.prototype.register = function () {
         this.write('PASS ' + this.password);
     }
     this.write('NICK ' + this.nick);
-    this.write('USER ' + this.user + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
+    this.write('USER ' + this.username + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
     if (this.cap_negotation) {
         this.write('CAP END');
     }
@@ -145,7 +146,7 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(connect_data.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.user = connect_data.user.address.split('.').map(function(i, idx){
+        this.username = connect_data.user.address.split('.').map(function(i, idx){
             return parseInt(i, 10).toString(16);
         }).join('');
 
