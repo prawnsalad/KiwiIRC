@@ -197,6 +197,7 @@ _kiwi.model.Gateway = function () {
                         break;
                     }
                 });
+                that.set('cap', data.cap);
                 break;
 
             case 'connect':
