@@ -9,7 +9,8 @@ var ws          = require('socket.io'),
     _           = require('underscore'),
     Client      = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler,
-    rehash      = require('./rehash.js');
+    rehash      = require('./rehash.js'),
+    range_check = require('range_check');
 
 
 
@@ -55,7 +56,9 @@ var WebListener = function (web_config, transports) {
         
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: true}, ws_opts));
-        hs.listen(web_config.port, web_config.address);
+        hs.listen(web_config.port, web_config.address, function () {
+            that.emit('listening');
+        });
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' with SSL');
     } else {
@@ -65,7 +68,9 @@ var WebListener = function (web_config, transports) {
 
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: false}, ws_opts));
-        hs.listen(web_config.port, web_config.address);
+        hs.listen(web_config.port, web_config.address, function () {
+            that.emit('listening');
+        });
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
@@ -104,9 +109,9 @@ function authoriseConnection(handshakeData, callback) {
     var address = handshakeData.address.address;
 
     // If a forwarded-for header is found, switch the source address
-    if (handshakeData.headers['x-forwarded-for']) {
+    if (handshakeData.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
-        if (!global.config.http_proxies || global.config.http_proxies.indexOf(address) < 0) {
+        if (!global.config.http_proxies || !range_check.in_range(address, global.config.http_proxies)) {
             console.log('Unlisted proxy:', address);
             callback(null, false);
             return;

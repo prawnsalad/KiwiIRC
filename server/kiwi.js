@@ -42,8 +42,8 @@ if (process.argv.indexOf('-f') === -1 && global.config.log) {
 
 
 // Make sure we have a valid config file and at least 1 server
-if (Object.keys(global.config).length === 0) {
-    console.log('Couldn\'t find a valid config file!');
+if (!global.config || Object.keys(global.config).length === 0) {
+    console.log('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
     process.exit(1);
 }
 
@@ -107,8 +107,18 @@ _.each(global.config.servers, function (server) {
     wl.on('destroy', function (client) {
         clients.remove(client);
     });
+
+    wl.on('listening', webListenerRunning);
 });
 
+// Once all the listeners are listening, set the processes UID/GID
+var num_listening = 0;
+function webListenerRunning() {
+    num_listening++;
+    if (num_listening === global.config.servers.length) {
+        setProcessUid();
+    }
+}
 
 
 
@@ -121,11 +131,13 @@ _.each(global.config.servers, function (server) {
 process.title = 'kiwiirc';
 
 // Change UID/GID
-if ((global.config.group) && (global.config.group !== '')) {
-    process.setgid(global.config.group);
-}
-if ((global.config.user) && (global.config.user !== '')) {
-    process.setuid(global.config.user);
+function setProcessUid() {
+    if ((global.config.group) && (global.config.group !== '')) {
+        process.setgid(global.config.group);
+    }
+    if ((global.config.user) && (global.config.user !== '')) {
+        process.setuid(global.config.user);
+    }
 }
 
 

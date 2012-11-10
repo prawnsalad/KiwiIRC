@@ -7,3 +7,4 @@ client/assets/kiwi.min.js
 client/index.html
 kiwi.log
 kiwiirc.pid
+config.js

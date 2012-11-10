@@ -141,7 +141,9 @@ a img { border:none; }
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
 
-.messages .msg.global_nick_highlight { background:#D9D9D9; }
+.messages .msg.global_nick_highlight,
+.messages .msg.highlight { background:#D9D9D9; }
+
 
 
 
@@ -223,6 +225,7 @@ a img { border:none; }
 .server_select .basic label { font-size:1.3em; margin-top:4px; }
 .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
 .server_select .basic .show_more { display: block; width:40px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
+.server_select.single_server .basic { border:none; }
 .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 .server_select .status .ok {
     border:1px solid #A33F3F; background-color:#D28A8A;

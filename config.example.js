@@ -44,6 +44,18 @@ conf.public_http = "client/";
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
+
+/*
+ * Client side plugins
+ * Array of URLs that will be loaded into the browser when the client first loads up
+ * See http://github.com/prawnsalad/KiwiIRC/wiki/Client-plugins
+ */
+conf.client_plugins = [
+    // "http://server.com/kiwi/plugins/myplugin.html"
+];
+
+
+
 // Enabled CAP extensions (See ENTER URL TO CAP INFO HERE PLS)
 conf.cap_options = [];
 
@@ -75,10 +87,24 @@ conf.ip_as_username = [
 conf.reject_unauthorised_certificates = false;
 
 
-// Whitelisted HTTP proxies
-conf.http_proxies = ["127.0.0.1"];
 
-// Enabled transports for the client to use
+/*
+ * Reverse proxy settings
+ * Reverse proxies that have been reported to work can be found at:
+ *     http://github.com/prawnsalad/KiwiIRC/wiki/Running-behind-a-proxy
+ */
+// Whitelisted HTTP proxies in CIDR format
+conf.http_proxies = ["127.0.0.1/32"];
+
+// Header that contains the real-ip from the HTTP proxy
+conf.http_proxy_ip_header = "x-forwarded-for";
+
+// Base HTTP path to the KIWI IRC client (eg. /kiwi)
+conf.http_base_path = "/kiwi";
+
+
+
+// Enabled transports for the browser to use
 conf.transports = [
     "websocket",
     "flashsocket",
@@ -87,15 +113,20 @@ conf.transports = [
     "jsonp-polling"
 ];
 
-// Base HTTP path to the KIWI IRC client (eg. /kiwi)
-conf.http_base_path = "/kiwi";
+
 
 
 // Default quit message
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
 
-
+// If not empty, the client may only connect to this 1 IRC server
+//conf.restrict_server = "irc.kiwiirc.com";
+//conf.restrict_server_port = 6667;
+//conf.restrict_server_ssl = false;
+//conf.restrict_server_channel = "#kiwiirc";
+//conf.restrict_server_password = "";
+//conf.restrict_server_nick = "kiwi_";
 
 
 /*
