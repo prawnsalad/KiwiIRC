@@ -2,12 +2,12 @@ var net     = require('net'),
     tls     = require('tls'),
     events  = require('events'),
     util    = require('util'),
-    _       = require('underscore');
+    _       = require('lodash');
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     var that = this;
     events.EventEmitter.call(this);
-    
+
     if (ssl) {
         this.socket = tls.connect({
             host: hostname,

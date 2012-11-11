@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 
 var irc_numerics = {
     RPL_WELCOME:            '001',
