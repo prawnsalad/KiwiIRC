@@ -460,6 +460,230 @@ html, body { height:100%; }
 
 
 
+
+
+
+/**
+ * Mini theme
+ */
+#kiwi.theme_mini {
+    background: #FFF;
+    color: #555555;
+}
+#kiwi.theme_mini,
+#kiwi.theme_mini input,
+#kiwi.theme_mini button,
+#kiwi.theme_mini textarea {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px; line-height:1.4em;
+}
+#kiwi.theme_mini input, textarea {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 3px;
+}
+#kiwi.theme_mini #toolbar {
+    background-color:#1B1B1B; font-size:0.9em;
+}
+#kiwi.theme_mini #controlbox { background-color:#1B1B1B; }
+#kiwi.theme_mini #memberlists_resize_handle {
+    display:none; width:0;
+}
+#kiwi.theme_mini #toolbar .panellist li {
+    line-height: 1.4em;
+    vertical-align: middle;
+    
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -khtml-border-radius:5px;
+
+    border: 1px solid #333;
+    background-color: #eee;
+}
+
+#kiwi.theme_mini #toolbar #tabs { margin-right:0 !important; }
+#kiwi.theme_mini #toolbar .panellist .alert_highlight { background: #990000; }
+#kiwi.theme_mini #toolbar .panellist .alert_activity { background: #009900; }
+#kiwi.theme_mini #toolbar .panellist .alert_action { }
+
+#kiwi.theme_mini #toolbar .panellist .active { padding-right:23px; }
+#kiwi.theme_mini #toolbar .panellist li .part {
+    background:url('../img/redcross.png'); width:14px; height:14px;
+}
+#kiwi.theme_mini #toolbar .panellist li .part:after { content:""; }
+
+#kiwi.theme_mini #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
+
+/* Tab texts are within a span */
+#kiwi.theme_mini #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:block; }
+
+#kiwi.theme_mini #status_message {
+    background: #FEEFB3; color: #9F6000;
+    border-bottom: 1px solid;
+    padding: 0.9em;
+    text-align: center; font-size:1.1em;
+}
+#kiwi.theme_mini #status_message.err { color:#D8000C; background:#FFBABA; }
+
+#kiwi.theme_mini .messages { color: #333333; }
+#kiwi.theme_mini .messages.active { }
+#kiwi.theme_mini .messages a { text-decoration:none; }
+
+#kiwi.theme_mini .messages .msg { border-bottom: 1px solid #DEDEDE; padding: 5px; font-family:arial; font-size:0.9em; }
+#kiwi.theme_mini .messages .msg .time { display:none; }
+#kiwi.theme_mini .messages .msg .nick { display:block; font-family:Arial; text-transform:capitalize; }
+#kiwi.theme_mini .messages .msg .text { display:block; white-space:pre-wrap; word-wrap:break-word; font-family:arial; }
+
+#kiwi.theme_mini .messages .msg.action .nick { }
+#kiwi.theme_mini .messages .msg.action .text { color:#009900; border-left:none; font-style:italic; }
+#kiwi.theme_mini .messages .msg.action.join { color:#009900; }
+#kiwi.theme_mini .messages .msg.action.part .text { color:#900; }
+#kiwi.theme_mini .messages .msg.action.quit .text { color:#900; }
+#kiwi.theme_mini .messages .msg.action.kick .text { color:#900; }
+#kiwi.theme_mini .messages .msg.status .nick { }
+#kiwi.theme_mini .messages .msg.status .text { color:#990000; border-left:none; font-weight:bold; }
+#kiwi.theme_mini .messages .msg.topic .nick { display:none; }
+#kiwi.theme_mini .messages .msg.topic .text { color:#009900; font-style: italic; border-left:none; }
+#kiwi.theme_mini .messages .msg.motd { border:none; }
+/*#kiwi.theme_mini .messages .msg.motd .nick { display:none; }*/
+#kiwi.theme_mini .messages .msg.motd .text { color:#666; }
+#kiwi.theme_mini .messages .msg.whois .nick { font-weight:normal; }
+#kiwi.theme_mini .messages .msg.whois .text { padding-left:1em; border-left:1px dashed #999; }
+#kiwi.theme_mini .messages .msg.error .text {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}
+
+#kiwi.theme_mini .messages .msg.global_nick_highlight,
+#kiwi.theme_mini .messages .msg.highlight { background:#D9D9D9; }
+
+
+
+#kiwi.theme_mini #memberlists {
+    background-color: #DADADA;
+    border-left: 1px solid #8A8A8A;
+    display:none;
+    width:0px;
+}
+#kiwi.theme_mini #memberlists ul { list-style: none; }
+#kiwi.theme_mini #memberlists ul.active { }
+#kiwi.theme_mini #memberlists ul li { padding: 0.2em 1em; }
+#kiwi.theme_mini #memberlists ul li:hover {
+    border-left: 5px solid #88C56A;
+    -webkit-transition: 0.2s ease;
+    -moz-transition: 0.2s ease;
+    -ms-transition: 0.2s ease;
+    -o-transition: 0.2s ease;
+    transition: 0.2s ease; 
+}
+#kiwi.theme_mini #memberlists ul li a.nick { display:block; color:black; }
+
+#kiwi.theme_mini #memberlists ul li .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi.theme_mini #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi.theme_mini #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
+
+
+#kiwi.theme_mini #controlbox .input {
+    background:#fff; margin:3px;
+    height:1.7em;
+}
+#kiwi.theme_mini #controlbox .input .nick { display:none; }
+#kiwi.theme_mini #controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi.theme_mini #controlbox .input .input_wrap {
+    position:absolute;
+    right:3px; left:3px;
+    height:1.7em;
+}
+#kiwi.theme_mini #controlbox .input .inp {
+    line-height:1.7em;
+    border: medium none;
+    box-shadow: none;
+    border-radius: 0;
+    resize:none;
+    overflow:hidden;
+    position:relative;
+    height:100%; width:100%;
+    display: block;
+}
+
+
+#kiwi.theme_mini #controlbox .nickchange {
+    padding:10px; left: 0px;
+    background: #1B1B1B; color:#eeeeee;
+}
+#kiwi.theme_mini #controlbox .nickchange input { padding:0.3em 0.5em; }
+#kiwi.theme_mini #controlbox .nickchange button { padding:0.5em; }
+
+
+
+#kiwi.theme_mini #topic { display:none; }
+#kiwi.theme_mini #topic div {
+    top:2; bottom:2px; left:0; width:100%;
+    padding: 0.2em 1em;
+    text-align: center;
+    box-shadow: none;
+    border-radius: 0;
+    background-color:#FFF;
+    height: 1.5em;
+    overflow: hidden;
+    outline: none;
+}
+
+
+#kiwi.theme_mini #toolbar .app_tools { padding-left:10px; color:#D4D4D4; }
+#kiwi.theme_mini #toolbar .app_tools ul li {
+    font-size:26px;
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    transition: all .3s ease;
+    margin-left:10px;
+}
+#kiwi.theme_mini #toolbar .app_tools ul li:hover { color:#88C56A; }
+#kiwi.theme_mini #toolbar .app_tools img { }
+
+
+/* The server select dialog */
+#kiwi.theme_mini .server_select { padding:3em 0 2em 0; margin: 0 auto; width:100%; }
+#kiwi.theme_mini .server_select .more { display:none; }
+#kiwi.theme_mini .server_select button { display:block; padding:3px 7px; margin:0 auto; }
+#kiwi.theme_mini .server_select input.nick {
+    float:none; display:block; width:80%;
+    padding:0.5em 1em; margin:0 auto;
+    text-align: center;
+}
+#kiwi.theme_mini .server_select label { display:none; }
+#kiwi.theme_mini .server_select br { clear:both; }
+#kiwi.theme_mini .server_select .basic { border:none; }
+#kiwi.theme_mini .server_select .basic .show_more { display:none !important; }
+#kiwi.theme_mini .server_select.single_server .basic { border:none; }
+#kiwi.theme_mini .server_select .status { text-align: center; font-weight: bold; padding:1em; }
+#kiwi.theme_mini .server_select .status.ok { }
+#kiwi.theme_mini .server_select .status.error {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}
+
+#kiwi.theme_mini .server_select .divider-verticle {
+    display:none;
+}
+#kiwi.theme_mini .server_select .server_details {
+    position: relative !important;
+    float: none !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 2em 0 0 0 !important;
+}
+#kiwi.theme_mini .server_select .about_kiwi { display:none; }
+
+
+
+
+
+
+
+
+
 /* CLI theme */
 #kiwi.theme_cli { background:#222222; color:#6d6d6d; }
 #kiwi.theme_cli #controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; }
