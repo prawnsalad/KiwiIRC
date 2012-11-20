@@ -26,7 +26,7 @@ var listeners = {
         data.args = args;
         data.client = null;
 
-        global.plugins.emit('client:commands:msg', data);
+        global.modules.emit('client:commands:msg', data);
 
         if (args.target && (args.msg)) {
             // TODO: Enable plugin support here again

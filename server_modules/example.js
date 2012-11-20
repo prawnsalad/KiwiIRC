@@ -1,14 +1,14 @@
-var kiwiPlugins = require('../server/plugins.js');
+var kiwiModules = require('../server/modules');
 
-var plugin = new kiwiPlugins.Plugin('Example Plugin');
+var module = new kiwiModules.Module('Example Module');
 
 
-plugin.subscribe('client:connected', function(data) {
-	console.log('Client connection:', data);
+module.subscribe('client:connected', function(data) {
+    console.log('Client connection:', data);
 });
 
 
-plugin.subscribe('client:commands:msg', function(data) {
-	console.log('Client msg:', data.args.target, ': ', data.args.msg);
-	data.args.msg += ' - modified!';
+module.subscribe('client:commands:msg', function(data) {
+    console.log('Client msg:', data.args.target, ': ', data.args.msg);
+    data.args.msg += ' - modified!';
 });

@@ -8,7 +8,7 @@ var active_publisher;
 
 // Create a publisher to allow event subscribing
 function Publisher (obj) {
-	var EventPublisher = function pluginPublisher() {};
+	var EventPublisher = function modulePublisher() {};
 	util.inherits(EventPublisher, events.EventEmitter);
 
 	return new EventPublisher();
@@ -22,9 +22,9 @@ function registerPublisher (obj) {
 
 
 
-function Plugin (plugin_name) {
+function Module (module_name) {
 
-	// Holder for all the bound events by this plugin
+	// Holder for all the bound events by this module
 	var bound_events = {};
 
 	// Handy function to be a little more consistant with EventEmitter
@@ -33,25 +33,25 @@ function Plugin (plugin_name) {
 	};
 
 
-	// Keep track of this plugins events and bind
+	// Keep track of this modules events and bind
 	this.subscribe = function (event_name, fn) {
 		bound_events[event_name] = bound_events[event_name] || [];
 		bound_events[event_name].push(fn);
 
-		global.plugins.on(event_name, fn);
+		global.modules.on(event_name, fn);
 	};
 
 
-	// Keep track of this plugins events and bind once
+	// Keep track of this modules events and bind once
 	this.once = function (event_name, fn) {
 		bound_events[event_name] = bound_events[event_name] || [];
 		bound_events[event_name].push(fn);
 
-		global.plugins.once(event_name, fn);
+		global.modules.once(event_name, fn);
 	};
 
 
-	// Remove any events by this plugin only
+	// Remove any events by this module only
 	this.unsubscribe = function (event_name, fn) {
 		var idx;
 
@@ -72,11 +72,11 @@ function Plugin (plugin_name) {
 			}
 		}
 
-		global.plugins.removeListener(event_name, fn);
+		global.modules.removeListener(event_name, fn);
 	};
 
 
-	// Clean up anything used by this plugin
+	// Clean up anything used by this module
 	this.dispose = function () {
 		this.unsubscribe();
 	};
@@ -86,7 +86,7 @@ function Plugin (plugin_name) {
 
 module.exports = {
 	// Objects
-	Plugin: Plugin,
+	Module: Module,
 	Publisher: Publisher,
 
 	// Methods

@@ -3,7 +3,7 @@ var fs          = require('fs'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     rehash      = require('./rehash.js'),
-    plugins = require('./plugins');
+    modules = require('./modules.js');
 
 
 
@@ -57,10 +57,10 @@ if ((!global.config.servers) || (global.config.servers.length < 1)) {
 
 
 // Create a plugin interface
-global.plugins = new plugins.Publisher();
+global.modules = new modules.Publisher();
 
 // Register as the active imterfac
-plugins.registerPublisher(global.plugins);
+modules.registerPublisher(global.modules);
 
 require('../server_modules/example.js');
 
