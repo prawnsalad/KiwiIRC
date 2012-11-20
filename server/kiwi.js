@@ -2,7 +2,8 @@ var fs          = require('fs'),
     _           = require('lodash'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
-    rehash      = require('./rehash.js');
+    rehash      = require('./rehash.js'),
+    plugins = require('./plugins');
 
 
 
@@ -51,6 +52,17 @@ if ((!global.config.servers) || (global.config.servers.length < 1)) {
     console.log('No servers defined in config file');
     process.exit(2);
 }
+
+
+
+
+// Create a plugin interface
+global.plugins = new plugins.Publisher();
+
+// Register as the active imterfac
+plugins.registerPublisher(global.plugins);
+
+require('../server_modules/example.js');
 
 
 

@@ -22,6 +22,12 @@ ClientCommands.prototype.run = function (command, args, irc_connection, callback
 
 var listeners = {
     PRIVMSG: function (args, irc_connection, callback) {
+        var data = {};
+        data.args = args;
+        data.client = null;
+
+        global.plugins.emit('client:commands:msg', data);
+
         if (args.target && (args.msg)) {
             // TODO: Enable plugin support here again
             //obj = kiwi.kiwi_mod.run('msgsend', args, {websocket: websocket});

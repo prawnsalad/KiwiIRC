@@ -46,6 +46,8 @@ var Client = function (websocket) {
     websocket.on('error', function () {
         websocketError.apply(that, arguments);
     });
+
+    global.plugins.emit('client:connected', {client:this});
 };
 util.inherits(Client, events.EventEmitter);
 
