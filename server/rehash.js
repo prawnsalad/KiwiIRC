@@ -1,6 +1,6 @@
 var util   = require('util'),
     events = require('events'),
-    _      = require('underscore');
+    _      = require('lodash');
 
 
 

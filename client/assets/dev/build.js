@@ -1,6 +1,6 @@
 var fs        = require('fs'),
     uglyfyJS  = require('uglify-js'),
-    _         = require('underscore'),
+    _         = require('lodash'),
     config    = require('./../../../server/configuration.js');
 
 var FILE_ENCODING = 'utf-8',
