@@ -1006,7 +1006,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Clear any current theme
         this.$el.removeClass(function (i, css) {
-            return (css.match (/\btheme_\S+/g) || []).join(' ');
+            return (css.match(/\btheme_\S+/g) || []).join(' ');
         });
 
         // Apply the new theme
