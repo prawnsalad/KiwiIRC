@@ -457,7 +457,6 @@ var listeners = {
                         } else {
                             this.irc_connection.write('CAP END');
                             this.irc_connection.cap_negotation = false;
-                            this.irc_connection.register();
                         }
                         break;
                     case 'ACK':
@@ -472,7 +471,6 @@ var listeners = {
                             } else {
                                 this.irc_connection.write('CAP END');
                                 this.irc_connection.cap_negotation = false;
-                                this.irc_connection.register();
                             }
                         }
                         break;
@@ -483,7 +481,6 @@ var listeners = {
                         if (this.irc_connection.cap.requested.length > 0) {
                             this.irc_connection.write('CAP END');
                             this.irc_connection.cap_negotation = false;
-                            this.irc_connection.register();
                         }
                         break;
                     case 'LIST':
@@ -507,7 +504,6 @@ var listeners = {
                 } else {
                     this.irc_connection.write('CAP END');
                     this.irc_connection.cap_negotation = false;
-                    this.irc_connection.register();
                 }
             },
     'AWAY':                 function (command) {
@@ -517,18 +513,19 @@ var listeners = {
                 this.irc_connection.write('CAP END');
                 this.irc_connection.cap_negotation = false;
                 this.irc_connection.sasl = true;
-                this.irc_connection.register();
             },
     'RPL_SASLLOGGEDIN':     function (command) {
-                // noop
+                if (this.irc_connection.cap_negotation === false) {
+                    this.irc_connection.write('CAP END');
+                }
             },
     'ERR_SASLNOTAUTHORISED':function (command) {
                 this.irc_connection.write('CAP END');
                 this.irc_connection.cap_negotation = false;
-                this.irc_connection.register();
             },
     'ERR_SASLABORTED':      function (command) {
-                // noop
+                this.irc_connection.write('CAP END');
+                this.irc_connection.cap_negotation = false;
             },
     'ERR_SASLALREADYAUTHED':function (command) {
                 // noop

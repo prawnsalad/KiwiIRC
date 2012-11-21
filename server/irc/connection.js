@@ -105,29 +105,15 @@ var connect_handler = function () {
 
     this.write('CAP LS');
 
-    this.registration_timeout = setTimeout(function () {
-        that.register();
-    }, 1000);
-    
-    this.connected = true;
-    this.emit('connected');
-};
-
-IrcConnection.prototype.register = function () {
-    if (this.registration_timeout !== null) {
-        clearTimeout(this.registeration_timeout);
-        this.registration_timeout = null;
-    }
-    if ((this.password) && (!this.sasl)) {
+    if (this.password) {
         this.write('PASS ' + this.password);
     }
     this.write('NICK ' + this.nick);
     this.write('USER ' + this.username + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
-    if (this.cap_negotation) {
-        this.write('CAP END');
-    }
+    
+    this.connected = true;
+    this.emit('connected');
 };
-
 
 
 function findWebIrc(connect_data) {
