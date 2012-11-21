@@ -59,7 +59,7 @@ if ((!global.config.servers) || (global.config.servers.length < 1)) {
 // Create a plugin interface
 global.modules = new modules.Publisher();
 
-// Register as the active imterfac
+// Register as the active interface
 modules.registerPublisher(global.modules);
 
 require('../server_modules/example.js');

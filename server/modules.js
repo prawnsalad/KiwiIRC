@@ -12,7 +12,7 @@ function Publisher (obj) {
 	util.inherits(EventPublisher, events.EventEmitter);
 
 	return new EventPublisher();
-};
+}
 
 
 // Register an already created Publisher() as the active instance
@@ -22,65 +22,68 @@ function registerPublisher (obj) {
 
 
 
-function Module (module_name) {
 
-	// Holder for all the bound events by this module
-	var bound_events = {};
-
-	// Handy function to be a little more consistant with EventEmitter
-	this._events = function () {
-		return bound_events;
-	};
+/**
+ * Module object
+ * To be created by modules to bind to server events
+ */
+function Module (module_name) {}
 
 
-	// Keep track of this modules events and bind
-	this.subscribe = function (event_name, fn) {
-		bound_events[event_name] = bound_events[event_name] || [];
-		bound_events[event_name].push(fn);
-
-		global.modules.on(event_name, fn);
-	};
+// Holder for all the bound events by this module
+Module.prototype._events = {};
 
 
-	// Keep track of this modules events and bind once
-	this.once = function (event_name, fn) {
-		bound_events[event_name] = bound_events[event_name] || [];
-		bound_events[event_name].push(fn);
+// Keep track of this modules events and bind
+Module.prototype.subscribe = function (event_name, fn) {
+	this._events[event_name] = this._events[event_name] || [];
+	this._events[event_name].push(fn);
 
-		global.modules.once(event_name, fn);
-	};
+	active_publisher.on(event_name, fn);
+};
 
 
-	// Remove any events by this module only
-	this.unsubscribe = function (event_name, fn) {
-		var idx;
+// Keep track of this modules events and bind once
+Module.prototype.once = function (event_name, fn) {
+	this._events[event_name] = this._events[event_name] || [];
+	this._events[event_name].push(fn);
 
-		if (typeof event_name === 'undefined') {
-			// Remove all events
-			bound_events = [];
+	active_publisher.once(event_name, fn);
+};
 
-		} else if (typeof fn === 'undefined') {
-			// Remove all of 1 event type
-			delete bound_events[event_name];
 
-		} else {
-			// Remove a single event + callback
-			for (idx in (bound_events[event_name] || [])) {
-				if (bound_events[event_name][idx] === fn) {
-					delete bound_events[event_name][idx];
-				}
+// Remove any events by this module only
+Module.prototype.unsubscribe = function (event_name, fn) {
+	var idx;
+
+	if (typeof event_name === 'undefined') {
+		// Remove all events
+		this._events = [];
+
+	} else if (typeof fn === 'undefined') {
+		// Remove all of 1 event type
+		delete this._events[event_name];
+
+	} else {
+		// Remove a single event + callback
+		for (idx in (this._events[event_name] || [])) {
+			if (this._events[event_name][idx] === fn) {
+				delete this._events[event_name][idx];
 			}
 		}
+	}
 
-		global.modules.removeListener(event_name, fn);
-	};
-
-
-	// Clean up anything used by this module
-	this.dispose = function () {
-		this.unsubscribe();
-	};
+	active_publisher.removeListener(event_name, fn);
 };
+
+
+// Clean up anything used by this module
+Module.prototype.dispose = function () {
+	this.unsubscribe();
+};
+
+
+
 
 
 
