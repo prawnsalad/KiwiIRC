@@ -979,7 +979,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Change the theme when the config is changed
         _kiwi.global.settings.on('change:theme', this.updateTheme, this);
-        this.updateTheme();
+        this.updateTheme(getQueryVariable('theme'));
 
         this.doLayout();
 
