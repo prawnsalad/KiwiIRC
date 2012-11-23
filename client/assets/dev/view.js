@@ -1220,8 +1220,9 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     open: function () {
         // Create the content div if we haven't already
         if (!this.$content) {
-            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /></div>');
-            this.$content.append('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /><div class="content"></div></div>');
+            console.log(this.$el.data('type'), this.mediaTypes);
+            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || 'Not found :(');
         }
 
         // Now show the content if not already
@@ -1233,20 +1234,46 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             this.$el.append(this.$content);
             this.$content.slideDown();
         }
+    },
+
+
+
+    // Generate the media content for each recognised type
+    mediaTypes: {
+        twitter: function () {
+            var tweet_id = this.$el.data('tweetid');
+            var that = this;
+
+            $.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweet_id + '&callback=?', function (data) {
+                that.$content.find('div').html(data.html);
+            });
+
+            return $('<div>Loading tweet..</div>');
+        },
+
+
+        image: function () {
+            return $('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+        }
     }
 
 }, {
 
     // Build the closed media HTML from a URL
     buildHtml: function (url) {
-        var html = '';
+        var html = '', matches;
 
         // Is it an image?
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        // Is it a tweet?
+        matches = (/https?:\/\/twitter.com\/([a-zA-Z0-9_]+)\/status\/([0-9]+)/ig).exec(url);
+        if (matches) {
+            html += '<span class="media twitter" data-type="twitter" data-url="' + url + '" data-tweetid="' + matches[2] + '" title="Show tweet information"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;
     }
-}
-);
+});
