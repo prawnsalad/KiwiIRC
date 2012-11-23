@@ -249,6 +249,7 @@ _kiwi.view.Panel = Backbone.View.extend({
     className: "messages",
     events: {
         "click .chan": "chanClick",
+        'click .media .open': 'mediaClick',
         'mouseenter .msg .nick': 'msgEnter',
         'mouseleave .msg .nick': 'msgLeave'
     },
@@ -297,27 +298,32 @@ _kiwi.view.Panel = Backbone.View.extend({
         msg.msg =  $('<div />').text(msg.msg).html();
 
         // Make the channels clickable
-        re = new RegExp('\\B([' + _kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
+        re = new RegExp('(?:^|\\s)([' + _kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
         msg.msg = msg.msg.replace(re, function (match) {
-            return '<a class="chan">' + match + '</a>';
+            return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
         });
 
 
-        // Make links clickable
-        msg.msg = msg.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]*))?/gi, function (url) {
-            var nice;
+        // Parse any links found
+        msg.msg = msg.msg.replace(/(([A-Za-z0-9\-]+\:\/\/)|(www\.))([\w.]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
+            var nice, extra_html = '';
 
-            // Add the http is no protoocol was found
+            // Add the http if no protoocol was found
             if (url.match(/^www\./)) {
                 url = 'http://' + url;
             }
 
+            // Shorten the displayed URL if it's going to be too long
             nice = url;
             if (nice.length > 100) {
                 nice = nice.substr(0, 100) + '...';
             }
 
-            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>';
+            // Get any media HTML if supported
+            extra_html = _kiwi.view.MediaMessage.buildHtml(url);
+
+            // Make the link clickable
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a> ' + extra_html;
         });
 
 
@@ -377,11 +383,27 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
     chanClick: function (event) {
         if (event.target) {
-            _kiwi.gateway.join($(event.target).text());
+            _kiwi.gateway.join($(event.target).data('channel'));
         } else {
             // IE...
-            _kiwi.gateway.join($(event.srcElement).text());
+            _kiwi.gateway.join($(event.srcElement).data('channel'));
         }
+    },
+
+    mediaClick: function (event) {
+        var $media = $(event.target).parents('.media');
+        var media_message;
+
+        if ($media.data('media')) {
+            media_message = $media.data('media');
+        } else {
+            media_message = new _kiwi.view.MediaMessage({el: $media[0]});
+            $media.data('media', media_message);
+        }
+
+        $media.data('media', media_message);
+
+        media_message.open();
     },
 
     msgEnter: function (event) {
@@ -1167,3 +1189,47 @@ _kiwi.view.Application = Backbone.View.extend({
         }
     }
 });
+
+
+
+
+
+
+
+
+
+_kiwi.view.MediaMessage = Backbone.View.extend({
+    events: {
+        'click .media_close': 'close'
+    },
+
+    initialize: function () {
+        this.url = this.$el.data('url');
+    },
+
+    close: function () {
+        this.$el.find('.media_content').remove();
+    },
+
+    open: function () {
+        var $content = $('<div class="media_content"><a class="media_close">[x]</a></div>');
+        $content.append('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+
+        this.$el.append($content);
+    }
+
+}, {
+
+    // Build the HTML from a URL
+    buildHtml: function (url) {
+        var html = '';
+
+        // Is it an image?
+        if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
+            html += '<span class="media" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-play"></i></a></span>';
+        }
+
+        return html;
+    }
+}
+);
