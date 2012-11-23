@@ -1204,29 +1204,46 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     },
 
     initialize: function () {
+        // Get the URL from the data
         this.url = this.$el.data('url');
     },
 
+    // Close the media content and remove it from display
     close: function () {
-        this.$el.find('.media_content').remove();
+        var that = this;
+        this.$content.slideUp('fast', function () {
+            that.$content.remove();
+        });
     },
 
+    // Open the media content within its wrapper
     open: function () {
-        var $content = $('<div class="media_content"><a class="media_close">[x]</a></div>');
-        $content.append('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+        // Create the content div if we haven't already
+        if (!this.$content) {
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /></div>');
+            this.$content.append('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+        }
 
-        this.$el.append($content);
+        // Now show the content if not already
+        if (!this.$content.is(':visible')) {
+            // Hide it first so the slideDown always plays
+            this.$content.hide();
+
+            // Add the media content and slide it into view
+            this.$el.append(this.$content);
+            this.$content.slideDown();
+        }
     }
 
 }, {
 
-    // Build the HTML from a URL
+    // Build the closed media HTML from a URL
     buildHtml: function (url) {
         var html = '';
 
         // Is it an image?
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-play"></i></a></span>';
+            html += '<span class="media" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;

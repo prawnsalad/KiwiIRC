@@ -341,6 +341,11 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .messages .msg.highlight { background:#D9D9D9; }
 
 
+#kiwi.theme_relaxed .messages .msg .media { margin-left:0.5em; }
+#kiwi.theme_relaxed .messages .msg .media .media_close { font-size:0.9em; }
+#kiwi.theme_relaxed .messages .msg .media .media_content { margin:10px 0 0 10px; }
+#kiwi.theme_relaxed .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
+
 
 #kiwi.theme_relaxed #memberlists {
     background-color: #DADADA;
