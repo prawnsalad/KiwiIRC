@@ -1221,7 +1221,6 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         // Create the content div if we haven't already
         if (!this.$content) {
             this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /><div class="content"></div></div>');
-            console.log(this.$el.data('type'), this.mediaTypes);
             this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || 'Not found :(');
         }
 
@@ -1245,7 +1244,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             var that = this;
 
             $.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweet_id + '&callback=?', function (data) {
-                that.$content.find('div').html(data.html);
+                that.$content.find('.content').html(data.html);
             });
 
             return $('<div>Loading tweet..</div>');
@@ -1254,6 +1253,42 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         image: function () {
             return $('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+        },
+
+
+        reddit: function () {
+            var that = this;
+            var matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(this.url);
+
+            $.getJSON('http://www.' + matches[0] + '.json?jsonp=?', function (data) {
+                console.log('Loaded reddit data', data);
+                var post = data[0].data.children[0].data;
+                var thumb = '';
+
+                // Show a thumbnail if there is one
+                if (post.thumbnail) {
+                    //post.thumbnail = 'http://www.eurotunnel.com/uploadedImages/commercial/back-steps-icon-arrow.png';
+
+                    // Hide the thumbnail if an over_18 image
+                    if (post.over_18) {
+                        thumb = '<span class="thumbnail_nsfw" onclick="$(this).find(\'p\').remove(); $(this).find(\'img\').css(\'visibility\', \'visible\');">';
+                        thumb += '<p style="font-size:0.9em;line-height:1.2em;cursor:pointer;">Show<br />NSFW</p>';
+                        thumb += '<img src="' + post.thumbnail + '" class="thumbnail" style="visibility:hidden;" />';
+                        thumb += '</span>';
+                    } else {
+                        thumb = '<img src="' + post.thumbnail + '" class="thumbnail" />';
+                    }
+                }
+
+                // Build the template string up
+                var tmpl = '<div>' + thumb + '<b><%- title %></b><br />Posted by <%- author %>. &nbsp;&nbsp; ';
+                tmpl += '<i class="icon-arrow-up"></i> <%- ups %> &nbsp;&nbsp; <i class="icon-arrow-down"></i> <%- downs %><br />';
+                tmpl += '<%- num_comments %> comments made. <a href="http://www.reddit.com<%- permalink %>">View post</a></div>';
+
+                that.$content.find('.content').html(_.template(tmpl, post));
+            });
+
+            return $('<div>Loading Reddit thread..</div>');
         }
     }
 
@@ -1272,6 +1307,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         matches = (/https?:\/\/twitter.com\/([a-zA-Z0-9_]+)\/status\/([0-9]+)/ig).exec(url);
         if (matches) {
             html += '<span class="media twitter" data-type="twitter" data-url="' + url + '" data-tweetid="' + matches[2] + '" title="Show tweet information"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        // Is reddit?
+        matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(url);
+        if (matches) {
+            html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;
