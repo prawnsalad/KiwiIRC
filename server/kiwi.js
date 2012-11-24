@@ -3,7 +3,7 @@ var fs          = require('fs'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     rehash      = require('./rehash.js'),
-    modules = require('./modules.js');
+    modules     = require('./modules.js');
 
 
 
@@ -62,7 +62,14 @@ global.modules = new modules.Publisher();
 // Register as the active interface
 modules.registerPublisher(global.modules);
 
-require('../server_modules/example.js');
+// Load any modules in the config
+(global.config.modules || []).forEach(function (module_name) {
+    if (modules.load('../server_modules/' + module_name + '.js')) {
+        console.log('Module ' + module_name + ' loaded successfuly');
+    } else {
+        console.log('Module ' + module_name + ' failed to load');
+    }
+});
 
 
 
