@@ -1081,12 +1081,14 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Set the panels width depending on the memberlist visibility
         if (el_memberlists.css('display') != 'none') {
-            // Handle + panels to the side of the memberlist
-            el_panels.css('right', el_memberlists.outerWidth(true) + el_resize_handle.outerWidth(true));
-            el_resize_handle.css('left', el_memberlists.position().left - el_resize_handle.outerWidth(true));
+            // Panels to the side of the memberlist
+            el_panels.css('right', el_memberlists.outerWidth(true));
+            // The resize handle sits overlapping the panels and memberlist
+            el_resize_handle.css('left', el_memberlists.position().left - (el_resize_handle.outerWidth(true) / 2));
         } else {
-            // Memberlist is hidden so handle + panels to the right edge
-            el_panels.css('right', el_resize_handle.outerWidth(true));
+            // Memberlist is hidden so panels to the right edge
+            el_panels.css('right', 0);
+            // And move the handle just out of sight to the right
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
     },
