@@ -17,6 +17,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
         this.loaded_applet = null;
     },
 
+
     // Load an applet within this panel
     load: function (applet_object, applet_name) {
         if (typeof applet_object === 'object') {
@@ -49,6 +50,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
         return this;
     },
 
+
     loadFromUrl: function(applet_url, applet_name) {
         var that = this;
 
@@ -65,6 +67,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
         });
     },
 
+
     close: function () {
         this.view.$el.remove();
         this.destroy();
@@ -77,5 +80,54 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
         }
 
         this.closePanel();
+    }
+},
+
+
+{
+    // Load an applet type once only. If it already exists, return that
+    loadOnce: function (applet_name) {
+
+        // See if we have an instance loaded already
+        var applet = _.find(_kiwi.app.panels.models, function(panel) {
+            // Ignore if it's not an applet
+            if (!panel.isApplet()) return;
+
+            // Ignore if it doesn't have an applet loaded
+            if (!panel.loaded_applet) return;
+
+            if (panel.loaded_applet.get('_applet_name') === applet_name) {
+                return true;
+            }
+        });
+
+        if (applet) return applet;
+
+
+        // If we didn't find an instance, load a new one up
+        return this.load(applet_name);
+    },
+
+
+    load: function (applet_name) {
+        var applet;
+
+        // Find the applet within the registered applets
+        if (!_kiwi.applets[applet_name]) return;
+
+        // Create the applet and load the content
+        applet = new _kiwi.model.Applet();
+        applet.load(new _kiwi.applets[applet_name]({_applet_name: applet_name}));
+
+        // Add it into the tab list
+        _kiwi.app.panels.add(applet);
+
+
+        return applet;
+    },
+
+
+    register: function (applet_name, applet) {
+        _kiwi.applets[applet_name] = applet;
     }
 });

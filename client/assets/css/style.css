@@ -341,6 +341,37 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .messages .msg.highlight { background:#D9D9D9; }
 
 
+#kiwi.theme_relaxed .messages .msg .media { margin-left:0.5em; }
+#kiwi.theme_relaxed .messages .msg .media .media_close { font-size:0.9em; }
+#kiwi.theme_relaxed .messages .msg .media .media_content { margin:10px 0 0 10px; overflow:hidden; }
+#kiwi.theme_relaxed .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
+#kiwi.theme_relaxed .messages .msg .media .media_content > .content {
+    background: white;
+    overflow: hidden;
+    padding: 10px;
+    border: #DDD 1px solid;
+    border-top-color: #EEE;
+    border-bottom-color: #BBB;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    float: left;
+}
+
+#kiwi.theme_relaxed .messages .msg .media.twitter .media_content > .content {
+    background: transparent;
+    border:none;
+    overflow: hidden;
+    box-shadow: none;
+    padding: 0;
+}
+#kiwi.theme_relaxed .messages .msg .media.reddit .thumbnail_nsfw {
+    display: inline-block;
+    float: left;
+}
+#kiwi.theme_relaxed .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
+
 
 #kiwi.theme_relaxed #memberlists {
     background-color: #DADADA;
