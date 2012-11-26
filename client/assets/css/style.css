@@ -737,14 +737,14 @@ html, body { height:100%; }
 #kiwi.theme_cli #controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; margin:3px; }
 #kiwi.theme_cli #controlbox .input_wrap:before { content:"> " }
 #kiwi.theme_cli #controlbox .input { background:none; border:none;}
-#kiwi.theme_cli #controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; }
+#kiwi.theme_cli #controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; overflow:hidden; }
 #kiwi.theme_cli #controlbox .input .input_wrap {
     position:absolute;
     right:7px; left: 12.2em;
     height:1.7em;
 }
 #kiwi.theme_cli #controlbox .input .inp {
-    line-height:1.7em;
+    line-height:1.4em;
     font-size:1.3em;
     background:transparent; color:#909090;
     border: medium none;
@@ -753,7 +753,7 @@ html, body { height:100%; }
     outline:none; resize:none;
     overflow:hidden;
     position:absolute;
-    height:100%; width:98%;
+    height:99%; width:98%;
     display: inline;
     padding-left:0.5em;
 }
