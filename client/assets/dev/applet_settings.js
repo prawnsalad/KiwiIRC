@@ -12,6 +12,8 @@
 
             // Now actually show the current settings
             this.loadSettings();
+
+
         },
         
 
@@ -42,10 +44,13 @@
 
 
 
-    _kiwi.applets.Settings = Backbone.Model.extend({
+    var Applet = Backbone.Model.extend({
         initialize: function () {
             this.set('title', 'Settings');
             this.view = new View();
         }
     });
+
+
+    _kiwi.model.Applet.register('kiwi_settings', Applet);
 })();

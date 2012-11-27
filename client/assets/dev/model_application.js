@@ -989,11 +989,8 @@ _kiwi.model.Application = function () {
         }
 
         function settingsCommand (ev) {
-            var panel = new _kiwi.model.Applet();
-            panel.load(new _kiwi.applets.Settings());
-            
-            _kiwi.app.panels.add(panel);
-            panel.view.show();
+            var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
+            settings.view.show();
         }
 
         function appletCommand (ev) {

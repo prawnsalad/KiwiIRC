@@ -2,7 +2,8 @@ var fs          = require('fs'),
     _           = require('lodash'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
-    rehash      = require('./rehash.js');
+    rehash      = require('./rehash.js'),
+    modules     = require('./modules.js');
 
 
 
@@ -51,6 +52,24 @@ if ((!global.config.servers) || (global.config.servers.length < 1)) {
     console.log('No servers defined in config file');
     process.exit(2);
 }
+
+
+
+
+// Create a plugin interface
+global.modules = new modules.Publisher();
+
+// Register as the active interface
+modules.registerPublisher(global.modules);
+
+// Load any modules in the config
+(global.config.modules || []).forEach(function (module_name) {
+    if (modules.load('../server_modules/' + module_name + '.js')) {
+        console.log('Module ' + module_name + ' loaded successfuly');
+    } else {
+        console.log('Module ' + module_name + ' failed to load');
+    }
+});
 
 
 

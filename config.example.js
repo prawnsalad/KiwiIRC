@@ -66,7 +66,7 @@ conf.cap_options = [];
 conf.module_dir = "./kiwi_modules/";
 
 // Which modules to load
-conf.modules = ["spamfilter", "statistics"];
+conf.modules = [];
 
 
 

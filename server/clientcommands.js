@@ -22,12 +22,8 @@ ClientCommands.prototype.run = function (command, args, irc_connection, callback
 
 var listeners = {
     PRIVMSG: function (args, irc_connection, callback) {
-        if (args.target && (args.msg)) {
-            // TODO: Enable plugin support here again
-            //obj = kiwi.kiwi_mod.run('msgsend', args, {websocket: websocket});
-            //if (obj !== null) {
-                irc_connection.write('PRIVMSG ' + args.target + ' :' + args.msg, callback);
-            //}
+         if (args.target && (args.msg)) {
+            irc_connection.write('PRIVMSG ' + args.target + ' :' + args.msg, callback);
         }
     },
     
