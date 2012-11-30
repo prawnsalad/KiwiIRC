@@ -124,7 +124,7 @@ html, body { height:100%; }
 #kiwi #controlbox .input .input_wrap { display:inline; }
 
 /* The textarea input */
-#kiwi #controlbox .input .inp { }
+#kiwi #controlbox .input .inp { white-space: nowrap; }
 
 
 /* Nick change dialog showed when clicking the nick label */
