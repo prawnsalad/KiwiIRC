@@ -63,7 +63,7 @@ conf.cap_options = [];
 
 
 // Directory to find the server modules
-conf.module_dir = "./kiwi_modules/";
+conf.module_dir = "../server_modules/";
 
 // Which modules to load
 conf.modules = [];
