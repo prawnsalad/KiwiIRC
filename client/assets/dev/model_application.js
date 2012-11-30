@@ -416,6 +416,14 @@ _kiwi.model.Application = function () {
             });
 
 
+            gw.on('onctcp_request', function (event) {
+                // Reply to a TIME ctcp
+                if (event.msg.toUpperCase() === 'TIME') {
+                    gw.ctcp(true, event.type, event.nick, (new Date()).toString());
+                }
+            });
+
+
             gw.on('onnotice', function (event) {
                 var panel;
 
