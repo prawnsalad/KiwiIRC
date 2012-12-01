@@ -329,7 +329,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .messages .msg.topic .text { color:#009900; margin-left:9em; font-style: italic; border-left:none; }
 #kiwi.theme_relaxed .messages .msg.motd { border:none; }
 /*#kiwi.theme_relaxed .messages .msg.motd .nick { display:none; }*/
-#kiwi.theme_relaxed .messages .msg.motd .text { color:#666; }
+#kiwi.theme_relaxed .messages .msg.motd .text { color:#666; font-family:monospace; }
 #kiwi.theme_relaxed .messages .msg.whois .nick { font-weight:normal; }
 #kiwi.theme_relaxed .messages .msg.whois .text { margin-left:18em; padding-left:1em; border-left:1px dashed #999; }
 #kiwi.theme_relaxed .messages .msg.error .text {
