@@ -101,7 +101,8 @@ _kiwi.view.ServerSelect = function () {
     var model = Backbone.View.extend({
         events: {
             'submit form': 'submitForm',
-            'click .show_more': 'showMore'
+            'click .show_more': 'showMore',
+            'change .have_pass input': 'showPass'
         },
 
         initialize: function () {
@@ -145,26 +146,34 @@ _kiwi.view.ServerSelect = function () {
             if ($('button', this.$el).attr('disabled')) return;
             
             var values = {
-                nick: $('.nick', this.$el).val(),
-                server: $('.server', this.$el).val(),
-                port: $('.port', this.$el).val(),
-                ssl: $('.ssl', this.$el).prop('checked'),
-                password: $('.password', this.$el).val(),
-                channel: $('.channel', this.$el).val(),
-                channel_key: $('.channel_key', this.$el).val()
+                nick: $('input.nick', this.$el).val(),
+                server: $('input.server', this.$el).val(),
+                port: $('input.port', this.$el).val(),
+                ssl: $('input.ssl', this.$el).prop('checked'),
+                password: $('input.password', this.$el).val(),
+                channel: $('input.channel', this.$el).val(),
+                channel_key: $('input.channel_key', this.$el).val()
             };
 
             this.trigger('server_connect', values);
         },
 
         submitNickChange: function (event) {
-            _kiwi.gateway.changeNick($('.nick', this.$el).val());
+            _kiwi.gateway.changeNick($('input.nick', this.$el).val());
             this.networkConnecting();
+        },
+
+        showPass: function (event) {
+            if (this.$el.find('tr.have_pass input').is(':checked')) {
+                this.$el.find('tr.pass').show().find('input').focus();
+            } else {
+                this.$el.find('tr.pass').hide().find('input').val('');
+            }
         },
 
         showMore: function (event) {
             $('.more', this.$el).slideDown('fast');
-            $('.server', this.$el).select();
+            $('input.server', this.$el).select();
         },
 
         populateFields: function (defaults) {
@@ -180,13 +189,13 @@ _kiwi.view.ServerSelect = function () {
             channel = defaults.channel || '';
             channel_key = defaults.channel_key || '';
 
-            $('.nick', this.$el).val(nick);
-            $('.server', this.$el).val(server);
-            $('.port', this.$el).val(port);
-            $('.ssl', this.$el).prop('checked', ssl);
-            $('.password', this.$el).val(password);
-            $('.channel', this.$el).val(channel);
-            $('.channel_key', this.$el).val(channel_key);
+            $('input.nick', this.$el).val(nick);
+            $('input.server', this.$el).val(server);
+            $('input.port', this.$el).val(port);
+            $('input.ssl', this.$el).prop('checked', ssl);
+            $('input.password', this.$el).val(password);
+            $('input.channel', this.$el).val(channel);
+            $('input.channel_key', this.$el).val(channel_key);
         },
 
         hide: function () {
@@ -207,6 +216,7 @@ _kiwi.view.ServerSelect = function () {
             } else if (new_state === 'nick_change') {
                 $('.more', this.$el).hide();
                 $('.show_more', this.$el).hide();
+                $('input.nick', this.$el).select();
             }
 
             state = new_state;

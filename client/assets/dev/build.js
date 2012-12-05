@@ -85,13 +85,13 @@ var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
 var vars = {
     base_path: config.get().http_base_path || '/kiwi',
     cache_buster: Math.ceil(Math.random() * 9000).toString(),
-    server_settings: '{}',
-    client_plugins: '[]'
+    server_settings: {},
+    client_plugins: []
 };
 
 // Any restricted server mode set?
 if (config.get().restrict_server) {
-    vars.server_settings = JSON.stringify({
+    vars.server_settings = {
         connection: {
             server: config.get().restrict_server,
             port: config.get().restrict_server_port || 6667,
@@ -100,15 +100,21 @@ if (config.get().restrict_server) {
             nick: config.get().restrict_server_nick,
             allow_change: false
         }
-    });
+    };
+}
+
+// Any client default settings?
+if (config.get().client) {
+    vars.server_settings.client = config.get().client;
 }
 
 // Any client plugins?
 if (config.get().client_plugins && config.get().client_plugins.length > 0) {
-    vars.client_plugins = JSON.stringify(config.get().client_plugins);
+    vars.client_plugins = config.get().client_plugins;
 }
 
 _.each(vars, function(value, key) {
+    if (typeof value === 'object') value = JSON.stringify(value);
     index_src = index_src.replace(new RegExp('<%' + key + '%>', 'g'), value);
 });
 

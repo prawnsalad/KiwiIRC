@@ -79,26 +79,54 @@
 
                 <form>
                     <div class="basic">
-                        <label for="server_select_nick">Nickname</label>
-                        <input type="text" class="nick" id="server_select_nick"> <br />
+                        <table>
+                            <tr class="nick">
+                                <td><label for="server_select_nick">Nickname</label></td>
+                                <td><input type="text" class="nick" id="server_select_nick"></td>
+                            </tr>
 
-                        <button type="submit">Start..</button> <br />
-                        <a href="" onclick="return false;" class="show_more">More</a>
+                            <tr class="have_pass">
+                                <td colspan="2">
+                                    <label for="server_select_show_pass">I have a password</label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
+                                </td>
+                            </tr>
+
+                            <tr class="pass">
+                                <td><label for="server_select_password">Password</label></td>
+                                <td><input type="password" class="password" id="server_select_password"></td>
+                            </tr>
+
+                            <tr class="channel">
+                                <td><label for="server_select_channel">Channel</label></td>
+                                <td><input type="text" class="channel" id="server_select_channel"><input type="hidden" class="channel_key"></td>
+                            </tr>
+
+                            <tr class="start">
+                                <td colspan="2"><button type="submit">Start..</button></td>
+                            </tr>
+                        </table>
+
+                        <a href="" onclick="return false;" class="show_more">Server and network</a>
                     </div>
 
+
                     <div class="more">
-                        <label for="server_select_server">Server</label>
-                        <input type="text" class="server" id="server_select_server"> <br />
-                        <label for="server_select_channel">Channel</label>
-                        <input type="text" class="channel" id="server_select_channel"> <br />
-                        <input type="hidden" class="channel_key">
-                        <br />
-                        <label for="server_select_port">Port</label>
-                        <input type="text" class="port" id="server_select_port"> <br />
-                        <label for="server_select_password">Password</label>
-                        <input type="text" class="password" id="server_select_password"> <br />
-                        <label for="server_select_ssl">SSL</label>
-                        <input type="checkbox" class="ssl" id="server_select_ssl">
+                        <table>
+                            <tr class="server">
+                                <td><label for="server_select_server">Server</label></td>
+                                <td><input type="text" class="server" id="server_select_server"></td>
+                            <tr>
+
+                            <tr class="port">
+                                <td><label for="server_select_port">Port</label></td>
+                                <td><input type="text" class="port" id="server_select_port"></td>
+                            </tr>
+
+                            <tr class="ssl">
+                                <td><label for="server_select_ssl">SSL</label></td>
+                                <td><input type="checkbox" class="ssl" id="server_select_ssl"></td>
+                            </tr>
+                        </table>
                     </div>
                 </form>
 

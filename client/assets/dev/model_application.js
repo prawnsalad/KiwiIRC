@@ -146,7 +146,7 @@ _kiwi.model.Application = function () {
         this.populateDefaultServerSettings = function () {
             var parts;
             var defaults = {
-                nick: getQueryVariable('nick') || 'kiwi_' + Math.ceil(Math.random() * 10000).toString(),
+                nick: getQueryVariable('nick') || 'kiwi_?',
                 server: 'irc.kiwiirc.com',
                 port: 6667,
                 ssl: false,
@@ -154,6 +154,35 @@ _kiwi.model.Application = function () {
                 channel_key: ''
             };
             var uricheck;
+
+
+            /**
+             * Get any settings set by the server
+             * These settings may be changed in the server selection dialog
+             */
+            if (this.server_settings.client) {
+                if (this.server_settings.client.nick)
+                    defaults.nick = this.server_settings.client.nick;
+
+                if (this.server_settings.client.server)
+                    defaults.server = this.server_settings.client.server;
+
+                if (this.server_settings.client.port)
+                    defaults.port = this.server_settings.client.port;
+
+                if (this.server_settings.client.ssl)
+                    defaults.ssl = this.server_settings.client.ssl;
+
+                if (this.server_settings.client.channel)
+                    defaults.channel = this.server_settings.client.channel;
+            }
+
+
+
+            /**
+             * Get any settings passed in the URL
+             * These settings may be changed in the server selection dialog
+             */
 
             // Process the URL part by part, extracting as we go
             parts = window.location.pathname.toString().replace(this.get('base_path'), '').split('/');
@@ -221,6 +250,10 @@ _kiwi.model.Application = function () {
             }
 
             // If any settings have been given by the server.. override any auto detected settings
+            /**
+             * Get any server restrictions as set in the server config
+             * These settings can not changed in the server selection dialog
+             */
             if (this.server_settings && this.server_settings.connection) {
                 if (this.server_settings.connection.server) {
                     defaults.server = this.server_settings.connection.server;
@@ -413,6 +446,14 @@ _kiwi.model.Application = function () {
                 }
                 
                 panel.addMsg(event.nick, event.msg);
+            });
+
+
+            gw.on('onctcp_request', function (event) {
+                // Reply to a TIME ctcp
+                if (event.msg.toUpperCase() === 'TIME') {
+                    gw.ctcp(true, event.type, event.nick, (new Date()).toString());
+                }
             });
 
 

@@ -322,8 +322,20 @@ var listeners = {
                 this.client.sendIrcCommand('kiwi', {server: this.con_num, namespace: namespace, data: tmp.substr(namespace.length + 1)});
             } else if (command.trailing.substr(1, 7) === 'VERSION') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
+            } else if (command.trailing.substr(1, 6) === 'SOURCE') {
+                this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'SOURCE http://www.kiwiirc.com/' + String.fromCharCode(1));
+            } else if (command.trailing.substr(1, 10) === 'CLIENTINFO') {
+                this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));
             } else {
-                this.client.sendIrcCommand('ctcp_request', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(1, command.trailing.length - 2)});
+                this.client.sendIrcCommand('ctcp_request', {
+                    server: this.con_num,
+                    nick: command.nick,
+                    ident: command.ident,
+                    hostname: command.hostname,
+                    target: command.params[0],
+                    type: (command.trailing.substr(1, command.trailing.length - 2).split(' ') || [null])[0],
+                    msg: command.trailing.substr(1, command.trailing.length - 2)
+                });
             }
         } else {
             //{nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing}

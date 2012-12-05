@@ -1,6 +1,14 @@
 {
-  "name": "KiwiIRC",
-  "version": "0.5.2",
+  "name": "kiwiirc",
+  "version": "0.5.3",
+  "description": "A hand-crafted webirc server",
+  "homepage": "http://www.kiwiirc.com/",
+  "preferGlobal": "true",
+  "bin": { "kiwiirc": "./kiwi" },
+  "repository" : {
+        "type": "git",
+        "url": "https://github.com/prawnsalad/KiwiIRC.git"
+    },
   "scripts": {
     "postinstall": "node client/assets/dev/build.js"
   },

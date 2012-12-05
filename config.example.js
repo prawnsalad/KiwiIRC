@@ -63,7 +63,7 @@ conf.cap_options = [];
 
 
 // Directory to find the server modules
-conf.module_dir = "./kiwi_modules/";
+conf.module_dir = "../server_modules/";
 
 // Which modules to load
 conf.modules = [];
@@ -93,6 +93,7 @@ conf.reject_unauthorised_certificates = false;
  * Reverse proxies that have been reported to work can be found at:
  *     http://github.com/prawnsalad/KiwiIRC/wiki/Running-behind-a-proxy
  */
+
 // Whitelisted HTTP proxies in CIDR format
 conf.http_proxies = ["127.0.0.1/32"];
 
@@ -120,6 +121,16 @@ conf.transports = [
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
 
+// Default settings for the client. These may be changed in the browser
+conf.client = {
+    server: 'irc.kiwiirc.com',
+    port:    6697,
+    ssl:     true,
+    channel: '#kiwiirc',
+    nick:    'kiwi_?'
+};
+
+
 // If not empty, the client may only connect to this 1 IRC server
 //conf.restrict_server = "irc.kiwiirc.com";
 //conf.restrict_server_port = 6667;
@@ -127,6 +138,8 @@ conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 //conf.restrict_server_channel = "#kiwiirc";
 //conf.restrict_server_password = "";
 //conf.restrict_server_nick = "kiwi_";
+
+
 
 
 /*
