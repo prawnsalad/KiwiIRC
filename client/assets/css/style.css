@@ -158,7 +158,7 @@ html, body { height:100%; }
 #kiwi .server_select .more { display: none; }
 #kiwi .server_select button {  }
 #kiwi .server_select input { }
-#kiwi .server_select label { float:left; width:5em; }
+#kiwi .server_select label { }
 #kiwi .server_select br { clear:both; }
 #kiwi .server_select .basic input { }
 #kiwi .server_select .basic label { }
@@ -470,15 +470,19 @@ html, body { height:100%; }
 /* The server select dialog */
 #kiwi.theme_relaxed .server_select { width:730px;  padding:3em 0 2em 0; margin: 0 auto; }
 #kiwi.theme_relaxed .server_select .more { display: none; width:270px; margin:0 auto; }
-#kiwi.theme_relaxed .server_select button { float:right; padding:3px 7px; margin-top:10px; }
-#kiwi.theme_relaxed .server_select input { float:right; margin-bottom:5px; padding:3px 7px; width:150px; }
-#kiwi.theme_relaxed .server_select label { float:left; width:5em; padding-top:3px }
+#kiwi.theme_relaxed .server_select table tr td { padding:5px; }
+#kiwi.theme_relaxed .server_select button { float:right; padding:3px 7px; }
+#kiwi.theme_relaxed .server_select input { padding:3px 7px; width:150px; }
+#kiwi.theme_relaxed .server_select label { }
 #kiwi.theme_relaxed .server_select br { clear:both; }
 #kiwi.theme_relaxed .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
 #kiwi.theme_relaxed .server_select .basic input { width:170px; }
 #kiwi.theme_relaxed .server_select .basic label { font-size:1.3em; margin-top:4px; }
+#kiwi.theme_relaxed .server_select .basic tr.have_pass { font-size:0.8em; }
+#kiwi.theme_relaxed .server_select .basic tr.pass { display:none; }
+#kiwi.theme_relaxed .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_relaxed .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi.theme_relaxed .server_select .basic .show_more { display: block; width:40px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
+#kiwi.theme_relaxed .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
 #kiwi.theme_relaxed .server_select.single_server .basic { border:none; }
 #kiwi.theme_relaxed .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 #kiwi.theme_relaxed .server_select .status.ok { }
