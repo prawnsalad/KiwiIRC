@@ -164,6 +164,7 @@ html, body { height:100%; }
 #kiwi .server_select .basic label { }
 #kiwi .server_select .basic { border-bottom: 1px solid gray; margin-bottom:1em; }
 #kiwi .server_select .basic .show_more { }
+#kiwi .server_select .basic tr.pass { display:none; }
 #kiwi .server_select.single_server .basic { border:none; }
 #kiwi .server_select .status {  }
 
@@ -479,7 +480,6 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .server_select .basic input { width:170px; }
 #kiwi.theme_relaxed .server_select .basic label { font-size:1.3em; margin-top:4px; }
 #kiwi.theme_relaxed .server_select .basic tr.have_pass { font-size:0.8em; }
-#kiwi.theme_relaxed .server_select .basic tr.pass { display:none; }
 #kiwi.theme_relaxed .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_relaxed .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
 #kiwi.theme_relaxed .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
@@ -699,6 +699,10 @@ html, body { height:100%; }
 #kiwi.theme_mini .server_select label { display:none; }
 #kiwi.theme_mini .server_select br { clear:both; }
 #kiwi.theme_mini .server_select .basic { border:none; }
+#kiwi.theme_mini .server_select .basic table { width:100%; }
+#kiwi.theme_mini .server_select .basic table tr.channel,
+#kiwi.theme_mini .server_select .basic table tr.pass,
+#kiwi.theme_mini .server_select .basic table tr.have_pass { display:none; }
 #kiwi.theme_mini .server_select .basic .show_more { display:none !important; }
 #kiwi.theme_mini .server_select.single_server .basic { border:none; }
 #kiwi.theme_mini .server_select .status { text-align: center; font-weight: bold; padding:1em; }
@@ -922,15 +926,18 @@ html, body { height:100%; }
 /* The server select dialog */
 #kiwi.theme_cli .server_select { width:730px;  padding:3em 0 2em 0; margin: 0 auto; }
 #kiwi.theme_cli .server_select .more { display: none; width:270px; margin:0 auto; }
+#kiwi.theme_cli .server_select table tr td { padding:5px; }
 #kiwi.theme_cli .server_select button { float:right; padding:3px 7px; margin-top:10px; }
-#kiwi.theme_cli .server_select input { float:right; margin-bottom:5px; padding:3px 7px; width:150px; }
-#kiwi.theme_cli .server_select label { float:left; width:5em; padding-top:3px }
+#kiwi.theme_cli .server_select input { padding:3px 7px; width:150px; }
+#kiwi.theme_cli .server_select label { width:5em; padding-top:3px }
 #kiwi.theme_cli .server_select br { clear:both; }
 #kiwi.theme_cli .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
 #kiwi.theme_cli .server_select .basic input { width:170px; }
 #kiwi.theme_cli .server_select .basic label { font-size:1.3em; margin-top:4px; }
+#kiwi.theme_cli .server_select .basic tr.have_pass { font-size:0.8em; }
+#kiwi.theme_cli .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_cli .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi.theme_cli .server_select .basic .show_more { display: block; width:40px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
+#kiwi.theme_cli .server_select .basic .show_more { display: block; width:116px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
 #kiwi.theme_cli .server_select.single_server .basic { border:none; }
 #kiwi.theme_cli .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 #kiwi.theme_cli .server_select .status.ok { }
@@ -947,3 +954,14 @@ html, body { height:100%; }
     color: #555555;
 }
 #kiwi.theme_cli .server_select .kiwi_logo img { }
+
+
+#kiwi .divider-verticle {
+    border-left: 1px solid #303030;
+    border-right: 1px solid #1B1B1B;
+}
+
+#kiwi .divider-horizontal {
+    border-top: 1px solid #303030;
+    border-bottom: 1px solid #1B1B1B;
+}
