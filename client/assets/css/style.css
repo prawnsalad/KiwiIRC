@@ -956,12 +956,12 @@ html, body { height:100%; }
 #kiwi.theme_cli .server_select .kiwi_logo img { }
 
 
-#kiwi .divider-verticle {
+#kiwi.theme_cli .divider-verticle {
     border-left: 1px solid #303030;
     border-right: 1px solid #1B1B1B;
 }
 
-#kiwi .divider-horizontal {
+#kiwi.theme_cli .divider-horizontal {
     border-top: 1px solid #303030;
     border-bottom: 1px solid #1B1B1B;
 }
