@@ -458,11 +458,11 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
-            $('#memberlists').show();
+            $('#memberlists').removeClass('disabled');
             members.view.show();
         } else {
             // Memberlist not found for this panel, hide any active ones
-            $('#memberlists').hide().children().removeClass('active');
+            $('#memberlists').addClass('disabled').children().removeClass('active');
         }
 
         _kiwi.app.view.doLayout();
@@ -1063,6 +1063,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
 
     doLayout: function () {
+        var el_kiwi = $('#kiwi');
         var el_panels = $('#panels');
         var el_memberlists = $('#memberlists');
         var el_toolbar = $('#toolbar');
@@ -1088,6 +1089,13 @@ _kiwi.view.Application = Backbone.View.extend({
         el_panels.css(css_heights);
         el_memberlists.css(css_heights);
         el_resize_handle.css(css_heights);
+
+        // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
+        if (el_kiwi.outerWidth() < 400) {
+            el_kiwi.addClass('narrow');
+        } else {
+            el_kiwi.removeClass('narrow');
+        }
 
         // Set the panels width depending on the memberlist visibility
         if (el_memberlists.css('display') != 'none') {
