@@ -164,6 +164,7 @@ function setProcessUid() {
 // Make sure Kiwi doesn't simply quit on an exception
 process.on('uncaughtException', function (e) {
     console.log('[Uncaught exception] ' + e);
+    console.log(e.stack);
 });
 
 
