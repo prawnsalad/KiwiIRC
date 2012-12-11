@@ -1,6 +1,7 @@
 var events = require('events'),
     util = require('util'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    EventPublisher = require('./plugininterface.js');
 
 
 /**
@@ -14,9 +15,7 @@ var active_publisher;
 
 // Create a publisher to allow event subscribing
 function Publisher (obj) {
-    var EventPublisher = function modulePublisher() {};
-    util.inherits(EventPublisher, events.EventEmitter);
-
+    var EventPublisher = require('./plugininterface.js');
     return new EventPublisher();
 }
 
@@ -47,6 +46,7 @@ function loadModule (module_file) {
         delete require.cache[require.resolve(module_file)];
     } catch (err) {
         // Module was not found
+        console.log(err);
         return false;
     }
 
@@ -90,7 +90,7 @@ Module.prototype.on = function (event_name, fn) {
     this._events[event_name].push(fn);
 
     // If this is an internal event, do not propogate the event
-    if (internal_events.indexOf(event_name) !== -1) {
+    if (internal_events.indexOf(event_name) === -1) {
         active_publisher.on(event_name, fn);
     }
 };
