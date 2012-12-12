@@ -7,17 +7,45 @@ var net     = require('net'),
 var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     var that = this;
     events.EventEmitter.call(this);
+    
+    this.connected = false;
+    this.registered = false;
+    this.cap_negotiation = true;
+    this.nick = nick;
+    this.user = user;  // Contains users real hostname and address
+    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.]/, ''),
+    this.irc_host = {hostname: hostname, port: port};
+    this.ssl = !(!ssl);
+    this.options = Object.create(null);
+    this.cap = {requested: [], enabled: []};
+    this.sasl = false;
+    
+    this.password = pass;
+    this.hold_last = false;
+    this.held_data = '';
 
-    if (ssl) {
+    global.modules.emit('irc:connecting', {connection: this}).done(function () {
+        that.connect();
+    });
+};
+util.inherits(IrcConnection, events.EventEmitter);
+
+module.exports.IrcConnection = IrcConnection;
+
+
+IrcConnection.prototype.connect = function () {
+    var that = this;
+
+    if (this.ssl) {
         this.socket = tls.connect({
-            host: hostname,
-            port: port,
+            host: this.irc_host.hostname,
+            port: this.irc_host.port,
             rejectUnauthorized: global.config.reject_unauthorised_certificates
         }, function () {
             connect_handler.apply(that, arguments);
         });
     } else {
-        this.socket = net.createConnection(port, hostname);
+        this.socket = net.createConnection(this.irc_host.port, this.irc_host.hostname);
         this.socket.on('connect', function () {
             connect_handler.apply(that, arguments);
         });
@@ -36,27 +64,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     this.socket.on('close', function () {
         that.emit('close');
     });
-    
-    this.connected = false;
-    this.registered = false;
-    this.cap_negotiation = true;
-    this.nick = nick;
-    this.user = user;  // Contains users real hostname and address
-    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.]/, ''),
-    this.irc_host = {hostname: hostname, port: port};
-    this.ssl = !(!ssl);
-    this.options = Object.create(null);
-    this.cap = {requested: [], enabled: []};
-    this.sasl = false;
-    
-    this.password = pass;
-    this.hold_last = false;
-    this.held_data = '';
 };
-util.inherits(IrcConnection, events.EventEmitter);
-
-module.exports.IrcConnection = IrcConnection;
-
 
 IrcConnection.prototype.write = function (data, callback) {
     write.call(this, data + '\r\n', 'utf-8', callback);
