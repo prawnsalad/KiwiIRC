@@ -41,7 +41,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     this.registered = false;
     this.cap_negotiation = true;
     this.nick = nick;
-    this.user = user;
+    this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.]/, ''),
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
@@ -86,33 +86,34 @@ var connect_handler = function () {
 
     // Build up data to be used for webirc/etc detection
     connect_data = {
-        user: this.user,
-        nick: this.nick,
-        realname: '[www.kiwiirc.com] ' + this.nick,
-        username: this.username,
-        irc_host: this.irc_host
+        connection: this,
+
+        // Array of lines to be sent to the IRCd before anything else
+        prepend_data: []
     };
 
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    // Send any initial data for webirc/etc
-    if (connect_data.prepend_data) {
-        _.each(connect_data.prepend_data, function(data) {
-            that.write(data);
-        });
-    }
+    global.modules.emit('irc:authorize', connect_data).done(function () {
+        // Send any initial data for webirc/etc
+        if (connect_data.prepend_data) {
+            _.each(connect_data.prepend_data, function(data) {
+                that.write(data);
+            });
+        }
 
-    this.write('CAP LS');
+        that.write('CAP LS');
 
-    if (this.password) {
-        this.write('PASS ' + this.password);
-    }
-    this.write('NICK ' + this.nick);
-    this.write('USER ' + this.username + ' 0 0 :' + '[www.kiwiirc.com] ' + this.nick);
-    
-    this.connected = true;
-    this.emit('connected');
+        if (that.password) {
+            that.write('PASS ' + that.password);
+        }
+        that.write('NICK ' + that.nick);
+        that.write('USER ' + that.username + ' 0 0 :' + '[www.kiwiirc.com] ' + that.nick);
+        
+        that.connected = true;
+        that.emit('connected');
+    });
 };
 
 
@@ -122,17 +123,17 @@ function findWebIrc(connect_data) {
     var tmp;
 
     // Do we have a WEBIRC password for this?
-    if (webirc_pass && webirc_pass[connect_data.irc_host.hostname]) {
-        tmp = 'WEBIRC ' + webirc_pass[connect_data.irc_host.hostname] + ' KiwiIRC ';
-        tmp += connect_data.user.hostname + ' ' + connect_data.user.address;
+    if (webirc_pass && webirc_pass[this.irc_host.hostname]) {
+        tmp = 'WEBIRC ' + webirc_pass[this.irc_host.hostname] + ' KiwiIRC ';
+        tmp += this.user.hostname + ' ' + this.user.address;
         connect_data.prepend_data = [tmp];
     }
 
 
     // Check if we need to pass the users IP as its username/ident
-    if (ip_as_username && ip_as_username.indexOf(connect_data.irc_host.hostname) > -1) {
+    if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.username = connect_data.user.address.split('.').map(function(i, idx){
+        this.username = this.user.address.split('.').map(function(i, idx){
             return parseInt(i, 10).toString(16);
         }).join('');
 
