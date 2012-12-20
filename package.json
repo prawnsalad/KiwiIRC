@@ -15,7 +15,7 @@
   "dependencies": {
     "node-static": "0.5.9",
     "uglify-js": "1.2.3",
-    "socket.io": "0.8.7",
+    "socket.io": "0.9.13",
     "range_check": "0.0.1",
     "lodash": "0.9.1",
     "daemonize2": "0.4.0-rc.5"
