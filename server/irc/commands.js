@@ -177,14 +177,19 @@ var listeners = {
         var i = 0;
         _.each(members, function (member) {
             var j, k, modes = [];
-            for (j = 0; j < member.length; j++) {
-                for (k = 0; k < that.irc_connection.options.PREFIX.length; k++) {
-                    if (member.charAt(j) === that.irc_connection.options.PREFIX[k].symbol) {
-                        modes.push(that.irc_connection.options.PREFIX[k].mode);
-                        i++;
+
+            // Make sure we have some prefixes already
+            if (that.irc_connection.options.PREFIX) {
+                for (j = 0; j < member.length; j++) {
+                    for (k = 0; k < that.irc_connection.options.PREFIX.length; k++) {
+                        if (member.charAt(j) === that.irc_connection.options.PREFIX[k].symbol) {
+                            modes.push(that.irc_connection.options.PREFIX[k].mode);
+                            i++;
+                        }
                     }
                 }
             }
+
             member_list.push({nick: member, modes: modes});
             if (i++ >= 50) {
                 that.client.sendIrcCommand('userlist', {server: that.con_num, users: member_list, channel: command.params[2]});
@@ -252,12 +257,18 @@ var listeners = {
         this.client.sendIrcCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.trailing || command.params[0]});
     },
     'TOPIC': function (command) {
-        this.client.sendIrcCommand('topic', {server: this.con_num, nick: command.nick, channel: command.params[0], topic: command.trailing});
+        // If we don't have an associated channel, no need to continue
+        if (!command.params[0]) return;
+
+        var channel = command.params[0],
+            topic = command.trailing || '';
+
+        this.client.sendIrcCommand('topic', {server: this.con_num, nick: command.nick, channel: channel, topic: topic});
     },
     'MODE': function (command) {                
-        var chanmodes = this.irc_connection.options.CHANMODES,
-            prefixes = this.irc_connection.options.PREFIX,
-            always_param = chanmodes[0].concat(chanmodes[1]),
+        var chanmodes = this.irc_connection.options.CHANMODES || [],
+            prefixes = this.irc_connection.options.PREFIX || [],
+            always_param = (chanmodes[0] || '').concat((chanmodes[1] || '')),
             modes = [],
             has_param, i, j, add;
         
@@ -272,7 +283,7 @@ var listeners = {
                 return m === mode;
             })) {
                 return true;
-            } else if (add && _.find(chanmodes[2].split(''), function (m) {
+            } else if (add && _.find((chanmodes[2] || '').split(''), function (m) {
                 return m === mode;
             })) {
                 return true;
