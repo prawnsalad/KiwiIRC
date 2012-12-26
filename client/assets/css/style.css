@@ -95,6 +95,7 @@ html, body { height:100%; }
 
 /* A member/nick list per channel */
 #kiwi #memberlists { border-left: 1px solid #8A8A8A; }
+#kiwi #memberlists.disabled { display:none; }
 #kiwi #memberlists ul { display:none; }
 
 /* The active channels nicklist */
@@ -318,6 +319,9 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .messages .msg .nick { width:11em; float:left; font-size:12px; font-family:Arial; text-align:left; padding: 5px; overflow:hidden; }
 #kiwi.theme_relaxed .messages .msg .text { display:block; margin-left:12em; border-left: 1px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:5px; }
 
+#kiwi.theme_relaxed.narrow .messages .msg .nick { width: auto; }
+#kiwi.theme_relaxed.narrow .messages .msg .text { margin-left: 1em; border:none; }
+
 #kiwi.theme_relaxed .messages .msg.action .nick { }
 #kiwi.theme_relaxed .messages .msg.action .text { margin-left:9em; color:#009900; border-left:none; font-style:italic; }
 #kiwi.theme_relaxed .messages .msg.action.join { color:#009900; }
@@ -340,6 +344,11 @@ html, body { height:100%; }
 
 #kiwi.theme_relaxed .messages .msg.global_nick_highlight,
 #kiwi.theme_relaxed .messages .msg.highlight { background:#D9D9D9; }
+
+/* Narrow styling (window width < 400px) */
+#kiwi.theme_relaxed.narrow .messages .msg .nick { width: auto; }
+#kiwi.theme_relaxed.narrow .messages .msg .text { margin-left: 1em; border:none; }
+#kiwi.theme_relaxed.narrow .messages .msg.action .text { margin-left: 1em; }
 
 
 #kiwi.theme_relaxed .messages .msg .media { margin-left:0.5em; }
@@ -378,6 +387,7 @@ html, body { height:100%; }
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
 }
+#kiwi.theme_relaxed.narrow #memberlists { display:none; }
 #kiwi.theme_relaxed #memberlists ul { list-style: none; }
 #kiwi.theme_relaxed #memberlists ul.active { }
 #kiwi.theme_relaxed #memberlists ul li { padding: 0.2em 1em; }
@@ -406,6 +416,10 @@ html, body { height:100%; }
 }
 #kiwi.theme_relaxed #controlbox .input .nick { text-align: right; width:11em; left:0px; position:absolute; padding:2px; overflow:hidden; }
 #kiwi.theme_relaxed #controlbox .input .nick a { text-decoration:none; color:black; }
+
+#kiwi.theme_relaxed.narrow #controlbox .input .nick { display:none; }
+#kiwi.theme_relaxed.narrow #controlbox .input .input_wrap { left:7px; }
+
 #kiwi.theme_relaxed #controlbox .input .input_wrap {
     position:absolute;
     right:7px; left: 12.2em;
@@ -457,6 +471,7 @@ html, body { height:100%; }
 
 
 #kiwi.theme_relaxed #toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
+#kiwi.theme_relaxed.narrow #toolbar .app_tools { width:auto; }
 #kiwi.theme_relaxed #toolbar .app_tools ul li {
     font-size:26px;
     -webkit-transition: all .3s ease;
