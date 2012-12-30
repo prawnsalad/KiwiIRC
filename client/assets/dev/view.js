@@ -316,7 +316,8 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         // Parse any links found
         msg.msg = msg.msg.replace(/(([A-Za-z0-9\-]+\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
-            var nice, extra_html = '';
+            var nice = url,
+                extra_html = '';
 
             // Add the http if no protoocol was found
             if (url.match(/^www\./)) {
@@ -324,7 +325,6 @@ _kiwi.view.Panel = Backbone.View.extend({
             }
 
             // Shorten the displayed URL if it's going to be too long
-            nice = url;
             if (nice.length > 100) {
                 nice = nice.substr(0, 100) + '...';
             }
