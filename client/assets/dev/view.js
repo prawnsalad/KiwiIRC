@@ -21,13 +21,23 @@ _kiwi.view.MemberList = Backbone.View.extend({
         });
     },
     nickClick: function (x) {
-        var target = $(x.currentTarget).parent('li'),
-            member = target.data('member'),
-            userbox = new _kiwi.view.UserBox();
+        var $target = $(x.currentTarget).parent('li'),
+            member = $target.data('member'),
+            userbox;
         
+        // If the userbox already exists here, hide it
+        if ($target.find('.userbox').length > 0) {
+            $('.userbox', this.$el).remove();
+            return;
+        }
+
+        userbox = new _kiwi.view.UserBox();
         userbox.member = member;
+
+        // Remove any existing userboxes
         $('.userbox', this.$el).remove();
-        target.append(userbox.$el);
+        
+        $target.append(userbox.$el);
     },
     show: function () {
         $('#memberlists').children().removeClass('active');
