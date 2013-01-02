@@ -662,11 +662,11 @@ _kiwi.model.Application = function () {
 
                 panel = _kiwi.app.panels.active;
                 if (event.ident) {
-                    panel.addMsg(event.nick, 'is ' + event.nick + '!' + event.ident + '@' + event.host + ' * ' + event.msg, 'whois');
+                    panel.addMsg(event.nick, event.nick + ' [' + event.nick + '!' + event.ident + '@' + event.host + '] * ' + event.msg, 'whois');
                 } else if (event.chans) {
-                    panel.addMsg(event.nick, 'on ' + event.chans, 'whois');
+                    panel.addMsg(event.nick, 'Channels: ' + event.chans, 'whois');
                 } else if (event.irc_server) {
-                    panel.addMsg(event.nick, 'using ' + event.server, 'whois');
+                    panel.addMsg(event.nick, 'Connected to server: ' + event.irc_server, 'whois');
                 } else if (event.msg) {
                     panel.addMsg(event.nick, event.msg, 'whois');
                 } else if (event.logon) {
