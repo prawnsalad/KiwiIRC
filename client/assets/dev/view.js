@@ -14,19 +14,30 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var $this = $(this.el);
         $this.empty();
         this.model.forEach(function (member) {
-            $('<li><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
+            var prefix_css_class = (member.get('modes') || []).join(' ');
+            $('<li class="mode ' + prefix_css_class + '"><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
                 .appendTo($this)
                 .data('member', member);
         });
     },
     nickClick: function (x) {
-        var target = $(x.currentTarget).parent('li'),
-            member = target.data('member'),
-            userbox = new _kiwi.view.UserBox();
+        var $target = $(x.currentTarget).parent('li'),
+            member = $target.data('member'),
+            userbox;
         
+        // If the userbox already exists here, hide it
+        if ($target.find('.userbox').length > 0) {
+            $('.userbox', this.$el).remove();
+            return;
+        }
+
+        userbox = new _kiwi.view.UserBox();
         userbox.member = member;
+
+        // Remove any existing userboxes
         $('.userbox', this.$el).remove();
-        target.append(userbox.$el);
+
+        $target.append(userbox.$el);
     },
     show: function () {
         $('#memberlists').children().removeClass('active');
@@ -290,11 +301,15 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
 
     render: function () {
+        var that = this;
+
         this.$el.empty();
-        this.model.get("backscroll").forEach(this.newMsg);
+        _.each(this.model.get('scrollback'), function (msg) {
+            that.newMsg(msg);
+        });
     },
+
     newMsg: function (msg) {
-        // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
         var re, line_msg, $this = this.$el,
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
 
@@ -315,8 +330,9 @@ _kiwi.view.Panel = Backbone.View.extend({
 
 
         // Parse any links found
-        msg.msg = msg.msg.replace(/(([A-Za-z0-9\-]+\:\/\/)|(www\.))([\w.]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
-            var nice, extra_html = '';
+        msg.msg = msg.msg.replace(/(([A-Za-z0-9\-]+\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
+            var nice = url,
+                extra_html = '';
 
             // Add the http if no protoocol was found
             if (url.match(/^www\./)) {
@@ -324,7 +340,6 @@ _kiwi.view.Panel = Backbone.View.extend({
             }
 
             // Shorten the displayed URL if it's going to be too long
-            nice = url;
             if (nice.length > 100) {
                 nice = nice.substr(0, 100) + '...';
             }

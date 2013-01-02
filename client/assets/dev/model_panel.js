@@ -55,6 +55,14 @@ _kiwi.model.Panel = Backbone.Model.extend({
         this.trigger("msg", message_obj);
     },
 
+
+    clearMessages: function () {
+        this.set({'scrollback': []}, {silent: true});
+        this.addMsg('', 'Window cleared');
+
+        this.view.render();
+    },
+
     closePanel: function () {
         if (this.view) {
             this.view.unbind();

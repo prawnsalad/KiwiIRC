@@ -662,11 +662,11 @@ _kiwi.model.Application = function () {
 
                 panel = _kiwi.app.panels.active;
                 if (event.ident) {
-                    panel.addMsg(event.nick, 'is ' + event.nick + '!' + event.ident + '@' + event.host + ' * ' + event.msg, 'whois');
+                    panel.addMsg(event.nick, event.nick + ' [' + event.nick + '!' + event.ident + '@' + event.host + '] * ' + event.msg, 'whois');
                 } else if (event.chans) {
-                    panel.addMsg(event.nick, 'on ' + event.chans, 'whois');
+                    panel.addMsg(event.nick, 'Channels: ' + event.chans, 'whois');
                 } else if (event.irc_server) {
-                    panel.addMsg(event.nick, 'using ' + event.server, 'whois');
+                    panel.addMsg(event.nick, 'Connected to server: ' + event.irc_server, 'whois');
                 } else if (event.msg) {
                     panel.addMsg(event.nick, event.msg, 'whois');
                 } else if (event.logon) {
@@ -828,6 +828,8 @@ _kiwi.model.Application = function () {
             controlbox.on('command_quote', quoteCommand);
 
             controlbox.on('command_kick', kickCommand);
+
+            controlbox.on('command_clear', clearCommand);
 
 
             controlbox.on('command_css', function (ev) {
@@ -1027,6 +1029,17 @@ _kiwi.model.Application = function () {
             ev.params.shift();
 
             _kiwi.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
+        }
+
+        function clearCommand (ev) {
+            // Can't clear a server or applet panel
+            if (_kiwi.app.panels.active.isServer() || _kiwi.app.panels.active.isApplet()) {
+                return;
+            }
+
+            if (_kiwi.app.panels.active.clearMessages) {
+                _kiwi.app.panels.active.clearMessages();
+            }
         }
 
         function settingsCommand (ev) {

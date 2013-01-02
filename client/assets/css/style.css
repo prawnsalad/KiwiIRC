@@ -401,10 +401,26 @@ html, body { height:100%; }
 }
 #kiwi.theme_relaxed #memberlists ul li a.nick { display:block; color:black; }
 
-#kiwi.theme_relaxed #memberlists ul li .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi.theme_relaxed #memberlists ul li .userbox { margin:4px 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
 #kiwi.theme_relaxed #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
 #kiwi.theme_relaxed #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
 
+/* User mode styles */
+#kiwi.theme_relaxed #memberlists ul li .prefix {
+    display:none;
+    width:20px; height:20px;
+    border-radius: 5px;
+    margin: 0 7px 0 0;
+    font-size:12px; text-align: center;
+    color: #E3E3E3;
+    /* text-indent: -1000px; */
+}
+/* Most important modes towards the bottom - they override the top ones! */
+#kiwi.theme_relaxed #memberlists ul li.mode.v .prefix { display:inline-block; background:#b3b3b3; }
+#kiwi.theme_relaxed #memberlists ul li.mode.h .prefix { display:inline-block; background:#b5b447; }
+#kiwi.theme_relaxed #memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
+#kiwi.theme_relaxed #memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
+#kiwi.theme_relaxed #memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
 
 #kiwi.theme_relaxed #controlbox .input {
     background:#fff; margin:3px;
@@ -471,6 +487,7 @@ html, body { height:100%; }
 
 
 #kiwi.theme_relaxed #toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
+#kiwi.theme_relaxed.narrow #toolbar #tabs { margin-right:0; }
 #kiwi.theme_relaxed.narrow #toolbar .app_tools { width:auto; }
 #kiwi.theme_relaxed #toolbar .app_tools ul li {
     font-size:26px;
