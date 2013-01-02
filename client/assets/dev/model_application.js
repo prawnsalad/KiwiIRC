@@ -829,6 +829,8 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command_kick', kickCommand);
 
+            controlbox.on('command_clear', clearCommand);
+
 
             controlbox.on('command_css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
@@ -1027,6 +1029,17 @@ _kiwi.model.Application = function () {
             ev.params.shift();
 
             _kiwi.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
+        }
+
+        function clearCommand (ev) {
+            // Can't clear a server or applet panel
+            if (_kiwi.app.panels.active.isServer() || _kiwi.app.panels.active.isApplet()) {
+                return;
+            }
+
+            if (_kiwi.app.panels.active.clearMessages) {
+                _kiwi.app.panels.active.clearMessages();
+            }
         }
 
         function settingsCommand (ev) {

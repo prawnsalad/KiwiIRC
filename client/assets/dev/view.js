@@ -36,7 +36,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
         // Remove any existing userboxes
         $('.userbox', this.$el).remove();
-        
+
         $target.append(userbox.$el);
     },
     show: function () {
@@ -301,11 +301,15 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
 
     render: function () {
+        var that = this;
+
         this.$el.empty();
-        this.model.get("backscroll").forEach(this.newMsg);
+        _.each(this.model.get('scrollback'), function (msg) {
+            that.newMsg(msg);
+        });
     },
+
     newMsg: function (msg) {
-        // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
         var re, line_msg, $this = this.$el,
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
 
