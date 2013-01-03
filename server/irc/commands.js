@@ -4,6 +4,8 @@ var irc_numerics = {
     RPL_WELCOME:            '001',
     RPL_MYINFO:             '004',
     RPL_ISUPPORT:           '005',
+    RPL_MAPMORE:            '006',
+    RPL_MAPEND:             '007',
     RPL_WHOISREGNICK:       '307',
     RPL_WHOISUSER:          '311',
     RPL_WHOISSERVER:        '312',
@@ -18,6 +20,8 @@ var irc_numerics = {
     RPL_TOPIC:              '332',
     RPL_TOPICWHOTIME:       '333',
     RPL_NAMEREPLY:          '353',
+    RPL_LINKS:              '364',
+    RPL_ENDOFLINKS:         '365',
     RPL_ENDOFNAMES:         '366',
     RPL_BANLIST:            '367',
     RPL_ENDOFBANLIST:       '368',
@@ -28,6 +32,8 @@ var irc_numerics = {
     ERR_NOSUCHNICK:         '401',
     ERR_CANNOTSENDTOCHAN:   '404',
     ERR_TOOMANYCHANNELS:    '405',
+    ERR_UNKNOWNCOMMAND:     '421',
+    ERR_NOMOTD:             '422',
     ERR_NICKNAMEINUSE:      '433',
     ERR_USERNOTINCHANNEL:   '441',
     ERR_NOTONCHANNEL:       '442',
@@ -37,6 +43,7 @@ var irc_numerics = {
     ERR_INVITEONLYCHAN:     '473',
     ERR_BANNEDFROMCHAN:     '474',
     ERR_BADCHANNELKEY:      '475',
+    ERR_NOPRIVILEGES:       '481',
     ERR_CHANOPRIVSNEEDED:   '482',
     RPL_STARTTLS:           '670',
     RPL_SASLAUTHENTICATED:  '900',
@@ -486,5 +493,64 @@ var listeners = {
         this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'nickname_in_use', nick: command.params[1], reason: command.trailing});
     },
     ERR_NOTREGISTERED: function (command) {
+    },
+
+    RPL_MAPMORE: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+    RPL_MAPEND: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LINKS: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+    RPL_ENDOFLINKS: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    ERR_UNKNOWNCOMMAND: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, '`' + params.join(', ') + '` ' + command.trailing);
+    },
+
+    ERR_NOMOTD: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, command.trailing);
+    },
+
+    ERR_NOPRIVILEGES: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, command.trailing);
     }
 };
+
+
+
+
+function genericNotice (command, msg, is_error) {
+    // Default to being an error
+    if (typeof is_error !== 'boolean')
+        is_error = true;
+
+    this.client.sendIrcCommand('notice', {
+        server: this.con_num,
+        nick: command.prefix,
+        ident: '',
+        hostname: '',
+        target: command.params[0],
+        msg: msg,
+        numeric: parseInt(command.command, 10)
+    });
+}
