@@ -1,4 +1,4 @@
-kiwi.model.Applet = kiwi.model.Panel.extend({
+_kiwi.model.Applet = _kiwi.model.Panel.extend({
     // Used to determine if this is an applet panel. Applet panel tabs are treated
     // differently than others
     applet: true,
@@ -7,7 +7,7 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
     initialize: function (attributes) {
         // Temporary name
         var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
-        this.view = new kiwi.view.Applet({model: this, name: name});
+        this.view = new _kiwi.view.Applet({model: this, name: name});
 
         this.set({
             "name": name
@@ -16,6 +16,7 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
         // Holds the loaded applet
         this.loaded_applet = null;
     },
+
 
     // Load an applet within this panel
     load: function (applet_object, applet_name) {
@@ -49,21 +50,23 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
         return this;
     },
 
+
     loadFromUrl: function(applet_url, applet_name) {
         var that = this;
 
         this.view.$el.html('Loading..');
         $script(applet_url, function () {
             // Check if the applet loaded OK
-            if (!kiwi.applets[applet_name]) {
+            if (!_kiwi.applets[applet_name]) {
                 that.view.$el.html('Not found');
                 return;
             }
 
             // Load a new instance of this applet
-            that.load(new kiwi.applets[applet_name]());
+            that.load(new _kiwi.applets[applet_name]());
         });
     },
+
 
     close: function () {
         this.view.$el.remove();
@@ -77,5 +80,54 @@ kiwi.model.Applet = kiwi.model.Panel.extend({
         }
 
         this.closePanel();
+    }
+},
+
+
+{
+    // Load an applet type once only. If it already exists, return that
+    loadOnce: function (applet_name) {
+
+        // See if we have an instance loaded already
+        var applet = _.find(_kiwi.app.panels.models, function(panel) {
+            // Ignore if it's not an applet
+            if (!panel.isApplet()) return;
+
+            // Ignore if it doesn't have an applet loaded
+            if (!panel.loaded_applet) return;
+
+            if (panel.loaded_applet.get('_applet_name') === applet_name) {
+                return true;
+            }
+        });
+
+        if (applet) return applet;
+
+
+        // If we didn't find an instance, load a new one up
+        return this.load(applet_name);
+    },
+
+
+    load: function (applet_name) {
+        var applet;
+
+        // Find the applet within the registered applets
+        if (!_kiwi.applets[applet_name]) return;
+
+        // Create the applet and load the content
+        applet = new _kiwi.model.Applet();
+        applet.load(new _kiwi.applets[applet_name]({_applet_name: applet_name}));
+
+        // Add it into the tab list
+        _kiwi.app.panels.add(applet);
+
+
+        return applet;
+    },
+
+
+    register: function (applet_name, applet) {
+        _kiwi.applets[applet_name] = applet;
     }
 });

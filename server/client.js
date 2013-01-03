@@ -1,7 +1,7 @@
 var util             = require('util'),
     events           = require('events'),
     crypto           = require('crypto'),
-    _                = require('underscore'),
+    _                = require('lodash'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     IrcCommands      = require('./irc/commands.js'),
     ClientCommands   = require('./clientcommands.js');
@@ -110,38 +110,55 @@ function kiwiCommand(command, callback) {
         callback = function () {};
     }
     switch (command.command) {
-		case 'connect':
-			if (command.hostname && command.port && command.nick) {
-				var con = new IrcConnection(command.hostname, command.port, command.ssl,
-					command.nick, {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
-					command.password);
+        case 'connect':
+            if (command.hostname && command.port && command.nick) {
+                var con;
 
-				var con_num = this.next_connection++;
-				this.irc_connections[con_num] = con;
+                if (global.config.restrict_server) {
+                    con = new IrcConnection(
+                        global.config.restrict_server,
+                        global.config.restrict_server_port,
+                        global.config.restrict_server_ssl,
+                        command.nick,
+                        {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
+                        global.config.restrict_server_password);
 
-				var irc_commands = new IrcCommands(con, con_num, this);
-				irc_commands.bindEvents();
-				
-				con.on('connected', function () {
-					return callback(null, con_num);
-				});
-				
-				con.on('error', function (err) {
+                } else {
+                    con = new IrcConnection(
+                        command.hostname,
+                        command.port,
+                        command.ssl,
+                        command.nick,
+                        {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
+                        command.password);
+                }
+
+                var con_num = this.next_connection++;
+                this.irc_connections[con_num] = con;
+
+                var irc_commands = new IrcCommands(con, con_num, this);
+                irc_commands.bindEvents();
+                
+                con.on('connected', function () {
+                    return callback(null, con_num);
+                });
+                
+                con.on('error', function (err) {
                     console.log('irc_connection error (' + command.hostname + '):', err);
                     // TODO: Once multiple servers implemented, specify which server failed
                     //that.sendKiwiCommand('error', {server: con_num, error: err});
                     return callback(err.code, null);
-				});
+                });
                 
                 con.on('close', function () {
                     that.irc_connections[con_num] = null;
                 });
-			} else {
-				return callback('Hostname, port and nickname must be specified');
-			}
-		break;
-		default:
-			callback();
+            } else {
+                return callback('Hostname, port and nickname must be specified');
+            }
+        break;
+        default:
+            callback();
     }
 }
 

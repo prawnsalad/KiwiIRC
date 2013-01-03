@@ -1,7 +1,7 @@
 /*jslint white:true, regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global kiwi */
 
-kiwi.view.MemberList = Backbone.View.extend({
+_kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
     events: {
         "click .nick": "nickClick"
@@ -14,19 +14,30 @@ kiwi.view.MemberList = Backbone.View.extend({
         var $this = $(this.el);
         $this.empty();
         this.model.forEach(function (member) {
-            $('<li><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
+            var prefix_css_class = (member.get('modes') || []).join(' ');
+            $('<li class="mode ' + prefix_css_class + '"><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
                 .appendTo($this)
                 .data('member', member);
         });
     },
     nickClick: function (x) {
-        var target = $(x.currentTarget).parent('li'),
-            member = target.data('member'),
-            userbox = new kiwi.view.UserBox();
+        var $target = $(x.currentTarget).parent('li'),
+            member = $target.data('member'),
+            userbox;
         
+        // If the userbox already exists here, hide it
+        if ($target.find('.userbox').length > 0) {
+            $('.userbox', this.$el).remove();
+            return;
+        }
+
+        userbox = new _kiwi.view.UserBox();
         userbox.member = member;
+
+        // Remove any existing userboxes
         $('.userbox', this.$el).remove();
-        target.append(userbox.$el);
+
+        $target.append(userbox.$el);
     },
     show: function () {
         $('#memberlists').children().removeClass('active');
@@ -36,7 +47,7 @@ kiwi.view.MemberList = Backbone.View.extend({
 
 
 
-kiwi.view.UserBox = Backbone.View.extend({
+_kiwi.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick',
@@ -48,22 +59,21 @@ kiwi.view.UserBox = Backbone.View.extend({
     },
 
     queryClick: function (event) {
-        var panel = new kiwi.model.Channel({name: this.member.get('nick')});
-        panel.set('members', undefined);
-        kiwi.app.panels.add(panel);
+        var panel = new _kiwi.model.Query({name: this.member.get('nick')});
+        _kiwi.app.panels.add(panel);
         panel.view.show();
     },
 
     infoClick: function (event) {
-        kiwi.app.controlbox.processInput('/whois ' + this.member.get('nick'));
+        _kiwi.app.controlbox.processInput('/whois ' + this.member.get('nick'));
     },
 
     slapClick: function (event) {
-        kiwi.app.controlbox.processInput('/slap ' + this.member.get('nick'));
+        _kiwi.app.controlbox.processInput('/slap ' + this.member.get('nick'));
     }
 });
 
-kiwi.view.NickChangeBox = Backbone.View.extend({
+_kiwi.view.NickChangeBox = Backbone.View.extend({
     events: {
         'submit': 'changeNick',
         'click .cancel': 'close'
@@ -75,10 +85,10 @@ kiwi.view.NickChangeBox = Backbone.View.extend({
     
     render: function () {
         // Add the UI component and give it focus
-        kiwi.app.controlbox.$el.prepend(this.$el);
+        _kiwi.app.controlbox.$el.prepend(this.$el);
         this.$el.find('input').focus();
 
-        this.$el.css('bottom', kiwi.app.controlbox.$el.outerHeight(true));
+        this.$el.css('bottom', _kiwi.app.controlbox.$el.outerHeight(true));
     },
     
     close: function () {
@@ -88,30 +98,40 @@ kiwi.view.NickChangeBox = Backbone.View.extend({
 
     changeNick: function (event) {
         var that = this;
-        kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
+        _kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
             that.close();
         });
         return false;
     }
 });
 
-kiwi.view.ServerSelect = function () {
+_kiwi.view.ServerSelect = function () {
     // Are currently showing all the controlls or just a nick_change box?
     var state = 'all';
 
     var model = Backbone.View.extend({
         events: {
             'submit form': 'submitForm',
-            'click .show_more': 'showMore'
+            'click .show_more': 'showMore',
+            'change .have_pass input': 'showPass'
         },
 
         initialize: function () {
             this.$el = $($('#tmpl_server_select').html());
 
-            kiwi.gateway.bind('onconnect', this.networkConnected, this);
-            kiwi.gateway.bind('connecting', this.networkConnecting, this);
+            // Remove the 'more' link if the server has disabled server changing
+            if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
+                if (!_kiwi.app.server_settings.connection.allow_change) {
+                    this.$el.find('.show_more').remove();
+                    this.$el.addClass('single_server');
+                }
+            }
 
-            kiwi.gateway.bind('onirc_error', function (data) {
+
+            _kiwi.gateway.bind('onconnect', this.networkConnected, this);
+            _kiwi.gateway.bind('connecting', this.networkConnecting, this);
+
+            _kiwi.gateway.bind('onirc_error', function (data) {
                 $('button', this.$el).attr('disabled', null);
 
                 if (data.error == 'nickname_in_use') {
@@ -137,29 +157,38 @@ kiwi.view.ServerSelect = function () {
             if ($('button', this.$el).attr('disabled')) return;
             
             var values = {
-                nick: $('.nick', this.$el).val(),
-                server: $('.server', this.$el).val(),
-                port: $('.port', this.$el).val(),
-                ssl: $('.ssl', this.$el).prop('checked'),
-                password: $('.password', this.$el).val(),
-                channel: $('.channel', this.$el).val()
+                nick: $('input.nick', this.$el).val(),
+                server: $('input.server', this.$el).val(),
+                port: $('input.port', this.$el).val(),
+                ssl: $('input.ssl', this.$el).prop('checked'),
+                password: $('input.password', this.$el).val(),
+                channel: $('input.channel', this.$el).val(),
+                channel_key: $('input.channel_key', this.$el).val()
             };
 
             this.trigger('server_connect', values);
         },
 
         submitNickChange: function (event) {
-            kiwi.gateway.changeNick($('.nick', this.$el).val());
+            _kiwi.gateway.changeNick($('input.nick', this.$el).val());
             this.networkConnecting();
+        },
+
+        showPass: function (event) {
+            if (this.$el.find('tr.have_pass input').is(':checked')) {
+                this.$el.find('tr.pass').show().find('input').focus();
+            } else {
+                this.$el.find('tr.pass').hide().find('input').val('');
+            }
         },
 
         showMore: function (event) {
             $('.more', this.$el).slideDown('fast');
-            $('.server', this.$el).select();
+            $('input.server', this.$el).select();
         },
 
         populateFields: function (defaults) {
-            var nick, server, channel;
+            var nick, server, port, channel, channel_key, ssl, password;
 
             defaults = defaults || {};
 
@@ -169,13 +198,15 @@ kiwi.view.ServerSelect = function () {
             ssl = defaults.ssl || 0;
             password = defaults.password || '';
             channel = defaults.channel || '';
+            channel_key = defaults.channel_key || '';
 
-            $('.nick', this.$el).val(nick);
-            $('.server', this.$el).val(server);
-            $('.port', this.$el).val(port);
-            $('.ssl', this.$el).prop('checked', ssl);
-            $('.password', this.$el).val(password);
-            $('.channel', this.$el).val(channel);
+            $('input.nick', this.$el).val(nick);
+            $('input.server', this.$el).val(server);
+            $('input.port', this.$el).val(port);
+            $('input.ssl', this.$el).prop('checked', ssl);
+            $('input.password', this.$el).val(password);
+            $('input.channel', this.$el).val(channel);
+            $('input.channel_key', this.$el).val(channel_key);
         },
 
         hide: function () {
@@ -196,6 +227,7 @@ kiwi.view.ServerSelect = function () {
             } else if (new_state === 'nick_change') {
                 $('.more', this.$el).hide();
                 $('.show_more', this.$el).hide();
+                $('input.nick', this.$el).select();
             }
 
             state = new_state;
@@ -233,11 +265,14 @@ kiwi.view.ServerSelect = function () {
 };
 
 
-kiwi.view.Panel = Backbone.View.extend({
+_kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
     className: "messages",
     events: {
-        "click .chan": "chanClick"
+        "click .chan": "chanClick",
+        'click .media .open': 'mediaClick',
+        'mouseenter .msg .nick': 'msgEnter',
+        'mouseleave .msg .nick': 'msgLeave'
     },
 
     initialize: function (options) {
@@ -266,39 +301,54 @@ kiwi.view.Panel = Backbone.View.extend({
     },
 
     render: function () {
+        var that = this;
+
         this.$el.empty();
-        this.model.get("backscroll").forEach(this.newMsg);
+        _.each(this.model.get('scrollback'), function (msg) {
+            that.newMsg(msg);
+        });
     },
+
     newMsg: function (msg) {
-        // TODO: make sure that the message pane is scrolled to the bottom (Or do we? ~Darren)
         var re, line_msg, $this = this.$el,
-            nick_colour_hex;
+            nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
+
+        // Nick highlight detecting
+        if ((new RegExp('\\b' + _kiwi.gateway.get('nick') + '\\b', 'i')).test(msg.msg)) {
+            is_highlight = true;
+            msg_css_classes += ' highlight';
+        }
 
         // Escape any HTML that may be in here
         msg.msg =  $('<div />').text(msg.msg).html();
 
         // Make the channels clickable
-        re = new RegExp('\\B([' + kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
+        re = new RegExp('(?:^|\\s)([' + _kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
         msg.msg = msg.msg.replace(re, function (match) {
-            return '<a class="chan">' + match + '</a>';
+            return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
         });
 
 
-        // Make links clickable
-        msg.msg = msg.msg.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]*))?/gi, function (url) {
-            var nice;
+        // Parse any links found
+        msg.msg = msg.msg.replace(/(([A-Za-z0-9\-]+\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
+            var nice = url,
+                extra_html = '';
 
-            // Add the http is no protoocol was found
+            // Add the http if no protoocol was found
             if (url.match(/^www\./)) {
                 url = 'http://' + url;
             }
 
-            nice = url;
+            // Shorten the displayed URL if it's going to be too long
             if (nice.length > 100) {
                 nice = nice.substr(0, 100) + '...';
             }
 
-            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>';
+            // Get any media HTML if supported
+            extra_html = _kiwi.view.MediaMessage.buildHtml(url);
+
+            // Make the link clickable
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a> ' + extra_html;
         });
 
 
@@ -319,20 +369,30 @@ kiwi.view.Panel = Backbone.View.extend({
 
         msg.nick_style = 'color:' + nick_colour_hex + ';';
 
+        // Generate a hex string from the nick to be used as a CSS class name
+        nick_hex = msg.nick_css_class = '';
+        if (msg.nick) {
+            _.map(msg.nick.split(''), function (char) {
+                nick_hex += char.charCodeAt(0).toString(16);
+            });
+            msg_css_classes += ' nick_' + nick_hex;
+        }
+
         // Build up and add the line
-        line_msg = '<div class="msg <%= type %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        msg.msg_css_classes = msg_css_classes;
+        line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
         // Activity/alerts based on the type of new message
         if (msg.type.match(/^action /)) {
             this.alert('action');
-        } else if (msg.msg.indexOf(kiwi.gateway.get('nick')) > -1) {
-            kiwi.app.view.alertWindow('* People are talking!');
+        } else if (is_highlight) {
+            _kiwi.app.view.alertWindow('* People are talking!');
             this.alert('highlight');
         } else {
             // If this is the active panel, send an alert out
             if (this.model.isActive()) {
-                kiwi.app.view.alertWindow('* People are talking!');
+                _kiwi.app.view.alertWindow('* People are talking!');
             }
             this.alert('activity');
         }
@@ -341,19 +401,68 @@ kiwi.view.Panel = Backbone.View.extend({
 
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
-        if (this.msg_count > 250) {
+        if (this.msg_count > (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250)) {
             $('.msg:first', this.$el).remove();
             this.msg_count--;
         }
     },
     chanClick: function (event) {
         if (event.target) {
-            kiwi.gateway.join($(event.target).text());
+            _kiwi.gateway.join($(event.target).data('channel'));
         } else {
             // IE...
-            kiwi.gateway.join($(event.srcElement).text());
+            _kiwi.gateway.join($(event.srcElement).data('channel'));
         }
     },
+
+    mediaClick: function (event) {
+        var $media = $(event.target).parents('.media');
+        var media_message;
+
+        if ($media.data('media')) {
+            media_message = $media.data('media');
+        } else {
+            media_message = new _kiwi.view.MediaMessage({el: $media[0]});
+            $media.data('media', media_message);
+        }
+
+        $media.data('media', media_message);
+
+        media_message.open();
+    },
+
+    msgEnter: function (event) {
+        var nick_class;
+
+        // Find a valid class that this element has
+        _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
+            if (css_class.match(/^nick_[a-z0-9]+/i)) {
+                nick_class = css_class;
+            }
+        });
+
+        // If no class was found..
+        if (!nick_class) return;
+
+        $('.'+nick_class).addClass('global_nick_highlight');
+    },
+
+    msgLeave: function (event) {
+        var nick_class;
+
+        // Find a valid class that this element has
+        _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
+            if (css_class.match(/^nick_[a-z0-9]+/i)) {
+                nick_class = css_class;
+            }
+        });
+
+        // If no class was found..
+        if (!nick_class) return;
+
+        $('.'+nick_class).removeClass('global_nick_highlight');
+    },
+
     show: function () {
         var $this = this.$el;
 
@@ -364,26 +473,26 @@ kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
-            $('#memberlists').show();
+            $('#memberlists').removeClass('disabled');
             members.view.show();
         } else {
             // Memberlist not found for this panel, hide any active ones
-            $('#memberlists').hide().children().removeClass('active');
+            $('#memberlists').addClass('disabled').children().removeClass('active');
         }
 
-        kiwi.app.view.doLayout();
-
-        this.scrollToBottom();
+        _kiwi.app.view.doLayout();
         this.alert('none');
 
         this.trigger('active', this.model);
-        kiwi.app.panels.trigger('active', this.model);
+        _kiwi.app.panels.trigger('active', this.model);
+
+        this.scrollToBottom(true);
     },
 
 
     alert: function (level) {
         // No need to highlight if this si the active panel
-        if (this.model == kiwi.app.panels.active) return;
+        if (this.model == _kiwi.app.panels.active) return;
 
         var types, type_idx;
         types = ['none', 'action', 'activity', 'highlight'];
@@ -418,20 +527,25 @@ kiwi.view.Panel = Backbone.View.extend({
 
 
     // Scroll to the bottom of the panel
-    scrollToBottom: function () {
-        // TODO: Don't scroll down if we're scrolled up the panel a little
-        this.$container[0].scrollTop = this.$container[0].scrollHeight;
+    scrollToBottom: function (force_down) {
+        // If this isn't the active panel, don't scroll
+        if (this.model !== _kiwi.app.panels.active) return;
+
+        // Don't scroll down if we're scrolled up the panel a little
+        if (force_down || this.$container.scrollTop() + this.$container.height() > this.$el.outerHeight() - 150) {
+            this.$container[0].scrollTop = this.$container[0].scrollHeight;
+        }
     }
 });
 
-kiwi.view.Applet = kiwi.view.Panel.extend({
+_kiwi.view.Applet = _kiwi.view.Panel.extend({
     className: 'applet',
     initialize: function (options) {
         this.initializePanel(options);
     }
 });
 
-kiwi.view.Channel = kiwi.view.Panel.extend({
+_kiwi.view.Channel = _kiwi.view.Panel.extend({
     initialize: function (options) {
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
@@ -445,14 +559,14 @@ kiwi.view.Channel = kiwi.view.Panel.extend({
         this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
 
         // If this is the active channel then update the topic bar
-        if (kiwi.app.panels.active === this) {
-            kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
+        if (_kiwi.app.panels.active === this) {
+            _kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
         }
     }
 });
 
-// Model for this = kiwi.model.PanelList
-kiwi.view.Tabs = Backbone.View.extend({
+// Model for this = _kiwi.model.PanelList
+_kiwi.view.Tabs = Backbone.View.extend({
     events: {
         'click li': 'tabClick',
         'click li .part': 'partClick'
@@ -468,7 +582,7 @@ kiwi.view.Tabs = Backbone.View.extend({
         this.tabs_applets = $('ul.applets', this.$el);
         this.tabs_msg = $('ul.channels', this.$el);
 
-        kiwi.gateway.on('change:name', function (gateway, new_val) {
+        _kiwi.gateway.on('change:name', function (gateway, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
     },
@@ -492,7 +606,7 @@ kiwi.view.Tabs = Backbone.View.extend({
                 .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
         });
 
-        kiwi.app.view.doLayout();
+        _kiwi.app.view.doLayout();
     },
 
     updateTabTitle: function (panel, new_title) {
@@ -511,13 +625,13 @@ kiwi.view.Tabs = Backbone.View.extend({
             .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
         panel.bind('change:title', this.updateTabTitle);
-        kiwi.app.view.doLayout();
+        _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
         panel.tab.remove();
         delete panel.tab;
 
-        kiwi.app.view.doLayout();
+        _kiwi.app.view.doLayout();
     },
 
     panelActive: function (panel) {
@@ -553,20 +667,20 @@ kiwi.view.Tabs = Backbone.View.extend({
         // Only need to part if it's a channel
         // If the nicklist is empty, we haven't joined the channel as yet
         if (panel.isChannel() && panel.get('members').models.length > 0) {
-            kiwi.gateway.part(panel.get('name'));
+            _kiwi.gateway.part(panel.get('name'));
         } else {
             panel.close();
         }
     },
 
     next: function () {
-        var next = kiwi.app.panels.active.tab.next();
+        var next = _kiwi.app.panels.active.tab.next();
         if (!next.length) next = $('li:first', this.tabs_msgs);
 
         next.click();
     },
     prev: function () {
-        var prev = kiwi.app.panels.active.tab.prev();
+        var prev = _kiwi.app.panels.active.tab.prev();
         if (!prev.length) prev = $('li:last', this.tabs_msgs);
 
         prev.click();
@@ -575,13 +689,13 @@ kiwi.view.Tabs = Backbone.View.extend({
 
 
 
-kiwi.view.TopicBar = Backbone.View.extend({
+_kiwi.view.TopicBar = Backbone.View.extend({
     events: {
         'keydown div': 'process'
     },
 
     initialize: function () {
-        kiwi.app.panels.bind('active', function (active_panel) {
+        _kiwi.app.panels.bind('active', function (active_panel) {
             // If it's a channel topic, update and make editable
             if (active_panel.isChannel()) {
                 this.setCurrentTopic(active_panel.get('topic') || '');
@@ -600,17 +714,15 @@ kiwi.view.TopicBar = Backbone.View.extend({
             inp_val = inp.text();
         
         // Only allow topic editing if this is a channel panel
-        if (!kiwi.app.panels.active.isChannel()) {
+        if (!_kiwi.app.panels.active.isChannel()) {
             return false;
         }
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            kiwi.gateway.topic(kiwi.app.panels.active.get('name'), inp_val);
+            _kiwi.gateway.topic(_kiwi.app.panels.active.get('name'), inp_val);
             return false;
         }
-        
-        return false;
     },
 
     setCurrentTopic: function (new_topic) {
@@ -623,7 +735,7 @@ kiwi.view.TopicBar = Backbone.View.extend({
 
 
 
-kiwi.view.ControlBox = Backbone.View.extend({
+_kiwi.view.ControlBox = Backbone.View.extend({
     events: {
         'keydown .inp': 'process',
         'click .nick': 'showNickChange'
@@ -641,13 +753,13 @@ kiwi.view.ControlBox = Backbone.View.extend({
         // Hold tab autocomplete data
         this.tabcomplete = {active: false, data: [], prefix: ''};
 
-        kiwi.gateway.bind('change:nick', function () {
+        _kiwi.gateway.bind('change:nick', function () {
             $('.nick', that.$el).text(this.get('nick'));
         });
     },
 
     showNickChange: function (ev) {
-        (new kiwi.view.NickChangeBox()).render();
+        (new _kiwi.view.NickChangeBox()).render();
     },
 
     process: function (ev) {
@@ -702,11 +814,11 @@ kiwi.view.ControlBox = Backbone.View.extend({
             break;
 
         case (ev.keyCode === 37 && meta):            // left
-            kiwi.app.panels.view.prev();
+            _kiwi.app.panels.view.prev();
             return false;
 
         case (ev.keyCode === 39 && meta):            // right
-            kiwi.app.panels.view.next();
+            _kiwi.app.panels.view.next();
             return false;
 
         case (ev.keyCode === 9):                     // tab
@@ -714,7 +826,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
                 var ac_data = [];
-                $.each(kiwi.app.panels.active.get('members').models, function (i, member) {
+                $.each(_kiwi.app.panels.active.get('members').models, function (i, member) {
                     if (!member) return;
                     ac_data.push(member.get('nick'));
                 });
@@ -773,13 +885,17 @@ kiwi.view.ControlBox = Backbone.View.extend({
             pre_processed;
         
         // The default command
-        if (command_raw[0] !== '/') {
-            command_raw = '/msg ' + kiwi.app.panels.active.get('name') + ' ' + command_raw;
+        if (command_raw[0] !== '/' || command_raw.substr(0, 2) === '//') {
+            // Remove any slash escaping at the start (ie. //)
+            command_raw = command_raw.replace(/^\/\//, '/');
+
+            // Prepend the default command
+            command_raw = '/msg ' + _kiwi.app.panels.active.get('name') + ' ' + command_raw;
         }
 
         // Process the raw command for any aliases
-        this.preprocessor.vars.server = kiwi.gateway.get('name');
-        this.preprocessor.vars.channel = kiwi.app.panels.active.get('name');
+        this.preprocessor.vars.server = _kiwi.gateway.get('name');
+        this.preprocessor.vars.channel = _kiwi.app.panels.active.get('name');
         this.preprocessor.vars.destination = this.preprocessor.vars.channel;
         command_raw = this.preprocessor.process(command_raw);
 
@@ -791,7 +907,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
         } else {
             // Default command
             command = 'msg';
-            params.unshift(kiwi.app.panels.active.get('name'));
+            params.unshift(_kiwi.app.panels.active.get('name'));
         }
 
         // Trigger the command events
@@ -809,7 +925,7 @@ kiwi.view.ControlBox = Backbone.View.extend({
 
 
 
-kiwi.view.StatusMessage = Backbone.View.extend({
+_kiwi.view.StatusMessage = Backbone.View.extend({
     initialize: function () {
         this.$el.hide();
 
@@ -824,7 +940,7 @@ kiwi.view.StatusMessage = Backbone.View.extend({
         opt.timeout = opt.timeout || 5000;
 
         this.$el.text(text).attr('class', opt.type);
-        this.$el.slideDown(kiwi.app.view.doLayout);
+        this.$el.slideDown(_kiwi.app.view.doLayout);
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
@@ -836,13 +952,13 @@ kiwi.view.StatusMessage = Backbone.View.extend({
         opt.timeout = opt.timeout || 5000;
 
         this.$el.html(text).attr('class', opt.type);
-        this.$el.slideDown(kiwi.app.view.doLayout);
+        this.$el.slideDown(_kiwi.app.view.doLayout);
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
 
     hide: function () {
-        this.$el.slideUp(kiwi.app.view.doLayout);
+        this.$el.slideUp(_kiwi.app.view.doLayout);
     },
 
     doTimeout: function (length) {
@@ -855,7 +971,7 @@ kiwi.view.StatusMessage = Backbone.View.extend({
 
 
 
-kiwi.view.ResizeHandler = Backbone.View.extend({
+_kiwi.view.ResizeHandler = Backbone.View.extend({
     events: {
         'mousedown': 'startDrag',
         'mouseup': 'stopDrag'
@@ -881,34 +997,36 @@ kiwi.view.ResizeHandler = Backbone.View.extend({
 
         this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2));
         $('#memberlists').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
-        kiwi.app.view.doLayout();
+        _kiwi.app.view.doLayout();
     }
 });
 
 
 
-kiwi.view.AppToolbar = Backbone.View.extend({
+_kiwi.view.AppToolbar = Backbone.View.extend({
     events: {
         'click .settings': 'clickSettings'
     },
 
     initialize: function () {
-        console.log('apptoolbar created', this.$el);
     },
 
     clickSettings: function (event) {
-        console.log('clicked');
-        kiwi.app.controlbox.processInput('/settings');
+        _kiwi.app.controlbox.processInput('/settings');
     }
 });
 
 
 
-kiwi.view.Application = Backbone.View.extend({
+_kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         $(window).resize(this.doLayout);
         $('#toolbar').resize(this.doLayout);
         $('#controlbox').resize(this.doLayout);
+
+        // Change the theme when the config is changed
+        _kiwi.global.settings.on('change:theme', this.updateTheme, this);
+        this.updateTheme(getQueryVariable('theme'));
 
         this.doLayout();
 
@@ -916,10 +1034,30 @@ kiwi.view.Application = Backbone.View.extend({
 
         // Confirmation require to leave the page
         window.onbeforeunload = function () {
-            if (kiwi.gateway.isConnected()) {
+            if (_kiwi.gateway.isConnected()) {
                 return 'This will close all KiwiIRC conversations. Are you sure you want to close this window?';
             }
         };
+    },
+
+
+
+    updateTheme: function (theme_name) {
+        // If called by the settings callback, get the correct new_value
+        if (theme_name === _kiwi.global.settings) {
+            theme_name = arguments[1];
+        }
+
+        // If we have no theme specified, get it from the settings
+        if (!theme_name) theme_name = _kiwi.global.settings.get('theme');
+
+        // Clear any current theme
+        this.$el.removeClass(function (i, css) {
+            return (css.match(/\btheme_\S+/g) || []).join(' ');
+        });
+
+        // Apply the new theme
+        this.$el.addClass('theme_' + (theme_name || 'relaxed'));
     },
 
 
@@ -940,6 +1078,7 @@ kiwi.view.Application = Backbone.View.extend({
 
 
     doLayout: function () {
+        var el_kiwi = $('#kiwi');
         var el_panels = $('#panels');
         var el_memberlists = $('#memberlists');
         var el_toolbar = $('#toolbar');
@@ -966,14 +1105,23 @@ kiwi.view.Application = Backbone.View.extend({
         el_memberlists.css(css_heights);
         el_resize_handle.css(css_heights);
 
+        // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
+        if (el_kiwi.outerWidth() < 400) {
+            el_kiwi.addClass('narrow');
+        } else {
+            el_kiwi.removeClass('narrow');
+        }
+
         // Set the panels width depending on the memberlist visibility
         if (el_memberlists.css('display') != 'none') {
-            // Handle + panels to the side of the memberlist
-            el_panels.css('right', el_memberlists.outerWidth(true) + el_resize_handle.outerWidth(true));
-            el_resize_handle.css('left', el_memberlists.position().left - el_resize_handle.outerWidth(true));
+            // Panels to the side of the memberlist
+            el_panels.css('right', el_memberlists.outerWidth(true));
+            // The resize handle sits overlapping the panels and memberlist
+            el_resize_handle.css('left', el_memberlists.position().left - (el_resize_handle.outerWidth(true) / 2));
         } else {
-            // Memberlist is hidden so handle + panels to the right edge
-            el_panels.css('right', el_resize_handle.outerWidth(true));
+            // Memberlist is hidden so panels to the right edge
+            el_panels.css('right', 0);
+            // And move the handle just out of sight to the right
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
     },
@@ -1074,5 +1222,134 @@ kiwi.view.Application = Backbone.View.extend({
             $('#controlbox').slideDown(0);
             this.doLayout();
         }
+    }
+});
+
+
+
+
+
+
+
+
+
+_kiwi.view.MediaMessage = Backbone.View.extend({
+    events: {
+        'click .media_close': 'close'
+    },
+
+    initialize: function () {
+        // Get the URL from the data
+        this.url = this.$el.data('url');
+    },
+
+    // Close the media content and remove it from display
+    close: function () {
+        var that = this;
+        this.$content.slideUp('fast', function () {
+            that.$content.remove();
+        });
+    },
+
+    // Open the media content within its wrapper
+    open: function () {
+        // Create the content div if we haven't already
+        if (!this.$content) {
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /><div class="content"></div></div>');
+            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || 'Not found :(');
+        }
+
+        // Now show the content if not already
+        if (!this.$content.is(':visible')) {
+            // Hide it first so the slideDown always plays
+            this.$content.hide();
+
+            // Add the media content and slide it into view
+            this.$el.append(this.$content);
+            this.$content.slideDown();
+        }
+    },
+
+
+
+    // Generate the media content for each recognised type
+    mediaTypes: {
+        twitter: function () {
+            var tweet_id = this.$el.data('tweetid');
+            var that = this;
+
+            $.getJSON('https://api.twitter.com/1/statuses/oembed.json?id=' + tweet_id + '&callback=?', function (data) {
+                that.$content.find('.content').html(data.html);
+            });
+
+            return $('<div>Loading tweet..</div>');
+        },
+
+
+        image: function () {
+            return $('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
+        },
+
+
+        reddit: function () {
+            var that = this;
+            var matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(this.url);
+
+            $.getJSON('http://www.' + matches[0] + '.json?jsonp=?', function (data) {
+                console.log('Loaded reddit data', data);
+                var post = data[0].data.children[0].data;
+                var thumb = '';
+
+                // Show a thumbnail if there is one
+                if (post.thumbnail) {
+                    //post.thumbnail = 'http://www.eurotunnel.com/uploadedImages/commercial/back-steps-icon-arrow.png';
+
+                    // Hide the thumbnail if an over_18 image
+                    if (post.over_18) {
+                        thumb = '<span class="thumbnail_nsfw" onclick="$(this).find(\'p\').remove(); $(this).find(\'img\').css(\'visibility\', \'visible\');">';
+                        thumb += '<p style="font-size:0.9em;line-height:1.2em;cursor:pointer;">Show<br />NSFW</p>';
+                        thumb += '<img src="' + post.thumbnail + '" class="thumbnail" style="visibility:hidden;" />';
+                        thumb += '</span>';
+                    } else {
+                        thumb = '<img src="' + post.thumbnail + '" class="thumbnail" />';
+                    }
+                }
+
+                // Build the template string up
+                var tmpl = '<div>' + thumb + '<b><%- title %></b><br />Posted by <%- author %>. &nbsp;&nbsp; ';
+                tmpl += '<i class="icon-arrow-up"></i> <%- ups %> &nbsp;&nbsp; <i class="icon-arrow-down"></i> <%- downs %><br />';
+                tmpl += '<%- num_comments %> comments made. <a href="http://www.reddit.com<%- permalink %>">View post</a></div>';
+
+                that.$content.find('.content').html(_.template(tmpl, post));
+            });
+
+            return $('<div>Loading Reddit thread..</div>');
+        }
+    }
+
+}, {
+
+    // Build the closed media HTML from a URL
+    buildHtml: function (url) {
+        var html = '', matches;
+
+        // Is it an image?
+        if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
+            html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        // Is it a tweet?
+        matches = (/https?:\/\/twitter.com\/([a-zA-Z0-9_]+)\/status\/([0-9]+)/ig).exec(url);
+        if (matches) {
+            html += '<span class="media twitter" data-type="twitter" data-url="' + url + '" data-tweetid="' + matches[2] + '" title="Show tweet information"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        // Is reddit?
+        matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(url);
+        if (matches) {
+            html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        return html;
     }
 });

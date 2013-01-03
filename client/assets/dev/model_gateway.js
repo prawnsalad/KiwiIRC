@@ -1,4 +1,4 @@
-kiwi.model.Gateway = function () {
+_kiwi.model.Gateway = function () {
 
     // Set to a reference to this object within initialize()
     var that = null;
@@ -62,12 +62,12 @@ kiwi.model.Gateway = function () {
         var resource;
 
         // Work out the resource URL for socket.io
-        if (kiwi.app.get('base_path').substr(0, 1) === '/') {
-            resource = kiwi.app.get('base_path');
+        if (_kiwi.app.get('base_path').substr(0, 1) === '/') {
+            resource = _kiwi.app.get('base_path');
             resource = resource.substr(1, resource.length-1);
             resource += '/transport';
         } else {
-            resource = kiwi.app.get('base_path') + '/transport';
+            resource = _kiwi.app.get('base_path') + '/transport';
         }
 
         this.socket = io.connect(this.get('kiwi_server'), {
@@ -85,12 +85,12 @@ kiwi.model.Gateway = function () {
         });
 
         this.socket.on('error', function (e) {
-            console.log("kiwi.gateway.socket.on('error')", {reason: e});
+            console.log("_kiwi.gateway.socket.on('error')", {reason: e});
             that.trigger("connect_fail", {reason: e});
         });
 
         this.socket.on('connecting', function (transport_type) {
-            console.log("kiwi.gateway.socket.on('connecting')");
+            console.log("_kiwi.gateway.socket.on('connecting')");
             that.trigger("connecting");
         });
 
@@ -104,9 +104,9 @@ kiwi.model.Gateway = function () {
             this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
                 if (!err) {
                     that.server_num = server_num;
-                    console.log("kiwi.gateway.socket.on('connect')");
+                    console.log("_kiwi.gateway.socket.on('connect')");
                 } else {
-                    console.log("kiwi.gateway.socket.on('error')", {reason: err});
+                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
                     callback(err);
                 }
             });
@@ -126,20 +126,20 @@ kiwi.model.Gateway = function () {
 
         this.socket.on('disconnect', function () {
             that.trigger("disconnect", {});
-            console.log("kiwi.gateway.socket.on('disconnect')");
+            console.log("_kiwi.gateway.socket.on('disconnect')");
         });
 
         this.socket.on('close', function () {
-            console.log("kiwi.gateway.socket.on('close')");
+            console.log("_kiwi.gateway.socket.on('close')");
         });
 
         this.socket.on('reconnecting', function (reconnectionDelay, reconnectionAttempts) {
-            console.log("kiwi.gateway.socket.on('reconnecting')");
+            console.log("_kiwi.gateway.socket.on('reconnecting')");
             that.trigger("reconnecting", {delay: reconnectionDelay, attempts: reconnectionAttempts});
         });
 
         this.socket.on('reconnect_failed', function () {
-            console.log("kiwi.gateway.socket.on('reconnect_failed')");
+            console.log("_kiwi.gateway.socket.on('reconnect_failed')");
         });
     };
 
@@ -197,6 +197,7 @@ kiwi.model.Gateway = function () {
                         break;
                     }
                 });
+                that.set('cap', data.cap);
                 break;
 
             case 'connect':
@@ -210,15 +211,15 @@ kiwi.model.Gateway = function () {
                 break;
             /*
             case 'sync':
-                if (kiwi.gateway.onSync && kiwi.gateway.syncing) {
-                    kiwi.gateway.syncing = false;
-                    kiwi.gateway.onSync(item);
+                if (_kiwi.gateway.onSync && _kiwi.gateway.syncing) {
+                    _kiwi.gateway.syncing = false;
+                    _kiwi.gateway.onSync(item);
                 }
                 break;
             */
 
             case 'kiwi':
-                this.emit('kiwi.' + data.namespace, data.data);
+                this.emit('_kiwi.' + data.namespace, data.data);
                 break;
             }
         }

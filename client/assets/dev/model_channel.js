@@ -1,13 +1,13 @@
 // TODO: Channel modes
 // TODO: Listen to gateway events for anythign related to this channel
-kiwi.model.Channel = kiwi.model.Panel.extend({
+_kiwi.model.Channel = _kiwi.model.Panel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;
 
-        this.view = new kiwi.view.Channel({"model": this, "name": name});
+        this.view = new _kiwi.view.Channel({"model": this, "name": name});
         this.set({
-            "members": new kiwi.model.MemberList(),
+            "members": new _kiwi.model.MemberList(),
             "name": name,
             "scrollback": [],
             "topic": ""
@@ -15,10 +15,20 @@ kiwi.model.Channel = kiwi.model.Panel.extend({
 
         members = this.get("members");
         members.bind("add", function (member) {
+            var show_message = _kiwi.global.settings.get('show_joins_parts');
+            if (show_message === false) {
+                return;
+            }
+            
             this.addMsg(' ', '== ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 
         members.bind("remove", function (member, members, options) {
+            var show_message = _kiwi.global.settings.get('show_joins_parts');
+            if (show_message === false) {
+                return;
+            }
+
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
             if (options.type === 'quit') {

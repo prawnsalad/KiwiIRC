@@ -1,15 +1,23 @@
 {
-  "name": "KiwiIRC",
-  "version": "0.5.0",
+  "name": "kiwiirc",
+  "version": "0.5.3",
+  "description": "A hand-crafted webirc server",
+  "homepage": "http://www.kiwiirc.com/",
+  "preferGlobal": "true",
+  "bin": { "kiwiirc": "./kiwi" },
+  "repository" : {
+        "type": "git",
+        "url": "https://github.com/prawnsalad/KiwiIRC.git"
+    },
   "scripts": {
-    "postinstall": "node client/dev/build.js"
+    "postinstall": "node client/assets/dev/build.js"
   },
   "dependencies": {
     "node-static": "0.5.9",
     "uglify-js": "1.2.3",
-    "socket.io": "0.8.7",
-    "underscore": "1.3.3",
+    "socket.io": "0.9.13",
+    "range_check": "0.0.1",
+    "lodash": "0.9.1",
     "daemonize2": "0.4.0-rc.5"
-  },
-  "private": true
+  }
 }

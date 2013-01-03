@@ -1,31 +1,44 @@
-# Installation
+### Kiwi IRC - A hand-crafted IRC client
+Kiwi IRC is a fully featured IRC client that can be extended to suit almost any needs.
+Using the web application is extremly simple even without any IRC knowledge as all the common needs are built directly into the UI.
 
-* Download the Kiwi source or clone the git repository:
+For more information see http://kiwiirc.com or an example of the application can be found at http://kiwiirc.com/client/
 
-    $ git clone git@github.com:prawnsalad/KiwiIRC.git
 
-* Install the dependancies:
+### Installation
 
-    $ npm install
+1. Download the Kiwi source or clone the git repository:
+
+    `$ git clone git@github.com:prawnsalad/KiwiIRC.git && cd KiwiIRC`
+
+2. Install the dependancies and make sure the client code is built:
     
-* If you're using SSL, create your certificate and key, place it in the server folder.
+    `$ npm install`
 
-* Edit the configuration file as needed:
+    `$ node client/assets/dev/build.js`
 
-    $ nano server/config.json
-    
-# Running 
-From the source folder:
+3. Copy and edit the configuration file as needed:
 
-    $ node server/kiwi.js
+    `$ cp config.example.js config.js`
 
-# Bugs
+    `$ nano config.js`
+
+
+### Running
+From the source folder: `$ ./kiwi start`
+
+You can also run kiwi in the foreground to see any output by using the `-f` flag. Eg: `$ ./kiwi -f`
+
+Open your new Kiwi instance in your browser. By default: http://localhost:7778/
+
+
+### Bugs
 Report bugs using the issue tracker on github: https://github.com/prawnsalad/KiwiIRC/issues
 
-# Licence
+### Licence
 GNU Affero
 http://www.gnu.org/licenses/agpl.html
 
 
-# Thanks to
+### Thanks to
 The KiwiIRC logo credited to Michael Drahony (www.drahony.com)

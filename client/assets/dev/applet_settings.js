@@ -6,26 +6,51 @@
 
         initialize: function (options) {
             this.$el = $($('#tmpl_applet_settings').html());
+
+            // Incase any settings change while we have this open, update them
+            _kiwi.global.settings.on('change', this.loadSettings, this);
+
+            // Now actually show the current settings
+            this.loadSettings();
+
+
         },
         
+
+        loadSettings: function () {
+            var settings = _kiwi.global.settings;
+
+            this.$el.find('.setting-theme').val(settings.get('theme') || 'relaxed');
+            this.$el.find('.setting-scrollback').val(settings.get('scrollback') || '250');
+
+            if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
+                this.$el.find('.setting-show_joins_parts').attr('checked', true);
+            } else {
+                this.$el.find('.setting-show_joins_parts').attr('checked', false);
+            }
+        },
+
+
         saveSettings: function () {
-            var theme = $('.theme', this.$el).val();
+            var settings = _kiwi.global.settings;
 
-            // Clear any current theme
-            kiwi.app.view.$el.removeClass(function (i, css) {
-                return (css.match (/\btheme_\S+/g) || []).join(' ');
-            });
+            settings.set('theme', $('.setting-theme', this.$el).val());
+            settings.set('scrollback', $('.setting-scrollback', this.$el).val());
+            settings.set('show_joins_parts', $('.setting-show_joins_parts', this.$el).is(':checked'));
 
-            if (theme) kiwi.app.view.$el.addClass('theme_' + theme);
+            settings.save();
         }
     });
 
 
 
-    kiwi.applets.Settings = Backbone.Model.extend({
+    var Applet = Backbone.Model.extend({
         initialize: function () {
             this.set('title', 'Settings');
             this.view = new View();
         }
     });
+
+
+    _kiwi.model.Applet.register('kiwi_settings', Applet);
 })();
