@@ -27,18 +27,19 @@ var listeners = {
         // be sent from the IRCd to the target without being truncated.
         var wrap_length = 350,
             trunc_msg,
-            trunc_length;
+            trunc_length,
+            message = args.msg;
             
          if (args.target && (args.msg)) {
             trunc_length = wrap_length - args.target.length;
             // If the message is longer than wrap_length, send the message in chunks
-            while (args.msg.length > trunc_length) {
-                trunc_msg = args.msg.substr(0, trunc_length);
-                args.msg = args.msg.substr(trunc_length - 1);
+            while (message.length > trunc_length) {
+                trunc_msg = message.substr(0, trunc_length);
+                message = message.substr(trunc_length - 1);
                 irc_connection.write('PRIVMSG ' + args.target + ' :' + trunc_msg);
             }
             // Send the remaining text
-            irc_connection.write('PRIVMSG ' + args.target + ' :' + args.msg, callback);
+            irc_connection.write('PRIVMSG ' + args.target + ' :' + message, callback);
         }
     },
     
@@ -111,18 +112,19 @@ var listeners = {
         // be sent from the IRCd to the target without being truncated.
         var wrap_length = 350,
             trunc_msg,
-            trunc_length;
+            trunc_length,
+            message = args.msg;
             
          if (args.target && (args.msg)) {
             trunc_length = wrap_length - args.target.length;
             // If the message is longer than wrap_length, send the message in chunks
-            while (args.msg.length > trunc_length) {
-                trunc_msg = args.msg.substr(0, trunc_length);
-                args.msg = args.msg.substr(trunc_length - 1);
+            while (message.length > trunc_length) {
+                trunc_msg = message.substr(0, trunc_length);
+                message = message.substr(trunc_length - 1);
                 irc_connection.write('NOTICE ' + args.target + ' :' + trunc_msg);
             }
             // Send the remaining text
-            irc_connection.write('NOTICE ' + args.target + ' :' + args.msg, callback);
+            irc_connection.write('NOTICE ' + args.target + ' :' + message, callback);
         }
     },
 
