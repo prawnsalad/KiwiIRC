@@ -22,8 +22,24 @@ ClientCommands.prototype.run = function (command, args, irc_connection, callback
 
 var listeners = {
     PRIVMSG: function (args, irc_connection, callback) {
+        // Maximum length of target + message we can send to the IRC server is 500 characters
+        // but we need to leave extra room for the sender prefix so the entire message can
+        // be sent from the IRCd to the target without being truncated.
+        var wrap_length = 350,
+            trunc_msg,
+            trunc_length,
+            message = args.msg;
+            
          if (args.target && (args.msg)) {
-            irc_connection.write('PRIVMSG ' + args.target + ' :' + args.msg, callback);
+            trunc_length = wrap_length - args.target.length;
+            // If the message is longer than wrap_length, send the message in chunks
+            while (message.length > trunc_length) {
+                trunc_msg = message.substr(0, trunc_length);
+                message = message.substr(trunc_length - 1);
+                irc_connection.write('PRIVMSG ' + args.target + ' :' + trunc_msg);
+            }
+            // Send the remaining text
+            irc_connection.write('PRIVMSG ' + args.target + ' :' + message, callback);
         }
     },
     
@@ -91,8 +107,24 @@ var listeners = {
 
 
     NOTICE: function (args, irc_connection, callback) {
-        if ((args.target) && (args.msg)) {
-            irc_connection.write('NOTICE ' + args.target + ' :' + args.msg, callback);
+        // Maximum length of target + message we can send to the IRC server is 500 characters
+        // but we need to leave extra room for the sender prefix so the entire message can
+        // be sent from the IRCd to the target without being truncated.
+        var wrap_length = 350,
+            trunc_msg,
+            trunc_length,
+            message = args.msg;
+            
+         if (args.target && (args.msg)) {
+            trunc_length = wrap_length - args.target.length;
+            // If the message is longer than wrap_length, send the message in chunks
+            while (message.length > trunc_length) {
+                trunc_msg = message.substr(0, trunc_length);
+                message = message.substr(trunc_length - 1);
+                irc_connection.write('NOTICE ' + args.target + ' :' + trunc_msg);
+            }
+            // Send the remaining text
+            irc_connection.write('NOTICE ' + args.target + ' :' + message, callback);
         }
     },
 
