@@ -46,8 +46,13 @@ var listeners = {
         // be sent from the IRCd to the target without being truncated.
 
         var blocks = truncateString(args.msg, 350);
-        blocks.forEach(function (block) {
-            irc_connection.write('PRIVMSG ' + args.target + ' :' + block);
+        blocks.forEach(function (block, idx) {
+            // Apply the callback on the last message only
+            var cb = (idx === blocks.length - 1) ?
+                callback :
+                undefined;
+
+            irc_connection.write('PRIVMSG ' + args.target + ' :' + block, cb);
         });
     },
     
@@ -120,8 +125,13 @@ var listeners = {
         // be sent from the IRCd to the target without being truncated.
 
         var blocks = truncateString(args.msg, 350);
-        blocks.forEach(function (block) {
-            irc_connection.write('NOTICE ' + args.target + ' :' + block);
+        blocks.forEach(function (block, idx) {
+            // Apply the callback on the last message only
+            var cb = (idx === blocks.length - 1) ?
+                callback :
+                undefined;
+
+            irc_connection.write('NOTICE ' + args.target + ' :' + block, cb);
         });
     },
 
