@@ -35,7 +35,7 @@ var listeners = {
             // If the message is longer than wrap_length, send the message in chunks
             while (message.length > trunc_length) {
                 trunc_msg = message.substr(0, trunc_length);
-                message = message.substr(trunc_length - 1);
+                message = message.substr(trunc_length);
                 irc_connection.write('PRIVMSG ' + args.target + ' :' + trunc_msg);
             }
             // Send the remaining text
@@ -120,7 +120,7 @@ var listeners = {
             // If the message is longer than wrap_length, send the message in chunks
             while (message.length > trunc_length) {
                 trunc_msg = message.substr(0, trunc_length);
-                message = message.substr(trunc_length - 1);
+                message = message.substr(trunc_length);
                 irc_connection.write('NOTICE ' + args.target + ' :' + trunc_msg);
             }
             // Send the remaining text
