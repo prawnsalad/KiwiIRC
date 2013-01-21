@@ -20,27 +20,35 @@ ClientCommands.prototype.run = function (command, args, irc_connection, callback
 
 
 
+/**
+ * Truncate a string into blocks of a set size
+ */
+function truncateString(str, block_size) {
+    block_size = block_size || 350;
+
+    var blocks = [],
+        current_pos;
+
+    for (current_pos = 0; current_pos < str.length; current_pos = current_pos + block_size) {
+        blocks.push(str.substr(current_pos, block_size));
+    }
+
+    return blocks;
+}
+
+
+
+
 var listeners = {
     PRIVMSG: function (args, irc_connection, callback) {
         // Maximum length of target + message we can send to the IRC server is 500 characters
         // but we need to leave extra room for the sender prefix so the entire message can
         // be sent from the IRCd to the target without being truncated.
-        var wrap_length = 350,
-            trunc_msg,
-            trunc_length,
-            message = args.msg;
-            
-         if (args.target && (args.msg)) {
-            trunc_length = wrap_length - args.target.length;
-            // If the message is longer than wrap_length, send the message in chunks
-            while (message.length > trunc_length) {
-                trunc_msg = message.substr(0, trunc_length);
-                message = message.substr(trunc_length);
-                irc_connection.write('PRIVMSG ' + args.target + ' :' + trunc_msg);
-            }
-            // Send the remaining text
-            irc_connection.write('PRIVMSG ' + args.target + ' :' + message, callback);
-        }
+
+        var blocks = truncateString(args.msg, 350);
+        blocks.forEach(function (block) {
+            irc_connection.write('PRIVMSG ' + args.target + ' :' + block);
+        });
     },
     
 
@@ -110,22 +118,11 @@ var listeners = {
         // Maximum length of target + message we can send to the IRC server is 500 characters
         // but we need to leave extra room for the sender prefix so the entire message can
         // be sent from the IRCd to the target without being truncated.
-        var wrap_length = 350,
-            trunc_msg,
-            trunc_length,
-            message = args.msg;
-            
-         if (args.target && (args.msg)) {
-            trunc_length = wrap_length - args.target.length;
-            // If the message is longer than wrap_length, send the message in chunks
-            while (message.length > trunc_length) {
-                trunc_msg = message.substr(0, trunc_length);
-                message = message.substr(trunc_length);
-                irc_connection.write('NOTICE ' + args.target + ' :' + trunc_msg);
-            }
-            // Send the remaining text
-            irc_connection.write('NOTICE ' + args.target + ' :' + message, callback);
-        }
+
+        var blocks = truncateString(args.msg, 350);
+        blocks.forEach(function (block) {
+            irc_connection.write('NOTICE ' + args.target + ' :' + block);
+        });
     },
 
 
