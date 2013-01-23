@@ -19,7 +19,8 @@ function IrcChannel(irc_connection, name) {
 
 	bindEvent('privmsg', this.onMsg);
 	bindEvent('notice', this.onNotice);
-	bindEvent('ctcp', this.onCtcp);
+	bindEvent('ctcp_request', this.onCtcpRequest);
+    bindEvent('ctcp_response', this.onCtcpResponse);
 
     bindEvent('nicklist', this.onNicklist);
     bindEvent('nicklistEnd', this.onNicklistEnd);
@@ -104,8 +105,20 @@ IrcChannel.prototype.onNotice = function (event) {
 };
 
 
-IrcChannel.prototype.onCtcp = function (event) {
+IrcChannel.prototype.onCtcpRequest = function (event) {
     this.clientEvent('ctcp_request', {
+        nick: event.nick,
+        ident: event.ident,
+        hostname: event.hostname,
+        target: event.target,
+        type: event.type,
+        msg: event.msg
+    });
+};
+
+
+IrcChannel.prototype.onCtcpResponse = function (event) {
+    this.clientEvent('ctcp_response', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,

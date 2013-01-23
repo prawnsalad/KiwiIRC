@@ -198,19 +198,22 @@ var listeners = {
             }
 
             member_list.push({nick: member, modes: modes});
-            if (i++ >= 50) {
-                that.client.sendIrcCommand('userlist', {server: that.con_num, users: member_list, channel: command.params[2]});
-                member_list = [];
-                i = 0;
-            }
         });
-        if (i > 0) {
-            this.client.sendIrcCommand('userlist', {server: this.con_num, users: member_list, channel: command.params[2]});
-        }
+
+        that.irc_connection.emit('channel:' + command.params[2] + ':userlist', {
+            users: member_list,
+            channel: command.params[2]
+        });
     },
+
+    
     'RPL_ENDOFNAMES': function (command) {
-        this.client.sendIrcCommand('userlist_end', {server: this.con_num, channel: command.params[1]});
+        that.irc_connection.emit('channel:' + command.params[1] + ':userlist_end', {
+            channel: command.params[1]
+        });
     },
+
+
     'RPL_BANLIST': function (command) {
         this.client.sendIrcCommand('banlist', {server: this.con_num, channel: command.params[1], banned: command.params[2], banned_by: command.params[3], banned_at: command.params[4]});
     },
@@ -229,6 +232,8 @@ var listeners = {
     'PING': function (command) {
         this.irc_connection.write('PONG ' + command.trailing);
     },
+
+
     'JOIN': function (command) {
         var channel;
         if (typeof command.trailing === 'string' && command.trailing !== '') {
@@ -237,23 +242,70 @@ var listeners = {
             channel = command.params[0];
         }
         
-        this.irc_connection.emit('channel:' + channel + ':join');
+        this.irc_connection.emit('channel:' + channel + ':join', {
+            nick: command.nick,
+            ident: command.ident,
+            hostname: command.hostname,
+            channel: channel
+        });
     },
+
+
     'PART': function (command) {
-        this.client.sendIrcCommand('part', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], message: command.trailing});
+        this.irc_connection.emit('channel:' + command.params[0] + ':part', {
+            nick: command.nick,
+            ident: command.ident,
+            hostname: command.hostname,
+            channel: command.params[0],
+            message: command.trailing
+        });
     },
+
+
     'KICK': function (command) {
-        this.client.sendIrcCommand('kick', {server: this.con_num, kicked: command.params[1], nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], message: command.trailing});
+        this.irc_connection.emit('channel:' + command.params[0] + ':kick', {
+            kicked: command.params[1],
+            nick: command.nick,
+            ident: command.ident,
+            hostname: command.hostname,
+            channel: command.params[0],
+            message: command.trailing
+        });
     },
+
+
     'QUIT': function (command) {
-        this.client.sendIrcCommand('quit', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, message: command.trailing});
+        this.irc_connection.emit('user:' + command.nick + ':quit', {
+            nick: command.nick,
+            ident: command.ident,
+            hostname: command.hostname,
+            message: command.trailing
+        });
     },
+
+
     'NOTICE': function (command) {
+        var namespace;
+
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             // It's a CTCP response
-            this.client.sendIrcCommand('ctcp_response', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(1, command.trailing.length - 2)});
+            namespace = (command.params[0] == this.irc_connection.nick) ? 'user' : 'channel';
+            this.irc_connection.emit(namespace + ':' + command.params[0] + ':ctcp_response', {
+                nick: command.nick,
+                ident: command.ident,
+                hostname: command.hostname,
+                channel: command.params[0],
+                msg: command.trailing.substr(1, command.trailing.length - 2)
+            });
         } else {
-            this.client.sendIrcCommand('notice', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, target: command.params[0], msg: command.trailing});
+            namespace = (command.params[0] == this.irc_connection.nick) ? 'user' : 'channel';
+            this.irc_connection.emit(namespace + ':' + command.params[0] + ':notice', {
+                nick: command.nick,
+                ident: command.ident,
+                hostname: command.hostname,
+                target: command.params[0],
+                msg: command.trailing
+            });
         }
     },
     'NICK': function (command) {
@@ -341,7 +393,8 @@ var listeners = {
             } else if (command.trailing.substr(1, 10) === 'CLIENTINFO') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));
             } else {
-                this.irc_connection.emit('channel:' + command.params[0] + ':ctcp', {
+                namespace = (command.target == this.irc_connection.nick) ? 'user' : 'channel';
+                this.irc_connection.emit(namespace + ':' + command.nick + ':ctcp_request', {
                     nick: command.nick,
                     ident: command.ident,
                     hostname: command.hostname,
@@ -351,13 +404,15 @@ var listeners = {
                 });
             }
         } else {
-            this.irc_connection.emit('channel:' + command.params[0] + ':privmsg', {
+            // A message to a user (private message) or to a channel?
+            namespace = (command.target == this.irc_connection.nick) ? 'user' : 'channel';
+            this.irc_connection.emit(namespace + ':' + command.nick + ':privmsg', {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,
                 channel: command.params[0],
                 msg: command.trailing
-            });
+            );
         }
     },
     'CAP': function (command) {
