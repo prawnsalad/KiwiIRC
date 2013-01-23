@@ -1,4 +1,5 @@
-var IrcConnection = require('./connection.js');
+var util = require('util'),
+    IrcConnection = require('./connection.js');
 
 var State = function (client, save_state) {
     events.EventEmitter.call(this);

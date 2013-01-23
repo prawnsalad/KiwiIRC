@@ -237,11 +237,7 @@ var listeners = {
             channel = command.params[0];
         }
         
-        this.client.sendIrcCommand('join', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: channel});
-        
-        if (command.nick === this.nick) {
-            this.irc_connection.write('NAMES ' + channel);
-        }
+        this.irc_connection.emit('channel:' + channel + ':join');
     },
     'PART': function (command) {
         this.client.sendIrcCommand('part', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], message: command.trailing});
@@ -345,8 +341,7 @@ var listeners = {
             } else if (command.trailing.substr(1, 10) === 'CLIENTINFO') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));
             } else {
-                this.client.sendIrcCommand('ctcp_request', {
-                    server: this.con_num,
+                this.irc_connection.emit('channel:' + command.params[0] + ':ctcp', {
                     nick: command.nick,
                     ident: command.ident,
                     hostname: command.hostname,
@@ -356,8 +351,13 @@ var listeners = {
                 });
             }
         } else {
-            //{nick: msg.nick, ident: msg.ident, hostname: msg.hostname, channel: msg.params.trim(), msg: msg.trailing}
-            this.client.sendIrcCommand('msg', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing});
+            this.irc_connection.emit('channel:' + command.params[0] + ':privmsg', {
+                nick: command.nick,
+                ident: command.ident,
+                hostname: command.hostname,
+                channel: command.params[0],
+                msg: command.trailing
+            });
         }
     },
     'CAP': function (command) {
