@@ -2,6 +2,7 @@ var util             = require('util'),
     events           = require('events'),
     crypto           = require('crypto'),
     _                = require('lodash'),
+    State            = require('./irc/state.js');
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     IrcCommands      = require('./irc/commands.js'),
     ClientCommands   = require('./clientcommands.js');
@@ -23,8 +24,7 @@ var Client = function (websocket) {
         .update(Math.floor(Math.random() * 100000).toString())
         .digest('hex');
     
-    this.irc_connections = [];
-    this.next_connection = 0;
+    this.state = new State(this);
     
     this.buffer = {
         list: [],
@@ -78,12 +78,12 @@ function handleClientMessage(msg, callback) {
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
         return (typeof callback === 'function') ? callback('server not specified') : undefined;
-    } else if (!this.irc_connections[msg.server]) {
+    } else if (!this.state.irc_connections[msg.server]) {
         return (typeof callback === 'function') ? callback('not connected to server') : undefined;
     }
 
     // The server this command is directed to
-    server = this.irc_connections[msg.server];
+    server = this.state.irc_connections[msg.server];
 
     if (typeof callback !== 'function') {
         callback = null;
@@ -115,7 +115,7 @@ function kiwiCommand(command, callback) {
                 var con;
 
                 if (global.config.restrict_server) {
-                    con = new IrcConnection(
+                    this.state.connect(
                         global.config.restrict_server,
                         global.config.restrict_server_port,
                         global.config.restrict_server_ssl,
@@ -124,7 +124,7 @@ function kiwiCommand(command, callback) {
                         global.config.restrict_server_password);
 
                 } else {
-                    con = new IrcConnection(
+                    this.state.connect(
                         command.hostname,
                         command.port,
                         command.ssl,
@@ -132,28 +132,6 @@ function kiwiCommand(command, callback) {
                         {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
                         command.password);
                 }
-
-                var con_num = this.next_connection++;
-                this.irc_connections[con_num] = con;
-                con.con_num = con_num;
-
-                var irc_commands = new IrcCommands(con, con_num, this);
-                irc_commands.bindEvents();
-                
-                con.on('connected', function () {
-                    return callback(null, con_num);
-                });
-                
-                con.on('error', function (err) {
-                    console.log('irc_connection error (' + command.hostname + '):', err);
-                    // TODO: Once multiple servers implemented, specify which server failed
-                    //that.sendKiwiCommand('error', {server: con_num, error: err});
-                    return callback(err.code, null);
-                });
-                
-                con.on('close', function () {
-                    that.irc_connections[con_num] = null;
-                });
             } else {
                 return callback('Hostname, port and nickname must be specified');
             }
@@ -166,13 +144,7 @@ function kiwiCommand(command, callback) {
 
 // Websocket has disconnected, so quit all the IRC connections
 function websocketDisconnect() {
-    _.each(this.irc_connections, function (irc_connection, i, cons) {
-        if (irc_connection) {
-            irc_connection.end('QUIT :' + (global.config.quit_message || ''));
-            irc_connection.dispose();
-            cons[i] = null;
-        }
-    });
+    this.emit('disconnect');
     
     this.dispose();
 }
