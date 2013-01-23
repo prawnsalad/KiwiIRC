@@ -135,6 +135,7 @@ function kiwiCommand(command, callback) {
 
                 var con_num = this.next_connection++;
                 this.irc_connections[con_num] = con;
+                con.con_num = con_num;
 
                 var irc_commands = new IrcCommands(con, con_num, this);
                 irc_commands.bindEvents();
