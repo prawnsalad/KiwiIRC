@@ -36,7 +36,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
             global.config.restrict_server_port,
             global.config.restrict_server_ssl,
             command.nick,
-            address,
+            user,
             global.config.restrict_server_password);
 
     } else {
@@ -45,7 +45,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
             command.port,
             command.ssl,
             command.nick,
-            address,
+            user,
             command.password);
     }
     
