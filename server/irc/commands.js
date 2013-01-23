@@ -318,7 +318,11 @@ var listeners = {
         var channel = command.params[0],
             topic = command.trailing || '';
 
-        this.client.sendIrcCommand('topic', {server: this.con_num, nick: command.nick, channel: channel, topic: topic});
+        this.irc_connection.emit('channel:' + channel + ':topic', {
+            nick: command.nick,
+            channel: channel,
+            topic: topic
+        });
     },
     'MODE': function (command) {                
         var chanmodes = this.irc_connection.options.CHANMODES || [],

@@ -22,6 +22,8 @@ function IrcChannel(irc_connection, name) {
 	bindEvent('ctcp_request', this.onCtcpRequest);
     bindEvent('ctcp_response', this.onCtcpResponse);
 
+    bindEvent('topic', this.onTopic)
+
     bindEvent('nicklist', this.onNicklist);
     bindEvent('nicklistEnd', this.onNicklistEnd);
 }
@@ -61,7 +63,7 @@ IrcChannel.prototype.onPart = function (event) {
 
 IrcChannel.prototype.onKick = function (event) {
     this.client.sendIrcCommand('kick', {
-        kicked: event.params[1],  // Nick of the kicked
+        kicked: event.kicked,  // Nick of the kicked
         nick: event.nick, // Nick of the kicker
         ident: event.ident,
         hostname: event.hostname,
@@ -83,7 +85,6 @@ IrcChannel.prototype.onQuit = function (event) {
 
 IrcChannel.prototype.onMsg = function (event) {
     this.clientEvent('msg', {
-        server: this.con_num,
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -95,7 +96,6 @@ IrcChannel.prototype.onMsg = function (event) {
 
 IrcChannel.prototype.onNotice = function (event) {
     this.clientEvent('msg', {
-        server: this.con_num,
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -142,6 +142,15 @@ IrcChannel.prototype.onNicklistEnd = function (event) {
     this.clientEvent('userlist_end', {
         users: event.users,
         channel: this.name
+    });
+};
+
+
+IrcChannel.prototype.onTopic = function (event) {
+    this.clientEvent('topic', {
+        nick: event.nick,
+        channel: this.name,
+        topic: event.topic
     });
 };
 
