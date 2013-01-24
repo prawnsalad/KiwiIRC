@@ -47,7 +47,7 @@ IrcChannel.prototype.unbindEvents = function () {
     });
 };
 
-IrcUser.prototype.onNick = function (event) {
+function onNick(event) {
     this.irc_connection.clientEvent('nick', {
         nick: event.nick,
         ident: event.ident,
@@ -56,14 +56,14 @@ IrcUser.prototype.onNick = function (event) {
     });
 };
 
-IrcUser.prototype.onAway = function (event) {
+function onAway(event) {
     this.irc_connection.clientEvent('away', {
         nick: event.nick,
         msg: event.msg
     });
 };
 
-IrcUser.prototype.onQuit = function (event) {
+function onQuit(event) {
     this.irc_connection.clientEvent('quit', {
         nick: event.nick,
         ident: event.ident,
@@ -72,7 +72,7 @@ IrcUser.prototype.onQuit = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisUser = function (event) {
+function onWhoisUser(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         ident: event.ident,
@@ -82,7 +82,7 @@ IrcUser.prototype.onWhoisUser = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisServer = function (event) {
+function onWhoisServer(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         irc_server: event.irc_server,
@@ -90,7 +90,7 @@ IrcUser.prototype.onWhoisServer = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisOperator = function (event) {
+function onWhoisOperator(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: event.msg,
@@ -98,7 +98,7 @@ IrcUser.prototype.onWhoisOperator = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisChannels = function (event) {
+function onWhoisChannels(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         chans: event.chans,
@@ -106,7 +106,7 @@ IrcUser.prototype.onWhoisChannels = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisModes = function (event) {
+function onWhoisModes(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: event.msg,
@@ -114,7 +114,7 @@ IrcUser.prototype.onWhoisModes = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisUser = function (event) {
+function onWhoisUser(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         idle: event.idle,
@@ -123,7 +123,7 @@ IrcUser.prototype.onWhoisUser = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisRegNick = function (event) {
+function onWhoisRegNick(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: event.msg,
@@ -131,7 +131,7 @@ IrcUser.prototype.onWhoisRegNick = function (event) {
     });
 };
 
-IrcUser.prototype.onWhoisEnd = function (event) {
+function onWhoisEnd(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: event.msg,
@@ -139,7 +139,7 @@ IrcUser.prototype.onWhoisEnd = function (event) {
     });
 };
 
-IrcUser.prototype.onNotice = function (event) {
+function onNotice(event) {
     this.irc_connection.clientEvent('notice', {
         nick: event.nick,
         ident: event.ident,
@@ -149,7 +149,7 @@ IrcUser.prototype.onNotice = function (event) {
     });
 };
 
-IrcUser.prototype.onCtcpResponse = function (event) {
+function onCtcpResponse(event) {
     this.irc_connection.clientEvent('ctcp_response', {
         nick: event.nick,
         ident: event.ident,
@@ -159,7 +159,7 @@ IrcUser.prototype.onCtcpResponse = function (event) {
     });
 };
 
-IrcUser.prototype.onPrivmsg = function (event) {
+function onPrivmsg(event) {
     this.irc_connection.clientEvent('privmsg', {
         nick: event.nick,
         ident: event.ident,
@@ -169,7 +169,7 @@ IrcUser.prototype.onPrivmsg = function (event) {
     });
 };
 
-IrcUser.prototype.onCtcpRequest = function (event) {
+function onCtcpRequest(event) {
     this.irc_connection.clientEvent('ctcp_request', {
         nick: event.nick,
         ident: event.ident,
