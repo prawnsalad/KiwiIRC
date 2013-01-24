@@ -5,7 +5,7 @@ var IrcUser = function (irc_connection, nick) {
 
 module.exports = IrcUser;
 
-IrcUser.prototype.bindEvents = function() {
+IrcUser.prototype.bindEvents = function () {
     var that = this;
 
     // If we havent generated an event listing yet, do so now
@@ -39,7 +39,7 @@ IrcUser.prototype.bindEvents = function() {
 };
 
 
-IrcChannel.prototype.unbindEvents = function () {
+IrcUser.prototype.unbindEvents = function () {
     this.irc_events.forEach(function(fn, event_name, irc_events) {
         if (irc_events[event_name].bound_fn) {
             this.irc_connection.removeListener('user:' + this.nick + ':' + event_name, irc_events[event_name].bound_fn);
