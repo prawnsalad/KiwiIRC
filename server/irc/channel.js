@@ -1,68 +1,91 @@
 
 function IrcChannel(irc_connection, name) {
-    var that = this;
+    this.irc_connection = irc_connection;
+    this.name = name;
 
-	this.irc_connection = irc_connection;
-	this.name = name;
-
-	// Helper for binding listeners
-	function bindEvent(event, fn) {
-		irc_connection.on('channel:' + name + ':' + event, function () {
-            fn.apply(that, arguments);
-        });
-	}
-
-	bindEvent('join', this.onJoin);
-	bindEvent('part', this.onPart);
-	bindEvent('kick', this.onKick);
-	bindEvent('quit', this.onQuit);
-
-	bindEvent('privmsg', this.onMsg);
-	bindEvent('notice', this.onNotice);
-	bindEvent('ctcp_request', this.onCtcpRequest);
-    bindEvent('ctcp_response', this.onCtcpResponse);
-
-    bindEvent('topic', this.onTopic)
-
-    bindEvent('nicklist', this.onNicklist);
-    bindEvent('nicklistEnd', this.onNicklistEnd);
+    this.members = [];
 }
 
 
-IrcChannel.prototype.clientEvent = function (event_name, event) {
-	event.server = this.irc_connection.con_num;
-	this.irc_connection.state.sendIrcCommand(event_name, event);
+IrcChannel.prototype.dispose = function (){
+    this.unbindEvents();
+    this.irc_connection = undefined;
 };
 
 
-IrcChannel.prototype.onJoin = function (event) {
-	this.clientEvent('join', {
-		channel: this.name,
-		nick: event.nick,
-		ident: event.ident,
-		hostname: event.hostname,
-	});
+IrcChannel.prototype.bindEvents = function() {
+    var that = this;
 
-	// If we've just joined this channel then requesr=t get a nick list
+    // If we havent generated an event listing yet, do so now
+    if (!this.irc_events) {
+        this.irc_events = {
+            join: onJoin,
+            part: onPart,
+            kick: onKick,
+            quit: onQuit,
+            privmsg: onMsg,
+            notice: onNotice,
+            ctcp_request: onCtcpRequest,
+            ctcp_response: onCtcpResponse,
+            topic: onTopic,
+            nicklist: onNicklist,
+            nicklistEnd: onNicklistEnd
+        };
+    }
+
+    this.irc_events.forEach(function(fn, event_name, irc_events){
+        // Bind the event to `that` context, storing it with the event listing
+        if (!irc_events[event_name].bound_fn) {
+            irc_events[event_name].bound_fn = fn.bind(that);
+        }
+
+        this.irc_connection.on(event_name, irc_events[event_name].bound_fn);
+    });
+};
+
+
+IrcChannel.prototype.unbindEvents = function() {
+    this.irc_events.forEach(function(fn, event_name, irc_events){
+        if (irc_events[event_name].bound_fn) {
+            this.irc_connection.removeListener(event_name, irc_events[event_name].bound_fn);
+        }
+    });
+};
+
+
+
+
+
+function onJoin(event) {
+    this.irc_connection.sendIrcCommand('join', {
+        channel: this.name,
+        nick: event.nick,
+        ident: event.ident,
+        hostname: event.hostname,
+    });
+
+    // If we've just joined this channel then request get a nick list
     if (event.nick === this.irc_connection.nick) {
         this.irc_connection.write('NAMES ' + channel);
     }
 };
 
 
-IrcChannel.prototype.onPart = function (event) {
-    this.clientEvent('part', {
+function onPart(event) {
+    this.irc_connection.sendIrcCommand('part', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
         channel: this.name,
         message: event.message
     });
+
+    this.dispose();
 };
 
 
-IrcChannel.prototype.onKick = function (event) {
-    this.client.sendIrcCommand('kick', {
+function onKick(event) {
+    this.irc_connection.sendIrcCommand('kick', {
         kicked: event.kicked,  // Nick of the kicked
         nick: event.nick, // Nick of the kicker
         ident: event.ident,
@@ -70,21 +93,25 @@ IrcChannel.prototype.onKick = function (event) {
         channel: this.name,
         message: event.message
     });
+
+    this.dispose();
 };
 
 
-IrcChannel.prototype.onQuit = function (event) {
-    this.clientEvent('quit', {
+function onQuit(event) {
+    this.irc_connection.sendIrcCommand('quit', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
         message: event.message
     });
+
+    this.dispose();
 };
 
 
-IrcChannel.prototype.onMsg = function (event) {
-    this.clientEvent('msg', {
+function onMsg(event) {
+    this.irc_connection.sendIrcCommand('msg', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -94,8 +121,8 @@ IrcChannel.prototype.onMsg = function (event) {
 };
 
 
-IrcChannel.prototype.onNotice = function (event) {
-    this.clientEvent('msg', {
+function onNotice(event) {
+    this.irc_connection.sendIrcCommand('msg', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -105,8 +132,8 @@ IrcChannel.prototype.onNotice = function (event) {
 };
 
 
-IrcChannel.prototype.onCtcpRequest = function (event) {
-    this.clientEvent('ctcp_request', {
+function onCtcpRequest(event) {
+    this.irc_connection.sendIrcCommand('ctcp_request', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -117,8 +144,8 @@ IrcChannel.prototype.onCtcpRequest = function (event) {
 };
 
 
-IrcChannel.prototype.onCtcpResponse = function (event) {
-    this.clientEvent('ctcp_response', {
+function onCtcpResponse(event) {
+    this.irc_connection.sendIrcCommand('ctcp_response', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -130,24 +157,24 @@ IrcChannel.prototype.onCtcpResponse = function (event) {
 
 
 // TODO: Split event.users into batches of 50
-IrcChannel.prototype.onNicklist = function (event) {
-    this.clientEvent('userlist', {
+function onNicklist(event) {
+    this.irc_connection.sendIrcCommand('userlist', {
         users: event.users,
         channel: this.name
     });
 };
 
 
-IrcChannel.prototype.onNicklistEnd = function (event) {
-    this.clientEvent('userlist_end', {
+function onNicklistEnd(event) {
+    this.irc_connection.sendIrcCommand('userlist_end', {
         users: event.users,
         channel: this.name
     });
 };
 
 
-IrcChannel.prototype.onTopic = function (event) {
-    this.clientEvent('topic', {
+function onTopic(event) {
+    this.irc_connection.sendIrcCommand('topic', {
         nick: event.nick,
         channel: this.name,
         topic: event.topic
@@ -163,18 +190,18 @@ user:event
 user:*
 
 Server disconnected:
-	server:disconnect
-	server:*
+    server:disconnect
+    server:*
 
 Joining channel #kiwiirc:
-	channel:#kiwiirc:join
-	channel:*:join
+    channel:#kiwiirc:join
+    channel:*:join
 
 Channel message:
-	channel:#kiwiirc:privmsg
-	channel:*:privmsg
+    channel:#kiwiirc:privmsg
+    channel:*:privmsg
 
 Private message:
-	user:privmsg
-	user:*
+    user:privmsg
+    user:*
 */
