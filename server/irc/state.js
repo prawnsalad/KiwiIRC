@@ -1,5 +1,7 @@
-var util = require('util'),
-    IrcConnection = require('./connection.js');
+var util            = require('util'),
+    events          = require('events'),
+    _               = require('lodash'),
+    IrcConnection   = require('./connection.js').IrcConnection;
 
 var State = function (client, save_state) {
     events.EventEmitter.call(this);
@@ -36,18 +38,20 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
             global.config.restrict_server,
             global.config.restrict_server_port,
             global.config.restrict_server_ssl,
-            command.nick,
+            nick,
             user,
-            global.config.restrict_server_password);
+            global.config.restrict_server_password,
+            this);
 
     } else {
         con = new IrcConnection(
-            command.hostname,
-            command.port,
-            command.ssl,
-            command.nick,
+            hostname,
+            port,
+            ssl,
+            nick,
             user,
-            command.password);
+            pass,
+            this);
     }
     
     con_num = this.next_connection++;
@@ -61,7 +65,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     });
     
     con.on('error', function (err) {
-        console.log('irc_connection error (' + command.hostname + '):', err);
+        console.log('irc_connection error (' + hostname + '):', err);
         return callback(err.code, {server: con_num, error: err});
     });
 

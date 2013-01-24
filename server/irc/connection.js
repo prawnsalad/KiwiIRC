@@ -5,7 +5,7 @@ var net     = require('net'),
     _       = require('lodash');
 
 
-var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
+var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     var that = this;
     events.EventEmitter.call(this);
     
@@ -23,6 +23,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass) {
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.]/, '');
     this.password = pass;
+    
+    // State object
+    this.state = state;
 
     // IRC connection information
     this.irc_host = {hostname: hostname, port: port};

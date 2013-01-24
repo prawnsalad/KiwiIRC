@@ -416,7 +416,7 @@ var listeners = {
                 hostname: command.hostname,
                 channel: command.params[0],
                 msg: command.trailing
-            );
+            });
         }
     },
     'CAP': function (command) {
