@@ -117,32 +117,55 @@ var listeners = {
         this.client.sendIrcCommand('options', {server: this.con_num, options: this.irc_connection.options, cap: this.irc_connection.cap.enabled});
     },
     'RPL_ENDOFWHOIS': function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: true});
+        this.irc_connection.emit('user:' + command.params[1] + ':endofwhois', {
+            nick: command.params[1],
+            msg: command.trailing
+        });
     },
     'RPL_WHOISUSER': function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], ident: command.params[2], host: command.params[3], msg: command.trailing, end: false});
+        this.irc_connection.emit('user:' + command.params[1] + ':whoisuser', {
+            nick: command.params[1],
+            ident: command.params[2],
+            host: command.params[3],
+            msg: command.trailing
+        });
     },
     'RPL_WHOISSERVER': function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], irc_server: command.params[2], end: false});
+        this.irc_connection.emit('user:' + command.params[1] + ':whoisserver', {
+            nick: command.params[1],
+            irc_server: command.params[2]
+        });
     },
     'RPL_WHOISOPERATOR': function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: false});
+        this.irc_connection.emit('user:' + command.params[1] + ':whoisoperator', {
+            nick: command.params[1],
+            msg: command.trailing
+        });
     },
     'RPL_WHOISCHANNELS':       function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], chans: command.trailing, end: false});
+        this.irc_connection.emit('user:' + command.params[1] + ':whoischannels', {
+            nick: command.params[1],
+            chans: commnd.trailing
+        });
     },
     'RPL_WHOISMODES': function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: false});
+        this.irc_connection.emit('user:' + command.params[1] + ':whoismodes', {
+            nick: command.params[1],
+            msg: command.trailing
+        });
     },
     'RPL_WHOISIDLE': function (command) {
-        if (command.params[3]) {
-            this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], idle: command.params[2], logon: command.params[3], end: false});
-        } else {
-            this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], idle: command.params[2], end: false});
-        }
+        this.irc_connection.emit('user:' + command.params[1] + ':whoisidle', {
+            nick: command.params[1],
+            idle: command.params[2],
+            logon: command.params[3] || undefined
+        });
     },
     'RPL_WHOISREGNICK': function (command) {
-        this.client.sendIrcCommand('whois', {server: this.con_num, nick: command.params[1], msg: command.trailing, end: false});
+        this.irc_connection.emit('user:' + command.params[1] + ':whoisregnick', {
+            nick: command.params[1],
+            msg: command.trailing
+        });
     },
     'RPL_LISTSTART': function (command) {
         this.client.sendIrcCommand('list_start', {server: this.con_num});
@@ -309,7 +332,12 @@ var listeners = {
         }
     },
     'NICK': function (command) {
-        this.client.sendIrcCommand('nick', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, newnick: command.trailing || command.params[0]});
+        this.irc_connection.emit('user:' + nick + ':nick', {
+            nick: command.nick,
+            ident: command.ident,
+            hostname: command.hostname,
+            newnick: command.trailing || command.params[0]
+        });
     },
     'TOPIC': function (command) {
         // If we don't have an associated channel, no need to continue
@@ -489,7 +517,10 @@ var listeners = {
         }
     },
     'AWAY': function (command) {
-        this.client.sendIrcCommand('away', {server: this.con_num, nick: command.nick, msg: command.trailing});
+        this.irc_connection.emit('user:' + command.nick + ':away', {
+            nick: command.nick,
+            msg: command.trailing
+        });
     },
     'RPL_SASLAUTHENTICATED': function (command) {
         this.irc_connection.write('CAP END');
