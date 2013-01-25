@@ -220,7 +220,7 @@ var listeners = {
             member_list.push({nick: member, modes: modes});
         });
 
-        that.irc_connection.emit('channel:' + command.params[2] + ':userlist', {
+        this.irc_connection.emit('channel:' + command.params[2] + ':userlist', {
             users: member_list,
             channel: command.params[2]
         });
@@ -228,7 +228,7 @@ var listeners = {
 
     
     'RPL_ENDOFNAMES': function (command) {
-        that.irc_connection.emit('channel:' + command.params[1] + ':userlist_end', {
+        this.irc_connection.emit('channel:' + command.params[1] + ':userlist_end', {
             channel: command.params[1]
         });
     },
