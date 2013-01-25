@@ -111,7 +111,13 @@ IrcConnection.prototype.connect = function () {
     });
 };
 
-
+/**
+ * Send an event to the client
+ */
+IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
+    data.server = this.con_num;
+    this.state.sendIrcCommand(event_name, data, callback);
+};
 
 /**
  * Write a line of data to the IRCd

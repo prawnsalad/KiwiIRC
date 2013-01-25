@@ -43,7 +43,7 @@ IrcChannel.prototype.irc_events = {
 
 
 function onJoin(event) {
-    this.irc_connection.sendIrcCommand('join', {
+    this.irc_connection.clientEvent('join', {
         channel: this.name,
         nick: event.nick,
         ident: event.ident,
@@ -58,7 +58,7 @@ function onJoin(event) {
 
 
 function onPart(event) {
-    this.irc_connection.sendIrcCommand('part', {
+    this.irc_connection.clientEvent('part', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -71,7 +71,7 @@ function onPart(event) {
 
 
 function onKick(event) {
-    this.irc_connection.sendIrcCommand('kick', {
+    this.irc_connection.clientEvent('kick', {
         kicked: event.kicked,  // Nick of the kicked
         nick: event.nick, // Nick of the kicker
         ident: event.ident,
@@ -85,7 +85,7 @@ function onKick(event) {
 
 
 function onQuit(event) {
-    this.irc_connection.sendIrcCommand('quit', {
+    this.irc_connection.clientEvent('quit', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -97,7 +97,7 @@ function onQuit(event) {
 
 
 function onMsg(event) {
-    this.irc_connection.sendIrcCommand('msg', {
+    this.irc_connection.clientEvent('msg', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -108,7 +108,7 @@ function onMsg(event) {
 
 
 function onNotice(event) {
-    this.irc_connection.sendIrcCommand('msg', {
+    this.irc_connection.clientEvent('msg', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -119,7 +119,7 @@ function onNotice(event) {
 
 
 function onCtcpRequest(event) {
-    this.irc_connection.sendIrcCommand('ctcp_request', {
+    this.irc_connection.clientEvent('ctcp_request', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -131,7 +131,7 @@ function onCtcpRequest(event) {
 
 
 function onCtcpResponse(event) {
-    this.irc_connection.sendIrcCommand('ctcp_response', {
+    this.irc_connection.clientEvent('ctcp_response', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
@@ -144,7 +144,7 @@ function onCtcpResponse(event) {
 
 // TODO: Split event.users into batches of 50
 function onNicklist(event) {
-    this.irc_connection.sendIrcCommand('userlist', {
+    this.irc_connection.clientEvent('userlist', {
         users: event.users,
         channel: this.name
     });
@@ -152,7 +152,7 @@ function onNicklist(event) {
 
 
 function onNicklistEnd(event) {
-    this.irc_connection.sendIrcCommand('userlist_end', {
+    this.irc_connection.clientEvent('userlist_end', {
         users: event.users,
         channel: this.name
     });
@@ -160,7 +160,7 @@ function onNicklistEnd(event) {
 
 
 function onTopic(event) {
-    this.irc_connection.sendIrcCommand('topic', {
+    this.irc_connection.clientEvent('topic', {
         nick: event.nick,
         channel: this.name,
         topic: event.topic
