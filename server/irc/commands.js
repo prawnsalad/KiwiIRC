@@ -180,16 +180,15 @@ var listeners = {
         this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_end', {});
     },
     'RPL_LIST': function (command) {
-            this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_channel', {
-                channel: command.params[1],
-                num_users: parseint(command.params[2], 10),
-                topic: command.trailing
-            });
-        }
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_channel', {
+            channel: command.params[1],
+            num_users: parseint(command.params[2], 10),
+            topic: command.trailing
+        });
     },
     'RPL_MOTD': function (command) {
         this.irc_connection.emit('server:'  + this.irc_connection.irc_host.hostname + ':motd', {
-            motd: command.trailing + '\n';
+            motd: command.trailing + '\n'
         });
     },
     'RPL_MOTDSTART': function (command) {
