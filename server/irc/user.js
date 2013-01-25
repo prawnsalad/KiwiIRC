@@ -27,7 +27,8 @@ IrcUser.prototype.irc_events = {
     notice:         onNotice,
     ctcp_response:  onCtcpResponse,
     privmsg:        onPrivmsg,
-    ctcp_request:   onCtcpRequest
+    ctcp_request:   onCtcpRequest,
+    mode:           onMode
 };
 
 function onNick(event) {
@@ -160,5 +161,13 @@ function onCtcpRequest(event) {
         target: event.target,
         type: event.type,
         msg: event.msg
+    });
+};
+
+function onMode(event) {
+    this.irc_connection.clientEvent('mode', {
+        target: event.target,
+        nick: event.nick,
+        modes: event.modes
     });
 };

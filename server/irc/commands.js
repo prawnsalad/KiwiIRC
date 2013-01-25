@@ -372,7 +372,7 @@ var listeners = {
             prefixes = this.irc_connection.options.PREFIX || [],
             always_param = (chanmodes[0] || '').concat((chanmodes[1] || '')),
             modes = [],
-            has_param, i, j, add;
+            has_param, i, j, add, event;
         
         prefixes = _.reduce(prefixes, function (list, prefix) {
             list.push(prefix.mode);
@@ -416,8 +416,9 @@ var listeners = {
             }
         }
         
-        this.client.sendIrcCommand('mode', {
-            server: this.con_num,
+        event = (_.contains(this.irc_connection.options.CHANTYPES, command.params[0][0]) ? 'channel' : 'user') + command.params[0] + ':mode';
+        
+        this.irc_connection.emit(event, {
             target: command.params[0],
             nick: command.nick || command.prefix || '',
             modes: modes

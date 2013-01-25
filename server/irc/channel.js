@@ -37,7 +37,8 @@ IrcChannel.prototype.irc_events = {
     nicklistEnd:    onNicklistEnd,
     banlist:        onBanList,
     banlist_end:    onBanListEnd,
-    topicsetby:     onTopicSetby
+    topicsetby:     onTopicSetby,
+    mode:           onMode
 };
 
 
@@ -191,6 +192,14 @@ function onTopicSetBy(event) {
         nick: event.nick,
         channel: event.channel,
         when: event.when
+    });
+};
+
+function onMode(event) {
+    this.irc_connection.clientEvent('mode', {
+        target: event.target,
+        nick: event.nick,
+        modes: event.modes
     });
 };
 
