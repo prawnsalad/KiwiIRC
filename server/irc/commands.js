@@ -416,7 +416,7 @@ var listeners = {
             }
         }
         
-        event = (_.contains(this.irc_connection.options.CHANTYPES, command.params[0][0]) ? 'channel' : 'user') + command.params[0] + ':mode';
+        event = (_.contains(this.irc_connection.options.CHANTYPES, command.params[0][0]) ? 'channel:' : 'user:') + command.params[0] + ':mode';
         
         this.irc_connection.emit(event, {
             target: command.params[0],
