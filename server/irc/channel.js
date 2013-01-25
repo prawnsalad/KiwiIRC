@@ -1,45 +1,43 @@
 var util    = require('util'),
-    Binder  = require('./binder.js');
+    EventBinder  = require('./eventbinder.js');
 
 function IrcChannel(irc_connection, name) {
     this.irc_connection = irc_connection;
     this.name = name;
 
-    this.scope = 'channel:' + name;
-    Binder.call(this);
-    
     this.members = [];
     this.ban_list_buffer = [];
+
+    // Listen for events on the IRC connection
+    this.irc_events = {
+        join:           onJoin,
+        part:           onPart,
+        kick:           onKick,
+        quit:           onQuit,
+        privmsg:        onMsg,
+        notice:         onNotice,
+        ctcp_request:   onCtcpRequest,
+        ctcp_response:  onCtcpResponse,
+        topic:          onTopic,
+        nicklist:       onNicklist,
+        nicklistEnd:    onNicklistEnd,
+        banlist:        onBanList,
+        banlist_end:    onBanListEnd,
+        topicsetby:     onTopicSetby,
+        mode:           onMode
+    };
+    EventBinder.bindIrcEvents('channel:' + this.name, this.irc_events, this, irc_connection);
 }
 
-util.inherits(IrcChannel, Binder);
 
 module.exports = IrcChannel;
 
 
 IrcChannel.prototype.dispose = function (){
-    this.unbindEvents();
+    EventBinder.unbindIrcEvents('channel:' + this.name, this.irc_events);
     this.irc_connection = undefined;
 };
 
-
-IrcChannel.prototype.irc_events = {
-    join:           onJoin,
-    part:           onPart,
-    kick:           onKick,
-    quit:           onQuit,
-    privmsg:        onMsg,
-    notice:         onNotice,
-    ctcp_request:   onCtcpRequest,
-    ctcp_response:  onCtcpResponse,
-    topic:          onTopic,
-    nicklist:       onNicklist,
-    nicklistEnd:    onNicklistEnd,
-    banlist:        onBanList,
-    banlist_end:    onBanListEnd,
-    topicsetby:     onTopicSetby,
-    mode:           onMode
-};
 
 
 function onJoin(event) {

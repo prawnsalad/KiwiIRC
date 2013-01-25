@@ -1,35 +1,39 @@
 var util    = require('util'),
-    Binder  = require('./binder.js');
+    EventBinder  = require('./eventbinder.js');
 
 var IrcUser = function (irc_connection, nick) {
     this.irc_connection = irc_connection;
     this.nick = nick;
     
-    this.scope = 'user:' + nick;
-    Binder.call(this);
+    this.irc_events = {
+        nick:           onNick,
+        away:           onAway,
+        quit:           onKick,
+        whoisuser:      onWhoisUser,
+        whoisoperator:  onWhoisOperator,
+        whoischannels:  onWhoisChannels,
+        whoismodes:     onWhoisModes,
+        whoisidle:      onWhoisIdle,
+        whoisregnick:   onRegNick,
+        endofwhois:     onEhoisEnd,
+        notice:         onNotice,
+        ctcp_response:  onCtcpResponse,
+        privmsg:        onPrivmsg,
+        ctcp_request:   onCtcpRequest,
+        mode:           onMode
+    };
+    EventBinder.bindIrcEvents('user:' + this.nick, this.irc_events, this, irc_connection);
 };
 
-util.inherits(IrcUser, Binder);
 
 module.exports = IrcUser;
 
-IrcUser.prototype.irc_events = {
-    nick:           onNick,
-    away:           onAway,
-    quit:           onKick,
-    whoisuser:      onWhoisUser,
-    whoisoperator:  onWhoisOperator,
-    whoischannels:  onWhoisChannels,
-    whoismodes:     onWhoisModes,
-    whoisidle:      onWhoisIdle,
-    whoisregnick:   onRegNick,
-    endofwhois:     onEhoisEnd,
-    notice:         onNotice,
-    ctcp_response:  onCtcpResponse,
-    privmsg:        onPrivmsg,
-    ctcp_request:   onCtcpRequest,
-    mode:           onMode
+
+IrcUser.prototype.dispose = function (){
+    EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events);
+    this.irc_connection = undefined;
 };
+
 
 function onNick(event) {
     this.irc_connection.clientEvent('nick', {
