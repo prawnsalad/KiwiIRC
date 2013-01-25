@@ -4,6 +4,7 @@ function IrcChannel(irc_connection, name) {
     this.name = name;
 
     this.members = [];
+    this.ban_list_buffer = [];
 }
 
 
@@ -29,7 +30,10 @@ IrcChannel.prototype.bindEvents = function() {
             ctcp_response: onCtcpResponse,
             topic: onTopic,
             nicklist: onNicklist,
-            nicklistEnd: onNicklistEnd
+            nicklistEnd: onNicklistEnd,
+            banlist: onBanList,
+            banlist_end: onBanListEnd,
+            topicsetby: onTopicSetby
         };
     }
 
@@ -180,6 +184,35 @@ function onTopic(event) {
         topic: event.topic
     });
 };
+
+
+function onBanList(event) {
+    this.ban_list_buffer.push(event);
+};
+
+function onBanListEnd(event) {
+    var that = this;
+    this.ban_list_buffer.forEach(function (ban) {
+        that.irc_connection.clientEvent('banlist', ban);
+    });
+    this.ban_list_buffer = [];
+};
+
+function onTopic(event) {
+    this.irc_connection.clientEvent('topic', {
+        channel: event.channel,
+        topic: event.topic
+    });
+};
+
+function onTopicSetBy(event) {
+    this.irc_connection.clientEvent('topicsetby', {
+        nick: event.nick,
+        channel: event.channel,
+        when: event.when
+    });
+};
+
 
 /*
 server:event

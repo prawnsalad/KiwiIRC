@@ -238,19 +238,36 @@ var listeners = {
 
 
     'RPL_BANLIST': function (command) {
-        this.client.sendIrcCommand('banlist', {server: this.con_num, channel: command.params[1], banned: command.params[2], banned_by: command.params[3], banned_at: command.params[4]});
+        this.irc_connection.emit('channel:' + command.params[1] + ':banlist', {
+            channel: command.params[1],
+            banned: command.params[2],
+            banned_by: command.params[3],
+            banned_at: command.params[4]
+        });
     },
     'RPL_ENDOFBANLIST': function (command) {
-        this.client.sendIrcCommand('banlist_end', {server: this.con_num, channel: command.params[1]});
+        this.irc_connection.emit('channel:' + command.params[1] + ':banlist_end', {
+            channel: commands.params[1]
+        });
     },
     'RPL_TOPIC': function (command) {
-        this.client.sendIrcCommand('topic', {server: this.con_num, nick: '', channel: command.params[1], topic: command.trailing});
+        this.irc_connection.emit('channel:' + command.params[1] + ':topic', {
+            channel: command.params[1],
+            topic: command.trailing
+        });
     },
     'RPL_NOTOPIC': function (command) {
-        this.client.sendIrcCommand('topic', {server: this.con_num, nick: '', channel: command.params[1], topic: ''});
+        this.irc_connection.emit('channel:' + command.params[1] + ':topic', {
+            channel: command.params[1],
+            topic: ''
+        });
     },
     'RPL_TOPICWHOTIME': function (command) {
-        this.client.sendIrcCommand('topicsetby', {server: this.con_num, nick: command.params[2], channel: command.params[1], when: command.params[3]});
+        this.irc_connection.emit('channel:' + command.params[1] + ':topicsetby', {
+            nick: command.params[2],
+            channel: command.params[1],
+            when: command.params[3]
+        });
     },
     'PING': function (command) {
         this.irc_connection.write('PONG ' + command.trailing);
