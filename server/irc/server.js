@@ -1,61 +1,45 @@
+var util    = require('util'),
+    Binder  = require('./binder.js');
+
 var IrcServer = function (irc_connection, host, port) {
     this.irc_connection = irc_connection;
     this.host = host;
     this.port = port;
     
+    this.scope = 'server:' + host;
+    
+    Binder.call(this);
+    
     this.list_buffer = [];
     this.motd_buffer = '';
 };
 
+util.inherits(IrcServer, Binder);
+
 module.exports = IrcServer;
 
-IrcServer.prototype.bindEvents = function () {
-    var that = this;
-
-    // If we havent generated an event listing yet, do so now
-    if (!this.irc_events) {
-        this.irc_events = {
-            connect:                onConnect,
-            options:                onOptions,
-            list_start:             onListStart,
-            list_channel:           onListChannel,
-            list_end:               onListEnd,
-            motd_start:             onMotdStart,
-            motd:                   onMotd,
-            motd_end:               onMotdEnd,
-            error:                  onError,
-            channel_redirect:       onChannelRedirect,
-            no_such_nick:           onNoSuchNick,
-            cannot_send_to_channel: onChannotSendToChan,
-            too_many_channels:      onTooManyChannels,
-            user_not_in_channel:    onUserNotInChannel,
-            not_on_channel:         onNotOnChannel,
-            channel_is_full:        onChannelisFull,
-            invite_only_channel:    onInviteOnlyChannel,
-            banned_from_channel:    onBannedFromChannel,
-            bad_channel_key:        onBadChannelKey,
-            chanop_privs_needed:    onChanopPrivsNeeded,
-            nickname_in_use:        onNicknameInUse
-        };
-    }
-
-    this.irc_events.forEach(function (fn, event_name, irc_events) {
-        // Bind the event to `that` context, storing it with the event listing
-        if (!irc_events[event_name].bound_fn) {
-            irc_events[event_name].bound_fn = fn.bind(that);
-        }
-
-        this.irc_connection.on('server:' + this.host + ':' + event_name, irc_events[event_name].bound_fn);
-    });
-};
-
-
-IrcServer.prototype.unbindEvents = function () {
-    this.irc_events.forEach(function(fn, event_name, irc_events) {
-        if (irc_events[event_name].bound_fn) {
-            this.irc_connection.removeListener('server:' + this.host + ':' + event_name, irc_events[event_name].bound_fn);
-        }
-    });
+IrcServer.prototype.irc_events = {
+    connect:                onConnect,
+    options:                onOptions,
+    list_start:             onListStart,
+    list_channel:           onListChannel,
+    list_end:               onListEnd,
+    motd_start:             onMotdStart,
+    motd:                   onMotd,
+    motd_end:               onMotdEnd,
+    error:                  onError,
+    channel_redirect:       onChannelRedirect,
+    no_such_nick:           onNoSuchNick,
+    cannot_send_to_channel: onChannotSendToChan,
+    too_many_channels:      onTooManyChannels,
+    user_not_in_channel:    onUserNotInChannel,
+    not_on_channel:         onNotOnChannel,
+    channel_is_full:        onChannelisFull,
+    invite_only_channel:    onInviteOnlyChannel,
+    banned_from_channel:    onBannedFromChannel,
+    bad_channel_key:        onBadChannelKey,
+    chanop_privs_needed:    onChanopPrivsNeeded,
+    nickname_in_use:        onNicknameInUse
 };
 
 function onConnect(event) {

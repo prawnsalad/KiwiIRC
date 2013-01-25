@@ -1,11 +1,20 @@
+var util    = require('util'),
+    Binder  = require('./binder.js');
 
 function IrcChannel(irc_connection, name) {
     this.irc_connection = irc_connection;
     this.name = name;
 
+    this.scope = 'channel:' + name;
+    Binder.call(this);
+    
     this.members = [];
     this.ban_list_buffer = [];
 }
+
+util.inherits(IrcChannel, Binder);
+
+module.exports = IrcChannel;
 
 
 IrcChannel.prototype.dispose = function (){
@@ -14,50 +23,22 @@ IrcChannel.prototype.dispose = function (){
 };
 
 
-IrcChannel.prototype.bindEvents = function() {
-    var that = this;
-
-    // If we havent generated an event listing yet, do so now
-    if (!this.irc_events) {
-        this.irc_events = {
-            join: onJoin,
-            part: onPart,
-            kick: onKick,
-            quit: onQuit,
-            privmsg: onMsg,
-            notice: onNotice,
-            ctcp_request: onCtcpRequest,
-            ctcp_response: onCtcpResponse,
-            topic: onTopic,
-            nicklist: onNicklist,
-            nicklistEnd: onNicklistEnd,
-            banlist: onBanList,
-            banlist_end: onBanListEnd,
-            topicsetby: onTopicSetby
-        };
-    }
-
-    this.irc_events.forEach(function(fn, event_name, irc_events){
-        // Bind the event to `that` context, storing it with the event listing
-        if (!irc_events[event_name].bound_fn) {
-            irc_events[event_name].bound_fn = fn.bind(that);
-        }
-
-        this.irc_connection.on(event_name, irc_events[event_name].bound_fn);
-    });
+IrcChannel.prototype.irc_events = {
+    join:           onJoin,
+    part:           onPart,
+    kick:           onKick,
+    quit:           onQuit,
+    privmsg:        onMsg,
+    notice:         onNotice,
+    ctcp_request:   onCtcpRequest,
+    ctcp_response:  onCtcpResponse,
+    topic:          onTopic,
+    nicklist:       onNicklist,
+    nicklistEnd:    onNicklistEnd,
+    banlist:        onBanList,
+    banlist_end:    onBanListEnd,
+    topicsetby:     onTopicSetby
 };
-
-
-IrcChannel.prototype.unbindEvents = function() {
-    this.irc_events.forEach(function(fn, event_name, irc_events){
-        if (irc_events[event_name].bound_fn) {
-            this.irc_connection.removeListener(event_name, irc_events[event_name].bound_fn);
-        }
-    });
-};
-
-
-
 
 
 function onJoin(event) {
