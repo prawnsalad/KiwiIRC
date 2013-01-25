@@ -87,7 +87,9 @@ var listeners = {
         var nick =  command.params[0];
         this.irc_connection.registered = true;
         this.cap_negotation = false;
-        this.client.sendIrcCommand('connect', {server: this.con_num, nick: nick});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':connect', {
+            nick: nick
+        });
     },
     'RPL_ISUPPORT': function (command) {
         var options, i, option, matches, j;
@@ -114,7 +116,10 @@ var listeners = {
                 }
             }
         }
-        this.client.sendIrcCommand('options', {server: this.con_num, options: this.irc_connection.options, cap: this.irc_connection.cap.enabled});
+        this.irc_connection.emit('server:'  + this.irc_connection.irc_host.hostname + ':options', {
+            options: this.irc_connection.options,
+            cap: this.irc_connection.cap.enabled
+        });
     },
     'RPL_ENDOFWHOIS': function (command) {
         this.irc_connection.emit('user:' + command.params[1] + ':endofwhois', {
@@ -168,37 +173,30 @@ var listeners = {
         });
     },
     'RPL_LISTSTART': function (command) {
-        this.client.sendIrcCommand('list_start', {server: this.con_num});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_start', {});
         this.client.buffer.list = [];
     },
     'RPL_LISTEND': function (command) {
-        if (this.client.buffer.list.length > 0) {
-            this.client.buffer.list = _.sortBy(this.client.buffer.list, function (channel) {
-                return channel.num_users;
-            });
-            this.client.sendIrcCommand('list_channel', {server: this.con_num, chans: this.client.buffer.list});
-            this.client.buffer.list = [];
-        }
-        this.client.sendIrcCommand('list_end', {server: this.con_num});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_end', {});
     },
     'RPL_LIST': function (command) {
-        this.client.buffer.list.push({server: this.con_num, channel: command.params[1], num_users: parseInt(command.params[2], 10), topic: command.trailing});
-        if (this.client.buffer.list.length > 200){
-            this.client.buffer.list = _.sortBy(this.client.buffer.list, function (channel) {
-                return channel.num_users;
+            this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_channel', {
+                channel: command.params[1],
+                num_users: parseint(command.params[2], 10),
+                topic: command.trailing
             });
-            this.client.sendIrcCommand('list_channel', {server: this.con_num, chans: this.client.buffer.list});
-            this.client.buffer.list = [];
         }
     },
     'RPL_MOTD': function (command) {
-        this.client.buffer.motd += command.trailing + '\n';
+        this.irc_connection.emit('server:'  + this.irc_connection.irc_host.hostname + ':motd', {
+            motd: command.trailing + '\n';
+        });
     },
     'RPL_MOTDSTART': function (command) {
-        this.client.buffer.motd = '';
+        this.irc_connection.emit('server:'  + this.irc_connection.irc_host.hostname + ':motd_start', {});
     },
     'RPL_ENDOFMOTD': function (command) {
-        this.client.sendIrcCommand('motd', {server: this.con_num, msg: this.client.buffer.motd});
+        this.irc_connection.emit('server:'  + this.irc_connection.irc_host.hostname + ':motd_end', {});
     },
     'RPL_NAMEREPLY': function (command) {
         var members = command.trailing.split(' ');
@@ -561,43 +559,82 @@ var listeners = {
         // noop
     },
     'ERROR': function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'error', reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':error', {
+            reason: command.trailing
+        });
     },
     ERR_LINKCHANNEL: function (command) {
-        this.client.sendIrcCommand('channel_redirect', {server: this.con_num, from: command.params[1], to: command.params[2]});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':channel_redirect', {
+            from: command.params[1],
+            to: command.params[2]
+        });
     },
     ERR_NOSUCHNICK: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'no_such_nick', nick: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':no_such_nick', {
+            nick: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_CANNOTSENDTOCHAN: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'cannot_send_to_chan', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':cannot_send_to_chan', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_TOOMANYCHANNELS: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'too_many_channels', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':too_many_channels', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_USERNOTINCHANNEL: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'user_not_in_channel', nick: command.params[0], channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':user_not_in_channel', {
+            nick: command.params[0],
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_NOTONCHANNEL: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'not_on_channel', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':not_on_channel', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_CHANNELISFULL: function (command) {
-            this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'channel_is_full', channel: command.params[1], reason: command.trailing});
+            this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':channel_is_full', {
+                channel: command.params[1],
+                reason: command.trailing
+            });
         },
     ERR_INVITEONLYCHAN: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'invite_only_channel', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':invite_only_channel', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_BANNEDFROMCHAN: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'banned_from_channel', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':banned_from_channel', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_BADCHANNELKEY: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'bad_channel_key', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':bad_channel_key', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_CHANOPRIVSNEEDED: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'chanop_privs_needed', channel: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':chanop_privs_needed', {
+            channel: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_NICKNAMEINUSE: function (command) {
-        this.client.sendIrcCommand('irc_error', {server: this.con_num, error: 'nickname_in_use', nick: command.params[1], reason: command.trailing});
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':nickname_in_use', {
+            nick: command.params[1],
+            reason: command.trailing
+        });
     },
     ERR_NOTREGISTERED: function (command) {
     },
