@@ -1,5 +1,6 @@
-var util    = require('util'),
-    EventBinder  = require('./eventbinder.js');
+var util        = require('util'),
+    EventBinder = require('./eventbinder.js'),
+    IrcUser     = require('./user.js');
 
 function IrcChannel(irc_connection, name) {
     this.irc_connection = irc_connection;
@@ -19,11 +20,11 @@ function IrcChannel(irc_connection, name) {
         ctcp_request:   onCtcpRequest,
         ctcp_response:  onCtcpResponse,
         topic:          onTopic,
-        nicklist:       onNicklist,
-        nicklistEnd:    onNicklistEnd,
+        userlist:       onNicklist,
+        userlist_end:   onNicklistEnd,
         banlist:        onBanList,
         banlist_end:    onBanListEnd,
-        topicsetby:     onTopicSetby,
+        topicsetby:     onTopicSetBy,
         mode:           onMode
     };
     EventBinder.bindIrcEvents('channel:' + this.name, this.irc_events, this, irc_connection);
@@ -34,7 +35,7 @@ module.exports = IrcChannel;
 
 
 IrcChannel.prototype.dispose = function (){
-    EventBinder.unbindIrcEvents('channel:' + this.name, this.irc_events);
+    EventBinder.unbindIrcEvents('channel:' + this.name, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
@@ -45,12 +46,12 @@ function onJoin(event) {
         channel: this.name,
         nick: event.nick,
         ident: event.ident,
-        hostname: event.hostname,
+        hostname: event.hostname
     });
 
     // If we've just joined this channel then request get a nick list
     if (event.nick === this.irc_connection.nick) {
-        this.irc_connection.write('NAMES ' + channel);
+        this.irc_connection.write('NAMES ' + this.name);
     }
 };
 
@@ -100,7 +101,7 @@ function onMsg(event) {
         ident: event.ident,
         hostname: event.hostname,
         channel: this.name,
-        msg: event.message
+        msg: event.msg
     });
 };
 
@@ -146,6 +147,7 @@ function onNicklist(event) {
         users: event.users,
         channel: this.name
     });
+    updateUsersList.call(this, event.users);
 };
 
 
@@ -154,7 +156,19 @@ function onNicklistEnd(event) {
         users: event.users,
         channel: this.name
     });
+    updateUsersList.call(this, event.users);
 };
+
+function updateUsersList(users) {
+    var that = this;
+    if (users) {
+        users.forEach(function (user) {
+            if (!that.irc_connection.irc_users[user.nick]) {
+                that.irc_connection.irc_users[user.nick] = new IrcUser(that.irc_connection, user.nick);
+            }
+        });
+    }
+}
 
 
 function onTopic(event) {

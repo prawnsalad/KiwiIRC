@@ -150,7 +150,7 @@ var listeners = {
     'RPL_WHOISCHANNELS':       function (command) {
         this.irc_connection.emit('user:' + command.params[1] + ':whoischannels', {
             nick: command.params[1],
-            chans: commnd.trailing
+            chans: command.trailing
         });
     },
     'RPL_WHOISMODES': function (command) {
@@ -452,8 +452,8 @@ var listeners = {
             }
         } else {
             // A message to a user (private message) or to a channel?
-            namespace = (command.target == this.irc_connection.nick) ? 'user' : 'channel';
-            this.irc_connection.emit(namespace + ':' + command.nick + ':privmsg', {
+            namespace = (command.params[0] === this.irc_connection.nick) ? 'user:' + command.nick : 'channel:' + command.params[0];
+            this.irc_connection.emit(namespace + ':privmsg', {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,

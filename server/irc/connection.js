@@ -1,13 +1,19 @@
-var net     = require('net'),
-    tls     = require('tls'),
-    events  = require('events'),
-    util    = require('util'),
-    _       = require('lodash');
+var net             = require('net'),
+    tls             = require('tls'),
+    util            = require('util'),
+    _               = require('lodash'),
+    EventEmitter2   = require('eventemitter2').EventEmitter2,
+    IrcServer       = require('./server.js'),
+    IrcChannel      = require('./channel.js'),
+    IrcUser         = require('./user.js');
 
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     var that = this;
-    events.EventEmitter.call(this);
+    EventEmitter2.call(this,{
+        wildcard: true,
+        delimiter: ':'
+    });
     
     // Socket state
     this.connected = false;
@@ -26,6 +32,41 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     
     // State object
     this.state = state;
+    
+    // IrcServer object
+    this.server = new IrcServer(this, hostname, port);
+    
+    // IrcUser objects
+    this.irc_users = Object.create(null);
+    
+    // IrcChannel objects
+    this.irc_channels = Object.create(null);
+    
+    // Create IrcUser and IrcChannel objects when needed
+    // TODO: Remove IrcUser objects when they are no longer needed
+    this.on('server:*:connect', function (event) {
+        that.nick = event.nick;
+        that.irc_users[event.nick] = new IrcUser(that, event.nick);
+    });
+    this.on('channel:*:join', function (event) {
+        var chan;
+        if (event.nick === that.nick) {
+            chan = new IrcChannel(that, event.channel);
+            that.irc_channels[event.channel] = chan;
+            chan.irc_events.join.call(chan, event);
+        }
+    });
+    
+    this.on('user:*:privmsg', function (event) {
+        var user;
+        if (event.channel === that.nick) {
+            if (!that.irc_users[event.nick]) {
+                user = new IrcUser(that, event.nick);
+                that.irc_users[event.nick] = user;
+                user.irc_events.privmsg.call(user, event);
+            }
+        }
+    });
 
     // IRC connection information
     this.irc_host = {hostname: hostname, port: port};
@@ -49,7 +90,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
             that.connect();
         });
 };
-util.inherits(IrcConnection, events.EventEmitter);
+util.inherits(IrcConnection, EventEmitter2);
 
 module.exports.IrcConnection = IrcConnection;
 
@@ -144,6 +185,14 @@ IrcConnection.prototype.end = function (data, callback) {
  * Clean up this IrcConnection instance and any sockets
  */
 IrcConnection.prototype.dispose = function () {
+    _.each(this.irc_users, function (user) {
+        user.dispose();
+    });
+    _.each(this.irc_channels, function (chan) {
+        chan.dispose();
+    });
+    this.irc_users = null;
+    this.irc_channels = null;
     this.disposeSocket();
     this.removeAllListeners();
 };

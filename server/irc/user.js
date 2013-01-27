@@ -8,14 +8,14 @@ var IrcUser = function (irc_connection, nick) {
     this.irc_events = {
         nick:           onNick,
         away:           onAway,
-        quit:           onKick,
+        quit:           onQuit,
         whoisuser:      onWhoisUser,
         whoisoperator:  onWhoisOperator,
         whoischannels:  onWhoisChannels,
         whoismodes:     onWhoisModes,
         whoisidle:      onWhoisIdle,
-        whoisregnick:   onRegNick,
-        endofwhois:     onEhoisEnd,
+        whoisregnick:   onWhoisRegNick,
+        endofwhois:     onWhoisEnd,
         notice:         onNotice,
         ctcp_response:  onCtcpResponse,
         privmsg:        onPrivmsg,
@@ -29,7 +29,7 @@ var IrcUser = function (irc_connection, nick) {
 module.exports = IrcUser;
 
 
-IrcUser.prototype.dispose = function (){
+IrcUser.prototype.dispose = function () {
     EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events);
     this.irc_connection = undefined;
 };
@@ -42,6 +42,9 @@ function onNick(event) {
         hostname: event.hostname,
         newnick: event.newnick
     });
+    EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events);
+    this.nick = event.newnick;
+    EventBinder.bindIrcEvents('user:' + this.nick, this.irc_events, this, irc_connection);
 };
 
 function onAway(event) {
@@ -102,7 +105,7 @@ function onWhoisModes(event) {
     });
 };
 
-function onWhoisUser(event) {
+function onWhoisIdle(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         idle: event.idle,
@@ -148,7 +151,7 @@ function onCtcpResponse(event) {
 };
 
 function onPrivmsg(event) {
-    this.irc_connection.clientEvent('privmsg', {
+    this.irc_connection.clientEvent('msg', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
