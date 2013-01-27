@@ -2,6 +2,10 @@ var _ = require('lodash');
 
 
 module.exports.bindIrcEvents = function (events_scope, event_map, context, irc_connection) {
+    var namespace_prefix = events_scope ?
+        events_scope + ':' :
+        '';
+
     // Make sure we have a holder for the bound events
     if (!event_map._bound_events)
         event_map._bound_events = {};
@@ -15,12 +19,16 @@ module.exports.bindIrcEvents = function (events_scope, event_map, context, irc_c
         }
 
         // Add the listener to the IRC connection object
-        irc_connection.on(events_scope + ':' + event_name, event_map._bound_events[event_name]);
+        irc_connection.on(namespace_prefix + event_name, event_map._bound_events[event_name]);
     });
 };
 
 
 module.exports.unbindIrcEvents = function (events_scope, event_map, irc_connection) {
+    var namespace_prefix = events_scope ?
+        events_scope + ':' :
+        '';
+
     // No bound events? Then we have nothing to do
     if (!event_map._bound_events) return;
 
@@ -29,7 +37,7 @@ module.exports.unbindIrcEvents = function (events_scope, event_map, irc_connecti
 
         if (event_map._bound_events[event_name]) {
             // Remove the listener from the IRC connection object
-            irc_connection.removeListener(events_scope + ':' + event_name, event_map._bound_events[event_name]);
+            irc_connection.removeListener(namespace_prefix + event_name, event_map._bound_events[event_name]);
 
             // Remove the bound function as no longer needed
             event_map._bound_events[event_name] = undefined;

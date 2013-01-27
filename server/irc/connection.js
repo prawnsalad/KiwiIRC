@@ -3,6 +3,7 @@ var net             = require('net'),
     util            = require('util'),
     _               = require('lodash'),
     EventEmitter2   = require('eventemitter2').EventEmitter2,
+    EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js');
@@ -10,10 +11,12 @@ var net             = require('net'),
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     var that = this;
+
     EventEmitter2.call(this,{
         wildcard: true,
         delimiter: ':'
     });
+    this.setMaxListeners(0);
     
     // Socket state
     this.connected = false;
@@ -41,32 +44,6 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     
     // IrcChannel objects
     this.irc_channels = Object.create(null);
-    
-    // Create IrcUser and IrcChannel objects when needed
-    // TODO: Remove IrcUser objects when they are no longer needed
-    this.on('server:*:connect', function (event) {
-        that.nick = event.nick;
-        that.irc_users[event.nick] = new IrcUser(that, event.nick);
-    });
-    this.on('channel:*:join', function (event) {
-        var chan;
-        if (event.nick === that.nick) {
-            chan = new IrcChannel(that, event.channel);
-            that.irc_channels[event.channel] = chan;
-            chan.irc_events.join.call(chan, event);
-        }
-    });
-    
-    this.on('user:*:privmsg', function (event) {
-        var user;
-        if (event.channel === that.nick) {
-            if (!that.irc_users[event.nick]) {
-                user = new IrcUser(that, event.nick);
-                that.irc_users[event.nick] = user;
-                user.irc_events.privmsg.call(user, event);
-            }
-        }
-    });
 
     // IRC connection information
     this.irc_host = {hostname: hostname, port: port};
@@ -83,6 +60,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.hold_last = false;
     this.held_data = '';
 
+    this.applyIrcEvents();
 
     // Call any modules before making the connection
     global.modules.emit('irc:connecting', {connection: this})
@@ -95,6 +73,20 @@ util.inherits(IrcConnection, EventEmitter2);
 module.exports.IrcConnection = IrcConnection;
 
 
+
+IrcConnection.prototype.applyIrcEvents = function () {
+    // Listen for events on the IRC connection
+    this.irc_events = {
+        'server:*:connect':  onServerConnect,
+        'channel:*:join':    onChannelJoin,
+        'user:*:privmsg':    onUserPrivmsg,
+        'channel:*:part':    onUserParts,
+        'channel:*:quit':    onUserParts,
+        'channel:*:kick':    onUserParts
+    };
+
+    EventBinder.bindIrcEvents('', this.irc_events, this, this);
+};
 
 
 /**
@@ -193,6 +185,9 @@ IrcConnection.prototype.dispose = function () {
     });
     this.irc_users = null;
     this.irc_channels = null;
+
+    EventBinder.unbindIrcEvents('', this.irc_events, this);
+
     this.disposeSocket();
     this.removeAllListeners();
 };
@@ -208,6 +203,60 @@ IrcConnection.prototype.disposeSocket = function () {
         this.socket = null;
     }
 };
+
+
+
+function onChannelJoin(event) {
+    var chan;
+
+    // Only deal with ourselves joining a channel
+    if (event.nick !== this.nick)
+        return;
+
+    // We should only ever get a JOIN command for a channel
+    // we're not already a member of.. but check we don't
+    // have this channel in case something went wrong somewhere
+    // at an earlier point
+    if (!this.irc_channels[event.channel]) {
+        chan = new IrcChannel(this, event.channel);
+        this.irc_channels[event.channel] = chan;
+        chan.irc_events.join.call(chan, event);
+    }
+}
+
+
+function onServerConnect(event) {
+    this.nick = event.nick;
+    this.irc_users[event.nick] = new IrcUser(this, event.nick);
+}
+
+
+function onUserPrivmsg(event) {
+    var user;
+
+    // Only deal with messages targetted to us
+    if (event.channel !== this.nick)
+        return;
+
+    if (!this.irc_users[event.nick]) {
+        user = new IrcUser(this, event.nick);
+        this.irc_users[event.nick] = user;
+        user.irc_events.privmsg.call(user, event);
+    }
+}
+
+
+function onUserParts(event) {
+    // Only deal with ourselves leaving a channel
+    if (event.nick !== this.nick)
+        return;
+
+    if (this.irc_channels[event.channel]) {
+        this.irc_channels[event.channel].dispose();
+        delete this.irc_channels[event.channel];
+    }
+}
+
 
 
 

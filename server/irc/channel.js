@@ -64,8 +64,6 @@ function onPart(event) {
         channel: this.name,
         message: event.message
     });
-
-    this.dispose();
 };
 
 
@@ -78,8 +76,6 @@ function onKick(event) {
         channel: this.name,
         message: event.message
     });
-
-    this.dispose();
 };
 
 
@@ -90,8 +86,6 @@ function onQuit(event) {
         hostname: event.hostname,
         message: event.message
     });
-
-    this.dispose();
 };
 
 
