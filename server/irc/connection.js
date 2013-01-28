@@ -79,7 +79,9 @@ IrcConnection.prototype.applyIrcEvents = function () {
     this.irc_events = {
         'server:*:connect':  onServerConnect,
         'channel:*:join':    onChannelJoin,
-        'user:*:privmsg':    onUserPrivmsg,
+
+        // TODO: uncomment when using an IrcUser per nick
+        //'user:*:privmsg':    onUserPrivmsg,
         'channel:*:part':    onUserParts,
         'channel:*:quit':    onUserParts,
         'channel:*:kick':    onUserParts
@@ -227,7 +229,9 @@ function onChannelJoin(event) {
 
 function onServerConnect(event) {
     this.nick = event.nick;
-    this.irc_users[event.nick] = new IrcUser(this, event.nick);
+
+    // TODO: use `event.nick` instead of `'*'` when using an IrcUser per nick
+    this.irc_users[event.nick] = new IrcUser(this, '*');
 }
 
 

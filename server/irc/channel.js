@@ -141,7 +141,8 @@ function onNicklist(event) {
         users: event.users,
         channel: this.name
     });
-    updateUsersList.call(this, event.users);
+    // TODO: uncomment when using an IrcUser per nick
+    //updateUsersList.call(this, event.users);
 };
 
 
@@ -150,7 +151,8 @@ function onNicklistEnd(event) {
         users: event.users,
         channel: this.name
     });
-    updateUsersList.call(this, event.users);
+    // TODO: uncomment when using an IrcUser per nick
+    //updateUsersList.call(this, event.users);
 };
 
 function updateUsersList(users) {
