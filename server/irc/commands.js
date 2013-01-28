@@ -440,7 +440,7 @@ var listeners = {
             } else if (command.trailing.substr(1, 10) === 'CLIENTINFO') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));
             } else {
-                namespace = (command.target == this.irc_connection.nick) ? 'user' : 'channel';
+                namespace = (command.params[0].toLowerCase() == this.irc_connection.nick.toLowerCase()) ? 'user' : 'channel';
                 this.irc_connection.emit(namespace + ':' + command.nick + ':ctcp_request', {
                     nick: command.nick,
                     ident: command.ident,
