@@ -346,7 +346,7 @@ var listeners = {
         }
     },
     'NICK': function (command) {
-        this.irc_connection.emit('user:' + nick + ':nick', {
+        this.irc_connection.emit('user:' + command.nick + ':nick', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
