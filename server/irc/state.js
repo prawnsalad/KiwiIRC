@@ -4,6 +4,8 @@ var util            = require('util'),
     IrcConnection   = require('./connection.js').IrcConnection;
 
 var State = function (client, save_state) {
+    var that = this;
+
     events.EventEmitter.call(this);
     this.client = client;
     this.save_state = save_state || false;
@@ -11,17 +13,18 @@ var State = function (client, save_state) {
     this.irc_connections = [];
     this.next_connection = 0;
     
-    this.client.on('disconnect', function () {
-        if (!this.save_state) {
-            _.each(this.irc_connections, function (irc_connection, i, cons) {
+    this.client.on('destroy', function () {
+        if (!that.save_state) {
+            _.each(that.irc_connections, function (irc_connection, i, cons) {
                 if (irc_connection) {
                     irc_connection.end('QUIT :' + (global.config.quit_message || ''));
                     irc_connection.dispose();
                     cons[i] = null;
+                    console.log('killed irc_connection');
                 }
             });
             
-            this.dispose();
+            that.dispose();
         }
     });
 };

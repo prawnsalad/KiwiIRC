@@ -202,6 +202,7 @@ IrcConnection.prototype.dispose = function () {
  */
 IrcConnection.prototype.disposeSocket = function () {
     if (this.socket) {
+        this.socket.end();
         this.socket.removeAllListeners();
         this.socket = null;
     }

@@ -30,7 +30,7 @@ module.exports = IrcUser;
 
 
 IrcUser.prototype.dispose = function () {
-    EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events);
+    EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
