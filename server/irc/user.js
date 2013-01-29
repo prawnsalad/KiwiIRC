@@ -42,9 +42,11 @@ function onNick(event) {
         hostname: event.hostname,
         newnick: event.newnick
     });
-    EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events);
-    this.nick = event.newnick;
-    EventBinder.bindIrcEvents('user:' + this.nick, this.irc_events, this, irc_connection);
+
+    // TODO: uncomment when using an IrcUser per nick
+    //EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events, irc_connection);
+    //this.nick = event.newnick;
+    //EventBinder.bindIrcEvents('user:' + this.nick, this.irc_events, this, irc_connection);
 };
 
 function onAway(event) {
