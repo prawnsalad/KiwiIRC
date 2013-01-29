@@ -82,6 +82,7 @@ IrcConnection.prototype.applyIrcEvents = function () {
 
         // TODO: uncomment when using an IrcUser per nick
         //'user:*:privmsg':    onUserPrivmsg,
+        'user:*:nick':       onUserNick,
         'channel:*:part':    onUserParts,
         'channel:*:quit':    onUserParts,
         'channel:*:kick':    onUserParts
@@ -247,6 +248,17 @@ function onUserPrivmsg(event) {
         this.irc_users[event.nick] = user;
         user.irc_events.privmsg.call(user, event);
     }
+}
+
+
+function onUserNick(event) {
+    var user;
+
+    // Only deal with messages targetted to us
+    if (event.nick !== this.nick)
+        return;
+
+    this.nick = event.newnick;
 }
 
 
