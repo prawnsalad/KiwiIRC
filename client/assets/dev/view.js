@@ -769,7 +769,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             meta;
 
         if (navigator.appVersion.indexOf("Mac") !== -1) {
-            meta = ev.ctrlKey;
+            meta = ev.metaKey;
         } else {
             meta = ev.altKey;
         }
@@ -813,11 +813,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             }
             break;
 
-        case (ev.keyCode === 37 && meta):            // left
+        case (ev.keyCode === 219 && meta):            // [ + meta
             _kiwi.app.panels.view.prev();
             return false;
 
-        case (ev.keyCode === 39 && meta):            // right
+        case (ev.keyCode === 221 && meta):            // ] + meta
             _kiwi.app.panels.view.next();
             return false;
 
