@@ -6,6 +6,14 @@ var irc_numerics = {
     RPL_ISUPPORT:           '005',
     RPL_MAPMORE:            '006',
     RPL_MAPEND:             '007',
+    RPL_STATSCONN:          '250',
+    RPL_LUSERCLIENT:        '251',
+    RPL_LUSEROP:            '252',
+    RPL_LUSERUNKNOWN:       '253',
+    RPL_LUSERCHANNELS:      '254',
+    RPL_LUSERME:            '255',
+    RPL_LOCALUSERS:         '265',
+    RPL_GLOBALUSERS:        '266',
     RPL_WHOISREGNICK:       '307',
     RPL_WHOISUSER:          '311',
     RPL_WHOISSERVER:        '312',
@@ -676,6 +684,54 @@ var listeners = {
         var params = _.clone(command.params);
         params.shift();
         genericNotice.call(this, command, command.trailing);
+    },
+
+    RPL_STATSCONN: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LUSERCLIENT: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LUSEROP: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LUSERUNKNOWN: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LUSERCHANNELS: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LUSERME: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+
+    RPL_LOCALUSERS: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
+    },
+    
+    RPL_GLOBALUSERS: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.join(', ') + ' ' + command.trailing);
     }
 };
 
