@@ -174,7 +174,6 @@ var listeners = {
     },
     'RPL_LISTSTART': function (command) {
         this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_start', {});
-        this.client.buffer.list = [];
     },
     'RPL_LISTEND': function (command) {
         this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_end', {});
@@ -182,7 +181,7 @@ var listeners = {
     'RPL_LIST': function (command) {
         this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':list_channel', {
             channel: command.params[1],
-            num_users: parseint(command.params[2], 10),
+            num_users: parseInt(command.params[2], 10),
             topic: command.trailing
         });
     },

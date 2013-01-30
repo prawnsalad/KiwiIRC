@@ -1,5 +1,6 @@
 var util    = require('util'),
-    EventBinder  = require('./eventbinder.js');
+    EventBinder  = require('./eventbinder.js'),
+    _ = require('lodash');
 
 var IrcServer = function (irc_connection, host, port) {
     this.irc_connection = irc_connection;
@@ -63,6 +64,7 @@ function onOptions(event) {
 
 function onListStart(event) {
     this.irc_connection.clientEvent('list_start', {});
+    this.list_buffer = [];
 };
 
 function onListChannel(event) {
@@ -82,20 +84,21 @@ function onListChannel(event) {
             chans: buf
         });
         this.list_buffer = [];
-    };
+    }
 };
 
 function onListEnd(event) {
-    if (this.list_buffer.length > 200) {
-        buf = _.sortBy(this.list_buffer, function (channel) {
-            // sortBy sorts in ascending order, we want to sort by descending, hence using 0 - num_users.
-            return 0 - channel.num_users;
-        });
-        this.irc_connection.clientEvent('list_channel', {
-            chans: buf
-        });
-        this.list_buffer = [];
-    };
+    var buf;
+    
+    buf = _.sortBy(this.list_buffer, function (channel) {
+        // sortBy sorts in ascending order, we want to sort by descending, hence using 0 - num_users.
+        return 0 - channel.num_users;
+    });
+    this.irc_connection.clientEvent('list_channel', {
+        chans: buf
+    });
+    this.list_buffer = [];
+
     
     this.irc_connection.clientEvent('list_end', {});
 };
