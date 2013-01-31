@@ -769,6 +769,8 @@ _kiwi.model.Application = function () {
                         (new _kiwi.view.NickChangeBox()).render();
                     }
 
+                case 'password_mismatch':
+                    _kiwi.app.panels.server.addMsg(' ', '== Incorrect password given', 'status');
                     break;
                 default:
                     // We don't know what data contains, so don't do anything with it.
