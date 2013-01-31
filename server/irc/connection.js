@@ -186,8 +186,6 @@ IrcConnection.prototype.dispose = function () {
     _.each(this.irc_channels, function (chan) {
         chan.dispose();
     });
-    this.irc_users = null;
-    this.irc_channels = null;
     this.irc_users = undefined;
     this.irc_channels = undefined;
 
