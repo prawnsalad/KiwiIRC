@@ -13,7 +13,7 @@ var State = function (client, save_state) {
     this.irc_connections = [];
     this.next_connection = 0;
     
-    this.client.on('destroy', function () {
+    this.client.on('dispose', function () {
         if (!that.save_state) {
             _.each(that.irc_connections, function (irc_connection, i, cons) {
                 if (irc_connection) {
@@ -85,6 +85,6 @@ State.prototype.sendKiwiCommand = function () {
 };
 
 State.prototype.dispose = function () {
-    this.emit('destroy');
+    this.emit('dispose');
     this.removeAllListeners();
 };

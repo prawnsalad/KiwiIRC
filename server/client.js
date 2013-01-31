@@ -68,7 +68,7 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 };
 
 Client.prototype.dispose = function () {
-    this.emit('destroy');
+    this.emit('dispose');
     this.removeAllListeners();
 };
 
