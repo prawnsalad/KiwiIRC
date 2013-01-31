@@ -287,9 +287,9 @@ html, body { height:100%; }
     background-color: #eee;
 }
 
-#kiwi.theme_relaxed #toolbar .panellist .alert_highlight { background: #990000; }
-#kiwi.theme_relaxed #toolbar .panellist .alert_activity { background: #009900; }
-#kiwi.theme_relaxed #toolbar .panellist .alert_action { }
+#kiwi.theme_relaxed #toolbar .panellist .alert_highlight { /*background: #990000;*/ }
+#kiwi.theme_relaxed #toolbar .panellist .alert_activity { font-weight:normal; }
+#kiwi.theme_relaxed #toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi.theme_relaxed #toolbar .panellist .active { padding-right:23px; }
 #kiwi.theme_relaxed #toolbar .panellist li .part {
@@ -300,7 +300,21 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
 
 /* Tab texts are within a span */
-#kiwi.theme_relaxed #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:block; }
+#kiwi.theme_relaxed #toolbar .panellist li span  { line-height:20px; vertical-align:middle; }
+
+#kiwi.theme_relaxed #toolbar .panellist li.active .activity { display:none; }
+#kiwi.theme_relaxed #toolbar .panellist li .activity.zero { visibility:hidden; }
+#kiwi.theme_relaxed #toolbar .panellist li .activity {
+    padding: 1px 3px; margin-left:1em;
+    border-radius: 4px;
+    background: #3F9532; color:#000; /*color: #ff5300;*/
+    text-align: center; font-size: 10px;
+    display:inline-block;
+    width:2em;
+}
+#kiwi.theme_relaxed #toolbar .panellist li.alert_highlight .activity {
+    color: #fff; background: #a60400;
+}
 
 #kiwi.theme_relaxed #status_message {
     background: #FEEFB3; color: #9F6000;
@@ -533,7 +547,19 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .server_select .kiwi_logo img { }
 
 
-
+#kiwi.theme_relaxed.chanlist_treeview #panels { left:200px; }
+#kiwi.theme_relaxed.chanlist_treeview #toolbar { position:static; }
+#kiwi.theme_relaxed.chanlist_treeview #toolbar .app_tools { float:none; }
+#kiwi.theme_relaxed.chanlist_treeview #toolbar > div { margin-left:200px; }
+#kiwi.theme_relaxed.chanlist_treeview #toolbar #tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:200px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.theme_relaxed.chanlist_treeview #tabs ul li { display:block; float:none; }
+#kiwi.theme_relaxed.chanlist_treeview #tabs ul li .activity { float:right; }
+#kiwi.theme_relaxed.chanlist_treeview #tabs ul li.active {
+    margin-right:0;
+    border-right-width:0;
+    border-bottom-right-radius:0;
+    border-top-right-radius:0;
+}
 
 
 

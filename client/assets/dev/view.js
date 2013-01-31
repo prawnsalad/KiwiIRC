@@ -117,6 +117,8 @@ _kiwi.view.ServerSelect = function () {
         },
 
         initialize: function () {
+            var that = this;
+
             this.$el = $($('#tmpl_server_select').html());
 
             // Remove the 'more' link if the server has disabled server changing
@@ -137,6 +139,12 @@ _kiwi.view.ServerSelect = function () {
                 if (data.error == 'nickname_in_use') {
                     this.setStatus('Nickname already taken');
                     this.show('nick_change');
+                }
+
+                if (data.error == 'password_mismatch') {
+                    this.setStatus('Incorrect Password');
+                    this.show('nick_change');
+                    that.$el.find('.password').select();
                 }
             }, this);
         },
@@ -386,9 +394,11 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Activity/alerts based on the type of new message
         if (msg.type.match(/^action /)) {
             this.alert('action');
+
         } else if (is_highlight) {
             _kiwi.app.view.alertWindow('* People are talking!');
             this.alert('highlight');
+
         } else {
             // If this is the active panel, send an alert out
             if (this.model.isActive()) {
@@ -396,6 +406,20 @@ _kiwi.view.Panel = Backbone.View.extend({
             }
             this.alert('activity');
         }
+
+        // Update the activity counters
+        (function () {
+            // Only inrement the counters if we're not the active panel
+            if (this.model.isActive()) return;
+
+            var $act = this.model.tab.find('.activity');
+            $act.text((parseInt($act.text(), 10) || 0) + 1);
+            if ($act.text() === '0') {
+                $act.addClass('zero');
+            } else {
+                $act.removeClass('zero');
+            }
+        }).apply(this);
 
         this.scrollToBottom();
 
@@ -431,6 +455,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         media_message.open();
     },
 
+    // Cursor hovers over a message
     msgEnter: function (event) {
         var nick_class;
 
@@ -447,6 +472,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         $('.'+nick_class).addClass('global_nick_highlight');
     },
 
+    // Cursor leaves message
     msgLeave: function (event) {
         var nick_class;
 
@@ -481,10 +507,13 @@ _kiwi.view.Panel = Backbone.View.extend({
         }
 
         _kiwi.app.view.doLayout();
+
+        // Remove any alerts and activity counters for this panel
         this.alert('none');
+        this.model.tab.find('.activity').text('0').addClass('zero');
 
         this.trigger('active', this.model);
-        _kiwi.app.panels.trigger('active', this.model);
+        _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels.active);
 
         this.scrollToBottom(true);
     },
@@ -615,7 +644,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     panelAdded: function (panel) {
         // Add a tab to the panel
-        panel.tab = $('<li><span>' + (panel.get('title') || panel.get('name')) + '</span></li>');
+        panel.tab = $('<li><span>' + (panel.get('title') || panel.get('name')) + '</span><div class="activity"></div></li>');
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
@@ -634,7 +663,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         _kiwi.app.view.doLayout();
     },
 
-    panelActive: function (panel) {
+    panelActive: function (panel, previously_active_panel) {
         // Remove any existing tabs or part images
         $('.part', this.$el).remove();
         this.tabs_applets.children().removeClass('active');
@@ -1105,6 +1134,11 @@ _kiwi.view.Application = Backbone.View.extend({
         el_memberlists.css(css_heights);
         el_resize_handle.css(css_heights);
 
+        // If we have channel tabs on the side, adjust the height
+        if (el_kiwi.hasClass('chanlist_treeview')) {
+            $('#kiwi #tabs').css(css_heights);
+        }
+
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
         if (el_kiwi.outerWidth() < 400) {
             el_kiwi.addClass('narrow');
@@ -1124,6 +1158,12 @@ _kiwi.view.Application = Backbone.View.extend({
             // And move the handle just out of sight to the right
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
+    },
+
+
+    toggleLayout: function () {
+        this.$el.toggleClass('chanlist_treeview');
+        this.doLayout();
     },
 
 
