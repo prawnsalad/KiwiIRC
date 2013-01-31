@@ -19,7 +19,7 @@ var IrcServer = function (irc_connection, host, port) {
         motd_start:             onMotdStart,
         motd:                   onMotd,
         motd_end:               onMotdEnd,
-        error:                  onError_,
+        error:                  onError,
         password_mismatch:      onPasswordMismatch,
         channel_redirect:       onChannelRedirect,
         no_such_nick:           onNoSuchNick,
@@ -118,7 +118,7 @@ function onMotdEnd(event) {
     });
 };
 
-function onError_(event) {
+function onError(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'error',
         reason: event.reason

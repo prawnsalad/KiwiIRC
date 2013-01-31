@@ -15,7 +15,7 @@ module.exports.bindIrcEvents = function (events_scope, event_map, context, irc_c
 
         // Bind the event to `context`, storing it with the event listing
         if (!event_map._bound_events[event_name]) {
-            event_map._bound_events[event_name] = fn.bind(context);
+            event_map._bound_events[event_name] = _.bind(fn, context);
         }
 
         // Add the listener to the IRC connection object
@@ -40,7 +40,9 @@ module.exports.unbindIrcEvents = function (events_scope, event_map, irc_connecti
             irc_connection.removeListener(namespace_prefix + event_name, event_map._bound_events[event_name]);
 
             // Remove the bound function as no longer needed
-            event_map._bound_events[event_name] = undefined;
+            delete event_map._bound_events[event_name];
         }
     });
+
+    delete event_map._bound_events;
 };
