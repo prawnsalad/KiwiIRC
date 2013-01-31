@@ -45,6 +45,7 @@ var irc_numerics = {
     ERR_NICKNAMEINUSE:      '433',
     ERR_USERNOTINCHANNEL:   '441',
     ERR_NOTONCHANNEL:       '442',
+    ERR_PASSWDMISMATCH:     '464',
     ERR_NOTREGISTERED:      '451',
     ERR_LINKCHANNEL:        '470',
     ERR_CHANNELISFULL:      '471',
@@ -569,6 +570,9 @@ var listeners = {
         this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':error', {
             reason: command.trailing
         });
+    },
+    ERR_PASSWDMISMATCH: function (command) {
+        this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':password_mismatch', {});
     },
     ERR_LINKCHANNEL: function (command) {
         this.irc_connection.emit('server:' + this.irc_connection.irc_host.hostname + ':channel_redirect', {

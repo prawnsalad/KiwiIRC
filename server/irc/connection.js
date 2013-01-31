@@ -188,6 +188,11 @@ IrcConnection.prototype.dispose = function () {
     });
     this.irc_users = null;
     this.irc_channels = null;
+    this.irc_users = undefined;
+    this.irc_channels = undefined;
+
+    this.server.dispose();
+    this.server = undefined;
 
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 

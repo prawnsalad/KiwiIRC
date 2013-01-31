@@ -19,7 +19,8 @@ var IrcServer = function (irc_connection, host, port) {
         motd_start:             onMotdStart,
         motd:                   onMotd,
         motd_end:               onMotdEnd,
-        error:                  onError,
+        error:                  onError_,
+        password_mismatch:      onPasswordMismatch,
         channel_redirect:       onChannelRedirect,
         no_such_nick:           onNoSuchNick,
         cannot_send_to_channel: onCannotSendToChan,
@@ -33,7 +34,7 @@ var IrcServer = function (irc_connection, host, port) {
         chanop_privs_needed:    onChanopPrivsNeeded,
         nickname_in_use:        onNicknameInUse
     };
-    EventBinder.bindIrcEvents('server:' + this.host, this.irc_events, this, irc_connection);
+    EventBinder.bindIrcEvents('server:' + this.host, this.irc_events, this, this.irc_connection);
     
 
 };
@@ -43,7 +44,7 @@ module.exports = IrcServer;
 
 
 IrcServer.prototype.dispose = function (){
-    EventBinder.unbindIrcEvents('server:' + this.host, this.irc_events);
+    EventBinder.unbindIrcEvents('server:' + this.host, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
@@ -117,12 +118,18 @@ function onMotdEnd(event) {
     });
 };
 
-function onError(event) {
+function onError_(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'error',
         reason: event.reason
     });
 };
+
+function onPasswordMismatch(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'password_mismatch'
+    });
+}
 
 function onChannelRedirect(event) {
     this.irc_connection.clientEvent('channel_redirect', {
