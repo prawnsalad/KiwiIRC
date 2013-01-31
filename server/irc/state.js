@@ -20,7 +20,6 @@ var State = function (client, save_state) {
                     irc_connection.end('QUIT :' + (global.config.quit_message || ''));
                     irc_connection.dispose();
                     cons[i] = null;
-                    console.log('killed irc_connection');
                 }
             });
             
