@@ -2,8 +2,10 @@ var util    = require('util'),
     EventBinder  = require('./eventbinder.js'),
     _ = require('lodash');
 
-var IrcServer = function (irc_connection) {
+var IrcServer = function (irc_connection, host, port) {
     this.irc_connection = irc_connection;
+    this.host = host;
+    this.port = port;
 
     this.list_buffer = [];
     this.motd_buffer = '';
@@ -32,7 +34,7 @@ var IrcServer = function (irc_connection) {
         chanop_privs_needed:    onChanopPrivsNeeded,
         nickname_in_use:        onNicknameInUse
     };
-    EventBinder.bindIrcEvents('server', this.irc_events, this, this.irc_connection);
+    EventBinder.bindIrcEvents('server:' + this.host, this.irc_events, this, this.irc_connection);
     
 
 };
@@ -42,7 +44,7 @@ module.exports = IrcServer;
 
 
 IrcServer.prototype.dispose = function (){
-    EventBinder.unbindIrcEvents('server', this.irc_events, this.irc_connection);
+    EventBinder.unbindIrcEvents('server:' + this.host, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
