@@ -124,7 +124,7 @@ _.each(global.config.servers, function (server) {
         clients.add(client);
     });
 
-    wl.on('destroy', function (client) {
+    wl.on('client_dispose', function (client) {
         clients.remove(client);
     });
 
