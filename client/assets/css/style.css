@@ -800,7 +800,7 @@ html, body { height:100%; }
     font-size:14px; line-height:1.4em;
 }
 
-#kiwi.theme_cli #controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; margin:3px; }
+#kiwi.theme_cli #controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; }
 #kiwi.theme_cli #controlbox .input_wrap:before { content:"> " }
 #kiwi.theme_cli #controlbox .input { background:none; border:none;}
 #kiwi.theme_cli #controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; overflow:hidden; }
@@ -819,6 +819,7 @@ html, body { height:100%; }
     outline:none; resize:none;
     overflow:hidden;
     position:absolute;
+    top: 0px;
     height:99%; width:98%;
     display: inline;
     padding-left:0.5em;
@@ -882,15 +883,16 @@ html, body { height:100%; }
     background-color: #eee;
 }
 
-#kiwi.theme_cli #toolbar .panellist .alert_highlight { background: #990000; }
-#kiwi.theme_cli #toolbar .panellist .alert_activity { background: #009900; }
-#kiwi.theme_cli #toolbar .panellist .alert_action { }
+#kiwi.theme_cli #toolbar .panellist .alert_highlight { font-weight:bold; }
+#kiwi.theme_cli #toolbar .panellist .alert_activity { font-weight:normal; }
+#kiwi.theme_cli #toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi.theme_cli #toolbar .panellist .active { padding-right:23px; }
 #kiwi.theme_cli #toolbar .panellist li .part {
     background:url('../img/redcross.png'); width:14px; height:14px;
 }
 #kiwi.theme_cli #toolbar .panellist li .part:after { content:""; }
+#kiwi.theme_cli #toolbar .panellist li .activity { display:none; }
 
 #kiwi.theme_cli #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
 
@@ -1022,4 +1024,20 @@ html, body { height:100%; }
 #kiwi.theme_cli .divider-horizontal {
     border-top: 1px solid #303030;
     border-bottom: 1px solid #1B1B1B;
+}
+
+
+
+#kiwi.theme_cli.chanlist_treeview #panels { left:200px; }
+#kiwi.theme_cli.chanlist_treeview #toolbar { position:static; }
+#kiwi.theme_cli.chanlist_treeview #toolbar .app_tools { float:none; }
+#kiwi.theme_cli.chanlist_treeview #toolbar > div { margin-left:200px; }
+#kiwi.theme_cli.chanlist_treeview #toolbar #tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:200px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.theme_cli.chanlist_treeview #tabs ul li { display:block; float:none; }
+#kiwi.theme_cli.chanlist_treeview #tabs ul li .activity { float:right; }
+#kiwi.theme_cli.chanlist_treeview #tabs ul li.active {
+    margin-right:0;
+    border-right-width:0;
+    border-bottom-right-radius:0;
+    border-top-right-radius:0;
 }
