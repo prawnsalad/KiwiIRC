@@ -330,14 +330,14 @@ html, body { height:100%; }
 
 #kiwi.theme_relaxed .messages .msg { border-bottom: 1px solid #DEDEDE; padding: 1px; font-family:arial; font-size:0.9em; }
 #kiwi.theme_relaxed .messages .msg .time { width:6em; float:left; color:#777; display:none; }
-#kiwi.theme_relaxed .messages .msg .nick { width:11em; float:left; font-size:12px; font-family:Arial; text-align:left; padding: 5px; overflow:hidden; }
+#kiwi.theme_relaxed .messages .msg .nick { width:11em; float:left; font-size:12px; font-family:Arial; text-align:right; padding: 5px; overflow:hidden; }
 #kiwi.theme_relaxed .messages .msg .text { display:block; margin-left:12em; border-left: 1px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:5px; }
 
 #kiwi.theme_relaxed.narrow .messages .msg .nick { width: auto; }
 #kiwi.theme_relaxed.narrow .messages .msg .text { margin-left: 1em; border:none; }
 
 #kiwi.theme_relaxed .messages .msg.action .nick { }
-#kiwi.theme_relaxed .messages .msg.action .text { margin-left:9em; color:#009900; border-left:none; font-style:italic; }
+#kiwi.theme_relaxed .messages .msg.action .text { color:#009900; border-left:none; font-style:italic; }
 #kiwi.theme_relaxed .messages .msg.action.join { color:#009900; }
 #kiwi.theme_relaxed .messages .msg.action.part .text { color:#900; }
 #kiwi.theme_relaxed .messages .msg.action.quit .text { color:#900; }
