@@ -145,8 +145,8 @@ function authoriseConnection(handshakeData, callback) {
 function newConnection(websocket) {
     var client, that = this;
     client = new Client(websocket);
-    client.on('destroy', function () {
-        that.emit('destroy', this);
+    client.on('dispose', function () {
+        that.emit('client_dispose', this);
     });
     this.emit('connection', client);
 }

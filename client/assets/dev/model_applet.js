@@ -40,6 +40,8 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
 
                 // Keep a reference to this applet
                 this.loaded_applet = applet_object;
+
+                this.loaded_applet.trigger('applet_loaded');
             }
 
         } else if (typeof applet_object === 'string') {

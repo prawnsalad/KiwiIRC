@@ -452,7 +452,7 @@ _kiwi.model.Application = function () {
             gw.on('onctcp_request', function (event) {
                 // Reply to a TIME ctcp
                 if (event.msg.toUpperCase() === 'TIME') {
-                    gw.ctcp(true, event.type, event.nick, (new Date()).toString());
+                    gw.ctcp(false, event.type, event.nick, (new Date()).toString());
                 }
             });
 
@@ -769,6 +769,8 @@ _kiwi.model.Application = function () {
                         (new _kiwi.view.NickChangeBox()).render();
                     }
 
+                case 'password_mismatch':
+                    _kiwi.app.panels.server.addMsg(' ', '== Incorrect password given', 'status');
                     break;
                 default:
                     // We don't know what data contains, so don't do anything with it.

@@ -11,17 +11,19 @@ For more information see http://kiwiirc.com or an example of the application can
 
     `$ git clone git@github.com:prawnsalad/KiwiIRC.git && cd KiwiIRC`
 
-2. Install the dependancies and make sure the client code is built:
-    
-    `$ npm install`
+2. Install the dependancies:
 
-    `$ node client/assets/dev/build.js`
+    `$ npm install`
 
 3. Copy and edit the configuration file as needed:
 
     `$ cp config.example.js config.js`
 
     `$ nano config.js`
+
+4.  Make sure the client code is built:
+
+    `$ ./kiwi build`
 
 
 ### Running

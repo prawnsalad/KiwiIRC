@@ -20,11 +20,40 @@ ClientCommands.prototype.run = function (command, args, irc_connection, callback
 
 
 
+/**
+ * Truncate a string into blocks of a set size
+ */
+function truncateString(str, block_size) {
+    block_size = block_size || 350;
+
+    var blocks = [],
+        current_pos;
+
+    for (current_pos = 0; current_pos < str.length; current_pos = current_pos + block_size) {
+        blocks.push(str.substr(current_pos, block_size));
+    }
+
+    return blocks;
+}
+
+
+
+
 var listeners = {
     PRIVMSG: function (args, irc_connection, callback) {
-         if (args.target && (args.msg)) {
-            irc_connection.write('PRIVMSG ' + args.target + ' :' + args.msg, callback);
-        }
+        // Maximum length of target + message we can send to the IRC server is 500 characters
+        // but we need to leave extra room for the sender prefix so the entire message can
+        // be sent from the IRCd to the target without being truncated.
+
+        var blocks = truncateString(args.msg, 350);
+        blocks.forEach(function (block, idx) {
+            // Apply the callback on the last message only
+            var cb = (idx === blocks.length - 1) ?
+                callback :
+                undefined;
+
+            irc_connection.write('PRIVMSG ' + args.target + ' :' + block, cb);
+        });
     },
     
 
@@ -91,9 +120,19 @@ var listeners = {
 
 
     NOTICE: function (args, irc_connection, callback) {
-        if ((args.target) && (args.msg)) {
-            irc_connection.write('NOTICE ' + args.target + ' :' + args.msg, callback);
-        }
+        // Maximum length of target + message we can send to the IRC server is 500 characters
+        // but we need to leave extra room for the sender prefix so the entire message can
+        // be sent from the IRCd to the target without being truncated.
+
+        var blocks = truncateString(args.msg, 350);
+        blocks.forEach(function (block, idx) {
+            // Apply the callback on the last message only
+            var cb = (idx === blocks.length - 1) ?
+                callback :
+                undefined;
+
+            irc_connection.write('NOTICE ' + args.target + ' :' + block, cb);
+        });
     },
 
 
