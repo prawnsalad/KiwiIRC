@@ -106,7 +106,7 @@ var listeners = {
 
     KICK: function (args, irc_connection, callback) {
         if ((args.channel) && (args.nick)) {
-            irc_connection.write('KICK ' + args.channel + ' ' + args.nick + ':' + args.reason, callback);
+            irc_connection.write('KICK ' + args.channel + ' ' + args.nick + ' :' + args.reason, callback);
         }
     },
 
