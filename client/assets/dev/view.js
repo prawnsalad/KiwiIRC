@@ -578,6 +578,16 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     initialize: function (options) {
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
+
+        this.$el.append('<div class="initial_loader" style="margin:1em;">Joining channel.. <span class="loader"></span></div>');
+    },
+
+    // Override the existing newMsg() method to remove the joining channel loader
+    newMsg: function () {
+        this.$el.find('.initial_loader').slideUp(function () {
+            $(this).remove();
+        });
+        return this.constructor.__super__.newMsg.apply(this, arguments);
     },
 
     topic: function (topic) {

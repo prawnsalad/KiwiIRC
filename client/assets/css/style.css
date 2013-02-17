@@ -229,6 +229,14 @@ html, body { height:100%; }
 
 
 
+#kiwi .loader {
+    background:url(../img/loader.gif) no-repeat;
+    width:43px; height:11px;
+    display:inline-block;
+}
+
+
+
 
 
 /**
