@@ -579,7 +579,10 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
 
-        this.$el.append('<div class="initial_loader" style="margin:1em;">Joining channel.. <span class="loader"></span></div>');
+        // Only show the loader if this is a channel (ie. not a query)
+        if (this.model.isChannel()) {
+            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;">Joining channel.. <span class="loader"></span></div>');
+        }
     },
 
     // Override the existing newMsg() method to remove the joining channel loader
@@ -587,6 +590,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.$el.find('.initial_loader').slideUp(function () {
             $(this).remove();
         });
+
         return this.constructor.__super__.newMsg.apply(this, arguments);
     },
 
