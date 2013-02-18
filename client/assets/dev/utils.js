@@ -371,7 +371,7 @@ function formatIRCMsg (msg) {
                     //console.log(i, to);
                     fg = col(match[1]);
                     bg = col(match[3]);
-                    str = msg.substring(i + 1 + match[1].length + ((bg !== null) ? match[2].length + 1 : 0), to);
+                    str = msg.substring(i + 1 + match[1].length + ((bg !== null) ? match[2].length : 0), to);
                     //console.log(str);
                     replace += '<span style="' + ((fg !== null) ? 'color: ' + fg + '; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + str + '</span>';
                     i = to;
