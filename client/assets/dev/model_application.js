@@ -132,14 +132,10 @@ _kiwi.model.Application = function () {
 
 
         this.initializeGlobals = function () {
-            _kiwi.global.control = this.controlbox;
-            _kiwi.global.gateway = _kiwi.gateway;
             _kiwi.global.panels = this.panels;
             
-            _kiwi.global.components = {
-                Applet: _kiwi.model.Applet,
-                Panel: _kiwi.model.Panel
-            };
+            _kiwi.global.components.Applet = _kiwi.model.Applet;
+            _kiwi.global.components.Panel =_kiwi.model.Panel;
         };
 
 

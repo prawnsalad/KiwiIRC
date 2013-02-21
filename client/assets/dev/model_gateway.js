@@ -47,7 +47,72 @@ _kiwi.model.Gateway = function () {
         
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
+
+        this.applyEventHandlers();
     };
+
+
+    this.applyEventHandlers = function () {
+        /*
+        TODO: Impliment event 'groups' to remove a listener group
+        kiwi.gateway.on('msg:#channel', my_function);
+        kiwi.gateway.on('msg:somenick', my_function);
+
+        kiwi.gateway.on('notice:#channel', my_function);
+        kiwi.gateway.on('action:somenick', my_function);
+
+        kiwi.gateway.on('join:#channel', my_function);
+        kiwi.gateway.on('part:#channel', my_function);
+        kiwi.gateway.on('quit', my_function);
+        */
+        var that = this;
+        
+        // Some easier handler events
+        this.on('onmsg', function (event) {
+            var source,
+                is_pm = (event.channel == that.get('nick'));
+
+            source = is_pm ? event.nick : event.channel;
+            
+            that.trigger('msg:' + source, event);
+
+            if (is_pm) {
+                that.trigger('pm', event);
+                that.trigger('pm:' + source, event);
+            }
+        }, this);
+
+
+        this.on('onnotice', function (event) {
+            // The notice towards a channel or a query window?
+            var source = event.target || event.nick;
+
+            this.trigger('notice', event);
+            this.trigger('notice:' + source, event);
+        }, this);
+
+
+        this.on('onaction', function (event) {
+            var source,
+                is_pm = (event.channel == that.get('nick'));
+
+            source = is_pm ? event.nick : event.channel;
+            
+            that.trigger('action:' + source, event);
+
+            if (is_pm) {
+                that.trigger('action', event);
+                that.trigger('action:' + source, event);
+            }
+        }, this);
+
+
+        this.on('ontopic', function (event) {
+            that.trigger('topic', event);
+            that.trigger('topic:' + event.channel, event);
+        });
+    };
+
 
 
     /**
