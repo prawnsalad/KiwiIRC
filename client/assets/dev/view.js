@@ -578,6 +578,20 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     initialize: function (options) {
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
+
+        // Only show the loader if this is a channel (ie. not a query)
+        if (this.model.isChannel()) {
+            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;">Joining channel.. <span class="loader"></span></div>');
+        }
+    },
+
+    // Override the existing newMsg() method to remove the joining channel loader
+    newMsg: function () {
+        this.$el.find('.initial_loader').slideUp(function () {
+            $(this).remove();
+        });
+
+        return this.constructor.__super__.newMsg.apply(this, arguments);
     },
 
     topic: function (topic) {
@@ -1057,6 +1071,9 @@ _kiwi.view.Application = Backbone.View.extend({
         _kiwi.global.settings.on('change:theme', this.updateTheme, this);
         this.updateTheme(getQueryVariable('theme'));
 
+        _kiwi.global.settings.on('change:channel_list_style', this.setTabLayout, this);
+        this.setTabLayout(_kiwi.global.settings.get('channel_list_style'));
+
         this.doLayout();
 
         $(document).keydown(this.setKeyFocus);
@@ -1087,6 +1104,22 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Apply the new theme
         this.$el.addClass('theme_' + (theme_name || 'relaxed'));
+    },
+
+
+    setTabLayout: function (layout_style) {
+        // If called by the settings callback, get the correct new_value
+        if (layout_style === _kiwi.global.settings) {
+            layout_style = arguments[1];
+        }
+        
+        if (layout_style == 'list') {
+            this.$el.addClass('chanlist_treeview');
+        } else {
+            this.$el.removeClass('chanlist_treeview');
+        }
+        
+        this.doLayout();
     },
 
 
@@ -1158,12 +1191,6 @@ _kiwi.view.Application = Backbone.View.extend({
             // And move the handle just out of sight to the right
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
-    },
-
-
-    toggleLayout: function () {
-        this.$el.toggleClass('chanlist_treeview');
-        this.doLayout();
     },
 
 

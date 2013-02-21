@@ -229,6 +229,14 @@ html, body { height:100%; }
 
 
 
+#kiwi .loader {
+    background:url(../img/loader.gif) no-repeat;
+    width:43px; height:11px;
+    display:inline-block;
+}
+
+
+
 
 
 /**
@@ -562,7 +570,20 @@ html, body { height:100%; }
 }
 
 
+#kiwi.theme_relaxed .applet > div.settings button.save {
+    padding:1em 2em;
+    border:1px solid gray; border-radius:3px;
+}
+#kiwi.theme_relaxed .applet > div.settings tr {
+    border-bottom: 1px dashed black;
+}
 
+#kiwi.theme_relaxed .applet > div.settings td.label {
+    font-weight: bold;
+}
+#kiwi.theme_relaxed .applet > div.settings tr.save {
+    text-align: right;
+}
 
 
 /**
