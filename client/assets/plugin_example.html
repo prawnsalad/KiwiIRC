@@ -1,0 +1,67 @@
+
+
+
+
+
+<div id="canvas_applet">
+    <style>
+
+    </style>
+    <div style="height:100%; background:green; position:relative;">
+        <h2>Hello, World!</h2>
+        <div class="bar" style="height:20px;width:1px;background:red;"></div>
+    </div>
+</div>
+
+
+<script>
+
+
+    (function () {
+        var view = Backbone.View.extend({
+            events: {
+            },
+
+            initialize: function (options) {
+                var that = this;
+                this.$el = $($('#canvas_applet').html());
+
+                this.model.on('applet_loaded', function () {
+                    that.$el.parent().css('height', '100%');
+                });
+            }
+        });
+
+
+
+        var applet = Backbone.Model.extend({
+            initialize: function () {
+                var that = this;
+
+                this.set('title', 'Canvas Design');
+                this.view = new view({model: this});
+
+                var irc = kiwi.components.Irc();
+                var input = kiwi.components.ControlInput();
+
+                this.on('applet_loaded', function () {
+                    irc.on('onmsg', function () {
+                        var bar = that.view.$el.find('.bar');
+                        bar.width(bar.width()+1);
+                    });
+                });
+
+                input.on('command_graph', function (event) { console.log(event); });
+            },
+
+            canvas: function (event) {
+                console.log('waheeyy');
+            }
+        });
+
+
+        kiwi.components.Applet.register('canvas', applet);
+        kiwi.components.Applet.loadOnce('canvas');
+    })();
+
+</script>
