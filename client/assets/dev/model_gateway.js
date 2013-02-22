@@ -74,11 +74,12 @@ _kiwi.model.Gateway = function () {
 
             source = is_pm ? event.nick : event.channel;
             
-            that.trigger('msg:' + source, event);
+            that.trigger('message:' + source, event);
+            that.trigger('message', event);
 
             if (is_pm) {
-                that.trigger('pm', event);
                 that.trigger('pm:' + source, event);
+                that.trigger('pm', event);
             }
         }, this);
 
@@ -87,8 +88,8 @@ _kiwi.model.Gateway = function () {
             // The notice towards a channel or a query window?
             var source = event.target || event.nick;
 
-            this.trigger('notice', event);
             this.trigger('notice:' + source, event);
+            this.trigger('notice', event);
         }, this);
 
 
@@ -101,15 +102,15 @@ _kiwi.model.Gateway = function () {
             that.trigger('action:' + source, event);
 
             if (is_pm) {
-                that.trigger('action', event);
                 that.trigger('action:' + source, event);
+                that.trigger('action', event);
             }
         }, this);
 
 
         this.on('ontopic', function (event) {
-            that.trigger('topic', event);
             that.trigger('topic:' + event.channel, event);
+            that.trigger('topic', event);
         });
     };
 

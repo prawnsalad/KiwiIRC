@@ -45,13 +45,13 @@
                 var input = kiwi.components.ControlInput();
 
                 this.on('applet_loaded', function () {
-                    irc.on('onmsg', function () {
+                    irc.on('message', function () {
                         var bar = that.view.$el.find('.bar');
                         bar.width(bar.width()+1);
                     });
                 });
 
-                input.on('command_graph', function (event) { console.log(event); });
+                input.on('command:graph', function (event) { console.log(event); });
             },
 
             canvas: function (event) {
