@@ -43,7 +43,7 @@ _kiwi.global = {
 	        };
 	    },
 
-	    Irc: function() {
+	    Network: function() {
 	        var obj = new this.EventComponent(_kiwi.gateway);
 	        var funcs = {
 	        	kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
@@ -57,6 +57,7 @@ _kiwi.global = {
 
 	        return obj;
 	    },
+
 	    ControlInput: function() {
 	        var obj = new this.EventComponent(_kiwi.app.controlbox);
 	        var funcs = {

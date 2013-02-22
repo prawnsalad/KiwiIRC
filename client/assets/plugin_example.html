@@ -41,16 +41,17 @@
                 this.set('title', 'Canvas Design');
                 this.view = new view({model: this});
 
-                var irc = kiwi.components.Irc();
+                var net = kiwi.components.Network();
                 var input = kiwi.components.ControlInput();
 
                 this.on('applet_loaded', function () {
-                    irc.on('message', function () {
+                    net.on('message', function () {
                         var bar = that.view.$el.find('.bar');
                         bar.width(bar.width()+1);
                     });
                 });
 
+                net.on('kiwi', function (event) { console.log('kiwi', event); });
                 input.on('command:graph', function (event) { console.log(event); });
             },
 

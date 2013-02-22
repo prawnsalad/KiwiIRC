@@ -54,9 +54,8 @@ _kiwi.model.Gateway = function () {
 
     this.applyEventHandlers = function () {
         /*
-        TODO: Impliment event 'groups' to remove a listener group
-        kiwi.gateway.on('msg:#channel', my_function);
-        kiwi.gateway.on('msg:somenick', my_function);
+        kiwi.gateway.on('message:#channel', my_function);
+        kiwi.gateway.on('message:somenick', my_function);
 
         kiwi.gateway.on('notice:#channel', my_function);
         kiwi.gateway.on('action:somenick', my_function);
@@ -218,7 +217,8 @@ _kiwi.model.Gateway = function () {
 
 
     this.parseKiwi = function (command, data) {
-        console.log('kiwi event', command, data);
+        this.trigger('kiwi:' + command, data);
+        this.trigger('kiwi', data);
     };
     /*
         Events:
