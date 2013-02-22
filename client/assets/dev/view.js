@@ -955,11 +955,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         // Trigger the command events
         this.trigger('command', {command: command, params: params});
-        this.trigger('command_' + command, {command: command, params: params});
+        this.trigger('command:' + command, {command: command, params: params});
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?
-        if (!this._callbacks['command_' + command]) {
+        if (!this._callbacks['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
     }
