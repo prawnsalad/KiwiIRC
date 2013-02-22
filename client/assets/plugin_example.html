@@ -1,15 +1,9 @@
-
-
-
-
-
 <div id="canvas_applet">
     <style>
 
     </style>
-    <div style="height:100%; background:green; position:relative;">
-        <h2>Hello, World!</h2>
-        <div class="bar" style="height:20px;width:1px;background:red;"></div>
+    <div style="height:100%; position:relative;">
+        <div id="plugin_example_graph" style="height:250px;width:80%;margin:1em auto;border:1px solid gray;"></div>
     </div>
 </div>
 
@@ -38,25 +32,62 @@
             initialize: function () {
                 var that = this;
 
-                this.set('title', 'Canvas Design');
+                this.set('title', 'Message Stats');
                 this.view = new view({model: this});
 
+                this.on('applet_loaded', function () {
+                    function loadGraphing(){
+                        window.c = function(){ delete window.c; that.startGraphing(); };
+
+                        // Load the charting scripts and call our temp. func when complete
+                        google.load("visualization", "1", {callback: 'window.c()', packages:["corechart"]});
+                    }
+
+                    // First step - load the charting scripts
+                    $script('http://www.google.com/jsapi', loadGraphing);
+                });
+
+            },
+
+
+            startGraphing: function() {
+                var that = this;
+
+                // Create our kiwi components
                 var net = kiwi.components.Network();
                 var input = kiwi.components.ControlInput();
 
-                this.on('applet_loaded', function () {
-                    net.on('message', function () {
-                        var bar = that.view.$el.find('.bar');
-                        bar.width(bar.width()+1);
+                // Holder for our stats and numbers
+                this.stats = {};
+
+                // Do our magic on any incoming message
+                net.on('message', function (event) {
+                    // Make sure we have this stat
+                    if (!that.stats[event.channel])
+                        that.stats[event.channel] = 0;
+
+                    that.stats[event.channel]++;
+
+                    // Build the chart data
+                    var chart_data = [['Source', 'Messages']];
+                    _.each(that.stats, function(stat, source_name){
+                        chart_data.push([source_name, stat]);
                     });
+                    var data = google.visualization.arrayToDataTable(chart_data);
+
+                    // Create the chart and plot it
+                    var chart = new google.visualization.ColumnChart(document.getElementById('plugin_example_graph'));
+
+                    var options = {
+                        title: 'Num. Incoming messages'
+                    };
+
+                    chart.draw(data, options);
                 });
 
+                // Bla...
                 net.on('kiwi', function (event) { console.log('kiwi', event); });
                 input.on('command:graph', function (event) { console.log(event); });
-            },
-
-            canvas: function (event) {
-                console.log('waheeyy');
             }
         });
 
