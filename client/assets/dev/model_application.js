@@ -54,20 +54,12 @@ _kiwi.model.Application = function () {
             this.view.barsHide(true);
 
             this.panels.server.server_login.bind('server_connect', function (event) {
-                var server_login = this,
-                    transport_path = '';
+                var server_login = this;
                 auto_connect_details = event;
 
                 server_login.networkConnecting();
                 
-                // Path to get the socket.io transport code
-                transport_path = that.kiwi_server + that.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
-                
-                $script(transport_path, function () {
-                    if (!window.io) {
-                        kiwiServerNotFound();
-                        return;
-                    }
+                that.loadTransport(function () {
                     _kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                     _kiwi.gateway.set('nick', event.nick);
                     
@@ -76,7 +68,8 @@ _kiwi.model.Application = function () {
                             kiwiServerNotFound();
                         }
                     });
-                });
+
+                }, kiwiServerNotFound);
             });
 
             // TODO: Shouldn't really be here but it's not working in the view.. :/
@@ -84,6 +77,40 @@ _kiwi.model.Application = function () {
             setTimeout(function(){
                 _kiwi.app.panels.server.server_login.$el.find('.nick').select();
             }, 0);
+        };
+
+
+        this.syncSession = function (session_id) {
+            this.loadTransport(function () {
+                _kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
+                _kiwi.gateway.syncSession(session_id, function () { that.view.barsShow(); });
+            }, kiwiServerNotFound);
+        };
+
+
+        this.loadTransport = function (success_fn, error_fn) {
+            var that = this,
+                transport_path;
+
+            // Already loaded?
+            if (window.io) {
+                success_fn && success_fn();
+                return;
+            }
+
+            // Path to get the socket.io transport code
+            transport_path = this.kiwi_server + this.get('base_path') + '/transport/socket.io.js?ts=' + (new Date().getTime());
+
+            // Load the socket.io scripts and check if successful
+            $script(transport_path, function () {
+                if (!window.io) {
+                    error_fn && error_fn();
+                } else {
+                    success_fn && success_fn();
+                }
+
+                return;
+            });
         };
 
 
@@ -525,7 +552,10 @@ _kiwi.model.Application = function () {
                 channel = that.panels.getByName(event.channel);
 
                 // If we didn't find a channel for this, may aswell leave
-                if (!channel) return;
+                if (!channel) {
+                    channel = new _kiwi.model.Channel({name: event.channel});
+                    that.panels.add(channel);
+                }
 
                 channel.temp_userlist = channel.temp_userlist || [];
                 _.each(event.users, function (item) {

@@ -50,15 +50,8 @@ _kiwi.model.Gateway = function () {
     };
 
 
-    /**
-    *   Connects to the server
-    *   @param  {String}    host        The hostname or IP address of the IRC server to connect to
-    *   @param  {Number}    port        The port of the IRC server to connect to
-    *   @param  {Boolean}   ssl         Whether or not to connect to the IRC server using SSL
-    *   @param  {String}    password    The password to supply to the IRC server during registration
-    *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
-    */
-    this.connect = function (host, port, ssl, password, callback) {
+
+    this.connectToKiwiServer = function () {
         var resource;
 
         // Work out the resource URL for socket.io
@@ -70,6 +63,7 @@ _kiwi.model.Gateway = function () {
             resource = _kiwi.app.get('base_path') + '/transport';
         }
 
+        // Create a new connection to the kiwi server
         this.socket = io.connect(this.get('kiwi_server'), {
             'resource': resource,
             
@@ -79,6 +73,7 @@ _kiwi.model.Gateway = function () {
             'reconnection delay': 2000,
             'sync disconnect on unload': false
         });
+
         this.socket.on('connect_failed', function (reason) {
             this.socket.disconnect();
             this.trigger("connect_fail", {reason: reason});
@@ -92,24 +87,6 @@ _kiwi.model.Gateway = function () {
         this.socket.on('connecting', function (transport_type) {
             console.log("_kiwi.gateway.socket.on('connecting')");
             that.trigger("connecting");
-        });
-
-        /**
-         * Once connected to the kiwi server send the IRC connect command along
-         * with the IRC server details.
-         * A `connect` event is sent from the kiwi server once connected to the
-         * IRCD and the nick has been accepted.
-         */
-        this.socket.on('connect', function () {
-            this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
-                if (!err) {
-                    that.server_num = server_num;
-                    console.log("_kiwi.gateway.socket.on('connect')");
-                } else {
-                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
-                    callback(err);
-                }
-            });
         });
 
         this.socket.on('too_many_connections', function () {
@@ -140,6 +117,74 @@ _kiwi.model.Gateway = function () {
 
         this.socket.on('reconnect_failed', function () {
             console.log("_kiwi.gateway.socket.on('reconnect_failed')");
+        });
+    };
+
+
+
+    function handleSyncData(sync_data) {
+        console.log('handleSyncData()');
+        // For the time being.. we only expect 1 server. In future may be more.
+        if (sync_data.servers) {
+            _.each(sync_data.servers, function (server) {
+                that.set('nick', server.nick);
+                that.set('name', server.network_name)
+            });
+        }
+    }
+
+    this.syncSession = function (session_id, callback) {
+        var that = this;
+
+        function doSync() {
+            that.socket.emit('kiwi', {
+                command: 'continue_session',
+                session_id: session_id
+            }, function (sync_data){
+                    handleSyncData(sync_data);
+                    callback && callback();
+               }
+            );
+        }
+
+        if (!this.socket) {
+            this.connectToKiwiServer();
+            this.socket.on('connect', doSync);
+        } else {
+            doSync();
+        }
+
+    };
+
+
+    /**
+    *   Connects to the server
+    *   @param  {String}    host        The hostname or IP address of the IRC server to connect to
+    *   @param  {Number}    port        The port of the IRC server to connect to
+    *   @param  {Boolean}   ssl         Whether or not to connect to the IRC server using SSL
+    *   @param  {String}    password    The password to supply to the IRC server during registration
+    *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
+    */
+    this.connect = function (host, port, ssl, password, callback) {
+
+        this.connectToKiwiServer();
+
+        /**
+         * Once connected to the kiwi server send the IRC connect command along
+         * with the IRC server details.
+         * A `connect` event is sent from the kiwi server once connected to the
+         * IRCD and the nick has been accepted.
+         */
+        this.socket.on('connect', function () {
+            this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
+                if (!err) {
+                    that.server_num = server_num;
+                    console.log("_kiwi.gateway.socket.on('connect')");
+                } else {
+                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
+                    callback(err);
+                }
+            });
         });
     };
 

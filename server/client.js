@@ -24,7 +24,7 @@ var Client = function (websocket) {
         .update(Math.floor(Math.random() * 100000).toString())
         .digest('hex');
     
-    this.state = new State(this);
+    this.state = new State(this, true);
     
     this.buffer = {
         list: [],
@@ -66,6 +66,16 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
     var c = {command: command, data: data};
     this.websocket.emit('kiwi', c, callback);
 };
+
+
+Client.prototype.syncClient = function () {
+    this.state.irc_connections.forEach(function(irc_connection, irc_connection_idx) {
+        _.each(irc_connection.irc_channels, function(channel) {
+            irc_connection.write('NAMES ' + channel.name);
+        });
+    });
+};
+
 
 Client.prototype.dispose = function () {
     this.emit('dispose');
@@ -137,7 +147,42 @@ function kiwiCommand(command, callback) {
             } else {
                 return callback('Hostname, port and nickname must be specified');
             }
-        break;
+
+            break;
+
+        case 'continue_session':
+            var state;
+
+            if (command.session_id)
+                state = global.states.get(command.session_id);
+
+            if (!state) {
+                callback({error: 'State does not exist'});
+                return;
+            }
+
+            // Remove the existing state
+            if (this.state)
+                this.state.dispose();
+
+            // Attach this client to the new state
+            state.attachClient(this);
+
+            // Keep a reference to this state for ourselves
+            this.state = state;
+
+            // Finally.. sync the state + browser
+            this.syncClient();
+
+            // Send some data back down to the browser
+            return callback({
+                servers:[
+                    {network_name: 'Synced Net', nick: state.irc_connections[0].nick}
+                ]
+            });
+
+            break;
+
         default:
             callback();
     }

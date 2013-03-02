@@ -111,6 +111,33 @@ global.clients = {
 
 
 
+// Holder for all the client states
+global.states = {
+    states: Object.create(null),
+
+    add: function (state) {
+        this.states[state.hash] = state;
+        console.log('State added ' + state.hash);
+    },
+
+    remove: function (state) {
+        if (typeof this.states[state.hash] !== 'undefined') {
+            delete this.states[state.hash];
+            console.log('State removed ' + state.hash);
+        }
+    },
+
+    get: function (state_hash) {
+        if (this.states[state_hash]) {
+            console.log('State given ' + state_hash);
+            return this.states[state_hash];
+        }
+    }
+};
+
+
+
+
 /*
  * Web listeners
  */
@@ -191,6 +218,7 @@ process.stdin.on('data', function (buffered) {
         case 'stats':
             console.log('Connected clients: ' + _.size(global.clients.clients).toString());
             console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+            console.log('Num. states: ' + _.size(global.states.states).toString());
             break;
 
         case 'reconfig':

@@ -1,5 +1,6 @@
 var util            = require('util'),
     events          = require('events'),
+    crypto          = require('crypto'),
     _               = require('lodash'),
     IrcConnection   = require('./connection.js').IrcConnection;
 
@@ -7,30 +8,48 @@ var State = function (client, save_state) {
     var that = this;
 
     events.EventEmitter.call(this);
-    this.client = client;
     this.save_state = save_state || false;
     
     this.irc_connections = [];
     this.next_connection = 0;
     
+    this.attachClient(client);
+
+    // A hash to identify this client instance
+    this.hash = crypto.createHash('sha256')
+        .update(Date.now().toString())
+        .update((Math.random() * 100000).toString())
+        .digest('hex');
+
+    global.states.add(this);
+
     this.client.on('dispose', function () {
-        if (!that.save_state) {
-            _.each(that.irc_connections, function (irc_connection, i, cons) {
-                if (irc_connection) {
-                    irc_connection.end('QUIT :' + (global.config.quit_message || ''));
-                    irc_connection.dispose();
-                    cons[i] = null;
-                }
-            });
-            
-            that.dispose();
-        }
+        if (that.save_state) return;
+
+        _.each(that.irc_connections, function (irc_connection, i, cons) {
+            if (irc_connection) {
+                irc_connection.end('QUIT :' + (global.config.quit_message || ''));
+                irc_connection.dispose();
+                cons[i] = null;
+            }
+        });
+        
+        that.dispose();
     });
 };
 
 util.inherits(State, events.EventEmitter);
 
 module.exports = State;
+
+State.prototype.attachClient = function (new_client) {
+    this.client = new_client;
+};
+State.prototype.detachClient = function (old_client) {
+    if (this.cient === old_client)
+        this.client = null;
+};
+
 
 State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callback) {
     var that = this;
@@ -85,6 +104,7 @@ State.prototype.sendKiwiCommand = function () {
 };
 
 State.prototype.dispose = function () {
+    global.states.remove(this);
     this.emit('dispose');
     this.removeAllListeners();
 };
