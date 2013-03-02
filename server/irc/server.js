@@ -7,6 +7,8 @@ var IrcServer = function (irc_connection) {
 
     this.list_buffer = [];
     this.motd_buffer = '';
+    this.network_name = 'Network';
+    this.server_options = {};
     
     this.irc_events = {
         connect:                onConnect,
@@ -55,6 +57,13 @@ function onConnect(event) {
 };
 
 function onOptions(event) {
+    // Keep a copy of these options for later use
+    this.server_options = event;
+
+    // Keep a copy of the network name
+    if (event.options.NETWORK)
+        this.network_name = event.options.NETWORK;
+
     this.irc_connection.clientEvent('options', {
         options: event.options,
         cap: event.cap

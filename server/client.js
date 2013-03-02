@@ -70,6 +70,11 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 
 Client.prototype.syncClient = function () {
     this.state.irc_connections.forEach(function(irc_connection, irc_connection_idx) {
+        // TODO: This is hacky.. shouldn't be emitting this event from here
+        // Force the MOTD + network options down to the client
+        irc_connection.emit('server:*:motd_end');
+        irc_connection.emit('server:*:options', irc_connection.server.server_options);
+
         _.each(irc_connection.irc_channels, function(channel) {
             irc_connection.write('NAMES ' + channel.name);
         });
@@ -150,6 +155,11 @@ function kiwiCommand(command, callback) {
 
             break;
 
+        /**
+         * Persistant state stuff
+         * Taking a session_id (state.hash) from the client, switch
+         * the current state with one that matches the session_id.
+         */
         case 'continue_session':
             var state;
 
@@ -174,10 +184,13 @@ function kiwiCommand(command, callback) {
             // Finally.. sync the state + browser
             this.syncClient();
 
-            // Send some data back down to the browser
+            // Send some data back down to the browser (should really be in syncClient())
             return callback({
                 servers:[
-                    {network_name: 'Synced Net', nick: state.irc_connections[0].nick}
+                    {
+                        network_name: state.irc_connections[0].server.network_name,
+                        nick: state.irc_connections[0].nick
+                    }
                 ]
             });
 

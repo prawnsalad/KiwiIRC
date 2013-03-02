@@ -122,6 +122,7 @@ _kiwi.model.Gateway = function () {
 
 
 
+    // Handles the data recieved from the kiwi server after a syncSession() call
     function handleSyncData(sync_data) {
         console.log('handleSyncData()');
         // For the time being.. we only expect 1 server. In future may be more.
@@ -133,6 +134,7 @@ _kiwi.model.Gateway = function () {
         }
     }
 
+    // Force the server to use an existing State (session) for this client
     this.syncSession = function (session_id, callback) {
         var that = this;
 
