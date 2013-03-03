@@ -24,7 +24,9 @@ var Client = function (websocket) {
         .update(Math.floor(Math.random() * 100000).toString())
         .digest('hex');
     
-    this.state = new State(this, true);
+    // TODO: Don't blindly add a state here, check if we're continuing a session first
+    this.state = new State(false);
+    this.state.attachClient(this);
     
     this.buffer = {
         list: [],
@@ -83,6 +85,9 @@ Client.prototype.syncClient = function () {
 
 
 Client.prototype.dispose = function () {
+    if (this.state)
+        this.state.detachClient(this);
+
     this.emit('dispose');
     this.removeAllListeners();
 };

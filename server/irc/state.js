@@ -4,7 +4,7 @@ var util            = require('util'),
     _               = require('lodash'),
     IrcConnection   = require('./connection.js').IrcConnection;
 
-var State = function (client, save_state) {
+var State = function (save_state) {
     var that = this;
 
     events.EventEmitter.call(this);
@@ -12,8 +12,9 @@ var State = function (client, save_state) {
     
     this.irc_connections = [];
     this.next_connection = 0;
-    
-    this.attachClient(client);
+
+    // Array of connected clients to this state
+    this.client = [];
 
     // A hash to identify this client instance
     this.hash = crypto.createHash('sha256')
@@ -22,33 +23,12 @@ var State = function (client, save_state) {
         .digest('hex');
 
     global.states.add(this);
-
-    this.client.on('dispose', function () {
-        if (that.save_state) return;
-
-        _.each(that.irc_connections, function (irc_connection, i, cons) {
-            if (irc_connection) {
-                irc_connection.end('QUIT :' + (global.config.quit_message || ''));
-                irc_connection.dispose();
-                cons[i] = null;
-            }
-        });
-        
-        that.dispose();
-    });
 };
 
 util.inherits(State, events.EventEmitter);
 
 module.exports = State;
 
-State.prototype.attachClient = function (new_client) {
-    this.client = new_client;
-};
-State.prototype.detachClient = function (old_client) {
-    if (this.cient === old_client)
-        this.client = null;
-};
 
 
 State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callback) {
@@ -95,8 +75,45 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     });
 };
 
+
+
+State.prototype.attachClient = function (new_client) {
+    if (!_.contains(this.client, new_client))
+        this.client.push(new_client);
+};
+
+
+State.prototype.detachClient = function (old_client) {
+    var that = this;
+
+    // Remove this client from our list
+    this.client = _.reject(this.client, function(client) {
+        return client === old_client;
+    });
+    console.log(this.client, this.client.lengthm, _.size(this.client));
+    
+    // If we have no more connected clients and we're not saving this
+    // state, dispose of everything
+    if (_.size(this.client) === 0 && !that.save_state) {
+        _.each(that.irc_connections, function (irc_connection, i, cons) {
+            if (irc_connection) {
+                irc_connection.end('QUIT :' + (global.config.quit_message || ''));
+                irc_connection.dispose();
+                cons[i] = null;
+            }
+        });
+        
+        that.dispose();
+    }
+};
+
+
 State.prototype.sendIrcCommand = function () {
-    this.client.sendIrcCommand.apply(this.client, arguments);
+    var args = arguments;
+
+    _.each(this.client, function(client) {
+        client.sendIrcCommand.apply(client, args);
+    });
 };
 
 State.prototype.sendKiwiCommand = function () {
