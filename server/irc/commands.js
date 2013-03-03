@@ -252,7 +252,7 @@ var listeners = {
     },
     'RPL_ENDOFBANLIST': function (command) {
         this.irc_connection.emit('channel:' + command.params[1] + ':banlist_end', {
-            channel: commands.params[1]
+            channel: command.params[1]
         });
     },
     'RPL_TOPIC': function (command) {
