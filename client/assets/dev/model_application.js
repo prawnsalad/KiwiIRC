@@ -457,6 +457,11 @@ _kiwi.model.Application = function () {
             });
 
 
+            gw.on('onctcp_response', function (event) {
+                that.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg);
+            });
+
+
             gw.on('onnotice', function (event) {
                 var panel;
 
@@ -833,6 +838,8 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command_clear', clearCommand);
 
+            controlbox.on('command_ctcp', ctcpCommand);
+
 
             controlbox.on('command_css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
@@ -1042,6 +1049,21 @@ _kiwi.model.Application = function () {
             if (_kiwi.app.panels.active.clearMessages) {
                 _kiwi.app.panels.active.clearMessages();
             }
+        }
+
+        function ctcpCommand(ev) {
+            var target, type;
+
+            // Make sure we have a target and a ctcp type (eg. version, time)
+            if (ev.params.length < 2) return;
+
+            target = ev.params[0];
+            ev.params.shift();
+
+            type = ev.params[0];
+            ev.params.shift();
+
+            _kiwi.gateway.ctcp(true, type, target, ev.params.join(' '));
         }
 
         function settingsCommand (ev) {
