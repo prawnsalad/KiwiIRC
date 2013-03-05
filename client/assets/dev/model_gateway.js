@@ -47,7 +47,72 @@ _kiwi.model.Gateway = function () {
         
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
+
+        this.applyEventHandlers();
     };
+
+
+    this.applyEventHandlers = function () {
+        /*
+        kiwi.gateway.on('message:#channel', my_function);
+        kiwi.gateway.on('message:somenick', my_function);
+
+        kiwi.gateway.on('notice:#channel', my_function);
+        kiwi.gateway.on('action:somenick', my_function);
+
+        kiwi.gateway.on('join:#channel', my_function);
+        kiwi.gateway.on('part:#channel', my_function);
+        kiwi.gateway.on('quit', my_function);
+        */
+        var that = this;
+        
+        // Some easier handler events
+        this.on('onmsg', function (event) {
+            var source,
+                is_pm = (event.channel == that.get('nick'));
+
+            source = is_pm ? event.nick : event.channel;
+            
+            that.trigger('message:' + source, event);
+            that.trigger('message', event);
+
+            if (is_pm) {
+                that.trigger('pm:' + source, event);
+                that.trigger('pm', event);
+            }
+        }, this);
+
+
+        this.on('onnotice', function (event) {
+            // The notice towards a channel or a query window?
+            var source = event.target || event.nick;
+
+            this.trigger('notice:' + source, event);
+            this.trigger('notice', event);
+        }, this);
+
+
+        this.on('onaction', function (event) {
+            var source,
+                is_pm = (event.channel == that.get('nick'));
+
+            source = is_pm ? event.nick : event.channel;
+            
+            that.trigger('action:' + source, event);
+
+            if (is_pm) {
+                that.trigger('action:' + source, event);
+                that.trigger('action', event);
+            }
+        }, this);
+
+
+        this.on('ontopic', function (event) {
+            that.trigger('topic:' + event.channel, event);
+            that.trigger('topic', event);
+        });
+    };
+
 
 
     /**
@@ -152,7 +217,8 @@ _kiwi.model.Gateway = function () {
 
 
     this.parseKiwi = function (command, data) {
-        console.log('kiwi event', command, data);
+        this.trigger('kiwi:' + command, data);
+        this.trigger('kiwi', data);
     };
     /*
         Events:

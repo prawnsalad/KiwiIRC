@@ -132,14 +132,10 @@ _kiwi.model.Application = function () {
 
 
         this.initializeGlobals = function () {
-            _kiwi.global.control = this.controlbox;
-            _kiwi.global.gateway = _kiwi.gateway;
             _kiwi.global.panels = this.panels;
             
-            _kiwi.global.components = {
-                Applet: _kiwi.model.Applet,
-                Panel: _kiwi.model.Panel
-            };
+            _kiwi.global.components.Applet = _kiwi.model.Applet;
+            _kiwi.global.components.Panel =_kiwi.model.Panel;
         };
 
 
@@ -814,47 +810,47 @@ _kiwi.model.Application = function () {
             controlbox.on('unknown_command', unknownCommand);
 
             controlbox.on('command', allCommands);
-            controlbox.on('command_msg', msgCommand);
+            controlbox.on('command:msg', msgCommand);
 
-            controlbox.on('command_action', actionCommand);
+            controlbox.on('command:action', actionCommand);
 
-            controlbox.on('command_join', joinCommand);
+            controlbox.on('command:join', joinCommand);
 
-            controlbox.on('command_part', partCommand);
+            controlbox.on('command:part', partCommand);
 
-            controlbox.on('command_nick', function (ev) {
+            controlbox.on('command:nick', function (ev) {
                 _kiwi.gateway.changeNick(ev.params[0]);
             });
 
-            controlbox.on('command_query', queryCommand);
+            controlbox.on('command:query', queryCommand);
 
-            controlbox.on('command_topic', topicCommand);
+            controlbox.on('command:topic', topicCommand);
 
-            controlbox.on('command_notice', noticeCommand);
+            controlbox.on('command:notice', noticeCommand);
 
-            controlbox.on('command_quote', quoteCommand);
+            controlbox.on('command:quote', quoteCommand);
 
-            controlbox.on('command_kick', kickCommand);
+            controlbox.on('command:kick', kickCommand);
 
-            controlbox.on('command_clear', clearCommand);
+            controlbox.on('command:clear', clearCommand);
 
             controlbox.on('command_ctcp', ctcpCommand);
 
 
-            controlbox.on('command_css', function (ev) {
+            controlbox.on('command:css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
                 $('link[rel="stylesheet"]').each(function () {
                     this.href = this.href.replace(/\?.*|$/, queryString);
                 });
             });
 
-            controlbox.on('command_js', function (ev) {
+            controlbox.on('command:js', function (ev) {
                 if (!ev.params[0]) return;
                 $script(ev.params[0] + '?' + (new Date().getTime()));
             });
 
             
-            controlbox.on('command_set', function (ev) {
+            controlbox.on('command:set', function (ev) {
                 if (!ev.params[0]) return;
 
                 var setting = ev.params[0],
@@ -873,13 +869,13 @@ _kiwi.model.Application = function () {
             });
 
 
-            controlbox.on('command_save', function (ev) {
+            controlbox.on('command:save', function (ev) {
                 _kiwi.global.settings.save();
                 _kiwi.app.panels.active.addMsg('', 'Settings have been saved');
             });
 
 
-            controlbox.on('command_alias', function (ev) {
+            controlbox.on('command:alias', function (ev) {
                 var name, rule;
 
                 // No parameters passed so list them
@@ -910,8 +906,8 @@ _kiwi.model.Application = function () {
                 controlbox.preprocessor.aliases[name] = rule;
             });
 
-            controlbox.on('command_applet', appletCommand);
-            controlbox.on('command_settings', settingsCommand);
+            controlbox.on('command:applet', appletCommand);
+            controlbox.on('command:settings', settingsCommand);
         };
 
         // A fallback action. Send a raw command to the server
