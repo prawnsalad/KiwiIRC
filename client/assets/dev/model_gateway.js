@@ -111,6 +111,13 @@ _kiwi.model.Gateway = function () {
             that.trigger('topic:' + event.channel, event);
             that.trigger('topic', event);
         });
+
+
+        this.on('onjoin', function (event) {
+            that.trigger('join:' + event.channel, event);
+            that.trigger('join', event);
+        });
+
     };
 
 

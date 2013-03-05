@@ -908,6 +908,7 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:applet', appletCommand);
             controlbox.on('command:settings', settingsCommand);
+            controlbox.on('command:script', scriptCommand);
         };
 
         // A fallback action. Send a raw command to the server
@@ -1065,6 +1066,11 @@ _kiwi.model.Application = function () {
         function settingsCommand (ev) {
             var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
             settings.view.show();
+        }
+
+        function scriptCommand (ev) {
+            var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
+            editor.view.show();
         }
 
         function appletCommand (ev) {

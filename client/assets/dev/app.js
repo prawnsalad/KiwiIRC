@@ -52,7 +52,10 @@ _kiwi.global = {
 	        };
 
 	        _.each(funcs, function(gateway_fn, func_name) {
-	        	obj[func_name] = _kiwi.gateway[gateway_fn];
+	        	obj[func_name] = function() {
+	        		var fn_name = gateway_fn;
+	        		_kiwi.gateway[fn_name].apply(_kiwi.gateway, arguments);
+	        	};
 	        });
 
 	        return obj;

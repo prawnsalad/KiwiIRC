@@ -46,6 +46,7 @@ var src = concat([
     __dirname + '/applet_settings.js',
     __dirname + '/applet_nickserv.js',
     __dirname + '/applet_chanlist.js',
+    __dirname + '/applet_scripteditor.js',
 
     __dirname + '/utils.js',
     __dirname + '/view.js'

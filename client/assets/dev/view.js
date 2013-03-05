@@ -1131,7 +1131,7 @@ _kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if ((ev.target.tagName.toLowerCase() === 'input') || $(ev.target).attr('contenteditable')) {
+        if ((ev.target.tagName.toLowerCase() === 'input') || (ev.target.tagName.toLowerCase() === 'textarea') || $(ev.target).attr('contenteditable')) {
             return;
         }
 
