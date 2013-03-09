@@ -142,11 +142,11 @@ _kiwi.model.Application = function () {
         this.populateDefaultServerSettings = function () {
             var parts;
             var defaults = {
-                nick: getQueryVariable('nick') || 'kiwi_?',
-                server: 'irc.kiwiirc.com',
+                nick: getQueryVariable('nick') || '',
+                server: '',
                 port: 6667,
                 ssl: false,
-                channel: window.location.hash || '#kiwiirc',
+                channel: window.location.hash || '#chat',
                 channel_key: ''
             };
             var uricheck;
@@ -248,7 +248,7 @@ _kiwi.model.Application = function () {
             // If any settings have been given by the server.. override any auto detected settings
             /**
              * Get any server restrictions as set in the server config
-             * These settings can not changed in the server selection dialog
+             * These settings can not be changed in the server selection dialog
              */
             if (this.server_settings && this.server_settings.connection) {
                 if (this.server_settings.connection.server) {

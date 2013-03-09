@@ -131,7 +131,7 @@ conf.client = {
 };
 
 
-// If not empty, the client may only connect to this 1 IRC server
+// If set, the client may only connect to this 1 IRC server
 //conf.restrict_server = "irc.kiwiirc.com";
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;
