@@ -150,6 +150,15 @@ _kiwi.view.ServerSelect = function () {
         },
 
         submitForm: function (event) {
+            event.preventDefault();
+
+            // Make sure a nick is chosen
+            if (!$('input.nick', this.$el).val().trim()) {
+                this.setStatus('Select a nickname first!');
+                $('input.nick', this.$el).select();
+                return;
+            }
+
             if (state === 'nick_change') {
                 this.submitNickChange(event);
             } else {
@@ -157,7 +166,7 @@ _kiwi.view.ServerSelect = function () {
             }
 
             $('button', this.$el).attr('disabled', 1);
-            return false;
+            return;
         },
 
         submitLogin: function (event) {
@@ -245,7 +254,7 @@ _kiwi.view.ServerSelect = function () {
             $('.status', this.$el)
                 .text(text)
                 .attr('class', 'status')
-                .addClass(class_name)
+                .addClass(class_name||'')
                 .show();
         },
         clearStatus: function () {
