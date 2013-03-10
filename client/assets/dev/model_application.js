@@ -834,7 +834,7 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:clear', clearCommand);
 
-            controlbox.on('command_ctcp', ctcpCommand);
+            controlbox.on('command:ctcp', ctcpCommand);
 
 
             controlbox.on('command:css', function (ev) {
