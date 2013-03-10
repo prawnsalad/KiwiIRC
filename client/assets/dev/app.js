@@ -32,6 +32,7 @@ _kiwi.global = {
 	        }
 
 	        _.extend(this, Backbone.Events);
+	        this._source = event_source;
 
 	        // Proxy the events to this dispatcher
 	        event_source.on('all', proxyEvent, this);
@@ -40,6 +41,7 @@ _kiwi.global = {
 	        this.dispose = function () {
 	            event_source.off('all', proxyEvent);
 	            this.off();
+	            delete this.event_source;
 	        };
 	    },
 
@@ -48,13 +50,14 @@ _kiwi.global = {
 	        var funcs = {
 	        	kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
 	        	part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
-	        	notice: 'notice', msg: 'privmsg'
+	        	notice: 'notice', msg: 'privmsg',
+	        	get: 'get'
 	        };
 
 	        _.each(funcs, function(gateway_fn, func_name) {
 	        	obj[func_name] = function() {
 	        		var fn_name = gateway_fn;
-	        		_kiwi.gateway[fn_name].apply(_kiwi.gateway, arguments);
+	        		return _kiwi.gateway[fn_name].apply(_kiwi.gateway, arguments);
 	        	};
 	        });
 
@@ -68,7 +71,10 @@ _kiwi.global = {
 	        };
 
 	        _.each(funcs, function(controlbox_fn, func_name) {
-	        	obj[func_name] = _kiwi.app.controlbox[controlbox_fn];
+	        	obj[func_name] = function() {
+	        		var fn_name = controlbox_fn;
+	        		return _kiwi.app.controlbox[fn_name].apply(_kiwi.app.controlbox, arguments);
+	        	};
 	        });
 
 	        return obj;
