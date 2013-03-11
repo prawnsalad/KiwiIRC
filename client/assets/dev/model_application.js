@@ -996,6 +996,13 @@ _kiwi.model.Application = function () {
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
 
+                // If not a valid channel name, display a warning
+                if (!that.isChannelName(channel_name)) {
+                    _kiwi.app.panels.server.addMsg('', channel_name + ' is not a valid channel name');
+                    _kiwi.app.message.text(channel_name + ' is not a valid channel name', {timeout: 5000});
+                    return;
+                }
+
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
