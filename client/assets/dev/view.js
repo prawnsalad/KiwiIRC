@@ -1151,12 +1151,12 @@ _kiwi.view.Application = Backbone.View.extend({
 
 
     doLayout: function () {
-        var el_kiwi = this.$el; //$('#kiwi');
-        var el_panels = $('#panels', el_kiwi);
-        var el_memberlists = $('#memberlists', el_kiwi);
-        var el_toolbar = $('#toolbar', el_kiwi);
-        var el_controlbox = $('#controlbox', el_kiwi);
-        var el_resize_handle = $('#memberlists_resize_handle', el_kiwi);
+        var el_kiwi = this.$el;
+        var el_panels = $('#kiwi #panels');
+        var el_memberlists = $('#kiwi #memberlists');
+        var el_toolbar = $('#kiwi #toolbar');
+        var el_controlbox = $('#kiwi #controlbox');
+        var el_resize_handle = $('#kiwi #memberlists_resize_handle');
 
         var css_heights = {
             top: el_toolbar.outerHeight(true),
