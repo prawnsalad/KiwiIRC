@@ -265,8 +265,7 @@ _kiwi.model.Gateway = function () {
                 $.each(data.options, function (name, value) {
                     switch (name) {
                     case 'CHANTYPES':
-                        // TODO: Check this. Why is it only getting the first char?
-                        that.set('channel_prefix', value.join('').charAt(0));
+                        that.set('channel_prefix', value.join(''));
                         break;
                     case 'NETWORK':
                         that.set('name', value);
