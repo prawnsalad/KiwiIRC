@@ -424,6 +424,11 @@ _kiwi.model.Application = function () {
                 var panel,
                     is_pm = (event.channel == _kiwi.gateway.get('nick'));
 
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
+
                 if (is_pm) {
                     // If a panel isn't found for this PM, create one
                     panel = that.panels.getByName(event.nick);
@@ -440,12 +445,17 @@ _kiwi.model.Application = function () {
                         panel = that.panels.server;
                     }
                 }
-                
+
                 panel.addMsg(event.nick, event.msg);
             });
 
 
             gw.on('onctcp_request', function (event) {
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
+
                 // Reply to a TIME ctcp
                 if (event.msg.toUpperCase() === 'TIME') {
                     gw.ctcp(false, event.type, event.nick, (new Date()).toString());
@@ -454,12 +464,22 @@ _kiwi.model.Application = function () {
 
 
             gw.on('onctcp_response', function (event) {
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
+                
                 that.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg);
             });
 
 
             gw.on('onnotice', function (event) {
                 var panel;
+
+                // An ignored user? don't do anything with it
+                if (event.nick && gw.isNickIgnored(event.nick)) {
+                    return;
+                }
 
                 // Find a panel for the destination(channel) or who its from
                 panel = that.panels.getByName(event.target) || that.panels.getByName(event.nick);
@@ -474,6 +494,11 @@ _kiwi.model.Application = function () {
             gw.on('onaction', function (event) {
                 var panel,
                     is_pm = (event.channel == _kiwi.gateway.get('nick'));
+
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
 
                 if (is_pm) {
                     // If a panel isn't found for this PM, create one
@@ -905,6 +930,48 @@ _kiwi.model.Application = function () {
                 // Now actually add the alias
                 controlbox.preprocessor.aliases[name] = rule;
             });
+
+            
+            controlbox.on('command:ignore', function (ev) {
+                var list = _kiwi.gateway.get('ignore_list');
+
+                // No parameters passed so list them
+                if (!ev.params[0]) {
+                    if (list.length > 0) {
+                        _kiwi.app.panels.active.addMsg(' ', 'Ignored nicks:');
+                        $.each(list, function (idx, ignored_pattern) {
+                            _kiwi.app.panels.active.addMsg(' ', ignored_pattern);
+                        });
+                    } else {
+                        _kiwi.app.panels.active.addMsg(' ', 'Not ignoring anybody');
+                    }
+                    return;
+                }
+
+                // We have a parameter, so add it
+                list.push(ev.params[0]);
+                _kiwi.gateway.set('ignore_list', list);
+                _kiwi.app.panels.active.addMsg(' ', 'Ignoring ' + ev.params[0]);
+            });
+
+
+            controlbox.on('command:unignore', function (ev) {
+                var list = _kiwi.gateway.get('ignore_list');
+
+                if (!ev.params[0]) {
+                    _kiwi.app.panels.active.addMsg(' ', 'Specifiy which nick you wish to stop ignoring');
+                    return;
+                }
+
+                list = _.reject(list, function(pattern) {
+                    return pattern === ev.params[0];
+                });
+
+                _kiwi.gateway.set('ignore_list', list);
+
+                _kiwi.app.panels.active.addMsg(' ', 'Stopped ignoring ' + ev.params[0]);
+            });
+
 
             controlbox.on('command:applet', appletCommand);
             controlbox.on('command:settings', settingsCommand);

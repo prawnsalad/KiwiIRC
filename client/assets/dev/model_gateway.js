@@ -38,7 +38,13 @@ _kiwi.model.Gateway = function () {
         *   The URL to the Kiwi server
         *   @type   String
         */
-        kiwi_server: '//kiwi'
+        kiwi_server: '//kiwi',
+
+        /**
+        *   List of nicks we are ignoring
+        *   @type Array
+        */
+        ignore_list: []
     };
 
 
@@ -513,6 +519,24 @@ _kiwi.model.Gateway = function () {
 
         this.sendData(data, callback);
     };
+
+
+    // Check a nick alongside our ignore list
+    this.isNickIgnored = function (nick) {
+        var idx, list = this.get('ignore_list');
+        var pattern, regex;
+
+        for (idx = 0; idx < list.length; idx++) {
+            pattern = list[idx].replace(/([.+^$[\]\\(){}|-])/g, "\\$1")
+                .replace('*', '.*')
+                .replace('?', '.');
+
+            regex = new RegExp(pattern, 'i');
+            if (regex.test(nick)) return true;
+        }
+
+        return false;
+    }
 
 
     return new (Backbone.Model.extend(this))(arguments);
