@@ -1235,22 +1235,21 @@ html, body { height:100%; }
 
 
 /* The server select dialog */
-#kiwi.theme_basic .server_select { padding:3em 0 2em 0; margin: 0 auto; width:100%; }
-#kiwi.theme_basic .server_select .more { display:none; }
-#kiwi.theme_basic .server_select button { display:block; padding:3px 7px; margin:0 auto; }
-#kiwi.theme_basic .server_select input.nick {
-    float:none; display:block; width:80%;
-    padding:0.5em 1em; margin:0 auto;
-    text-align: center;
-}
-#kiwi.theme_basic .server_select label { display:none; }
+#kiwi.theme_basic .server_select { width:730px;  padding:3em 0 2em 0; margin: 0 auto; }
+#kiwi.theme_basic .server_select a { text-decoration: none; }
+#kiwi.theme_basic .server_select .more { display: none; width:270px; margin:0 auto; }
+#kiwi.theme_basic .server_select table tr td { padding:5px; }
+#kiwi.theme_basic .server_select button { float:right; padding:3px 7px; }
+#kiwi.theme_basic .server_select input { padding:3px 7px; width:150px; }
+#kiwi.theme_basic .server_select label { }
 #kiwi.theme_basic .server_select br { clear:both; }
-#kiwi.theme_basic .server_select .basic { border:none; }
-#kiwi.theme_basic .server_select .basic table { width:100%; }
-#kiwi.theme_basic .server_select .basic table tr.channel,
-#kiwi.theme_basic .server_select .basic table tr.pass,
-#kiwi.theme_basic .server_select .basic table tr.have_pass { display:none; }
-#kiwi.theme_basic .server_select .basic .show_more { display:none !important; }
+#kiwi.theme_basic .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
+#kiwi.theme_basic .server_select .basic input { width:170px; }
+#kiwi.theme_basic .server_select .basic label { font-size:1.3em; margin-top:4px; }
+#kiwi.theme_basic .server_select .basic tr.have_pass { font-size:0.8em; }
+#kiwi.theme_basic .server_select .basic tr.channel td { padding-top:1em; }
+#kiwi.theme_basic .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
+#kiwi.theme_basic .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
 #kiwi.theme_basic .server_select.single_server .basic { border:none; }
 #kiwi.theme_basic .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 #kiwi.theme_basic .server_select .status.ok { }
@@ -1259,17 +1258,15 @@ html, body { height:100%; }
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
 
-#kiwi.theme_basic .server_select .divider-verticle {
-    display:none;
+
+#kiwi.theme_basic .server_select .kiwi_logo { text-align: center; display:block; }
+#kiwi.theme_basic .server_select .kiwi_logo h1 {
+    font-size:20px;
+    line-height:48px; vertical-align: middle;
+    color: #555555;
 }
-#kiwi.theme_basic .server_select .server_details {
-    position: relative !important;
-    float: none !important;
-    width: auto !important;
-    padding: 0 !important;
-    margin: 2em 0 0 0 !important;
-}
-#kiwi.theme_basic .server_select .about_kiwi { display:none; }
+#kiwi.theme_basic .server_select .kiwi_logo img { }
+
 
 #kiwi.theme_basic.chanlist_treeview #panels { left:160px; }
 #kiwi.theme_basic.chanlist_treeview #toolbar { position:static; }
