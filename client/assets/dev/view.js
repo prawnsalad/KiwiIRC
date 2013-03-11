@@ -992,7 +992,7 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.timeout = opt.timeout || 5000;
 
         this.$el.text(text).attr('class', opt.type);
-        this.$el.slideDown(_kiwi.app.view.doLayout);
+        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, this));
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
@@ -1010,7 +1010,7 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
     },
 
     hide: function () {
-        this.$el.slideUp(_kiwi.app.view.doLayout);
+        this.$el.slideUp($.proxy(_kiwi.app.view.doLayout, this));
     },
 
     doTimeout: function (length) {
@@ -1072,9 +1072,11 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
 
 _kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
-        $(window).resize(this.doLayout);
-        $('#toolbar').resize(this.doLayout);
-        $('#controlbox').resize(this.doLayout);
+        var that = this;
+
+        $(window).resize(function() { that.doLayout.apply(that); });
+        $('#toolbar').resize(function() { that.doLayout.apply(that); });
+        $('#controlbox').resize(function() { that.doLayout.apply(that); });
 
         // Change the theme when the config is changed
         _kiwi.global.settings.on('change:theme', this.updateTheme, this);
@@ -1149,12 +1151,12 @@ _kiwi.view.Application = Backbone.View.extend({
 
 
     doLayout: function () {
-        var el_kiwi = $('#kiwi');
-        var el_panels = $('#panels');
-        var el_memberlists = $('#memberlists');
-        var el_toolbar = $('#toolbar');
-        var el_controlbox = $('#controlbox');
-        var el_resize_handle = $('#memberlists_resize_handle');
+        var el_kiwi = this.$el; //$('#kiwi');
+        var el_panels = $('#panels', el_kiwi);
+        var el_memberlists = $('#memberlists', el_kiwi);
+        var el_toolbar = $('#toolbar', el_kiwi);
+        var el_controlbox = $('#controlbox', el_kiwi);
+        var el_resize_handle = $('#memberlists_resize_handle', el_kiwi);
 
         var css_heights = {
             top: el_toolbar.outerHeight(true),
@@ -1178,7 +1180,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // If we have channel tabs on the side, adjust the height
         if (el_kiwi.hasClass('chanlist_treeview')) {
-            $('#kiwi #tabs').css(css_heights);
+            $('#tabs', el_kiwi).css(css_heights);
         }
 
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
@@ -1278,8 +1280,8 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideUp({queue: false, duration: 400, step: this.doLayout});
-            $('#controlbox').slideUp({queue: false, duration: 400, step: this.doLayout});
+            $('#toolbar').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             $('#toolbar').slideUp(0);
             $('#controlbox').slideUp(0);
@@ -1291,8 +1293,8 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideDown({queue: false, duration: 400, step: this.doLayout});
-            $('#controlbox').slideDown({queue: false, duration: 400, step: this.doLayout});
+            $('#toolbar').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             $('#toolbar').slideDown(0);
             $('#controlbox').slideDown(0);
