@@ -11,7 +11,7 @@ For more information see http://kiwiirc.com or an example of the application can
 
     `$ git clone git@github.com:prawnsalad/KiwiIRC.git && cd KiwiIRC`
 
-2. Install the dependancies:
+2. Install the dependencies:
 
     `$ npm install`
 
