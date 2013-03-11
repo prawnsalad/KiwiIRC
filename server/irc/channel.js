@@ -101,12 +101,12 @@ function onMsg(event) {
 
 
 function onNotice(event) {
-    this.irc_connection.clientEvent('msg', {
+    this.irc_connection.clientEvent('notice', {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        channel: this.name,
-        msg: event.trailing
+        target: event.target,
+        msg: event.msg
     });
 };
 
