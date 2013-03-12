@@ -301,7 +301,7 @@ function formatIRCMsg (msg) {
         *   @inner
         */
         colourMatch = function (str) {
-            var re = /^\x03([0-9][0-5]?)(,([0-9][0-5]?))?/;
+            var re = /^\x03([0-9][0-9]?)(,([0-9][0-9]?))?/;
             return re.exec(str);
         };
         /**

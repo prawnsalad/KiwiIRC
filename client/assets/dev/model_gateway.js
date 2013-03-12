@@ -38,7 +38,13 @@ _kiwi.model.Gateway = function () {
         *   The URL to the Kiwi server
         *   @type   String
         */
-        kiwi_server: '//kiwi'
+        kiwi_server: '//kiwi',
+
+        /**
+        *   List of nicks we are ignoring
+        *   @type Array
+        */
+        ignore_list: []
     };
 
 
@@ -47,6 +53,77 @@ _kiwi.model.Gateway = function () {
         
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
+
+        this.applyEventHandlers();
+    };
+
+
+    this.applyEventHandlers = function () {
+        /*
+        kiwi.gateway.on('message:#channel', my_function);
+        kiwi.gateway.on('message:somenick', my_function);
+
+        kiwi.gateway.on('notice:#channel', my_function);
+        kiwi.gateway.on('action:somenick', my_function);
+
+        kiwi.gateway.on('join:#channel', my_function);
+        kiwi.gateway.on('part:#channel', my_function);
+        kiwi.gateway.on('quit', my_function);
+        */
+        var that = this;
+        
+        // Some easier handler events
+        this.on('onmsg', function (event) {
+            var source,
+                is_pm = (event.channel == that.get('nick'));
+
+            source = is_pm ? event.nick : event.channel;
+            
+            that.trigger('message:' + source, event);
+            that.trigger('message', event);
+
+            if (is_pm) {
+                that.trigger('pm:' + source, event);
+                that.trigger('pm', event);
+            }
+        }, this);
+
+
+        this.on('onnotice', function (event) {
+            // The notice towards a channel or a query window?
+            var source = event.target || event.nick;
+
+            this.trigger('notice:' + source, event);
+            this.trigger('notice', event);
+        }, this);
+
+
+        this.on('onaction', function (event) {
+            var source,
+                is_pm = (event.channel == that.get('nick'));
+
+            source = is_pm ? event.nick : event.channel;
+            
+            that.trigger('action:' + source, event);
+
+            if (is_pm) {
+                that.trigger('action:' + source, event);
+                that.trigger('action', event);
+            }
+        }, this);
+
+
+        this.on('ontopic', function (event) {
+            that.trigger('topic:' + event.channel, event);
+            that.trigger('topic', event);
+        });
+
+
+        this.on('onjoin', function (event) {
+            that.trigger('join:' + event.channel, event);
+            that.trigger('join', event);
+        });
+
     };
 
 
@@ -199,7 +276,8 @@ _kiwi.model.Gateway = function () {
 
 
     this.parseKiwi = function (command, data) {
-        console.log('kiwi event', command, data);
+        this.trigger('kiwi:' + command, data);
+        this.trigger('kiwi', data);
     };
     /*
         Events:
@@ -233,8 +311,7 @@ _kiwi.model.Gateway = function () {
                 $.each(data.options, function (name, value) {
                     switch (name) {
                     case 'CHANTYPES':
-                        // TODO: Check this. Why is it only getting the first char?
-                        that.set('channel_prefix', value.join('').charAt(0));
+                        that.set('channel_prefix', value.join(''));
                         break;
                     case 'NETWORK':
                         that.set('name', value);
@@ -487,6 +564,24 @@ _kiwi.model.Gateway = function () {
 
         this.sendData(data, callback);
     };
+
+
+    // Check a nick alongside our ignore list
+    this.isNickIgnored = function (nick) {
+        var idx, list = this.get('ignore_list');
+        var pattern, regex;
+
+        for (idx = 0; idx < list.length; idx++) {
+            pattern = list[idx].replace(/([.+^$[\]\\(){}|-])/g, "\\$1")
+                .replace('*', '.*')
+                .replace('?', '.');
+
+            regex = new RegExp(pattern, 'i');
+            if (regex.test(nick)) return true;
+        }
+
+        return false;
+    }
 
 
     return new (Backbone.Model.extend(this))(arguments);

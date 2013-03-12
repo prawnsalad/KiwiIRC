@@ -159,25 +159,21 @@ _kiwi.model.Application = function () {
 
 
         this.initializeGlobals = function () {
-            _kiwi.global.control = this.controlbox;
-            _kiwi.global.gateway = _kiwi.gateway;
             _kiwi.global.panels = this.panels;
             
-            _kiwi.global.components = {
-                Applet: _kiwi.model.Applet,
-                Panel: _kiwi.model.Panel
-            };
+            _kiwi.global.components.Applet = _kiwi.model.Applet;
+            _kiwi.global.components.Panel =_kiwi.model.Panel;
         };
 
 
         this.populateDefaultServerSettings = function () {
             var parts;
             var defaults = {
-                nick: getQueryVariable('nick') || 'kiwi_?',
-                server: 'irc.kiwiirc.com',
+                nick: getQueryVariable('nick') || '',
+                server: '',
                 port: 6667,
                 ssl: false,
-                channel: window.location.hash || '#kiwiirc',
+                channel: window.location.hash || '#chat',
                 channel_key: ''
             };
             var uricheck;
@@ -279,7 +275,7 @@ _kiwi.model.Application = function () {
             // If any settings have been given by the server.. override any auto detected settings
             /**
              * Get any server restrictions as set in the server config
-             * These settings can not changed in the server selection dialog
+             * These settings can not be changed in the server selection dialog
              */
             if (this.server_settings && this.server_settings.connection) {
                 if (this.server_settings.connection.server) {
@@ -455,6 +451,11 @@ _kiwi.model.Application = function () {
                 var panel,
                     is_pm = (event.channel == _kiwi.gateway.get('nick'));
 
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
+
                 if (is_pm) {
                     // If a panel isn't found for this PM, create one
                     panel = that.panels.getByName(event.nick);
@@ -471,12 +472,17 @@ _kiwi.model.Application = function () {
                         panel = that.panels.server;
                     }
                 }
-                
+
                 panel.addMsg(event.nick, event.msg);
             });
 
 
             gw.on('onctcp_request', function (event) {
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
+
                 // Reply to a TIME ctcp
                 if (event.msg.toUpperCase() === 'TIME') {
                     gw.ctcp(false, event.type, event.nick, (new Date()).toString());
@@ -484,8 +490,23 @@ _kiwi.model.Application = function () {
             });
 
 
+            gw.on('onctcp_response', function (event) {
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
+                
+                that.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg);
+            });
+
+
             gw.on('onnotice', function (event) {
                 var panel;
+
+                // An ignored user? don't do anything with it
+                if (event.nick && gw.isNickIgnored(event.nick)) {
+                    return;
+                }
 
                 // Find a panel for the destination(channel) or who its from
                 panel = that.panels.getByName(event.target) || that.panels.getByName(event.nick);
@@ -500,6 +521,11 @@ _kiwi.model.Application = function () {
             gw.on('onaction', function (event) {
                 var panel,
                     is_pm = (event.channel == _kiwi.gateway.get('nick'));
+
+                // An ignored user? don't do anything with it
+                if (gw.isNickIgnored(event.nick)) {
+                    return;
+                }
 
                 if (is_pm) {
                     // If a panel isn't found for this PM, create one
@@ -839,45 +865,47 @@ _kiwi.model.Application = function () {
             controlbox.on('unknown_command', unknownCommand);
 
             controlbox.on('command', allCommands);
-            controlbox.on('command_msg', msgCommand);
+            controlbox.on('command:msg', msgCommand);
 
-            controlbox.on('command_action', actionCommand);
+            controlbox.on('command:action', actionCommand);
 
-            controlbox.on('command_join', joinCommand);
+            controlbox.on('command:join', joinCommand);
 
-            controlbox.on('command_part', partCommand);
+            controlbox.on('command:part', partCommand);
 
-            controlbox.on('command_nick', function (ev) {
+            controlbox.on('command:nick', function (ev) {
                 _kiwi.gateway.changeNick(ev.params[0]);
             });
 
-            controlbox.on('command_query', queryCommand);
+            controlbox.on('command:query', queryCommand);
 
-            controlbox.on('command_topic', topicCommand);
+            controlbox.on('command:topic', topicCommand);
 
-            controlbox.on('command_notice', noticeCommand);
+            controlbox.on('command:notice', noticeCommand);
 
-            controlbox.on('command_quote', quoteCommand);
+            controlbox.on('command:quote', quoteCommand);
 
-            controlbox.on('command_kick', kickCommand);
+            controlbox.on('command:kick', kickCommand);
 
-            controlbox.on('command_clear', clearCommand);
+            controlbox.on('command:clear', clearCommand);
+
+            controlbox.on('command:ctcp', ctcpCommand);
 
 
-            controlbox.on('command_css', function (ev) {
+            controlbox.on('command:css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
                 $('link[rel="stylesheet"]').each(function () {
                     this.href = this.href.replace(/\?.*|$/, queryString);
                 });
             });
 
-            controlbox.on('command_js', function (ev) {
+            controlbox.on('command:js', function (ev) {
                 if (!ev.params[0]) return;
                 $script(ev.params[0] + '?' + (new Date().getTime()));
             });
 
             
-            controlbox.on('command_set', function (ev) {
+            controlbox.on('command:set', function (ev) {
                 if (!ev.params[0]) return;
 
                 var setting = ev.params[0],
@@ -896,13 +924,13 @@ _kiwi.model.Application = function () {
             });
 
 
-            controlbox.on('command_save', function (ev) {
+            controlbox.on('command:save', function (ev) {
                 _kiwi.global.settings.save();
                 _kiwi.app.panels.active.addMsg('', 'Settings have been saved');
             });
 
 
-            controlbox.on('command_alias', function (ev) {
+            controlbox.on('command:alias', function (ev) {
                 var name, rule;
 
                 // No parameters passed so list them
@@ -933,8 +961,51 @@ _kiwi.model.Application = function () {
                 controlbox.preprocessor.aliases[name] = rule;
             });
 
-            controlbox.on('command_applet', appletCommand);
-            controlbox.on('command_settings', settingsCommand);
+            
+            controlbox.on('command:ignore', function (ev) {
+                var list = _kiwi.gateway.get('ignore_list');
+
+                // No parameters passed so list them
+                if (!ev.params[0]) {
+                    if (list.length > 0) {
+                        _kiwi.app.panels.active.addMsg(' ', 'Ignored nicks:');
+                        $.each(list, function (idx, ignored_pattern) {
+                            _kiwi.app.panels.active.addMsg(' ', ignored_pattern);
+                        });
+                    } else {
+                        _kiwi.app.panels.active.addMsg(' ', 'Not ignoring anybody');
+                    }
+                    return;
+                }
+
+                // We have a parameter, so add it
+                list.push(ev.params[0]);
+                _kiwi.gateway.set('ignore_list', list);
+                _kiwi.app.panels.active.addMsg(' ', 'Ignoring ' + ev.params[0]);
+            });
+
+
+            controlbox.on('command:unignore', function (ev) {
+                var list = _kiwi.gateway.get('ignore_list');
+
+                if (!ev.params[0]) {
+                    _kiwi.app.panels.active.addMsg(' ', 'Specifiy which nick you wish to stop ignoring');
+                    return;
+                }
+
+                list = _.reject(list, function(pattern) {
+                    return pattern === ev.params[0];
+                });
+
+                _kiwi.gateway.set('ignore_list', list);
+
+                _kiwi.app.panels.active.addMsg(' ', 'Stopped ignoring ' + ev.params[0]);
+            });
+
+
+            controlbox.on('command:applet', appletCommand);
+            controlbox.on('command:settings', settingsCommand);
+            controlbox.on('command:script', scriptCommand);
         };
 
         // A fallback action. Send a raw command to the server
@@ -954,6 +1025,13 @@ _kiwi.model.Application = function () {
             $.each(channel_names, function (index, channel_name) {
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
+
+                // If not a valid channel name, display a warning
+                if (!that.isChannelName(channel_name)) {
+                    _kiwi.app.panels.server.addMsg('', channel_name + ' is not a valid channel name');
+                    _kiwi.app.message.text(channel_name + ' is not a valid channel name', {timeout: 5000});
+                    return;
+                }
 
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
@@ -1074,9 +1152,29 @@ _kiwi.model.Application = function () {
             }
         }
 
+        function ctcpCommand(ev) {
+            var target, type;
+
+            // Make sure we have a target and a ctcp type (eg. version, time)
+            if (ev.params.length < 2) return;
+
+            target = ev.params[0];
+            ev.params.shift();
+
+            type = ev.params[0];
+            ev.params.shift();
+
+            _kiwi.gateway.ctcp(true, type, target, ev.params.join(' '));
+        }
+
         function settingsCommand (ev) {
             var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
             settings.view.show();
+        }
+
+        function scriptCommand (ev) {
+            var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
+            editor.view.show();
         }
 
         function appletCommand (ev) {
