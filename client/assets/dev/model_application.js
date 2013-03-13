@@ -992,7 +992,12 @@ _kiwi.model.Application = function () {
 
             channel_names = ev.params.join(' ').split(',');
 
-            $.each(channel_names, function (index, channel_name) {
+            $.each(channel_names, function (index, channel_name_key) {
+                // We may have a channel key so split it off
+                var spli = channel_name_key.split(' '),
+                    channel_name = spli[0],
+                    channel_key = spli[1] || '';
+
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
 
@@ -1010,7 +1015,7 @@ _kiwi.model.Application = function () {
                     _kiwi.app.panels.add(channel);
                 }
 
-                _kiwi.gateway.join(channel_name);
+                _kiwi.gateway.join(channel_name, channel_key);
             });
 
             if (channel) channel.view.show();
