@@ -2,6 +2,7 @@ var net             = require('net'),
     tls             = require('tls'),
     util            = require('util'),
     EventEmitter    = require('events').EventEmitter,
+    crypto          = require('crypto'),
     ipaddr          = require('ipaddr.js');
     
 var SocksConnection = function (destination, socks) {
@@ -13,6 +14,7 @@ var SocksConnection = function (destination, socks) {
     
     this.socksSocket = net.connect({host: socks.host, port: socks.port}, socksConnected.bind(this));
     this.socksSocket.once('data', socksAuth.bind(this));
+    this.socksSocket.on('error', socksError);
 };
 
 util.inherits(SocksConnection, EventEmitter);
@@ -143,8 +145,30 @@ var socksReply = function (data) {
     }
 };
 
-var emitSocket = function () {
+var starttls = function () {
     var that = this;
-    this.socksSocket.setEncoding('utf8');
-    this.emit('socksConnect', this.socksSocket);
+    
+    var pair = tls.createSecurePair(crypto.createCredentials(), false);
+    pair.encrypted.pipe(this.socksSocket);
+    this.socksSocket.pipe(pair.encrypted);
+    
+    pair.cleartext.socket = this.socksSocket;
+    pair.cleartext.encrypted = pair.encrypted;
+    pair.cleartext.authorised = false;
+    
+    pair.on('secure', function () { 
+        that.emit('socksConnect', pair.cleartext, pair.encrypted);
+    });
+}
+
+var socksError = function (err) {
+    console.log(err);
+}
+
+var emitSocket = function () {
+    if (this.destination.ssl) {
+        starttls.call(this);
+    } else {
+        this.emit('socksConnect', this.socksSocket);
+    }
 };
