@@ -6,7 +6,8 @@ var net             = require('net'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
-    IrcUser         = require('./user.js');
+    IrcUser         = require('./user.js'),
+    SocksConnection = require('./socks.js');
 
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
@@ -48,6 +49,10 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     // IRC connection information
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
+    
+    // SOCKS proxy details
+    // TODO: read proxy details from configuration
+    this.socks = false;
 
     // Options sent by the IRCd
     this.options = Object.create(null);
@@ -97,6 +102,7 @@ IrcConnection.prototype.applyIrcEvents = function () {
  */
 IrcConnection.prototype.connect = function () {
     var that = this;
+    var socks;
 
     // The socket connect event to listener for
     var socket_connect_event_name = 'connect';
@@ -105,30 +111,57 @@ IrcConnection.prototype.connect = function () {
     // Make sure we don't already have an open connection
     this.disposeSocket();
 
-    // Open either a secure or plain text socket
-    if (this.ssl) {
-        this.socket = tls.connect({
-            host: this.irc_host.hostname,
+    // Are we connecting through a SOCKS proxy?
+    if (this.socks) {
+        socks = new SocksConnection({
+            host: this.irc_host.hostname, 
             port: this.irc_host.port,
-            rejectUnauthorized: global.config.reject_unauthorised_certificates
+            ssl: this.ssl
+        }, {host: this.socks.host,
+            port: this.socks.port,
+            user: this.socks.user,
+            pass: this.socks.pass
         });
-
-        socket_connect_event_name = 'secureConnect';
-
+        
+        socks.on('connect', function (socket){
+            that.socket = socket;
+            setupSocket.call(that);
+        });
     } else {
-        this.socket = net.connect({
-            host: this.irc_host.hostname,
-            port: this.irc_host.port
+        // Open either a secure or plain text socket
+        if (this.ssl) {
+            this.socket = tls.connect({
+                host: this.irc_host.hostname,
+                port: this.irc_host.port,
+                rejectUnauthorized: global.config.reject_unauthorised_certificates
+            });
+
+            socket_connect_event_name = 'secureConnect';
+
+        } else {
+            this.socket = net.connect({
+                host: this.irc_host.hostname,
+                port: this.irc_host.port
+            });
+        }
+
+        this.socket.on(socket_connect_event_name, function () {
+            that.connected = true;
+            socketConnectHandler.apply(that, arguments);
         });
+        
+        setupSocket.call(this);
     }
+};
 
+/**
+ * Set the socket's encoding and add event handlers
+ */
+var setupSocket = function () {
+    var that = this;
+    
     this.socket.setEncoding('utf-8');
-
-    this.socket.on(socket_connect_event_name, function () {
-        that.connected = true;
-        socketConnectHandler.apply(that, arguments);
-    });
-
+    
     this.socket.on('error', function (event) {
         that.emit('error', event);
 
