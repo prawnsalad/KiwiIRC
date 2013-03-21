@@ -5,22 +5,45 @@ var net             = require('net'),
     crypto          = require('crypto'),
     ipaddr          = require('ipaddr.js');
     
+/*
+ * API:
+ * var s = new SocksConnection({host: irc.example.com, port: 6667, ssl: false}, {host: socks.example.net, port: 1080, user: null, pass: null});
+ * s.on('connect', function (socket) {
+ *     // send data to socket
+ * });
+ */
+
 var SocksConnection = function (destination, socks) {
     var that = this;
     EventEmitter.call(this);
     
-    this.socks = socks;
-    this.destination = destination;
+    this.remoteAddress = destination.host;
+    this.remotePort = destination.port;
+    this.ssl = destination.ssl;
     
-    this.socksSocket = net.connect({host: socks.host, port: socks.port}, socksConnected.bind(this));
-    this.socksSocket.once('data', socksAuth.bind(this));
-    this.socksSocket.on('error', socksError);
+    this.socksAddress = null;
+    this.socksPort = null;
+    
+    this.socksSocket = net.connect({host: socks.host, port: socks.port}, socksConnected.bind(this, !(!socks.user)));
+    this.socksSocket.once('data', socksAuth.bind(this, {user: socks.user || null, pass: socks.pass || null}));
+    this.socksSocket.on('error', this._error);
 };
 
 util.inherits(SocksConnection, EventEmitter);
 
-var socksConnected = function () {
-    if (this.socks.auth) {
+module.exports = SocksConnection;
+
+SocksConnection.prototype.dispose = function () {
+    this.socksSocket.destroy();
+    this.removeAllListeners();
+}
+
+SocksConnection.prototype._error = function (err) {
+    this.emit('error', err);
+}
+
+var socksConnected = function (auth) {
+    if (auth) {
         this.socksSocket.write('\x05\x02\x02\x00'); // SOCKS version 5, supporting two auth methods
                                                     // username/password and 'no authentication'
     } else {
@@ -28,7 +51,7 @@ var socksConnected = function () {
     }
 };
 
-var socksAuth = function (data) {
+var socksAuth = function (auth, data) {
     var bufs = [];
     switch (data.readUInt8(1)) {
     case 255:
@@ -37,21 +60,21 @@ var socksAuth = function (data) {
         break;
     case 2:
         bufs[0] = new Buffer([1]);
-        bufs[1] = new Buffer([Buffer.byteLength(this.socks.auth.user)]);
-        bufs[2] = new Buffer(this.socks.auth.user);
-        bufs[3] = new Buffer([Buffer.byteLength(this.socks.auth.pass)]);
-        bufs[4] = new Buffer(this.socks.auth.pass);
+        bufs[1] = new Buffer([Buffer.byteLength(auth.user)]);
+        bufs[2] = new Buffer(auth.user);
+        bufs[3] = new Buffer([Buffer.byteLength(auth.pass)]);
+        bufs[4] = new Buffer(auth.pass);
         this.socksSocket.write(Buffer.concat(bufs));
         this.socksSocket.once('data', socksAuthStatus.bind(this));
         break;
     default:
-        socksRequest.call(this, this.destination.host, this.destination.port);
+        socksRequest.call(this, this.remoteAddress, this.remotePort);
     }
 };
 
 var socksAuthStatus = function (data) {
     if (data.readUInt8(1) === 1) {
-        socksRequest.call(this, this.destination.host, this.destination.port);
+        socksRequest.call(this, this.remoteHost, this.remotePort);
     } else {
         this.emit('error', 'SOCKS: Authentication failed');
         this.socksSocket.destroy();
@@ -157,18 +180,16 @@ var starttls = function () {
     pair.cleartext.authorised = false;
     
     pair.on('secure', function () { 
-        that.emit('socksConnect', pair.cleartext, pair.encrypted);
+        that.emit('connect', pair.cleartext, this.socksSocket);
+        that.socksSocket.removeListener('error', that._error);
     });
 }
 
-var socksError = function (err) {
-    console.log(err);
-}
-
 var emitSocket = function () {
-    if (this.destination.ssl) {
+    if (this.ssl) {
         starttls.call(this);
     } else {
-        this.emit('socksConnect', this.socksSocket);
+        this.emit('connect', this.socksSocket);
+        this.socksSocket.removeListener('error', this._error);
     }
 };
