@@ -35,6 +35,15 @@ conf.servers.push({
 
 
 
+// Do we want to enable the built in Identd server?
+conf.identd = {
+    enabled: false,
+    port: 113,
+    address: "0.0.0.0"
+};
+
+
+
 
 
 
