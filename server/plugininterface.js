@@ -104,12 +104,9 @@ function EmitCall (event_name, event_data) {
 
 
 function PluginInterface () {
+    // Holder for all the bound listeners by this module
+    this._listeners = {};
 }
-
-
-// Holder for all the bound listeners by this module
-PluginInterface.prototype._listeners = {};
-
 
 
 PluginInterface.prototype.on = function (event_name, fn, scope) {
@@ -131,7 +128,7 @@ PluginInterface.prototype.off = function (event_name, fn, scope) {
 
     if (typeof event_name === 'undefined') {
         // Remove all listeners
-        this._listeners = [];
+        this._listeners = {};
 
     } else if (typeof fn === 'undefined') {
         // Remove all of 1 event type

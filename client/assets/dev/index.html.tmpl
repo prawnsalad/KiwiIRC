@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base target="_blank">
 
 <title> KiwiIRC </title>
@@ -150,8 +151,8 @@
         <div class="settings">
             ​<table>
                 <tr>
-                    <td>Theme</td>
-                    <td>
+                    <td class="label">Theme</td>
+                    <td class="setting">
                         <select class="setting-theme">
                             <option value="relaxed">Relaxed</option>
                             <option value="mini">Mini</option>
@@ -160,17 +161,30 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Scrollback</td>
-                    <td><input type="text" class="setting-scrollback" value="150" /></td>
+                    <td class="label">Channel list</td>
+                    <td class="setting">
+                        <select class="setting-channel_list_style">
+                            <option value="list">List</option>
+                            <option value="tabs">Tabs</option>
+                        </select>
+
+                        <i style="font-size:0.9em;">Lots of channels? `List` may be more suited</i>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Scrollback</td>
+                    <td class="setting"><input type="text" class="setting-scrollback" value="150" /></td>
                 </tr>
 
                 <tr>
-                    <td>Show joins/parts</td>
-                    <td><input type="checkbox" class="setting-show_joins_parts" /></td>
+                    <td class="label">Show joins/parts</td>
+                    <td class="setting"><input type="checkbox" class="setting-show_joins_parts" /></td>
+                </tr>
+
+                <tr class="save">
+                    <td colspan="2"><button class="save">Save</button>​​​​​​​​​</td>
                 </tr>
             </table>
-
-            <button class="save">Save</button>​​​​​​​​​
         </div>
     </script>
 

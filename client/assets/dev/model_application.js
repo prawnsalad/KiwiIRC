@@ -452,8 +452,13 @@ _kiwi.model.Application = function () {
             gw.on('onctcp_request', function (event) {
                 // Reply to a TIME ctcp
                 if (event.msg.toUpperCase() === 'TIME') {
-                    gw.ctcp(true, event.type, event.nick, (new Date()).toString());
+                    gw.ctcp(false, event.type, event.nick, (new Date()).toString());
                 }
+            });
+
+
+            gw.on('onctcp_response', function (event) {
+                that.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg);
             });
 
 
@@ -769,6 +774,8 @@ _kiwi.model.Application = function () {
                         (new _kiwi.view.NickChangeBox()).render();
                     }
 
+                case 'password_mismatch':
+                    _kiwi.app.panels.server.addMsg(' ', '== Incorrect password given', 'status');
                     break;
                 default:
                     // We don't know what data contains, so don't do anything with it.
@@ -830,6 +837,8 @@ _kiwi.model.Application = function () {
             controlbox.on('command_kick', kickCommand);
 
             controlbox.on('command_clear', clearCommand);
+
+            controlbox.on('command_ctcp', ctcpCommand);
 
 
             controlbox.on('command_css', function (ev) {
@@ -1040,6 +1049,21 @@ _kiwi.model.Application = function () {
             if (_kiwi.app.panels.active.clearMessages) {
                 _kiwi.app.panels.active.clearMessages();
             }
+        }
+
+        function ctcpCommand(ev) {
+            var target, type;
+
+            // Make sure we have a target and a ctcp type (eg. version, time)
+            if (ev.params.length < 2) return;
+
+            target = ev.params[0];
+            ev.params.shift();
+
+            type = ev.params[0];
+            ev.params.shift();
+
+            _kiwi.gateway.ctcp(true, type, target, ev.params.join(' '));
         }
 
         function settingsCommand (ev) {

@@ -20,7 +20,17 @@
         loadSettings: function () {
             var settings = _kiwi.global.settings;
 
-            this.$el.find('.setting-theme').val(settings.get('theme') || 'relaxed');
+            // TODO: Tidy this up
+            var theme = settings.get('theme') || 'relaxed';
+            this.$el.find('.setting-theme option').filter(function() {
+                return $(this).val() === theme;
+            }).attr('selected', true);
+
+            var list_style = settings.get('channel_list_style') || 'tabs';
+            this.$el.find('.setting-channel_list_style option').filter(function() {
+                return $(this).val() === list_style;
+            }).attr('selected', true);
+
             this.$el.find('.setting-scrollback').val(settings.get('scrollback') || '250');
 
             if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
@@ -34,11 +44,18 @@
         saveSettings: function () {
             var settings = _kiwi.global.settings;
 
+            // Stop settings being updated while we're saving one by one
+            _kiwi.global.settings.off('change', this.loadSettings, this);
+
             settings.set('theme', $('.setting-theme', this.$el).val());
+            settings.set('channel_list_style', $('.setting-channel_list_style', this.$el).val());
             settings.set('scrollback', $('.setting-scrollback', this.$el).val());
             settings.set('show_joins_parts', $('.setting-show_joins_parts', this.$el).is(':checked'));
 
             settings.save();
+
+            // Continue listening for setting changes
+            _kiwi.global.settings.on('change', this.loadSettings, this);
         }
     });
 
