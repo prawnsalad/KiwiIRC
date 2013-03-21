@@ -1035,7 +1035,17 @@ html, body { height:100%; }
     border-bottom: 1px solid #1B1B1B;
 }
 
-
+.inp {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px #C0D9D9 solid;
+    border-radius: 3px;
+}
+.inp:hover {
+    background: #DCDCDC;
+}
+.nick {
+    font-weight: bold;
+}
 
 #kiwi.theme_cli.chanlist_treeview #panels { left:200px; }
 #kiwi.theme_cli.chanlist_treeview #toolbar { position:static; }
