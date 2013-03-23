@@ -7,7 +7,7 @@ var net             = require('net'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
-    SocksConnection = require('./socks.js');
+    SocksConnection = require('../socks.js');
 
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
@@ -51,8 +51,17 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.ssl = !(!ssl);
     
     // SOCKS proxy details
-    // TODO: read proxy details from configuration
-    this.socks = false;
+    // TODO: Wildcard matching of hostnames and/or CIDR ranges of IP addresses
+    if ((global.config.socks_proxy && global.config.socks_proxy.enabled) && ((global.config.socks_proxy.all) || (_.contains(global.config.socks_proxy.proxy_hosts, this.irc_host.hostname)))) {
+        this.socks = {
+            host: global.config.socks_proxy.address,
+            port: global.config.socks_proxy.port,
+            user: global.config.socks_proxy.user,
+            pass: global.config.socks_proxy.pass
+        };
+    } else {
+        this.socks = false;
+    }
 
     // Options sent by the IRCd
     this.options = Object.create(null);
@@ -123,9 +132,11 @@ IrcConnection.prototype.connect = function () {
             pass: this.socks.pass
         });
         
-        socks.on('connect', function (socket){
+        socks.on('connect', function (socket) {
             that.socket = socket;
             setupSocket.call(that);
+            that.connected = true;
+            socketConnectHandler.call(that);
         });
     } else {
         // Open either a secure or plain text socket
@@ -147,7 +158,7 @@ IrcConnection.prototype.connect = function () {
 
         this.socket.on(socket_connect_event_name, function () {
             that.connected = true;
-            socketConnectHandler.apply(that, arguments);
+            socketConnectHandler.call(that);
         });
         
         setupSocket.call(this);

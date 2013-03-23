@@ -104,6 +104,31 @@ conf.http_proxy_ip_header = "x-forwarded-for";
 conf.http_base_path = "/kiwi";
 
 
+/*
+ * SOCKS proxy settings
+ */
+conf.socks_proxy = {};
+
+// Enable proxying outbound connections through a SOCKS proxy
+conf.socks_proxy.enabled = false;
+
+// Proxy *all* outbound connections through a SOCKS proxy
+conf.socks_proxy.all = false;
+
+// Use SOCKS proxy for these hosts only (if conf.sock_proxy.all === false)
+conf.socks_proxy.proxy_hosts = [
+    "irc.example.com"
+];
+
+// Host and port for the SOCKS proxy
+conf.socks_proxy.address = '127.0.0.1';
+conf.socks_proxy.port = 1080;
+
+// Username and password for the SOCKS proxy
+// Set user to null to disable password authentication
+conf.socks_proxy.user = null;
+conf.socks_proxy.pass = null;
+
 
 // Enabled transports for the browser to use
 conf.transports = [
