@@ -13,6 +13,9 @@ var State = function (save_state) {
     this.irc_connections = [];
     this.next_connection = 0;
 
+    // Stored in storage
+    this.saved_persistence = false;
+
     // Array of connected clients to this state
     this.client = [];
 
@@ -30,49 +33,106 @@ util.inherits(State, events.EventEmitter);
 module.exports = State;
 
 
+State.prototype.savePersistence = function(callback) {
+    var that = this;
+
+    // Go through and save each irc_connection
+    global.storage.putState('darren', this.hash, function() {
+        _.each(that.irc_connections, function (irc_connection) {
+            if (!irc_connection) return;
+
+            global.storage.putConnection(that.hash, irc_connection.con_num, {
+                nick: irc_connection.nick,
+                user: irc_connection.user,
+                username: irc_connection.username,
+                password: irc_connection.password,
+                server_host: irc_connection.irc_host.hostname,
+                server_port: irc_connection.irc_host.port,
+                server_ssl: irc_connection.ssl
+            }, function() {
+                    that.save_state = true;
+                    that.saved_persistence = true;
+
+                    // Save all the channels in this connection
+                    _.each(irc_connection.irc_channels, function(channel) {
+                        global.storage.putChannel(
+                            that.hash,
+                            irc_connection.con_num,
+                            channel.name,
+                            {name: channel.name}
+                        );
+                    });
+            });
+
+            callback && callback();
+        });
+    });
+}
+State.prototype.stopPersistence = function(callback) {
+    global.storage.delState('darren', this.hash, callback);
+    this.save_state = false;
+    this.saved_persistence = true;
+};
 
 State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callback) {
     var that = this;
     var con, con_num;
-    if (global.config.restrict_server) {
-        con = new IrcConnection(
-            global.config.restrict_server,
-            global.config.restrict_server_port,
-            global.config.restrict_server_ssl,
-            nick,
-            user,
-            global.config.restrict_server_password,
-            this);
 
+    // Get a connection number for this new connection object
+    this.next_connection++;
+    con_num = this.next_connection;
+
+    // If we're not saving state or we have already saved state, dont save again.
+    if (!this.save_state || this.saved_persistence) {
+        doConnect();
     } else {
-        con = new IrcConnection(
-            hostname,
-            port,
-            ssl,
-            nick,
-            user,
-            pass,
-            this);
+        this.savePersistence(doConnect)
     }
-    
-    con_num = this.next_connection++;
-    this.irc_connections[con_num] = con;
-    con.con_num = con_num;
-    
-    new IrcCommands(con, con_num, this).bindEvents();
-    
-    con.on('connected', function () {
-        return callback(null, con_num);
-    });
-    
-    con.on('error', function (err) {
-        console.log('irc_connection error (' + hostname + '):', err);
-        return callback(err.code, {server: con_num, error: err});
-    });
 
-    con.on('close', function () {
-        that.irc_connections[con_num] = null;
-    });
+    function doConnect() {
+        if (global.config.restrict_server) {
+            con = new IrcConnection(
+                global.config.restrict_server,
+                global.config.restrict_server_port,
+                global.config.restrict_server_ssl,
+                nick,
+                user,
+                global.config.restrict_server_password,
+                that,
+                con_num
+            );
+
+        } else {
+            con = new IrcConnection(
+                hostname,
+                port,
+                ssl,
+                nick,
+                user,
+                pass,
+                that,
+                con_num
+            );
+        }
+        
+        
+        that.irc_connections[con_num] = con;
+        
+        new IrcCommands(con, con_num, that).bindEvents();
+        
+        con.on('connected', function () {
+            return callback(null, con_num);
+        });
+        
+        con.on('error', function (err) {
+            return callback(err.code, {server: con_num, error: err});
+        });
+
+        con.on('close', function () {
+            that.irc_connections[con_num].dispose();
+            that.irc_connections[con_num] = null;
+        });
+    }
 };
 
 
@@ -90,7 +150,6 @@ State.prototype.detachClient = function (old_client) {
     this.client = _.reject(this.client, function(client) {
         return client === old_client;
     });
-    console.log(this.client, this.client.lengthm, _.size(this.client));
     
     // If we have no more connected clients and we're not saving this
     // state, dispose of everything
@@ -122,6 +181,7 @@ State.prototype.sendKiwiCommand = function () {
 
 State.prototype.dispose = function () {
     global.states.remove(this);
+    global.storage.delState('darren', this.hash);
     this.emit('dispose');
     this.removeAllListeners();
 };

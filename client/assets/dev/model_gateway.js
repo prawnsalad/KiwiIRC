@@ -198,32 +198,26 @@ _kiwi.model.Gateway = function () {
     };
 
 
+    this.saveSession = function(username, password, callback) {
+        this.socket.emit('kiwi', {
+            command: 'save_session',
+            username: username,
+            password: password
+        }, callback);
+    };
 
-    // Handles the data recieved from the kiwi server after a syncSession() call
-    function handleSyncData(sync_data) {
-        console.log('handleSyncData()');
-        // For the time being.. we only expect 1 server. In future may be more.
-        if (sync_data.servers) {
-            _.each(sync_data.servers, function (server) {
-                that.set('nick', server.nick);
-                that.set('name', server.network_name)
-            });
-        }
-    }
 
     // Force the server to use an existing State (session) for this client
-    this.syncSession = function (session_id, callback) {
+    this.syncSession = function (username, password, callback) {
         var that = this;
 
         function doSync() {
             that.socket.emit('kiwi', {
                 command: 'continue_session',
-                session_id: session_id
-            }, function (sync_data){
-                    handleSyncData(sync_data);
-                    callback && callback();
-               }
-            );
+                //session_id: session_id
+                username: username,
+                password: password
+            });
         }
 
         if (!this.socket) {
@@ -356,7 +350,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function
     */
     this.sendData = function (data, callback) {
-        this.socket.emit('irc', {server: 0, data: JSON.stringify(data)}, callback);
+        this.socket.emit('irc', {server: this.server_num, data: JSON.stringify(data)}, callback);
     };
 
     /**

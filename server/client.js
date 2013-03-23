@@ -71,6 +71,30 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 
 
 Client.prototype.syncClient = function () {
+    var servers = [],
+        channels = [];
+
+    // Note that we're now syncing data
+    this.state.is_syncing = true;
+
+    _.each(this.state.irc_connections, function(irc_connection) {
+        if (!irc_connection) return;
+
+        channels = [];
+        _.each(irc_connection.irc_channels, function(channel) {
+            channels.push({name: channel.name});
+        });
+
+        servers.push({
+            network_name: irc_connection.server.network_name,
+            nick: irc_connection.nick,
+            channels: channels
+        });
+    });
+
+    this.sendKiwiCommand('sync_data', {servers: servers});
+
+
     this.state.irc_connections.forEach(function(irc_connection, irc_connection_idx) {
         // TODO: This is hacky.. shouldn't be emitting this event from here
         // Force the MOTD + network options down to the client
@@ -79,8 +103,17 @@ Client.prototype.syncClient = function () {
 
         _.each(irc_connection.irc_channels, function(channel) {
             irc_connection.write('NAMES ' + channel.name);
+
+            global.storage.getEvents(irc_connection.state.hash, irc_connection.con_num, channel.name, function(events){
+                _.each(events, function (event, idx) {
+                    console.log('channel:' + channel.name + ':' + event.name);
+                    irc_connection.emit('channel:' + channel.name + ':' + event.name, event.obj);
+                });
+            });
         });
     });
+
+    delete this.state.is_syncing;
 };
 
 
@@ -165,39 +198,55 @@ function kiwiCommand(command, callback) {
          * Taking a session_id (state.hash) from the client, switch
          * the current state with one that matches the session_id.
          */
+        case 'save_session':
+            if (command.username && !that.state.save_state) {
+                this.state.savePersistence(function (){
+                    callback({stored: true});
+                });
+            } else if (that.state.save_state) {
+                callback({stored: true});
+            }
+
+            callback({stored: false});
+            
+            break;
+
         case 'continue_session':
             var state;
 
-            if (command.session_id)
-                state = global.states.get(command.session_id);
+            if (command.username) {
+                global.storage.getStates(command.username, function(states) {
+                    var hash_id, state;
 
-            if (!state) {
-                callback({error: 'State does not exist'});
-                return;
-            }
-
-            // Remove the existing state
-            if (this.state)
-                this.state.dispose();
-
-            // Attach this client to the new state
-            state.attachClient(this);
-
-            // Keep a reference to this state for ourselves
-            this.state = state;
-
-            // Finally.. sync the state + browser
-            this.syncClient();
-
-            // Send some data back down to the browser (should really be in syncClient())
-            return callback({
-                servers:[
-                    {
-                        network_name: state.irc_connections[0].server.network_name,
-                        nick: state.irc_connections[0].nick
+                    if (!states || states.length === 0) {
+                        callback({error: 'UserState does not exist'});
                     }
-                ]
-            });
+
+                    hash_id = states[states.length-1];
+                    state = global.states.get(hash_id);
+
+                    if (!state) {
+                        callback({error: 'State does not exist '+hash_id});
+                        return;
+                    }
+
+                    // Remove the existing state
+                    if (that.state)
+                        that.state.dispose();
+
+                    // Attach this client to the new state
+                    state.attachClient(that);
+
+                    // Keep a reference to this state for ourselves
+                    that.state = state;
+
+                    // Finally.. sync the state + browser
+                    that.syncClient();
+
+                    return callback();
+                    
+                });
+            }
 
             break;
 

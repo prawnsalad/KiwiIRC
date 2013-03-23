@@ -80,10 +80,15 @@ _kiwi.model.Application = function () {
         };
 
 
-        this.syncSession = function (session_id) {
+        this.saveSession = function(username, password) {
+            _kiwi.gateway.saveSession(username, password);
+        };
+
+
+        this.syncSession = function (username, password) {
             this.loadTransport(function () {
                 _kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
-                _kiwi.gateway.syncSession(session_id, function () { that.view.barsShow(); });
+                _kiwi.gateway.syncSession(username, password, function () { that.view.barsShow(); });
             }, kiwiServerNotFound);
         };
 
@@ -832,6 +837,33 @@ _kiwi.model.Application = function () {
                     // We don't know what data contains, so don't do anything with it.
                     //_kiwi.front.tabviews.server.addMsg(null, ' ', '== ' + data, 'status');
                 }
+            });
+
+
+            gw.on('kiwi:sync_data', function (data) {
+                var panel;
+
+                console.log('kiwi:sync_data');
+
+                // For the time being.. we only expect 1 server. In future may be more.
+                if (data.servers) {
+                    _.each(data.servers, function (server) {
+                        that.set('nick', server.nick);
+                        that.set('name', server.network_name)
+
+                        _.each(server.channels, function(channel) {
+                            panel = that.panels.getByName(channel.name);
+
+                            // If we didn't find a channel for this, may aswell leave
+                            if (!panel) {
+                                panel = new _kiwi.model.Channel({name: channel.name});
+                                that.panels.add(panel);
+                            }
+                        });
+                    });
+                }
+
+                that.view.barsShow();
             });
         };
 

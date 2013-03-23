@@ -137,6 +137,11 @@ global.states = {
 
 
 
+var Storage = require('./storage/sqlite.js');
+global.storage = new Storage(50);
+
+
+
 
 /*
  * Web listeners

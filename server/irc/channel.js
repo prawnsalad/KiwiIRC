@@ -35,13 +35,27 @@ module.exports = IrcChannel;
 
 
 IrcChannel.prototype.dispose = function (){
+    global.storage.delChannel(this.irc_connection.state.hash, this.irc_connection.con_num, this.name);
     EventBinder.unbindIrcEvents('channel:' + this.name, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
 
+IrcChannel.prototype.storeEvent = function(event_name, event) {
+    // If we're not saving this state, don't store the event
+    if (!this.irc_connection.state.save_state) return;
+
+    // If we're currently syncing, don't store this event
+    if (this.irc_connection.state.is_syncing) return;
+
+    global.storage.putEvent(this.irc_connection.state.hash, this.irc_connection.con_num, this.name, event_name, event);
+};
+
+
 
 function onJoin(event) {
+    this.storeEvent('join', event);
+
     this.irc_connection.clientEvent('join', {
         channel: this.name,
         nick: event.nick,
@@ -57,6 +71,8 @@ function onJoin(event) {
 
 
 function onPart(event) {
+    this.storeEvent('part', event);
+
     this.irc_connection.clientEvent('part', {
         nick: event.nick,
         ident: event.ident,
@@ -68,6 +84,8 @@ function onPart(event) {
 
 
 function onKick(event) {
+    this.storeEvent('kick', event);
+
     this.irc_connection.clientEvent('kick', {
         kicked: event.kicked,  // Nick of the kicked
         nick: event.nick, // Nick of the kicker
@@ -80,6 +98,8 @@ function onKick(event) {
 
 
 function onQuit(event) {
+    this.storeEvent('quit', event);
+
     this.irc_connection.clientEvent('quit', {
         nick: event.nick,
         ident: event.ident,
@@ -90,6 +110,8 @@ function onQuit(event) {
 
 
 function onMsg(event) {
+    this.storeEvent('privmsg', event);
+
     this.irc_connection.clientEvent('msg', {
         nick: event.nick,
         ident: event.ident,
@@ -101,6 +123,8 @@ function onMsg(event) {
 
 
 function onNotice(event) {
+    this.storeEvent('notice', event);
+
     this.irc_connection.clientEvent('notice', {
         nick: event.nick,
         ident: event.ident,
@@ -168,6 +192,8 @@ function updateUsersList(users) {
 
 
 function onTopic(event) {
+    this.storeEvent('topic', event);
+
     this.irc_connection.clientEvent('topic', {
         nick: event.nick,
         channel: this.name,
@@ -186,13 +212,6 @@ function onBanListEnd(event) {
         that.irc_connection.clientEvent('banlist', ban);
     });
     this.ban_list_buffer = [];
-};
-
-function onTopic(event) {
-    this.irc_connection.clientEvent('topic', {
-        channel: event.channel,
-        topic: event.topic
-    });
 };
 
 function onTopicSetBy(event) {

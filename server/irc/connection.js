@@ -9,7 +9,7 @@ var net             = require('net'),
     IrcUser         = require('./user.js');
 
 
-var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
+var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_num) {
     var that = this;
 
     EventEmitter2.call(this,{
@@ -36,6 +36,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     // State object
     this.state = state;
     
+    // Connection number given by the state object
+    this.con_num = con_num;
+
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);
     
@@ -194,6 +197,9 @@ IrcConnection.prototype.dispose = function () {
 
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
+    if (this.state.save_state)
+        global.storage.delConnection(this.state.hash, this.con_num);
+
     this.disposeSocket();
     this.removeAllListeners();
 };
@@ -214,8 +220,9 @@ IrcConnection.prototype.disposeSocket = function () {
 
 
 function onChannelJoin(event) {
-    var chan;
-
+    var that = this,
+        chan;
+    
     // Only deal with ourselves joining a channel
     if (event.nick !== this.nick)
         return;
@@ -224,6 +231,15 @@ function onChannelJoin(event) {
     // we're not already a member of.. but check we don't
     // have this channel in case something went wrong somewhere
     // at an earlier point
+    if (this.state.save_state) {
+        global.storage.putChannel(this.state.hash, this.con_num, event.channel, {name: event.channel}, function() {
+            handleChannelJoin.apply(that, [event]);
+        });
+    } else {
+        handleChannelJoin.apply(that, [event]);
+    }
+}
+function handleChannelJoin(event){
     if (!this.irc_channels[event.channel]) {
         chan = new IrcChannel(this, event.channel);
         this.irc_channels[event.channel] = chan;
@@ -313,7 +329,7 @@ var socketConnectHandler = function () {
         
         that.write('NICK ' + that.nick);
         that.write('USER ' + that.username + ' 0 0 :' + '[www.kiwiirc.com] ' + that.nick);
-        
+
         that.emit('connected');
     });
 };
