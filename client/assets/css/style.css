@@ -1131,9 +1131,10 @@ html, body { height:100%; }
 #kiwi.theme_basic .messages.active { }
 #kiwi.theme_basic .messages a { text-decoration:underline; }
 
+#kiwi.theme_basic .messages .msg { }
 #kiwi.theme_basic .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
 #kiwi.theme_basic .messages .msg { border: none; }
-#kiwi.theme_basic .messages .msg .time { display:inline; margin-right:1em; color:gray; }
+#kiwi.theme_basic .messages .msg .time { display:inline; margin-right:1em; margin-left:2px; color:gray; }
 #kiwi.theme_basic .messages .msg .nick { display:inline; margin-right:1em; }
 #kiwi.theme_basic .messages .msg .nick:before { content:"<"; }
 #kiwi.theme_basic .messages .msg .nick:after { content:">"; }
@@ -1142,6 +1143,12 @@ html, body { height:100%; }
 #kiwi.theme_basic .messages .msg.action .nick,
 #kiwi.theme_basic .messages .msg.static .nick,
 #kiwi.theme_basic .messages .msg.topic .nick { display:none; }
+
+#kiwi.theme_basic .messages .msg.action .text { color:#009900; font-style:italic; }
+#kiwi.theme_basic .messages .msg.action.join { color:#009900; }
+#kiwi.theme_basic .messages .msg.action.part .text { color:#900; }
+#kiwi.theme_basic .messages .msg.action.quit .text { color:#900; }
+#kiwi.theme_basic .messages .msg.action.kick .text { color:#900; }
 
 #kiwi.theme_basic .messages .msg.motd { border:none; }
 /*#kiwi.theme_basic .messages .msg.motd .nick { display:none; }*/
@@ -1160,9 +1167,9 @@ html, body { height:100%; }
 
 #kiwi.theme_basic #memberlists {
     background-color: #DADADA;
-    border-left: 1px solid #8A8A8A;
+    border-left: 1px dashed #8A8A8A;
 }
-#kiwi.theme_basic #memberlists ul { list-style: none; }
+#kiwi.theme_basic #memberlists ul { list-style: none; margin-left:2px; }
 #kiwi.theme_basic #memberlists ul.active { }
 #kiwi.theme_basic #memberlists ul li { padding:0 2px; }
 #kiwi.theme_basic #memberlists ul li:hover {}
@@ -1177,11 +1184,19 @@ html, body { height:100%; }
     background:#fff; margin:3px;
     height:1.7em;
 }
-#kiwi.theme_basic #controlbox .input .nick { display:none; }
+#kiwi.theme_basic #controlbox .input .nick {
+    text-align: right;
+    width: 11em;
+    left: 0px;
+    position: absolute;
+    padding: 2px;
+    overflow: hidden;
+}
+#kiwi.theme_basic #controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
 #kiwi.theme_basic #controlbox .input .nick a { text-decoration:none; color:black; }
 #kiwi.theme_basic #controlbox .input .input_wrap {
     position:absolute;
-    right:3px; left:3px;
+    right:3px; left:12em;
     height:1.7em;
 }
 #kiwi.theme_basic #controlbox .input .inp {
