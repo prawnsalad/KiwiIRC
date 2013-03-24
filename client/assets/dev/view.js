@@ -893,12 +893,20 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             }
             
             (function () {
-                var tokens = inp_val.substring(0, inp[0].selectionStart).split(' '),
-                    val,
-                    p1,
-                    newnick,
-                    range,
-                    nick = tokens[tokens.length - 1];
+                var tokens,              // Words before the cursor position
+                    val,                 // New value being built up
+                    p1,                  // Position in the value just before the nick 
+                    newnick,             // New nick to be displayed (cycles through)
+                    range,               // TextRange for setting new text cursor position
+                    nick,                // Current nick in the value
+                    trailing = ': ';     // Text to be inserted after a tabbed nick
+
+                tokens = inp_val.substring(0, inp[0].selectionStart).split(' ');
+                if (tokens[tokens.length-1] == ':')
+                    tokens.pop();
+
+                nick  = tokens[tokens.length - 1];
+
                 if (this.tabcomplete.prefix === '') {
                     this.tabcomplete.prefix = nick;
                 }
@@ -908,21 +916,31 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 });
 
                 if (this.tabcomplete.data.length > 0) {
+                    // Get the current value before cursor position
                     p1 = inp[0].selectionStart - (nick.length);
                     val = inp_val.substr(0, p1);
+
+                    // Include the current selected nick
                     newnick = this.tabcomplete.data.shift();
                     this.tabcomplete.data.push(newnick);
                     val += newnick;
+
+                    if (inp_val.substr(inp[0].selectionStart, 2) !== trailing)
+                        val += trailing;
+
+                    // Now include the rest of the current value
                     val += inp_val.substr(inp[0].selectionStart);
+
                     inp.val(val);
 
+                    // Move the cursor position to the end of the nick
                     if (inp[0].setSelectionRange) {
-                        inp[0].setSelectionRange(p1 + newnick.length, p1 + newnick.length);
+                        inp[0].setSelectionRange(p1 + newnick.length + trailing.length, p1 + newnick.length + trailing.length);
                     } else if (inp[0].createTextRange) { // not sure if this bit is actually needed....
                         range = inp[0].createTextRange();
                         range.collapse(true);
-                        range.moveEnd('character', p1 + newnick.length);
-                        range.moveStart('character', p1 + newnick.length);
+                        range.moveEnd('character', p1 + newnick.length + trailing.length);
+                        range.moveStart('character', p1 + newnick.length + trailing.length);
                         range.select();
                     }
                 }
@@ -1142,7 +1160,7 @@ _kiwi.view.Application = Backbone.View.extend({
         if (show_timestamps === _kiwi.global.settings) {
             show_timestamps = arguments[1];
         }
-        
+
         if (show_timestamps) {
             this.$el.addClass('timestamps');
         } else {
