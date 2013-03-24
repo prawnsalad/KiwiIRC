@@ -1138,7 +1138,7 @@ html, body { height:100%; }
 #kiwi.theme_basic .messages .msg .nick { display:inline; margin-right:1em; }
 #kiwi.theme_basic .messages .msg .nick:before { content:"<"; }
 #kiwi.theme_basic .messages .msg .nick:after { content:">"; }
-#kiwi.theme_basic .messages .msg .text { white-space:pre-wrap; word-wrap:break-word; }
+#kiwi.theme_basic .messages .msg .text { white-space:pre-wrap; word-wrap:break-word; color:#1e1e1e; }
 
 #kiwi.theme_basic .messages .msg.action .nick,
 #kiwi.theme_basic .messages .msg.static .nick,
