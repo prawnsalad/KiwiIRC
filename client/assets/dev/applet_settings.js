@@ -38,6 +38,12 @@
             } else {
                 this.$el.find('.setting-show_joins_parts').attr('checked', false);
             }
+
+            if (typeof settings.get('show_timestamps') === 'undefined' || !settings.get('show_timestamps')) {
+                this.$el.find('.setting-show_timestamps').attr('checked', false);
+            } else {
+                this.$el.find('.setting-show_timestamps').attr('checked', true);
+            }
         },
 
 
@@ -51,6 +57,7 @@
             settings.set('channel_list_style', $('.setting-channel_list_style', this.$el).val());
             settings.set('scrollback', $('.setting-scrollback', this.$el).val());
             settings.set('show_joins_parts', $('.setting-show_joins_parts', this.$el).is(':checked'));
+            settings.set('show_timestamps', $('.setting-show_timestamps', this.$el).is(':checked'));
 
             settings.save();
 
