@@ -886,11 +886,24 @@ _kiwi.model.Application = function () {
                     ev.params.shift();
 
                     value = ev.params.join(' ');
+
+                    // If we're setting a true boolean value..
+                    if (value === 'true')
+                        value = true;
+
+                    // If we're setting a false boolean value..
+                    if (value === 'false')
+                        value = false;
+
+                    // If we're setting a number..
+                    if (parseInt(value, 10).toString() === value)
+                        value = parseInt(value, 10);
+
                     _kiwi.global.settings.set(setting, value);
                 }
 
                 // Read the value to the user
-                _kiwi.app.panels.active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting));
+                _kiwi.app.panels.active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting).toString());
             });
 
 
