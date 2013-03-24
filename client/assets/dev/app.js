@@ -15,7 +15,7 @@ _kiwi.applets = {};
  * and data (think: plugins)
  */
 _kiwi.global = {
-	settings: undefined,
+	settings: undefined, // Instance of _kiwi.model.DataStore
 	plugins: undefined,
 	utils: undefined, // TODO: Re-usable methods
 	user: undefined, // TODO: Limited user methods

@@ -1085,6 +1085,9 @@ _kiwi.view.Application = Backbone.View.extend({
         _kiwi.global.settings.on('change:channel_list_style', this.setTabLayout, this);
         this.setTabLayout(_kiwi.global.settings.get('channel_list_style'));
 
+        _kiwi.global.settings.on('change:show_timestamps', this.displayTimestamps, this);
+        this.displayTimestamps(_kiwi.global.settings.get('show_timestamps'));
+
         this.doLayout();
 
         $(document).keydown(this.setKeyFocus);
@@ -1131,6 +1134,20 @@ _kiwi.view.Application = Backbone.View.extend({
         }
         
         this.doLayout();
+    },
+
+
+    displayTimestamps: function (show_timestamps) {
+        // If called by the settings callback, get the correct new_value
+        if (show_timestamps === _kiwi.global.settings) {
+            show_timestamps = arguments[1];
+        }
+        
+        if (show_timestamps) {
+            this.$el.addClass('timestamps');
+        } else {
+            this.$el.removeClass('timestamps');
+        }
     },
 
 
