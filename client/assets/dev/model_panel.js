@@ -44,13 +44,15 @@ _kiwi.model.Panel = Backbone.Model.extend({
 
         // Update the scrollback
         bs = this.get("scrollback");
-        bs.push(message_obj);
+        if (bs) {
+            bs.push(message_obj);
 
-        // Keep the scrolback limited
-        if (bs.length > scrollback) {
-            bs.splice(scrollback);
+            // Keep the scrolback limited
+            if (bs.length > scrollback) {
+                bs.splice(scrollback);
+            }
+            this.set({"scrollback": bs}, {silent: true});
         }
-        this.set({"scrollback": bs}, {silent: true});
 
         this.trigger("msg", message_obj);
     },
