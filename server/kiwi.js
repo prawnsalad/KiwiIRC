@@ -14,7 +14,7 @@ config.loadConfig();
 
 // If we're not running in the forground and we have a log file.. switch
 // console.log to output to a file
-if (process.argv.indexOf('-f') === -1 && global.config.log) {
+if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
     (function () {
         var log_file_name = global.config.log;
 
