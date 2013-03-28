@@ -35,6 +35,15 @@ conf.servers.push({
 
 
 
+// Do we want to enable the built in Identd server?
+conf.identd = {
+    enabled: false,
+    port: 113,
+    address: "0.0.0.0"
+};
+
+
+
 
 
 
@@ -131,7 +140,7 @@ conf.client = {
 };
 
 
-// If not empty, the client may only connect to this 1 IRC server
+// If set, the client may only connect to this 1 IRC server
 //conf.restrict_server = "irc.kiwiirc.com";
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;

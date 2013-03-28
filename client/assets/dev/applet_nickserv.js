@@ -28,7 +28,7 @@
             this.set('title', 'Nickserv Login');
             //this.view = new View();
 
-            _kiwi.global.control.on('command_login', this.loginCommand, this);
+            _kiwi.global.control.on('command:login', this.loginCommand, this);
         },
 
         loginCommand: function (event) {

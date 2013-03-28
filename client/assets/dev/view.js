@@ -150,6 +150,15 @@ _kiwi.view.ServerSelect = function () {
         },
 
         submitForm: function (event) {
+            event.preventDefault();
+
+            // Make sure a nick is chosen
+            if (!$('input.nick', this.$el).val().trim()) {
+                this.setStatus('Select a nickname first!');
+                $('input.nick', this.$el).select();
+                return;
+            }
+
             if (state === 'nick_change') {
                 this.submitNickChange(event);
             } else {
@@ -157,7 +166,7 @@ _kiwi.view.ServerSelect = function () {
             }
 
             $('button', this.$el).attr('disabled', 1);
-            return false;
+            return;
         },
 
         submitLogin: function (event) {
@@ -245,7 +254,7 @@ _kiwi.view.ServerSelect = function () {
             $('.status', this.$el)
                 .text(text)
                 .attr('class', 'status')
-                .addClass(class_name)
+                .addClass(class_name||'')
                 .show();
         },
         clearStatus: function () {
@@ -884,12 +893,20 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             }
             
             (function () {
-                var tokens = inp_val.substring(0, inp[0].selectionStart).split(' '),
-                    val,
-                    p1,
-                    newnick,
-                    range,
-                    nick = tokens[tokens.length - 1];
+                var tokens,              // Words before the cursor position
+                    val,                 // New value being built up
+                    p1,                  // Position in the value just before the nick 
+                    newnick,             // New nick to be displayed (cycles through)
+                    range,               // TextRange for setting new text cursor position
+                    nick,                // Current nick in the value
+                    trailing = ': ';     // Text to be inserted after a tabbed nick
+
+                tokens = inp_val.substring(0, inp[0].selectionStart).split(' ');
+                if (tokens[tokens.length-1] == ':')
+                    tokens.pop();
+
+                nick  = tokens[tokens.length - 1];
+
                 if (this.tabcomplete.prefix === '') {
                     this.tabcomplete.prefix = nick;
                 }
@@ -899,21 +916,31 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 });
 
                 if (this.tabcomplete.data.length > 0) {
+                    // Get the current value before cursor position
                     p1 = inp[0].selectionStart - (nick.length);
                     val = inp_val.substr(0, p1);
+
+                    // Include the current selected nick
                     newnick = this.tabcomplete.data.shift();
                     this.tabcomplete.data.push(newnick);
                     val += newnick;
+
+                    if (inp_val.substr(inp[0].selectionStart, 2) !== trailing)
+                        val += trailing;
+
+                    // Now include the rest of the current value
                     val += inp_val.substr(inp[0].selectionStart);
+
                     inp.val(val);
 
+                    // Move the cursor position to the end of the nick
                     if (inp[0].setSelectionRange) {
-                        inp[0].setSelectionRange(p1 + newnick.length, p1 + newnick.length);
+                        inp[0].setSelectionRange(p1 + newnick.length + trailing.length, p1 + newnick.length + trailing.length);
                     } else if (inp[0].createTextRange) { // not sure if this bit is actually needed....
                         range = inp[0].createTextRange();
                         range.collapse(true);
-                        range.moveEnd('character', p1 + newnick.length);
-                        range.moveStart('character', p1 + newnick.length);
+                        range.moveEnd('character', p1 + newnick.length + trailing.length);
+                        range.moveStart('character', p1 + newnick.length + trailing.length);
                         range.select();
                     }
                 }
@@ -955,11 +982,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         // Trigger the command events
         this.trigger('command', {command: command, params: params});
-        this.trigger('command_' + command, {command: command, params: params});
+        this.trigger('command:' + command, {command: command, params: params});
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?
-        if (!this._callbacks['command_' + command]) {
+        if (!this._callbacks['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
     }
@@ -983,7 +1010,7 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.timeout = opt.timeout || 5000;
 
         this.$el.text(text).attr('class', opt.type);
-        this.$el.slideDown(_kiwi.app.view.doLayout);
+        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, this));
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
@@ -1001,7 +1028,7 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
     },
 
     hide: function () {
-        this.$el.slideUp(_kiwi.app.view.doLayout);
+        this.$el.slideUp($.proxy(_kiwi.app.view.doLayout, this));
     },
 
     doTimeout: function (length) {
@@ -1063,9 +1090,11 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
 
 _kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
-        $(window).resize(this.doLayout);
-        $('#toolbar').resize(this.doLayout);
-        $('#controlbox').resize(this.doLayout);
+        var that = this;
+
+        $(window).resize(function() { that.doLayout.apply(that); });
+        $('#toolbar').resize(function() { that.doLayout.apply(that); });
+        $('#controlbox').resize(function() { that.doLayout.apply(that); });
 
         // Change the theme when the config is changed
         _kiwi.global.settings.on('change:theme', this.updateTheme, this);
@@ -1073,6 +1102,9 @@ _kiwi.view.Application = Backbone.View.extend({
 
         _kiwi.global.settings.on('change:channel_list_style', this.setTabLayout, this);
         this.setTabLayout(_kiwi.global.settings.get('channel_list_style'));
+
+        _kiwi.global.settings.on('change:show_timestamps', this.displayTimestamps, this);
+        this.displayTimestamps(_kiwi.global.settings.get('show_timestamps'));
 
         this.doLayout();
 
@@ -1123,6 +1155,20 @@ _kiwi.view.Application = Backbone.View.extend({
     },
 
 
+    displayTimestamps: function (show_timestamps) {
+        // If called by the settings callback, get the correct new_value
+        if (show_timestamps === _kiwi.global.settings) {
+            show_timestamps = arguments[1];
+        }
+
+        if (show_timestamps) {
+            this.$el.addClass('timestamps');
+        } else {
+            this.$el.removeClass('timestamps');
+        }
+    },
+
+
     // Globally shift focus to the command input box on a keypress
     setKeyFocus: function (ev) {
         // If we're copying text, don't shift focus
@@ -1131,7 +1177,7 @@ _kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we're typing into an input box somewhere, ignore
-        if ((ev.target.tagName.toLowerCase() === 'input') || $(ev.target).attr('contenteditable')) {
+        if ((ev.target.tagName.toLowerCase() === 'input') || (ev.target.tagName.toLowerCase() === 'textarea') || $(ev.target).attr('contenteditable')) {
             return;
         }
 
@@ -1140,12 +1186,12 @@ _kiwi.view.Application = Backbone.View.extend({
 
 
     doLayout: function () {
-        var el_kiwi = $('#kiwi');
-        var el_panels = $('#panels');
-        var el_memberlists = $('#memberlists');
-        var el_toolbar = $('#toolbar');
-        var el_controlbox = $('#controlbox');
-        var el_resize_handle = $('#memberlists_resize_handle');
+        var el_kiwi = this.$el;
+        var el_panels = $('#kiwi #panels');
+        var el_memberlists = $('#kiwi #memberlists');
+        var el_toolbar = $('#kiwi #toolbar');
+        var el_controlbox = $('#kiwi #controlbox');
+        var el_resize_handle = $('#kiwi #memberlists_resize_handle');
 
         var css_heights = {
             top: el_toolbar.outerHeight(true),
@@ -1169,7 +1215,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // If we have channel tabs on the side, adjust the height
         if (el_kiwi.hasClass('chanlist_treeview')) {
-            $('#kiwi #tabs').css(css_heights);
+            $('#tabs', el_kiwi).css(css_heights);
         }
 
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
@@ -1269,8 +1315,8 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideUp({queue: false, duration: 400, step: this.doLayout});
-            $('#controlbox').slideUp({queue: false, duration: 400, step: this.doLayout});
+            $('#toolbar').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             $('#toolbar').slideUp(0);
             $('#controlbox').slideUp(0);
@@ -1282,8 +1328,8 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideDown({queue: false, duration: 400, step: this.doLayout});
-            $('#controlbox').slideDown({queue: false, duration: 400, step: this.doLayout});
+            $('#toolbar').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             $('#toolbar').slideDown(0);
             $('#controlbox').slideDown(0);

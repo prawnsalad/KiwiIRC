@@ -3,7 +3,8 @@ var fs          = require('fs'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     rehash      = require('./rehash.js'),
-    modules     = require('./modules.js');
+    modules     = require('./modules.js'),
+    Identd      = require('./identd.js');
 
 
 
@@ -107,6 +108,19 @@ global.clients = {
         }
     }
 };
+
+
+
+
+/*
+ * Identd server
+ */
+if (global.config.identd && global.config.identd.enabled) {
+    new Identd({
+        bind_addr: global.config.identd.address,
+        bind_port: global.config.identd.port
+    }).start();
+}
 
 
 
