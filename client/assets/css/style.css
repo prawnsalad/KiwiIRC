@@ -114,7 +114,7 @@ html, body { height:100%; }
  * Control box
  */
 #kiwi #controlbox .input {
-    height:1.7em;
+    height:1.7em; position:relative;
 }
 
 /* The nick label */
@@ -135,6 +135,10 @@ html, body { height:100%; }
 }
 #kiwi #controlbox .nickchange input { }
 #kiwi #controlbox .nickchange button { }
+
+/* Plugin tools */
+#kiwi #controlbox .input_tools { float:right; }
+#kiwi #controlbox .input_tools .tool { margin:0 1em; display:inline; }
 
 
 
