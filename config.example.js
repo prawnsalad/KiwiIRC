@@ -54,7 +54,10 @@ conf.public_http = "client/";
 conf.max_client_conns = 5;
 
 // Max connections per server. 0 to disable.
-// Setting is ignored if there is a WEBIRC password configured for the server or kiwi is running in restricted server mode.
+// Setting is ignored if:
+//   - There is a WEBIRC password configured for the server,
+//   - Kiwi is configured to send the client's ip as a username for the server, or
+//   - Kiwi is running in restricted server mode.
 conf.max_server_conns = 0;
 
 

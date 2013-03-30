@@ -41,6 +41,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     if ((global.config.max_server_conns > 0) &&
         (!global.config.restrict_server) &&
         (!(global.config.webirc_pass && global.config.webirc_pass[hostname])) &&
+        (!(global.config.ip_as_username && _.contains(global.config.ip_as_username, hostname))) &&
         (global.servers.numOnHost(hostname) >= global.config.max_server_conns))
     {
         return callback('Too many connections to host', {host: hostname, limit: global.config.max_server_conns});
