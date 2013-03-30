@@ -35,26 +35,14 @@ module.exports = State;
 State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callback) {
     var that = this;
     var con, con_num;
-    if (global.config.restrict_server) {
-        con = new IrcConnection(
-            global.config.restrict_server,
-            global.config.restrict_server_port,
-            global.config.restrict_server_ssl,
-            nick,
-            user,
-            global.config.restrict_server_password,
-            this);
-
-    } else {
-        con = new IrcConnection(
-            hostname,
-            port,
-            ssl,
-            nick,
-            user,
-            pass,
-            this);
-    }
+    con = new IrcConnection(
+        hostname,
+        port,
+        ssl,
+        nick,
+        user,
+        pass,
+        this);
     
     con_num = this.next_connection++;
     this.irc_connections[con_num] = con;
