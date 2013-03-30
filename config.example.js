@@ -92,8 +92,8 @@ conf.webirc_pass = {
 
 // Some IRCDs require the clients IP via the username/ident
 conf.ip_as_username = [
-	"irc.network.com",
-	"127.0.0.1"
+    //"irc.network.com",
+    //"127.0.0.1"
 ];
 
 // Whether to verify IRC servers' SSL certificates against built-in well-known certificate authorities

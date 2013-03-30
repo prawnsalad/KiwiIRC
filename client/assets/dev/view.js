@@ -1237,6 +1237,9 @@ _kiwi.view.Application = Backbone.View.extend({
             // And move the handle just out of sight to the right
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
+
+        var input_wrap_width = parseInt($('#kiwi #controlbox .input_tools').outerWidth());
+        el_controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
     },
 
 
