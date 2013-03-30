@@ -8,6 +8,8 @@ Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiir
 
 ### Installation
 
+*Note: This requires Node.js to run. Make sure you have installed Node.js first! http://nodejs.org/download/*
+
 1. Download the Kiwi source or clone the git repository:
 
     `$ git clone git@github.com:prawnsalad/KiwiIRC.git && cd KiwiIRC`
