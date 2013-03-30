@@ -19,6 +19,7 @@ var State = function (client, save_state) {
                 if (irc_connection) {
                     irc_connection.end('QUIT :' + (global.config.quit_message || ''));
                     irc_connection.dispose();
+                    global.servers.removeConnection(irc_connection);
                     cons[i] = null;
                 }
             });
@@ -46,6 +47,11 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
             this);
 
     } else {
+        if ((global.config.max_server_conns > 0) && (!(global.config.webirc_pass && global.config.webirc_passs[hostname])))  {
+            if (global.servers.numOnHost(hostname) >= global.config.max_server_conns) {
+                return callback('Too many connections to host', {host: hostname, limit: global.config.max_server_conns});
+            }
+        }
         con = new IrcConnection(
             hostname,
             port,
@@ -63,6 +69,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     new IrcCommands(con, con_num, this).bindEvents();
     
     con.on('connected', function () {
+        global.servers.addConnection(this);
         return callback(null, con_num);
     });
     
@@ -73,6 +80,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
 
     con.on('close', function () {
         that.irc_connections[con_num] = null;
+        global.servers.removeConnection(this);
     });
 };
 
