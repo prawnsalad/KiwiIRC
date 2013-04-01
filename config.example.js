@@ -106,6 +106,8 @@ conf.http_base_path = "/kiwi";
 
 /*
  * SOCKS (version 5) proxy settings
+ * This feature is only available on node 0.10.0 and above.
+ * Do not enable it if you're running 0.8 or below or Bad Things will happen.
  */
 conf.socks_proxy = {};
 
