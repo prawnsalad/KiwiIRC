@@ -257,6 +257,7 @@ _kiwi.model.Gateway = function () {
     */
     this.parse = function (command, data) {
         //console.log('gateway event', command, data);
+
         if (command !== undefined) {
             that.trigger('on' + command, data);
 
@@ -279,6 +280,9 @@ _kiwi.model.Gateway = function () {
                 break;
 
             case 'connect':
+                //if (!_kiwi.app.connections[data.server]) {
+                //    _kiwi.app.connections[data.server] = new _kiwi.model.Network(data.server);
+                //}
                 that.set('nick', data.nick);
                 break;
 
@@ -300,6 +304,14 @@ _kiwi.model.Gateway = function () {
                 this.emit('_kiwi.' + data.namespace, data.data);
                 break;
             }
+        }
+
+
+        if (typeof data.server !== 'undefined') {
+            that.trigger('connection:' + data.server.toString(), {
+                event_name: command,
+                event_data: data
+            });
         }
     };
 

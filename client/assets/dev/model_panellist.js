@@ -2,14 +2,16 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
     model: _kiwi.model.Panel,
 
     comparator: function (chan) {
-        return chan.get("name");
+        return chan.get('name');
     },
     initialize: function () {
-        this.view = new _kiwi.view.Tabs({"el": $('#tabs')[0], "model": this});
+        this.view = new _kiwi.view.Tabs({el: $('#tabs')[0], model: this});
 
         // Automatically create a server tab
-        this.add(new _kiwi.model.Server({'name': _kiwi.gateway.get('name')}));
-        this.server = this.getByName(_kiwi.gateway.get('name'));
+        var server_panel = new _kiwi.model.Server({name: 'Server'});
+
+        this.add(server_panel);
+        this.server = server_panel;
 
         // Holds the active panel
         this.active = null;
@@ -20,8 +22,12 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
         }, this);
 
     },
+
+
+
     getByName: function (name) {
         if (typeof name !== 'string') return;
+
         return this.find(function (c) {
             return name.toLowerCase() === c.get('name').toLowerCase();
         });
