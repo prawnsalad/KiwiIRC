@@ -6,7 +6,8 @@ var net             = require('net'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
-    IrcUser         = require('./user.js');
+    IrcUser         = require('./user.js'),
+    Socks           = require('../socks.js');
 
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
@@ -48,6 +49,19 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     // IRC connection information
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
+    
+    // SOCKS proxy details
+    // TODO: Wildcard matching of hostnames and/or CIDR ranges of IP addresses
+    if ((global.config.socks_proxy && global.config.socks_proxy.enabled) && ((global.config.socks_proxy.all) || (_.contains(global.config.socks_proxy.proxy_hosts, this.irc_host.hostname)))) {
+        this.socks = {
+            host: global.config.socks_proxy.address,
+            port: global.config.socks_proxy.port,
+            user: global.config.socks_proxy.user,
+            pass: global.config.socks_proxy.pass
+        };
+    } else {
+        this.socks = false;
+    }
 
     // Options sent by the IRCd
     this.options = Object.create(null);
@@ -97,6 +111,7 @@ IrcConnection.prototype.applyIrcEvents = function () {
  */
 IrcConnection.prototype.connect = function () {
     var that = this;
+    var socks;
 
     // The socket connect event to listener for
     var socket_connect_event_name = 'connect';
@@ -105,8 +120,20 @@ IrcConnection.prototype.connect = function () {
     // Make sure we don't already have an open connection
     this.disposeSocket();
 
-    // Open either a secure or plain text socket
-    if (this.ssl) {
+    // Are we connecting through a SOCKS proxy?
+    if (this.socks) {
+        this.socket = Socks.connect({
+            host: this.irc_host.hostname, 
+            port: this.irc_host.port,
+            ssl: this.ssl,
+            rejectUnauthorized: global.config.reject_unauthorised_certificates
+        }, {host: this.socks.host,
+            port: this.socks.port,
+            user: this.socks.user,
+            pass: this.socks.pass
+        });
+        
+    } else if (this.ssl) {
         this.socket = tls.connect({
             host: this.irc_host.hostname,
             port: this.irc_host.port,
@@ -121,14 +148,14 @@ IrcConnection.prototype.connect = function () {
             port: this.irc_host.port
         });
     }
-
-    this.socket.setEncoding('utf-8');
-
+    
     this.socket.on(socket_connect_event_name, function () {
         that.connected = true;
-        socketConnectHandler.apply(that, arguments);
+        socketConnectHandler.call(that);
     });
-
+    
+    this.socket.setEncoding('utf-8');
+    
     this.socket.on('error', function (event) {
         that.emit('error', event);
 
