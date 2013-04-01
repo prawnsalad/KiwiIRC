@@ -196,7 +196,7 @@ var startTLS = function () {
     var that = this;
     var plaintext = tls.connect({
         socket: this.socksSocket,
-        rejectUnauthorized: this.rejectUnauthorized
+        rejectUnauthorized: this.remote_options.rejectUnauthorized
     });
     
     plaintext.on('error', function (err) {
