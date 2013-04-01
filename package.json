@@ -22,4 +22,7 @@
     "eventemitter2": "0.4.11",
     "ipaddr.js": "0.1.1"
   }
+  "engines": {
+    "node": ">=0.10.0"
+  }
 }

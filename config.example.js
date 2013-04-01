@@ -105,7 +105,7 @@ conf.http_base_path = "/kiwi";
 
 
 /*
- * SOCKS proxy settings
+ * SOCKS (version 5) proxy settings
  */
 conf.socks_proxy = {};
 

@@ -7,7 +7,7 @@ var net             = require('net'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
-    SocksConnection = require('../socks.js');
+    Socks           = require('../socks.js');
 
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
@@ -122,54 +122,37 @@ IrcConnection.prototype.connect = function () {
 
     // Are we connecting through a SOCKS proxy?
     if (this.socks) {
-        socks = new SocksConnection({
+        this.socket = Socks.connect({
             host: this.irc_host.hostname, 
             port: this.irc_host.port,
-            ssl: this.ssl
+            ssl: this.ssl,
+            rejectUnauthorized: global.config.reject_unauthorised_certificates
         }, {host: this.socks.host,
             port: this.socks.port,
             user: this.socks.user,
             pass: this.socks.pass
         });
         
-        socks.on('connect', function (socket) {
-            that.socket = socket;
-            setupSocket.call(that);
-            that.connected = true;
-            socketConnectHandler.call(that);
+    } else if (this.ssl) {
+        this.socket = tls.connect({
+            host: this.irc_host.hostname,
+            port: this.irc_host.port,
+            rejectUnauthorized: global.config.reject_unauthorised_certificates
         });
+
+        socket_connect_event_name = 'secureConnect';
+
     } else {
-        // Open either a secure or plain text socket
-        if (this.ssl) {
-            this.socket = tls.connect({
-                host: this.irc_host.hostname,
-                port: this.irc_host.port,
-                rejectUnauthorized: global.config.reject_unauthorised_certificates
-            });
-
-            socket_connect_event_name = 'secureConnect';
-
-        } else {
-            this.socket = net.connect({
-                host: this.irc_host.hostname,
-                port: this.irc_host.port
-            });
-        }
-
-        this.socket.on(socket_connect_event_name, function () {
-            that.connected = true;
-            socketConnectHandler.call(that);
+        this.socket = net.connect({
+            host: this.irc_host.hostname,
+            port: this.irc_host.port
         });
-        
-        setupSocket.call(this);
     }
-};
-
-/**
- * Set the socket's encoding and add event handlers
- */
-var setupSocket = function () {
-    var that = this;
+    
+    this.socket.on(socket_connect_event_name, function () {
+        that.connected = true;
+        socketConnectHandler.call(that);
+    });
     
     this.socket.setEncoding('utf-8');
     

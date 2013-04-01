@@ -1,46 +1,65 @@
-var net             = require('net'),
-    tls             = require('tls'),
-    util            = require('util'),
-    EventEmitter    = require('events').EventEmitter,
-    crypto          = require('crypto'),
-    ipaddr          = require('ipaddr.js');
-    
-/*
- * API:
- * var s = new SocksConnection({host: irc.example.com, port: 6667, ssl: false}, {host: socks.example.net, port: 1080, user: null, pass: null});
- * s.on('connect', function (socket) {
- *     // send data to socket
- * });
- */
+var stream  = require('stream'),
+    util    = require('util'),
+    net     = require('net'),
+    tls     = require('tls'),
+    _       = require('lodash'),
+    ipaddr  = require('ipaddr.js');
 
-var SocksConnection = function (destination, socks) {
+var SocksConnection = function (remote_options, socks_options) {
     var that = this;
-    EventEmitter.call(this);
+    stream.Duplex.call(this);
     
-    this.remoteAddress = destination.host;
-    this.remotePort = destination.port;
-    this.ssl = destination.ssl;
+    this.remote_options = _.defaults(remote_options, {
+        host: 'localhost',
+        ssl: false,
+        rejectUnauthorized: false
+    });
+    socks_options = _.defaults(socks_options, {
+        host: 'localhost',
+        port: 1080,
+        user: null,
+        pass: null
+    });
     
     this.socksAddress = null;
     this.socksPort = null;
     
-    this.socksSocket = net.connect({host: socks.host, port: socks.port}, socksConnected.bind(this, !(!socks.user)));
-    this.socksSocket.once('data', socksAuth.bind(this, {user: socks.user || null, pass: socks.pass || null}));
-    this.socksSocket.on('error', this._error);
+    this.socksSocket = net.connect({host: socks_options.host, port: socks_options.port}, socksConnected.bind(this, !(!socks_options.user)));
+    this.socksSocket.once('data', socksAuth.bind(this, {user: socks_options.user, pass: socks_options.pass}));
+    this.socksSocket.on('error', function (err) {
+        that.emit('error', err);
+    });
+    
+    this.outSocket = this.socksSocket;
 };
 
-util.inherits(SocksConnection, EventEmitter);
+util.inherits(SocksConnection, stream.Duplex);
 
-module.exports = SocksConnection;
+SocksConnection.connect = function (remote_options, socks_options, connection_listener) {
+    var socks_connection = new SocksConnection(remote_options, socks_options);
+    if (typeof connection_listener === 'Function') {
+        socks_connection.on('connect', connection_listener);
+    }
+    return socks_connection;
+};
+
+SocksConnection.prototype._read = function () {
+    this.outSocket.resume();
+};
+
+SocksConnection.prototype._write = function (chunk, encoding, callback) {
+    this.outSocket.write(chunk, 'utf8', callback);
+};
 
 SocksConnection.prototype.dispose = function () {
-    this.socksSocket.destroy();
+    this.outSocket.destroy();
+    this.outSocket.removeAllListeners();
+    if (this.outSocket !== this.socksSocket) {
+        this.socksSocket.destroy();
+        this.socksSocket.removeAllListeners();
+    }
     this.removeAllListeners();
-}
-
-SocksConnection.prototype._error = function (err) {
-    this.emit('error', err);
-}
+};
 
 var socksConnected = function (auth) {
     if (auth) {
@@ -68,13 +87,13 @@ var socksAuth = function (auth, data) {
         this.socksSocket.once('data', socksAuthStatus.bind(this));
         break;
     default:
-        socksRequest.call(this, this.remoteAddress, this.remotePort);
+        socksRequest.call(this, this.remote_options.host, this.remote_options.port);
     }
 };
 
 var socksAuthStatus = function (data) {
     if (data.readUInt8(1) === 1) {
-        socksRequest.call(this, this.remoteHost, this.remotePort);
+        socksRequest.call(this, this.remote_options.host, this.remote_options.port);
     } else {
         this.emit('error', 'SOCKS: Authentication failed');
         this.socksSocket.destroy();
@@ -133,7 +152,12 @@ var socksReply = function (data) {
         this.socksAddress = addr;
         this.socksPort = port;
         
-        emitSocket.call(this);
+        if (this.remote_options.ssl) {
+            startTLS.call(this);
+        } else {
+            proxyData.call(this);
+            this.emit('connect');
+        }
         
     } else {
         switch (status) {
@@ -168,28 +192,37 @@ var socksReply = function (data) {
     }
 };
 
-var starttls = function () {
+var startTLS = function () {
+    var that = this;
+    var plaintext = tls.connect({
+        socket: this.socksSocket,
+        rejectUnauthorized: this.rejectUnauthorized
+    });
+    
+    plaintext.on('error', function (err) {
+        that.emit('error', err);
+    });
+    
+    plaintext.on('secureConnect', function () {
+        that.emit('connect');
+    });
+    this.outSocket = plaintext;
+    proxyData.call(this);
+};
+
+var proxyData = function () {
     var that = this;
     
-    var pair = tls.createSecurePair(crypto.createCredentials(), false);
-    pair.encrypted.pipe(this.socksSocket);
-    this.socksSocket.pipe(pair.encrypted);
-    
-    pair.cleartext.socket = this.socksSocket;
-    pair.cleartext.encrypted = pair.encrypted;
-    pair.cleartext.authorised = false;
-    
-    pair.on('secure', function () { 
-        that.emit('connect', pair.cleartext, this.socksSocket);
-        that.socksSocket.removeListener('error', that._error);
+    this.outSocket.on('data', function (data) {
+        var buffer_not_full = that.push(data);
+        if (!buffer_not_full) {
+            this.pause();
+        }
     });
-}
-
-var emitSocket = function () {
-    if (this.ssl) {
-        starttls.call(this);
-    } else {
-        this.emit('connect', this.socksSocket);
-        this.socksSocket.removeListener('error', this._error);
-    }
+    
+    this.outSocket.on('end', function () {
+        that.push(null);
+    });
 };
+
+module.exports = SocksConnection;
