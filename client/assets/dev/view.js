@@ -1025,6 +1025,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         if (!this._callbacks['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
+    },
+
+
+    addPluginIcon: function ($icon) {
+        var $tool = $('<div class="tool"></div>').append($icon);
+        this.$el.find('.input_tools').append($tool);
+        _kiwi.app.view.doLayout();
     }
 });
 
