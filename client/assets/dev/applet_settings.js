@@ -48,7 +48,8 @@
 
 
         saveSettings: function () {
-            var settings = _kiwi.global.settings;
+            var settings = _kiwi.global.settings,
+                feedback;
 
             // Stop settings being updated while we're saving one by one
             _kiwi.global.settings.off('change', this.loadSettings, this);
@@ -60,6 +61,11 @@
             settings.set('show_timestamps', $('.setting-show_timestamps', this.$el).is(':checked'));
 
             settings.save();
+
+            feedback = $('.feedback', this.$el);
+            feedback.fadeIn('slow', function () {
+                feedback.fadeOut('slow');
+            })
 
             // Continue listening for setting changes
             _kiwi.global.settings.on('change', this.loadSettings, this);
