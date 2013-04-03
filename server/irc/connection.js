@@ -7,8 +7,18 @@ var net             = require('net'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
-    Socks           = require('../socks.js');
-
+    Socks;
+ 
+ 
+// Break the Node.js version down into usable parts
+var version_values = process.version.substr(1).split('.').map(function (item) {
+    return parseInt(item, 10);
+});
+ 
+// If we have a suitable Nodejs version, bring int he socks functionality
+if (version_values[0] >= 10) {
+    Socks = require('../socks.js');
+}
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     var that = this;
