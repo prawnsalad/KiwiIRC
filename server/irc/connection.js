@@ -14,9 +14,9 @@ var net             = require('net'),
 var version_values = process.version.substr(1).split('.').map(function (item) {
     return parseInt(item, 10);
 });
- 
+
 // If we have a suitable Nodejs version, bring int he socks functionality
-if (version_values[0] >= 10) {
+if (version_values[1] >= 10) {
     Socks = require('../socks.js');
 }
 
