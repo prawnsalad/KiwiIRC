@@ -205,6 +205,11 @@ html, body { height:100%; }
 #kiwi .settings table td {
     padding:0.5em 1em;
 }
+#kiwi .settings .save .feedback {
+    display: none;
+    position: relative;
+    left: -1.6em;
+}
 
 
 
