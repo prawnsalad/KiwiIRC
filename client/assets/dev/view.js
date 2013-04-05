@@ -442,6 +442,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         } else if (is_highlight) {
             _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.playSound('highlight');
             this.alert('highlight');
 
         } else {
@@ -450,6 +451,11 @@ _kiwi.view.Panel = Backbone.View.extend({
                 _kiwi.app.view.alertWindow('* People are talking!');
             }
             this.alert('activity');
+        }
+
+        if (this.model.isQuery() && !this.model.isActive()) {
+            _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.playSound('highlight');
         }
 
         // Update the activity counters
@@ -1159,6 +1165,8 @@ _kiwi.view.Application = Backbone.View.extend({
                 return 'This will close all KiwiIRC conversations. Are you sure you want to close this window?';
             }
         };
+
+        this.initSound();
     },
 
 
@@ -1381,6 +1389,36 @@ _kiwi.view.Application = Backbone.View.extend({
             $('#controlbox').slideDown(0);
             this.doLayout();
         }
+    },
+
+
+    initSound: function () {
+        var that = this,
+            base_path = this.model.get('base_path');
+
+        $script(base_path + '/assets/libs/soundmanager2/soundmanager2-nodebug-jsmin.js', function() {
+            if (typeof soundManager === 'undefined')
+                return;
+
+            soundManager.setup({
+                url: base_path + '/assets/libs/soundmanager2/',
+                flashVersion: 9, // optional: shiny features (default = 8)// optional: ignore Flash where possible, use 100% HTML5 mode
+                preferFlash: true,
+
+                onready: function() {
+                    that.sound_object = soundManager.createSound({
+                        id: 'highlight',
+                        url: base_path + '/assets/sound/highlight.mp3'
+                    });
+                }
+            });
+        });
+    },
+
+
+    playSound: function (sound_id) {
+        if (!this.sound_object) return;
+        soundManager.play(sound_id);
     }
 });
 
