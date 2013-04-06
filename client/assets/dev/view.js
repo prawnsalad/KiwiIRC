@@ -1418,6 +1418,10 @@ _kiwi.view.Application = Backbone.View.extend({
 
     playSound: function (sound_id) {
         if (!this.sound_object) return;
+
+        if (_kiwi.global.settings.get('mute_sounds'))
+            return;
+        
         soundManager.play(sound_id);
     }
 });

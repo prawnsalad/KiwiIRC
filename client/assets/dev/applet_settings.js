@@ -44,6 +44,12 @@
             } else {
                 this.$el.find('.setting-show_timestamps').attr('checked', true);
             }
+
+            if (typeof settings.get('mute_sounds') === 'undefined' || settings.get('mute_sounds')) {
+                this.$el.find('.setting-mute_sounds').attr('checked', true);
+            } else {
+                this.$el.find('.setting-mute_sounds').attr('checked', false);
+            }
         },
 
 
@@ -59,6 +65,7 @@
             settings.set('scrollback', $('.setting-scrollback', this.$el).val());
             settings.set('show_joins_parts', $('.setting-show_joins_parts', this.$el).is(':checked'));
             settings.set('show_timestamps', $('.setting-show_timestamps', this.$el).is(':checked'));
+            settings.set('mute_sounds', $('.setting-mute_sounds', this.$el).is(':checked'));
 
             settings.save();
 
