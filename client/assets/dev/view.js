@@ -713,6 +713,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
+            panel.tab.addClass('icon-nonexistant');
         }
 
         panel.tab.data('panel_id', panel.cid)

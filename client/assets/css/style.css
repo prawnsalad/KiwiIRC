@@ -311,7 +311,8 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist .active { padding-right:23px; }
 #kiwi.theme_relaxed #toolbar .panellist li .part:before { content:"\f00d"; }
 
-#kiwi.theme_relaxed #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
+#kiwi.theme_relaxed #toolbar .panellist li.server span { padding-left: 5px; }
+#kiwi.theme_relaxed #toolbar .panellist li.server:before { content: "\f0ec"; }
 
 /* Tab texts are within a span */
 #kiwi.theme_relaxed #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
@@ -642,7 +643,8 @@ html, body { height:100%; }
 #kiwi.theme_mini #toolbar .panellist .active { padding-right:23px; }
 #kiwi.theme_mini #toolbar .panellist li .part:before { content:"\f00d"; }
 
-#kiwi.theme_mini #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
+#kiwi.theme_mini #toolbar .panellist li.server span { padding-left:5px; }
+#kiwi.theme_mini #toolbar .panellist li.server:before { content: "\f0ec"; }
 
 /* Tab texts are within a span */
 #kiwi.theme_mini #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
@@ -902,7 +904,8 @@ html, body { height:100%; }
 #kiwi.theme_cli #toolbar .panellist .active { padding-right:23px; }
 #kiwi.theme_cli #toolbar .panellist li .part:before { content:"\f00d"; }
 
-#kiwi.theme_cli #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
+#kiwi.theme_cli #toolbar .panellist li.server span { padding-left:5px; }
+#kiwi.theme_cli #toolbar .panellist li.server:before { content: "\f0ec"; }
 
 /* Tab texts are within a span */
 #kiwi.theme_cli #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
