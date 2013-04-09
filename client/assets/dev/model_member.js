@@ -84,6 +84,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         return tmp.substr(i);
     },
     displayNick: function (full) {
+		full = false;
         var display = this.get('nick');
 
         if (full) {

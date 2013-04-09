@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base target="_blank">
 
-<title> KiwiIRC </title>
+<title> Learnable - Chat With the Experts </title>
 
+<link rel="stylesheet" type="text/css" href="https://d3jdkh4ynqm70e.cloudfront.net/assets/styles-79e7805cc443b3ec0f05a50992cb0b8a.css" />
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css" />
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.css" />
 <!--[if IE 7]>
@@ -14,7 +15,26 @@
 <![endif]-->
 </head>
 <body>
-    <div id="kiwi" class="theme_relaxed">
+<header class='page-header'>
+	<div class='container'><div class='row'><div class='span6'><a href='/'>
+	<span class='learnablelogo'>Learnable</span>
+	</a></div>
+	<nav class='span6 headernav'><ul>
+	<li><a href="https://learnable.com/membership" class="bluelink">Pricing</a></li>
+	<li><a href="https://learnable.com/membership">Sign Up</a></li>
+	<li><a class='bluelink sign-in' href='https://learnable.com/sign-in'>Log In</a></li>
+	</ul></nav></div></div>
+</header>
+<div class='nav-strap'><div class='container'>
+<div class='row'><div class='span6 secondary-menu'><ul class='secondary-menu'>
+<li><a href="https://learnable.com/topics">Discover</a></li>
+<li><a href="https://learnable.com/discussion">Discuss</a></li>
+<li><a href="https://learnable.com/dashboard">Dashboard</a></li>
+</ul></div></div></div></div>
+<div class="main">
+    <div id="kiwi" class="theme_relaxed container content-box">
+	<h1> Talk with the Experts</h1>
+	<div>
         <div id="toolbar">
             <div class="app_tools">
                 <ul class="main">
@@ -46,14 +66,32 @@
         <div id="controlbox">
             <div class="input">
                 <span class="nick"> </span>
-                <div class="input_wrap"><textarea class="inp"></textarea></div>
+                <div class="input_wrap"><textarea class="inp" placeholder="Type message here…"></textarea></div>
             </div>
         </div>
     </div>
-
-
-
-
+	</div>
+</div>
+<footer class='colophon'><div class='container'><div class='row'>
+<div class='span2'><a class='learnablelogo dark' href='https://learnable.com'>Learnable</a></div>
+<div class='span8 pagination-centered'><ul class='tertiarylinks'>
+<li><a href='https://learnable.com/about'>About Us</a></li>
+<li><a href='https://learnable.com/teachers'>Teach</a></li>
+<li><a href='https://learnable.com/learn/faq'>FAQ</a></li>
+<li><a href='https://learnable.com/legal-stuff/terms-of-service'>Terms of Use</a></li>
+<li><a href='https://learnable.com/legal-stuff/privacy-policy'>Privacy Policy</a></li>
+</ul>
+<ul class='tertiarylinks'>
+<li><a href='http://facebook.com/learnable' target='_blank'>Facebook</a></li>
+<li><a href='http://www.twitter.com/learnablehq' target='_blank'>Twitter</a></li>
+<li><a href='https://learnable.com/contact'>Contact Us</a></li>
+</ul>
+<p class='copyright'>© 2010 – 2013 Learnable Pty. Ltd.  All Rights Reserved</p>
+</div>
+<div class='span2 relative'>
+<a class='sitepointlogo dark' href='http://sitepoint.com' target='_blank'>SitePoint</a>
+</div></div></div>
+</footer>
 
     
     <script type="text/html" id="tmpl_userbox">
@@ -68,7 +106,7 @@
     
     <script type="text/html" id="tmpl_nickchange">
         <form class="nickchange">
-            <label for="nickchange">New nick:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button>Change</button> <a class="cancel">Cancel</a>
+            <label for="nickchange">New nick:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button class="btn-success btn">Change</button> <a class="cancel">Cancel</a>
         </form>
     </script>
 
@@ -86,6 +124,7 @@
                                 <td><input type="text" class="nick" id="server_select_nick"></td>
                             </tr>
 
+							<!--
                             <tr class="have_pass">
                                 <td colspan="2">
                                     <label for="server_select_show_pass">I have a password</label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
@@ -95,15 +134,15 @@
                             <tr class="pass">
                                 <td><label for="server_select_password">Password</label></td>
                                 <td><input type="password" class="password" id="server_select_password"></td>
-                            </tr>
+                            </tr>-->
 
                             <tr class="channel">
-                                <td><label for="server_select_channel">Channel</label></td>
+                                <td><label for="server_select_channel"></label></td>
                                 <td><input type="text" class="channel" id="server_select_channel"><input type="hidden" class="channel_key"></td>
                             </tr>
 
                             <tr class="start">
-                                <td colspan="2"><button type="submit">Start..</button></td>
+                                <td colspan="2"><button type="submit" class="btn btn-success">Start&hellip;</button></td>
                             </tr>
                         </table>
 
@@ -135,14 +174,10 @@
             </div>
 
             <div class="about_kiwi" style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
-                <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
-                    <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
-                    <h1>Powered by Kiwi IRC</h1>
-                </a>
+				<h1>Talk with the Experts</h1>
 
-                <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
+                <p style="font-style:italic;">Powered by <a href="https://kiwiirc.com/">Kiwi IRC</a>.</p>
 
-                <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://kiwiirc.com/">Kiwi IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a> page. This network of people may not be associated with Kiwi IRC itself.</p>
             </div>
         </div>
     </script>

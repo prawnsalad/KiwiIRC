@@ -1194,9 +1194,10 @@ _kiwi.view.Application = Backbone.View.extend({
         var el_resize_handle = $('#kiwi #memberlists_resize_handle');
 
         var css_heights = {
-            top: el_toolbar.outerHeight(true),
-            bottom: el_controlbox.outerHeight(true)
+            top: el_toolbar.outerHeight(true)
         };
+
+
 
 
         // If any elements are not visible, full size the panals instead
@@ -1207,6 +1208,14 @@ _kiwi.view.Application = Backbone.View.extend({
         if (!el_controlbox.is(':visible')) {
             css_heights.bottom = 0;
         }
+
+		panels_height = $(window).height() - 300;
+		if(panels_height < 400){
+			panels_height = 400;
+		}
+
+		var panels_heights = css_heights;
+		panels_heights['height'] = panels_height;
 
         // Apply the CSS sizes
         el_panels.css(css_heights);
