@@ -32,6 +32,14 @@ _kiwi.model.Panel = Backbone.Model.extend({
             return;
         }
 
+		// Prefix if it exists
+		if(typeof opts != 'undefined' && typeof opts.prefix != 'undefined'){
+			message_obj.prefix = opts.prefix;
+		}
+		if(typeof opts != 'undefined' && typeof opts.modes != 'undefined'){
+			message_obj.modes = opts.modes;
+		}
+
         // The CSS class (action, topic, notice, etc)
         if (typeof message_obj.type !== "string") {
             message_obj.type = '';

@@ -395,9 +395,12 @@ _kiwi.view.Panel = Backbone.View.extend({
             msg_css_classes += ' nick_' + nick_hex;
         }
 
+		if(msg.modes){
+			msg_css_classes += ' ' + msg.modes.join(' ');
+		}
         // Build up and add the line
         msg.msg_css_classes = msg_css_classes;
-        line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %> <span class="prefix"><%- prefix %></span></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         $this.append(_.template(line_msg, msg));
 
         // Activity/alerts based on the type of new message
@@ -951,9 +954,10 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
 
     processInput: function (command_raw) {
-        var command, params,
+        var command, params, members, user, panel, opts,
             pre_processed;
-        
+		console.log('processInput');
+
         // The default command
         if (command_raw[0] !== '/' || command_raw.substr(0, 2) === '//') {
             // Remove any slash escaping at the start (ie. //)
@@ -971,18 +975,41 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         // Extract the command and parameters
         params = command_raw.split(' ');
+		console.log('params', params);
         if (params[0][0] === '/') {
+		console.log('params');
             command = params[0].substr(1).toLowerCase();
             params = params.splice(1, params.length - 1);
+			panel = _kiwi.app.panels.active;
+
+			members = panel.get('members');
+			if(typeof members != 'undefined'){
+				user = members.getByNick(_kiwi.gateway.get('nick'));
+				console.log('params', params);
+				if (user){
+					console.log('user', user);
+					opts = {modes: user.get('modes'), prefix: user.get('prefix')}
+				}
+			}
+			console.log('params', params);
         } else {
             // Default command
             command = 'msg';
-            params.unshift(_kiwi.app.panels.active.get('name'));
+			panel = _kiwi.app.panels.active;
+            params.unshift(panel.get('name'));
+
+			members = panel.get('members');
+			user = members.getByNick(_kiwi.gateway.get('nick'));
+			if (user){
+				console.log('user', user);
+				params.push({prefix: user.get('prefix'), modes: user.get('modes')})
+			}
+			console.log('params', params);
         }
 
         // Trigger the command events
-        this.trigger('command', {command: command, params: params});
-        this.trigger('command:' + command, {command: command, params: params});
+        this.trigger('command', {command: command, params: params, opts: opts});
+        this.trigger('command:' + command, {command: command, params: params, opts: opts});
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?

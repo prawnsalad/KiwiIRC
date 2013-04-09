@@ -416,13 +416,15 @@ _kiwi.model.Application = function () {
                 if (event.kicked === _kiwi.gateway.get('nick')) {
                     members.reset([]);
                 }
-                
+
             });
 
 
             gw.on('onmsg', function (event) {
-                var panel,
+                var panel, members, user, opts,
                     is_pm = (event.channel == _kiwi.gateway.get('nick'));
+
+				console.log("onmsg", event);
 
                 // An ignored user? don't do anything with it
                 if (gw.isNickIgnored(event.nick)) {
@@ -446,7 +448,18 @@ _kiwi.model.Application = function () {
                     }
                 }
 
-                panel.addMsg(event.nick, event.msg);
+				console.log("panel", panel.get('members'));
+				// Does this nick have a prefix?
+				members = panel.get('members');
+                user = members.getByNick(event.nick);
+                if (user){
+					console.log('user', user);
+					opts = {}
+					opts.prefix = user.get('prefix');
+					opts.modes = user.get('modes');
+				}
+				
+                panel.addMsg(event.nick, event.msg, undefined, opts);
             });
 
 
@@ -1057,7 +1070,7 @@ _kiwi.model.Application = function () {
 
             ev.params.shift();
 
-            panel.addMsg(_kiwi.gateway.get('nick'), ev.params.join(' '));
+            panel.addMsg(_kiwi.gateway.get('nick'), ev.params.join(' '), undefined, ev.opts);
             _kiwi.gateway.privmsg(destination, ev.params.join(' '));
         }
 

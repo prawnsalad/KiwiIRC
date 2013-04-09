@@ -158,7 +158,8 @@ function onPrivmsg(event) {
         ident: event.ident,
         hostname: event.hostname,
         channel: event.channel,
-        msg: event.msg
+        msg: event.msg,
+		prefix: event.prefix
     });
 };
 

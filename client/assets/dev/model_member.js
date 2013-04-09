@@ -65,6 +65,9 @@ _kiwi.model.Member = Backbone.Model.extend({
             });
             prefix = (prefix) ? prefix.symbol : '';
         }
+		if(prefix == '+'){
+			prefix = 'e';
+		}
         return prefix;
     },
     stripPrefix: function (nick) {

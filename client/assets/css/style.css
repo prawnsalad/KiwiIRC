@@ -416,7 +416,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
 
 /* User mode styles */
-#kiwi.theme_relaxed #memberlists ul li .prefix {
+#kiwi.theme_relaxed .prefix {
     display:none;
     width:20px; height:20px;
     border-radius: 5px;
@@ -426,11 +426,11 @@ html, body { height:100%; }
     /* text-indent: -1000px; */
 }
 /* Most important modes towards the bottom - they override the top ones! */
-#kiwi.theme_relaxed #memberlists ul li.mode.v .prefix { display:inline-block; background:#b3b3b3; }
-#kiwi.theme_relaxed #memberlists ul li.mode.h .prefix { display:inline-block; background:#b5b447; }
-#kiwi.theme_relaxed #memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
-#kiwi.theme_relaxed #memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
-#kiwi.theme_relaxed #memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
+#kiwi.theme_relaxed .v .prefix { display:inline-block; background:#47b547; }
+#kiwi.theme_relaxed .h .prefix { display:inline-block; background:#b5b447; }
+#kiwi.theme_relaxed .o .prefix { display:inline-block; background:#47b4dc; }
+#kiwi.theme_relaxed .a .prefix { display:inline-block; background:#b54747; }
+#kiwi.theme_relaxed .q .prefix { display:inline-block; background:#8547b5; }
 #kiwi.theme_relaxed #controlbox {
 	border-top: 1px solid #DEDEDE;
 }
