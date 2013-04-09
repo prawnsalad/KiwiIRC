@@ -1,3 +1,6 @@
+## Talk with the Experts fork of Kiwi IRC
+This is a fork of [Kiwi IRC](https://github.com/prawnsalad/KiwiIRC) for use as the Learnable 'Talk with the Experts' chat room. It provides a Learnable-esque look and feel, and only allows entry to the room #sitepoint on irc.freenode.net.
+
 ### Kiwi IRC - A hand-crafted IRC client
 Kiwi IRC is a fully featured IRC client that can be extended to suit almost any needs.
 Using the web application is extremly simple even without any IRC knowledge as all the common needs are built directly into the UI.
