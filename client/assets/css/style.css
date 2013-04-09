@@ -44,8 +44,8 @@ html, body { height:100%; }
 #kiwi #toolbar .panellist .alert_activity { font-weight: bold; }
 #kiwi #toolbar .panellist .alert_action { font-weight: bold; }
 
-#kiwi #toolbar .panellist li .part { position: absolute; top: 8px; right: 5px; }
-#kiwi #toolbar .panellist li .part:after { content:"[x]"; }
+#kiwi #toolbar .panellist li .part { position: absolute; top: 5px; right: 5px; }
+#kiwi #toolbar .panellist li .part:before { content:"[x]"; }
 #kiwi #toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
 
 #kiwi #status_message {
@@ -309,10 +309,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi.theme_relaxed #toolbar .panellist .active { padding-right:23px; }
-#kiwi.theme_relaxed #toolbar .panellist li .part {
-    background:url('../img/redcross.png'); width:14px; height:14px;
-}
-#kiwi.theme_relaxed #toolbar .panellist li .part:after { content:""; }
+#kiwi.theme_relaxed #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_relaxed #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
 
@@ -643,10 +640,7 @@ html, body { height:100%; }
 #kiwi.theme_mini #toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi.theme_mini #toolbar .panellist .active { padding-right:23px; }
-#kiwi.theme_mini #toolbar .panellist li .part {
-    background:url('../img/redcross.png'); width:14px; height:14px;
-}
-#kiwi.theme_mini #toolbar .panellist li .part:after { content:""; }
+#kiwi.theme_mini #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_mini #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
 
@@ -906,10 +900,7 @@ html, body { height:100%; }
 #kiwi.theme_cli #toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi.theme_cli #toolbar .panellist .active { padding-right:23px; }
-#kiwi.theme_cli #toolbar .panellist li .part {
-    background:url('../img/redcross.png'); width:14px; height:14px;
-}
-#kiwi.theme_cli #toolbar .panellist li .part:after { content:""; }
+#kiwi.theme_cli #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_cli #toolbar .panellist li.server span { background:url(../img/server_tab.png) no-repeat; padding-left:23px; }
 
@@ -1115,9 +1106,9 @@ html, body { height:100%; }
 #kiwi.theme_basic #toolbar .panellist .alert_activity { font-weight:normal; color:green; }
 #kiwi.theme_basic #toolbar .panellist .alert_action { font-weight:normal; color:green; }
 
-#kiwi.theme_basic #toolbar .panellist .active { padding-right:23px; }
+#kiwi.theme_basic #toolbar .panellist .active { padding-right:25px; }
 #kiwi.theme_basic #toolbar .panellist li .part {}
-#kiwi.theme_basic #toolbar .panellist li .part:after { content:"[x]"; }
+#kiwi.theme_basic #toolbar .panellist li .part:before { content:"[x]"; }
 
 #kiwi.theme_basic #toolbar .panellist li.server span { }
 
