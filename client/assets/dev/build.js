@@ -55,6 +55,7 @@ var src = concat([
     __dirname + '/applet_scripteditor.js',
 
     __dirname + '/utils.js',
+	__dirname + '/persist.js',
     __dirname + '/view.js'
 ]);
 

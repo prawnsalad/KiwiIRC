@@ -24,7 +24,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var $target = $(x.currentTarget).parent('li'),
             member = $target.data('member'),
             userbox;
-        
+
         // If the userbox already exists here, hide it
         if ($target.find('.userbox').length > 0) {
             $('.userbox', this.$el).remove();
@@ -78,11 +78,11 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
         'submit': 'changeNick',
         'click .cancel': 'close'
     },
-    
+
     initialize: function () {
         this.$el = $($('#tmpl_nickchange').html());
     },
-    
+
     render: function () {
         // Add the UI component and give it focus
         _kiwi.app.controlbox.$el.prepend(this.$el);
@@ -90,15 +90,16 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
         this.$el.css('bottom', _kiwi.app.controlbox.$el.outerHeight(true));
     },
-    
+
     close: function () {
         this.$el.remove();
 
     },
 
     changeNick: function (event) {
-        var that = this;
-        _kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
+        var that = this, nick = this.$el.find('input').val();
+		Persist.set('nick', nick)
+        _kiwi.gateway.changeNick(nick, function (err, val) {
             that.close();
         });
         return false;
@@ -172,9 +173,10 @@ _kiwi.view.ServerSelect = function () {
         submitLogin: function (event) {
             // If submitting is disabled, don't do anything
             if ($('button', this.$el).attr('disabled')) return;
-            
+
+			var nick = $('input.nick', this.$el).val();
             var values = {
-                nick: $('input.nick', this.$el).val(),
+                nick: nick,
                 server: $('input.server', this.$el).val(),
                 port: $('input.port', this.$el).val(),
                 ssl: $('input.ssl', this.$el).prop('checked'),
@@ -182,6 +184,8 @@ _kiwi.view.ServerSelect = function () {
                 channel: $('input.channel', this.$el).val(),
                 channel_key: $('input.channel_key', this.$el).val()
             };
+
+			Persist.set('nick', nick);
 
             this.trigger('server_connect', values);
         },
@@ -209,7 +213,7 @@ _kiwi.view.ServerSelect = function () {
 
             defaults = defaults || {};
 
-            nick = defaults.nick || '';
+            nick = Persist.get('nick') || defaults.nick || '';
             server = defaults.server || '';
             port = defaults.port || 6667;
             ssl = defaults.ssl || 0;
@@ -234,7 +238,6 @@ _kiwi.view.ServerSelect = function () {
             new_state = new_state || 'all';
 
             this.$el.show();
-
             if (new_state === 'all') {
                 $('.show_more', this.$el).show();
 
@@ -610,7 +613,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (typeof topic !== 'string' || !topic) {
             topic = this.model.get("topic");
         }
-        
+
         this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
 
         // If this is the active channel then update the topic bar
@@ -645,7 +648,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         var that = this;
 
         this.tabs_msg.empty();
-        
+
         // Add the server tab first
         this.model.server.tab
             .data('panel_id', this.model.server.cid)
@@ -767,7 +770,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
     process: function (ev) {
         var inp = $(ev.currentTarget),
             inp_val = inp.text();
-        
+
         // Only allow topic editing if this is a channel panel
         if (!_kiwi.app.panels.active.isChannel()) {
             return false;
@@ -808,11 +811,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         // Hold tab autocomplete data
         this.tabcomplete = {active: false, data: [], prefix: ''};
 
-		_kiwi.gateway.bind('pastebin.created', function(data){
+		_kiwi.gateway.bind('pastebin:created', function(data){
 			$('.inp', that.$el).val('');
 			that.processInput('Pasted Code: ' + data);
 		});
-		
+
 		$('#controlbox .inp').tagautocomplete({
         	source: function(){
                 panel = _kiwi.app.panels.active;
@@ -852,7 +855,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             this.tabcomplete.data = [];
             this.tabcomplete.prefix = '';
         }
-        
+
         switch (true) {
         case (ev.keyCode === 13):              // return
 			console.log("Create message");
@@ -919,11 +922,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             if (inp_val[inp[0].selectionStart - 1] === ' ') {
                 return false;
             }
-            
+
             (function () {
                 var tokens,              // Words before the cursor position
                     val,                 // New value being built up
-                    p1,                  // Position in the value just before the nick 
+                    p1,                  // Position in the value just before the nick
                     newnick,             // New nick to be displayed (cycles through)
                     range,               // TextRange for setting new text cursor position
                     nick,                // Current nick in the value
@@ -1196,13 +1199,13 @@ _kiwi.view.Application = Backbone.View.extend({
         if (layout_style === _kiwi.global.settings) {
             layout_style = arguments[1];
         }
-        
+
         if (layout_style == 'list') {
             this.$el.addClass('chanlist_treeview');
         } else {
             this.$el.removeClass('chanlist_treeview');
         }
-        
+
         this.doLayout();
     },
 
