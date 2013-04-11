@@ -191,7 +191,9 @@ _kiwi.view.ServerSelect = function () {
         },
 
         submitNickChange: function (event) {
-            _kiwi.gateway.changeNick($('input.nick', this.$el).val());
+			var nick = $('input.nick', this.$el).val();
+            _kiwi.gateway.changeNick(nick);
+			Persist.set('nick', nick);
             this.networkConnecting();
         },
 
@@ -323,6 +325,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 		}else{
 			$('#toolbar #tabs').hide();
 		}
+        _kiwi.app.view.doLayout();
     },
 
     render: function () {
@@ -342,6 +345,10 @@ _kiwi.view.Panel = Backbone.View.extend({
         if ((new RegExp('\\b' + _kiwi.gateway.get('nick') + '\\b', 'i')).test(msg.msg)) {
             is_highlight = true;
             msg_css_classes += ' mention';
+        }
+        if (msg.nick == _kiwi.gateway.get('nick')) {
+            is_self = true;
+            msg_css_classes += ' self';
         }
 
         // Escape any HTML that may be in here
@@ -526,13 +533,13 @@ _kiwi.view.Panel = Backbone.View.extend({
             $('#memberlists').addClass('disabled').children().removeClass('active');
         }
 
-        _kiwi.app.view.doLayout();
 
 		if(this.$container.children().size() > 2){
 			$('#toolbar #tabs').show();
 		}else{
 			$('#toolbar #tabs').hide();
 		}
+        _kiwi.app.view.doLayout();
         // Remove any alerts and activity counters for this panel
         this.alert('none');
         this.model.tab.find('.activity').text('0').addClass('zero');
@@ -1266,9 +1273,6 @@ _kiwi.view.Application = Backbone.View.extend({
         var css_heights = {
             top: el_toolbar.outerHeight(true)
         };
-
-
-
 
         // If any elements are not visible, full size the panals instead
         if (!el_toolbar.is(':visible')) {
