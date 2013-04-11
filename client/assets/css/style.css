@@ -299,7 +299,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist li .activity {
     padding: 1px 3px; margin-left:1em;
     border-radius: 4px;
-    background: #3F9532; color:#000; /*color: #ff5300;*/
+    background: #3F9532; color:#fff; /*color: #ff5300;*/
     text-align: center; font-size: 10px;
     display:inline-block;
     width:2em;
