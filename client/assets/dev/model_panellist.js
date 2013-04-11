@@ -25,5 +25,10 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
         return this.find(function (c) {
             return name.toLowerCase() === c.get('name').toLowerCase();
         });
-    }
+    },
+	getNotServer: function(){
+		return this.find(function (c) {
+            return c.get('name').toLowerCase() !== 'server';
+        });
+	}
 });

@@ -14,10 +14,10 @@ function EmitCall (event_name, event_data) {
     // Emit this event to an array of listeners
     function callListeners(listeners) {
         var current_event_idx = -1;
-        
+
         // Make sure we have some data to pass to the listeners
         event_data = event_data || undefined;
-        
+
         // If no bound listeners for this event, leave now
         if (listeners.length === 0) {
             emitComplete();

@@ -451,13 +451,16 @@ _kiwi.model.Application = function () {
 				console.log("panel", panel.get('members'));
 				// Does this nick have a prefix?
 				members = panel.get('members');
-                user = members.getByNick(event.nick);
-                if (user){
-					console.log('user', user);
-					opts = {}
-					opts.prefix = user.get('prefix');
-					opts.modes = user.get('modes');
+				if(members){
+					user = members.getByNick(event.nick);
+					if (user){
+						console.log('user', user);
+						opts = {}
+						opts.prefix = user.get('prefix');
+						opts.modes = user.get('modes');
+					}
 				}
+
 
                 panel.addMsg(event.nick, event.msg, undefined, opts);
             });

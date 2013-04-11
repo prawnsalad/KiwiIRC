@@ -318,6 +318,11 @@ _kiwi.view.Panel = Backbone.View.extend({
         this.msg_count = 0;
 
         this.model.set({"view": this}, {"silent": true});
+		if(this.$container.children().size() > 2){
+			$('#toolbar #tabs').show();
+		}else{
+			$('#toolbar #tabs').hide();
+		}
     },
 
     render: function () {
@@ -523,6 +528,11 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         _kiwi.app.view.doLayout();
 
+		if(this.$container.children().size() > 2){
+			$('#toolbar #tabs').show();
+		}else{
+			$('#toolbar #tabs').hide();
+		}
         // Remove any alerts and activity counters for this panel
         this.alert('none');
         this.model.tab.find('.activity').text('0').addClass('zero');
@@ -820,8 +830,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         	source: function(){
                 panel = _kiwi.app.panels.active;
 				names = [];
-				$.each(panel.get('members').models, function(i, e){
-					names.push('@' + e.get('nick').replace(/@\+/, ''));
+				members = panel.get('members');
+				if(!members){
+					return [];
+				}
+				$.each(members.models, function(i, e){
+					console.log('"' + e.get('nick') + '"')
+					names.push('@' + e.get('nick').replace(/\s?[@\+]\s?/, ''));
 				});
 				return names;
 		   	}

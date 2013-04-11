@@ -17,7 +17,7 @@ html, body { height:100%; }
 /**
  * Main layout blocks
  */
-#kiwi #toolbar { top:0px; width:100%; display:none; }
+#kiwi #toolbar { top:0px; width:100%;}
 #kiwi #panels { left:0px; right:200px; bottom:100px; top:100px; }
 #kiwi #memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
 #kiwi #controlbox { bottom:0px; width:100%; display:none; }
@@ -26,7 +26,7 @@ html, body { height:100%; }
 }
 
 
-#kiwi #toolbar #tabs { margin-right: 200px; }
+#kiwi #toolbar #tabs { margin-right: 200px; border-bottom: 1px solid #DEDEDE;  }
 #kiwi #toolbar .panellist {
     overflow: hidden;
     white-space: nowrap;
@@ -506,7 +506,7 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_relaxed #toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
+#kiwi.theme_relaxed #toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; display: none; }
 #kiwi.theme_relaxed.narrow #toolbar #tabs { margin-right:0; }
 #kiwi.theme_relaxed.narrow #toolbar .app_tools { width:auto; }
 #kiwi.theme_relaxed #toolbar .app_tools ul li {
@@ -590,7 +590,12 @@ html, body { height:100%; }
 	margin-bottom: 1em;
 }
 #kiwi #tabs{
-	display: none;
+}
+#kiwi #tabs .panellist .server{
+display:none;
+}
+#kiwi #tabs .panellist .channel .part{
+display: none;
 }
 #kiwi .topic a{
 display: inline;
