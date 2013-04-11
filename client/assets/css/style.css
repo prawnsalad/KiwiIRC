@@ -353,6 +353,7 @@ html, body { height:100%; }
 
 #kiwi.theme_relaxed .messages .msg.global_nick_highlight,
 #kiwi.theme_relaxed .messages .msg.highlight { background:#f5f5f5; }
+#kiwi.theme_relaxed .messages .msg.mention { background:rgb(230, 255, 228); }
 
 /* Narrow styling (window width < 400px) */
 #kiwi.theme_relaxed.narrow .messages .msg .nick { width: auto; }

@@ -333,7 +333,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Nick highlight detecting
         if ((new RegExp('\\b' + _kiwi.gateway.get('nick') + '\\b', 'i')).test(msg.msg)) {
             is_highlight = true;
-            msg_css_classes += ' highlight';
+            msg_css_classes += ' mention';
         }
 
         // Escape any HTML that may be in here
