@@ -59,10 +59,10 @@ _kiwi.model.Application = function () {
                 auto_connect_details = event;
 
                 server_login.networkConnecting();
-                
+
                 // Path to get the socket.io transport code
                 transport_path = that.kiwi_server + that.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
-                
+
                 $script(transport_path, function () {
                     if (!window.io) {
                         kiwiServerNotFound();
@@ -70,7 +70,7 @@ _kiwi.model.Application = function () {
                     }
                     _kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                     _kiwi.gateway.set('nick', event.nick);
-                    
+
                     _kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function (error) {
                         if (error) {
                             kiwiServerNotFound();
@@ -105,7 +105,7 @@ _kiwi.model.Application = function () {
 
         this.initializeClient = function () {
             this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
-            
+
             /**
              * Set the UI components up
              */
@@ -121,7 +121,7 @@ _kiwi.model.Application = function () {
             this.message = new _kiwi.view.StatusMessage({el: $('#status_message')[0]});
 
             //this.resize_handle = new _kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
-            
+
             this.panels.server.view.show();
 
             // Rejigg the UI sizes
@@ -133,7 +133,7 @@ _kiwi.model.Application = function () {
 
         this.initializeGlobals = function () {
             _kiwi.global.panels = this.panels;
-            
+
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
         };
@@ -288,7 +288,7 @@ _kiwi.model.Application = function () {
 
             gw.on('onconnect', function (event) {
                 that.view.barsShow();
-                
+
                 if (auto_connect_details.channel) {
                     that.controlbox.processInput('/JOIN ' + auto_connect_details.channel + ' ' + auto_connect_details.channel_key);
                 }
@@ -458,7 +458,7 @@ _kiwi.model.Application = function () {
 					opts.prefix = user.get('prefix');
 					opts.modes = user.get('modes');
 				}
-				
+
                 panel.addMsg(event.nick, event.msg, undefined, opts);
             });
 
@@ -481,7 +481,7 @@ _kiwi.model.Application = function () {
                 if (gw.isNickIgnored(event.nick)) {
                     return;
                 }
-                
+
                 that.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg);
             });
 
@@ -591,7 +591,7 @@ _kiwi.model.Application = function () {
 
             gw.on('onmode', function (event) {
                 var channel, i, prefixes, members, member, find_prefix;
-                
+
                 // Build a nicely formatted string to be displayed to a regular human
                 function friendlyModeString (event_modes, alt_target) {
                     var modes = {}, return_string;
@@ -741,10 +741,10 @@ _kiwi.model.Application = function () {
                     applet = new _kiwi.applets.Chanlist();
 
                 panel.load(applet);
-                
+
                 _kiwi.app.panels.add(panel);
                 panel.view.show();
-                
+
                 _kiwi.app.channel_list = applet;
             });
 
@@ -887,7 +887,7 @@ _kiwi.model.Application = function () {
                 $script(ev.params[0] + '?' + (new Date().getTime()));
             });
 
-            
+
             controlbox.on('command:set', function (ev) {
                 if (!ev.params[0]) return;
 
@@ -957,7 +957,7 @@ _kiwi.model.Application = function () {
                 controlbox.preprocessor.aliases[name] = rule;
             });
 
-            
+
             controlbox.on('command:ignore', function (ev) {
                 var list = _kiwi.gateway.get('ignore_list');
 
@@ -1045,7 +1045,7 @@ _kiwi.model.Application = function () {
             });
 
             if (channel) channel.view.show();
-            
+
         }
 
         function queryCommand (ev) {
@@ -1061,7 +1061,7 @@ _kiwi.model.Application = function () {
             }
 
             if (panel) panel.view.show();
-            
+
         }
 
         function msgCommand (ev) {
@@ -1195,7 +1195,7 @@ _kiwi.model.Application = function () {
                     return;
                 }
             }
-            
+
             _kiwi.app.panels.add(panel);
             panel.view.show();
         }

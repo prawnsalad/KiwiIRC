@@ -42,7 +42,7 @@ switch (process.argv[2]) {
     case 'build':
         require('../client/assets/dev/build.js');
         break;
-        
+
     default:
         console.log('Usage: [-f|start|stop|restart|status|reconfig|build]');
 }

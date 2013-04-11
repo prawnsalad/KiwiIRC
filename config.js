@@ -17,7 +17,7 @@ conf.servers = [];
 
 // Example server block
 conf.servers.push({
-    port:   80,
+    port:   8080,
     address: "0.0.0.0"
 });
 

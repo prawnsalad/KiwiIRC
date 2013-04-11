@@ -29,6 +29,12 @@ config.loadConfig();
  */
 
 var src = concat([
+
+    __dirname + '/bootstrap-typeahead.js',
+    __dirname + '/rangy-core.js',
+    __dirname + '/caret-position.js',
+    __dirname + '/bootstrap-tagautocomplete.js',
+
     __dirname + '/app.js',
     __dirname + '/model_application.js',
     __dirname + '/model_gateway.js',

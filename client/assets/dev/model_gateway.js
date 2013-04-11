@@ -50,7 +50,7 @@ _kiwi.model.Gateway = function () {
 
     this.initialize = function () {
         that = this;
-        
+
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
 
@@ -71,14 +71,14 @@ _kiwi.model.Gateway = function () {
         kiwi.gateway.on('quit', my_function);
         */
         var that = this;
-        
+
         // Some easier handler events
         this.on('onmsg', function (event) {
             var source,
                 is_pm = (event.channel == that.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
-            
+
             that.trigger('message:' + source, event);
             that.trigger('message', event);
 
@@ -103,7 +103,7 @@ _kiwi.model.Gateway = function () {
                 is_pm = (event.channel == that.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
-            
+
             that.trigger('action:' + source, event);
 
             if (is_pm) {
@@ -150,7 +150,6 @@ _kiwi.model.Gateway = function () {
 
         this.socket = io.connect(this.get('kiwi_server'), {
             'resource': resource,
-            
             'try multiple transports': true,
             'connect timeout': 3000,
             'max reconnection attempts': 7,

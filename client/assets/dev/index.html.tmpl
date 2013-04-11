@@ -66,7 +66,7 @@
         <div id="controlbox">
             <div class="input">
                 <span class="nick"> </span>
-                <div class="input_wrap"><textarea class="inp" placeholder="Type message here…"></textarea></div>
+                <div class="input_wrap"><div class="inp" contenteditable placeholder="Type message here…"></div></div>
             </div>
         </div>
     </div>
@@ -295,6 +295,12 @@
             scripts = scripts.concat([
                 'dev/app.js',
                 [
+                    'dev/bootstrap-typeahead.js',
+                    'dev/rangy-core.js',
+                    'dev/caret-position.js',
+                    'dev/bootstrap-tagautocomplete.js'
+                ],
+                [
                     'dev/model_application.js',
                     'dev/model_gateway.js'
                 ],
@@ -304,7 +310,6 @@
                     'dev/model_member.js',
                     'dev/model_memberlist.js'
                 ],
-                
                 [
                     'dev/model_query.js',
                     'dev/model_channel.js',

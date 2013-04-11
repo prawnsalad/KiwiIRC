@@ -267,7 +267,7 @@ _kiwi.view.ServerSelect = function () {
         },
 
         networkConnecting: function (event) {
-            this.setStatus('Connecting..', 'ok');
+            this.setStatus('Connecting to server…', 'ok');
         },
 
         showError: function (event) {
@@ -808,6 +808,23 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         // Hold tab autocomplete data
         this.tabcomplete = {active: false, data: [], prefix: ''};
 
+		_kiwi.gateway.bind('pastebin.created', function(data){
+			$('.inp', that.$el).val('');
+			that.processInput('Pasted Code: ' + data);
+		});
+		
+		$('#controlbox .inp').tagautocomplete({
+        	source: function(){
+                panel = _kiwi.app.panels.active;
+				names = [];
+				$.each(panel.get('members').models, function(i, e){
+					names.push('@' + e.get('nick').replace(/@\+/, ''));
+				});
+				return names;
+		   	}
+        });
+		console.log("Initialized tagautocomplete on ",$('#controlbox .inp') );
+
         _kiwi.gateway.bind('change:nick', function () {
             $('.nick', that.$el).text(this.get('nick'));
         });
@@ -820,7 +837,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     process: function (ev) {
         var that = this,
             inp = $(ev.currentTarget),
-            inp_val = inp.val(),
+            inp_val = inp.text(),
             meta;
 
         if (navigator.appVersion.indexOf("Mac") !== -1) {
@@ -838,18 +855,26 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         
         switch (true) {
         case (ev.keyCode === 13):              // return
+			console.log("Create message");
             inp_val = inp_val.trim();
 
             if (inp_val) {
-                $.each(inp_val.split('\n'), function (idx, line) {
-                    that.processInput(line);
-                });
-
+				// If we've got more than 3 lines, send to pastebin
+				var lines = inp_val.split('\n');
+				if(lines.length > 3){
+					console.log("Sending to pastebin", inp_val);
+				 	inp.text('Sending to pastebin…');
+				  	_kiwi.gateway.socket.emit('kiwi', {command: 'pastebin:create', value: inp_val });
+				}else{
+					$.each(lines, function (idx, line) {
+						that.processInput(line);
+					});
+				}
                 this.buffer.push(inp_val);
                 this.buffer_pos = this.buffer.length;
             }
 
-            inp.val('');
+            inp.text('');
             return false;
 
             break;
