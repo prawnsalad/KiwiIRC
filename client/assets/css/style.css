@@ -19,7 +19,7 @@ html, body { height:100%; }
  */
 #kiwi #toolbar { top:0px; width:100%;}
 #kiwi #panels { left:0px; right:200px; bottom:100px; top:100px; }
-#kiwi #memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
+#kiwi #memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; }
 #kiwi #controlbox { bottom:0px; width:100%; display:none; }
 #kiwi #memberlists_resize_handle {
     position: absolute; width:10px; z-index:1;
@@ -28,7 +28,6 @@ html, body { height:100%; }
 
 #kiwi #toolbar #tabs { border-bottom: 1px solid #DEDEDE;  }
 #kiwi #toolbar .panellist {
-    overflow: hidden;
     white-space: nowrap;
     display:block;
 }
@@ -55,7 +54,7 @@ html, body { height:100%; }
 }
 
 
-#kiwi .panel_container { overflow-y:auto; height:100%; }
+#kiwi .panel_container {overflow-y:auto; height:100%; margin-right: 210px; }
 
 
 
@@ -100,7 +99,7 @@ html, body { height:100%; }
 
 /* The active channels nicklist */
 #kiwi #memberlists ul.active { display:block; }
-#kiwi #memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
+#kiwi #memberlists ul li { cursor:pointer; }
 #kiwi #memberlists ul li a.nick { }
 
 /* The userbox shown when clicking a nick */
@@ -611,3 +610,49 @@ margin: 0.4em;
 position: relative;
 border-top: 1px solid #DEDEDE;
 }
+
+#kiwi .o .prefix, #kiwi .v .prefix {
+	position: relative;
+	text-decoration: none;
+	border-bottom: solid 1px;
+}
+
+#kiwi .o .prefix:before,#kiwi .v .prefix:before {
+  content: "";
+  position: absolute;
+  border-top: 4px solid RGBA(0,0,0,0.7);;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  visibility: hidden;
+  top: -5px;
+  left: 2px;
+}
+
+#kiwi .o .prefix:after,#kiwi .v .prefix:after {
+  position: absolute;
+  color: white;
+  top: -35px;
+  left: -26px;
+  background: RGBA(0,0,0,0.7);
+  padding: 5px 15px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+#kiwi .v .prefix:after {
+  content: 'Expert';
+}
+#kiwi .o .prefix:after {
+  content: 'Admin';
+}
+#kiwi .o .prefix:hover:before, #kiwi .o .prefix:hover:after, #kiwi .v .prefix:hover:before, #kiwi .v .prefix:hover:after  {
+  visibility: visible;
+  -webkit-transition: visibility 0s linear .3s;
+  -moz-transition: visibility 0s linear .3s;
+  -o-transition: visibility 0s linear .3s;
+  transition: visibility 0s linear .3s;
+}
+
