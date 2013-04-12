@@ -312,8 +312,8 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_relaxed #toolbar .panellist li.server span { padding-left: 5px; }
-#kiwi.theme_relaxed.connected #toolbar .panellist li.server:before { content: "\f0ec"; }
-#kiwi.theme_relaxed #toolbar .panellist li.server:before { content: "\f06a"; }
+#kiwi.theme_relaxed.connected #toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi.theme_relaxed #toolbar .panellist li.server:before { content: "\f06a"; color:#900;}
 
 /* Tab texts are within a span */
 #kiwi.theme_relaxed #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
@@ -645,8 +645,8 @@ html, body { height:100%; }
 #kiwi.theme_mini #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_mini #toolbar .panellist li.server span { padding-left:5px; }
-#kiwi.theme_mini.connected #toolbar .panellist li.server:before { content: "\f0ec"; }
-#kiwi.theme_mini #toolbar .panellist li.server:before { content: "\f06a"; }
+#kiwi.theme_mini.connected #toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi.theme_mini #toolbar .panellist li.server:before { content: "\f06a"; color:#900; }
 
 /* Tab texts are within a span */
 #kiwi.theme_mini #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
@@ -907,8 +907,8 @@ html, body { height:100%; }
 #kiwi.theme_cli #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_cli #toolbar .panellist li.server span { padding-left:5px; }
-#kiwi.theme_cli.connected #toolbar .panellist li.server:before { content: "\f0ec"; }
-#kiwi.theme_cli #toolbar .panellist li.server:before { content: "\f06a"; }
+#kiwi.theme_cli.connected #toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi.theme_cli #toolbar .panellist li.server:before { content: "\f06a"; color:#900; }
 
 /* Tab texts are within a span */
 #kiwi.theme_cli #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
