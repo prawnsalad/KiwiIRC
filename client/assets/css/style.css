@@ -572,7 +572,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed.chanlist_treeview #toolbar > div { margin-left:160px; }
 #kiwi.theme_relaxed.chanlist_treeview #toolbar #tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
 #kiwi.theme_relaxed.chanlist_treeview #tabs ul li { display:block; float:none; }
-#kiwi.theme_relaxed.chanlist_treeview #tabs ul li .activity { float:right; }
+#kiwi.theme_relaxed.chanlist_treeview #tabs ul li .activity { position:absolute; right:5px; }
 #kiwi.theme_relaxed.chanlist_treeview #tabs ul li.active {
     margin-right:0;
     border-right-width:0;
