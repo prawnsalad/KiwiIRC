@@ -713,6 +713,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
+            panel.tab.addClass('icon-nonexistant');
         }
 
         panel.tab.data('panel_id', panel.cid)
@@ -738,7 +739,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         // Only show the part image on non-server tabs
         if (!panel.isServer()) {
-            panel.tab.append('<span class="part"></span>');
+            panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
     },
 
