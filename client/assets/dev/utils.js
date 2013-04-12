@@ -363,7 +363,6 @@ function formatIRCMsg (msg) {
             }
             match = colourMatch(msg.substr(i, 6));
             if (match) {
-                console.log(match);
                 i += match[1].length;
                 // 2 & 4
                 colours[0] = hexFromNum(match[2]);
