@@ -68,10 +68,10 @@ function onListStart(event) {
 };
 
 function onListChannel(event) {
-    if (!this.busy_listing) {
-      onListStart.call(this, event);
-    }
     var buf;
+    if (!this.busy_listing) {
+      onListStart.call(this);
+    }
     this.list_buffer.push({
         channel: event.channel,
         num_users: event.num_users,
