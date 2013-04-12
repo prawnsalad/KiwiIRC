@@ -312,7 +312,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_relaxed #toolbar .panellist li.server span { padding-left: 5px; }
-#kiwi.connected.theme_relaxed #toolbar .panellist li.server:before { content: "\f0ec"; }
+#kiwi.theme_relaxed.connected #toolbar .panellist li.server:before { content: "\f0ec"; }
 #kiwi.theme_relaxed #toolbar .panellist li.server:before { content: "\f06a"; }
 
 /* Tab texts are within a span */
@@ -645,7 +645,7 @@ html, body { height:100%; }
 #kiwi.theme_mini #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_mini #toolbar .panellist li.server span { padding-left:5px; }
-#kiwi.connected.theme_mini #toolbar .panellist li.server:before { content: "\f0ec"; }
+#kiwi.theme_mini.connected #toolbar .panellist li.server:before { content: "\f0ec"; }
 #kiwi.theme_mini #toolbar .panellist li.server:before { content: "\f06a"; }
 
 /* Tab texts are within a span */
@@ -907,7 +907,7 @@ html, body { height:100%; }
 #kiwi.theme_cli #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_cli #toolbar .panellist li.server span { padding-left:5px; }
-#kiwi.connected.theme_cli #toolbar .panellist li.server:before { content: "\f0ec"; }
+#kiwi.theme_cli.connected #toolbar .panellist li.server:before { content: "\f0ec"; }
 #kiwi.theme_cli #toolbar .panellist li.server:before { content: "\f06a"; }
 
 /* Tab texts are within a span */
