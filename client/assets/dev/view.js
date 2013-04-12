@@ -33,10 +33,14 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
         userbox = new _kiwi.view.UserBox();
         userbox.member = member;
+        userbox.channel = this.model.channel;
 
         // Remove any existing userboxes
         $('.userbox', this.$el).remove();
 
+        if (!this.model.getByNick(_kiwi.gateway.get('nick')).get('is_op')) {
+            userbox.$el.children('.if_op').remove();
+        }
         $target.append(userbox.$el);
     },
     show: function () {
@@ -51,7 +55,13 @@ _kiwi.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick',
-        'click .slap': 'slapClick'
+        'click .slap': 'slapClick',
+        'click .op': 'opClick',
+        'click .deop': 'deopClick',
+        'click .voice': 'voiceClick',
+        'click .devoice': 'devoiceClick',
+        'click .kick': 'kickClick',
+        'click .ban': 'banClick'
     },
 
     initialize: function () {
@@ -70,6 +80,32 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     slapClick: function (event) {
         _kiwi.app.controlbox.processInput('/slap ' + this.member.get('nick'));
+    },
+
+    opClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +o ' + this.member.get('nick'));
+    },
+
+    deopClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -o ' + this.member.get('nick'));
+    },
+
+    voiceClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +v ' + this.member.get('nick'));
+    },
+
+    devoiceClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -v ' + this.member.get('nick'));
+    },
+
+    kickClick: function (event) {
+        // TODO: Enable the use of a custom kick message
+        _kiwi.app.controlbox.processInput('/kick ' + this.member.get('nick') + ' Bye!');
+    },
+
+    banClick: function (event) {
+        // TODO: Set ban on host, not just on nick
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.member.get('nick') + '!*');
     }
 });
 
@@ -406,6 +442,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         } else if (is_highlight) {
             _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.playSound('highlight');
             this.alert('highlight');
 
         } else {
@@ -414,6 +451,11 @@ _kiwi.view.Panel = Backbone.View.extend({
                 _kiwi.app.view.alertWindow('* People are talking!');
             }
             this.alert('activity');
+        }
+
+        if (this.model.isQuery() && !this.model.isActive()) {
+            _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.playSound('highlight');
         }
 
         // Update the activity counters
@@ -671,6 +713,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
+            panel.tab.addClass('icon-nonexistant');
         }
 
         panel.tab.data('panel_id', panel.cid)
@@ -696,7 +739,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         // Only show the part image on non-server tabs
         if (!panel.isServer()) {
-            panel.tab.append('<span class="part"></span>');
+            panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
     },
 
@@ -989,6 +1032,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         if (!this._callbacks['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
+    },
+
+
+    addPluginIcon: function ($icon) {
+        var $tool = $('<div class="tool"></div>').append($icon);
+        this.$el.find('.input_tools').append($tool);
+        _kiwi.app.view.doLayout();
     }
 });
 
@@ -1116,6 +1166,8 @@ _kiwi.view.Application = Backbone.View.extend({
                 return 'This will close all KiwiIRC conversations. Are you sure you want to close this window?';
             }
         };
+
+        this.initSound();
     },
 
 
@@ -1237,6 +1289,9 @@ _kiwi.view.Application = Backbone.View.extend({
             // And move the handle just out of sight to the right
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
+
+        var input_wrap_width = parseInt($('#kiwi #controlbox .input_tools').outerWidth());
+        el_controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
     },
 
 
@@ -1335,6 +1390,40 @@ _kiwi.view.Application = Backbone.View.extend({
             $('#controlbox').slideDown(0);
             this.doLayout();
         }
+    },
+
+
+    initSound: function () {
+        var that = this,
+            base_path = this.model.get('base_path');
+
+        $script(base_path + '/assets/libs/soundmanager2/soundmanager2-nodebug-jsmin.js', function() {
+            if (typeof soundManager === 'undefined')
+                return;
+
+            soundManager.setup({
+                url: base_path + '/assets/libs/soundmanager2/',
+                flashVersion: 9, // optional: shiny features (default = 8)// optional: ignore Flash where possible, use 100% HTML5 mode
+                preferFlash: true,
+
+                onready: function() {
+                    that.sound_object = soundManager.createSound({
+                        id: 'highlight',
+                        url: base_path + '/assets/sound/highlight.mp3'
+                    });
+                }
+            });
+        });
+    },
+
+
+    playSound: function (sound_id) {
+        if (!this.sound_object) return;
+
+        if (_kiwi.global.settings.get('mute_sounds'))
+            return;
+        
+        soundManager.play(sound_id);
     }
 });
 

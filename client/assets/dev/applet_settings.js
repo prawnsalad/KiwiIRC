@@ -44,11 +44,18 @@
             } else {
                 this.$el.find('.setting-show_timestamps').attr('checked', true);
             }
+
+            if (typeof settings.get('mute_sounds') === 'undefined' || settings.get('mute_sounds')) {
+                this.$el.find('.setting-mute_sounds').attr('checked', true);
+            } else {
+                this.$el.find('.setting-mute_sounds').attr('checked', false);
+            }
         },
 
 
         saveSettings: function () {
-            var settings = _kiwi.global.settings;
+            var settings = _kiwi.global.settings,
+                feedback;
 
             // Stop settings being updated while we're saving one by one
             _kiwi.global.settings.off('change', this.loadSettings, this);
@@ -58,8 +65,14 @@
             settings.set('scrollback', $('.setting-scrollback', this.$el).val());
             settings.set('show_joins_parts', $('.setting-show_joins_parts', this.$el).is(':checked'));
             settings.set('show_timestamps', $('.setting-show_timestamps', this.$el).is(':checked'));
+            settings.set('mute_sounds', $('.setting-mute_sounds', this.$el).is(':checked'));
 
             settings.save();
+
+            feedback = $('.feedback', this.$el);
+            feedback.fadeIn('slow', function () {
+                feedback.fadeOut('slow');
+            })
 
             // Continue listening for setting changes
             _kiwi.global.settings.on('change', this.loadSettings, this);

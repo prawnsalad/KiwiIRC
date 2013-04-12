@@ -8,7 +8,7 @@
 <title> KiwiIRC </title>
 
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css" />
-<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.min.css" />
 <!--[if IE 7]>
 <link rel="stylesheet" type="text/css" href="/kiwi/assets/css/font-awesome-ie7.css" />
 <![endif]-->
@@ -47,6 +47,7 @@
             <div class="input">
                 <span class="nick"> </span>
                 <div class="input_wrap"><textarea class="inp"></textarea></div>
+                <div class="input_tools"></div>
             </div>
         </div>
     </div>
@@ -58,6 +59,13 @@
     
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
+            <a class="if_op op"><i class="icon-star"></i>Op</a>
+            <a class="if_op deop"><i class="icon-star-empty"></i>De-op</a>
+            <a class="if_op voice"><i class="icon-volume-up"></i>Voice</a>
+            <a class="if_op devoice"><i class="icon-volume-off"></i>De-voice</a>
+            <a class="if_op kick"><i class="icon-remove"></i>Kick</a>
+            <a class="if_op ban"><i class="icon-ban-circle"></i>Ban</a>
+
             <a class="query"><i class="icon-comment"></i>Message</a>
             <a class="info"><i class="icon-info-sign"></i>Info</a>
             <a class="slap"><i class="icon-user-md"></i>Slap!</a>
@@ -186,9 +194,14 @@
                     <td class="label">Show timestamps</td>
                     <td class="setting"><input type="checkbox" class="setting-show_timestamps" /></td>
                 </tr>
+                
+                <tr>
+                    <td class="label">Mute sounds</td>
+                    <td class="setting"><input type="checkbox" class="setting-mute_sounds" /></td>
+                </tr>
 
                 <tr class="save">
-                    <td colspan="2"><button class="save">Save</button>​​​​​​​​​</td>
+                    <td colspan="2"><button class="save">Save</button><br/><span class="feedback">Saved!</span></td>
                 </tr>
             </table>
         </div>

@@ -103,6 +103,14 @@ _kiwi.model.Panel = Backbone.Model.extend({
         return (channel_prefix.indexOf(this_name[0]) > -1);
     },
 
+    isQuery: function () {
+        if (!this.isChannel() && !this.isApplet() && !this.isServer()) {
+            return true;
+        }
+
+        return false;
+    },
+
     isApplet: function () {
         return this.applet ? true : false;
     },
