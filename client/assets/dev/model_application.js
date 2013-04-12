@@ -719,32 +719,8 @@ _kiwi.model.Application = function () {
 
 
             gw.on('onlist_start', function (data) {
-                if (_kiwi.app.channel_list) {
-                    _kiwi.app.channel_list.close();
-                    delete _kiwi.app.channel_list;
-                }
-
-                var panel = new _kiwi.model.Applet(),
-                    applet = new _kiwi.applets.Chanlist();
-
-                panel.load(applet);
-                
-                _kiwi.app.panels.add(panel);
-                panel.view.show();
-                
-                _kiwi.app.channel_list = applet;
-            });
-
-
-            gw.on('onlist_channel', function (data) {
-                // TODO: Put this listener within the applet itself
-                _kiwi.app.channel_list.addChannel(data.chans);
-            });
-
-
-            gw.on('onlist_end', function (data) {
-                // TODO: Put this listener within the applet itself
-                delete _kiwi.app.channel_list;
+                var chanlist = _kiwi.model.Applet.loadOnce('kiwi_chanlist');
+                chanlist.view.show();
             });
 
 

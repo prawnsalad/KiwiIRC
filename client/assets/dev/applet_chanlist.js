@@ -50,12 +50,27 @@
 
 
 
-    _kiwi.applets.Chanlist = Backbone.Model.extend({
+    var Applet = Backbone.Model.extend({
         initialize: function () {
             this.set('title', 'Channel List');
             this.view = new View();
+
+            this.network = _kiwi.global.components.Network();
+            this.network.on('onlist_channel', this.onListChannel, this);
+            this.network.on('onlist_start', this.onListStart, this);
         },
 
+
+        // New channels to add to our list
+        onListChannel: function (event) {
+            console.log(event);
+            this.addChannel(event.chans);
+        },
+
+        // A new, fresh channel list starting
+        onListStart: function (event) {
+            // TODO: clear out our existing list
+        },
 
         addChannel: function (channels) {
             var that = this;
@@ -86,8 +101,13 @@
             this.view.$el.html('');
             this.view.remove();
             this.view = null;
+
+            // Remove any network event bindings
+            this.network.off();
         }
     });
 
 
+
+    _kiwi.model.Applet.register('kiwi_chanlist', Applet);
 })();
