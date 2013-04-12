@@ -64,9 +64,13 @@ function onOptions(event) {
 function onListStart(event) {
     this.irc_connection.clientEvent('list_start', {});
     this.list_buffer = [];
+    this.busy_listing = true;
 };
 
 function onListChannel(event) {
+    if (!this.busy_listing) {
+      onListStart.call(this, event);
+    }
     var buf;
     this.list_buffer.push({
         channel: event.channel,
@@ -97,7 +101,7 @@ function onListEnd(event) {
         chans: buf
     });
     this.list_buffer = [];
-
+    this.busy_listing = false;
     
     this.irc_connection.clientEvent('list_end', {});
 };
