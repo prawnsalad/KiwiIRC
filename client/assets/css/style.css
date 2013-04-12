@@ -29,7 +29,6 @@ html, body { height:100%; }
 #kiwi #toolbar #tabs { margin-right: 200px; }
 #kiwi #toolbar .panellist {
     overflow: hidden;
-    white-space: nowrap;
     display:block;
 }
 #kiwi #toolbar .panellist li {
