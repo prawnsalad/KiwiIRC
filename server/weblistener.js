@@ -47,12 +47,15 @@ var WebListener = function (web_config, transports) {
         };
 
         // Do we have an intermediate certificate?
-        if (typeof web_config.ssl_ca.map !== 'undefined') {
-            opts.ca = web_config.ssl_ca.map(function (f) { return fs.readFileSync(f); });
-        } else if (typeof web_config.ssl_ca !== 'undefined') {
-            opts.ca = fs.readFileSync(web_config.ssl_ca);
-        }
+        if (typeof web_config.ssl_ca !== 'undefined') {
+            // An array of them?
+            if (typeof web_config.ssl_ca.map !== 'undefined') {
+                opts.ca = web_config.ssl_ca.map(function (f) { return fs.readFileSync(f); });
 
+            } else {
+                opts.ca = fs.readFileSync(web_config.ssl_ca);
+            }
+        }
 
         hs = https.createServer(opts, handleHttpRequest);
         
