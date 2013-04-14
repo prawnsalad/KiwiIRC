@@ -47,9 +47,9 @@ var WebListener = function (web_config, transports) {
         };
 
         // Do we have an intermediate certificate?
-        if (typeof web_config.ssl_ca.map !== 'undefined') {
+        if (web_config.ssl_ca && web_config.ssl_ca.map) {
             opts.ca = web_config.ssl_ca.map(function (f) { return fs.readFileSync(f); });
-        } else if (typeof web_config.ssl_ca !== 'undefined') {
+        } else if (web_config.ssl_ca) {
             opts.ca = fs.readFileSync(web_config.ssl_ca);
         }
 
