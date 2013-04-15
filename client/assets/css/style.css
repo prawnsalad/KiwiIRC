@@ -664,3 +664,7 @@ border-top: 1px solid #DEDEDE;
 #kiwi .gist-data .line{
 	white-space: nowrap;
 }
+#kiwi .gist-data .line-number{
+	line-height: 1.6em;
+	padding:0 4px;
+}
