@@ -364,9 +364,12 @@ html, body { height:100%; }
 
 #kiwi.theme_relaxed .messages .msg .media { margin-left:0.5em; }
 #kiwi.theme_relaxed .messages .msg .media .media_close { font-size:0.9em; }
-#kiwi.theme_relaxed .messages .msg .media .media_content { margin:10px 0 0 10px; overflow:hidden; }
+#kiwi.theme_relaxed .messages .msg .media .media_content { margin:10px 0 0 10px; overflow:auto; }
 #kiwi.theme_relaxed .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
 #kiwi.theme_relaxed .messages .msg .media .media_content > .content {
+	white-space: normal;
+	width: 98%;
+	box-sizing: border-box;
     background: white;
     overflow: hidden;
     padding: 10px;
@@ -655,4 +658,9 @@ border-top: 1px solid #DEDEDE;
   -o-transition: visibility 0s linear .3s;
   transition: visibility 0s linear .3s;
 }
-
+#kiwi pre{
+	white-space: normal;
+}
+#kiwi .gist-data .line{
+	white-space: nowrap;
+}

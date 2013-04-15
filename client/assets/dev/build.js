@@ -48,6 +48,7 @@ var src = concat([
     __dirname + '/model_applet.js',
     __dirname + '/model_pluginmanager.js',
     __dirname + '/model_datastore.js',
+    __dirname + '/model_gist.js',
 
     __dirname + '/applet_settings.js',
     __dirname + '/applet_nickserv.js',

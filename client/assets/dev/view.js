@@ -479,7 +479,11 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         $media.data('media', media_message);
 
-        media_message.open();
+		var that = this;
+        media_message.open(function(){
+			console.log("Scrolling down");
+			that.scrollToBottom(true);
+		});
     },
 
     // Cursor hovers over a message
@@ -842,7 +846,6 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 					return [];
 				}
 				$.each(members.models, function(i, e){
-					console.log('"' + e.get('nick') + '"')
 					names.push('@' + e.get('nick').replace(/\s?[@\+]\s?/, ''));
 				});
 				return names;
@@ -858,7 +861,25 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     showNickChange: function (ev) {
         (new _kiwi.view.NickChangeBox()).render();
     },
-
+	cleanHtmlInput: function(el){
+		var text = "";
+		if (typeof window.getSelection != "undefined") {
+			var sel = window.getSelection();
+			sel.selectAllChildren(el);
+			text = sel.toString();
+			sel.removeAllRanges();
+		} else if (document.body.createTextRange) {
+			var div = document.body.appendChild(document.createElement("div"));
+			div.innerHTML = el.innerHTML;
+			var textRange = document.body.createTextRange();
+			textRange.moveToElementText(div);
+			text = textRange.text;
+			document.body.removeChild(div);
+		}
+		console.log('text', text)
+		text = text.replace(/^(\r\n|\r|\n)+/gm, '').replace(/(\r\n|\r|\n)+$/gm, '')
+		return text;
+	},
     process: function (ev) {
         var that = this,
             inp = $(ev.currentTarget),
@@ -880,16 +901,34 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         switch (true) {
         case (ev.keyCode === 13):              // return
-			console.log("Create message");
-            inp_val = inp_val.trim();
+			inp_val_raw = inp.html();
+            inp_val = this.cleanHtmlInput(inp.get()[0]);
+			console.log("Creating message", inp_val);
 
             if (inp_val) {
-				// If we've got more than 3 lines, send to pastebin
-				var lines = inp_val.split('\n');
+				// If we've got more than 3 lines, create Gist
+				var lines = inp_val.split(/\r\n|\r|\n/gm);
 				if(lines.length > 3){
-					console.log("Sending to pastebin", inp_val);
-				 	inp.text('Sending to pastebin…');
-				  	_kiwi.gateway.socket.emit('kiwi', {command: 'pastebin:create', value: inp_val });
+					console.log("Sending to gist", inp_val);
+				 	inp.text('Sending paste to gist.github.com…');
+					_kiwi.model.Gist.create(
+						_kiwi.gateway.get('nick'),
+					   	{ "paste.txt": { content: inp_val } }
+					).done(function(json){
+						console.log("GIST done", json);
+						that.processInput('Code gist: ' + json['html_url']);
+						inp.text('');
+						var r = rangy.createRange();
+						r.setStart( inp.get()[0], 0 );
+						r.collapse(true);
+						rangy.getSelection().setSingleRange(r);
+					}).fail(function(xhr, status, error){
+						console.log("Failed to create gist", xhr, status, error);
+						$.each(lines, function (idx, line) {
+							that.processInput(line);
+						});
+					});
+					return false;
 				}else{
 					$.each(lines, function (idx, line) {
 						that.processInput(line);
@@ -900,6 +939,10 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             }
 
             inp.text('');
+			var r = rangy.createRange();
+			r.setStart( inp.get()[0], 0 );
+			r.collapse(true);
+			rangy.getSelection().setSingleRange(r);
             return false;
 
             break;
@@ -1448,7 +1491,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     },
 
     // Open the media content within its wrapper
-    open: function () {
+    open: function (cb) {
         // Create the content div if we haven't already
         if (!this.$content) {
             this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /><div class="content"></div></div>');
@@ -1462,7 +1505,10 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
             // Add the media content and slide it into view
             this.$el.append(this.$content);
-            this.$content.slideDown();
+            this.$content.slideDown({complete: function(){
+				console.log("Slid down");
+				cb()
+			}});
         }
     },
 
@@ -1486,6 +1532,17 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             return $('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
         },
 
+		gist: function () {
+			var gistid = this.$el.data('gistid'), that = this;
+			$.ajax({
+				url: 'https://gist.github.com/' + gistid + '.json',
+				dataType: 'jsonp', success: function(gist){
+					that.$content.find('.content').html(gist['div']);
+					$('body').append('<link rel="stylesheet" href="' + gist['stylesheet'] + '" type="text/css" />');
+				}
+			});
+            return $('<div>Loading code Gist...</div>');
+		},
 
         reddit: function () {
             var that = this;
@@ -1544,6 +1601,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(url);
         if (matches) {
             html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+		// Is a gist?
+        matches = (/gist.github.com\/([a-zA-Z0-9]+\/)?([0-9]+\/?)/gi).exec(url);
+        if (matches) {
+            html += '<span class="media gist" data-type="gist" data-url="' + url + '" data-gistid="' + matches[2] + '" title="Show code Gist"><a class="open"><small>Show</small> <i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;
