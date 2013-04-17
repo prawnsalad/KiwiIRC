@@ -1293,6 +1293,19 @@ html, body { height:100%; }
     line-height:48px; vertical-align: middle;
     color: #555555;
 }
+
+.inp:hover {
+    background: #DCDCDC;
+}
+.inp {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px #C0D9D9 solid;
+    border-radius: 3px;
+}
+.nick {
+    font-weight: bold;
+}
+
 #kiwi.theme_basic .server_select .kiwi_logo img { }
 
 
