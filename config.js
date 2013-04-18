@@ -49,7 +49,7 @@ conf.identd = {
 conf.public_http = "client/";
 
 // Max connections per connection. 0 to disable
-conf.max_client_conns = 5;
+conf.max_client_conns = 128;
 
 
 /*
