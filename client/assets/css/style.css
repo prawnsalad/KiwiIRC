@@ -668,3 +668,12 @@ border-top: 1px solid #DEDEDE;
 	line-height: 1.6em;
 	padding:0 4px;
 }
+
+
+#kiwi div{
+	display: none;
+}
+
+body.ready #kiwi div{
+	display: block;
+}

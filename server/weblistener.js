@@ -30,9 +30,9 @@ var WebListener = function (web_config, transports) {
 
 
     events.EventEmitter.call(this);
-    
+
     http_handler = new HttpHandler(web_config);
-    
+
     // Standard options for the socket.io connections
     ws_opts = {
         'log level': 0,
@@ -53,7 +53,7 @@ var WebListener = function (web_config, transports) {
 
 
         hs = https.createServer(opts, handleHttpRequest);
-        
+
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: true}, ws_opts));
         hs.listen(web_config.port, web_config.address, function () {
@@ -74,7 +74,7 @@ var WebListener = function (web_config, transports) {
 
         console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
-    
+
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
@@ -93,7 +93,7 @@ util.inherits(WebListener, events.EventEmitter);
 
 function handleHttpRequest(request, response) {
     var uri = url.parse(request.url, true);
-    
+
     // If this isn't a socket.io request, pass it onto the http handler
     if (uri.pathname.substr(0, 10) !== '/socket.io') {
         http_handler.serve(request, response);
@@ -122,21 +122,21 @@ function authoriseConnection(handshakeData, callback) {
     }
 
     handshakeData.real_address = address;
-    
+
     // If enabled, don't go over the connection limit
     if (global.config.max_client_conns && global.config.max_client_conns > 0) {
         if (global.clients.numOnAddress(address) + 1 > global.config.max_client_conns) {
             return callback(null, false);
         }
     }
-        
+
     dns.reverse(address, function (err, domains) {
         if (err || domains.length === 0) {
             handshakeData.revdns = address;
         } else {
             handshakeData.revdns = _.first(domains) || address;
         }
-        
+
         // All is well, authorise the connection
         callback(null, true);
     });

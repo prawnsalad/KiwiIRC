@@ -33,7 +33,7 @@
 </ul></div></div></div></div>
 <div class="main">
     <div id="kiwi" class="theme_relaxed container content-box">
-	<h1> Talk with the Experts</h1>
+	<h1 id="allpages-title">loading&hellip;</h1>
 	<div>
         <div id="toolbar">
             <div class="app_tools">
@@ -173,10 +173,7 @@
                 <div class="divider-verticle"></div>
             </div>
 
-            <div class="about_kiwi" style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
-				<p>Enter some sort of info here about talk with the experts.</p>
-
-                <p style="font-style:italic;">Powered by <a href="https://kiwiirc.com/">Kiwi IRC</a>.</p>
+            <div class="about_kiwi" id="frontpage-description" style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
 
             </div>
         </div>
@@ -294,6 +291,7 @@
             console.log('Loading debugging scripts');
             scripts = scripts.concat([
                 'dev/app.js',
+				'frontpage.js',
                 [
                     'dev/bootstrap-typeahead.js',
                     'dev/rangy-core.js',
@@ -334,6 +332,7 @@
                 ]
             ]);
         } else {
+			scripts.push('frontpage.js');
             scripts.push('kiwi.min.js?<%cache_buster%>');
         }
 
@@ -383,9 +382,7 @@
                     to_load.push(base + scripts[cur_script][idx]);
                 }
             }
-            
             $script(to_load, loadNextScript);
-
             cur_script++;
         }
 
