@@ -18,7 +18,7 @@ html, body { height:100%; }
  * Main layout blocks
  */
 #kiwi #toolbar { top:0px; width:100%;}
-#kiwi #panels { left:0px; right:200px; bottom:100px; top:100px; }
+#kiwi #panels { clear:both; left:0px; right:200px; bottom:100px; top:100px; }
 #kiwi #memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; }
 #kiwi #controlbox { bottom:0px; width:100%; display:none; }
 #kiwi #memberlists_resize_handle {
