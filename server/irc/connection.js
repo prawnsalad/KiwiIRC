@@ -17,7 +17,7 @@ var version_values = process.version.substr(1).split('.').map(function (item) {
 
 // If we have a suitable Nodejs version, bring int he socks functionality
 if (version_values[1] >= 10) {
-    Socks = require('../socks.js');
+    Socks = require('socksjs');
 }
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
