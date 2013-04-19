@@ -1588,7 +1588,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         // Is it an image?
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><small>Show</small> <i class="icon-chevron-right"></i></a></span>';
         }
 
         // Is it a tweet?
