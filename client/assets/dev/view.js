@@ -20,11 +20,13 @@ _kiwi.view.MemberList = Backbone.View.extend({
                 .data('member', member);
         });
     },
-    nickClick: function (x) {
-        var $target = $(x.currentTarget).parent('li'),
+    nickClick: function (event) {
+        var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member'),
             userbox;
         
+        event.stopPropagation();
+
         // If the userbox already exists here, hide it
         if ($target.find('.userbox').length > 0) {
             $('.userbox', this.$el).remove();
@@ -35,13 +37,31 @@ _kiwi.view.MemberList = Backbone.View.extend({
         userbox.member = member;
         userbox.channel = this.model.channel;
 
-        // Remove any existing userboxes
-        $('.userbox', this.$el).remove();
-
         if (!this.model.getByNick(_kiwi.gateway.get('nick')).get('is_op')) {
             userbox.$el.children('.if_op').remove();
         }
-        $target.append(userbox.$el);
+
+        var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+        menu.addItem('userbox', userbox.$el);
+        menu.show();
+
+        // Position the userbox + menubox
+        (function() {
+            var t = event.pageY,
+                m_bottom = t + menu.$el.outerHeight(),  // Where the bottom of menu will be
+                memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight();
+
+            // If the bottom of the userbox is going to be too low.. raise it
+            if (m_bottom > memberlist_bottom){
+                t = memberlist_bottom - menu.$el.outerHeight();
+            }
+
+            // Set the new positon
+            menu.$el.offset({
+                left: _kiwi.app.view.$el.width() - menu.$el.outerWidth() - 20,
+                top: t
+            });
+        }).call(this);
     },
     show: function () {
         $('#memberlists').children().removeClass('active');
@@ -1553,5 +1573,97 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         }
 
         return html;
+    }
+});
+
+
+
+_kiwi.view.MenuBox = Backbone.View.extend({
+    events: {
+        'click .ui_menu_foot .close': 'dispose'
+    },
+
+    initialize: function(title) {
+        var that = this;
+
+        this.$el = $('<div class="ui_menu"></div>');
+
+        this._title = title || '';
+        this._items = {};
+        this._display_footer = true;
+
+        this._close_proxy = function(event) {
+            that.onDocumentClick(event);
+        };
+        $(document).on('click', this._close_proxy);
+    },
+
+
+    render: function() {
+        var that = this;
+
+        this.$el.find('*').remove();
+
+        if (this._title) {
+            $('<div class="ui_menu_title"></div>')
+                .text(this._title)
+                .appendTo(this.$el);
+        }
+
+
+        _.each(this._items, function(item) {
+            var $item = $('<div class="ui_menu_content hover"></div>')
+                .append(item);
+
+            that.$el.append($item);
+        });
+
+        if (this._display_footer)
+            this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="icon-remove"></i></a></div>');
+    },
+
+
+    onDocumentClick: function(event) {
+        var $target = $(event.target);
+
+        // If this is not itself AND we don't contain this element, dispose $el
+        if ($target[0] != this.$el[0] && this.$el.has($target).length === 0)
+            this.dispose();
+    },
+
+
+    dispose: function() {
+        _.each(this._items, function(item) {
+            item.dispose && item.dispose();
+            item.remove && item.remove();
+        });
+
+        this._items = null;
+        this.remove();
+
+        $(document).off('click', this._close_proxy);
+    },
+
+
+    addItem: function(item_name, $item) {
+        $item = $($item);
+        if ($item.is('a')) $item.addClass('icon-chevron-right');
+        this._items[item_name] = $item;
+    },
+
+
+    removeItem: function(item_name) {
+        delete this._items[item_name];
+    },
+
+
+    showFooter: function(show) {
+        this._show_footer = show;
+    },
+
+
+    show: function() {
+        this.render();
+        this.$el.appendTo(_kiwi.app.view.$el);
     }
 });
