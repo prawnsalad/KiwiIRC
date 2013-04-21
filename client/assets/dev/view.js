@@ -695,9 +695,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
-        //this.tabs_applets = $('ul.applets', this.$el);
-        //this.tabs_msg = $('ul.channels', this.$el);
-
         this.model.network.on('change:name', function (network, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
@@ -714,6 +711,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         // Add the server tab first
         this.model.server.tab
             .data('panel', this.model.server)
+            .data('connection_id', this.model.network.get('connection_id'))
             .appendTo(this.$el);
 
         // Go through each panel adding its tab
@@ -744,6 +742,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         }
 
         panel.tab.data('panel', panel)
+            .data('connection_id', this.model.network.get('connection_id'))
             .appendTo(this.$el);
             //.appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
@@ -877,6 +876,10 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         _kiwi.gateway.bind('change:nick', function () {
             $('.nick', that.$el).text(this.get('nick'));
+        });
+
+        _kiwi.app.connections.on('active', function(panel, connection) {
+            $('.nick', that.$el).text(connection.get('nick'));
         });
     },
 

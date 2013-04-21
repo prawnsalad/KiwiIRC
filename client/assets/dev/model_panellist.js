@@ -4,18 +4,12 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
     comparator: function (chan) {
         return chan.get('name');
     },
-    initialize: function (network) {
+    initialize: function (elements, network) {
 
         // The network this PanelList is associated with
         this.network = network;
 
         this.view = new _kiwi.view.Tabs({model: this});
-
-        // Automatically create a server tab
-        var server_panel = new _kiwi.model.Server({name: 'Server'});
-
-        this.add(server_panel);
-        this.server = server_panel;
 
         // Holds the active panel
         this.active = null;
@@ -24,7 +18,6 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
         this.bind('active', function (active_panel) {
             this.active = active_panel;
         }, this);
-
     },
 
 
@@ -35,5 +28,46 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
         return this.find(function (c) {
             return name.toLowerCase() === c.get('name').toLowerCase();
         });
+    }
+});
+
+
+
+_kiwi.model.NetworkPanelList = Backbone.Collection.extend({
+    model: _kiwi.model.Network,
+
+    initialize: function() {
+        this.on('add', this.onNetworkAdd, this);
+        this.on('remove', this.onNetworkRemove, this);
+
+        // Current active panel
+        this.active = undefined;
+        this.active_connection = undefined;
+    },
+
+    getByConnectionId: function(id) {
+        return this.find(function(connection){
+            return connection.get('connection_id') == id;
+        });
+    },
+
+
+    onNetworkAdd: function(network) {
+        network.panels.on('active', this.onActive, this);
+    },
+
+    onNetworkRemove: function(network) {
+        network.panels.off('active', this.onActive, this);
+    },
+
+    onActive: function(panel) {
+        var connection = this.getByConnectionId(panel.tab.data('connection_id'));
+        this.trigger('active', panel, connection);
+
+        console.log('Active connection:', connection.get('connection_id'), 'Active panel:', panel.get('name'));
+        this.active = connection;
+        connection.panels.active = panel;
+        
+        _kiwi.app.panels = connection.panels;
     }
 });

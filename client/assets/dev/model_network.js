@@ -39,12 +39,18 @@
             this.gateway = _kiwi.global.components.Network(this.get('connection_id'));
             this.bindGatewayEvents();
 
-            this.panels = new _kiwi.model.PanelList(this);
+            this.panels = new _kiwi.model.PanelList([], this);
+            this.panels.network = this;
+
+            // Automatically create a server tab
+            var server_panel = new _kiwi.model.Server({name: 'Server'});
+            this.panels.add(server_panel);
+            this.panels.server = server_panel;
         },
 
 
         bindGatewayEvents: function () {
-            //this.gateway.on('all', function() {console.log('ALL', arguments);});
+            //this.gateway.on('all', function() {console.log('ALL', this.get('connection_id'), arguments);});
 
             this.gateway.on('connect', function(event) {
                 this.set('nick', event.nick);

@@ -36,7 +36,7 @@ _kiwi.model.Application = function () {
             this.detectKiwiServer();
 
             // Holds instances of model_network
-            this.connections = [];
+            this.connections = new _kiwi.model.NetworkPanelList();
 
             // The active network (reference to a this.connections element)
             this.active_connection = null;
@@ -118,8 +118,9 @@ _kiwi.model.Application = function () {
              * we will keep this single server variable here until
              * It all gets moved over
              */
-            _kiwi.app.connections[0] = new _kiwi.model.Network(0);
-            this.panels = _kiwi.app.connections[0].panels;
+            var connection = new _kiwi.model.Network({connection_id: 0});
+            _kiwi.app.connections.add(connection);
+            this.panels = connection.panels;
 
             /**
              * Set the UI components up
@@ -744,7 +745,7 @@ _kiwi.model.Application = function () {
             if (typeof fn !== 'function')
                 return;
 
-            _.each(this.connections, function(connection) {
+            _.each(this.connections.models, function(connection) {
                 _.each(connection.panels.model, fn);
             });
         }

@@ -280,9 +280,9 @@ _kiwi.model.Gateway = function () {
                 break;
 
             case 'connect':
-                //if (!_kiwi.app.connections[data.server]) {
-                //    _kiwi.app.connections[data.server] = new _kiwi.model.Network(data.server);
-                //}
+                if (!_kiwi.app.connections.getByConnectionId(data.server)) {
+                    _kiwi.app.connections.add(new _kiwi.model.Network({connection_id: data.server}));
+                }
                 that.set('nick', data.nick);
                 break;
 
@@ -322,7 +322,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function
     */
     this.sendData = function (data, callback) {
-        this.socket.emit('irc', {server: 0, data: JSON.stringify(data)}, callback);
+        this.socket.emit('irc', {server: _kiwi.app.connections.active.get('connection_id'), data: JSON.stringify(data)}, callback);
     };
 
     /**
