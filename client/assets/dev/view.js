@@ -20,11 +20,13 @@ _kiwi.view.MemberList = Backbone.View.extend({
                 .data('member', member);
         });
     },
-    nickClick: function (x) {
-        var $target = $(x.currentTarget).parent('li'),
+    nickClick: function (event) {
+        var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member'),
             userbox;
         
+        event.stopPropagation();
+
         // If the userbox already exists here, hide it
         if ($target.find('.userbox').length > 0) {
             $('.userbox', this.$el).remove();
@@ -33,11 +35,33 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
         userbox = new _kiwi.view.UserBox();
         userbox.member = member;
+        userbox.channel = this.model.channel;
 
-        // Remove any existing userboxes
-        $('.userbox', this.$el).remove();
+        if (!this.model.getByNick(_kiwi.gateway.get('nick')).get('is_op')) {
+            userbox.$el.children('.if_op').remove();
+        }
 
-        $target.append(userbox.$el);
+        var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+        menu.addItem('userbox', userbox.$el);
+        menu.show();
+
+        // Position the userbox + menubox
+        (function() {
+            var t = event.pageY,
+                m_bottom = t + menu.$el.outerHeight(),  // Where the bottom of menu will be
+                memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight();
+
+            // If the bottom of the userbox is going to be too low.. raise it
+            if (m_bottom > memberlist_bottom){
+                t = memberlist_bottom - menu.$el.outerHeight();
+            }
+
+            // Set the new positon
+            menu.$el.offset({
+                left: _kiwi.app.view.$el.width() - menu.$el.outerWidth() - 20,
+                top: t
+            });
+        }).call(this);
     },
     show: function () {
         $('#memberlists').children().removeClass('active');
@@ -51,7 +75,13 @@ _kiwi.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick',
-        'click .slap': 'slapClick'
+        'click .slap': 'slapClick',
+        'click .op': 'opClick',
+        'click .deop': 'deopClick',
+        'click .voice': 'voiceClick',
+        'click .devoice': 'devoiceClick',
+        'click .kick': 'kickClick',
+        'click .ban': 'banClick'
     },
 
     initialize: function () {
@@ -70,6 +100,32 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     slapClick: function (event) {
         _kiwi.app.controlbox.processInput('/slap ' + this.member.get('nick'));
+    },
+
+    opClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +o ' + this.member.get('nick'));
+    },
+
+    deopClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -o ' + this.member.get('nick'));
+    },
+
+    voiceClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +v ' + this.member.get('nick'));
+    },
+
+    devoiceClick: function (event) {
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -v ' + this.member.get('nick'));
+    },
+
+    kickClick: function (event) {
+        // TODO: Enable the use of a custom kick message
+        _kiwi.app.controlbox.processInput('/kick ' + this.member.get('nick') + ' Bye!');
+    },
+
+    banClick: function (event) {
+        // TODO: Set ban on host, not just on nick
+        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.member.get('nick') + '!*');
     }
 });
 
@@ -406,6 +462,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         } else if (is_highlight) {
             _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.playSound('highlight');
             this.alert('highlight');
 
         } else {
@@ -414,6 +471,11 @@ _kiwi.view.Panel = Backbone.View.extend({
                 _kiwi.app.view.alertWindow('* People are talking!');
             }
             this.alert('activity');
+        }
+
+        if (this.model.isQuery() && !this.model.isActive()) {
+            _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.playSound('highlight');
         }
 
         // Update the activity counters
@@ -677,6 +739,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
+            panel.tab.addClass('icon-nonexistant');
         }
 
         panel.tab.data('panel', panel)
@@ -703,7 +766,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         // Only show the part image on non-server tabs
         if (!panel.isServer()) {
-            panel.tab.append('<span class="part"></span>');
+            panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
     },
 
@@ -996,6 +1059,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         if (!this._callbacks['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
+    },
+
+
+    addPluginIcon: function ($icon) {
+        var $tool = $('<div class="tool"></div>').append($icon);
+        this.$el.find('.input_tools').append($tool);
+        _kiwi.app.view.doLayout();
     }
 });
 
@@ -1123,6 +1193,8 @@ _kiwi.view.Application = Backbone.View.extend({
                 return 'This will close all KiwiIRC conversations. Are you sure you want to close this window?';
             }
         };
+
+        this.initSound();
     },
 
 
@@ -1345,6 +1417,40 @@ _kiwi.view.Application = Backbone.View.extend({
             $('#controlbox').slideDown(0);
             this.doLayout();
         }
+    },
+
+
+    initSound: function () {
+        var that = this,
+            base_path = this.model.get('base_path');
+
+        $script(base_path + '/assets/libs/soundmanager2/soundmanager2-nodebug-jsmin.js', function() {
+            if (typeof soundManager === 'undefined')
+                return;
+
+            soundManager.setup({
+                url: base_path + '/assets/libs/soundmanager2/',
+                flashVersion: 9, // optional: shiny features (default = 8)// optional: ignore Flash where possible, use 100% HTML5 mode
+                preferFlash: true,
+
+                onready: function() {
+                    that.sound_object = soundManager.createSound({
+                        id: 'highlight',
+                        url: base_path + '/assets/sound/highlight.mp3'
+                    });
+                }
+            });
+        });
+    },
+
+
+    playSound: function (sound_id) {
+        if (!this.sound_object) return;
+
+        if (_kiwi.global.settings.get('mute_sounds'))
+            return;
+        
+        soundManager.play(sound_id);
     }
 });
 
@@ -1474,5 +1580,97 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         }
 
         return html;
+    }
+});
+
+
+
+_kiwi.view.MenuBox = Backbone.View.extend({
+    events: {
+        'click .ui_menu_foot .close': 'dispose'
+    },
+
+    initialize: function(title) {
+        var that = this;
+
+        this.$el = $('<div class="ui_menu"></div>');
+
+        this._title = title || '';
+        this._items = {};
+        this._display_footer = true;
+
+        this._close_proxy = function(event) {
+            that.onDocumentClick(event);
+        };
+        $(document).on('click', this._close_proxy);
+    },
+
+
+    render: function() {
+        var that = this;
+
+        this.$el.find('*').remove();
+
+        if (this._title) {
+            $('<div class="ui_menu_title"></div>')
+                .text(this._title)
+                .appendTo(this.$el);
+        }
+
+
+        _.each(this._items, function(item) {
+            var $item = $('<div class="ui_menu_content hover"></div>')
+                .append(item);
+
+            that.$el.append($item);
+        });
+
+        if (this._display_footer)
+            this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="icon-remove"></i></a></div>');
+    },
+
+
+    onDocumentClick: function(event) {
+        var $target = $(event.target);
+
+        // If this is not itself AND we don't contain this element, dispose $el
+        if ($target[0] != this.$el[0] && this.$el.has($target).length === 0)
+            this.dispose();
+    },
+
+
+    dispose: function() {
+        _.each(this._items, function(item) {
+            item.dispose && item.dispose();
+            item.remove && item.remove();
+        });
+
+        this._items = null;
+        this.remove();
+
+        $(document).off('click', this._close_proxy);
+    },
+
+
+    addItem: function(item_name, $item) {
+        $item = $($item);
+        if ($item.is('a')) $item.addClass('icon-chevron-right');
+        this._items[item_name] = $item;
+    },
+
+
+    removeItem: function(item_name) {
+        delete this._items[item_name];
+    },
+
+
+    showFooter: function(show) {
+        this._show_footer = show;
+    },
+
+
+    show: function() {
+        this.render();
+        this.$el.appendTo(_kiwi.app.view.$el);
     }
 });

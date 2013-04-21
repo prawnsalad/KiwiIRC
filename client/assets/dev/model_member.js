@@ -31,6 +31,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         modes = modes || [];
         this.sortModes(modes);
         this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes)}, {silent: true});
+        this.isOp();
     },
     addMode: function (mode) {
         var modes_to_add = mode.split(''),
@@ -43,6 +44,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         
         modes = this.sortModes(modes);
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
+        this.isOp();
     },
     removeMode: function (mode) {
         var modes_to_remove = mode.split(''),
@@ -54,6 +56,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         });
 
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
+        this.isOp();
     },
     getPrefix: function (modes) {
         var prefix = '';
@@ -93,5 +96,25 @@ _kiwi.model.Member = Backbone.Model.extend({
         }
 
         return display;
+    },
+    isOp: function () {
+        var user_prefixes = _kiwi.gateway.get('user_prefixes'),
+            modes = this.get('modes'),
+            o, max_mode;
+        if (modes.length > 0) {
+            o = _.indexOf(user_prefixes, _.find(user_prefixes, function (prefix) {
+                return prefix.mode === 'o';
+            }));
+            max_mode = _.indexOf(user_prefixes, _.find(user_prefixes, function (prefix) {
+                return prefix.mode === modes[0];
+            }));
+            if ((max_mode === -1) || (max_mode > o)) {
+                this.set({"is_op": false}, {silent: true});
+            } else {
+                this.set({"is_op": true}, {silent: true});
+            }
+        } else {
+            this.set({"is_op": false}, {silent: true});
+        }
     }
 });

@@ -10,7 +10,7 @@
 
                 this.model.on('applet_loaded', function () {
                     that.$el.parent().css('height', '100%');
-                    $script('https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js', function (){ that.createAce(); });
+                    $script(_kiwi.app.get('base_path') + '/assets/libs/ace/ace.js', function (){ that.createAce(); });
                 });
             },
 

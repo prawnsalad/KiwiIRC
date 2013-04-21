@@ -42,15 +42,20 @@ var WebListener = function (web_config, transports) {
 
     if (web_config.ssl) {
         opts = {
-            key: fs.readFileSync(__dirname + '/' + web_config.ssl_key),
-            cert: fs.readFileSync(__dirname + '/' + web_config.ssl_cert)
+            key: fs.readFileSync(web_config.ssl_key),
+            cert: fs.readFileSync(web_config.ssl_cert)
         };
 
         // Do we have an intermediate certificate?
         if (typeof web_config.ssl_ca !== 'undefined') {
-            opts.ca = fs.readFileSync(__dirname + '/' + web_config.ssl_ca);
-        }
+            // An array of them?
+            if (typeof web_config.ssl_ca.map !== 'undefined') {
+                opts.ca = web_config.ssl_ca.map(function (f) { return fs.readFileSync(f); });
 
+            } else {
+                opts.ca = fs.readFileSync(web_config.ssl_ca);
+            }
+        }
 
         hs = https.createServer(opts, handleHttpRequest);
         
