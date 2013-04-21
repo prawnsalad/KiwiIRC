@@ -85,7 +85,7 @@ IrcConnection.prototype.applyIrcEvents = function () {
         'user:*:nick':       onUserNick,
         'channel:*:part':    onUserParts,
         'channel:*:quit':    onUserParts,
-        'channel:*:kick':    onUserParts
+        'channel:*:kick':    onUserKick
     };
 
     EventBinder.bindIrcEvents('', this.irc_events, this, this);
@@ -275,6 +275,18 @@ function onUserParts(event) {
         this.irc_channels[event.channel].dispose();
         delete this.irc_channels[event.channel];
     }
+}
+
+function onUserKick(event){
+    // Only deal with ourselves being kicked from a channel
+    if (event.kicked !== this.nick)
+        return;
+
+    if (this.irc_channels[event.channel]) {
+        this.irc_channels[event.channel].dispose();
+        delete this.irc_channels[event.channel];
+    }
+
 }
 
 
