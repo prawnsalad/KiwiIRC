@@ -695,25 +695,26 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
-        this.tabs_applets = $('ul.applets', this.$el);
-        this.tabs_msg = $('ul.channels', this.$el);
+        //this.tabs_applets = $('ul.applets', this.$el);
+        //this.tabs_msg = $('ul.channels', this.$el);
 
         this.model.network.on('change:name', function (network, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
 
-        $('#kiwi .panellist.channels').append(this.$el);
+        this.$tab_container = $('#kiwi .panellist.channels');
+        this.$tab_container.append(this.$el);
     },
 
     render: function () {
         var that = this;
 
-        this.tabs_msg.empty();
+        this.$el.empty();
         
         // Add the server tab first
         this.model.server.tab
             .data('panel', this.model.server)
-            .appendTo(this.tabs_msg);
+            .appendTo(this.$el);
 
         // Go through each panel adding its tab
         this.model.forEach(function (panel) {
@@ -759,8 +760,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
     panelActive: function (panel, previously_active_panel) {
         // Remove any existing tabs or part images
         $('.part', this.$el).remove();
-        this.tabs_applets.children().removeClass('active');
-        this.tabs_msg.children().removeClass('active');
+        this.$tab_container.find('.active').removeClass('active');
 
         panel.tab.addClass('active');
 
@@ -796,14 +796,14 @@ _kiwi.view.Tabs = Backbone.View.extend({
     },
 
     next: function () {
-        var next = _kiwi.app.panels.active.tab.next();
-        if (!next.length) next = $('li:first', this.tabs_msgs);
+        var next = this.$tab_container.find('.active').next();
+        if (!next.length) next = $('li:first', this.$tab_container);
 
         next.click();
     },
     prev: function () {
-        var prev = _kiwi.app.panels.active.tab.prev();
-        if (!prev.length) prev = $('li:last', this.tabs_msgs);
+        var prev = this.$tab_container.find('.active').prev();
+        if (!prev.length) prev = $('li:last', this.$tab_container);
 
         prev.click();
     }
