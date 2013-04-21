@@ -64,8 +64,6 @@ var WebListener = function (web_config, transports) {
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
         });
-
-        console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' with SSL');
     } else {
 
         // Start some plain-text server up
@@ -76,9 +74,11 @@ var WebListener = function (web_config, transports) {
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
         });
-
-        console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
+
+    hs.on('error', function (err) {
+        that.emit('error', err);
+    })
     
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
