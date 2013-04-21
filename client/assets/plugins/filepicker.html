@@ -12,7 +12,8 @@
             var area = $("#kiwi #controlbox textarea");
 
             for (var i = 0; files.length>i; i++) {
-                area.val(area.val() + " " + files[i].url);
+                var f = files[i];
+                area.val(area.val() + " " + f.url + "+" + encodeURIComponent(f.filename));
             }
         }
 
