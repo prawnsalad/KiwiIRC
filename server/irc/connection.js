@@ -380,10 +380,15 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.username = this.user.address.split('.').map(function(i, idx){
-            return parseInt(i, 10).toString(16);
+        this.username = this.user.address.split(/[\.:]/).map(function(i, idx){
+            if (i && !isNaN(i)) {
+                return parseInt(i,10).toString(16);
+            } else if (i) {
+                return i.split('').map(function(j,jdx){
+                    return j.charCodeAt(0).toString(16);
+                }).join('');
+            }
         }).join('');
-
     }
 
     return connect_data;
