@@ -104,9 +104,9 @@ html, body { height:100%; }
 #kiwi #memberlists ul li a.nick { }
 
 /* The userbox shown when clicking a nick */
-#kiwi #memberlists ul li .userbox { position:relative; }
-#kiwi #memberlists ul li .userbox a { }
-#kiwi #memberlists ul li .userbox a i { }
+#kiwi .userbox { position:relative; }
+#kiwi .userbox a { }
+#kiwi .userbox a i { }
 
 
 
@@ -243,6 +243,30 @@ html, body { height:100%; }
     width:43px; height:11px;
     display:inline-block;
 }
+
+
+
+
+#kiwi .ui_menu {
+    padding: 0;
+    z-index:10;
+    position: absolute;
+    top: 100px; left: 100px;
+    background: #fff;
+    border: 1px solid #bbb;
+    background-clip: padding-box;
+}
+#kiwi .ui_menu .ui_menu_title {
+    padding: 5px 10px 5px 10px; font-weight: bold; overflow:hidden; background:#ddd;
+}
+#kiwi .ui_menu .ui_menu_content { padding: 5px 10px 5px 10px; border-top:1px solid #e9e9e9; overflow:hidden; position:relative; }
+#kiwi .ui_menu .ui_menu_content > a { display: block; }
+#kiwi .ui_menu .ui_menu_content > a[class^="icon-"]:before,
+#kiwi .ui_menu .ui_menu_content > a[class*=" icon-"]:before { margin-right: 5px; color:#666; }
+#kiwi .ui_menu .ui_menu_foot {
+    padding: 5px; border-top:1px solid #e9e9e9; background:#ddd; overflow:hidden;
+}
+#kiwi .ui_menu .ui_menu_foot .close { }
 
 
 
@@ -434,9 +458,9 @@ html, body { height:100%; }
 }
 #kiwi.theme_relaxed #memberlists ul li a.nick { display:block; color:black; }
 
-#kiwi.theme_relaxed #memberlists ul li .userbox { margin:4px 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
-#kiwi.theme_relaxed #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
-#kiwi.theme_relaxed #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
+#kiwi.theme_relaxed .userbox { margin:4px 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi.theme_relaxed .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi.theme_relaxed .userbox a i { font-size:1.1em; margin-right:5px; }
 
 /* User mode styles */
 #kiwi.theme_relaxed #memberlists ul li .prefix {
@@ -597,6 +621,28 @@ html, body { height:100%; }
 }
 
 
+#kiwi.theme_relaxed .ui_menu {
+    border-radius: 3px;
+    color: #333;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+}
+#kiwi.theme_relaxed .ui_menu .ui_menu_title {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+#kiwi.theme_relaxed .ui_menu .ui_menu_content { }
+#kiwi.theme_relaxed .ui_menu .ui_menu_content.hover:hover { background:#f7f7f7; }
+#kiwi.theme_relaxed .ui_menu .ui_menu_foot {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+#kiwi.theme_relaxed .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#kiwi.theme_relaxed .ui_menu .ui_menu_foot .close:hover { color: #222; }
+
+
+
+
+
 /**
  * Mini theme
  */
@@ -716,9 +762,9 @@ html, body { height:100%; }
 }
 #kiwi.theme_mini #memberlists ul li a.nick { display:block; color:black; }
 
-#kiwi.theme_mini #memberlists ul li .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
-#kiwi.theme_mini #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
-#kiwi.theme_mini #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
+#kiwi.theme_mini .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi.theme_mini .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi.theme_mini .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
 #kiwi.theme_mini #controlbox .input {
@@ -933,10 +979,10 @@ html, body { height:100%; }
     transition: 0.2s ease; 
 }
 
-#kiwi.theme_cli #memberlists ul li .userbox { margin:0 1em 0 1em; padding-bottom:0.4em; font-size:.9em; }
-#kiwi.theme_cli #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
-#kiwi.theme_cli #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
-#kiwi.theme_cli #memberlists ul li .userbox .divider-horizontal { display:none; }
+#kiwi.theme_cli .userbox { margin:0 1em 0 1em; padding-bottom:0.4em; font-size:.9em; }
+#kiwi.theme_cli .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi.theme_cli .userbox a i { font-size:1.1em; margin-right:5px; }
+#kiwi.theme_cli .userbox .divider-horizontal { display:none; }
 
 
 #kiwi.theme_cli .messages .msg > div { color:#6d6d6d; font-family: Inconsolata, Consolas, 'courier new', monospace; }
@@ -1060,6 +1106,19 @@ html, body { height:100%; }
 #kiwi.theme_cli.chanlist_treeview #tabs ul li.active { padding-left:1em; }
 
 
+#kiwi.theme_cli .ui_menu {
+    color: #333;
+}
+#kiwi.theme_cli .ui_menu .ui_menu_title { }
+#kiwi.theme_cli .ui_menu .ui_menu_content { }
+#kiwi.theme_cli .ui_menu .ui_menu_content.hover:hover { background:#f7f7f7; }
+#kiwi.theme_cli .ui_menu .ui_menu_foot {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+#kiwi.theme_cli .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#kiwi.theme_cli .ui_menu .ui_menu_foot .close:hover { color: #222; }
+
 
 
 
@@ -1181,9 +1240,9 @@ html, body { height:100%; }
 #kiwi.theme_basic #memberlists ul li:hover {}
 #kiwi.theme_basic #memberlists ul li a.nick { display:block; color:black; }
 
-#kiwi.theme_basic #memberlists ul li .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
-#kiwi.theme_basic #memberlists ul li .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
-#kiwi.theme_basic #memberlists ul li .userbox a i { font-size:1.1em; margin-right:5px; }
+#kiwi.theme_basic .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi.theme_basic .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi.theme_basic .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
 #kiwi.theme_basic #controlbox .input {
@@ -1309,3 +1368,7 @@ html, body { height:100%; }
     border-bottom-right-radius:0;
     border-top-right-radius:0;
 }
+
+
+#kiwi.theme_basic .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#kiwi.theme_basic .ui_menu .ui_menu_foot .close:hover { color: #222; }
