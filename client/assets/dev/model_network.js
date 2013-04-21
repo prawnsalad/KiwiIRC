@@ -75,8 +75,6 @@
             this.gateway.on('whois', onWhois, this);
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
-            this.gateway.on('list_channel', onListChannel, this);
-            this.gateway.on('list_end', onListEnd, this);
         }
     });
 
@@ -494,34 +492,8 @@
 
 
     function onListStart(event) {
-        if (_kiwi.app.channel_list) {
-            _kiwi.app.channel_list.close();
-            delete _kiwi.app.channel_list;
-        }
-
-        var panel = new _kiwi.model.Applet(),
-            applet = new _kiwi.applets.Chanlist();
-
-        panel.load(applet);
-
-        _kiwi.app.panels.add(panel);
-        panel.view.show();
-
-        _kiwi.app.channel_list = applet;
-    }
-
-
-
-    function onListChannel(event) {
-        // TODO: Put this listener within the applet itself
-        _kiwi.app.channel_list.addChannel(event.chans);
-    }
-
-
-
-    function onListEnd(event) {
-        // TODO: Put this listener within the applet itself
-        delete _kiwi.app.channel_list;
+        var chanlist = _kiwi.model.Applet.loadOnce('kiwi_chanlist');
+        chanlist.view.show();
     }
 
 
