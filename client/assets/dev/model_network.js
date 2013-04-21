@@ -39,7 +39,7 @@
             this.gateway = _kiwi.global.components.Network(this.get('connection_id'));
             this.bindGatewayEvents();
 
-            this.panels = new _kiwi.model.PanelList();
+            this.panels = new _kiwi.model.PanelList(this);
         },
 
 

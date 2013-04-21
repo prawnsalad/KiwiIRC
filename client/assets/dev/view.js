@@ -619,6 +619,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
 // Model for this = _kiwi.model.PanelList
 _kiwi.view.Tabs = Backbone.View.extend({
+    tagName: 'ul',
+
     events: {
         'click li': 'tabClick',
         'click li .part': 'partClick'
@@ -634,10 +636,13 @@ _kiwi.view.Tabs = Backbone.View.extend({
         this.tabs_applets = $('ul.applets', this.$el);
         this.tabs_msg = $('ul.channels', this.$el);
 
-        _kiwi.gateway.on('change:name', function (gateway, new_val) {
+        this.model.network.on('change:name', function (network, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
+
+        $('#kiwi .panellist.channels').append(this.$el);
     },
+
     render: function () {
         var that = this;
 
@@ -645,7 +650,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         
         // Add the server tab first
         this.model.server.tab
-            .data('panel_id', this.model.server.cid)
+            .data('panel', this.model.server)
             .appendTo(this.tabs_msg);
 
         // Go through each panel adding its tab
@@ -654,8 +659,9 @@ _kiwi.view.Tabs = Backbone.View.extend({
             if (panel == that.model.server) return;
 
             panel.tab
-                .data('panel_id', panel.cid)
-                .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
+                .data('panel', panel)
+                .appendTo(that.$el);
+                //.appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
         });
 
         _kiwi.app.view.doLayout();
@@ -673,8 +679,9 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.addClass('server');
         }
 
-        panel.tab.data('panel_id', panel.cid)
-            .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
+        panel.tab.data('panel', panel)
+            .appendTo(this.$el);
+            //.appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
 
         panel.bind('change:title', this.updateTabTitle);
         _kiwi.app.view.doLayout();
@@ -702,8 +709,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     tabClick: function (e) {
         var tab = $(e.currentTarget);
-
-        var panel = this.model.getByCid(tab.data('panel_id'));
+        
+        var panel = tab.data('panel');
         if (!panel) {
             // A panel wasn't found for this tab... wadda fuck
             return;
@@ -714,12 +721,12 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     partClick: function (e) {
         var tab = $(e.currentTarget).parent();
-        var panel = this.model.getByCid(tab.data('panel_id'));
+        var panel = this.model.getByCid(tab.data('panel'));
 
         // Only need to part if it's a channel
         // If the nicklist is empty, we haven't joined the channel as yet
         if (panel.isChannel() && panel.get('members').models.length > 0) {
-            _kiwi.gateway.part(panel.get('name'));
+            this.model.network.gateway.part(panel.get('name'));
         } else {
             panel.close();
         }

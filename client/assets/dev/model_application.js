@@ -735,6 +735,17 @@ _kiwi.model.Application = function () {
             return (channel_prefix.indexOf(channel_name[0]) > -1);
         };
 
+
+
+        this.eachPanel = function (fn) {
+            if (typeof fn !== 'function')
+                return;
+
+            _.each(this.connections, function(connection) {
+                _.each(connection.panels.model, fn);
+            });
+        }
+
     };
 
 

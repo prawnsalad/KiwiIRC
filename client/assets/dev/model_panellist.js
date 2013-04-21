@@ -4,8 +4,12 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
     comparator: function (chan) {
         return chan.get('name');
     },
-    initialize: function () {
-        this.view = new _kiwi.view.Tabs({el: $('#tabs')[0], model: this});
+    initialize: function (network) {
+
+        // The network this PanelList is associated with
+        this.network = network;
+
+        this.view = new _kiwi.view.Tabs({model: this});
 
         // Automatically create a server tab
         var server_panel = new _kiwi.model.Server({name: 'Server'});
