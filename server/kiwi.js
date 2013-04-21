@@ -172,7 +172,16 @@ _.each(global.config.servers, function (server) {
         clients.remove(client);
     });
 
-    wl.on('listening', webListenerRunning);
+    wl.on('listening', function () {
+        console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+        webListenerRunning();
+    });
+
+    wl.on('error', function (err) {
+        console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
+        // TODO: This should probably be refactored. ^JA
+        webListenerRunning();
+    });
 });
 
 // Once all the listeners are listening, set the processes UID/GID
