@@ -322,7 +322,12 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function
     */
     this.sendData = function (data, callback) {
-        this.socket.emit('irc', {server: _kiwi.app.connections.active.get('connection_id'), data: JSON.stringify(data)}, callback);
+        var data_buffer = {
+            server: _kiwi.app.connections.active_connection.get('connection_id'),
+            data: JSON.stringify(data)
+        };
+        
+        this.socket.emit('irc', data_buffer, callback);
     };
 
     /**

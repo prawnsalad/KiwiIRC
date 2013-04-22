@@ -35,12 +35,14 @@ _kiwi.model.Application = function () {
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
 
-            // Holds instances of model_network
+            // Takes instances of model_network
             this.connections = new _kiwi.model.NetworkPanelList();
+            this.connections.on('active', this.onPanelActive, this);
 
             // The active network (reference to a this.connections element)
             this.active_connection = null;
         };
+
 
         this.start = function () {
             // Only debug if set in the querystring

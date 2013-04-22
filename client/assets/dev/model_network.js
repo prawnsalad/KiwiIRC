@@ -57,7 +57,7 @@
             }, this);
 
             this.gateway.on('nick', function(event) {
-                if (event.nick === event.get('nick')) {
+                if (event.nick === this.get('nick')) {
                     this.set('nick', event.newnick);
                 }
             }, this);

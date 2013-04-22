@@ -64,10 +64,8 @@ _kiwi.model.NetworkPanelList = Backbone.Collection.extend({
         var connection = this.getByConnectionId(panel.tab.data('connection_id'));
         this.trigger('active', panel, connection);
 
+        this.active_connection = connection;
+        this.active = panel;
         console.log('Active connection:', connection.get('connection_id'), 'Active panel:', panel.get('name'));
-        this.active = connection;
-        connection.panels.active = panel;
-        
-        _kiwi.app.panels = connection.panels;
     }
 });
