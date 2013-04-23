@@ -179,6 +179,14 @@ _kiwi.model.Gateway = function () {
          * IRCD and the nick has been accepted.
          */
         this.socket.on('connect', function () {
+            that.newConnection({
+                nick: that.get('nick'),
+                host: host,
+                port: port,
+                ssl: ssl,
+                password: password
+            }, callback);
+            /*
             this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
                 if (!err) {
                     that.server_num = server_num;
@@ -188,6 +196,7 @@ _kiwi.model.Gateway = function () {
                     callback(err);
                 }
             });
+            */
         });
 
         this.socket.on('too_many_connections', function () {
@@ -218,6 +227,29 @@ _kiwi.model.Gateway = function () {
 
         this.socket.on('reconnect_failed', function () {
             console.log("_kiwi.gateway.socket.on('reconnect_failed')");
+        });
+    };
+
+
+
+    this.newConnection = function(connection_info, callback_fn) {
+        var that = this,
+            h = connection_info;
+
+        this.socket.emit('kiwi', {command: 'connect', nick: h.nick, hostname: h.host, port: h.port, ssl: h.ssl, password: h.password}, function (err, server_num) {
+            if (!err) {
+                that.server_num = server_num;
+
+                // TODO: Remove this whole premature connection thing when panel code is tidied
+                if (server_num != 0 && !_kiwi.app.connections.getByConnectionId(server_num)){
+                    _kiwi.app.connections.add(new _kiwi.model.Network({connection_id: server_num}));
+                }
+
+                console.log("_kiwi.gateway.socket.on('connect')");
+            } else {
+                console.log("_kiwi.gateway.socket.on('error')", {reason: err});
+                callback_fn && callback_fn(err);
+            }
         });
     };
 
@@ -280,9 +312,6 @@ _kiwi.model.Gateway = function () {
                 break;
 
             case 'connect':
-                if (!_kiwi.app.connections.getByConnectionId(data.server)) {
-                    _kiwi.app.connections.add(new _kiwi.model.Network({connection_id: data.server}));
-                }
                 that.set('nick', data.nick);
                 break;
 
