@@ -37,7 +37,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         userbox.member = member;
         userbox.channel = this.model.channel;
 
-        if (!this.model.getByNick(_kiwi.gateway.get('nick')).get('is_op')) {
+        if (!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
             userbox.$el.children('.if_op').remove();
         }
 
@@ -387,7 +387,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
 
         // Nick highlight detecting
-        if ((new RegExp('\\b' + _kiwi.gateway.get('nick') + '\\b', 'i')).test(msg.msg)) {
+        if ((new RegExp('\\b' + _kiwi.app.connections.active_connection.get('nick') + '\\b', 'i')).test(msg.msg)) {
             is_highlight = true;
             msg_css_classes += ' highlight';
         }
@@ -482,7 +482,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         (function () {
             // Only inrement the counters if we're not the active panel
             if (this.model.isActive()) return;
-
+console.log('Updating activity');
             var $act = this.model.tab.find('.activity');
             $act.text((parseInt($act.text(), 10) || 0) + 1);
             if ($act.text() === '0') {
@@ -1042,7 +1042,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         }
 
         // Process the raw command for any aliases
-        this.preprocessor.vars.server = _kiwi.gateway.get('name');
+        this.preprocessor.vars.server = _kiwi.app.connections.active_connection.get('name');
         this.preprocessor.vars.channel = _kiwi.app.panels.active.get('name');
         this.preprocessor.vars.destination = this.preprocessor.vars.channel;
         command_raw = this.preprocessor.process(command_raw);

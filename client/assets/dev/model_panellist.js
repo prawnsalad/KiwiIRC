@@ -53,19 +53,18 @@ _kiwi.model.NetworkPanelList = Backbone.Collection.extend({
 
 
     onNetworkAdd: function(network) {
-        network.panels.on('active', this.onActive, this);
+        network.panels.on('active', this.onPanelActive, this);
     },
 
     onNetworkRemove: function(network) {
-        network.panels.off('active', this.onActive, this);
+        network.panels.off('active', this.onPanelActive, this);
     },
 
-    onActive: function(panel) {
+    onPanelActive: function(panel) {
         var connection = this.getByConnectionId(panel.tab.data('connection_id'));
         this.trigger('active', panel, connection);
 
         this.active_connection = connection;
         this.active = panel;
-        console.log('Active connection:', connection.get('connection_id'), 'Active panel:', panel.get('name'));
     }
 });

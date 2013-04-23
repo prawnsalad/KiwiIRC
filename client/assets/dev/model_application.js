@@ -296,6 +296,14 @@ _kiwi.model.Application = function () {
         };
 
 
+        // Clicking a tab
+        this.onPanelActive = function (panel, connection) {
+            this.panels = connection.panels;
+            this.active_connection = connection;
+            console.log('Active connection:', connection.get('connection_id'), 'Active panel:', panel.get('name'));
+        };
+
+
         this.bindGatewayCommands = function (gw) {
             gw.on('onconnect', function (event) {
                 that.view.barsShow();
@@ -600,7 +608,7 @@ _kiwi.model.Application = function () {
 
             ev.params.shift();
 
-            panel.addMsg(_kiwi.gateway.get('nick'), ev.params.join(' '));
+            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), ev.params.join(' '));
             _kiwi.gateway.privmsg(destination, ev.params.join(' '));
         }
 
@@ -610,7 +618,7 @@ _kiwi.model.Application = function () {
             }
 
             var panel = _kiwi.app.panels.active;
-            panel.addMsg('', '* ' + _kiwi.gateway.get('nick') + ' ' + ev.params.join(' '), 'action');
+            panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
             _kiwi.gateway.action(panel.get('name'), ev.params.join(' '));
         }
 
