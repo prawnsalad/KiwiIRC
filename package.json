@@ -15,10 +15,11 @@
   "dependencies": {
     "node-static": "0.5.9",
     "uglify-js": "1.2.3",
-    "socket.io": "0.9.13",
+    "socket.io": "0.9.14",
     "range_check": "0.0.1",
     "lodash": "0.9.1",
     "daemonize2": "0.4.0-rc.5",
-    "eventemitter2": "0.4.11"
+    "eventemitter2": "0.4.11",
+    "ipaddr.js": "0.1.1"
   }
 }

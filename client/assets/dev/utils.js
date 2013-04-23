@@ -260,54 +260,39 @@ function hsl2rgb(h, s, l) {
 *   @returns    {String}        The HTML formatted message
 */
 function formatIRCMsg (msg) {
-    var re, next;
-
-    if ((!msg) || (typeof msg !== 'string')) {
-        return '';
-    }
-
-    // bold
-    if (msg.indexOf(String.fromCharCode(2)) !== -1) {
-        next = '<b>';
-        while (msg.indexOf(String.fromCharCode(2)) !== -1) {
-            msg = msg.replace(String.fromCharCode(2), next);
-            next = (next === '<b>') ? '</b>' : '<b>';
-        }
-        if (next === '</b>') {
-            msg = msg + '</b>';
-        }
-    }
-
-    // underline
-    if (msg.indexOf(String.fromCharCode(31)) !== -1) {
-        next = '<u>';
-        while (msg.indexOf(String.fromCharCode(31)) !== -1) {
-            msg = msg.replace(String.fromCharCode(31), next);
-            next = (next === '<u>') ? '</u>' : '<u>';
-        }
-        if (next === '</u>') {
-            msg = msg + '</u>';
-        }
-    }
-
-    // colour
-    /**
-    *   @inner
-    */
-    msg = (function (msg) {
-        var replace, colourMatch, col, i, match, to, endCol, fg, bg, str;
-        replace = '';
-        /**
-        *   @inner
-        */
+    "use strict";
+    var out = '',
+        currentTag = '',
+        openTags = {
+            bold: false,
+            italic: false,
+            underline: false,
+            colour: false
+        },
+        anyOpen = function () {
+            return (openTags.bold || openTags.italic || openTags.underline || openTags.colour);
+        },
+        spanFromOpen = function () {
+            var style = '',
+                colours;
+            if (!anyOpen()) {
+                return '';
+            } else {
+                style += (openTags.bold) ? 'font-weight: bold; ' : '';
+                style += (openTags.italic) ? 'font-style: italic; ' : '';
+                style += (openTags.underline) ? 'text-decoration: underline; ' : '';
+                if (openTags.colour) {
+                    colours = openTags.colour.split(',');
+                    style += 'color: ' + colours[0] + ((colours[1]) ? '; background-color: ' + colours[1] + ';' : '');
+                }
+                return '<span style="' + style + '">';
+            }
+        },
         colourMatch = function (str) {
-            var re = /^\x03([0-9][0-9]?)(,([0-9][0-9]?))?/;
+            var re = /^\x03(([0-9][0-9]?)(,([0-9][0-9]?))?)/;
             return re.exec(str);
-        };
-        /**
-        *   @inner
-        */
-        col = function (num) {
+        },
+        hexFromNum = function (num) {
             switch (parseInt(num, 10)) {
             case 0:
                 return '#FFFFFF';
@@ -344,50 +329,71 @@ function formatIRCMsg (msg) {
             default:
                 return null;
             }
-        };
-        if (msg.indexOf('\x03') !== -1) {
-            i = msg.indexOf('\x03');
-            replace = msg.substr(0, i);
-            while (i < msg.length) {
-                /**
-                *   @inner
-                */
-                match = colourMatch(msg.substr(i, 6));
-                if (match) {
-                    //console.log(match);
-                    // Next colour code
-                    to = msg.indexOf('\x03', i + 1);
-                    endCol = msg.indexOf(String.fromCharCode(15), i + 1);
-                    if (endCol !== -1) {
-                        if (to === -1) {
-                            to = endCol;
-                        } else {
-                            to = ((to < endCol) ? to : endCol);
-                        }
-                    }
-                    if (to === -1) {
-                        to = msg.length;
-                    }
-                    //console.log(i, to);
-                    fg = col(match[1]);
-                    bg = col(match[3]);
-                    str = msg.substring(i + 1 + match[1].length + ((bg !== null) ? match[2].length : 0), to);
-                    //console.log(str);
-                    replace += '<span style="' + ((fg !== null) ? 'color: ' + fg + '; ' : '') + ((bg !== null) ? 'background-color: ' + bg + ';' : '') + '">' + str + '</span>';
-                    i = to;
-                } else {
-                    if ((msg[i] !== '\x03') && (msg[i] !== String.fromCharCode(15))) {
-                        replace += msg[i];
-                    }
-                    i++;
-                }
+        },
+        i = 0,
+        colours = [],
+        match;
+
+    for (i = 0; i < msg.length; i++) {
+        switch (msg[i]) {
+        case '\x02':
+            if (anyOpen()) {
+                out += currentTag + '</span>';
             }
-            return replace;
+            openTags.bold = !openTags.bold;
+            currentTag = spanFromOpen();
+            break;
+        case '\x1D':
+            if (anyOpen()) {
+                out += currentTag + '</span>';
+            }
+            openTags.italic = !openTags.italic;
+            currentTag = spanFromOpen();
+            break;
+        case '\x1F':
+            if (anyOpen()) {
+                out += currentTag + '</span>';
+            }
+            openTags.underline = !openTags.underline;
+            currentTag = spanFromOpen();
+            break;
+        case '\x03':
+            if (anyOpen()) {
+                out += currentTag + '</span>';
+            }
+            match = colourMatch(msg.substr(i, 6));
+            if (match) {
+                i += match[1].length;
+                // 2 & 4
+                colours[0] = hexFromNum(match[2]);
+                if (match[4]) {
+                    colours[1] = hexFromNum(match[4]);
+                }
+                openTags.colour = colours.join(',');
+            } else {
+                openTags.colour = false;
+            }
+            currentTag = spanFromOpen();
+            break;
+        case '\x0F':
+            if (anyOpen()) {
+                out += currentTag + '</span>';
+            }
+            openTags.bold = openTags.italic = openTags.underline = openTags.colour = false;
+            break;
+        default:
+            if (anyOpen()) {
+                currentTag += msg[i];
+            } else {
+                out += msg[i];
+            }
+            break;
         }
-        return msg;
-    }(msg));
-    
-    return msg;
+    }
+    if (anyOpen()) {
+        out += currentTag + '</span>';
+    }
+    return out;
 }
 
 

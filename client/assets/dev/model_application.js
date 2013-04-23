@@ -302,6 +302,8 @@ _kiwi.model.Application = function () {
                     var msg = 'You have been disconnected. Attempting to reconnect for you..';
                     that.message.text(msg, {timeout: 10000});
 
+                    that.view.$el.removeClass('connected');
+
                     // Mention the disconnection on every channel
                     $.each(_kiwi.app.panels.models, function (idx, panel) {
                         if (!panel || !panel.isChannel()) return;
@@ -315,7 +317,8 @@ _kiwi.model.Application = function () {
                     msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
                     _kiwi.app.panels.server.addMsg('', msg, 'action quit');
                 });
-                gw.on('connect', function (event) {
+                gw.on('onconnect', function (event) {
+                    that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
 
                     var msg = 'It\'s OK, you\'re connected again :)';
@@ -719,32 +722,8 @@ _kiwi.model.Application = function () {
 
 
             gw.on('onlist_start', function (data) {
-                if (_kiwi.app.channel_list) {
-                    _kiwi.app.channel_list.close();
-                    delete _kiwi.app.channel_list;
-                }
-
-                var panel = new _kiwi.model.Applet(),
-                    applet = new _kiwi.applets.Chanlist();
-
-                panel.load(applet);
-                
-                _kiwi.app.panels.add(panel);
-                panel.view.show();
-                
-                _kiwi.app.channel_list = applet;
-            });
-
-
-            gw.on('onlist_channel', function (data) {
-                // TODO: Put this listener within the applet itself
-                _kiwi.app.channel_list.addChannel(data.chans);
-            });
-
-
-            gw.on('onlist_end', function (data) {
-                // TODO: Put this listener within the applet itself
-                delete _kiwi.app.channel_list;
+                var chanlist = _kiwi.model.Applet.loadOnce('kiwi_chanlist');
+                chanlist.view.show();
             });
 
 

@@ -19,6 +19,7 @@ var State = function (client, save_state) {
                 if (irc_connection) {
                     irc_connection.end('QUIT :' + (global.config.quit_message || ''));
                     irc_connection.dispose();
+                    global.servers.removeConnection(irc_connection);
                     cons[i] = null;
                 }
             });
@@ -35,26 +36,25 @@ module.exports = State;
 State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callback) {
     var that = this;
     var con, con_num;
-    if (global.config.restrict_server) {
-        con = new IrcConnection(
-            global.config.restrict_server,
-            global.config.restrict_server_port,
-            global.config.restrict_server_ssl,
-            nick,
-            user,
-            global.config.restrict_server_password,
-            this);
 
-    } else {
-        con = new IrcConnection(
-            hostname,
-            port,
-            ssl,
-            nick,
-            user,
-            pass,
-            this);
+    // Check the per-server limit on the number of connections
+    if ((global.config.max_server_conns > 0) &&
+        (!global.config.restrict_server) &&
+        (!(global.config.webirc_pass && global.config.webirc_pass[hostname])) &&
+        (!(global.config.ip_as_username && _.contains(global.config.ip_as_username, hostname))) &&
+        (global.servers.numOnHost(hostname) >= global.config.max_server_conns))
+    {
+        return callback('Too many connections to host', {host: hostname, limit: global.config.max_server_conns});
     }
+
+    con = new IrcConnection(
+        hostname,
+        port,
+        ssl,
+        nick,
+        user,
+        pass,
+        this);
     
     con_num = this.next_connection++;
     this.irc_connections[con_num] = con;
@@ -63,6 +63,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     new IrcCommands(con, con_num, this).bindEvents();
     
     con.on('connected', function () {
+        global.servers.addConnection(this);
         return callback(null, con_num);
     });
     
@@ -73,6 +74,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
 
     con.on('close', function () {
         that.irc_connections[con_num] = null;
+        global.servers.removeConnection(this);
     });
 };
 
