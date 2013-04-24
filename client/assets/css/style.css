@@ -31,7 +31,7 @@ html, body { height:100%; }
     overflow: hidden;
     display:block;
 }
-#kiwi #toolbar .panellist li {
+#kiwi #toolbar .panellist .connection li {
     float: left; list-style: inline;
     display:inline; position:relative;
     padding:5px; margin:3px;
@@ -43,10 +43,11 @@ html, body { height:100%; }
 #kiwi #toolbar .panellist .alert_activity { font-weight: bold; }
 #kiwi #toolbar .panellist .alert_action { font-weight: bold; }
 
-#kiwi #toolbar .panellist li .part { position: absolute; top: 5px; right: 5px; }
-#kiwi #toolbar .panellist li .part:before { content:"[x]"; }
-#kiwi #toolbar .panellist li .part:hover { color: #900; }
-#kiwi #toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
+#kiwi #toolbar .panellist .connection { display: inline; }
+#kiwi #toolbar .panellist .connection li .part { position: absolute; top: 5px; right: 5px; }
+#kiwi #toolbar .panellist .connection li .part:before { content:"[x]"; }
+#kiwi #toolbar .panellist .connection li .part:hover { color: #900; }
+#kiwi #toolbar .panellist .connection li img.icon { left:5px; top:2px; height:auto; width:auto; }
 
 #kiwi #status_message {
     background: #FFF;
@@ -301,14 +302,14 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #memberlists_resize_handle {
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
-#kiwi.theme_relaxed #toolbar .panellist li {
+#kiwi.theme_relaxed #toolbar .panellist .connection li {
     line-height: 1.4em;
     vertical-align: middle;
     
-    border-radius:5px;
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
     -khtml-border-radius:5px;
+    border-radius:5px;
     behavior: url(border-radius.htc);
 
     background-image: -webkit-gradient(
@@ -328,23 +329,23 @@ html, body { height:100%; }
     background-color: #eee;
 }
 
-#kiwi.theme_relaxed #toolbar .panellist .alert_highlight { /*background: #990000;*/ }
-#kiwi.theme_relaxed #toolbar .panellist .alert_activity { font-weight:normal; }
-#kiwi.theme_relaxed #toolbar .panellist .alert_action { font-weight:normal; }
+#kiwi.theme_relaxed #toolbar .panellist .connection .alert_highlight { /*background: #990000;*/ }
+#kiwi.theme_relaxed #toolbar .panellist .connection .alert_activity { font-weight:normal; }
+#kiwi.theme_relaxed #toolbar .panellist .connection .alert_action { font-weight:normal; }
 
-#kiwi.theme_relaxed #toolbar .panellist .active { padding-right:23px; }
-#kiwi.theme_relaxed #toolbar .panellist li .part:before { content:"\f00d"; }
+#kiwi.theme_relaxed #toolbar .panellist .connection .active { padding-right:23px; }
+#kiwi.theme_relaxed #toolbar .panellist .connection li .part:before { content:"\f00d"; }
 
-#kiwi.theme_relaxed #toolbar .panellist li.server span { padding-left: 5px; }
-#kiwi.theme_relaxed.connected #toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi.theme_relaxed #toolbar .panellist .connection li.server span { padding-left: 5px; }
+#kiwi.theme_relaxed.connected #toolbar .panellist .connection li.server:before { content: "\f0ec"; color:#3F9532; }
 #kiwi.theme_relaxed #toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
 
 /* Tab texts are within a span */
-#kiwi.theme_relaxed #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
+#kiwi.theme_relaxed #toolbar .panellist .connection li span  { line-height:20px; vertical-align:middle; display:inline-block; }
 
-#kiwi.theme_relaxed #toolbar .panellist li.active .activity { display:none; }
-#kiwi.theme_relaxed #toolbar .panellist li .activity.zero { visibility:hidden; }
-#kiwi.theme_relaxed #toolbar .panellist li .activity {
+#kiwi.theme_relaxed #toolbar .panellist .connection li.active .activity { display:none; }
+#kiwi.theme_relaxed #toolbar .panellist .connection li .activity.zero { visibility:hidden; }
+#kiwi.theme_relaxed #toolbar .panellist .connection li .activity {
     padding: 1px 3px; margin-left:1em;
     border-radius: 4px;
     background: #3F9532; color:#000; /*color: #ff5300;*/
@@ -352,7 +353,7 @@ html, body { height:100%; }
     display:inline-block;
     width:2em;
 }
-#kiwi.theme_relaxed #toolbar .panellist li.alert_highlight .activity {
+#kiwi.theme_relaxed #toolbar .panellist .connection li.alert_highlight .activity {
     color: #fff; background: #a60400;
 }
 

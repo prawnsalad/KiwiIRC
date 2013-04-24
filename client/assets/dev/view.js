@@ -669,7 +669,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (typeof topic !== 'string' || !topic) {
             topic = this.model.get("topic");
         }
-        
+
         this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
 
         // If this is the active channel then update the topic bar
@@ -678,6 +678,35 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         }
     }
 });
+
+
+
+// Model for this = _kiwi.model.NetworkPanelList
+_kiwi.view.NetworkTabs = Backbone.View.extend({
+    tagName: 'ul',
+    className: 'panellist channels',
+
+    initialize: function() {
+        this.model.on('add', this.networkAdded, this);
+        this.model.on('remove', this.networkRemoved, this);
+
+        this.$el.appendTo($('#kiwi #tabs'));
+    },
+
+    networkAdded: function(network) {
+        $('<li class="connection"></li>')
+            .append(network.panels.view.$el)
+            .appendTo(this.$el);
+    },
+
+    networkRemoved: function(network) {
+        network.panels.view.remove();
+
+        _kiwi.app.view.doLayout();
+    }
+});
+
+
 
 // Model for this = _kiwi.model.PanelList
 _kiwi.view.Tabs = Backbone.View.extend({
@@ -698,9 +727,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
         this.model.network.on('change:name', function (network, new_val) {
             $('span', this.model.server.tab).text(new_val);
         }, this);
-
-        this.$tab_container = $('#kiwi .panellist.channels');
-        this.$tab_container.append(this.$el);
     },
 
     render: function () {
@@ -759,7 +785,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
     panelActive: function (panel, previously_active_panel) {
         // Remove any existing tabs or part images
         $('.part', this.$el).remove();
-        this.$tab_container.find('.active').removeClass('active');
+        this.$el.parent().find('.active').removeClass('active');
 
         panel.tab.addClass('active');
 
@@ -771,7 +797,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     tabClick: function (e) {
         var tab = $(e.currentTarget);
-        
+
         var panel = tab.data('panel');
         if (!panel) {
             // A panel wasn't found for this tab... wadda fuck

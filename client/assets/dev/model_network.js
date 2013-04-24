@@ -39,8 +39,9 @@
             this.gateway = _kiwi.global.components.Network(this.get('connection_id'));
             this.bindGatewayEvents();
 
+            // Create our panel list (tabs)
             this.panels = new _kiwi.model.PanelList([], this);
-            this.panels.network = this;
+            //this.panels.network = this;
 
             // Automatically create a server tab
             var server_panel = new _kiwi.model.Server({name: 'Server'});

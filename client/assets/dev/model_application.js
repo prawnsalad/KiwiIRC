@@ -758,7 +758,7 @@ _kiwi.model.Application = function () {
             _.each(this.connections.models, function(connection) {
                 _.each(connection.panels.model, fn);
             });
-        }
+        };
 
     };
 
