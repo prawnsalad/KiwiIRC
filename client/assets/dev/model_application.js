@@ -491,6 +491,9 @@ _kiwi.model.Application = function () {
                 }
 
                 panel.addMsg('[' + (event.nick||'') + ']', event.msg);
+                if(!_kiwi.app.panels.active.isServer()) {
+                    _kiwi.app.panels.active.addMsg('[' + (event.nick||'') + ']', event.msg);
+                }
             });
 
 
