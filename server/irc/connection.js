@@ -17,7 +17,7 @@ var version_values = process.version.substr(1).split('.').map(function (item) {
 
 // If we have a suitable Nodejs version, bring int he socks functionality
 if (version_values[1] >= 10) {
-    Socks = require('../socks.js');
+    Socks = require('socksjs');
 }
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
@@ -52,6 +52,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     
     // IrcUser objects
     this.irc_users = Object.create(null);
+
+    // TODO: use `event.nick` instead of `'*'` when using an IrcUser per nick
+    this.irc_users[nick] = new IrcUser(this, '*');
     
     // IrcChannel objects
     this.irc_channels = Object.create(null);
@@ -109,7 +112,7 @@ IrcConnection.prototype.applyIrcEvents = function () {
         'user:*:nick':       onUserNick,
         'channel:*:part':    onUserParts,
         'channel:*:quit':    onUserParts,
-        'channel:*:kick':    onUserParts
+        'channel:*:kick':    onUserKick
     };
 
     EventBinder.bindIrcEvents('', this.irc_events, this, this);
@@ -271,9 +274,6 @@ function onChannelJoin(event) {
 
 function onServerConnect(event) {
     this.nick = event.nick;
-
-    // TODO: use `event.nick` instead of `'*'` when using an IrcUser per nick
-    this.irc_users[event.nick] = new IrcUser(this, '*');
 }
 
 
@@ -312,6 +312,18 @@ function onUserParts(event) {
         this.irc_channels[event.channel].dispose();
         delete this.irc_channels[event.channel];
     }
+}
+
+function onUserKick(event){
+    // Only deal with ourselves being kicked from a channel
+    if (event.kicked !== this.nick)
+        return;
+
+    if (this.irc_channels[event.channel]) {
+        this.irc_channels[event.channel].dispose();
+        delete this.irc_channels[event.channel];
+    }
+
 }
 
 

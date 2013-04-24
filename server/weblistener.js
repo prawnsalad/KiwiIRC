@@ -42,15 +42,20 @@ var WebListener = function (web_config, transports) {
 
     if (web_config.ssl) {
         opts = {
-            key: fs.readFileSync(__dirname + '/' + web_config.ssl_key),
-            cert: fs.readFileSync(__dirname + '/' + web_config.ssl_cert)
+            key: fs.readFileSync(web_config.ssl_key),
+            cert: fs.readFileSync(web_config.ssl_cert)
         };
 
         // Do we have an intermediate certificate?
         if (typeof web_config.ssl_ca !== 'undefined') {
-            opts.ca = fs.readFileSync(__dirname + '/' + web_config.ssl_ca);
-        }
+            // An array of them?
+            if (typeof web_config.ssl_ca.map !== 'undefined') {
+                opts.ca = web_config.ssl_ca.map(function (f) { return fs.readFileSync(f); });
 
+            } else {
+                opts.ca = fs.readFileSync(web_config.ssl_ca);
+            }
+        }
 
         hs = https.createServer(opts, handleHttpRequest);
         
@@ -59,8 +64,6 @@ var WebListener = function (web_config, transports) {
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
         });
-
-        console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' with SSL');
     } else {
 
         // Start some plain-text server up
@@ -71,9 +74,11 @@ var WebListener = function (web_config, transports) {
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
         });
-
-        console.log('Listening on ' + web_config.address + ':' + web_config.port.toString() + ' without SSL');
     }
+
+    hs.on('error', function (err) {
+        that.emit('error', err);
+    })
     
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
