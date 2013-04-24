@@ -7,9 +7,6 @@ _kiwi.model.Application = function () {
 
 
     var model = function () {
-        /** Instance of _kiwi.model.PanelList */
-        this.panels = null;
-
         /** _kiwi.view.Application */
         this.view = null;
 
@@ -37,10 +34,6 @@ _kiwi.model.Application = function () {
 
             // Takes instances of model_network
             this.connections = new _kiwi.model.NetworkPanelList();
-            this.connections.on('active', this.onPanelActive, this);
-
-            // The active network (reference to a this.connections element)
-            this.active_connection = null;
         };
 
 
@@ -61,7 +54,7 @@ _kiwi.model.Application = function () {
 
             this.view.barsHide(true);
 
-            this.panels.server.server_login.bind('server_connect', function (event) {
+            this.connections.getByConnectionId(0).panels.server.server_login.bind('server_connect', function (event) {
                 var server_login = this,
                     transport_path = '';
                 auto_connect_details = event;
@@ -90,13 +83,13 @@ _kiwi.model.Application = function () {
             // TODO: Shouldn't really be here but it's not working in the view.. :/
             // Hack for firefox browers: Focus is not given on this event loop iteration
             setTimeout(function(){
-                _kiwi.app.panels.server.server_login.$el.find('.nick').select();
+                _kiwi.app.connections.getByConnectionId(0).panels.server.server_login.$el.find('.nick').select();
             }, 0);
         };
 
 
         function kiwiServerNotFound (e) {
-            that.panels.server.server_login.showError();
+            that.connections.getByConnectionId(0).panels.server.server_login.showError();
         }
 
 
@@ -121,8 +114,7 @@ _kiwi.model.Application = function () {
              * It all gets moved over
              */
             var connection = new _kiwi.model.Network({connection_id: 0});
-            _kiwi.app.connections.add(connection);
-            this.panels = connection.panels;
+            this.connections.add(connection);
 
             /**
              * Set the UI components up
@@ -138,7 +130,7 @@ _kiwi.model.Application = function () {
 
             this.resize_handle = new _kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
             
-            this.panels.server.view.show();
+            this.connections.getByConnectionId(0).panels.server.view.show();
 
             // Rejigg the UI sizes
             this.view.doLayout();
@@ -148,7 +140,7 @@ _kiwi.model.Application = function () {
 
 
         this.initializeGlobals = function () {
-            _kiwi.global.panels = this.panels;
+            _kiwi.global.connections = this.connections;
             
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
@@ -292,16 +284,26 @@ _kiwi.model.Application = function () {
             defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
 
             // Populate the server select box with defaults
-            this.panels.server.server_login.populateFields(defaults);
+            this.connections.getByConnectionId(0).panels.server.server_login.populateFields(defaults);
         };
 
 
-        // Clicking a tab
-        this.onPanelActive = function (panel, connection) {
-            this.panels = connection.panels;
-            this.active_connection = connection;
-            console.log('Active connection:', connection.get('connection_id'), 'Active panel:', panel.get('name'));
-        };
+        this.panels = (function() {
+            var fn = function() {
+                // Get a complete list of panels
+                var panels = this.connections.panels();
+
+                // Active panels / server
+                panels.active = this.connections.active_panel;
+                panels.server = this.connections.active_connection.panels.server;
+
+                return panels;
+            };
+
+            _.extend(fn, Backbone.Events);
+
+            return fn;
+        })();
 
 
         this.bindGatewayCommands = function (gw) {
@@ -324,17 +326,17 @@ _kiwi.model.Application = function () {
                     that.view.$el.removeClass('connected');
 
                     // Mention the disconnection on every channel
-                    $.each(_kiwi.app.panels.models, function (idx, panel) {
+                    $.each(_kiwi.app.connections.getByConnectionId(0).panels.models, function (idx, panel) {
                         if (!panel || !panel.isChannel()) return;
                         panel.addMsg('', msg, 'action quit');
                     });
-                    _kiwi.app.panels.server.addMsg('', msg, 'action quit');
+                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action quit');
 
                     gw_stat = 1;
                 });
                 gw.on('reconnecting', function (event) {
                     msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
-                    _kiwi.app.panels.server.addMsg('', msg, 'action quit');
+                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action quit');
                 });
                 gw.on('onconnect', function (event) {
                     that.view.$el.addClass('connected');
@@ -344,11 +346,11 @@ _kiwi.model.Application = function () {
                     that.message.text(msg, {timeout: 5000});
 
                     // Mention the disconnection on every channel
-                    $.each(_kiwi.app.panels.models, function (idx, panel) {
+                    $.each(_kiwi.app.connections.getByConnectionId(0).panels.models, function (idx, panel) {
                         if (!panel || !panel.isChannel()) return;
                         panel.addMsg('', msg, 'action join');
                     });
-                    _kiwi.app.panels.server.addMsg('', msg, 'action join');
+                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action join');
 
                     gw_stat = 0;
                 });
@@ -454,13 +456,13 @@ _kiwi.model.Application = function () {
                 }
 
                 // Read the value to the user
-                _kiwi.app.panels.active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting).toString());
+                _kiwi.app.panels().active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting).toString());
             });
 
 
             controlbox.on('command:save', function (ev) {
                 _kiwi.global.settings.save();
-                _kiwi.app.panels.active.addMsg('', 'Settings have been saved');
+                _kiwi.app.panels().active.addMsg('', 'Settings have been saved');
             });
 
 
@@ -470,7 +472,7 @@ _kiwi.model.Application = function () {
                 // No parameters passed so list them
                 if (!ev.params[1]) {
                     $.each(controlbox.preprocessor.aliases, function (name, rule) {
-                        _kiwi.app.panels.server.addMsg(' ', name + '   =>   ' + rule);
+                        _kiwi.app.panels().server.addMsg(' ', name + '   =>   ' + rule);
                     });
                     return;
                 }
@@ -502,12 +504,12 @@ _kiwi.model.Application = function () {
                 // No parameters passed so list them
                 if (!ev.params[0]) {
                     if (list.length > 0) {
-                        _kiwi.app.panels.active.addMsg(' ', 'Ignored nicks:');
+                        _kiwi.app.panels().active.addMsg(' ', 'Ignored nicks:');
                         $.each(list, function (idx, ignored_pattern) {
-                            _kiwi.app.panels.active.addMsg(' ', ignored_pattern);
+                            _kiwi.app.panels().active.addMsg(' ', ignored_pattern);
                         });
                     } else {
-                        _kiwi.app.panels.active.addMsg(' ', 'Not ignoring anybody');
+                        _kiwi.app.panels().active.addMsg(' ', 'Not ignoring anybody');
                     }
                     return;
                 }
@@ -515,7 +517,7 @@ _kiwi.model.Application = function () {
                 // We have a parameter, so add it
                 list.push(ev.params[0]);
                 _kiwi.gateway.set('ignore_list', list);
-                _kiwi.app.panels.active.addMsg(' ', 'Ignoring ' + ev.params[0]);
+                _kiwi.app.panels().active.addMsg(' ', 'Ignoring ' + ev.params[0]);
             });
 
 
@@ -523,7 +525,7 @@ _kiwi.model.Application = function () {
                 var list = _kiwi.gateway.get('ignore_list');
 
                 if (!ev.params[0]) {
-                    _kiwi.app.panels.active.addMsg(' ', 'Specifiy which nick you wish to stop ignoring');
+                    _kiwi.app.panels().active.addMsg(' ', 'Specifiy which nick you wish to stop ignoring');
                     return;
                 }
 
@@ -533,7 +535,7 @@ _kiwi.model.Application = function () {
 
                 _kiwi.gateway.set('ignore_list', list);
 
-                _kiwi.app.panels.active.addMsg(' ', 'Stopped ignoring ' + ev.params[0]);
+                _kiwi.app.panels().active.addMsg(' ', 'Stopped ignoring ' + ev.params[0]);
             });
 
 
@@ -567,16 +569,16 @@ _kiwi.model.Application = function () {
 
                 // If not a valid channel name, display a warning
                 if (!that.isChannelName(channel_name)) {
-                    _kiwi.app.panels.server.addMsg('', channel_name + ' is not a valid channel name');
+                    _kiwi.app.panels().server.addMsg('', channel_name + ' is not a valid channel name');
                     _kiwi.app.message.text(channel_name + ' is not a valid channel name', {timeout: 5000});
                     return;
                 }
 
                 // Check if we have the panel already. If not, create it
-                channel = that.panels.getByName(channel_name);
+                channel = that.connections.active_connection.panels.getByName(channel_name);
                 if (!channel) {
                     channel = new _kiwi.model.Channel({name: channel_name});
-                    _kiwi.app.panels.add(channel);
+                    _kiwi.app.connections.active_connection.panels.add(channel);
                 }
 
                 _kiwi.gateway.join(channel_name, channel_key);
@@ -592,10 +594,10 @@ _kiwi.model.Application = function () {
             destination = ev.params[0];
 
             // Check if we have the panel already. If not, create it
-            panel = that.panels.getByName(destination);
+            panel = that.connections.active_connection.panels.getByName(destination);
             if (!panel) {
                 panel = new _kiwi.model.Query({name: destination});
-                _kiwi.app.panels.add(panel);
+                that.connections.active_connection.panels.add(panel);
             }
 
             if (panel) panel.view.show();
@@ -604,7 +606,7 @@ _kiwi.model.Application = function () {
 
         function msgCommand (ev) {
             var destination = ev.params[0],
-                panel = that.panels.getByName(destination) || that.panels.server;
+                panel = that.connections.active_connection.panels.getByName(destination) || that.panels().server;
 
             ev.params.shift();
 
@@ -613,25 +615,23 @@ _kiwi.model.Application = function () {
         }
 
         function actionCommand (ev) {
-            if (_kiwi.app.panels.active === _kiwi.app.panels.server) {
+            if (_kiwi.app.panels().active.isServer()) {
                 return;
             }
 
-            var panel = _kiwi.app.panels.active;
+            var panel = _kiwi.app.panels().active;
             panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
             _kiwi.gateway.action(panel.get('name'), ev.params.join(' '));
         }
 
         function partCommand (ev) {
             if (ev.params.length === 0) {
-                _kiwi.gateway.part(_kiwi.app.panels.active.get('name'));
+                _kiwi.gateway.part(_kiwi.app.panels().active.get('name'));
             } else {
                 _.each(ev.params, function (channel) {
                     _kiwi.gateway.part(channel);
                 });
             }
-            // TODO: More responsive = close tab now, more accurate = leave until part event
-            //_kiwi.app.panels.remove(_kiwi.app.panels.active);
         }
 
         function topicCommand (ev) {
@@ -643,7 +643,7 @@ _kiwi.model.Application = function () {
                 channel_name = ev.params[0];
                 ev.params.shift();
             } else {
-                channel_name = _kiwi.app.panels.active.get('name');
+                channel_name = _kiwi.app.panels().active.get('name');
             }
 
             _kiwi.gateway.topic(channel_name, ev.params.join(' '));
@@ -667,7 +667,7 @@ _kiwi.model.Application = function () {
         }
 
         function kickCommand (ev) {
-            var nick, panel = _kiwi.app.panels.active;
+            var nick, panel = _kiwi.app.panels().active;
 
             if (!panel.isChannel()) return;
 
@@ -682,12 +682,12 @@ _kiwi.model.Application = function () {
 
         function clearCommand (ev) {
             // Can't clear a server or applet panel
-            if (_kiwi.app.panels.active.isServer() || _kiwi.app.panels.active.isApplet()) {
+            if (_kiwi.app.panels().active.isServer() || _kiwi.app.panels().active.isApplet()) {
                 return;
             }
 
-            if (_kiwi.app.panels.active.clearMessages) {
-                _kiwi.app.panels.active.clearMessages();
+            if (_kiwi.app.panels().active.clearMessages) {
+                _kiwi.app.panels().active.clearMessages();
             }
         }
 
@@ -729,12 +729,12 @@ _kiwi.model.Application = function () {
                 if (_kiwi.applets[ev.params[0]]) {
                     panel.load(new _kiwi.applets[ev.params[0]]());
                 } else {
-                    _kiwi.app.panels.server.addMsg('', 'Applet "' + ev.params[0] + '" does not exist');
+                    _kiwi.app.panels().server.addMsg('', 'Applet "' + ev.params[0] + '" does not exist');
                     return;
                 }
             }
             
-            _kiwi.app.panels.add(panel);
+            _kiwi.app.connections.active_connection.panels.add(panel);
             panel.view.show();
         }
 
@@ -752,6 +752,8 @@ _kiwi.model.Application = function () {
 
 
         this.eachPanel = function (fn) {
+            alert('Switch this call with _kiwi.app.panels! location in console.log');
+            console.log('Switch this call with _kiwi.app.panels! location in console.log');
             if (typeof fn !== 'function')
                 return;
 

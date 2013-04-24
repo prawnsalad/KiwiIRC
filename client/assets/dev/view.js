@@ -90,7 +90,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     queryClick: function (event) {
         var panel = new _kiwi.model.Query({name: this.member.get('nick')});
-        _kiwi.app.panels.add(panel);
+        _kiwi.app.connections.active_connection.panels.add(panel);
         panel.view.show();
     },
 
@@ -482,7 +482,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         (function () {
             // Only inrement the counters if we're not the active panel
             if (this.model.isActive()) return;
-console.log('Updating activity');
+
             var $act = this.model.tab.find('.activity');
             $act.text((parseInt($act.text(), 10) || 0) + 1);
             if ($act.text() === '0') {
@@ -583,8 +583,8 @@ console.log('Updating activity');
         this.alert('none');
         this.model.tab.find('.activity').text('0').addClass('zero');
 
-        this.trigger('active', this.model);
-        _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels.active);
+        _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels().active);
+        this.model.trigger('active', this.model);
 
         this.scrollToBottom(true);
     },
@@ -592,7 +592,7 @@ console.log('Updating activity');
 
     alert: function (level) {
         // No need to highlight if this si the active panel
-        if (this.model == _kiwi.app.panels.active) return;
+        if (this.model == _kiwi.app.panels().active) return;
 
         var types, type_idx;
         types = ['none', 'action', 'activity', 'highlight'];
@@ -629,7 +629,7 @@ console.log('Updating activity');
     // Scroll to the bottom of the panel
     scrollToBottom: function (force_down) {
         // If this isn't the active panel, don't scroll
-        if (this.model !== _kiwi.app.panels.active) return;
+        if (this.model !== _kiwi.app.panels().active) return;
 
         // Don't scroll down if we're scrolled up the panel a little
         if (force_down || this.$container.scrollTop() + this.$container.height() > this.$el.outerHeight() - 150) {
@@ -673,7 +673,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
 
         // If this is the active channel then update the topic bar
-        if (_kiwi.app.panels.active === this) {
+        if (_kiwi.app.panels().active === this) {
             _kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
         }
     }
@@ -861,13 +861,13 @@ _kiwi.view.TopicBar = Backbone.View.extend({
             inp_val = inp.text();
         
         // Only allow topic editing if this is a channel panel
-        if (!_kiwi.app.panels.active.isChannel()) {
+        if (!_kiwi.app.panels().active.isChannel()) {
             return false;
         }
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            _kiwi.gateway.topic(_kiwi.app.panels.active.get('name'), inp_val);
+            _kiwi.gateway.topic(_kiwi.app.panels().active.get('name'), inp_val);
             return false;
         }
     },
@@ -981,11 +981,19 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
-                var ac_data = [];
-                $.each(_kiwi.app.panels.active.get('members').models, function (i, member) {
+                var ac_data = [],
+                    members = _kiwi.app.panels().active.get('members');
+
+                // If we have a members list, get the models. Otherwise empty array
+                members = members ? members.models : [];
+
+                $.each(members, function (i, member) {
                     if (!member) return;
                     ac_data.push(member.get('nick'));
                 });
+
+                ac_data.push(_kiwi.app.panels().active.get('name'));
+
                 ac_data = _.sortBy(ac_data, function (nick) {
                     return nick;
                 });
@@ -1064,12 +1072,12 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             command_raw = command_raw.replace(/^\/\//, '/');
 
             // Prepend the default command
-            command_raw = '/msg ' + _kiwi.app.panels.active.get('name') + ' ' + command_raw;
+            command_raw = '/msg ' + _kiwi.app.panels().active.get('name') + ' ' + command_raw;
         }
 
         // Process the raw command for any aliases
         this.preprocessor.vars.server = _kiwi.app.connections.active_connection.get('name');
-        this.preprocessor.vars.channel = _kiwi.app.panels.active.get('name');
+        this.preprocessor.vars.channel = _kiwi.app.panels().active.get('name');
         this.preprocessor.vars.destination = this.preprocessor.vars.channel;
         command_raw = this.preprocessor.process(command_raw);
 
@@ -1081,7 +1089,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         } else {
             // Default command
             command = 'msg';
-            params.unshift(_kiwi.app.panels.active.get('name'));
+            params.unshift(_kiwi.app.panels().active.get('name'));
         }
 
         // Trigger the command events
