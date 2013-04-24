@@ -72,7 +72,7 @@ _kiwi.model.Application = function () {
                     _kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
                     _kiwi.gateway.set('nick', event.nick);
                     
-                    _kiwi.gateway.connect(event.server, event.port, event.ssl, event.password, function (error) {
+                    _kiwi.gateway.connect(event.nick, event.server, event.port, event.ssl, event.password, function (error) {
                         if (error) {
                             kiwiServerNotFound();
                         }

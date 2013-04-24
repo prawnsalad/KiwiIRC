@@ -75,7 +75,8 @@ _kiwi.model.Gateway = function () {
         // Some easier handler events
         this.on('onmsg', function (event) {
             var source,
-                is_pm = (event.channel == that.get('nick'));
+                connection = _kiwi.app.connections.getByConnectionId(event.server),
+                is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
             
@@ -100,7 +101,8 @@ _kiwi.model.Gateway = function () {
 
         this.on('onaction', function (event) {
             var source,
-                is_pm = (event.channel == that.get('nick'));
+                connection = _kiwi.app.connections.getByConnectionId(event.server),
+                is_pm = (event.channel == cinnection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
             
@@ -130,13 +132,14 @@ _kiwi.model.Gateway = function () {
 
     /**
     *   Connects to the server
+    *   @param  {String}    nick        The nickname of the user to use on the network
     *   @param  {String}    host        The hostname or IP address of the IRC server to connect to
     *   @param  {Number}    port        The port of the IRC server to connect to
     *   @param  {Boolean}   ssl         Whether or not to connect to the IRC server using SSL
     *   @param  {String}    password    The password to supply to the IRC server during registration
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
-    this.connect = function (host, port, ssl, password, callback) {
+    this.connect = function (nick, host, port, ssl, password, callback) {
         var resource;
 
         // Work out the resource URL for socket.io
@@ -180,7 +183,7 @@ _kiwi.model.Gateway = function () {
          */
         this.socket.on('connect', function () {
             that.newConnection({
-                nick: that.get('nick'),
+                nick: nick,
                 host: host,
                 port: port,
                 ssl: ssl,
@@ -291,8 +294,6 @@ _kiwi.model.Gateway = function () {
         //console.log('gateway event', command, data);
 
         if (command !== undefined) {
-            that.trigger('on' + command, data);
-
             switch (command) {
             case 'options':
                 $.each(data.options, function (name, value) {
@@ -311,15 +312,6 @@ _kiwi.model.Gateway = function () {
                 that.set('cap', data.cap);
                 break;
 
-            case 'connect':
-                that.set('nick', data.nick);
-                break;
-
-            case 'nick':
-                if (data.nick === that.get('nick')) {
-                    that.set('nick', data.newnick);
-                }
-                break;
             /*
             case 'sync':
                 if (_kiwi.gateway.onSync && _kiwi.gateway.syncing) {
@@ -342,6 +334,9 @@ _kiwi.model.Gateway = function () {
                 event_data: data
             });
         }
+
+        // Trigger the global events (Mainly legacy now)
+        that.trigger('on' + command, data);
     };
 
     /**

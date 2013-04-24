@@ -154,7 +154,10 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
     changeNick: function (event) {
         var that = this;
-        _kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
+
+        event.preventDefault();
+
+        _kiwi.app.connections.active_connection.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
             that.close();
         });
         return false;
@@ -903,9 +906,6 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         // When we get any nick change event for any connection, update our view just incase it's us
         _kiwi.gateway.bind('onnick', function (event) {
             $('.nick', that.$el).text(_kiwi.app.connections.active_connection.get('nick'));
-        });
-        _kiwi.gateway.bind('onconnect', function (event) {
-            $('.nick', that.$el).text(event.nick);
         });
 
         // Update our nick view as we flick between connections
