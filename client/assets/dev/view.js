@@ -580,14 +580,14 @@ _kiwi.view.Panel = Backbone.View.extend({
             $('#memberlists').addClass('disabled').children().removeClass('active');
         }
 
-        _kiwi.app.view.doLayout();
-
         // Remove any alerts and activity counters for this panel
         this.alert('none');
         this.model.tab.find('.activity').text('0').addClass('zero');
 
         _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels().active);
         this.model.trigger('active', this.model);
+
+        _kiwi.app.view.doLayout();
 
         this.scrollToBottom(true);
     },
