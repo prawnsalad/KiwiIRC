@@ -102,7 +102,7 @@ _kiwi.model.Gateway = function () {
         this.on('onaction', function (event) {
             var source,
                 connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.channel == cinnection.get('nick'));
+                is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
             
