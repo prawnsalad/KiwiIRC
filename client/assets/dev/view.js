@@ -687,7 +687,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 // Model for this = _kiwi.model.NetworkPanelList
 _kiwi.view.NetworkTabs = Backbone.View.extend({
     tagName: 'ul',
-    className: 'panellist channels',
+    className: 'connections',
 
     initialize: function() {
         this.model.on('add', this.networkAdded, this);
@@ -714,6 +714,7 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
 // Model for this = _kiwi.model.PanelList
 _kiwi.view.Tabs = Backbone.View.extend({
     tagName: 'ul',
+    className: 'panellist',
 
     events: {
         'click li': 'tabClick',
@@ -727,9 +728,16 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
-        this.model.network.on('change:name', function (network, new_val) {
-            $('span', this.model.server.tab).text(new_val);
-        }, this);
+        // Network tabs start with a server, so determine what we are now
+        this.is_network = false;
+
+        if (this.model.network) {
+            this.is_network = true;
+
+            this.model.network.on('change:name', function (network, new_val) {
+                $('span', this.model.server.tab).text(new_val);
+            }, this);
+        }
     },
 
     render: function () {
@@ -737,21 +745,26 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         this.$el.empty();
         
-        // Add the server tab first
-        this.model.server.tab
-            .data('panel', this.model.server)
-            .data('connection_id', this.model.network.get('connection_id'))
-            .appendTo(this.$el);
+        if (this.is_network) {
+            // Add the server tab first
+            this.model.server.tab
+                .data('panel', this.model.server)
+                .data('connection_id', this.model.network.get('connection_id'))
+                .appendTo(this.$el);
+        }
 
         // Go through each panel adding its tab
         this.model.forEach(function (panel) {
             // If this is the server panel, ignore as it's already added
-            if (panel == that.model.server) return;
+            if (this.is_network && panel == that.model.server)
+                return;
 
-            panel.tab
-                .data('panel', panel)
-                .appendTo(that.$el);
-                //.appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
+            panel.tab.data('panel', panel);
+
+            if (this.is_network)
+                panel.tab.data('connection_id', this.model.network.get('connection_id'));
+
+            panel.tab.appendTo(that.$el);
         });
 
         _kiwi.app.view.doLayout();
@@ -770,10 +783,12 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.addClass('icon-nonexistant');
         }
 
-        panel.tab.data('panel', panel)
-            .data('connection_id', this.model.network.get('connection_id'))
-            .appendTo(this.$el);
-            //.appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
+        panel.tab.data('panel', panel);
+
+        if (this.is_network)
+            panel.tab.data('connection_id', this.model.network.get('connection_id'));
+
+        panel.tab.appendTo(this.$el);
 
         panel.bind('change:title', this.updateTabTitle);
         _kiwi.app.view.doLayout();
@@ -787,8 +802,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     panelActive: function (panel, previously_active_panel) {
         // Remove any existing tabs or part images
-        $('.part', this.$el).remove();
-        this.$el.parent().find('.active').removeClass('active');
+        _kiwi.app.view.$el.find('.panellist .part').remove();
+        _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
 
         panel.tab.addClass('active');
 

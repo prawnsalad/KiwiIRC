@@ -240,14 +240,17 @@ _kiwi.model.Gateway = function () {
             h = connection_info;
 
         this.socket.emit('kiwi', {command: 'connect', nick: h.nick, hostname: h.host, port: h.port, ssl: h.ssl, password: h.password}, function (err, server_num) {
+            var connection;
+
             if (!err) {
                 // TODO: Remove this whole premature connection thing when panel code is tidied
                 if (server_num != 0 && !_kiwi.app.connections.getByConnectionId(server_num)){
-                    _kiwi.app.connections.add(new _kiwi.model.Network({connection_id: server_num}));
+                    connection = new _kiwi.model.Network({connection_id: server_num});
+                    _kiwi.app.connections.add(connection);
                 }
 
                 console.log("_kiwi.gateway.socket.on('connect')");
-                callback_fn && callback_fn(err);
+                callback_fn && callback_fn(err, connection);
                 
             } else {
                 console.log("_kiwi.gateway.socket.on('error')", {reason: err});

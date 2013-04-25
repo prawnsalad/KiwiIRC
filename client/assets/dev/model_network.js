@@ -46,7 +46,7 @@
             // Automatically create a server tab
             var server_panel = new _kiwi.model.Server({name: 'Server'});
             this.panels.add(server_panel);
-            this.panels.server = server_panel;
+            this.panels.server = this.panels.active = server_panel;
         },
 
 

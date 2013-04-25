@@ -106,7 +106,11 @@ _kiwi.model.Application = function () {
 
         this.initializeClient = function () {
             this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
-            
+
+            this.applet_panels = new _kiwi.model.PanelList();
+            this.applet_panels.view.$el.addClass('panellist applets');
+            this.view.$el.find('#tabs').append(this.applet_panels.view.$el);
+
             /**
              * This is temporary.
              * While multiple server support is being worked on,
@@ -289,9 +293,20 @@ _kiwi.model.Application = function () {
 
 
         this.panels = (function() {
-            var fn = function() {
-                // Get a complete list of panels
-                var panels = this.connections.panels();
+            var fn = function(panel_type) {
+                var panels;
+
+                // Default panel type
+                panel_type = panel_type || 'connections';
+
+                switch (panel_type) {
+                case 'connections':
+                    panels = this.connections.panels();
+                    break;
+                case 'applets':
+                    panels = this.applet_panels.models;
+                    break;
+                }
 
                 // Active panels / server
                 panels.active = this.connections.active_panel;

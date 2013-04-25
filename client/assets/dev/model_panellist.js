@@ -7,8 +7,10 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
     initialize: function (elements, network) {
         var that = this;
 
-        // The network this PanelList is associated with
-        this.network = network;
+        // If this PanelList is associated with a network/connection
+        if (network) {
+            this.network = network;
+        }
 
         this.view = new _kiwi.view.Tabs({model: this});
 
