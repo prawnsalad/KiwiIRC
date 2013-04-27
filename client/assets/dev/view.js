@@ -188,24 +188,15 @@ _kiwi.view.ServerSelect = function () {
                 }
             }
 
-
             _kiwi.gateway.bind('onconnect', this.networkConnected, this);
             _kiwi.gateway.bind('connecting', this.networkConnecting, this);
+            _kiwi.gateway.bind('onirc_error', this.onIrcError, this);
+        },
 
-            _kiwi.gateway.bind('onirc_error', function (data) {
-                $('button', this.$el).attr('disabled', null);
-
-                if (data.error == 'nickname_in_use') {
-                    this.setStatus('Nickname already taken');
-                    this.show('nick_change');
-                }
-
-                if (data.error == 'password_mismatch') {
-                    this.setStatus('Incorrect Password');
-                    this.show('nick_change');
-                    that.$el.find('.password').select();
-                }
-            }, this);
+        dispose: function() {
+            _kiwi.gateway.off('onconnect', this.networkConnected, this);
+            _kiwi.gateway.off('connecting', this.networkConnecting, this);
+            _kiwi.gateway.off('onirc_error', this.onIrcError, this);
         },
 
         submitForm: function (event) {
@@ -231,7 +222,7 @@ _kiwi.view.ServerSelect = function () {
         submitLogin: function (event) {
             // If submitting is disabled, don't do anything
             if ($('button', this.$el).attr('disabled')) return;
-            
+
             var values = {
                 nick: $('input.nick', this.$el).val(),
                 server: $('input.server', this.$el).val(),
@@ -327,6 +318,21 @@ _kiwi.view.ServerSelect = function () {
 
         networkConnecting: function (event) {
             this.setStatus('Connecting..', 'ok');
+        },
+
+        onIrcError: function (data) {
+            $('button', this.$el).attr('disabled', null);
+
+            if (data.error == 'nickname_in_use') {
+                this.setStatus('Nickname already taken');
+                this.show('nick_change');
+            }
+
+            if (data.error == 'password_mismatch') {
+                this.setStatus('Incorrect Password');
+                this.show('nick_change');
+                that.$el.find('.password').select();
+            }
         },
 
         showError: function (event) {
@@ -1655,6 +1661,7 @@ _kiwi.view.MenuBox = Backbone.View.extend({
         this._title = title || '';
         this._items = {};
         this._display_footer = true;
+        this._close_on_blur = true;
 
         this._close_proxy = function(event) {
             that.onDocumentClick(event);
@@ -1690,6 +1697,9 @@ _kiwi.view.MenuBox = Backbone.View.extend({
     onDocumentClick: function(event) {
         var $target = $(event.target);
 
+        if (!this._close_on_blur)
+            return;
+
         // If this is not itself AND we don't contain this element, dispose $el
         if ($target[0] != this.$el[0] && this.$el.has($target).length === 0)
             this.dispose();
@@ -1722,7 +1732,12 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     showFooter: function(show) {
-        this._show_footer = show;
+        this._display_footer = show;
+    },
+
+
+    closeOnBlur: function(close_it) {
+        this._close_on_blur = close_it;
     },
 
 

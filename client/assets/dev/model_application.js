@@ -44,7 +44,7 @@ _kiwi.model.Application = function () {
             } else {
                 //manageDebug(true);
             }
-            
+
             // Set the gateway up
             _kiwi.gateway = new _kiwi.model.Gateway();
             this.bindGatewayCommands(_kiwi.gateway);
@@ -54,43 +54,8 @@ _kiwi.model.Application = function () {
 
             this.view.barsHide(true);
 
-            this.connections.getByConnectionId(0).panels.server.server_login.bind('server_connect', function (event) {
-                var server_login = this,
-                    transport_path = '';
-                auto_connect_details = event;
-
-                server_login.networkConnecting();
-                
-                // Path to get the socket.io transport code
-                transport_path = that.kiwi_server + that.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
-                
-                $script(transport_path, function () {
-                    if (!window.io) {
-                        kiwiServerNotFound();
-                        return;
-                    }
-                    _kiwi.gateway.set('kiwi_server', that.kiwi_server + '/kiwi');
-                    _kiwi.gateway.set('nick', event.nick);
-                    
-                    _kiwi.gateway.connect(event.nick, event.server, event.port, event.ssl, event.password, function (error) {
-                        if (error) {
-                            kiwiServerNotFound();
-                        }
-                    });
-                });
-            });
-
-            // TODO: Shouldn't really be here but it's not working in the view.. :/
-            // Hack for firefox browers: Focus is not given on this event loop iteration
-            setTimeout(function(){
-                _kiwi.app.connections.getByConnectionId(0).panels.server.server_login.$el.find('.nick').select();
-            }, 0);
+            this.showIntialConenctionDialog();
         };
-
-
-        function kiwiServerNotFound (e) {
-            that.connections.getByConnectionId(0).panels.server.server_login.showError();
-        }
 
 
         this.detectKiwiServer = function () {
@@ -104,21 +69,47 @@ _kiwi.model.Application = function () {
         };
 
 
+        this.showIntialConenctionDialog = function() {
+            var connection_dialog = new _kiwi.model.NewConnection();
+            this.populateDefaultServerSettings(connection_dialog);
+
+            var m = new _kiwi.view.MenuBox();
+            m.showFooter(false);
+            m.closeOnBlur(false);
+            m.addItem('new_connection', connection_dialog.view.$el);
+            m.show();
+
+            // Center the connection dialog
+            m.$el.addClass('first');
+            m.$el.offset({
+                left: (this.view.$el.width() / 2) - (m.$el.width() / 2)
+            });
+
+            // TODO: Shouldn't really be here but it's not working in the view.. :/
+            // Hack for firefox browers: Focus is not given on this event loop iteration
+            setTimeout(function(){
+                connection_dialog.view.$el.find('.nick').select();
+            }, 0);
+
+            // Once connected, close this dialog and remove its own event
+            var fn = function() {
+                connection_dialog.view.$el.slideUp('fast', function() {
+                    m.dispose();
+                    _kiwi.gateway.off('onconnect', fn);
+                });
+
+            };
+            _kiwi.gateway.on('onconnect', fn);
+        };
+
+
         this.initializeClient = function () {
             this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
 
+            // Applets panel list
             this.applet_panels = new _kiwi.model.PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
             this.view.$el.find('#tabs').append(this.applet_panels.view.$el);
-
-            /**
-             * This is temporary.
-             * While multiple server support is being worked on,
-             * we will keep this single server variable here until
-             * It all gets moved over
-             */
-            var connection = new _kiwi.model.Network({connection_id: 0});
-            this.connections.add(connection);
 
             /**
              * Set the UI components up
@@ -133,13 +124,9 @@ _kiwi.model.Application = function () {
             this.message = new _kiwi.view.StatusMessage({el: $('#status_message')[0]});
 
             this.resize_handle = new _kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
-            
-            this.connections.getByConnectionId(0).panels.server.view.show();
 
             // Rejigg the UI sizes
             this.view.doLayout();
-
-            this.populateDefaultServerSettings();
         };
 
 
@@ -151,7 +138,7 @@ _kiwi.model.Application = function () {
         };
 
 
-        this.populateDefaultServerSettings = function () {
+        this.populateDefaultServerSettings = function (new_connection_dialog) {
             var parts;
             var defaults = {
                 nick: getQueryVariable('nick') || '',
@@ -288,7 +275,7 @@ _kiwi.model.Application = function () {
             defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
 
             // Populate the server select box with defaults
-            this.connections.getByConnectionId(0).panels.server.server_login.populateFields(defaults);
+            new_connection_dialog.view.populateFields(defaults);
         };
 
 

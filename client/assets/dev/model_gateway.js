@@ -132,14 +132,9 @@ _kiwi.model.Gateway = function () {
 
     /**
     *   Connects to the server
-    *   @param  {String}    nick        The nickname of the user to use on the network
-    *   @param  {String}    host        The hostname or IP address of the IRC server to connect to
-    *   @param  {Number}    port        The port of the IRC server to connect to
-    *   @param  {Boolean}   ssl         Whether or not to connect to the IRC server using SSL
-    *   @param  {String}    password    The password to supply to the IRC server during registration
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
-    this.connect = function (nick, host, port, ssl, password, callback) {
+    this.connect = function (callback) {
         var resource;
 
         // Work out the resource URL for socket.io
@@ -153,7 +148,7 @@ _kiwi.model.Gateway = function () {
 
         this.socket = io.connect(this.get('kiwi_server'), {
             'resource': resource,
-            
+
             'try multiple transports': true,
             'connect timeout': 3000,
             'max reconnection attempts': 7,
@@ -182,13 +177,7 @@ _kiwi.model.Gateway = function () {
          * IRCD and the nick has been accepted.
          */
         this.socket.on('connect', function () {
-            that.newConnection({
-                nick: nick,
-                host: host,
-                port: port,
-                ssl: ssl,
-                password: password
-            }, callback);
+            callback && callback();
             /*
             this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
                 if (!err) {
@@ -244,7 +233,7 @@ _kiwi.model.Gateway = function () {
 
             if (!err) {
                 // TODO: Remove this whole premature connection thing when panel code is tidied
-                if (server_num != 0 && !_kiwi.app.connections.getByConnectionId(server_num)){
+                if (!_kiwi.app.connections.getByConnectionId(server_num)){
                     connection = new _kiwi.model.Network({connection_id: server_num});
                     _kiwi.app.connections.add(connection);
                 }
