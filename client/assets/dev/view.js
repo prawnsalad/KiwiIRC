@@ -924,9 +924,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         // Hold tab autocomplete data
         this.tabcomplete = {active: false, data: [], prefix: ''};
 
-        // When we get any nick change event for any connection, update our view just incase it's us
-        _kiwi.gateway.bind('onnick', function (event) {
-            $('.nick', that.$el).text(_kiwi.app.connections.active_connection.get('nick'));
+        // Keep the nick view updated with nick changes
+        _kiwi.app.connections.on('change:nick', function(connection) {
+            // Only update the nick view if it's the active connection
+            if (connection !== _kiwi.app.connections.active_connection)
+                return;
+
+            $('.nick', that.$el).text(connection.get('nick'));
         });
 
         // Update our nick view as we flick between connections
