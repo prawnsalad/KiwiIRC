@@ -232,7 +232,6 @@ _kiwi.model.Gateway = function () {
             var connection;
 
             if (!err) {
-                // TODO: Remove this whole premature connection thing when panel code is tidied
                 if (!_kiwi.app.connections.getByConnectionId(server_num)){
                     connection = new _kiwi.model.Network({connection_id: server_num});
                     _kiwi.app.connections.add(connection);
