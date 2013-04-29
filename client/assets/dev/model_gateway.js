@@ -342,7 +342,6 @@ _kiwi.model.Gateway = function () {
             server: _kiwi.app.connections.active_connection.get('connection_id'),
             data: JSON.stringify(data)
         };
-        
         this.socket.emit('irc', data_buffer, callback);
     };
 
@@ -568,7 +567,7 @@ _kiwi.model.Gateway = function () {
         }
 
         return false;
-    }
+    };
 
 
     return new (Backbone.Model.extend(this))(arguments);

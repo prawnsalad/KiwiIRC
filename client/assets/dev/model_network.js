@@ -53,9 +53,7 @@
         bindGatewayEvents: function () {
             //this.gateway.on('all', function() {console.log('ALL', this.get('connection_id'), arguments);});
 
-            this.gateway.on('connect', function(event) {
-                this.set('nick', event.nick);
-            }, this);
+            this.gateway.on('connect', onConnect, this);
 
             this.gateway.on('nick', function(event) {
                 if (event.nick === this.get('nick')) {
@@ -84,6 +82,16 @@
             this.gateway.on('list_start', onListStart, this);
         }
     });
+
+
+
+    function onConnect(event) {
+        this.set('nick', event.nick);
+
+        if (this.auto_join && this.auto_join.channel) {
+            this.gateway.join(this.auto_join.channel, this.auto_join.channel_key);
+        }
+    }
 
 
 

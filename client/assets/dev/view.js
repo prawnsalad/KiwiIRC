@@ -197,6 +197,8 @@ _kiwi.view.ServerSelect = function () {
             _kiwi.gateway.off('onconnect', this.networkConnected, this);
             _kiwi.gateway.off('connecting', this.networkConnecting, this);
             _kiwi.gateway.off('onirc_error', this.onIrcError, this);
+
+            this.$el.remove();
         },
 
         submitForm: function (event) {
@@ -349,7 +351,8 @@ _kiwi.view.ServerSelect = function () {
 
 _kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
-    className: "messages",
+    className: "panel messages",
+
     events: {
         "click .chan": "chanClick",
         'click .media .open': 'mediaClick',
@@ -573,7 +576,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         var $this = this.$el;
 
         // Hide all other panels and show this one
-        this.$container.children().css('display', 'none');
+        this.$container.children('.panel').css('display', 'none');
         $this.css('display', 'block');
 
         // Show this panels memberlist

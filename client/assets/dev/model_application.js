@@ -73,17 +73,8 @@ _kiwi.model.Application = function () {
             var connection_dialog = new _kiwi.model.NewConnection();
             this.populateDefaultServerSettings(connection_dialog);
 
-            var m = new _kiwi.view.MenuBox();
-            m.showFooter(false);
-            m.closeOnBlur(false);
-            m.addItem('new_connection', connection_dialog.view.$el);
-            m.show();
-
-            // Center the connection dialog
-            m.$el.addClass('first');
-            m.$el.offset({
-                left: (this.view.$el.width() / 2) - (m.$el.width() / 2)
-            });
+            connection_dialog.view.$el.addClass('initial');
+            this.view.$el.find('.panel_container:first').append(connection_dialog.view.$el);
 
             // TODO: Shouldn't really be here but it's not working in the view.. :/
             // Hack for firefox browers: Focus is not given on this event loop iteration
@@ -93,8 +84,11 @@ _kiwi.model.Application = function () {
 
             // Once connected, close this dialog and remove its own event
             var fn = function() {
-                connection_dialog.view.$el.slideUp('fast', function() {
-                    m.dispose();
+                connection_dialog.view.$el.slideUp(function() {
+                    console.log('disposing connectio dialog');
+                    connection_dialog.view.dispose();
+                    connection_dialog = null;
+
                     _kiwi.gateway.off('onconnect', fn);
                 });
 

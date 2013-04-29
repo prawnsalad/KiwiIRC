@@ -48,6 +48,8 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
     makeConnection: function(new_connection_event) {
         var that = this;
 
+        this.connect_details = new_connection_event;
+
         _kiwi.gateway.newConnection({
             nick: new_connection_event.nick,
             host: new_connection_event.server,
@@ -61,6 +63,14 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
 
     onNewNetwork: function(err, network) {
+        if (network && this.connect_details) {
+            network.auto_join = {
+                channel: this.connect_details.channel,
+                key: this.connect_details.channel_key
+            };
+        }
+
+
         // Show the server panel if this is our first network
         if (network && network.get('connection_id') === 0) {
             network.panels.server.view.show();
