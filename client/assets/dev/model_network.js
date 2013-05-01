@@ -80,16 +80,70 @@
             this.gateway.on('whois', onWhois, this);
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
+        },
+
+
+        /**
+         * Create panels and join the channel
+         * This will not wait for the join event to create a panel. This
+         * increases responsiveness in case of network lag
+         */
+        createAndJoinChannels: function (channels) {
+            var that = this,
+                panels = [];
+
+            // Multiple channels may come as comma-delimited 
+            if (typeof channels === 'string') {
+                channels = channels.split(',');
+            }
+
+            $.each(channels, function (index, channel_name_key) {
+                // We may have a channel key so split it off
+                var spli = channel_name_key.trim().split(' '),
+                    channel_name = spli[0],
+                    channel_key = spli[1] || '';
+
+                // Trim any whitespace off the name
+                channel_name = channel_name.trim();
+
+                // If not a valid channel name, display a warning
+                if (!_kiwi.app.isChannelName(channel_name)) {
+                    that.panels.server.addMsg('', channel_name + ' is not a valid channel name');
+                    _kiwi.app.message.text(channel_name + ' is not a valid channel name', {timeout: 5000});
+                    return;
+                }
+
+                // Check if we have the panel already. If not, create it
+                channel = that.panels.getByName(channel_name);
+                if (!channel) {
+                    channel = new _kiwi.model.Channel({name: channel_name});
+                    that.panels.add(channel);
+                }
+
+                panels.push(channel);
+
+                that.gateway.join(channel_name, channel_key);
+            });
+
+            return panels;
         }
     });
 
 
 
     function onConnect(event) {
+        var panels, channel_names;
+
+        // Update our nick with what the network gave us
         this.set('nick', event.nick);
 
+        // Auto joining channels
         if (this.auto_join && this.auto_join.channel) {
-            this.gateway.join(this.auto_join.channel, this.auto_join.channel_key);
+            panels = this.createAndJoinChannels(this.auto_join.channel + ' ' + (this.auto_join.channel_key || ''));
+
+            // Show the last channel if we have one
+            if (panels)
+                panels[panels.length - 1].view.show();
         }
     }
 

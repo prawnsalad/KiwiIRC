@@ -550,38 +550,14 @@ _kiwi.model.Application = function () {
         function allCommands (ev) {}
 
         function joinCommand (ev) {
-            var channel, channel_names;
+            var panels, channel_names;
 
             channel_names = ev.params.join(' ').split(',');
+            panels = that.connections.active_connection.createAndJoinChannels(channel_names);
 
-            $.each(channel_names, function (index, channel_name_key) {
-                // We may have a channel key so split it off
-                var spli = channel_name_key.split(' '),
-                    channel_name = spli[0],
-                    channel_key = spli[1] || '';
-
-                // Trim any whitespace off the name
-                channel_name = channel_name.trim();
-
-                // If not a valid channel name, display a warning
-                if (!that.isChannelName(channel_name)) {
-                    _kiwi.app.panels().server.addMsg('', channel_name + ' is not a valid channel name');
-                    _kiwi.app.message.text(channel_name + ' is not a valid channel name', {timeout: 5000});
-                    return;
-                }
-
-                // Check if we have the panel already. If not, create it
-                channel = that.connections.active_connection.panels.getByName(channel_name);
-                if (!channel) {
-                    channel = new _kiwi.model.Channel({name: channel_name});
-                    _kiwi.app.connections.active_connection.panels.add(channel);
-                }
-
-                _kiwi.gateway.join(channel_name, channel_key);
-            });
-
-            if (channel) channel.view.show();
-            
+            // Show the last channel if we have one
+            if (panels)
+                panels[panels.length - 1].view.show();
         }
 
         function queryCommand (ev) {
@@ -745,18 +721,6 @@ _kiwi.model.Application = function () {
             return (channel_prefix.indexOf(channel_name[0]) > -1);
         };
 
-
-
-        this.eachPanel = function (fn) {
-            alert('Switch this call with _kiwi.app.panels! location in console.log');
-            console.log('Switch this call with _kiwi.app.panels! location in console.log');
-            if (typeof fn !== 'function')
-                return;
-
-            _.each(this.connections.models, function(connection) {
-                _.each(connection.panels.model, fn);
-            });
-        };
 
     };
 
