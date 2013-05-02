@@ -336,9 +336,12 @@ _kiwi.model.Gateway = function () {
     *   @param  {Object}    data        The data to send
     *   @param  {Function}  callback    A callback function
     */
-    this.sendData = function (data, callback) {
+    this.sendData = function (connection_id, data, callback) {
+        if (typeof connection_id === 'undefined' || connection_id === null)
+            connection_id = _kiwi.app.connections.active_connection.get('connection_id');
+
         var data_buffer = {
-            server: _kiwi.app.connections.active_connection.get('connection_id'),
+            server: connection_id,
             data: JSON.stringify(data)
         };
         this.socket.emit('irc', data_buffer, callback);
@@ -350,7 +353,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.privmsg = function (target, msg, callback) {
+    this.privmsg = function (connection_id, target, msg, callback) {
         var data = {
             method: 'privmsg',
             args: {
@@ -359,7 +362,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -368,7 +371,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.notice = function (target, msg, callback) {
+    this.notice = function (connection_id, target, msg, callback) {
         var data = {
             method: 'notice',
             args: {
@@ -377,7 +380,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -388,7 +391,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    params      Additional paramaters
     *   @param  {Function}  callback    A callback function
     */
-    this.ctcp = function (request, type, target, params, callback) {
+    this.ctcp = function (connection_id, request, type, target, params, callback) {
         var data = {
             method: 'ctcp',
             args: {
@@ -399,7 +402,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -407,7 +410,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.action = function (target, msg, callback) {
+    this.action = function (connection_id, target, msg, callback) {
         this.ctcp(true, 'ACTION', target, msg, callback);
     };
 
@@ -417,7 +420,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    key         The key to the channel
     *   @param  {Function}  callback    A callback function
     */
-    this.join = function (channel, key, callback) {
+    this.join = function (connection_id, channel, key, callback) {
         var data = {
             method: 'join',
             args: {
@@ -426,7 +429,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -434,7 +437,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    channel     The channel to part
     *   @param  {Function}  callback    A callback function
     */
-    this.part = function (channel, callback) {
+    this.part = function (connection_id, channel, callback) {
         var data = {
             method: 'part',
             args: {
@@ -442,7 +445,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -451,7 +454,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    new_topic   The new topic to set
     *   @param  {Function}  callback    A callback function
     */
-    this.topic = function (channel, new_topic, callback) {
+    this.topic = function (connection_id, channel, new_topic, callback) {
         var data = {
             method: 'topic',
             args: {
@@ -460,7 +463,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -470,7 +473,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    reason      The reason for kicking the user
     *   @param  {Function}  callback    A callback function
     */
-    this.kick = function (channel, nick, reason, callback) {
+    this.kick = function (connection_id, channel, nick, reason, callback) {
         var data = {
             method: 'kick',
             args: {
@@ -480,7 +483,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -488,7 +491,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The quit message to send to the IRC server
     *   @param  {Function}   callback    A callback function
     */
-    this.quit = function (msg, callback) {
+    this.quit = function (connection_id, msg, callback) {
         msg = msg || "";
         var data = {
             method: 'quit',
@@ -497,7 +500,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -505,7 +508,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    data        The data to send to the IRC server
     *   @param  {Function}  callback    A callback function
     */
-    this.raw = function (data, callback) {
+    this.raw = function (connection_id, data, callback) {
         data = {
             method: 'raw',
             args: {
@@ -513,7 +516,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -521,7 +524,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    new_nick    Our new nickname
     *   @param  {Function}  callback    A callback function
     */
-    this.changeNick = function (new_nick, callback) {
+    this.changeNick = function (connection_id, new_nick, callback) {
         var data = {
             method: 'nick',
             args: {
@@ -529,7 +532,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**

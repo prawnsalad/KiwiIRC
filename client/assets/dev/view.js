@@ -239,7 +239,7 @@ _kiwi.view.ServerSelect = function () {
         },
 
         submitNickChange: function (event) {
-            _kiwi.gateway.changeNick($('input.nick', this.$el).val());
+            _kiwi.gateway.changeNick(null, $('input.nick', this.$el).val());
             this.networkConnecting();
         },
 
@@ -515,10 +515,10 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
     chanClick: function (event) {
         if (event.target) {
-            _kiwi.gateway.join($(event.target).data('channel'));
+            _kiwi.gateway.join(null, $(event.target).data('channel'));
         } else {
             // IE...
-            _kiwi.gateway.join($(event.srcElement).data('channel'));
+            _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
         }
     },
 
@@ -836,7 +836,9 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     partClick: function (e) {
         var tab = $(e.currentTarget).parent();
-        var panel = this.model.getByCid(tab.data('panel'));
+        var panel = tab.data('panel');
+
+        if (!panel) return;
 
         // Only need to part if it's a channel
         // If the nicklist is empty, we haven't joined the channel as yet
@@ -894,7 +896,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            _kiwi.gateway.topic(_kiwi.app.panels().active.get('name'), inp_val);
+            _kiwi.gateway.topic(null, _kiwi.app.panels().active.get('name'), inp_val);
             return false;
         }
     },
@@ -1126,7 +1128,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?
-        if (!this._callbacks['command:' + command]) {
+        if (!this._events['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
     },

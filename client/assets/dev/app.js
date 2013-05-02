@@ -65,14 +65,20 @@ _kiwi.global = {
 	        var funcs = {
 	        	kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
 	        	part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
-	        	notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
-	        	get: 'get'
+	        	notice: 'notice', msg: 'privmsg', changeNick: 'changeNick'
 	        };
 
+	        // Proxy each gateway method
 	        _.each(funcs, function(gateway_fn, func_name) {
 	        	obj[func_name] = function() {
 	        		var fn_name = gateway_fn;
-	        		return _kiwi.gateway[fn_name].apply(_kiwi.gateway, arguments);
+
+	        		// Add connection_id to the argument list
+	        		var args = Array.prototype.slice.call(arguments, 0);
+        			args.unshift(connection_id);
+
+        			// Call the gateway function on behalf of this connection
+	        		return _kiwi.gateway[fn_name].apply(_kiwi.gateway, args);
 	        	};
 	        });
 

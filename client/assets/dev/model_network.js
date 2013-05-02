@@ -305,7 +305,7 @@
 
         // Reply to a TIME ctcp
         if (event.msg.toUpperCase() === 'TIME') {
-            this.gateway.ctcp(false, event.type, event.nick, (new Date()).toString());
+            this.gateway.ctcp(null, false, event.type, event.nick, (new Date()).toString());
         }
     }
 
@@ -525,7 +525,7 @@
             idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
         }
 
-        panel = _kiwi.app.panels.active;
+        panel = _kiwi.app.panels().active;
         if (event.ident) {
             panel.addMsg(event.nick, event.nick + ' [' + event.nick + '!' + event.ident + '@' + event.host + '] * ' + event.msg, 'whois');
         } else if (event.chans) {

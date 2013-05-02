@@ -393,7 +393,7 @@ _kiwi.model.Application = function () {
             controlbox.on('command:part', partCommand);
 
             controlbox.on('command:nick', function (ev) {
-                _kiwi.gateway.changeNick(ev.params[0]);
+                _kiwi.gateway.changeNick(null, ev.params[0]);
             });
 
             controlbox.on('command:query', queryCommand);
@@ -546,7 +546,7 @@ _kiwi.model.Application = function () {
         function unknownCommand (ev) {
             var raw_cmd = ev.command + ' ' + ev.params.join(' ');
             console.log('RAW: ' + raw_cmd);
-            _kiwi.gateway.raw(raw_cmd);
+            _kiwi.gateway.raw(null, raw_cmd);
         }
 
         function allCommands (ev) {}
@@ -585,7 +585,7 @@ _kiwi.model.Application = function () {
             ev.params.shift();
 
             panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), ev.params.join(' '));
-            _kiwi.gateway.privmsg(destination, ev.params.join(' '));
+            _kiwi.gateway.privmsg(null, destination, ev.params.join(' '));
         }
 
         function actionCommand (ev) {
@@ -595,15 +595,15 @@ _kiwi.model.Application = function () {
 
             var panel = _kiwi.app.panels().active;
             panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
-            _kiwi.gateway.action(panel.get('name'), ev.params.join(' '));
+            _kiwi.gateway.action(null, panel.get('name'), ev.params.join(' '));
         }
 
         function partCommand (ev) {
             if (ev.params.length === 0) {
-                _kiwi.gateway.part(_kiwi.app.panels().active.get('name'));
+                _kiwi.gateway.part(null, _kiwi.app.panels().active.get('name'));
             } else {
                 _.each(ev.params, function (channel) {
-                    _kiwi.gateway.part(channel);
+                    _kiwi.gateway.part(null, channel);
                 });
             }
         }
@@ -620,7 +620,7 @@ _kiwi.model.Application = function () {
                 channel_name = _kiwi.app.panels().active.get('name');
             }
 
-            _kiwi.gateway.topic(channel_name, ev.params.join(' '));
+            _kiwi.gateway.topic(null, channel_name, ev.params.join(' '));
         }
 
         function noticeCommand (ev) {
@@ -632,12 +632,12 @@ _kiwi.model.Application = function () {
             destination = ev.params[0];
             ev.params.shift();
 
-            _kiwi.gateway.notice(destination, ev.params.join(' '));
+            _kiwi.gateway.notice(null, destination, ev.params.join(' '));
         }
 
         function quoteCommand (ev) {
             var raw = ev.params.join(' ');
-            _kiwi.gateway.raw(raw);
+            _kiwi.gateway.raw(null, raw);
         }
 
         function kickCommand (ev) {
@@ -651,7 +651,7 @@ _kiwi.model.Application = function () {
             nick = ev.params[0];
             ev.params.shift();
 
-            _kiwi.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
+            _kiwi.gateway.kick(null, panel.get('name'), nick, ev.params.join(' '));
         }
 
         function clearCommand (ev) {
@@ -677,7 +677,7 @@ _kiwi.model.Application = function () {
             type = ev.params[0];
             ev.params.shift();
 
-            _kiwi.gateway.ctcp(true, type, target, ev.params.join(' '));
+            _kiwi.gateway.ctcp(null, true, type, target, ev.params.join(' '));
         }
 
         function settingsCommand (ev) {

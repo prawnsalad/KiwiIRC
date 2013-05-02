@@ -29,6 +29,16 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
 
 
 
+    getByCid: function (cid) {
+        if (typeof name !== 'string') return;
+
+        return this.find(function (c) {
+            return cid === c.cid;
+        });
+    },
+
+
+
     getByName: function (name) {
         if (typeof name !== 'string') return;
 
