@@ -410,6 +410,8 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:ctcp', ctcpCommand);
 
+            controlbox.on('command:server', serverCommand);
+
 
             controlbox.on('command:css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
@@ -708,6 +710,57 @@ _kiwi.model.Application = function () {
             
             _kiwi.app.connections.active_connection.panels.add(panel);
             panel.view.show();
+        }
+
+
+        function serverCommand (ev) {
+            var server, port, ssl, password, nick,
+                tmp;
+
+            if (!ev.params[0]) return;
+
+            // Port given in 'host:port' format and no specific port given after a space
+            if (ev.params[0].indexOf(':') > 0) {
+                tmp = ev.params[0].split(':');
+                server = tmp[0];
+                port = tmp[1];
+
+                password = ev.params[1] || undefined;
+
+            } else {
+                // Server + port given as 'host port'
+                server = ev.params[0];
+                port = ev.params[1] || 6667;
+
+                password = ev.params[2] || undefined;
+            }
+
+            // + in the port means SSL
+            if (port.toString()[0] === '+') {
+                ssl = true;
+                port = parseInt(port.substring(1), 10);
+            } else {
+                ssl = false;
+            }
+
+            // Default port if one wasn't found
+            port = port || 6667;
+
+            // Use the same nick as we currently have
+            nick = _kiwi.app.connections.active_connection.get('nick');
+
+            _kiwi.app.panels().active.addMsg('', 'Connecting to ' + server + ':' + port.toString() + '..');
+
+            _kiwi.gateway.newConnection({
+                nick: nick,
+                host: server,
+                port: port,
+                ssl: ssl,
+                password: password
+            }, function(err, new_connection) {
+                if (err)
+                    _kiwi.app.panels().active.addMsg('', 'Error connecting to ' + server + ':' + port.toString() + ' (' + err.toString() + ')');
+            });
         }
 
 
