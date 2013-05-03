@@ -32,7 +32,7 @@ var IrcServer = function (irc_connection) {
         chanop_privs_needed:    onChanopPrivsNeeded,
         nickname_in_use:        onNicknameInUse
     };
-    EventBinder.bindIrcEvents('server:*', this.irc_events, this, this.irc_connection);
+    EventBinder.bindIrcEvents('server *', this.irc_events, this, this.irc_connection);
     
 
 };
@@ -42,7 +42,7 @@ module.exports = IrcServer;
 
 
 IrcServer.prototype.dispose = function (){
-    EventBinder.unbindIrcEvents('server:*', this.irc_events, this.irc_connection);
+    EventBinder.unbindIrcEvents('server *', this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 

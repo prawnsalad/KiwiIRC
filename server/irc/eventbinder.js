@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 module.exports.bindIrcEvents = function (events_scope, event_map, context, irc_connection) {
     var namespace_prefix = events_scope ?
-        events_scope + ':' :
+        events_scope + ' ' :
         '';
 
     // Make sure we have a holder for the bound events
@@ -26,7 +26,7 @@ module.exports.bindIrcEvents = function (events_scope, event_map, context, irc_c
 
 module.exports.unbindIrcEvents = function (events_scope, event_map, irc_connection) {
     var namespace_prefix = events_scope ?
-        events_scope + ':' :
+        events_scope + ' ' :
         '';
 
     // No bound events? Then we have nothing to do
