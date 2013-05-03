@@ -25,7 +25,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
 
     EventEmitter2.call(this,{
         wildcard: true,
-        delimiter: ':'
+        delimiter: ' '
     });
     this.setMaxListeners(0);
     
@@ -87,7 +87,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.applyIrcEvents();
 
     // Call any modules before making the connection
-    global.modules.emit('irc:connecting', {connection: this})
+    global.modules.emit('irc connecting', {connection: this})
         .done(function () {
             that.connect();
         });
@@ -101,15 +101,15 @@ module.exports.IrcConnection = IrcConnection;
 IrcConnection.prototype.applyIrcEvents = function () {
     // Listen for events on the IRC connection
     this.irc_events = {
-        'server:*:connect':  onServerConnect,
-        'channel:*:join':    onChannelJoin,
+        'server * connect':  onServerConnect,
+        'channel * join':    onChannelJoin,
 
         // TODO: uncomment when using an IrcUser per nick
         //'user:*:privmsg':    onUserPrivmsg,
-        'user:*:nick':       onUserNick,
-        'channel:*:part':    onUserParts,
-        'channel:*:quit':    onUserParts,
-        'channel:*:kick':    onUserKick
+        'user * nick':       onUserNick,
+        'channel * part':    onUserParts,
+        'channel * quit':    onUserParts,
+        'channel * kick':    onUserKick
     };
 
     EventBinder.bindIrcEvents('', this.irc_events, this, this);
@@ -347,7 +347,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc:authorize', connect_data).done(function () {
+    global.modules.emit('irc authorize', connect_data).done(function () {
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {
