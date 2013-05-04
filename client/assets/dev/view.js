@@ -849,19 +849,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
         } else {
             panel.close();
         }
-    },
-
-    next: function () {
-        var next = this.$tab_container.find('.active').next();
-        if (!next.length) next = $('li:first', this.$tab_container);
-
-        next.click();
-    },
-    prev: function () {
-        var prev = this.$tab_container.find('.active').prev();
-        if (!prev.length) prev = $('li:last', this.$tab_container);
-
-        prev.click();
     }
 });
 
@@ -1002,11 +989,43 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             break;
 
         case (ev.keyCode === 219 && meta):            // [ + meta
-            _kiwi.app.panels.view.prev();
+            // Find all the tab elements and get the index of the active tab
+            var $tabs = $('#kiwi #tabs').find('li[class!=connection]');
+            var cur_tab_ind = (function() {
+                for (var idx=0; idx<$tabs.length; idx++){
+                    if ($($tabs[idx]).hasClass('active'))
+                        return idx;
+                }
+            })();
+
+            // Work out the previous tab along. Wrap around if needed
+            if (cur_tab_ind === 0) {
+                $prev_tab = $($tabs[$tabs.length - 1]);
+            } else {
+                $prev_tab = $($tabs[cur_tab_ind - 1]);
+            }
+
+            $prev_tab.click();
             return false;
 
         case (ev.keyCode === 221 && meta):            // ] + meta
-            _kiwi.app.panels.view.next();
+            // Find all the tab elements and get the index of the active tab
+            var $tabs = $('#kiwi #tabs').find('li[class!=connection]');
+            var cur_tab_ind = (function() {
+                for (var idx=0; idx<$tabs.length; idx++){
+                    if ($($tabs[idx]).hasClass('active'))
+                        return idx;
+                }
+            })();
+
+            // Work out the next tab along. Wrap around if needed
+            if (cur_tab_ind === $tabs.length - 1) {
+                $next_tab = $($tabs[0]);
+            } else {
+                $next_tab = $($tabs[cur_tab_ind + 1]);
+            }
+
+            $next_tab.click();
             return false;
 
         case (ev.keyCode === 9):                     // tab
