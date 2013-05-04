@@ -68,6 +68,7 @@
             this.gateway.on('quit', onQuit, this);
             this.gateway.on('kick', onKick, this);
             this.gateway.on('msg', onMsg, this);
+            this.gateway.on('nick', onNick, this);
             this.gateway.on('ctcp_request', onCtcpRequest, this);
             this.gateway.on('ctcp_response', onCtcpResponse, this);
             this.gateway.on('notice', onNotice, this);
@@ -293,6 +294,25 @@
         }
 
         panel.addMsg(event.nick, event.msg);
+    }
+
+
+
+    function onNick(event) {
+        var member;
+
+        $.each(this.panels.models, function (index, panel) {
+            if (panel.get('name') == event.nick)
+                panel.set('name', event.newnick);
+
+            if (!panel.isChannel()) return;
+
+            member = panel.get('members').getByNick(event.nick);
+            if (member) {
+                member.set('nick', event.newnick);
+                panel.addMsg('', '== ' + event.nick + ' is now known as ' + event.newnick, 'action nick');
+            }
+        });
     }
 
 

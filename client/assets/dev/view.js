@@ -800,6 +800,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
         panel.tab.appendTo(this.$el);
 
         panel.bind('change:title', this.updateTabTitle);
+        panel.bind('change:name', this.updateTabTitle);
+
         _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
