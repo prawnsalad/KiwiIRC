@@ -35,7 +35,7 @@ var src = concat([
     __dirname + '/model_network.js',
     __dirname + '/model_member.js',
     __dirname + '/model_memberlist.js',
-    __dirname + 'dev/model_newconnection.js',
+    __dirname + '/model_newconnection.js',
     __dirname + '/model_panel.js',
     __dirname + '/model_panellist.js',
     __dirname + '/model_networkpanellist.js',
