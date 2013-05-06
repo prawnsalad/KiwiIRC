@@ -587,7 +587,7 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_relaxed .server_select .kiwi_logo { text-align: center; display:block; margin-top:30px; }
+#kiwi.theme_relaxed .server_select .kiwi_logo { margin-top:30px; }
 #kiwi.theme_relaxed .server_select .kiwi_logo h1 span {
     font-size:14px;
     line-height:24px; vertical-align: middle;
@@ -835,7 +835,7 @@ html, body { height:100%; }
 /* The server select dialog */
 #kiwi.theme_mini .server_select { padding:3em 0 2em 0; margin: 0 auto; width:100%; }
 #kiwi.theme_mini .server_select .more { display:none; }
-#kiwi.theme_mini .server_select button { display:block; padding:3px 7px; margin:0 auto; }
+#kiwi.theme_mini .server_select button { display:block; padding:3px 7px; margin:1em auto; }
 #kiwi.theme_mini .server_select input.nick {
     float:none; display:block; width:80%;
     padding:0.5em 1em; margin:0 auto;
@@ -857,9 +857,13 @@ html, body { height:100%; }
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
 
-#kiwi.theme_mini .server_select .divider-verticle {
-    display:none;
+#kiwi.theme_mini .server_select .kiwi_logo h1 span {
+    font-size:14px;
+    line-height:24px; vertical-align: middle;
+    color: #555555;
 }
+#kiwi.theme_mini .server_select .kiwi_logo img { display:inline; width:24px; }
+
 #kiwi.theme_mini .server_select .server_details {
     position: relative !important;
     float: none !important;
@@ -867,8 +871,6 @@ html, body { height:100%; }
     padding: 0 !important;
     margin: 2em 0 0 0 !important;
 }
-#kiwi.theme_mini .server_select .about_kiwi { display:none; }
-
 
 
 
@@ -1058,7 +1060,7 @@ html, body { height:100%; }
 
 
 /* The server select dialog */
-#kiwi.theme_cli .server_select { width:730px;  padding:3em 0 2em 0; margin: 0 auto; }
+#kiwi.theme_cli .server_select { width:320px;  padding:3em 0 2em 0; margin: 0 auto; color:#eee; }
 #kiwi.theme_cli .server_select .more { display: none; width:270px; margin:0 auto; }
 #kiwi.theme_cli .server_select table tr td { padding:5px; }
 #kiwi.theme_cli .server_select button { float:right; padding:3px 7px; margin-top:10px; }
@@ -1081,13 +1083,13 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_cli .server_select .kiwi_logo { text-align: center; display:block; }
+#kiwi.theme_cli .server_select .kiwi_logo { margin-top:30px; text-align:center; display:block; }
 #kiwi.theme_cli .server_select .kiwi_logo h1 {
     font-size:20px;
     line-height:48px; vertical-align: middle;
-    color: #555555;
+    color: #bbb;
 }
-#kiwi.theme_cli .server_select .kiwi_logo img { }
+#kiwi.theme_cli .server_select .kiwi_logo img { display:inline; width:24px; }
 
 
 #kiwi.theme_cli .divider-verticle {
@@ -1137,7 +1139,7 @@ html, body { height:100%; }
  * Basic theme
  */
 #kiwi.theme_basic {
-    background: #FFF;
+    background: url(../img/background-light.png) left top repeat-x #E3E3E3;
     color: #555555;
 }
 #kiwi.theme_basic,
@@ -1157,7 +1159,7 @@ html, body { height:100%; }
 }
 #kiwi.theme_basic #controlbox { background-color:#1B1B1B; }
 #kiwi.theme_basic #memberlists_resize_handle {
-    display:none; width:0;
+    /*display:none; width:0;*/
 }
 #kiwi.theme_basic #toolbar .panellist li {
     line-height: 1.4em;
@@ -1205,7 +1207,7 @@ html, body { height:100%; }
 #kiwi.theme_basic .messages .msg { }
 #kiwi.theme_basic .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
 #kiwi.theme_basic .messages .msg { border: none; }
-#kiwi.theme_basic .messages .msg .time { display:inline; margin-right:1em; margin-left:2px; color:gray; }
+#kiwi.theme_basic .messages .msg .time { display:none; margin-right:1em; margin-left:2px; color:gray; }
 #kiwi.theme_basic .messages .msg .nick { display:inline; margin-right:1em; }
 #kiwi.theme_basic .messages .msg .nick:before { content:"<"; }
 #kiwi.theme_basic .messages .msg .nick:after { content:">"; }
@@ -1231,9 +1233,16 @@ html, body { height:100%; }
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
 
+#kiwi.theme_basic.timestamps .messages .msg .time { display:inline; }
+#kiwi.theme_basic.timestamps .messages .msg .text { }
+
 #kiwi.theme_basic .messages .msg.global_nick_highlight,
 #kiwi.theme_basic .messages .msg.highlight { background:#D9D9D9; }
 
+/* Narrow styling (window width < 400px) */
+#kiwi.theme_basic.narrow .messages .msg .nick { width: auto; }
+#kiwi.theme_basic.narrow .messages .msg .text { margin-left: 1em; border:none; }
+#kiwi.theme_basic.narrow .messages .msg.action .text { margin-left: 1em; }
 
 
 #kiwi.theme_basic #memberlists {
@@ -1280,6 +1289,7 @@ html, body { height:100%; }
     position:relative;
     height:100%; width:100%;
     display: block;
+    outline: none;
 }
 
 
@@ -1328,7 +1338,7 @@ html, body { height:100%; }
 
 
 /* The server select dialog */
-#kiwi.theme_basic .server_select { width:730px;  padding:3em 0 2em 0; margin: 0 auto; }
+#kiwi.theme_basic .server_select { width:320px;  padding:3em 0 2em 0; margin: 0 auto; }
 #kiwi.theme_basic .server_select a { text-decoration: none; }
 #kiwi.theme_basic .server_select .more { display: none; width:270px; margin:0 auto; }
 #kiwi.theme_basic .server_select table tr td { padding:5px; }
@@ -1352,13 +1362,13 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_basic .server_select .kiwi_logo { text-align: center; display:block; }
+#kiwi.theme_basic .server_select .kiwi_logo { margin-top:30px; text-align:center; display:block; }
 #kiwi.theme_basic .server_select .kiwi_logo h1 {
-    font-size:20px;
+    font-size:14px;
     line-height:48px; vertical-align: middle;
     color: #555555;
 }
-#kiwi.theme_basic .server_select .kiwi_logo img { }
+#kiwi.theme_basic .server_select .kiwi_logo img { display:inline; width:24px; }
 
 
 #kiwi.theme_basic.chanlist_treeview #panels { left:160px; }
