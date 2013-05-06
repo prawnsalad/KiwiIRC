@@ -85,7 +85,6 @@ _kiwi.model.Application = function () {
             // Once connected, close this dialog and remove its own event
             var fn = function() {
                 connection_dialog.view.$el.slideUp(function() {
-                    console.log('disposing connectio dialog');
                     connection_dialog.view.dispose();
                     connection_dialog = null;
 
