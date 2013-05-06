@@ -27,7 +27,7 @@ var IrcChannel = function(irc_connection, name) {
         topicsetby:     onTopicSetBy,
         mode:           onMode
     };
-    EventBinder.bindIrcEvents('channel:' + this.name, this.irc_events, this, irc_connection);
+    EventBinder.bindIrcEvents('channel ' + this.name, this.irc_events, this, irc_connection);
 }
 
 
@@ -35,7 +35,7 @@ module.exports = IrcChannel;
 
 
 IrcChannel.prototype.dispose = function (){
-    EventBinder.unbindIrcEvents('channel:' + this.name, this.irc_events, this.irc_connection);
+    EventBinder.unbindIrcEvents('channel ' + this.name, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
@@ -210,29 +210,3 @@ function onMode(event) {
         modes: event.modes
     });
 };
-
-
-/*
-server:event
-server:*
-channel:#channel:event
-channel:*:event
-user:event
-user:*
-
-Server disconnected:
-    server:disconnect
-    server:*
-
-Joining channel #kiwiirc:
-    channel:#kiwiirc:join
-    channel:*:join
-
-Channel message:
-    channel:#kiwiirc:privmsg
-    channel:*:privmsg
-
-Private message:
-    user:privmsg
-    user:*
-*/

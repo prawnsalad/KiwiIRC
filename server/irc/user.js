@@ -22,7 +22,7 @@ var IrcUser = function (irc_connection, nick) {
         ctcp_request:   onCtcpRequest,
         mode:           onMode
     };
-    EventBinder.bindIrcEvents('user:' + this.nick, this.irc_events, this, irc_connection);
+    EventBinder.bindIrcEvents('user ' + this.nick, this.irc_events, this, irc_connection);
 };
 
 
@@ -30,7 +30,7 @@ module.exports = IrcUser;
 
 
 IrcUser.prototype.dispose = function () {
-    EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events, this.irc_connection);
+    EventBinder.unbindIrcEvents('user ' + this.nick, this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
@@ -44,9 +44,9 @@ function onNick(event) {
     });
 
     // TODO: uncomment when using an IrcUser per nick
-    //EventBinder.unbindIrcEvents('user:' + this.nick, this.irc_events, irc_connection);
+    //EventBinder.unbindIrcEvents('user ' + this.nick, this.irc_events, irc_connection);
     //this.nick = event.newnick;
-    //EventBinder.bindIrcEvents('user:' + this.nick, this.irc_events, this, irc_connection);
+    //EventBinder.bindIrcEvents('user ' + this.nick, this.irc_events, this, irc_connection);
 };
 
 function onAway(event) {
