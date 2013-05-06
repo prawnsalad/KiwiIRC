@@ -651,7 +651,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 });
 
 _kiwi.view.Applet = _kiwi.view.Panel.extend({
-    className: 'applet',
+    className: 'panel applet',
     initialize: function (options) {
         this.initializePanel(options);
     }
