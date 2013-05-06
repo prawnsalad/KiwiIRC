@@ -85,8 +85,8 @@ _kiwi.model.Panel = Backbone.Model.extend({
         this.destroy();
 
         // If closing the active panel, switch to the server panel
-        if (this.cid === _kiwi.app.panels().active.cid) {
-            _kiwi.app.panels().server.view.show();
+        if (this === _kiwi.app.panels().active) {
+            _kiwi.app.connections.active_connection.panels.server.view.show();
         }
     },
 
