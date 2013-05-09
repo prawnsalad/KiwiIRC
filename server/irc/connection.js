@@ -52,7 +52,10 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     
     // IrcUser objects
     this.irc_users = Object.create(null);
-    
+
+    // TODO: use `this.nick` instead of `'*'` when using an IrcUser per nick
+    this.irc_users[this.nick] = new IrcUser(this, '*');
+
     // IrcChannel objects
     this.irc_channels = Object.create(null);
 
@@ -271,9 +274,6 @@ function onChannelJoin(event) {
 
 function onServerConnect(event) {
     this.nick = event.nick;
-
-    // TODO: use `event.nick` instead of `'*'` when using an IrcUser per nick
-    this.irc_users[event.nick] = new IrcUser(this, '*');
 }
 
 

@@ -91,7 +91,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     loadOnce: function (applet_name) {
 
         // See if we have an instance loaded already
-        var applet = _.find(_kiwi.app.panels.models, function(panel) {
+        var applet = _.find(_kiwi.app.panels('applets'), function(panel) {
             // Ignore if it's not an applet
             if (!panel.isApplet()) return;
 
@@ -122,7 +122,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
         applet.load(new _kiwi.applets[applet_name]({_applet_name: applet_name}));
 
         // Add it into the tab list
-        _kiwi.app.panels.add(applet);
+        _kiwi.app.applet_panels.add(applet);
 
 
         return applet;

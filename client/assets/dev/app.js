@@ -26,38 +26,59 @@ _kiwi.global = {
 
 	// Event managers for plugins
 	components: {
-	    EventComponent: function(event_source) {
+	    EventComponent: function(event_source, proxy_event_name) {
 	        function proxyEvent(event_name, event_data) {
+	        	if (proxy_event_name !== 'all') {
+	        		event_data = event_name.event_data;
+	        		event_name = event_name.event_name
+	        	}
+//console.log(proxy_event_name, event_name, event_data);
 	            this.trigger(event_name, event_data);
 	        }
+
+	        // The event we are to proxy
+	        proxy_event_name = proxy_event_name || 'all';
+
 
 	        _.extend(this, Backbone.Events);
 	        this._source = event_source;
 
 	        // Proxy the events to this dispatcher
-	        event_source.on('all', proxyEvent, this);
+	        event_source.on(proxy_event_name, proxyEvent, this);
 
 	        // Clean up this object
 	        this.dispose = function () {
-	            event_source.off('all', proxyEvent);
+	            event_source.off(proxy_event_name, proxyEvent);
 	            this.off();
 	            delete this.event_source;
 	        };
 	    },
 
-	    Network: function() {
-	        var obj = new this.EventComponent(_kiwi.gateway);
+	    Network: function(connection_id) {
+	    	var connection_event;
+
+	    	if (typeof connection_id !== 'undefined') {
+	    		connection_event = 'connection:' + connection_id.toString();
+	    	}
+
+	        var obj = new this.EventComponent(_kiwi.gateway, connection_event);
 	        var funcs = {
 	        	kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
 	        	part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
-	        	notice: 'notice', msg: 'privmsg',
-	        	get: 'get'
+	        	notice: 'notice', msg: 'privmsg', changeNick: 'changeNick'
 	        };
 
+	        // Proxy each gateway method
 	        _.each(funcs, function(gateway_fn, func_name) {
 	        	obj[func_name] = function() {
 	        		var fn_name = gateway_fn;
-	        		return _kiwi.gateway[fn_name].apply(_kiwi.gateway, arguments);
+
+	        		// Add connection_id to the argument list
+	        		var args = Array.prototype.slice.call(arguments, 0);
+        			args.unshift(connection_id);
+
+        			// Call the gateway function on behalf of this connection
+	        		return _kiwi.gateway[fn_name].apply(_kiwi.gateway, args);
 	        	};
 	        });
 

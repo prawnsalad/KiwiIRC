@@ -37,7 +37,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         userbox.member = member;
         userbox.channel = this.model.channel;
 
-        if (!this.model.getByNick(_kiwi.gateway.get('nick')).get('is_op')) {
+        if (!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
             userbox.$el.children('.if_op').remove();
         }
 
@@ -90,7 +90,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     queryClick: function (event) {
         var panel = new _kiwi.model.Query({name: this.member.get('nick')});
-        _kiwi.app.panels.add(panel);
+        _kiwi.app.connections.active_connection.panels.add(panel);
         panel.view.show();
     },
 
@@ -154,7 +154,10 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
     changeNick: function (event) {
         var that = this;
-        _kiwi.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
+
+        event.preventDefault();
+
+        _kiwi.app.connections.active_connection.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
             that.close();
         });
         return false;
@@ -186,24 +189,17 @@ _kiwi.view.ServerSelect = function () {
                 }
             }
 
-
             _kiwi.gateway.bind('onconnect', this.networkConnected, this);
             _kiwi.gateway.bind('connecting', this.networkConnecting, this);
+            _kiwi.gateway.bind('onirc_error', this.onIrcError, this);
+        },
 
-            _kiwi.gateway.bind('onirc_error', function (data) {
-                $('button', this.$el).attr('disabled', null);
+        dispose: function() {
+            _kiwi.gateway.off('onconnect', this.networkConnected, this);
+            _kiwi.gateway.off('connecting', this.networkConnecting, this);
+            _kiwi.gateway.off('onirc_error', this.onIrcError, this);
 
-                if (data.error == 'nickname_in_use') {
-                    this.setStatus('Nickname already taken');
-                    this.show('nick_change');
-                }
-
-                if (data.error == 'password_mismatch') {
-                    this.setStatus('Incorrect Password');
-                    this.show('nick_change');
-                    that.$el.find('.password').select();
-                }
-            }, this);
+            this.$el.remove();
         },
 
         submitForm: function (event) {
@@ -229,7 +225,7 @@ _kiwi.view.ServerSelect = function () {
         submitLogin: function (event) {
             // If submitting is disabled, don't do anything
             if ($('button', this.$el).attr('disabled')) return;
-            
+
             var values = {
                 nick: $('input.nick', this.$el).val(),
                 server: $('input.server', this.$el).val(),
@@ -244,7 +240,7 @@ _kiwi.view.ServerSelect = function () {
         },
 
         submitNickChange: function (event) {
-            _kiwi.gateway.changeNick($('input.nick', this.$el).val());
+            _kiwi.gateway.changeNick(null, $('input.nick', this.$el).val());
             this.networkConnecting();
         },
 
@@ -323,6 +319,26 @@ _kiwi.view.ServerSelect = function () {
             state = new_state;
         },
 
+        infoBoxShow: function() {
+            var $side_panel = this.$el.find('.side_panel');
+            this.$el.animate({
+                width: parseInt($side_panel.css('left'), 10) + $side_panel.find('.content:first').outerWidth()
+            });
+        },
+
+        infoBoxHide: function() {
+            var $side_panel = this.$el.find('.side_panel');
+            this.$el.animate({
+                width: parseInt($side_panel.css('left'), 10)
+            });
+        },
+
+        infoBoxSet: function($info_view) {
+            this.$el.find('.side_panel .content')
+                .empty()
+                .append($info_view);
+        },
+
         setStatus: function (text, class_name) {
             $('.status', this.$el)
                 .text(text)
@@ -343,6 +359,21 @@ _kiwi.view.ServerSelect = function () {
             this.setStatus('Connecting..', 'ok');
         },
 
+        onIrcError: function (data) {
+            $('button', this.$el).attr('disabled', null);
+
+            if (data.error == 'nickname_in_use') {
+                this.setStatus('Nickname already taken');
+                this.show('nick_change');
+            }
+
+            if (data.error == 'password_mismatch') {
+                this.setStatus('Incorrect Password');
+                this.show('nick_change');
+                that.$el.find('.password').select();
+            }
+        },
+
         showError: function (event) {
             this.setStatus('Error connecting', 'error');
             $('button', this.$el).attr('disabled', null);
@@ -357,7 +388,8 @@ _kiwi.view.ServerSelect = function () {
 
 _kiwi.view.Panel = Backbone.View.extend({
     tagName: "div",
-    className: "messages",
+    className: "panel messages",
+
     events: {
         "click .chan": "chanClick",
         'click .media .open': 'mediaClick',
@@ -404,7 +436,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
 
         // Nick highlight detecting
-        if ((new RegExp('\\b' + _kiwi.gateway.get('nick') + '\\b', 'i')).test(msg.msg)) {
+        if ((new RegExp('\\b' + _kiwi.app.connections.active_connection.get('nick') + '\\b', 'i')).test(msg.msg)) {
             is_highlight = true;
             msg_css_classes += ' highlight';
         }
@@ -520,10 +552,10 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
     chanClick: function (event) {
         if (event.target) {
-            _kiwi.gateway.join($(event.target).data('channel'));
+            _kiwi.gateway.join(null, $(event.target).data('channel'));
         } else {
             // IE...
-            _kiwi.gateway.join($(event.srcElement).data('channel'));
+            _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
         }
     },
 
@@ -581,7 +613,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         var $this = this.$el;
 
         // Hide all other panels and show this one
-        this.$container.children().css('display', 'none');
+        this.$container.children('.panel').css('display', 'none');
         $this.css('display', 'block');
 
         // Show this panels memberlist
@@ -594,14 +626,14 @@ _kiwi.view.Panel = Backbone.View.extend({
             $('#memberlists').addClass('disabled').children().removeClass('active');
         }
 
-        _kiwi.app.view.doLayout();
-
         // Remove any alerts and activity counters for this panel
         this.alert('none');
         this.model.tab.find('.activity').text('0').addClass('zero');
 
-        this.trigger('active', this.model);
-        _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels.active);
+        _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels().active);
+        this.model.trigger('active', this.model);
+
+        _kiwi.app.view.doLayout();
 
         this.scrollToBottom(true);
     },
@@ -609,7 +641,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
     alert: function (level) {
         // No need to highlight if this si the active panel
-        if (this.model == _kiwi.app.panels.active) return;
+        if (this.model == _kiwi.app.panels().active) return;
 
         var types, type_idx;
         types = ['none', 'action', 'activity', 'highlight'];
@@ -646,7 +678,7 @@ _kiwi.view.Panel = Backbone.View.extend({
     // Scroll to the bottom of the panel
     scrollToBottom: function (force_down) {
         // If this isn't the active panel, don't scroll
-        if (this.model !== _kiwi.app.panels.active) return;
+        if (this.model !== _kiwi.app.panels().active) return;
 
         // Don't scroll down if we're scrolled up the panel a little
         if (force_down || this.$container.scrollTop() + this.$container.height() > this.$el.outerHeight() - 150) {
@@ -656,7 +688,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 });
 
 _kiwi.view.Applet = _kiwi.view.Panel.extend({
-    className: 'applet',
+    className: 'panel applet',
     initialize: function (options) {
         this.initializePanel(options);
     }
@@ -686,18 +718,50 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (typeof topic !== 'string' || !topic) {
             topic = this.model.get("topic");
         }
-        
+
         this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
 
         // If this is the active channel then update the topic bar
-        if (_kiwi.app.panels.active === this) {
+        if (_kiwi.app.panels().active === this) {
             _kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
         }
     }
 });
 
+
+
+// Model for this = _kiwi.model.NetworkPanelList
+_kiwi.view.NetworkTabs = Backbone.View.extend({
+    tagName: 'ul',
+    className: 'connections',
+
+    initialize: function() {
+        this.model.on('add', this.networkAdded, this);
+        this.model.on('remove', this.networkRemoved, this);
+
+        this.$el.appendTo($('#kiwi #tabs'));
+    },
+
+    networkAdded: function(network) {
+        $('<li class="connection"></li>')
+            .append(network.panels.view.$el)
+            .appendTo(this.$el);
+    },
+
+    networkRemoved: function(network) {
+        network.panels.view.remove();
+
+        _kiwi.app.view.doLayout();
+    }
+});
+
+
+
 // Model for this = _kiwi.model.PanelList
 _kiwi.view.Tabs = Backbone.View.extend({
+    tagName: 'ul',
+    className: 'panellist',
+
     events: {
         'click li': 'tabClick',
         'click li .part': 'partClick'
@@ -710,31 +774,43 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         this.model.on('active', this.panelActive, this);
 
-        this.tabs_applets = $('ul.applets', this.$el);
-        this.tabs_msg = $('ul.channels', this.$el);
+        // Network tabs start with a server, so determine what we are now
+        this.is_network = false;
 
-        _kiwi.gateway.on('change:name', function (gateway, new_val) {
-            $('span', this.model.server.tab).text(new_val);
-        }, this);
+        if (this.model.network) {
+            this.is_network = true;
+
+            this.model.network.on('change:name', function (network, new_val) {
+                $('span', this.model.server.tab).text(new_val);
+            }, this);
+        }
     },
+
     render: function () {
         var that = this;
 
-        this.tabs_msg.empty();
+        this.$el.empty();
         
-        // Add the server tab first
-        this.model.server.tab
-            .data('panel_id', this.model.server.cid)
-            .appendTo(this.tabs_msg);
+        if (this.is_network) {
+            // Add the server tab first
+            this.model.server.tab
+                .data('panel', this.model.server)
+                .data('connection_id', this.model.network.get('connection_id'))
+                .appendTo(this.$el);
+        }
 
         // Go through each panel adding its tab
         this.model.forEach(function (panel) {
             // If this is the server panel, ignore as it's already added
-            if (panel == that.model.server) return;
+            if (this.is_network && panel == that.model.server)
+                return;
 
-            panel.tab
-                .data('panel_id', panel.cid)
-                .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
+            panel.tab.data('panel', panel);
+
+            if (this.is_network)
+                panel.tab.data('connection_id', this.model.network.get('connection_id'));
+
+            panel.tab.appendTo(that.$el);
         });
 
         _kiwi.app.view.doLayout();
@@ -753,10 +829,16 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.addClass('icon-nonexistant');
         }
 
-        panel.tab.data('panel_id', panel.cid)
-            .appendTo(panel.isApplet() ? this.tabs_applets : this.tabs_msg);
+        panel.tab.data('panel', panel);
+
+        if (this.is_network)
+            panel.tab.data('connection_id', this.model.network.get('connection_id'));
+
+        panel.tab.appendTo(this.$el);
 
         panel.bind('change:title', this.updateTabTitle);
+        panel.bind('change:name', this.updateTabTitle);
+
         _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
@@ -768,9 +850,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     panelActive: function (panel, previously_active_panel) {
         // Remove any existing tabs or part images
-        $('.part', this.$el).remove();
-        this.tabs_applets.children().removeClass('active');
-        this.tabs_msg.children().removeClass('active');
+        _kiwi.app.view.$el.find('.panellist .part').remove();
+        _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
 
         panel.tab.addClass('active');
 
@@ -783,7 +864,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
     tabClick: function (e) {
         var tab = $(e.currentTarget);
 
-        var panel = this.model.getByCid(tab.data('panel_id'));
+        var panel = tab.data('panel');
         if (!panel) {
             // A panel wasn't found for this tab... wadda fuck
             return;
@@ -794,28 +875,17 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     partClick: function (e) {
         var tab = $(e.currentTarget).parent();
-        var panel = this.model.getByCid(tab.data('panel_id'));
+        var panel = tab.data('panel');
+
+        if (!panel) return;
 
         // Only need to part if it's a channel
         // If the nicklist is empty, we haven't joined the channel as yet
         if (panel.isChannel() && panel.get('members').models.length > 0) {
-            _kiwi.gateway.part(panel.get('name'));
+            this.model.network.gateway.part(panel.get('name'));
         } else {
             panel.close();
         }
-    },
-
-    next: function () {
-        var next = _kiwi.app.panels.active.tab.next();
-        if (!next.length) next = $('li:first', this.tabs_msgs);
-
-        next.click();
-    },
-    prev: function () {
-        var prev = _kiwi.app.panels.active.tab.prev();
-        if (!prev.length) prev = $('li:last', this.tabs_msgs);
-
-        prev.click();
     }
 });
 
@@ -846,13 +916,13 @@ _kiwi.view.TopicBar = Backbone.View.extend({
             inp_val = inp.text();
         
         // Only allow topic editing if this is a channel panel
-        if (!_kiwi.app.panels.active.isChannel()) {
+        if (!_kiwi.app.panels().active.isChannel()) {
             return false;
         }
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            _kiwi.gateway.topic(_kiwi.app.panels.active.get('name'), inp_val);
+            _kiwi.gateway.topic(null, _kiwi.app.panels().active.get('name'), inp_val);
             return false;
         }
     },
@@ -885,8 +955,18 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         // Hold tab autocomplete data
         this.tabcomplete = {active: false, data: [], prefix: ''};
 
-        _kiwi.gateway.bind('change:nick', function () {
-            $('.nick', that.$el).text(this.get('nick'));
+        // Keep the nick view updated with nick changes
+        _kiwi.app.connections.on('change:nick', function(connection) {
+            // Only update the nick view if it's the active connection
+            if (connection !== _kiwi.app.connections.active_connection)
+                return;
+
+            $('.nick', that.$el).text(connection.get('nick'));
+        });
+
+        // Update our nick view as we flick between connections
+        _kiwi.app.connections.on('active', function(panel, connection) {
+            $('.nick', that.$el).text(connection.get('nick'));
         });
     },
 
@@ -946,22 +1026,62 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             break;
 
         case (ev.keyCode === 219 && meta):            // [ + meta
-            _kiwi.app.panels.view.prev();
+            // Find all the tab elements and get the index of the active tab
+            var $tabs = $('#kiwi #tabs').find('li[class!=connection]');
+            var cur_tab_ind = (function() {
+                for (var idx=0; idx<$tabs.length; idx++){
+                    if ($($tabs[idx]).hasClass('active'))
+                        return idx;
+                }
+            })();
+
+            // Work out the previous tab along. Wrap around if needed
+            if (cur_tab_ind === 0) {
+                $prev_tab = $($tabs[$tabs.length - 1]);
+            } else {
+                $prev_tab = $($tabs[cur_tab_ind - 1]);
+            }
+
+            $prev_tab.click();
             return false;
 
         case (ev.keyCode === 221 && meta):            // ] + meta
-            _kiwi.app.panels.view.next();
+            // Find all the tab elements and get the index of the active tab
+            var $tabs = $('#kiwi #tabs').find('li[class!=connection]');
+            var cur_tab_ind = (function() {
+                for (var idx=0; idx<$tabs.length; idx++){
+                    if ($($tabs[idx]).hasClass('active'))
+                        return idx;
+                }
+            })();
+
+            // Work out the next tab along. Wrap around if needed
+            if (cur_tab_ind === $tabs.length - 1) {
+                $next_tab = $($tabs[0]);
+            } else {
+                $next_tab = $($tabs[cur_tab_ind + 1]);
+            }
+
+            $next_tab.click();
             return false;
 
         case (ev.keyCode === 9):                     // tab
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
-                var ac_data = [];
-                $.each(_kiwi.app.panels.active.get('members').models, function (i, member) {
+                var ac_data = [],
+                    members = _kiwi.app.panels().active.get('members');
+
+                // If we have a members list, get the models. Otherwise empty array
+                members = members ? members.models : [];
+
+                $.each(members, function (i, member) {
                     if (!member) return;
                     ac_data.push(member.get('nick'));
                 });
+
+                ac_data.push(_kiwi.app.panels().active.get('name'));
+
                 ac_data = _.sortBy(ac_data, function (nick) {
                     return nick;
                 });
@@ -1040,12 +1160,12 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             command_raw = command_raw.replace(/^\/\//, '/');
 
             // Prepend the default command
-            command_raw = '/msg ' + _kiwi.app.panels.active.get('name') + ' ' + command_raw;
+            command_raw = '/msg ' + _kiwi.app.panels().active.get('name') + ' ' + command_raw;
         }
 
         // Process the raw command for any aliases
-        this.preprocessor.vars.server = _kiwi.gateway.get('name');
-        this.preprocessor.vars.channel = _kiwi.app.panels.active.get('name');
+        this.preprocessor.vars.server = _kiwi.app.connections.active_connection.get('name');
+        this.preprocessor.vars.channel = _kiwi.app.panels().active.get('name');
         this.preprocessor.vars.destination = this.preprocessor.vars.channel;
         command_raw = this.preprocessor.process(command_raw);
 
@@ -1057,7 +1177,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         } else {
             // Default command
             command = 'msg';
-            params.unshift(_kiwi.app.panels.active.get('name'));
+            params.unshift(_kiwi.app.panels().active.get('name'));
         }
 
         // Trigger the command events
@@ -1066,7 +1186,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         // If we didn't have any listeners for this event, fire a special case
         // TODO: This feels dirty. Should this really be done..?
-        if (!this._callbacks['command:' + command]) {
+        if (!this._events['command:' + command]) {
             this.trigger('unknown_command', {command: command, params: params});
         }
     },
@@ -1608,6 +1728,7 @@ _kiwi.view.MenuBox = Backbone.View.extend({
         this._title = title || '';
         this._items = {};
         this._display_footer = true;
+        this._close_on_blur = true;
 
         this._close_proxy = function(event) {
             that.onDocumentClick(event);
@@ -1643,6 +1764,9 @@ _kiwi.view.MenuBox = Backbone.View.extend({
     onDocumentClick: function(event) {
         var $target = $(event.target);
 
+        if (!this._close_on_blur)
+            return;
+
         // If this is not itself AND we don't contain this element, dispose $el
         if ($target[0] != this.$el[0] && this.$el.has($target).length === 0)
             this.dispose();
@@ -1675,7 +1799,12 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     showFooter: function(show) {
-        this._show_footer = show;
+        this._display_footer = show;
+    },
+
+
+    closeOnBlur: function(close_it) {
+        this._close_on_blur = close_it;
     },
 
 

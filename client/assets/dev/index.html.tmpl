@@ -23,10 +23,7 @@
                 </ul>
             </div>
 
-            <div id="tabs">
-                <ul class="panellist channels"></ul>
-                <ul class="panellist applets"></ul>
-            </div>
+            <div id="tabs"></div>
 
             <div id="topic">
                 <div contenteditable="true"></div>
@@ -41,7 +38,7 @@
             <div class="panel_container container1"></div>
         </div>
 
-        <div id="memberlists"></div>
+        <div id="memberlists" class="disabled"></div>
 
         <div id="controlbox">
             <div class="input">
@@ -69,8 +66,6 @@
             <a class="query"><i class="icon-comment"></i>Message</a>
             <a class="info"><i class="icon-info-sign"></i>Info</a>
             <a class="slap"><i class="icon-user-md"></i>Slap!</a>
-
-            <div class="divider-horizontal"></div>
         </div>
     </script>
     
@@ -80,10 +75,24 @@
         </form>
     </script>
 
+    <script type="text/html" id="tmpl_new_connection_info">
+        <div style="margin:1em 20px;">
+            <img src="https://kiwiirc.com/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" style="display:block; margin:0 auto;"/> <br />
+            <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
+
+            <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://www.kiwiirc.com/">Kiwi IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a> page. This network of people may not be associated with Kiwi IRC itself.</p>
+        </div>
+    </script>
+
     <script type="text/html" id="tmpl_server_select">
         <div class="server_select">
 
-            <div class="server_details" style="position:relative;float:left;width:320px;padding-right:3em;margin-top:50px;">
+            <div class="side_panel" style="position:absolute;top:0px;left:320px;">
+                <div class="content" style="position:relative;width:300px;">
+                </div>
+            </div>
+
+            <div class="server_details" style="position:relative;width:320px;">
                 <div class="status">Think of a nickname..</div>
 
                 <form>
@@ -150,18 +159,9 @@
                     </div>
                 </form>
 
-                <div class="divider-verticle"></div>
-            </div>
-
-            <div class="about_kiwi" style="position:relative;float:left;width:320px;margin-left:3em;color:#555555;">
                 <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
-                    <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /> <br />
-                    <h1>Powered by Kiwi IRC</h1>
+                    <h1><span>Powered by Kiwi IRC</span> <img src="/kiwi/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
                 </a>
-
-                <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
-
-                <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://kiwiirc.com/">Kiwi IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a> page. This network of people may not be associated with Kiwi IRC itself.</p>
             </div>
         </div>
     </script>
@@ -288,10 +288,13 @@
                     'dev/model_gateway.js'
                 ],
                 [
+                    'dev/model_newconnection.js',
                     'dev/model_panellist.js',
+                    'dev/model_networkpanellist.js',
                     'dev/model_panel.js',
                     'dev/model_member.js',
-                    'dev/model_memberlist.js'
+                    'dev/model_memberlist.js',
+                    'dev/model_network.js'
                 ],
                 
                 [
