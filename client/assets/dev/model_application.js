@@ -716,7 +716,20 @@ _kiwi.model.Application = function () {
             var server, port, ssl, password, nick,
                 tmp;
 
-            if (!ev.params[0]) return;
+            // If no server address given, show the new connection dialog
+            if (!ev.params[0]) {
+                tmp = new _kiwi.view.MenuBox('New Connection');
+                tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
+                tmp.show();
+
+                // Center screen the dialog
+                tmp.$el.offset({
+                    top: (that.view.$el.height() / 2) - (tmp.$el.height() / 2),
+                    left: (that.view.$el.width() / 2) - (tmp.$el.width() / 2)
+                });
+
+                return;
+            }
 
             // Port given in 'host:port' format and no specific port given after a space
             if (ev.params[0].indexOf(':') > 0) {

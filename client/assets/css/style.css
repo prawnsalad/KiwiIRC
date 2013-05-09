@@ -166,6 +166,7 @@ html, body { height:100%; }
  * Server selection dialog
  */
 #kiwi .server_select { width:320px; margin:0 auto; overflow:hidden; }
+#kiwi .server_select.initial { margin-top: 3em; }
 #kiwi .server_select .more { display: none; }
 #kiwi .server_select button {  }
 #kiwi .server_select input { }
@@ -564,7 +565,7 @@ html, body { height:100%; }
 
 
 /* The server select dialog */
-#kiwi.theme_relaxed .server_select { padding:3em 0 2em 0; }
+#kiwi.theme_relaxed .server_select { margin-left:auto; margin-right:auto; }
 #kiwi.theme_relaxed .server_select .more { display: none; width:270px; margin:0 auto; }
 #kiwi.theme_relaxed .server_select table tr td { padding:5px; }
 #kiwi.theme_relaxed .server_select button { float:right; padding:3px 7px; }
@@ -1060,7 +1061,7 @@ html, body { height:100%; }
 
 
 /* The server select dialog */
-#kiwi.theme_cli .server_select { width:320px;  padding:3em 0 2em 0; margin: 0 auto; color:#eee; }
+#kiwi.theme_cli .server_select { margin-left:auto; margin-right:auto; color:#eee; }
 #kiwi.theme_cli .server_select .more { display: none; width:270px; margin:0 auto; }
 #kiwi.theme_cli .server_select table tr td { padding:5px; }
 #kiwi.theme_cli .server_select button { float:right; padding:3px 7px; margin-top:10px; }
@@ -1183,7 +1184,10 @@ html, body { height:100%; }
 #kiwi.theme_basic #toolbar .panellist li .part {}
 #kiwi.theme_basic #toolbar .panellist li .part:before { content:"[x]"; }
 
-#kiwi.theme_basic #toolbar .panellist li.server span { }
+#kiwi.theme_basic #toolbar .panellist li.server span { padding-left: 5px; }
+#kiwi.theme_basic.connected #toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi.theme_basic #toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
+
 
 /* Tab texts are within a span */
 #kiwi.theme_basic #toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
@@ -1371,7 +1375,7 @@ html, body { height:100%; }
 
 
 /* The server select dialog */
-#kiwi.theme_basic .server_select { width:320px;  padding:3em 0 2em 0; margin: 0 auto; }
+#kiwi.theme_basic .server_select { margin-left:auto; margin-right:auto; }
 #kiwi.theme_basic .server_select a { text-decoration: none; }
 #kiwi.theme_basic .server_select .more { display: none; width:270px; margin:0 auto; }
 #kiwi.theme_basic .server_select table tr td { padding:5px; }
