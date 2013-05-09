@@ -302,6 +302,20 @@ _kiwi.view.ServerSelect = function () {
             state = new_state;
         },
 
+        infoBoxShow: function() {
+            var $side_panel = this.$el.find('.side_panel');
+            this.$el.animate({
+                width: parseInt($side_panel.css('left'), 10) + $side_panel.find('.content:first').outerWidth()
+            });
+        },
+
+        infoBoxHide: function() {
+            var $side_panel = this.$el.find('.side_panel');
+            this.$el.animate({
+                width: parseInt($side_panel.css('left'), 10)
+            });
+        },
+
         setStatus: function (text, class_name) {
             $('.status', this.$el)
                 .text(text)
