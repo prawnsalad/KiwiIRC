@@ -170,6 +170,7 @@ html, body { height:100%; }
 #kiwi .server_select .basic { border-bottom: 1px solid gray; margin-bottom:1em; }
 #kiwi .server_select .basic .show_more { }
 #kiwi .server_select .basic tr.pass { display:none; }
+#kiwi .server_select .basic tr.key { display:none; }
 #kiwi .server_select.single_server .basic { border:none; }
 #kiwi .server_select .status {  }
 
@@ -569,6 +570,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .server_select .basic input { width:170px; }
 #kiwi.theme_relaxed .server_select .basic label { font-size:1.3em; margin-top:4px; }
 #kiwi.theme_relaxed .server_select .basic tr.have_pass { font-size:0.8em; }
+#kiwi.theme_relaxed .server_select .basic tr.have_key { font-size:0.8em; }
 #kiwi.theme_relaxed .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_relaxed .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
 #kiwi.theme_relaxed .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
@@ -842,6 +844,8 @@ html, body { height:100%; }
 #kiwi.theme_mini .server_select .basic table tr.channel,
 #kiwi.theme_mini .server_select .basic table tr.pass,
 #kiwi.theme_mini .server_select .basic table tr.have_pass { display:none; }
+#kiwi.theme_mini .server_select .basic table tr.key,
+#kiwi.theme_mini .server_select .basic table tr.have_key { display:none; }
 #kiwi.theme_mini .server_select .basic .show_more { display:none !important; }
 #kiwi.theme_mini .server_select.single_server .basic { border:none; }
 #kiwi.theme_mini .server_select .status { text-align: center; font-weight: bold; padding:1em; }

@@ -169,7 +169,8 @@ _kiwi.view.ServerSelect = function () {
         events: {
             'submit form': 'submitForm',
             'click .show_more': 'showMore',
-            'change .have_pass input': 'showPass'
+            'change .have_pass input': 'showPass',
+            'change .have_key input': 'showKey'
         },
 
         initialize: function () {
@@ -255,6 +256,14 @@ _kiwi.view.ServerSelect = function () {
             }
         },
 
+        showKey: function (event) {
+            if (this.$el.find('tr.have_key input').is(':checked')) {
+                this.$el.find('tr.key').show().find('input').focus();
+            } else {
+                this.$el.find('tr.key').hide().find('input').val('');
+            }
+        },
+
         showMore: function (event) {
             $('.more', this.$el).slideDown('fast');
             $('input.server', this.$el).select();
@@ -277,9 +286,17 @@ _kiwi.view.ServerSelect = function () {
             $('input.server', this.$el).val(server);
             $('input.port', this.$el).val(port);
             $('input.ssl', this.$el).prop('checked', ssl);
+            $('input#server_select_show_pass', this.$el).prop('checked', !(!password));
             $('input.password', this.$el).val(password);
+            if (!(!password)) {
+                $('tr.pass', this.$el).show();
+            }
             $('input.channel', this.$el).val(channel);
+            $('input#server_select_show_channel_key', this.$el).prop('checked', !(!channel_key));
             $('input.channel_key', this.$el).val(channel_key);
+            if (!(!channel_key)) {
+                $('tr.key', this.$el).show();
+            }
         },
 
         hide: function () {
