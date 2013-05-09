@@ -76,6 +76,13 @@ _kiwi.model.Application = function () {
             connection_dialog.view.$el.addClass('initial');
             this.view.$el.find('.panel_container:first').append(connection_dialog.view.$el);
 
+            var $info = $($('#tmpl_new_connection_info').html());
+
+            if ($info.html()) {
+                connection_dialog.view.infoBoxSet($info);
+                connection_dialog.view.infoBoxShow();
+            }
+
             // TODO: Shouldn't really be here but it's not working in the view.. :/
             // Hack for firefox browers: Focus is not given on this event loop iteration
             setTimeout(function(){

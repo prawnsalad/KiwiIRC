@@ -316,6 +316,12 @@ _kiwi.view.ServerSelect = function () {
             });
         },
 
+        infoBoxSet: function($info_view) {
+            this.$el.find('.side_panel .content')
+                .empty()
+                .append($info_view);
+        },
+
         setStatus: function (text, class_name) {
             $('.status', this.$el)
                 .text(text)
