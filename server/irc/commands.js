@@ -475,14 +475,17 @@ var listeners = {
         // i.e. - for disable, ~ for requires ACK, = for sticky
         var capabilities = command.trailing.replace(/[\-~=]/, '').split(' ');
         var request;
+
+        // Which capabilities we want to enable
         var want = ['multi-prefix', 'away-notify'];
-        
+
         if (this.irc_connection.password) {
             want.push('sasl');
         }
-        
+
         switch (command.params[1]) {
             case 'LS':
+                // Compute which of the available capabilities we want and request them
                 request = _.intersection(capabilities, want);
                 if (request.length > 0) {
                     this.irc_connection.cap.requested = request;
@@ -494,10 +497,12 @@ var listeners = {
                 break;
             case 'ACK':
                 if (capabilities.length > 0) {
+                    // Update list of enabled capabilities
                     this.irc_connection.cap.enabled = capabilities;
+                    // Update list of capabilities we would like to have but that aren't enabled
                     this.irc_connection.cap.requested = _.difference(this.irc_connection.cap.requested, capabilities);
                 }
-                if (this.irc_connection.cap.requested.length > 0) {
+                if (this.irc_connection.cap.enabled.length > 0) {
                     if (_.contains(this.irc_connection.cap.enabled, 'sasl')) {
                         this.irc_connection.sasl = true;
                         this.irc_connection.write('AUTHENTICATE PLAIN');
