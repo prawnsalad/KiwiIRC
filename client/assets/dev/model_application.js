@@ -141,11 +141,11 @@ _kiwi.model.Application = function () {
         this.populateDefaultServerSettings = function (new_connection_dialog) {
             var parts;
             var defaults = {
-                nick: getQueryVariable('nick') || '',
+                nick: '',
                 server: '',
                 port: 6667,
                 ssl: false,
-                channel: window.location.hash || '#chat',
+                channel: '#chat',
                 channel_key: ''
             };
             var uricheck;
@@ -153,7 +153,7 @@ _kiwi.model.Application = function () {
 
             /**
              * Get any settings set by the server
-             * These settings may be changed in the server selection dialog
+             * These settings may be changed in the server selection dialog or via URL parameters
              */
             if (this.server_settings.client) {
                 if (this.server_settings.client.nick)
@@ -178,6 +178,14 @@ _kiwi.model.Application = function () {
              * Get any settings passed in the URL
              * These settings may be changed in the server selection dialog
              */
+
+            // Any query parameters first
+            if (getQueryVariable('nick'))
+                defaults.nick = getQueryVariable('nick');
+
+            if (window.location.hash)
+                defaults.channel = window.location.hash;
+
 
             // Process the URL part by part, extracting as we go
             parts = window.location.pathname.toString().replace(this.get('base_path'), '').split('/');
