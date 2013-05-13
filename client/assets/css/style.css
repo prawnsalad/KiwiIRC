@@ -340,7 +340,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed #toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi.theme_relaxed #toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi.theme_relaxed #toolbar .panellist .active { padding-right:23px; }
+#kiwi.theme_relaxed #toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
 #kiwi.theme_relaxed #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_relaxed #toolbar .panellist li.server span { padding-left: 5px; }
@@ -696,7 +696,7 @@ html, body { height:100%; }
 #kiwi.theme_mini #toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi.theme_mini #toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi.theme_mini #toolbar .panellist .active { padding-right:23px; }
+#kiwi.theme_mini #toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
 #kiwi.theme_mini #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_mini #toolbar .panellist li.server span { padding-left:5px; }
@@ -962,7 +962,7 @@ html, body { height:100%; }
 #kiwi.theme_cli #toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi.theme_cli #toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi.theme_cli #toolbar .panellist .active { padding-right:23px; }
+#kiwi.theme_cli #toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
 #kiwi.theme_cli #toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi.theme_cli #toolbar .panellist li.server span { padding-left:5px; }
@@ -1184,7 +1184,7 @@ html, body { height:100%; }
 #kiwi.theme_basic #toolbar .panellist .alert_activity { font-weight:normal; color:green; }
 #kiwi.theme_basic #toolbar .panellist .alert_action { font-weight:normal; color:green; }
 
-#kiwi.theme_basic #toolbar .panellist .active { padding-right:25px; }
+#kiwi.theme_basic #toolbar .panellist .active { padding-right:25px; border-top:2px solid #df6b26; border-bottom:none; }
 #kiwi.theme_basic #toolbar .panellist li .part {}
 #kiwi.theme_basic #toolbar .panellist li .part:before { content:"[x]"; }
 
