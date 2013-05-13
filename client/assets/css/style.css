@@ -118,7 +118,15 @@ html, body { height:100%; }
 }
 
 /* The nick label */
-#kiwi #controlbox .input .nick { cursor: pointer; }
+#kiwi #controlbox .input .nick {
+    cursor: pointer;
+    background-color: #eee;
+    border-radius: 3px 0 0 3px;
+    border-right: 1px solid #ccc;
+    padding-right: 0.5em;
+    text-decoration: underline;
+}
+
 #kiwi #controlbox .input .nick a { }
 
 /* Wrapper div around the text area input */
