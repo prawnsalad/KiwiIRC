@@ -185,8 +185,8 @@ html, body { height:100%; }
 #kiwi .server_select .basic tr.channel td { position: relative; }
 #kiwi .server_select .basic tr.channel .icon-key {
     position: absolute;
-    top: 1.2em;
-    right: 0.7em;
+    top: 0.4em;
+    right: 0.6em;
     font-size: 1.3em;
     cursor: pointer;
 }
