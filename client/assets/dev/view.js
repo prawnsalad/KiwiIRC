@@ -1016,7 +1016,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 this.buffer_pos--;
                 inp.val(this.buffer[this.buffer_pos]);
             }
-            //suppress browsers default behavior as it would set the coursor at the beginning)
+            //suppress browsers default behavior as it would set the cursor at the beginning
             return false;
 
         case (ev.keyCode === 40):              // down
