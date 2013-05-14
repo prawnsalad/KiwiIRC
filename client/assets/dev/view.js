@@ -173,7 +173,8 @@ _kiwi.view.ServerSelect = function () {
             'submit form': 'submitForm',
             'click .show_more': 'showMore',
             'change .have_pass input': 'showPass',
-            'change .have_key input': 'showKey'
+            'change .have_key input': 'showKey',
+            'click .icon-key': 'channelKeyIconClick'
         },
 
         initialize: function () {
@@ -250,6 +251,10 @@ _kiwi.view.ServerSelect = function () {
             } else {
                 this.$el.find('tr.pass').hide().find('input').val('');
             }
+        },
+
+        channelKeyIconClick: function (event) {
+            this.$el.find('tr.have_key input').click();
         },
 
         showKey: function (event) {

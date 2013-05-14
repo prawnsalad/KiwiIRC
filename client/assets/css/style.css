@@ -181,6 +181,17 @@ html, body { height:100%; }
 #kiwi .server_select.single_server .basic { border:none; }
 #kiwi .server_select .status {  }
 
+/* Channel key icon */
+#kiwi .server_select .basic tr.channel td { position: relative; }
+#kiwi .server_select .basic tr.channel .icon-key {
+    position: absolute;
+    top: 1.2em;
+    right: 0.7em;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+#kiwi .server_select .basic tr.have_key { display:none; }
+
 /* When connected to an IRC server, .ok is set on the status div */
 #kiwi .server_select .status.ok { }
 
@@ -1086,6 +1097,8 @@ html, body { height:100%; }
     border:1px solid #A33F3F; background-color:#D28A8A;
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
+
+#kiwi.theme_cli .server_select .basic tr.channel .icon-key { color:#555; }
 
 
 #kiwi.theme_cli .server_select .kiwi_logo { margin-top:30px; text-align:center; display:block; }
