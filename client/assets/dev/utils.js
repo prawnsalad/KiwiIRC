@@ -285,7 +285,7 @@ function formatIRCMsg (msg) {
                     colours = openTags.colour.split(',');
                     style += 'color: ' + colours[0] + ((colours[1]) ? '; background-color: ' + colours[1] + ';' : '');
                 }
-                return '<span style="' + style + '">';
+                return '<span class="formatSpan" style="' + style + '">';
             }
         },
         colourMatch = function (str) {
