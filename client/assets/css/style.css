@@ -12,6 +12,7 @@ html, body { height:100%; }
 #kiwi p { margin:0.5em 0; }
 #kiwi a { color:#36C; text-decoration:none; cursor:pointer; }
 #kiwi a img { border:none; }
+#kiwi .formatSpan a { color: inherit; background-color: inherit; text-decoration: inherit; font-style: inherit; font-weight: inherit;}
 
 
 /**

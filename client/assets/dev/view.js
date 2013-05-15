@@ -457,7 +457,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
 
         // Parse any links found
-        msg.msg = msg.msg.replace(/(([A-Za-z0-9\-]+\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
+        msg.msg = msg.msg.replace(/(([A-Za-z][A-Za-z0-9\-]*\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
             var nice = url,
                 extra_html = '';
 
