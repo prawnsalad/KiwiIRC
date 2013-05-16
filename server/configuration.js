@@ -8,10 +8,11 @@ var config_filename = 'config.js',
 
 function loadConfig() {
     var new_config,
-        conf_filepath;
+        conf_filepath,
+        i;
 
     // Loop through the possible config paths and find a usable one
-    for (var i in config_dirs) {
+    for (i = 0; i < config_dirs.length; i++) {
         conf_filepath = config_dirs[i] + config_filename;
 
         try {
