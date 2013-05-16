@@ -132,7 +132,10 @@ _kiwi.model.Application = function () {
 
         this.initializeGlobals = function () {
             _kiwi.global.connections = this.connections;
-            
+
+            _kiwi.global.panels = this.panels;
+            _kiwi.global.panels.applets = this.applet_panels;
+
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
         };
@@ -305,7 +308,9 @@ _kiwi.model.Application = function () {
 
                 // Active panels / server
                 panels.active = this.connections.active_panel;
-                panels.server = this.connections.active_connection.panels.server;
+                panels.server = this.connections.active_connection ?
+                    this.connections.active_connection.panels.server :
+                    null;
 
                 return panels;
             };
