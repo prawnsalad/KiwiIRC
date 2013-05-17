@@ -134,17 +134,23 @@ function authoriseConnection(handshakeData, callback) {
             return callback(null, false);
         }
     }
-        
-    dns.reverse(address, function (err, domains) {
-        if (err || domains.length === 0) {
-            handshakeData.revdns = address;
-        } else {
-            handshakeData.revdns = _.first(domains) || address;
-        }
-        
-        // All is well, authorise the connection
+
+
+    try {
+        dns.reverse(address, function (err, domains) {
+            if (err || domains.length === 0) {
+                handshakeData.revdns = address;
+            } else {
+                handshakeData.revdns = _.first(domains) || address;
+            }
+            
+            // All is well, authorise the connection
+            callback(null, true);
+        });
+    } catch (err) {
+        handshakeData.revdns = address;
         callback(null, true);
-    });
+    }
 }
 
 function newConnection(websocket) {
