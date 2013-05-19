@@ -744,7 +744,7 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
         this.model.on('add', this.networkAdded, this);
         this.model.on('remove', this.networkRemoved, this);
 
-        this.$el.appendTo($('#kiwi #tabs'));
+        this.$el.appendTo($('#kiwi .tabs'));
     },
 
     networkAdded: function(network) {
@@ -1033,7 +1033,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         case (ev.keyCode === 219 && meta):            // [ + meta
             // Find all the tab elements and get the index of the active tab
-            var $tabs = $('#kiwi #tabs').find('li[class!=connection]');
+            var $tabs = $('#kiwi .tabs').find('li[class!=connection]');
             var cur_tab_ind = (function() {
                 for (var idx=0; idx<$tabs.length; idx++){
                     if ($($tabs[idx]).hasClass('active'))
@@ -1053,7 +1053,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         case (ev.keyCode === 221 && meta):            // ] + meta
             // Find all the tab elements and get the index of the active tab
-            var $tabs = $('#kiwi #tabs').find('li[class!=connection]');
+            var $tabs = $('#kiwi .tabs').find('li[class!=connection]');
             var cur_tab_ind = (function() {
                 for (var idx=0; idx<$tabs.length; idx++){
                     if ($($tabs[idx]).hasClass('active'))
@@ -1430,7 +1430,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // If we have channel tabs on the side, adjust the height
         if (el_kiwi.hasClass('chanlist_treeview')) {
-            $('#tabs', el_kiwi).css(css_heights);
+            this.$el.find('.tabs', el_kiwi).css(css_heights);
         }
 
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)

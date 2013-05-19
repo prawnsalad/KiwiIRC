@@ -27,7 +27,7 @@ html, body { height:100%; }
 }
 
 
-#kiwi .toolbar #tabs { margin-right: 200px; }
+#kiwi .toolbar .tabs { margin-right: 200px; }
 #kiwi .toolbar .panellist {
     overflow: hidden;
     display:block;
@@ -152,8 +152,8 @@ html, body { height:100%; }
 /**
  * Topic bar
  */
-#kiwi #topic { position:relative; height:2em; }
-#kiwi #topic div {
+#kiwi .toolbar .topic { position:relative; height:2em; }
+#kiwi .toolbar .topic div {
     position:absolute;
     top:0; bottom:0; left:0; right:0;
     overflow: hidden;
@@ -540,8 +540,8 @@ html, body { height:100%; }
 
 
 
-#kiwi.theme_relaxed #topic { background-color:#1B1B1B; padding-bottom:2px; }
-#kiwi.theme_relaxed #topic div {
+#kiwi.theme_relaxed .toolbar .topic { background-color:#1B1B1B; padding-bottom:2px; }
+#kiwi.theme_relaxed .toolbar .topic div {
     padding: 0.2em 1em;
     text-align: center;
     box-shadow: none;
@@ -552,7 +552,7 @@ html, body { height:100%; }
     outline: none;
     white-space: nowrap;
 }
-#kiwi.theme_relaxed #topic:hover div {
+#kiwi.theme_relaxed .toolbar .topic:hover div {
     min-height:1.5em;
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
@@ -564,7 +564,7 @@ html, body { height:100%; }
 
 
 #kiwi.theme_relaxed .toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
-#kiwi.theme_relaxed.narrow .toolbar #tabs { margin-right:0; }
+#kiwi.theme_relaxed.narrow .toolbar .tabs { margin-right:0; }
 #kiwi.theme_relaxed.narrow .toolbar .app_tools { width:auto; }
 #kiwi.theme_relaxed .toolbar .app_tools ul li {
     font-size:26px;
@@ -615,10 +615,10 @@ html, body { height:100%; }
 #kiwi.theme_relaxed.chanlist_treeview .toolbar { position:static; }
 #kiwi.theme_relaxed.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.theme_relaxed.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.theme_relaxed.chanlist_treeview .toolbar #tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
-#kiwi.theme_relaxed.chanlist_treeview #tabs ul li { display:block; float:none; }
-#kiwi.theme_relaxed.chanlist_treeview #tabs ul li .activity { position:absolute; right:5px; }
-#kiwi.theme_relaxed.chanlist_treeview #tabs ul li.active {
+#kiwi.theme_relaxed.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.theme_relaxed.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.theme_relaxed.chanlist_treeview .tabs ul li .activity { position:absolute; right:5px; }
+#kiwi.theme_relaxed.chanlist_treeview .tabs ul li.active {
     margin-right:0;
     border-right-width:0;
     border-bottom-right-radius:0;
@@ -703,7 +703,7 @@ html, body { height:100%; }
     background-color: #eee;
 }
 
-#kiwi.theme_mini .toolbar #tabs { margin-right:0 !important; }
+#kiwi.theme_mini .toolbar .tabs { margin-right:0 !important; }
 #kiwi.theme_mini .toolbar .panellist .alert_highlight { font-weight:bold; }
 #kiwi.theme_mini .toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi.theme_mini .toolbar .panellist .alert_action { font-weight:normal; }
@@ -821,8 +821,8 @@ html, body { height:100%; }
 
 
 
-#kiwi.theme_mini #topic { display:none; }
-#kiwi.theme_mini #topic div {
+#kiwi.theme_mini .toolbar .topic { display:none; }
+#kiwi.theme_mini .toolbar .topic div {
     top:2; bottom:2px; left:0; width:100%;
     padding: 0.2em 1em;
     text-align: center;
@@ -931,8 +931,8 @@ html, body { height:100%; }
     padding-left:0.5em;
 }
 
-#kiwi.theme_cli #topic { background:#111111; height:2em; border-bottom:1px solid #444444; border-top:1px solid #444444; }
-#kiwi.theme_cli #topic div {
+#kiwi.theme_cli .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #444444; border-top:1px solid #444444; }
+#kiwi.theme_cli .toolbar .topic div {
     width:100%; height: 1.5em;
     padding: 0.2em 1em;
     text-align: center;
@@ -941,7 +941,7 @@ html, body { height:100%; }
     overflow: hidden;
     white-space: nowrap;
 }
-#kiwi.theme_cli #topic:hover div {
+#kiwi.theme_cli .toolbar .topic:hover div {
     min-height:1.5em;
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
@@ -1127,10 +1127,10 @@ html, body { height:100%; }
 #kiwi.theme_cli.chanlist_treeview .toolbar { position:static; }
 #kiwi.theme_cli.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.theme_cli.chanlist_treeview .toolbar > div { }
-#kiwi.theme_cli.chanlist_treeview .toolbar #tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:200px; background:#1B1B1B; overflow-y:auto; }
-#kiwi.theme_cli.chanlist_treeview #tabs ul li { display:block; float:none; }
-#kiwi.theme_cli.chanlist_treeview #tabs ul li .activity { float:right; }
-#kiwi.theme_cli.chanlist_treeview #tabs ul li.active { padding-left:1em; }
+#kiwi.theme_cli.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:200px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.theme_cli.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.theme_cli.chanlist_treeview .tabs ul li .activity { float:right; }
+#kiwi.theme_cli.chanlist_treeview .tabs ul li.active { padding-left:1em; }
 
 
 #kiwi.theme_cli .ui_menu {
@@ -1193,7 +1193,7 @@ html, body { height:100%; }
     background-color: #eee;
 }
 
-#kiwi.theme_basic .toolbar #tabs { margin-right:0 !important; }
+#kiwi.theme_basic .toolbar .tabs { margin-right:0 !important; }
 #kiwi.theme_basic .toolbar .panellist .alert_highlight { font-weight:bold; color:red; }
 #kiwi.theme_basic .toolbar .panellist .alert_activity { font-weight:normal; color:green; }
 #kiwi.theme_basic .toolbar .panellist .alert_action { font-weight:normal; color:green; }
@@ -1357,8 +1357,8 @@ html, body { height:100%; }
 
 
 
-#kiwi.theme_basic #topic {  }
-#kiwi.theme_basic #topic div {
+#kiwi.theme_basic .toolbar .topic {  }
+#kiwi.theme_basic .toolbar .topic div {
     top:2; bottom:2px; left:0; width:100%;
     padding: 0.2em 1em;
     text-align: center;
@@ -1369,7 +1369,7 @@ html, body { height:100%; }
     overflow: hidden;
     outline: none;
 }
-#kiwi.theme_basic #topic:hover div {
+#kiwi.theme_basic .toolbar .topic:hover div {
     min-height:1.5em;
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
@@ -1430,10 +1430,10 @@ html, body { height:100%; }
 #kiwi.theme_basic.chanlist_treeview .toolbar { position:static; }
 #kiwi.theme_basic.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.theme_basic.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.theme_basic.chanlist_treeview .toolbar #tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
-#kiwi.theme_basic.chanlist_treeview #tabs ul li { display:block; float:none; }
-#kiwi.theme_basic.chanlist_treeview #tabs ul li .activity { float:right; }
-#kiwi.theme_basic.chanlist_treeview #tabs ul li.active {
+#kiwi.theme_basic.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.theme_basic.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.theme_basic.chanlist_treeview .tabs ul li .activity { float:right; }
+#kiwi.theme_basic.chanlist_treeview .tabs ul li.active {
     margin-right:0;
     border-right-width:0;
     border-bottom-right-radius:0;

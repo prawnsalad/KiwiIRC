@@ -109,7 +109,7 @@ _kiwi.model.Application = function () {
             // Applets panel list
             this.applet_panels = new _kiwi.model.PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
-            this.view.$el.find('#tabs').append(this.applet_panels.view.$el);
+            this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
             /**
              * Set the UI components up
@@ -117,7 +117,7 @@ _kiwi.model.Application = function () {
             this.controlbox = new _kiwi.view.ControlBox({el: $('#controlbox')[0]});
             this.bindControllboxCommands(this.controlbox);
 
-            this.topicbar = new _kiwi.view.TopicBar({el: $('#topic')[0]});
+            this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
 
             new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
 
