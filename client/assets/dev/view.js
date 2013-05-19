@@ -1222,8 +1222,8 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.type = opt.type || '';
         opt.timeout = opt.timeout || 5000;
 
-        this.$el.text(text).attr('class', opt.type);
-        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, this));
+        this.$el.text(text).addClass(opt.type);
+        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
@@ -1234,14 +1234,14 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.type = opt.type || '';
         opt.timeout = opt.timeout || 5000;
 
-        this.$el.html(text).attr('class', opt.type);
-        this.$el.slideDown(_kiwi.app.view.doLayout);
+        this.$el.html(text).addClass(opt.type);
+        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
 
     hide: function () {
-        this.$el.slideUp($.proxy(_kiwi.app.view.doLayout, this));
+        this.$el.slideUp($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
     },
 
     doTimeout: function (length) {
