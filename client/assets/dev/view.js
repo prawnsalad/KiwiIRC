@@ -8,7 +8,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
     },
     initialize: function (options) {
         this.model.bind('all', this.render, this);
-        $(this.el).appendTo('#memberlists');
+        $(this.el).appendTo('#kiwi .memberlists');
     },
     render: function () {
         var $this = $(this.el);
@@ -64,7 +64,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         }).call(this);
     },
     show: function () {
-        $('#memberlists').children().removeClass('active');
+        $('#kiwi .memberlists').children().removeClass('active');
         $(this.el).addClass('active');
     }
 });
@@ -414,7 +414,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         if (options.container) {
             this.$container = $(options.container);
         } else {
-            this.$container = $('#panels .container1');
+            this.$container = $('#kiwi .panels .container1');
         }
 
         this.$el.appendTo(this.$container);
@@ -624,11 +624,11 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
-            $('#memberlists').removeClass('disabled');
+            $('#kiwi .memberlists').removeClass('disabled');
             members.view.show();
         } else {
             // Memberlist not found for this panel, hide any active ones
-            $('#memberlists').addClass('disabled').children().removeClass('active');
+            $('#kiwi .memberlists').addClass('disabled').children().removeClass('active');
         }
 
         // Remove any alerts and activity counters for this panel
@@ -1279,7 +1279,7 @@ _kiwi.view.ResizeHandler = Backbone.View.extend({
         if (!this.dragging) return;
 
         this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2));
-        $('#memberlists').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
+        $('#kiwi .memberlists').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
         _kiwi.app.view.doLayout();
     }
 });
@@ -1402,11 +1402,11 @@ _kiwi.view.Application = Backbone.View.extend({
 
     doLayout: function () {
         var el_kiwi = this.$el;
-        var el_panels = $('#kiwi #panels');
-        var el_memberlists = $('#kiwi #memberlists');
+        var el_panels = $('#kiwi .panels');
+        var el_memberlists = $('#kiwi .memberlists');
         var el_toolbar = this.$el.find('.toolbar');
         var el_controlbox = $('#kiwi #controlbox');
-        var el_resize_handle = $('#kiwi #memberlists_resize_handle');
+        var el_resize_handle = $('#kiwi .memberlists_resize_handle');
 
         var css_heights = {
             top: el_toolbar.outerHeight(true),

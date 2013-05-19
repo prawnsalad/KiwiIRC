@@ -19,10 +19,10 @@ html, body { height:100%; }
  * Main layout blocks
  */
 #kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; }
-#kiwi #panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
-#kiwi #memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
+#kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
+#kiwi .memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
 #kiwi #controlbox { position: absolute; bottom:0px; width:100%; display:none; }
-#kiwi #memberlists_resize_handle {
+#kiwi .memberlists_resize_handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
 }
 
@@ -101,14 +101,14 @@ html, body { height:100%; }
 
 
 /* A member/nick list per channel */
-#kiwi #memberlists { border-left: 1px solid #8A8A8A; }
-#kiwi #memberlists.disabled { display:none; }
-#kiwi #memberlists ul { display:none; }
+#kiwi .memberlists { border-left: 1px solid #8A8A8A; }
+#kiwi .memberlists.disabled { display:none; }
+#kiwi .memberlists ul { display:none; }
 
 /* The active channels nicklist */
-#kiwi #memberlists ul.active { display:block; }
-#kiwi #memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
-#kiwi #memberlists ul li a.nick { }
+#kiwi .memberlists ul.active { display:block; }
+#kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
+#kiwi .memberlists ul li a.nick { }
 
 /* The userbox shown when clicking a nick */
 #kiwi .userbox { position:relative; }
@@ -318,7 +318,7 @@ html, body { height:100%; }
     background-color:#1B1B1B; font-size:0.9em;
 }
 #kiwi.theme_relaxed #controlbox { background-color:#1B1B1B; }
-#kiwi.theme_relaxed #memberlists_resize_handle {
+#kiwi.theme_relaxed .memberlists_resize_handle {
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
 #kiwi.theme_relaxed .toolbar .panellist li {
@@ -460,15 +460,15 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
 
 
-#kiwi.theme_relaxed #memberlists {
+#kiwi.theme_relaxed .memberlists {
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
 }
-#kiwi.theme_relaxed.narrow #memberlists { display:none; }
-#kiwi.theme_relaxed #memberlists ul { list-style: none; }
-#kiwi.theme_relaxed #memberlists ul.active { }
-#kiwi.theme_relaxed #memberlists ul li { padding: 0.2em 1em; }
-#kiwi.theme_relaxed #memberlists ul li:hover {
+#kiwi.theme_relaxed.narrow .memberlists { display:none; }
+#kiwi.theme_relaxed .memberlists ul { list-style: none; }
+#kiwi.theme_relaxed .memberlists ul.active { }
+#kiwi.theme_relaxed .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.theme_relaxed .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
     -moz-transition: 0.2s ease;
@@ -476,14 +476,14 @@ html, body { height:100%; }
     -o-transition: 0.2s ease;
     transition: 0.2s ease; 
 }
-#kiwi.theme_relaxed #memberlists ul li a.nick { display:block; color:black; }
+#kiwi.theme_relaxed .memberlists ul li a.nick { display:block; color:black; }
 
 #kiwi.theme_relaxed .userbox { margin:4px 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
 #kiwi.theme_relaxed .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
 #kiwi.theme_relaxed .userbox a i { font-size:1.1em; margin-right:5px; }
 
 /* User mode styles */
-#kiwi.theme_relaxed #memberlists ul li .prefix {
+#kiwi.theme_relaxed .memberlists ul li .prefix {
     display:none;
     width:20px; height:20px;
     border-radius: 5px;
@@ -493,11 +493,11 @@ html, body { height:100%; }
     /* text-indent: -1000px; */
 }
 /* Most important modes towards the bottom - they override the top ones! */
-#kiwi.theme_relaxed #memberlists ul li.mode.v .prefix { display:inline-block; background:#b3b3b3; }
-#kiwi.theme_relaxed #memberlists ul li.mode.h .prefix { display:inline-block; background:#b5b447; }
-#kiwi.theme_relaxed #memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
-#kiwi.theme_relaxed #memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
-#kiwi.theme_relaxed #memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
+#kiwi.theme_relaxed .memberlists ul li.mode.v .prefix { display:inline-block; background:#b3b3b3; }
+#kiwi.theme_relaxed .memberlists ul li.mode.h .prefix { display:inline-block; background:#b5b447; }
+#kiwi.theme_relaxed .memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
+#kiwi.theme_relaxed .memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
+#kiwi.theme_relaxed .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
 
 #kiwi.theme_relaxed #controlbox .input {
     background:#fff; margin:3px;
@@ -611,7 +611,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .server_select .kiwi_logo img { display:inline; width:24px; }
 
 
-#kiwi.theme_relaxed.chanlist_treeview #panels { left:160px; }
+#kiwi.theme_relaxed.chanlist_treeview .panels { left:160px; }
 #kiwi.theme_relaxed.chanlist_treeview .toolbar { position:static; }
 #kiwi.theme_relaxed.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.theme_relaxed.chanlist_treeview .toolbar > div { margin-left:160px; }
@@ -687,7 +687,7 @@ html, body { height:100%; }
     background-color:#1B1B1B; font-size:0.9em;
 }
 #kiwi.theme_mini #controlbox { background-color:#1B1B1B; }
-#kiwi.theme_mini #memberlists_resize_handle {
+#kiwi.theme_mini .memberlists_resize_handle {
     display:none; width:0;
 }
 #kiwi.theme_mini .toolbar .panellist li {
@@ -764,16 +764,16 @@ html, body { height:100%; }
 
 
 
-#kiwi.theme_mini #memberlists {
+#kiwi.theme_mini .memberlists {
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
     display:none;
     width:0px;
 }
-#kiwi.theme_mini #memberlists ul { list-style: none; }
-#kiwi.theme_mini #memberlists ul.active { }
-#kiwi.theme_mini #memberlists ul li { padding: 0.2em 1em; }
-#kiwi.theme_mini #memberlists ul li:hover {
+#kiwi.theme_mini .memberlists ul { list-style: none; }
+#kiwi.theme_mini .memberlists ul.active { }
+#kiwi.theme_mini .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.theme_mini .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
     -moz-transition: 0.2s ease;
@@ -781,7 +781,7 @@ html, body { height:100%; }
     -o-transition: 0.2s ease;
     transition: 0.2s ease; 
 }
-#kiwi.theme_mini #memberlists ul li a.nick { display:block; color:black; }
+#kiwi.theme_mini .memberlists ul li a.nick { display:block; color:black; }
 
 #kiwi.theme_mini .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
 #kiwi.theme_mini .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
@@ -992,10 +992,10 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_cli #memberlists { background:#222222; }
-#kiwi.theme_cli #memberlists ul li { padding: 0.2em 1em; }
-#kiwi.theme_cli #memberlists ul li a.nick { color:#6d6d6d; }
-#kiwi.theme_cli #memberlists ul li:hover {
+#kiwi.theme_cli .memberlists { background:#222222; }
+#kiwi.theme_cli .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.theme_cli .memberlists ul li a.nick { color:#6d6d6d; }
+#kiwi.theme_cli .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
     -moz-transition: 0.2s ease;
@@ -1123,7 +1123,7 @@ html, body { height:100%; }
 
 
 
-#kiwi.theme_cli.chanlist_treeview #panels { left:200px; }
+#kiwi.theme_cli.chanlist_treeview .panels { left:200px; }
 #kiwi.theme_cli.chanlist_treeview .toolbar { position:static; }
 #kiwi.theme_cli.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.theme_cli.chanlist_treeview .toolbar > div { }
@@ -1177,7 +1177,7 @@ html, body { height:100%; }
     background-color:#1B1B1B; font-size:0.9em;
 }
 #kiwi.theme_basic #controlbox { background-color:#1B1B1B; }
-#kiwi.theme_basic #memberlists_resize_handle {
+#kiwi.theme_basic .memberlists_resize_handle {
     /*display:none; width:0;*/
 }
 #kiwi.theme_basic .toolbar .panellist li {
@@ -1300,15 +1300,15 @@ html, body { height:100%; }
 
 
 
-#kiwi.theme_basic #memberlists {
+#kiwi.theme_basic .memberlists {
     background-color: #DADADA;
     border-left: 1px dashed #8A8A8A;
 }
-#kiwi.theme_basic #memberlists ul { list-style: none; margin-left:2px; }
-#kiwi.theme_basic #memberlists ul.active { }
-#kiwi.theme_basic #memberlists ul li { padding:0 2px; }
-#kiwi.theme_basic #memberlists ul li:hover {}
-#kiwi.theme_basic #memberlists ul li a.nick { display:block; color:black; }
+#kiwi.theme_basic .memberlists ul { list-style: none; margin-left:2px; }
+#kiwi.theme_basic .memberlists ul.active { }
+#kiwi.theme_basic .memberlists ul li { padding:0 2px; }
+#kiwi.theme_basic .memberlists ul li:hover {}
+#kiwi.theme_basic .memberlists ul li a.nick { display:block; color:black; }
 
 #kiwi.theme_basic .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
 #kiwi.theme_basic .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
@@ -1426,7 +1426,7 @@ html, body { height:100%; }
 #kiwi.theme_basic .server_select .kiwi_logo img { display:inline; width:24px; }
 
 
-#kiwi.theme_basic.chanlist_treeview #panels { left:160px; }
+#kiwi.theme_basic.chanlist_treeview .panels { left:160px; }
 #kiwi.theme_basic.chanlist_treeview .toolbar { position:static; }
 #kiwi.theme_basic.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.theme_basic.chanlist_treeview .toolbar > div { margin-left:160px; }

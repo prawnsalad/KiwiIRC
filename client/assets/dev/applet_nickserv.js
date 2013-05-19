@@ -10,7 +10,7 @@
         
         saveSettings: function () {
             var theme = $('.theme', this.$el).val(),
-                containers = $('#panels > .panel_container');
+                containers = $('#kiwi .panels > .panel_container');
 
             // Clear any current theme
             containers.removeClass(function (i, css) {
