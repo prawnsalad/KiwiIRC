@@ -119,7 +119,7 @@ _kiwi.model.Application = function () {
 
             this.topicbar = new _kiwi.view.TopicBar({el: $('#topic')[0]});
 
-            new _kiwi.view.AppToolbar({el: $('#toolbar .app_tools')[0]});
+            new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
 
             this.message = new _kiwi.view.StatusMessage({el: $('#status_message')[0]});
 

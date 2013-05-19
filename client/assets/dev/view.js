@@ -1306,7 +1306,7 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         $(window).resize(function() { that.doLayout.apply(that); });
-        $('#toolbar').resize(function() { that.doLayout.apply(that); });
+        this.$el.find('.toolbar').resize(function() { that.doLayout.apply(that); });
         $('#controlbox').resize(function() { that.doLayout.apply(that); });
 
         // Change the theme when the config is changed
@@ -1404,7 +1404,7 @@ _kiwi.view.Application = Backbone.View.extend({
         var el_kiwi = this.$el;
         var el_panels = $('#kiwi #panels');
         var el_memberlists = $('#kiwi #memberlists');
-        var el_toolbar = $('#kiwi #toolbar');
+        var el_toolbar = this.$el.find('.toolbar');
         var el_controlbox = $('#kiwi #controlbox');
         var el_resize_handle = $('#kiwi #memberlists_resize_handle');
 
@@ -1533,10 +1533,10 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            this.$el.find('.toolbar').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
             $('#controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
-            $('#toolbar').slideUp(0);
+            this.$el.find('.toolbar').slideUp(0);
             $('#controlbox').slideUp(0);
             this.doLayout();
         }
@@ -1546,10 +1546,10 @@ _kiwi.view.Application = Backbone.View.extend({
         var that = this;
 
         if (!instant) {
-            $('#toolbar').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            this.$el.find('.toolbar').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
             $('#controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
-            $('#toolbar').slideDown(0);
+            this.$el.find('.toolbar').slideDown(0);
             $('#controlbox').slideDown(0);
             this.doLayout();
         }
