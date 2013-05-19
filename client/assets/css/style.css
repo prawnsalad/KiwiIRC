@@ -21,7 +21,7 @@ html, body { height:100%; }
 #kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; }
 #kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
 #kiwi .memberlists { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
-#kiwi #controlbox { position: absolute; bottom:0px; width:100%; display:none; }
+#kiwi .controlbox { position: absolute; bottom:0px; width:100%; display:none; }
 #kiwi .memberlists_resize_handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
 }
@@ -120,32 +120,32 @@ html, body { height:100%; }
 /**
  * Control box
  */
-#kiwi #controlbox .input {
+#kiwi .controlbox .input {
     height:1.7em; position:relative;
 }
 
 /* The nick label */
-#kiwi #controlbox .input .nick { cursor: pointer; }
-#kiwi #controlbox .input .nick a { }
+#kiwi .controlbox .input .nick { cursor: pointer; }
+#kiwi .controlbox .input .nick a { }
 
 /* Wrapper div around the text area input */
-#kiwi #controlbox .input .input_wrap { display:inline; }
+#kiwi .controlbox .input .input_wrap { display:inline; }
 
 /* The textarea input */
-#kiwi #controlbox .input .inp { white-space: nowrap; }
+#kiwi .controlbox .input .inp { white-space: nowrap; }
 
 
 /* Nick change dialog showed when clicking the nick label */
-#kiwi #controlbox .nickchange {
+#kiwi .controlbox .nickchange {
     position: absolute;
     background: #FFF;
 }
-#kiwi #controlbox .nickchange input { }
-#kiwi #controlbox .nickchange button { }
+#kiwi .controlbox .nickchange input { }
+#kiwi .controlbox .nickchange button { }
 
 /* Plugin tools */
-#kiwi #controlbox .input_tools { float:right; }
-#kiwi #controlbox .input_tools .tool { margin:0 1em; display:inline; }
+#kiwi .controlbox .input_tools { float:right; }
+#kiwi .controlbox .input_tools .tool { margin:0 1em; display:inline; }
 
 
 
@@ -317,7 +317,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .toolbar {
     background-color:#1B1B1B; font-size:0.9em;
 }
-#kiwi.theme_relaxed #controlbox { background-color:#1B1B1B; }
+#kiwi.theme_relaxed .controlbox { background-color:#1B1B1B; }
 #kiwi.theme_relaxed .memberlists_resize_handle {
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
@@ -499,7 +499,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
 #kiwi.theme_relaxed .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
 
-#kiwi.theme_relaxed #controlbox .input {
+#kiwi.theme_relaxed .controlbox .input {
     background:#fff; margin:3px;
     height:1.7em;
     border-radius:5px;
@@ -507,18 +507,18 @@ html, body { height:100%; }
     -webkit-border-radius:5px;
     -khtml-border-radius:5px;
 }
-#kiwi.theme_relaxed #controlbox .input .nick { text-align: right; width:11em; left:0px; position:absolute; padding:2px; overflow:hidden; }
-#kiwi.theme_relaxed #controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi.theme_relaxed .controlbox .input .nick { text-align: right; width:11em; left:0px; position:absolute; padding:2px; overflow:hidden; }
+#kiwi.theme_relaxed .controlbox .input .nick a { text-decoration:none; color:black; }
 
-#kiwi.theme_relaxed.narrow #controlbox .input .nick { display:none; }
-#kiwi.theme_relaxed.narrow #controlbox .input .input_wrap { left:7px; }
+#kiwi.theme_relaxed.narrow .controlbox .input .nick { display:none; }
+#kiwi.theme_relaxed.narrow .controlbox .input .input_wrap { left:7px; }
 
-#kiwi.theme_relaxed #controlbox .input .input_wrap {
+#kiwi.theme_relaxed .controlbox .input .input_wrap {
     position:absolute;
     right:7px; left: 12.2em;
     height:1.7em;
 }
-#kiwi.theme_relaxed #controlbox .input .inp {
+#kiwi.theme_relaxed .controlbox .input .inp {
     line-height:1.7em;
     border: medium none;
     box-shadow: none;
@@ -531,12 +531,12 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_relaxed #controlbox .nickchange {
+#kiwi.theme_relaxed .controlbox .nickchange {
     padding:10px; left: 0px;
     background: #1B1B1B; color:#eeeeee;
 }
-#kiwi.theme_relaxed #controlbox .nickchange input { padding:0.3em 0.5em; }
-#kiwi.theme_relaxed #controlbox .nickchange button { padding:0.5em; }
+#kiwi.theme_relaxed .controlbox .nickchange input { padding:0.3em 0.5em; }
+#kiwi.theme_relaxed .controlbox .nickchange button { padding:0.5em; }
 
 
 
@@ -686,7 +686,7 @@ html, body { height:100%; }
 #kiwi.theme_mini .toolbar {
     background-color:#1B1B1B; font-size:0.9em;
 }
-#kiwi.theme_mini #controlbox { background-color:#1B1B1B; }
+#kiwi.theme_mini .controlbox { background-color:#1B1B1B; }
 #kiwi.theme_mini .memberlists_resize_handle {
     display:none; width:0;
 }
@@ -788,18 +788,18 @@ html, body { height:100%; }
 #kiwi.theme_mini .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
-#kiwi.theme_mini #controlbox .input {
+#kiwi.theme_mini .controlbox .input {
     background:#fff; margin:3px;
     height:1.7em;
 }
-#kiwi.theme_mini #controlbox .input .nick { display:none; }
-#kiwi.theme_mini #controlbox .input .nick a { text-decoration:none; color:black; }
-#kiwi.theme_mini #controlbox .input .input_wrap {
+#kiwi.theme_mini .controlbox .input .nick { display:none; }
+#kiwi.theme_mini .controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi.theme_mini .controlbox .input .input_wrap {
     position:absolute;
     right:3px; left:3px;
     height:1.7em;
 }
-#kiwi.theme_mini #controlbox .input .inp {
+#kiwi.theme_mini .controlbox .input .inp {
     line-height:1.7em;
     border: medium none;
     box-shadow: none;
@@ -812,12 +812,12 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_mini #controlbox .nickchange {
+#kiwi.theme_mini .controlbox .nickchange {
     padding:10px; left: 0px;
     background: #1B1B1B; color:#eeeeee;
 }
-#kiwi.theme_mini #controlbox .nickchange input { padding:0.3em 0.5em; }
-#kiwi.theme_mini #controlbox .nickchange button { padding:0.5em; }
+#kiwi.theme_mini .controlbox .nickchange input { padding:0.3em 0.5em; }
+#kiwi.theme_mini .controlbox .nickchange button { padding:0.5em; }
 
 
 
@@ -906,16 +906,16 @@ html, body { height:100%; }
     font-size:14px; line-height:1.4em;
 }
 
-#kiwi.theme_cli #controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; }
-#kiwi.theme_cli #controlbox .input_wrap:before { content:"> " }
-#kiwi.theme_cli #controlbox .input { background:none; border:none;}
-#kiwi.theme_cli #controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; overflow:hidden; }
-#kiwi.theme_cli #controlbox .input .input_wrap {
+#kiwi.theme_cli .controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; }
+#kiwi.theme_cli .controlbox .input_wrap:before { content:"> " }
+#kiwi.theme_cli .controlbox .input { background:none; border:none;}
+#kiwi.theme_cli .controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; overflow:hidden; }
+#kiwi.theme_cli .controlbox .input .input_wrap {
     position:absolute;
     right:7px; left: 12.2em;
     height:1.7em;
 }
-#kiwi.theme_cli #controlbox .input .inp {
+#kiwi.theme_cli .controlbox .input .inp {
     line-height:1.4em;
     font-size:1.3em;
     background:transparent; color:#909090;
@@ -1176,7 +1176,7 @@ html, body { height:100%; }
 #kiwi.theme_basic .toolbar {
     background-color:#1B1B1B; font-size:0.9em;
 }
-#kiwi.theme_basic #controlbox { background-color:#1B1B1B; }
+#kiwi.theme_basic .controlbox { background-color:#1B1B1B; }
 #kiwi.theme_basic .memberlists_resize_handle {
     /*display:none; width:0;*/
 }
@@ -1315,11 +1315,11 @@ html, body { height:100%; }
 #kiwi.theme_basic .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
-#kiwi.theme_basic #controlbox .input {
+#kiwi.theme_basic .controlbox .input {
     background:#fff; margin:3px;
     height:1.7em;
 }
-#kiwi.theme_basic #controlbox .input .nick {
+#kiwi.theme_basic .controlbox .input .nick {
     text-align: right;
     width: 11em;
     left: 0px;
@@ -1327,14 +1327,14 @@ html, body { height:100%; }
     padding: 2px;
     overflow: hidden;
 }
-#kiwi.theme_basic #controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
-#kiwi.theme_basic #controlbox .input .nick a { text-decoration:none; color:black; }
-#kiwi.theme_basic #controlbox .input .input_wrap {
+#kiwi.theme_basic .controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
+#kiwi.theme_basic .controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi.theme_basic .controlbox .input .input_wrap {
     position:absolute;
     right:3px; left:12em;
     height:1.7em;
 }
-#kiwi.theme_basic #controlbox .input .inp {
+#kiwi.theme_basic .controlbox .input .inp {
     line-height:1.7em;
     border: medium none;
     box-shadow: none;
@@ -1348,12 +1348,12 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_basic #controlbox .nickchange {
+#kiwi.theme_basic .controlbox .nickchange {
     padding:10px; left: 0px;
     background: #1B1B1B; color:#eeeeee;
 }
-#kiwi.theme_basic #controlbox .nickchange input { padding:0.3em 0.5em; }
-#kiwi.theme_basic #controlbox .nickchange button { padding:0.5em; }
+#kiwi.theme_basic .controlbox .nickchange input { padding:0.3em 0.5em; }
+#kiwi.theme_basic .controlbox .nickchange button { padding:0.5em; }
 
 
 

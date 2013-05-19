@@ -1307,7 +1307,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         $(window).resize(function() { that.doLayout.apply(that); });
         this.$el.find('.toolbar').resize(function() { that.doLayout.apply(that); });
-        $('#controlbox').resize(function() { that.doLayout.apply(that); });
+        $('#kiwi .controlbox').resize(function() { that.doLayout.apply(that); });
 
         // Change the theme when the config is changed
         _kiwi.global.settings.on('change:theme', this.updateTheme, this);
@@ -1396,7 +1396,7 @@ _kiwi.view.Application = Backbone.View.extend({
             return;
         }
 
-        $('#controlbox .inp').focus();
+        $('#kiwi .controlbox .inp').focus();
     },
 
 
@@ -1405,7 +1405,7 @@ _kiwi.view.Application = Backbone.View.extend({
         var el_panels = $('#kiwi .panels');
         var el_memberlists = $('#kiwi .memberlists');
         var el_toolbar = this.$el.find('.toolbar');
-        var el_controlbox = $('#kiwi #controlbox');
+        var el_controlbox = $('#kiwi .controlbox');
         var el_resize_handle = $('#kiwi .memberlists_resize_handle');
 
         var css_heights = {
@@ -1453,7 +1453,7 @@ _kiwi.view.Application = Backbone.View.extend({
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
 
-        var input_wrap_width = parseInt($('#kiwi #controlbox .input_tools').outerWidth());
+        var input_wrap_width = parseInt($('#kiwi .controlbox .input_tools').outerWidth());
         el_controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
     },
 
@@ -1534,10 +1534,10 @@ _kiwi.view.Application = Backbone.View.extend({
 
         if (!instant) {
             this.$el.find('.toolbar').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
-            $('#controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#kiwi .controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             this.$el.find('.toolbar').slideUp(0);
-            $('#controlbox').slideUp(0);
+            $('#kiwi .controlbox').slideUp(0);
             this.doLayout();
         }
     },
@@ -1547,10 +1547,10 @@ _kiwi.view.Application = Backbone.View.extend({
 
         if (!instant) {
             this.$el.find('.toolbar').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
-            $('#controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#kiwi .controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             this.$el.find('.toolbar').slideDown(0);
-            $('#controlbox').slideDown(0);
+            $('#kiwi .controlbox').slideDown(0);
             this.doLayout();
         }
     },

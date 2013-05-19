@@ -114,7 +114,7 @@ _kiwi.model.Application = function () {
             /**
              * Set the UI components up
              */
-            this.controlbox = new _kiwi.view.ControlBox({el: $('#controlbox')[0]});
+            this.controlbox = new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]});
             this.bindControllboxCommands(this.controlbox);
 
             this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
