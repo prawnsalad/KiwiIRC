@@ -121,7 +121,7 @@ _kiwi.model.Application = function () {
 
             new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
 
-            this.message = new _kiwi.view.StatusMessage({el: $('#status_message')[0]});
+            this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
 
             this.resize_handle = new _kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
 

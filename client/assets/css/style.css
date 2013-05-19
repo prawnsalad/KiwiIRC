@@ -55,7 +55,7 @@ html, body { height:100%; }
 #kiwi .toolbar .connections .panellist { display:inline; }
 #kiwi .toolbar .connections .panellist:after { content:""; }
 
-#kiwi #status_message {
+#kiwi .status_message {
     background: #FFF;
     border-bottom: 1px solid;
     text-align: center;
@@ -376,13 +376,13 @@ html, body { height:100%; }
     color: #fff; background: #a60400;
 }
 
-#kiwi.theme_relaxed #status_message {
+#kiwi.theme_relaxed .status_message {
     background: #FEEFB3; color: #9F6000;
     border-bottom: 1px solid;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }
-#kiwi.theme_relaxed #status_message.err { color:#D8000C; background:#FFBABA; }
+#kiwi.theme_relaxed .status_message.err { color:#D8000C; background:#FFBABA; }
 
 #kiwi.theme_relaxed .messages { color: #333333; }
 #kiwi.theme_relaxed .messages.active { }
@@ -722,13 +722,13 @@ html, body { height:100%; }
 #kiwi.theme_mini .toolbar .panellist li .activity:before { content:"("; }
 #kiwi.theme_mini .toolbar .panellist li .activity:after { content:")"; }
 
-#kiwi.theme_mini #status_message {
+#kiwi.theme_mini .status_message {
     background: #FEEFB3; color: #9F6000;
     border-bottom: 1px solid;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }
-#kiwi.theme_mini #status_message.err { color:#D8000C; background:#FFBABA; }
+#kiwi.theme_mini .status_message.err { color:#D8000C; background:#FFBABA; }
 
 #kiwi.theme_mini .messages { color: #333333; }
 #kiwi.theme_mini .messages.active { }
@@ -1214,13 +1214,13 @@ html, body { height:100%; }
 #kiwi.theme_basic .toolbar .panellist li .activity:before { content:"("; }
 #kiwi.theme_basic .toolbar .panellist li .activity:after { content:")"; }
 
-#kiwi.theme_basic #status_message {
+#kiwi.theme_basic .status_message {
     background: #FEEFB3; color: #9F6000;
     border-bottom: 1px solid;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }
-#kiwi.theme_basic #status_message.err { color:#D8000C; background:#FFBABA; }
+#kiwi.theme_basic .status_message.err { color:#D8000C; background:#FFBABA; }
 
 #kiwi.theme_basic .messages {  }
 #kiwi.theme_basic .messages.active { }
