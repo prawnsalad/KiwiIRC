@@ -54,6 +54,7 @@
             //this.gateway.on('all', function() {console.log('ALL', this.get('connection_id'), arguments);});
 
             this.gateway.on('connect', onConnect, this);
+            this.gateway.on('disconnect', onDisconnect, this);
 
             this.gateway.on('nick', function(event) {
                 if (event.nick === this.get('nick')) {
@@ -129,6 +130,14 @@
             return panels;
         }
     });
+
+
+    
+    function onDisconnect(event) {
+        $.each(this.panels.models, function (index, panel) {
+            panel.addMsg('', 'Disconnected from the IRC network', 'action quit');
+        });
+    }
 
 
 
