@@ -10,6 +10,7 @@ var IrcUser = function (irc_connection, nick) {
         away:           onAway,
         quit:           onQuit,
         whoisuser:      onWhoisUser,
+        whoisaway:      onWhoisAway,
         whoisoperator:  onWhoisOperator,
         whoischannels:  onWhoisChannels,
         whoismodes:     onWhoisModes,
@@ -71,6 +72,14 @@ function onWhoisUser(event) {
         ident: event.ident,
         host: event.host,
         msg: event.msg,
+        end: false
+    });
+};
+
+function onWhoisAway(event) {
+    this.irc_connection.clientEvent('whois', {
+        nick: event.nick,
+        away_reason: event.reason,
         end: false
     });
 };

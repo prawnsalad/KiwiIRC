@@ -560,6 +560,8 @@
             logon_date = formatDate(logon_date);
 
             panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
+        } else if (event.away_reason) {
+            panel.addMsg(event.nick, 'Away: ' + event.away_reason, 'whois');
         } else {
             panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
         }

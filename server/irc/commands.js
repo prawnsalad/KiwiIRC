@@ -14,6 +14,7 @@ var irc_numerics = {
     RPL_LUSERME:            '255',
     RPL_LOCALUSERS:         '265',
     RPL_GLOBALUSERS:        '266',
+    RPL_AWAY:               '301',
     RPL_WHOISREGNICK:       '307',
     RPL_WHOISUSER:          '311',
     RPL_WHOISSERVER:        '312',
@@ -134,6 +135,12 @@ var listeners = {
         this.irc_connection.emit('user ' + command.params[1] + ' endofwhois', {
             nick: command.params[1],
             msg: command.trailing
+        });
+    },
+    'RPL_AWAY': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whoisaway', {
+            nick: command.params[1],
+            reason: command.trailing
         });
     },
     'RPL_WHOISUSER': function (command) {
