@@ -11,8 +11,12 @@
 
             this.channels = [];
 
+            // Some of this code makes IE go completely crazy, so we have to browser sniff
+            // It's horrible, I know, but otherwise a Very Bad Thing™ will happen.
+            this.isIE = navigator.appName === 'Microsoft Internet Explorer';
+
             // Sort the table by num. users?
-            this.ordered = false;
+            this.ordered = !this.isIE;
 
             // Waiting to add the table back into the DOM?
             this.waiting = false;
@@ -21,18 +25,21 @@
 
         render: function () {
             var table = $('table', this.$el),
-                tbody = table.children('tbody:first').detach();
-            /*tbody.children().each(function (child) {
-                var i, chan;
-                child = $(child);
-                chan = child.children('td:first').text();
-                for (i = 0; i < chanList.length; i++) {
-                    if (chanList[i].channel === chan) {
-                        chanList[i].html = child.detach();
-                        break;
+                tbody = table.children('tbody:first').detach(),
+                that = this;
+            if (!this.isIE) {
+                tbody.children().each(function (idx, child) {
+                    var i, chan,
+                        channels_length = that.channels.length;
+                    chan = $(child.querySelector('.chan')).data('channel');
+                    for (i = 0; i < channels_length; i++) {
+                        if (that.channels[i].channel === chan) {
+                            that.channels[i].dom = tbody[0].removeChild(child);
+                            break;
+                        }
                     }
-                }
-            });*/
+                });
+            }
 
             if (this.ordered) {
                 this.channels.sort(function (a, b) {
@@ -41,9 +48,9 @@
             }
 
             _.each(this.channels, function (chan) {
-                tbody.append(chan.html);
+                tbody[0].appendChild(chan.dom);
             });
-            table.append(tbody);
+            table[0].appendChild(tbody[0]);
         }
     });
 
@@ -63,7 +70,6 @@
 
         // New channels to add to our list
         onListChannel: function (event) {
-            console.log(event);
             this.addChannel(event.chans);
         },
 
@@ -79,9 +85,32 @@
                 channels = [channels];
             }
             _.each(channels, function (chan) {
-                var html, channel;
-                html = '<tr><td><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(_.escape(chan.topic)) + '</td></tr>';
-                chan.html = html;
+                var frag, row, name, chanlink, num_users, topic;
+                frag = document.createDocumentFragment();
+                row = document.createElement("tr");
+                name = document.createElement("td");
+                chanlink = document.createElement("a");
+                if (typeof chanlink.dataset !== "undefined") {
+                    chanlink.dataset.channel = chan.channel;
+                } else {
+                    chanlink.setAttribute('data-channel', chan.channel);
+                }
+                chanlink.textContent = _.escape(chan.channel);
+                chanlink.classList.add('chan');
+                name.appendChild(chanlink);
+                row.appendChild(name);
+                num_users = document.createElement("td");
+                num_users.textContent = chan.num_users;
+                num_users.classList.add("num_users");
+                num_users.style.textAlign = 'center';
+                row.appendChild(num_users);
+                topic = document.createElement("td");
+                topic.style.paddingLeft = '2em';
+                topic.innerHTML = formatIRCMsg(_.escape(chan.topic));
+                row.appendChild(topic);
+                frag.appendChild(row);
+
+                chan.dom = frag;
                 that.view.channels.push(chan);
             });
 
