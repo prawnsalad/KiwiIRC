@@ -366,6 +366,10 @@
         }
 
         panel.addMsg('[' + (event.nick||'') + ']', event.msg);
+
+        // Show this notice to the active panel if it didn't have a set target
+        if (panel === this.panels.server)
+            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
     }
 
 
