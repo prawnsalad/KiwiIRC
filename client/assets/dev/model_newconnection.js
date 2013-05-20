@@ -63,6 +63,11 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
 
     onNewNetwork: function(err, network) {
+        // Show any errors if given
+        if (err) {
+            this.view.showError(err);
+        }
+
         if (network && this.connect_details) {
             network.auto_join = {
                 channel: this.connect_details.channel,

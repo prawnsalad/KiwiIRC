@@ -379,8 +379,25 @@ _kiwi.view.ServerSelect = function () {
             }
         },
 
-        showError: function (event) {
-            this.setStatus('Error connecting', 'error');
+        showError: function (error_reason) {
+            var err_text = 'Error Connecting';
+
+            if (error_reason) {
+                switch (error_reason) {
+                case 'ENOTFOUND':
+                    err_text = 'Server not found';
+                    break;
+
+                case 'ECONNREFUSED':
+                    err_text += ' (Connection refused)';
+                    break;
+
+                default:
+                    err_text += ' (' + error_reason + ')';
+                }
+            }
+
+            this.setStatus(err_text, 'error');
             $('button', this.$el).attr('disabled', null);
             this.show();
         }
