@@ -1,5 +1,21 @@
 /*jslint white:true, regexp: true, nomen: true, devel: true, undef: true, browser: true, continue: true, sloppy: true, forin: true, newcap: true, plusplus: true, maxerr: 50, indent: 4 */
 /*global kiwi */
+_kiwi.view.Member = Backbone.View.extend({
+    tagName: "li",
+    initialize: function (options) {
+        this.model.bind('change', this.render, this);
+        this.render();
+    },
+    render: function () {
+        var $this = this.$el,
+            prefix_css_class = (this.model.get('modes') || []).join(' ');
+
+        $this.addClass('mode ' + prefix_css_class);
+        $this.html('<a class="nick"><span class="prefix">' + this.model.get("prefix") + '</span>' + this.model.get("nick") + '</a>');
+        $this.data('member', this.model);
+        return this;
+    }
+});
 
 _kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
@@ -11,20 +27,18 @@ _kiwi.view.MemberList = Backbone.View.extend({
         $(this.el).appendTo('#kiwi .memberlists');
     },
     render: function () {
-        var $this = $(this.el);
+        var $this = this.$el;
         $this.empty();
         this.model.forEach(function (member) {
-            var prefix_css_class = (member.get('modes') || []).join(' ');
-            $('<li class="mode ' + prefix_css_class + '"><a class="nick"><span class="prefix">' + member.get("prefix") + '</span>' + member.get("nick") + '</a></li>')
-                .appendTo($this)
-                .data('member', member);
+            $this.append(member.view.el);
         });
+        return this;
     },
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member'),
             userbox;
-        
+
         event.stopPropagation();
 
         // If the userbox already exists here, hide it
