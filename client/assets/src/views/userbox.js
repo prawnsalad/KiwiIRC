@@ -12,7 +12,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
     },
 
     initialize: function () {
-        this.$el = $($('#tmpl_userbox').html());
+        this.$el = $($('#tmpl_userbox').html().trim());
     },
 
     queryClick: function (event) {

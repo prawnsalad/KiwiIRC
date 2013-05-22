@@ -6,7 +6,7 @@
 
             initialize: function (options) {
                 var that = this;
-                this.$el = $($('#tmpl_script_editor').html());
+                this.$el = $($('#tmpl_script_editor').html().trim());
 
                 this.model.on('applet_loaded', function () {
                     that.$el.parent().css('height', '100%');

@@ -7,7 +7,7 @@
 
 
         initialize: function (options) {
-            this.$el = $($('#tmpl_channel_list').html());
+            this.$el = $($('#tmpl_channel_list').html().trim());
 
             this.channels = [];
 
