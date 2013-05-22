@@ -19,12 +19,6 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
         members.bind("add", function (member) {
             var show_message = _kiwi.global.settings.get('show_joins_parts');
             if (show_message === false) {
-                // TODO: This might be better off being moved to the view at some point.
-                if (member.get('nick') === that.collection.network.get('nick')) {
-                    this.view.$el.find('.initial_loader').slideUp(function () {
-                        $(this).remove();
-                    });
-                }
                 return;
             }
 

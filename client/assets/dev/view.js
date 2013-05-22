@@ -703,6 +703,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     initialize: function (options) {
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
+        this.model.get('members').bind('add', function (member) {
+            if (member.get('nick') === that.collection.network.get('nick')) {
+                this.view.$el.find('.initial_loader').slideUp(function () {
+                    $(this).remove();
+                });
+            }
+        }, this);
 
         // Only show the loader if this is a channel (ie. not a query)
         if (this.model.isChannel()) {
