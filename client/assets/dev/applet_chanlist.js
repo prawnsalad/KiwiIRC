@@ -26,20 +26,15 @@
         render: function () {
             var table = $('table', this.$el),
                 tbody = table.children('tbody:first').detach(),
-                that = this;
-            if (!this.isIE) {
-                tbody.children().each(function (idx, child) {
-                    var i, chan,
-                        channels_length = that.channels.length;
-                    chan = $(child.querySelector('.chan')).data('channel');
-                    for (i = 0; i < channels_length; i++) {
-                        if (that.channels[i].channel === chan) {
-                            that.channels[i].dom = tbody[0].removeChild(child);
-                            break;
-                        }
-                    }
-                });
-            }
+                that = this,
+                channels_length = this.channels.length,
+                i;
+
+            tbody.children().each(function (idx, child) {
+                if (that.channels[idx].channel === $(child.querySelector('.chan')).data('channel')) {
+                    that.channels[idx].dom = tbody[0].removeChild(child);
+                }
+            });
 
             if (this.ordered) {
                 this.channels.sort(function (a, b) {
@@ -47,9 +42,9 @@
                 });
             }
 
-            _.each(this.channels, function (chan) {
-                tbody[0].appendChild(chan.dom);
-            });
+            for (i = 0; i < channels_length; i++) {
+                tbody[0].appendChild(this.channels[i].dom);
+            }
             table[0].appendChild(tbody[0]);
         }
     });
