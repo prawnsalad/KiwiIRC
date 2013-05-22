@@ -269,13 +269,10 @@ function formatIRCMsg (msg) {
             underline: false,
             colour: false
         },
-        anyOpen = function () {
-            return (openTags.bold || openTags.italic || openTags.underline || openTags.colour);
-        },
         spanFromOpen = function () {
             var style = '',
                 colours;
-            if (!anyOpen()) {
+            if (!(openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 return '';
             } else {
                 style += (openTags.bold) ? 'font-weight: bold; ' : '';
@@ -337,28 +334,28 @@ function formatIRCMsg (msg) {
     for (i = 0; i < msg.length; i++) {
         switch (msg[i]) {
         case '\x02':
-            if (anyOpen()) {
+            if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 out += currentTag + '</span>';
             }
             openTags.bold = !openTags.bold;
             currentTag = spanFromOpen();
             break;
         case '\x1D':
-            if (anyOpen()) {
+            if (an(openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 out += currentTag + '</span>';
             }
             openTags.italic = !openTags.italic;
             currentTag = spanFromOpen();
             break;
         case '\x1F':
-            if (anyOpen()) {
+            if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 out += currentTag + '</span>';
             }
             openTags.underline = !openTags.underline;
             currentTag = spanFromOpen();
             break;
         case '\x03':
-            if (anyOpen()) {
+            if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 out += currentTag + '</span>';
             }
             match = colourMatch(msg.substr(i, 6));
@@ -376,13 +373,13 @@ function formatIRCMsg (msg) {
             currentTag = spanFromOpen();
             break;
         case '\x0F':
-            if (anyOpen()) {
+            if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 out += currentTag + '</span>';
             }
             openTags.bold = openTags.italic = openTags.underline = openTags.colour = false;
             break;
         default:
-            if (anyOpen()) {
+            if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 currentTag += msg[i];
             } else {
                 out += msg[i];
@@ -390,7 +387,7 @@ function formatIRCMsg (msg) {
             break;
         }
     }
-    if (anyOpen()) {
+    if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
         out += currentTag + '</span>';
     }
     return out;
