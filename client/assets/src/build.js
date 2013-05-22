@@ -50,7 +50,7 @@ var src = concat([
     __dirname + '/applets/chanlist.js',
     __dirname + '/applets/scripteditor.js',
 
-    __dirname + '/utils.js',
+    __dirname + '/helpers/utils.js',
 
     __dirname + '/views/panel.js',
     __dirname + '/views/channel.js',
