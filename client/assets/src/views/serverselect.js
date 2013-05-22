@@ -14,7 +14,7 @@ _kiwi.view.ServerSelect = function () {
         initialize: function () {
             var that = this;
 
-            this.$el = $($('#tmpl_server_select').html());
+            this.$el = $($('#tmpl_server_select').html().trim());
 
             // Remove the 'more' link if the server has disabled server changing
             if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
