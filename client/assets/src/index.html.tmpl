@@ -320,6 +320,31 @@
                     'src/models/datastore.js',
                     'src/utils.js',
                     'src/views/view.js'
+                ],
+
+                // Some views extend these, so make sure they're loaded beforehand
+                [
+                    'src/views/panel.js'
+                ],
+
+                [
+                    'src/views/channel.js',
+                    'src/views/applet.js',
+                    'src/views/application.js',
+                    'src/views/apptoolbar.js',
+                    'src/views/controlbox.js',
+                    'src/views/mediamessage.js',
+                    'src/views/member.js',
+                    'src/views/memberlist.js',
+                    'src/views/menubox.js',
+                    'src/views/networktabs.js',
+                    'src/views/nickchangebox.js',
+                    'src/views/resizehandler.js',
+                    'src/views/serverselect.js',
+                    'src/views/statusmessage.js',
+                    'src/views/tabs.js',
+                    'src/views/topicbar.js',
+                    'src/views/userbox.js'
                 ]
             ]);
         } else {

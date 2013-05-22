@@ -51,7 +51,25 @@ var src = concat([
     __dirname + '/applets/scripteditor.js',
 
     __dirname + '/utils.js',
-    __dirname + '/views/view.js'
+
+    __dirname + '/views/panel.js',
+    __dirname + '/views/channel.js',
+    __dirname + '/views/applet.js',
+    __dirname + '/views/application.js',
+    __dirname + '/views/apptoolbar.js',
+    __dirname + '/views/controlbox.js',
+    __dirname + '/views/mediamessage.js',
+    __dirname + '/views/member.js',
+    __dirname + '/views/memberlist.js',
+    __dirname + '/views/menubox.js',
+    __dirname + '/views/networktabs.js',
+    __dirname + '/views/nickchangebox.js',
+    __dirname + '/views/resizehandler.js',
+    __dirname + '/views/serverselect.js',
+    __dirname + '/views/statusmessage.js',
+    __dirname + '/views/tabs.js',
+    __dirname + '/views/topicbar.js',
+    __dirname + '/views/userbox.js'
 ]);
 
 
