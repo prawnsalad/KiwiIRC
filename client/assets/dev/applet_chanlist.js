@@ -85,32 +85,10 @@
                 channels = [channels];
             }
             _.each(channels, function (chan) {
-                var frag, row, name, chanlink, num_users, topic;
-                frag = document.createDocumentFragment();
+                var row;
                 row = document.createElement("tr");
-                name = document.createElement("td");
-                chanlink = document.createElement("a");
-                if (typeof chanlink.dataset !== "undefined") {
-                    chanlink.dataset.channel = chan.channel;
-                } else {
-                    chanlink.setAttribute('data-channel', chan.channel);
-                }
-                chanlink.textContent = _.escape(chan.channel);
-                chanlink.classList.add('chan');
-                name.appendChild(chanlink);
-                row.appendChild(name);
-                num_users = document.createElement("td");
-                num_users.textContent = chan.num_users;
-                num_users.classList.add("num_users");
-                num_users.style.textAlign = 'center';
-                row.appendChild(num_users);
-                topic = document.createElement("td");
-                topic.style.paddingLeft = '2em';
-                topic.innerHTML = formatIRCMsg(_.escape(chan.topic));
-                row.appendChild(topic);
-                frag.appendChild(row);
-
-                chan.dom = frag;
+                row.innerHTML = '<td><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(_.escape(chan.topic)) + '</td>';
+                chan.dom = row;
                 that.view.channels.push(chan);
             });
 
