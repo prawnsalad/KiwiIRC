@@ -11,12 +11,8 @@
 
             this.channels = [];
 
-            // Some of this code makes IE go completely crazy, so we have to browser sniff
-            // It's horrible, I know, but otherwise a Very Bad Thing™ will happen.
-            this.isIE = navigator.appName === 'Microsoft Internet Explorer';
-
             // Sort the table by num. users?
-            this.ordered = !this.isIE;
+            this.ordered = true;
 
             // Waiting to add the table back into the DOM?
             this.waiting = false;
