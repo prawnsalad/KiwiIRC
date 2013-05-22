@@ -40,7 +40,7 @@ switch (process.argv[2]) {
         break;
 
     case 'build':
-        require('../client/assets/dev/build.js');
+        require('../client/assets/src/build.js');
         break;
         
     default:

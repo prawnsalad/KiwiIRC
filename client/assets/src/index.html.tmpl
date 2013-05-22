@@ -287,40 +287,40 @@
         if (getQueryVariable('debug')) {
             console.log('Loading debugging scripts');
             scripts = scripts.concat([
-                'dev/app.js',
+                'src/app.js',
                 [
-                    'dev/model_application.js',
-                    'dev/model_gateway.js'
+                    'src/models/application.js',
+                    'src/models/gateway.js'
                 ],
                 [
-                    'dev/model_newconnection.js',
-                    'dev/model_panellist.js',
-                    'dev/model_networkpanellist.js',
-                    'dev/model_panel.js',
-                    'dev/model_member.js',
-                    'dev/model_memberlist.js',
-                    'dev/model_network.js'
+                    'src/models/newconnection.js',
+                    'src/models/panellist.js',
+                    'src/models/networkpanellist.js',
+                    'src/models/panel.js',
+                    'src/models/member.js',
+                    'src/models/memberlist.js',
+                    'src/models/network.js'
                 ],
                 
                 [
-                    'dev/model_query.js',
-                    'dev/model_channel.js',
-                    'dev/model_server.js',
-                    'dev/model_applet.js'
+                    'src/models/query.js',
+                    'src/models/channel.js',
+                    'src/models/server.js',
+                    'src/models/applet.js'
                 ],
 
                 [
-                    'dev/applet_settings.js',
-                    'dev/applet_nickserv.js',
-                    'dev/applet_chanlist.js',
-                    'dev/applet_scripteditor.js'
+                    'src/applets/settings.js',
+                    'src/applets/nickserv.js',
+                    'src/applets/chanlist.js',
+                    'src/applets/scripteditor.js'
                 ],
 
                 [
-                    'dev/model_pluginmanager.js',
-                    'dev/model_datastore.js',
-                    'dev/utils.js',
-                    'dev/view.js'
+                    'src/models/pluginmanager.js',
+                    'src/models/datastore.js',
+                    'src/utils.js',
+                    'src/view.js'
                 ]
             ]);
         } else {
