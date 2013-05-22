@@ -47,7 +47,6 @@ var src = concat([
     __dirname + '/models/datastore.js',
 
     __dirname + '/applets/settings.js',
-    __dirname + '/applets/nickserv.js',
     __dirname + '/applets/chanlist.js',
     __dirname + '/applets/scripteditor.js',
 
