@@ -76,7 +76,7 @@ _kiwi.model.Application = function () {
             connection_dialog.view.$el.addClass('initial');
             this.view.$el.find('.panel_container:first').append(connection_dialog.view.$el);
 
-            var $info = $($('#tmpl_new_connection_info').html());
+            var $info = $($('#tmpl_new_connection_info').html().trim());
 
             if ($info.html()) {
                 connection_dialog.view.infoBoxSet($info);

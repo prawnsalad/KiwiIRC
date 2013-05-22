@@ -5,7 +5,7 @@
         },
 
         initialize: function (options) {
-            this.$el = $($('#tmpl_applet_settings').html());
+            this.$el = $($('#tmpl_applet_settings').html().trim());
 
             // Incase any settings change while we have this open, update them
             _kiwi.global.settings.on('change', this.loadSettings, this);
@@ -24,31 +24,31 @@
             var theme = settings.get('theme') || 'relaxed';
             this.$el.find('.setting-theme option').filter(function() {
                 return $(this).val() === theme;
-            }).attr('selected', true);
+            }).prop('selected', true);
 
             var list_style = settings.get('channel_list_style') || 'tabs';
             this.$el.find('.setting-channel_list_style option').filter(function() {
                 return $(this).val() === list_style;
-            }).attr('selected', true);
+            }).prop('selected', true);
 
             this.$el.find('.setting-scrollback').val(settings.get('scrollback') || '250');
 
             if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
-                this.$el.find('.setting-show_joins_parts').attr('checked', true);
+                this.$el.find('.setting-show_joins_parts').prop('checked', true);
             } else {
-                this.$el.find('.setting-show_joins_parts').attr('checked', false);
+                this.$el.find('.setting-show_joins_parts').prop('checked', false);
             }
 
             if (typeof settings.get('show_timestamps') === 'undefined' || !settings.get('show_timestamps')) {
-                this.$el.find('.setting-show_timestamps').attr('checked', false);
+                this.$el.find('.setting-show_timestamps').prop('checked', false);
             } else {
-                this.$el.find('.setting-show_timestamps').attr('checked', true);
+                this.$el.find('.setting-show_timestamps').prop('checked', true);
             }
 
             if (typeof settings.get('mute_sounds') === 'undefined' || settings.get('mute_sounds')) {
-                this.$el.find('.setting-mute_sounds').attr('checked', true);
+                this.$el.find('.setting-mute_sounds').prop('checked', true);
             } else {
-                this.$el.find('.setting-mute_sounds').attr('checked', false);
+                this.$el.find('.setting-mute_sounds').prop('checked', false);
             }
         },
 

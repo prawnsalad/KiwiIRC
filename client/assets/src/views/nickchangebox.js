@@ -5,7 +5,7 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
     },
     
     initialize: function () {
-        this.$el = $($('#tmpl_nickchange').html());
+        this.$el = $($('#tmpl_nickchange').html().trim());
     },
     
     render: function () {
