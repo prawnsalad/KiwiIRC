@@ -90,25 +90,11 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
             return $('<div>Loading Reddit thread..</div>');
         },
-          youtube: function () {
+        youtube: function () {
+            var ytid = this.$el.data('ytid');
             var that = this;
-        	
-        	$.ajax({
-                url: 'http://query.yahooapis.com/v1/public/yql',
-                    data: {
-                        q: "select * from json where url ='http://www.youtube.com/oembed?url="+ this.url + "&format=json'",
-                        format: "json"
-                    },
-                    dataType: "jsonp",
-                success: function (data) {
-                	that.$content.find('.content').html(data["query"]["results"]["json"]["html"]);
-                },
-                error: function (result) {
-                    console.log("Sorry no data found.");
-                }
-            });
-        	
-        return $('<div>Loading video..</div>');
+            var yt_html = '<iframe width="480" height="270" src="http://www.youtube.com/embed/'+ ytid +'?feature=oembed" frameborder="0" allowfullscreen=""></iframe>';
+            that.$content.find('.content').html(yt_html);
         }
     }
 
@@ -136,9 +122,9 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         }
         
         // Is youtube?
-        matches = (/youtube\.com\/watch\?v\=([a-zA-Z0-9_\-]+)?/gi).exec(url);
+        matches = (/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gi).exec(url);
         if (matches) {
-            html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" title="YouTube Video"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" data-ytid="' + matches[1] + '" title="YouTube Video"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
         return html;
     }
