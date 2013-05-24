@@ -104,7 +104,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         youtube: function () {
             var ytid = this.$el.data('ytid');
             var that = this;
-            var yt_html = '<iframe width="480" height="270" src="http://www.youtube.com/embed/'+ ytid +'?feature=oembed" frameborder="0" allowfullscreen=""></iframe>';
+            var yt_html = '<iframe width="480" height="270" src="https://www.youtube.com/embed/'+ ytid +'?feature=oembed" frameborder="0" allowfullscreen=""></iframe>';
             that.$content.find('.content').html(yt_html);
 
             return $('');
