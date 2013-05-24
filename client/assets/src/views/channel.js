@@ -1,4 +1,8 @@
 _kiwi.view.Channel = _kiwi.view.Panel.extend({
+    events: {
+        'click .msg .nick': 'nickClick'
+    },
+
     initialize: function (options) {
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
@@ -28,6 +32,48 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         // If this is the active channel then update the topic bar
         if (_kiwi.app.panels().active === this) {
             _kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
+        }
+    },
+
+    // Click on a nickname
+    nickClick: function (event) {
+        var nick = $(event.currentTarget).text(),
+            members = this.model.get('members'),
+            member, query, userbox, menubox;
+
+        if (members) {
+            member = members.getByNick(nick);
+            if (member) {
+                $('.userbox').remove();
+                userbox = new _kiwi.view.UserBox();
+                userbox.member = member;
+                userbox.channel = this.model;
+
+                if (!member.get('is_op')) {
+                    userbox.$el.children('.if_op').remove();
+                }
+                menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+                menubox.addItem('userbox', userbox.$el);
+                menubox.closeOnBlur(false);
+                menubox.show();
+                // Position the userbox + menubox
+                (function() {
+                    var t = event.pageY,
+                        m_bottom = t + menubox.$el.outerHeight(),  // Where the bottom of menu will be
+                        memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight();
+
+                    // If the bottom of the userbox is going to be too low.. raise it
+                    if (m_bottom > memberlist_bottom){
+                        t = memberlist_bottom - menubox.$el.outerHeight();
+                    }
+
+                    // Set the new positon
+                    menubox.$el.offset({
+                        left: event.clientX,
+                        top: t
+                    });
+                }).call(this);
+            }
         }
     }
 });
