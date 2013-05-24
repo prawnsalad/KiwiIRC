@@ -89,6 +89,26 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             });
 
             return $('<div>Loading Reddit thread..</div>');
+        },
+          youtube: function () {
+            var that = this;
+        	
+        	$.ajax({
+                url: 'http://query.yahooapis.com/v1/public/yql',
+                    data: {
+                        q: "select * from json where url ='http://www.youtube.com/oembed?url="+ this.url + "&format=json'",
+                        format: "json"
+                    },
+                    dataType: "jsonp",
+                success: function (data) {
+                	that.$content.find('.content').html(data["query"]["results"]["json"]["html"]);
+                },
+                error: function (result) {
+                    console.log("Sorry no data found.");
+                }
+            });
+        	
+        return $('<div>Loading video..</div>');
         }
     }
 
@@ -114,7 +134,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         if (matches) {
             html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
-
+        
+        // Is youtube?
+        matches = (/youtube\.com\/watch\?v\=([a-zA-Z0-9_\-]+)?/gi).exec(url);
+        if (matches) {
+            html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" title="YouTube Video"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
         return html;
     }
 });
