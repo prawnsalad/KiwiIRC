@@ -59,7 +59,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             var that = this;
 
             $.getJSON('http://api.imgur.com/oembed?url=' + this.url, function (data) {
-                var img_html = '<a href="' + this.url + '" target="_blank"><img height="100" src="' + data.url + '" /></a>';
+                var img_html = '<a href="' + data.url + '" target="_blank"><img height="100" src="' + data.url + '" /></a>';
                 that.$content.find('.content').html(img_html);
             });
 
