@@ -8,8 +8,8 @@ var net             = require('net'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
     Socks;
- 
- 
+
+
 // Break the Node.js version down into usable parts
 var version_values = process.version.substr(1).split('.').map(function (item) {
     return parseInt(item, 10);
@@ -28,7 +28,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
         delimiter: ' '
     });
     this.setMaxListeners(0);
-    
+
     // Socket state
     this.connected = false;
 
@@ -43,13 +43,13 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.password = pass;
-    
+
     // State object
     this.state = state;
-    
+
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);
-    
+
     // IrcUser objects
     this.irc_users = Object.create(null);
 
@@ -62,7 +62,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     // IRC connection information
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
-    
+
     // SOCKS proxy details
     // TODO: Wildcard matching of hostnames and/or CIDR ranges of IP addresses
     if ((global.config.socks_proxy && global.config.socks_proxy.enabled) && ((global.config.socks_proxy.all) || (_.contains(global.config.socks_proxy.proxy_hosts, this.irc_host.hostname)))) {
@@ -82,7 +82,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
 
     // Is SASL supported on the IRCd
     this.sasl = false;
-    
+
     // Buffers for data sent from the IRCd
     this.hold_last = false;
     this.held_data = '';
@@ -136,7 +136,7 @@ IrcConnection.prototype.connect = function () {
     // Are we connecting through a SOCKS proxy?
     if (this.socks) {
         this.socket = Socks.connect({
-            host: this.irc_host.hostname, 
+            host: this.irc_host.hostname,
             port: this.irc_host.port,
             ssl: this.ssl,
             rejectUnauthorized: global.config.reject_unauthorised_certificates
@@ -145,7 +145,7 @@ IrcConnection.prototype.connect = function () {
             user: this.socks.user,
             pass: this.socks.pass
         });
-        
+
     } else if (this.ssl) {
         this.socket = tls.connect({
             host: this.irc_host.hostname,
@@ -161,23 +161,22 @@ IrcConnection.prototype.connect = function () {
             port: this.irc_host.port
         });
     }
-    
+
     this.socket.on(socket_connect_event_name, function () {
         that.connected = true;
         socketConnectHandler.call(that);
     });
-    
+
     this.socket.setEncoding('utf-8');
-    
+
     this.socket.on('error', function (event) {
         that.emit('error', event);
-
     });
-    
+
     this.socket.on('data', function () {
         parse.apply(that, arguments);
     });
-    
+
     this.socket.on('close', function (had_error) {
         that.connected = false;
         that.emit('close');
@@ -210,7 +209,7 @@ IrcConnection.prototype.write = function (data, callback) {
 IrcConnection.prototype.end = function (data, callback) {
     if (data)
         this.write(data);
-    
+
     this.socket.end();
 };
 
@@ -359,10 +358,10 @@ var socketConnectHandler = function () {
 
         if (that.password)
             that.write('PASS ' + that.password);
-        
+
         that.write('NICK ' + that.nick);
         that.write('USER ' + that.username + ' 0 0 :' + '[www.kiwiirc.com] ' + that.nick);
-        
+
         that.emit('connected');
     });
 };
