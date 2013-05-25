@@ -3,7 +3,8 @@
 _kiwi.model.Channel = _kiwi.model.Panel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
-            members;
+            members,
+            that = this;
 
         this.view = new _kiwi.view.Channel({"model": this, "name": name});
         this.set({
@@ -20,7 +21,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
             if (show_message === false) {
                 return;
             }
-            
+
             this.addMsg(' ', '== ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 
