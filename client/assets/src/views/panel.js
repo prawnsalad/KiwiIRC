@@ -179,10 +179,10 @@ _kiwi.view.Panel = Backbone.View.extend({
             media_message = $media.data('media');
         } else {
             media_message = new _kiwi.view.MediaMessage({el: $media[0]});
+
+            // Cache this MediaMessage instance for when it's opened again
             $media.data('media', media_message);
         }
-
-        $media.data('media', media_message);
 
         media_message.open();
     },
