@@ -82,6 +82,7 @@
             this.gateway.on('whois', onWhois, this);
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
+            this.gateway.on('irc_error', onIrcError, this);
         },
 
 
@@ -624,7 +625,7 @@
     function onIrcError(event) {
         var panel, tmp;
 
-        if (event.channel !== undefined && !(panel = _kiwi.app.panels.getByName(event.channel))) {
+        if (event.channel !== undefined && !(panel = this.panels.getByName(event.channel))) {
             panel = this.panels.server;
         }
 
