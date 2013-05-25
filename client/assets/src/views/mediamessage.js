@@ -111,6 +111,19 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             that.$content.find('.content').html(yt_html);
 
             return $('');
+        },
+
+
+        gist: function () {
+            var that = this,
+                matches = (/https?:\/\/gist\.github\.com\/(?:[a-z0-9-]*\/)?([a-z0-9]+)(\#(.+))?$/i).exec(this.url);
+
+            $.getJSON('https://gist.github.com/'+matches[1]+'.json?callback=?' + (matches[2] || ''), function (data) {
+                $('body').append('<link rel="stylesheet" href="' + data.stylesheet + '" type="text/css" />');
+                that.$content.find('.content').html(data.div);
+            });
+
+            return $('<div>Loading gist..</div>');
         }
     }
     }, {
@@ -146,6 +159,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         matches = (/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gi).exec(url);
         if (matches) {
             html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" data-ytid="' + matches[1] + '" title="YouTube Video"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        // Is a github gist?
+        matches = (/https?:\/\/gist\.github\.com\/(?:[a-z0-9-]*\/)?([a-z0-9]+)(\#(.+))?$/i).exec(url);
+        if (matches) {
+            html += '<span class="media gist" data-type="gist" data-url="' + url + '" data-gist_id="' + matches[1] + '" title="GitHub Gist"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;
