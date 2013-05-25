@@ -15,8 +15,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.model.bind('change:topic', this.topic, this);
 
         this.model.get('members').bind('add', function (member) {
-            if (member.get('nick') === that.collection.network.get('nick')) {
-                this.view.$el.find('.initial_loader').slideUp(function () {
+            if (member.get('nick') === this.model.collection.network.get('nick')) {
+                this.$el.find('.initial_loader').slideUp(function () {
                     $(this).remove();
                 });
             }

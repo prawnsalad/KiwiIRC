@@ -3,16 +3,16 @@
 _kiwi.model.Channel = _kiwi.model.Panel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
-            members,
-            that = this;
+            members;
 
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
         this.set({
             "members": new _kiwi.model.MemberList(),
             "name": name,
             "scrollback": [],
             "topic": ""
         }, {"silent": true});
+
+        this.view = new _kiwi.view.Channel({"model": this, "name": name});
 
         members = this.get("members");
         members.channel = this;
