@@ -44,7 +44,6 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (members) {
             member = members.getByNick(nick);
             if (member) {
-                $('.userbox').remove();
                 userbox = new _kiwi.view.UserBox();
                 userbox.member = member;
                 userbox.channel = this.model;
@@ -54,8 +53,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 }
                 menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
-                menubox.closeOnBlur(false);
                 menubox.show();
+                
                 // Position the userbox + menubox
                 (function() {
                     var t = event.pageY,

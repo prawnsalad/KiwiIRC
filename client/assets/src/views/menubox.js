@@ -12,11 +12,6 @@ _kiwi.view.MenuBox = Backbone.View.extend({
         this._items = {};
         this._display_footer = true;
         this._close_on_blur = true;
-
-        this._close_proxy = function(event) {
-            that.onDocumentClick(event);
-        };
-        $(document).on('click', this._close_proxy);
     },
 
 
@@ -65,7 +60,8 @@ _kiwi.view.MenuBox = Backbone.View.extend({
         this._items = null;
         this.remove();
 
-        $(document).off('click', this._close_proxy);
+        if (this._close_proxy)
+            $(document).off('click', this._close_proxy);
     },
 
 
@@ -92,7 +88,20 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     show: function() {
+        var that = this;
+
         this.render();
         this.$el.appendTo(_kiwi.app.view.$el);
+
+        // We add this document click listener on the next javascript tick.
+        // If the current tick is handling an existing click event (such as the nicklist click handler),
+        // the click event bubbles up and hits the document therefore calling this callback to
+        // remove this menubox before it's even shown.
+        setTimeout(function() {
+            that._close_proxy = function(event) {
+                that.onDocumentClick(event);
+            };
+            $(document).on('click', that._close_proxy);
+        }, 0);
     }
 });

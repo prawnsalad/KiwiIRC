@@ -20,14 +20,6 @@ _kiwi.view.MemberList = Backbone.View.extend({
             member = $target.data('member'),
             userbox;
 
-        event.stopPropagation();
-
-        // If the userbox already exists here, hide it
-        if ($target.find('.userbox').length > 0) {
-            $('.userbox', this.$el).remove();
-            return;
-        }
-
         userbox = new _kiwi.view.UserBox();
         userbox.member = member;
         userbox.channel = this.model.channel;
