@@ -375,20 +375,24 @@
         var panel;
 
         // An ignored user? don't do anything with it
-        if (event.nick && _kiwi.gateway.isNickIgnored(event.nick)) {
+        if (!event.from_server && event.nick && _kiwi.gateway.isNickIgnored(event.nick)) {
             return;
         }
 
         // Find a panel for the destination(channel) or who its from
-        panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
-        if (!panel) {
+        if (!event.from_server) {
+            panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
+            if (!panel) {
+                panel = this.panels.server;
+            }
+        } else {
             panel = this.panels.server;
         }
 
         panel.addMsg('[' + (event.nick||'') + ']', event.msg);
 
         // Show this notice to the active panel if it didn't have a set target
-        if (panel === this.panels.server)
+        if (!event.from_server && panel === this.panels.server)
             _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
     }
 

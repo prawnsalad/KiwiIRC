@@ -350,9 +350,13 @@ var listeners = {
                 msg: command.trailing.substr(1, command.trailing.length - 2)
             });
         } else {
-            namespace = (command.params[0] == this.irc_connection.nick) ? 'user' : 'channel';
+            namespace = (command.params[0] == this.irc_connection.nick || command.params[0] == '*') ?
+                'user' :
+                'channel';
+
             this.irc_connection.emit(namespace + ' ' + command.params[0] + ' notice', {
-                nick: command.nick,
+                from_server: command.prefix ? true : false,
+                nick: command.nick || command.prefix || undefined,
                 ident: command.ident,
                 hostname: command.hostname,
                 target: command.params[0],
@@ -761,6 +765,7 @@ function genericNotice (command, msg, is_error) {
 
     this.client.sendIrcCommand('notice', {
         server: this.con_num,
+        from_server: true,
         nick: command.prefix,
         ident: '',
         hostname: '',
