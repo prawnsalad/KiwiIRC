@@ -508,8 +508,19 @@ html, body { height:100%; }
     -webkit-border-radius:5px;
     -khtml-border-radius:5px;
 }
-#kiwi.theme_relaxed .controlbox .input .nick { text-align: right; width:11em; left:0px; position:absolute; padding:2px; overflow:hidden; }
 #kiwi.theme_relaxed .controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi.theme_relaxed .controlbox .input .nick {
+    text-align: right;
+    width: 11em;
+    left: 0px;
+    position: absolute;
+    overflow: hidden;
+    background-color: #eee;
+    border-radius: 3px 0 0 3px;
+    border-right: 1px solid #ccc;
+    padding: 2px;
+    padding-right: 0.5em;
+}
 
 #kiwi.theme_relaxed.narrow .controlbox .input .nick { display:none; }
 #kiwi.theme_relaxed.narrow .controlbox .input .input_wrap { left:7px; }
