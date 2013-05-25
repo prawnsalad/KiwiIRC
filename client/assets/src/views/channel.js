@@ -1,6 +1,13 @@
 _kiwi.view.Channel = _kiwi.view.Panel.extend({
-    events: {
-        'click .msg .nick': 'nickClick'
+    events: function(){
+        var parent_events = _kiwi.view.Panel.prototype.events;
+        
+        if(_.isFunction(parent_events)){
+            parent_events = parent_events();
+        }
+        return _.extend({}, parent_events, {
+            'click .msg .nick' : 'nickClick'
+        });
     },
 
     initialize: function (options) {
