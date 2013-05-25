@@ -102,6 +102,7 @@ function onMsg(event) {
 
 function onNotice(event) {
     this.irc_connection.clientEvent('notice', {
+        from_server: event.from_server,
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
