@@ -14,13 +14,15 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.initializePanel(options);
         this.model.bind('change:topic', this.topic, this);
 
-        this.model.get('members').bind('add', function (member) {
-            if (member.get('nick') === this.model.collection.network.get('nick')) {
-                this.$el.find('.initial_loader').slideUp(function () {
-                    $(this).remove();
-                });
-            }
-        }, this);
+        if (this.model.get('members')) {
+            this.model.get('members').bind('add', function (member) {
+                if (member.get('nick') === this.model.collection.network.get('nick')) {
+                    this.$el.find('.initial_loader').slideUp(function () {
+                        $(this).remove();
+                    });
+                }
+            }, this);
+        }
 
         // Only show the loader if this is a channel (ie. not a query)
         if (this.model.isChannel()) {
