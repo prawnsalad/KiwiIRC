@@ -2,9 +2,6 @@ _kiwi.model.Application = function () {
     // Set to a reference to this object within initialize()
     var that = null;
 
-    // The auto connect details entered into the server select box
-    var auto_connect_details = {};
-
 
     var model = function () {
         /** _kiwi.view.Application */
@@ -324,13 +321,12 @@ _kiwi.model.Application = function () {
         this.bindGatewayCommands = function (gw) {
             gw.on('onconnect', function (event) {
                 that.view.barsShow();
-
-                if (auto_connect_details.channel) {
-                    that.controlbox.processInput('/JOIN ' + auto_connect_details.channel + ' ' + auto_connect_details.channel_key);
-                }
             });
 
 
+            /**
+             * Handle the reconnections to the kiwi server
+             */
             (function () {
                 var gw_stat = 0;
 
@@ -341,18 +337,31 @@ _kiwi.model.Application = function () {
                     that.view.$el.removeClass('connected');
 
                     // Mention the disconnection on every channel
-                    $.each(_kiwi.app.connections.getByConnectionId(0).panels.models, function (idx, panel) {
-                        if (!panel || !panel.isChannel()) return;
-                        panel.addMsg('', msg, 'action quit');
+                    _kiwi.app.connections.forEach(function(connection) {
+                        connection.panels.server.addMsg('', msg, 'action quit');
+
+                        connection.panels.forEach(function(panel) {
+                            if (!panel.isChannel())
+                                return;
+
+                            panel.addMsg('', msg, 'action quit');
+                        });
                     });
-                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action quit');
 
                     gw_stat = 1;
                 });
+
+
                 gw.on('reconnecting', function (event) {
-                    msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
-                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action quit');
+                    var msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
+
+                    // Only need to mention the repeating re-connection messages on server panels
+                    _kiwi.app.connections.forEach(function(connection) {
+                        connection.panels.server.addMsg('', msg, 'action quit');
+                    });
                 });
+
+
                 gw.on('onconnect', function (event) {
                     that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
@@ -361,11 +370,16 @@ _kiwi.model.Application = function () {
                     that.message.text(msg, {timeout: 5000});
 
                     // Mention the disconnection on every channel
-                    $.each(_kiwi.app.connections.getByConnectionId(0).panels.models, function (idx, panel) {
-                        if (!panel || !panel.isChannel()) return;
-                        panel.addMsg('', msg, 'action join');
+                    _kiwi.app.connections.forEach(function(connection) {
+                        connection.panels.server.addMsg('', msg, 'action join');
+
+                        connection.panels.forEach(function(panel) {
+                            if (!panel.isChannel())
+                                return;
+
+                            panel.addMsg('', msg, 'action join');
+                        });
                     });
-                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action join');
 
                     gw_stat = 0;
                 });

@@ -128,6 +128,22 @@
             });
 
             return panels;
+        },
+
+
+        /**
+         * Join all the open channels we have open
+         * Reconnecting to a network would typically call this.
+         */
+        rejoinAllChannels: function() {
+            var that = this;
+
+            this.panels.forEach(function(panel) {
+                if (!panel.isChannel())
+                    return;
+
+                that.gateway.join(panel.get('name'));
+            });
         }
     });
 
@@ -146,6 +162,9 @@
 
         // Update our nick with what the network gave us
         this.set('nick', event.nick);
+
+        // If this is a re-connection then we may have some channels to re-join
+        this.rejoinAllChannels();
 
         // Auto joining channels
         if (this.auto_join && this.auto_join.channel) {
