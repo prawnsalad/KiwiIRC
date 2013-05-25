@@ -55,6 +55,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             return $('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
         },
 
+
         imgur: function () {
             var that = this;
 
@@ -66,7 +67,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             return $('<div>Loading image..</div>');
         },
 
-        
+
         reddit: function () {
             var that = this;
             var matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(this.url);
@@ -101,6 +102,8 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
             return $('<div>Loading Reddit thread..</div>');
         },
+
+
         youtube: function () {
             var ytid = this.$el.data('ytid');
             var that = this;
@@ -120,15 +123,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
             html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
-        
-        // is this an imgur link?
+
+        // Is this an imgur link not picked up by the images regex?
         matches = (/imgur\.com\/[^/]*(?!=\.[^!.]+($|\?))/ig).exec(url);
-        if (matches) {
-        	 if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-             } else {
-        		html += '<span class="media imgur" data-type="imgur" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
-             }
-            }
+        if (matches && !url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
+            html += '<span class="media imgur" data-type="imgur" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
 
         // Is it a tweet?
         matches = (/https?:\/\/twitter.com\/([a-zA-Z0-9_]+)\/status\/([0-9]+)/ig).exec(url);
@@ -141,7 +141,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         if (matches) {
             html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
-        
+
         // Is youtube?
         matches = (/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gi).exec(url);
         if (matches) {
