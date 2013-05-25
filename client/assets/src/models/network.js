@@ -372,7 +372,7 @@
 
 
     function onNotice(event) {
-        var panel;
+        var panel, channel_name;
 
         // An ignored user? don't do anything with it
         if (!event.from_server && event.nick && _kiwi.gateway.isNickIgnored(event.nick)) {
@@ -382,6 +382,17 @@
         // Find a panel for the destination(channel) or who its from
         if (!event.from_server) {
             panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
+
+            // Forward ChanServ messages to its associated channel
+            if (event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
+                channel_name = /\[([^ \]]+)\]/gi.exec(event.msg);
+                if (channel_name && channel_name[1]) {
+                    channel_name = channel_name[1];
+
+                    panel = this.panels.getByName(channel_name);
+                }
+            }
+
             if (!panel) {
                 panel = this.panels.server;
             }
