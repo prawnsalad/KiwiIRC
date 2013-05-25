@@ -55,7 +55,18 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             return $('<a href="' + this.url + '" target="_blank"><img height="100" src="' + this.url + '" /></a>');
         },
 
+        imgur: function () {
+            var that = this;
 
+            $.getJSON('http://api.imgur.com/oembed?url=' + this.url, function (data) {
+                var img_html = '<a href="' + data.url + '" target="_blank"><img height="100" src="' + data.url + '" /></a>';
+                that.$content.find('.content').html(img_html);
+            });
+
+            return $('<div>Loading image..</div>');
+        },
+
+        
         reddit: function () {
             var that = this;
             var matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(this.url);
@@ -89,10 +100,17 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             });
 
             return $('<div>Loading Reddit thread..</div>');
+        },
+        youtube: function () {
+            var ytid = this.$el.data('ytid');
+            var that = this;
+            var yt_html = '<iframe width="480" height="270" src="https://www.youtube.com/embed/'+ ytid +'?feature=oembed" frameborder="0" allowfullscreen=""></iframe>';
+            that.$content.find('.content').html(yt_html);
+
+            return $('');
         }
     }
-
-}, {
+    }, {
 
     // Build the closed media HTML from a URL
     buildHtml: function (url) {
@@ -102,6 +120,15 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
             html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
+        
+        // is this an imgur link?
+        matches = (/imgur\.com\/[^/]*(?!=\.[^!.]+($|\?))/ig).exec(url);
+        if (matches) {
+        	 if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
+             } else {
+        		html += '<span class="media imgur" data-type="imgur" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+             }
+            }
 
         // Is it a tweet?
         matches = (/https?:\/\/twitter.com\/([a-zA-Z0-9_]+)\/status\/([0-9]+)/ig).exec(url);
@@ -113,6 +140,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(url);
         if (matches) {
             html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+        
+        // Is youtube?
+        matches = (/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gi).exec(url);
+        if (matches) {
+            html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" data-ytid="' + matches[1] + '" title="YouTube Video"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;
