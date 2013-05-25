@@ -341,7 +341,7 @@ function formatIRCMsg (msg) {
             currentTag = spanFromOpen();
             break;
         case '\x1D':
-            if (an(openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
+            if ((openTags.bold || openTags.italic || openTags.underline || openTags.colour)) {
                 out += currentTag + '</span>';
             }
             openTags.italic = !openTags.italic;
