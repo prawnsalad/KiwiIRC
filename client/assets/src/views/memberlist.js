@@ -11,7 +11,8 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var $this = this.$el;
         $this.empty();
         this.model.forEach(function (member) {
-            $this.append(member.view.el);
+            member.view.$el.data('member', member);
+            $this.append(member.view.$el);
         });
         return this;
     },

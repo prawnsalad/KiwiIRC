@@ -10,7 +10,7 @@ _kiwi.view.Member = Backbone.View.extend({
 
         $this.addClass('mode ' + prefix_css_class);
         $this.html('<a class="nick"><span class="prefix">' + this.model.get("prefix") + '</span>' + this.model.get("nick") + '</a>');
-        $this.data('member', this.model);
+
         return this;
     }
 });
