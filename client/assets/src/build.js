@@ -1,5 +1,5 @@
 var fs        = require('fs'),
-    uglyfyJS  = require('uglify-js'),
+    uglifyJS  = require('uglify-js'),
     _         = require('lodash'),
     config    = require('./../../../server/configuration.js');
 
@@ -21,14 +21,7 @@ function concat(src) {
 config.loadConfig();
 
 
-
-
-
-/**
- * Build the _kiwi.js files
- */
-
-var src = concat([
+var source_files = [
     __dirname + '/app.js',
     __dirname + '/models/application.js',
     __dirname + '/models/gateway.js',
@@ -70,19 +63,31 @@ var src = concat([
     __dirname + '/views/tabs.js',
     __dirname + '/views/topicbar.js',
     __dirname + '/views/userbox.js'
-]);
+];
 
 
+/**
+ * Build the kiwi.js/kiwi.min.js files
+ */
+var src = concat(source_files);
 src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
 
 fs.writeFileSync(__dirname + '/../kiwi.js', src, FILE_ENCODING);
 
+// Uglify can take take an array of filenames to produce minified code
+// but it's not wraped in an IIFE and produces a slightly larger file
+//src = uglifyJS.minify(source_files);
 
-src = uglyfyJS.parser.parse(src);
-src = uglyfyJS.uglify.ast_mangle(src);
-src = uglyfyJS.uglify.ast_squeeze(src);
-fs.writeFileSync(__dirname + '/../kiwi.min.js', uglyfyJS.uglify.gen_code(src), FILE_ENCODING);
+var ast = uglifyJS.parse(src, {filename: 'kiwi.js'});
+ast.figure_out_scope();
+ast = ast.transform(uglifyJS.Compressor({warnings: false}));
+ast.figure_out_scope();
+ast.compute_char_frequency();
+ast.mangle_names();
+src = ast.print_to_string();
+
+fs.writeFileSync(__dirname + '/../kiwi.min.js', src, FILE_ENCODING);
 
 
 

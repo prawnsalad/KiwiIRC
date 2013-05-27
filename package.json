@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "node-static": "0.5.9",
-    "uglify-js": "1.2.3",
+    "uglify-js": "2.3.6",
     "socket.io": "0.9.14",
     "range_check": "0.0.1",
     "lodash": "0.9.1",
