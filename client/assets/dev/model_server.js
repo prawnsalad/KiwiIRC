@@ -11,10 +11,5 @@ _kiwi.model.Server = _kiwi.model.Panel.extend({
         }, {"silent": true});
 
         //this.addMsg(' ', '--> Kiwi IRC: Such an awesome IRC client', '', {style: 'color:#009900;'});
-
-        this.server_login = new _kiwi.view.ServerSelect();
-        
-        this.view.$el.append(this.server_login.$el);
-        this.server_login.show();
     }
 });

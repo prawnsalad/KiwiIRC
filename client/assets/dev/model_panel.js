@@ -79,14 +79,14 @@ _kiwi.model.Panel = Backbone.Model.extend({
             this.unset('members');
         }
 
-        _kiwi.app.panels.remove(this);
+        this.get('panel_list').remove(this);
 
         this.unbind();
         this.destroy();
 
         // If closing the active panel, switch to the server panel
-        if (this.cid === _kiwi.app.panels.active.cid) {
-            _kiwi.app.panels.server.view.show();
+        if (this === _kiwi.app.panels().active) {
+            _kiwi.app.connections.active_connection.panels.server.view.show();
         }
     },
 
@@ -120,6 +120,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
     },
 
     isActive: function () {
-        return (_kiwi.app.panels.active === this);
+        return (_kiwi.app.panels().active === this);
     }
 });

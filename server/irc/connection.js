@@ -17,7 +17,7 @@ var version_values = process.version.substr(1).split('.').map(function (item) {
 
 // If we have a suitable Nodejs version, bring int he socks functionality
 if (version_values[1] >= 10) {
-    Socks = require('../socks.js');
+    Socks = require('socksjs');
 }
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
@@ -25,7 +25,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
 
     EventEmitter2.call(this,{
         wildcard: true,
-        delimiter: ':'
+        delimiter: ' '
     });
     this.setMaxListeners(0);
     
@@ -52,7 +52,10 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     
     // IrcUser objects
     this.irc_users = Object.create(null);
-    
+
+    // TODO: use `this.nick` instead of `'*'` when using an IrcUser per nick
+    this.irc_users[this.nick] = new IrcUser(this, '*');
+
     // IrcChannel objects
     this.irc_channels = Object.create(null);
 
@@ -87,7 +90,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.applyIrcEvents();
 
     // Call any modules before making the connection
-    global.modules.emit('irc:connecting', {connection: this})
+    global.modules.emit('irc connecting', {connection: this})
         .done(function () {
             that.connect();
         });
@@ -101,15 +104,15 @@ module.exports.IrcConnection = IrcConnection;
 IrcConnection.prototype.applyIrcEvents = function () {
     // Listen for events on the IRC connection
     this.irc_events = {
-        'server:*:connect':  onServerConnect,
-        'channel:*:join':    onChannelJoin,
+        'server * connect':  onServerConnect,
+        'channel * join':    onChannelJoin,
 
         // TODO: uncomment when using an IrcUser per nick
         //'user:*:privmsg':    onUserPrivmsg,
-        'user:*:nick':       onUserNick,
-        'channel:*:part':    onUserParts,
-        'channel:*:quit':    onUserParts,
-        'channel:*:kick':    onUserParts
+        'user * nick':       onUserNick,
+        'channel * part':    onUserParts,
+        'channel * quit':    onUserParts,
+        'channel * kick':    onUserKick
     };
 
     EventBinder.bindIrcEvents('', this.irc_events, this, this);
@@ -271,9 +274,6 @@ function onChannelJoin(event) {
 
 function onServerConnect(event) {
     this.nick = event.nick;
-
-    // TODO: use `event.nick` instead of `'*'` when using an IrcUser per nick
-    this.irc_users[event.nick] = new IrcUser(this, '*');
 }
 
 
@@ -314,6 +314,18 @@ function onUserParts(event) {
     }
 }
 
+function onUserKick(event){
+    // Only deal with ourselves being kicked from a channel
+    if (event.kicked !== this.nick)
+        return;
+
+    if (this.irc_channels[event.channel]) {
+        this.irc_channels[event.channel].dispose();
+        delete this.irc_channels[event.channel];
+    }
+
+}
+
 
 
 
@@ -335,7 +347,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc:authorize', connect_data).done(function () {
+    global.modules.emit('irc authorize', connect_data).done(function () {
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {

@@ -75,7 +75,8 @@ _kiwi.model.Gateway = function () {
         // Some easier handler events
         this.on('onmsg', function (event) {
             var source,
-                is_pm = (event.channel == that.get('nick'));
+                connection = _kiwi.app.connections.getByConnectionId(event.server),
+                is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
             
@@ -100,7 +101,8 @@ _kiwi.model.Gateway = function () {
 
         this.on('onaction', function (event) {
             var source,
-                is_pm = (event.channel == that.get('nick'));
+                connection = _kiwi.app.connections.getByConnectionId(event.server),
+                is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
             
@@ -130,13 +132,9 @@ _kiwi.model.Gateway = function () {
 
     /**
     *   Connects to the server
-    *   @param  {String}    host        The hostname or IP address of the IRC server to connect to
-    *   @param  {Number}    port        The port of the IRC server to connect to
-    *   @param  {Boolean}   ssl         Whether or not to connect to the IRC server using SSL
-    *   @param  {String}    password    The password to supply to the IRC server during registration
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
-    this.connect = function (host, port, ssl, password, callback) {
+    this.connect = function (callback) {
         var resource;
 
         // Work out the resource URL for socket.io
@@ -150,7 +148,7 @@ _kiwi.model.Gateway = function () {
 
         this.socket = io.connect(this.get('kiwi_server'), {
             'resource': resource,
-            
+
             'try multiple transports': true,
             'connect timeout': 3000,
             'max reconnection attempts': 7,
@@ -179,6 +177,8 @@ _kiwi.model.Gateway = function () {
          * IRCD and the nick has been accepted.
          */
         this.socket.on('connect', function () {
+            callback && callback();
+            /*
             this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
                 if (!err) {
                     that.server_num = server_num;
@@ -188,6 +188,7 @@ _kiwi.model.Gateway = function () {
                     callback(err);
                 }
             });
+            */
         });
 
         this.socket.on('too_many_connections', function () {
@@ -218,6 +219,31 @@ _kiwi.model.Gateway = function () {
 
         this.socket.on('reconnect_failed', function () {
             console.log("_kiwi.gateway.socket.on('reconnect_failed')");
+        });
+    };
+
+
+
+    this.newConnection = function(connection_info, callback_fn) {
+        var that = this,
+            h = connection_info;
+
+        this.socket.emit('kiwi', {command: 'connect', nick: h.nick, hostname: h.host, port: h.port, ssl: h.ssl, password: h.password}, function (err, server_num) {
+            var connection;
+
+            if (!err) {
+                if (!_kiwi.app.connections.getByConnectionId(server_num)){
+                    connection = new _kiwi.model.Network({connection_id: server_num});
+                    _kiwi.app.connections.add(connection);
+                }
+
+                console.log("_kiwi.gateway.socket.on('connect')");
+                callback_fn && callback_fn(err, connection);
+                
+            } else {
+                console.log("_kiwi.gateway.socket.on('error')", {reason: err});
+                callback_fn && callback_fn(err);
+            }
         });
     };
 
@@ -257,9 +283,8 @@ _kiwi.model.Gateway = function () {
     */
     this.parse = function (command, data) {
         //console.log('gateway event', command, data);
-        if (command !== undefined) {
-            that.trigger('on' + command, data);
 
+        if (command !== undefined) {
             switch (command) {
             case 'options':
                 $.each(data.options, function (name, value) {
@@ -278,15 +303,6 @@ _kiwi.model.Gateway = function () {
                 that.set('cap', data.cap);
                 break;
 
-            case 'connect':
-                that.set('nick', data.nick);
-                break;
-
-            case 'nick':
-                if (data.nick === that.get('nick')) {
-                    that.set('nick', data.newnick);
-                }
-                break;
             /*
             case 'sync':
                 if (_kiwi.gateway.onSync && _kiwi.gateway.syncing) {
@@ -301,6 +317,17 @@ _kiwi.model.Gateway = function () {
                 break;
             }
         }
+
+
+        if (typeof data.server !== 'undefined') {
+            that.trigger('connection:' + data.server.toString(), {
+                event_name: command,
+                event_data: data
+            });
+        }
+
+        // Trigger the global events (Mainly legacy now)
+        that.trigger('on' + command, data);
     };
 
     /**
@@ -309,8 +336,15 @@ _kiwi.model.Gateway = function () {
     *   @param  {Object}    data        The data to send
     *   @param  {Function}  callback    A callback function
     */
-    this.sendData = function (data, callback) {
-        this.socket.emit('irc', {server: 0, data: JSON.stringify(data)}, callback);
+    this.sendData = function (connection_id, data, callback) {
+        if (typeof connection_id === 'undefined' || connection_id === null)
+            connection_id = _kiwi.app.connections.active_connection.get('connection_id');
+
+        var data_buffer = {
+            server: connection_id,
+            data: JSON.stringify(data)
+        };
+        this.socket.emit('irc', data_buffer, callback);
     };
 
     /**
@@ -319,7 +353,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.privmsg = function (target, msg, callback) {
+    this.privmsg = function (connection_id, target, msg, callback) {
         var data = {
             method: 'privmsg',
             args: {
@@ -328,7 +362,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -337,7 +371,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.notice = function (target, msg, callback) {
+    this.notice = function (connection_id, target, msg, callback) {
         var data = {
             method: 'notice',
             args: {
@@ -346,7 +380,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -357,7 +391,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    params      Additional paramaters
     *   @param  {Function}  callback    A callback function
     */
-    this.ctcp = function (request, type, target, params, callback) {
+    this.ctcp = function (connection_id, request, type, target, params, callback) {
         var data = {
             method: 'ctcp',
             args: {
@@ -368,7 +402,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -376,7 +410,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.action = function (target, msg, callback) {
+    this.action = function (connection_id, target, msg, callback) {
         this.ctcp(true, 'ACTION', target, msg, callback);
     };
 
@@ -386,7 +420,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    key         The key to the channel
     *   @param  {Function}  callback    A callback function
     */
-    this.join = function (channel, key, callback) {
+    this.join = function (connection_id, channel, key, callback) {
         var data = {
             method: 'join',
             args: {
@@ -395,7 +429,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -403,7 +437,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    channel     The channel to part
     *   @param  {Function}  callback    A callback function
     */
-    this.part = function (channel, callback) {
+    this.part = function (connection_id, channel, callback) {
         var data = {
             method: 'part',
             args: {
@@ -411,7 +445,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -420,7 +454,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    new_topic   The new topic to set
     *   @param  {Function}  callback    A callback function
     */
-    this.topic = function (channel, new_topic, callback) {
+    this.topic = function (connection_id, channel, new_topic, callback) {
         var data = {
             method: 'topic',
             args: {
@@ -429,7 +463,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -439,7 +473,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    reason      The reason for kicking the user
     *   @param  {Function}  callback    A callback function
     */
-    this.kick = function (channel, nick, reason, callback) {
+    this.kick = function (connection_id, channel, nick, reason, callback) {
         var data = {
             method: 'kick',
             args: {
@@ -449,7 +483,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -457,7 +491,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The quit message to send to the IRC server
     *   @param  {Function}   callback    A callback function
     */
-    this.quit = function (msg, callback) {
+    this.quit = function (connection_id, msg, callback) {
         msg = msg || "";
         var data = {
             method: 'quit',
@@ -466,7 +500,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -474,7 +508,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    data        The data to send to the IRC server
     *   @param  {Function}  callback    A callback function
     */
-    this.raw = function (data, callback) {
+    this.raw = function (connection_id, data, callback) {
         data = {
             method: 'raw',
             args: {
@@ -482,7 +516,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -490,7 +524,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    new_nick    Our new nickname
     *   @param  {Function}  callback    A callback function
     */
-    this.changeNick = function (new_nick, callback) {
+    this.changeNick = function (connection_id, new_nick, callback) {
         var data = {
             method: 'nick',
             args: {
@@ -498,7 +532,7 @@ _kiwi.model.Gateway = function () {
             }
         };
 
-        this.sendData(data, callback);
+        this.sendData(connection_id, data, callback);
     };
 
     /**
@@ -535,7 +569,7 @@ _kiwi.model.Gateway = function () {
         }
 
         return false;
-    }
+    };
 
 
     return new (Backbone.Model.extend(this))(arguments);
