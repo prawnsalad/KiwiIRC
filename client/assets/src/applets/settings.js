@@ -15,7 +15,6 @@
 
 
         },
-        
 
         loadSettings: function () {
             var settings = _kiwi.global.settings;
@@ -58,7 +57,7 @@
                 feedback;
 
             // Stop settings being updated while we're saving one by one
-            _kiwi.global.settings.off('change', this.loadSettings, this);
+            settings.off('change', this.loadSettings, this);
 
             settings.set('theme', $('.setting-theme', this.$el).val());
             settings.set('channel_list_style', $('.setting-channel_list_style', this.$el).val());
@@ -72,10 +71,10 @@
             feedback = $('.feedback', this.$el);
             feedback.fadeIn('slow', function () {
                 feedback.fadeOut('slow');
-            })
+            });
 
             // Continue listening for setting changes
-            _kiwi.global.settings.on('change', this.loadSettings, this);
+            settings.on('change', this.loadSettings, this);
         }
     });
 
