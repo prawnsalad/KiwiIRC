@@ -170,7 +170,15 @@ conf.client = {
     port:    6697,
     ssl:     true,
     channel: '#kiwiirc',
-    nick:    'kiwi_?'
+    nick:    'kiwi_?',
+    settings: {
+        theme: 'relaxed',
+        channel_list_style: 'tabs',
+        scrollback: 250,
+        show_joins_parts: true,
+        show_timestamps: false,
+        mute_sounds: false
+    }
 };
 
 
