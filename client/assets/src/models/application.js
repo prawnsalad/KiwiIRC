@@ -48,6 +48,7 @@ _kiwi.model.Application = function () {
 
             this.initializeClient();
             this.initializeGlobals();
+            this.applyDefaultClientSettings(this.server_settings.client.settings);
 
             this.view.barsHide(true);
 
@@ -135,6 +136,15 @@ _kiwi.model.Application = function () {
 
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
+        };
+
+
+        this.applyDefaultClientSettings = function (settings) {
+            _.each(settings, function (value, setting) {
+                if (typeof _kiwi.global.settings.get(setting) === 'undefined') {
+                    _kiwi.global.settings.set(setting, value);
+                }
+            });
         };
 
 
