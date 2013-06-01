@@ -2,9 +2,6 @@ _kiwi.model.Application = function () {
     // Set to a reference to this object within initialize()
     var that = null;
 
-    // The auto connect details entered into the server select box
-    var auto_connect_details = {};
-
 
     var model = function () {
         /** _kiwi.view.Application */
@@ -76,7 +73,7 @@ _kiwi.model.Application = function () {
             connection_dialog.view.$el.addClass('initial');
             this.view.$el.find('.panel_container:first').append(connection_dialog.view.$el);
 
-            var $info = $($('#tmpl_new_connection_info').html());
+            var $info = $($('#tmpl_new_connection_info').html().trim());
 
             if ($info.html()) {
                 connection_dialog.view.infoBoxSet($info);
@@ -109,21 +106,21 @@ _kiwi.model.Application = function () {
             // Applets panel list
             this.applet_panels = new _kiwi.model.PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
-            this.view.$el.find('#tabs').append(this.applet_panels.view.$el);
+            this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
             /**
              * Set the UI components up
              */
-            this.controlbox = new _kiwi.view.ControlBox({el: $('#controlbox')[0]});
+            this.controlbox = new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]});
             this.bindControllboxCommands(this.controlbox);
 
-            this.topicbar = new _kiwi.view.TopicBar({el: $('#topic')[0]});
+            this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
 
-            new _kiwi.view.AppToolbar({el: $('#toolbar .app_tools')[0]});
+            new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
 
-            this.message = new _kiwi.view.StatusMessage({el: $('#status_message')[0]});
+            this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
 
-            this.resize_handle = new _kiwi.view.ResizeHandler({el: $('#memberlists_resize_handle')[0]});
+            this.resize_handle = new _kiwi.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();
@@ -324,13 +321,12 @@ _kiwi.model.Application = function () {
         this.bindGatewayCommands = function (gw) {
             gw.on('onconnect', function (event) {
                 that.view.barsShow();
-
-                if (auto_connect_details.channel) {
-                    that.controlbox.processInput('/JOIN ' + auto_connect_details.channel + ' ' + auto_connect_details.channel_key);
-                }
             });
 
 
+            /**
+             * Handle the reconnections to the kiwi server
+             */
             (function () {
                 var gw_stat = 0;
 
@@ -341,18 +337,31 @@ _kiwi.model.Application = function () {
                     that.view.$el.removeClass('connected');
 
                     // Mention the disconnection on every channel
-                    $.each(_kiwi.app.connections.getByConnectionId(0).panels.models, function (idx, panel) {
-                        if (!panel || !panel.isChannel()) return;
-                        panel.addMsg('', msg, 'action quit');
+                    _kiwi.app.connections.forEach(function(connection) {
+                        connection.panels.server.addMsg('', msg, 'action quit');
+
+                        connection.panels.forEach(function(panel) {
+                            if (!panel.isChannel())
+                                return;
+
+                            panel.addMsg('', msg, 'action quit');
+                        });
                     });
-                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action quit');
 
                     gw_stat = 1;
                 });
+
+
                 gw.on('reconnecting', function (event) {
-                    msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
-                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action quit');
+                    var msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
+
+                    // Only need to mention the repeating re-connection messages on server panels
+                    _kiwi.app.connections.forEach(function(connection) {
+                        connection.panels.server.addMsg('', msg, 'action quit');
+                    });
                 });
+
+
                 gw.on('onconnect', function (event) {
                     that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
@@ -361,11 +370,16 @@ _kiwi.model.Application = function () {
                     that.message.text(msg, {timeout: 5000});
 
                     // Mention the disconnection on every channel
-                    $.each(_kiwi.app.connections.getByConnectionId(0).panels.models, function (idx, panel) {
-                        if (!panel || !panel.isChannel()) return;
-                        panel.addMsg('', msg, 'action join');
+                    _kiwi.app.connections.forEach(function(connection) {
+                        connection.panels.server.addMsg('', msg, 'action join');
+
+                        connection.panels.forEach(function(panel) {
+                            if (!panel.isChannel())
+                                return;
+
+                            panel.addMsg('', msg, 'action join');
+                        });
                     });
-                    _kiwi.app.connections.getByConnectionId(0).panels.server.addMsg('', msg, 'action join');
 
                     gw_stat = 0;
                 });

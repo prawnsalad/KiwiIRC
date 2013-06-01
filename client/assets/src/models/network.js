@@ -54,6 +54,7 @@
             //this.gateway.on('all', function() {console.log('ALL', this.get('connection_id'), arguments);});
 
             this.gateway.on('connect', onConnect, this);
+            this.gateway.on('disconnect', onDisconnect, this);
 
             this.gateway.on('nick', function(event) {
                 if (event.nick === this.get('nick')) {
@@ -81,6 +82,7 @@
             this.gateway.on('whois', onWhois, this);
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
+            this.gateway.on('irc_error', onIrcError, this);
         },
 
 
@@ -127,8 +129,32 @@
             });
 
             return panels;
+        },
+
+
+        /**
+         * Join all the open channels we have open
+         * Reconnecting to a network would typically call this.
+         */
+        rejoinAllChannels: function() {
+            var that = this;
+
+            this.panels.forEach(function(panel) {
+                if (!panel.isChannel())
+                    return;
+
+                that.gateway.join(panel.get('name'));
+            });
         }
     });
+
+
+    
+    function onDisconnect(event) {
+        $.each(this.panels.models, function (index, panel) {
+            panel.addMsg('', 'Disconnected from the IRC network', 'action quit');
+        });
+    }
 
 
 
@@ -137,6 +163,9 @@
 
         // Update our nick with what the network gave us
         this.set('nick', event.nick);
+
+        // If this is a re-connection then we may have some channels to re-join
+        this.rejoinAllChannels();
 
         // Auto joining channels
         if (this.auto_join && this.auto_join.channel) {
@@ -343,20 +372,39 @@
 
 
     function onNotice(event) {
-        var panel;
+        var panel, channel_name;
 
         // An ignored user? don't do anything with it
-        if (event.nick && _kiwi.gateway.isNickIgnored(event.nick)) {
+        if (!event.from_server && event.nick && _kiwi.gateway.isNickIgnored(event.nick)) {
             return;
         }
 
         // Find a panel for the destination(channel) or who its from
-        panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
-        if (!panel) {
+        if (!event.from_server) {
+            panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
+
+            // Forward ChanServ messages to its associated channel
+            if (event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
+                channel_name = /\[([^ \]]+)\]/gi.exec(event.msg);
+                if (channel_name && channel_name[1]) {
+                    channel_name = channel_name[1];
+
+                    panel = this.panels.getByName(channel_name);
+                }
+            }
+
+            if (!panel) {
+                panel = this.panels.server;
+            }
+        } else {
             panel = this.panels.server;
         }
 
         panel.addMsg('[' + (event.nick||'') + ']', event.msg);
+
+        // Show this notice to the active panel if it didn't have a set target
+        if (!event.from_server && panel === this.panels.server)
+            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
     }
 
 
@@ -560,6 +608,8 @@
             logon_date = formatDate(logon_date);
 
             panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
+        } else if (event.away_reason) {
+            panel.addMsg(event.nick, 'Away: ' + event.away_reason, 'whois');
         } else {
             panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
         }
@@ -590,7 +640,7 @@
     function onIrcError(event) {
         var panel, tmp;
 
-        if (event.channel !== undefined && !(panel = _kiwi.app.panels.getByName(event.channel))) {
+        if (event.channel !== undefined && !(panel = this.panels.getByName(event.channel))) {
             panel = this.panels.server;
         }
 

@@ -5,13 +5,14 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
         var name = this.get("name") || "",
             members;
 
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
         this.set({
             "members": new _kiwi.model.MemberList(),
             "name": name,
             "scrollback": [],
             "topic": ""
         }, {"silent": true});
+
+        this.view = new _kiwi.view.Channel({"model": this, "name": name});
 
         members = this.get("members");
         members.channel = this;
@@ -20,7 +21,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
             if (show_message === false) {
                 return;
             }
-            
+
             this.addMsg(' ', '== ' + member.displayNick(true) + ' has joined', 'action join');
         }, this);
 

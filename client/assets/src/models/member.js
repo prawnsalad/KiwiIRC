@@ -32,6 +32,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         this.sortModes(modes);
         this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes)}, {silent: true});
         this.isOp();
+        this.view = new _kiwi.view.Member({"model": this});
     },
     addMode: function (mode) {
         var modes_to_add = mode.split(''),

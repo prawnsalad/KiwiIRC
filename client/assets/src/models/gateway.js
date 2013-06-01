@@ -411,7 +411,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function
     */
     this.action = function (connection_id, target, msg, callback) {
-        this.ctcp(true, 'ACTION', target, msg, callback);
+        this.ctcp(connection_id, true, 'ACTION', target, msg, callback);
     };
 
     /**

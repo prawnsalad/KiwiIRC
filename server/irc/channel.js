@@ -28,7 +28,7 @@ var IrcChannel = function(irc_connection, name) {
         mode:           onMode
     };
     EventBinder.bindIrcEvents('channel ' + this.name, this.irc_events, this, irc_connection);
-}
+};
 
 
 module.exports = IrcChannel;
@@ -53,7 +53,7 @@ function onJoin(event) {
     if (event.nick === this.irc_connection.nick) {
         this.irc_connection.write('NAMES ' + this.name);
     }
-};
+}
 
 
 function onPart(event) {
@@ -64,7 +64,7 @@ function onPart(event) {
         channel: this.name,
         message: event.message
     });
-};
+}
 
 
 function onKick(event) {
@@ -76,7 +76,7 @@ function onKick(event) {
         channel: this.name,
         message: event.message
     });
-};
+}
 
 
 function onQuit(event) {
@@ -86,7 +86,7 @@ function onQuit(event) {
         hostname: event.hostname,
         message: event.message
     });
-};
+}
 
 
 function onMsg(event) {
@@ -97,18 +97,19 @@ function onMsg(event) {
         channel: this.name,
         msg: event.msg
     });
-};
+}
 
 
 function onNotice(event) {
     this.irc_connection.clientEvent('notice', {
+        from_server: event.from_server,
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
         target: event.target,
         msg: event.msg
     });
-};
+}
 
 
 function onCtcpRequest(event) {
@@ -120,7 +121,7 @@ function onCtcpRequest(event) {
         type: event.type,
         msg: event.msg
     });
-};
+}
 
 
 function onCtcpResponse(event) {
@@ -132,7 +133,7 @@ function onCtcpResponse(event) {
         type: event.type,
         msg: event.msg
     });
-};
+}
 
 
 // TODO: Split event.users into batches of 50
@@ -143,7 +144,7 @@ function onNicklist(event) {
     });
     // TODO: uncomment when using an IrcUser per nick
     //updateUsersList.call(this, event.users);
-};
+}
 
 
 function onNicklistEnd(event) {
@@ -153,7 +154,7 @@ function onNicklistEnd(event) {
     });
     // TODO: uncomment when using an IrcUser per nick
     //updateUsersList.call(this, event.users);
-};
+}
 
 function updateUsersList(users) {
     var that = this;
@@ -173,12 +174,12 @@ function onTopic(event) {
         channel: this.name,
         topic: event.topic
     });
-};
+}
 
 
 function onBanList(event) {
     this.ban_list_buffer.push(event);
-};
+}
 
 function onBanListEnd(event) {
     var that = this;
@@ -186,14 +187,14 @@ function onBanListEnd(event) {
         that.irc_connection.clientEvent('banlist', ban);
     });
     this.ban_list_buffer = [];
-};
+}
 
 function onTopic(event) {
     this.irc_connection.clientEvent('topic', {
         channel: event.channel,
         topic: event.topic
     });
-};
+}
 
 function onTopicSetBy(event) {
     this.irc_connection.clientEvent('topicsetby', {
@@ -201,7 +202,7 @@ function onTopicSetBy(event) {
         channel: event.channel,
         when: event.when
     });
-};
+}
 
 function onMode(event) {
     this.irc_connection.clientEvent('mode', {
@@ -209,4 +210,4 @@ function onMode(event) {
         nick: event.nick,
         modes: event.modes
     });
-};
+}

@@ -15,7 +15,7 @@
 </head>
 <body>
     <div id="kiwi" class="theme_relaxed">
-        <div id="toolbar">
+        <div class="toolbar">
             <div class="app_tools">
                 <ul class="main">
                     <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
@@ -23,24 +23,24 @@
                 </ul>
             </div>
 
-            <div id="tabs"></div>
+            <div class="tabs"></div>
 
-            <div id="topic">
+            <div class="topic">
                 <div contenteditable="true"></div>
             </div>
 
-            <div id="status_message"></div>
+            <div class="status_message"></div>
         </div>
 
-        <div id="memberlists_resize_handle"></div>
+        <div class="memberlists_resize_handle"></div>
 
-        <div id="panels">
+        <div class="panels">
             <div class="panel_container container1"></div>
         </div>
 
-        <div id="memberlists" class="disabled"></div>
+        <div class="memberlists disabled"></div>
 
-        <div id="controlbox">
+        <div class="controlbox">
             <div class="input">
                 <span class="nick"> </span>
                 <div class="input_wrap"><textarea class="inp"></textarea></div>
@@ -279,48 +279,71 @@
 
         // Common dependancies that are required at all times
         var scripts = [
-            ['jquery-1.8.2.min.js', 'lodash.min.js'],
-            'backbone.min.js'
+            ['libs/jquery-1.9.1.min.js', 'libs/lodash.min.js'],
+            'libs/backbone.min.js'
         ];
 
         // If in debug mode, load each development script
         if (getQueryVariable('debug')) {
             console.log('Loading debugging scripts');
             scripts = scripts.concat([
-                'dev/app.js',
+                'src/app.js',
                 [
-                    'dev/model_application.js',
-                    'dev/model_gateway.js'
+                    'src/models/application.js',
+                    'src/models/gateway.js'
                 ],
                 [
-                    'dev/model_newconnection.js',
-                    'dev/model_panellist.js',
-                    'dev/model_networkpanellist.js',
-                    'dev/model_panel.js',
-                    'dev/model_member.js',
-                    'dev/model_memberlist.js',
-                    'dev/model_network.js'
+                    'src/models/newconnection.js',
+                    'src/models/panellist.js',
+                    'src/models/networkpanellist.js',
+                    'src/models/panel.js',
+                    'src/models/member.js',
+                    'src/models/memberlist.js',
+                    'src/models/network.js'
                 ],
                 
                 [
-                    'dev/model_query.js',
-                    'dev/model_channel.js',
-                    'dev/model_server.js',
-                    'dev/model_applet.js'
+                    'src/models/query.js',
+                    'src/models/channel.js',
+                    'src/models/server.js',
+                    'src/models/applet.js'
                 ],
 
                 [
-                    'dev/applet_settings.js',
-                    'dev/applet_nickserv.js',
-                    'dev/applet_chanlist.js',
-                    'dev/applet_scripteditor.js'
+                    'src/applets/settings.js',
+                    'src/applets/chanlist.js',
+                    'src/applets/scripteditor.js'
                 ],
 
                 [
-                    'dev/model_pluginmanager.js',
-                    'dev/model_datastore.js',
-                    'dev/utils.js',
-                    'dev/view.js'
+                    'src/models/pluginmanager.js',
+                    'src/models/datastore.js',
+                    'src/helpers/utils.js'
+                ],
+
+                // Some views extend these, so make sure they're loaded beforehand
+                [
+                    'src/views/panel.js'
+                ],
+
+                [
+                    'src/views/channel.js',
+                    'src/views/applet.js',
+                    'src/views/application.js',
+                    'src/views/apptoolbar.js',
+                    'src/views/controlbox.js',
+                    'src/views/mediamessage.js',
+                    'src/views/member.js',
+                    'src/views/memberlist.js',
+                    'src/views/menubox.js',
+                    'src/views/networktabs.js',
+                    'src/views/nickchangebox.js',
+                    'src/views/resizehandler.js',
+                    'src/views/serverselect.js',
+                    'src/views/statusmessage.js',
+                    'src/views/tabs.js',
+                    'src/views/topicbar.js',
+                    'src/views/userbox.js'
                 ]
             ]);
         } else {
