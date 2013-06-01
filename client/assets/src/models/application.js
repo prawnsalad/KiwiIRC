@@ -145,7 +145,6 @@ _kiwi.model.Application = function () {
                     _kiwi.global.settings.set(setting, value);
                 }
             });
-            _kiwi.global.settings.save();
         };
 
 
