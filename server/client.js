@@ -4,7 +4,6 @@ var util             = require('util'),
     _                = require('lodash'),
     State            = require('./irc/state.js');
     IrcConnection    = require('./irc/connection.js').IrcConnection,
-    IrcCommands      = require('./irc/commands.js'),
     ClientCommands   = require('./clientcommands.js');
 
 

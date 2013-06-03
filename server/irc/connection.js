@@ -417,7 +417,7 @@ var parse = function (data) {
         j,
         tags = [],
         tag;
-    
+
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
         this.hold_last = false;
@@ -462,11 +462,8 @@ var parse = function (data) {
                 trailing:   (msg[8]) ? msg[8].trim() : ''
             };
             msg.params = msg.params.split(' ');
-
-            this.emit('irc_' + msg.command.toUpperCase(), msg);
-
+            this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
         } else {
-
             // The line was not parsed correctly, must be malformed
             console.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
         }

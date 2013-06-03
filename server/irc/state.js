@@ -1,7 +1,8 @@
 var util            = require('util'),
     events          = require('events'),
     _               = require('lodash'),
-    IrcConnection   = require('./connection.js').IrcConnection;
+    IrcConnection   = require('./connection.js').IrcConnection,
+    IrcCommands     = require('./commands.js');
 
 var State = function (client, save_state) {
     var that = this;
@@ -55,18 +56,18 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
         user,
         pass,
         this);
-    
+
     con_num = this.next_connection++;
     this.irc_connections[con_num] = con;
     con.con_num = con_num;
-    
-    new IrcCommands(con, con_num, this).bindEvents();
-    
+
+    con.irc_commands = new IrcCommands(con, con_num, this);
+
     con.on('connected', function () {
         global.servers.addConnection(this);
         return callback(null, con_num);
     });
-    
+
     con.on('error', function (err) {
         console.log('irc_connection error (' + hostname + '):', err);
         return callback(err.code, {server: con_num, error: err});
