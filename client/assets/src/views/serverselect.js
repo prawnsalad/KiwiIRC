@@ -201,15 +201,22 @@ _kiwi.view.ServerSelect = function () {
         onIrcError: function (data) {
             $('button', this.$el).attr('disabled', null);
 
-            if (data.error == 'nickname_in_use') {
+            switch(data.error) {
+            case 'nickname_in_use':
                 this.setStatus('Nickname already taken');
                 this.show('nick_change');
-            }
-
-            if (data.error == 'password_mismatch') {
+                this.$el.find('.nick').select();
+                break;
+            case 'erroneus_nickname':
+                this.setStatus('Erroneus nickname');
+                this.show('nick_change');
+                this.$el.find('.nick').select();
+                break;
+            case 'password_mismatch':
                 this.setStatus('Incorrect Password');
                 this.show('nick_change');
-                that.$el.find('.password').select();
+                this.$el.find('.password').select();
+                break;
             }
         },
 

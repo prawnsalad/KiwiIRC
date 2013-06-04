@@ -685,6 +685,17 @@
             }
 
             break;
+        case 'erroneus_nickname':
+            this.panels.server.addMsg(' ', '== The nickname ' + event.nick + ' is not valid for this network. Please select a new nickname', 'status');
+            if (this.panels.server !== this.panels.active) {
+                _kiwi.app.message.text('The nickname "' + event.nick + '" is not valid for this network. Please select a new nickname');
+            }
+
+            // Only show the nickchange component if the controlbox is open
+            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
+                (new _kiwi.view.NickChangeBox()).render();
+            }
+            break;
 
         case 'password_mismatch':
             this.panels.server.addMsg(' ', '== Incorrect password given', 'status');
