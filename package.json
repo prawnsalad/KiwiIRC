@@ -1,6 +1,6 @@
 {
   "name": "kiwiirc",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "A hand-crafted webirc client",
   "homepage": "https://www.kiwiirc.com/",
   "preferGlobal": "true",
