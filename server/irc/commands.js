@@ -47,6 +47,7 @@ irc_numerics = {
     '405': 'ERR_TOOMANYCHANNELS',
     '421': 'ERR_UNKNOWNCOMMAND',
     '422': 'ERR_NOMOTD',
+    '432': 'ERR_ERRONEUSNICKNAME',
     '433': 'ERR_NICKNAMEINUSE',
     '441': 'ERR_USERNOTINCHANNEL',
     '442': 'ERR_NOTONCHANNEL',
@@ -711,6 +712,13 @@ handlers = {
 
     ERR_NICKNAMEINUSE: function (command) {
         this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' nickname_in_use', {
+            nick: command.params[1],
+            reason: command.trailing
+        });
+    },
+
+    ERR_ERRONEUSNICKNAME: function(command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' erroneus_nickname', {
             nick: command.params[1],
             reason: command.trailing
         });
