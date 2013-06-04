@@ -48,7 +48,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
 
         // Nick highlight detecting
-        if ((new RegExp('\\b' + _kiwi.app.connections.active_connection.get('nick') + '\\b', 'i')).test(msg.msg)) {
+        if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
             is_highlight = true;
             msg_css_classes += ' highlight';
         }
@@ -57,7 +57,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         msg.msg =  $('<div />').text(msg.msg).html();
 
         // Make the channels clickable
-        re = new RegExp('(?:^|\\s)([' + _kiwi.gateway.get('channel_prefix') + '][^ ,.\\007]+)', 'g');
+        re = new RegExp('(?:^|\\s)([' + escapeRegex(_kiwi.gateway.get('channel_prefix')) + '][^ ,.\\007]+)', 'g');
         msg.msg = msg.msg.replace(re, function (match) {
             return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
         });
