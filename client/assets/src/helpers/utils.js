@@ -95,10 +95,6 @@ function secondsToTime(secs) {
 }
 
 
-
-
-
-
 /* Command input Alias + re-writing */
 function InputPreProcessor () {
     this.recursive_depth = 3;
@@ -199,15 +195,6 @@ function InputPreProcessor () {
 }
 
 
-
-
-
-
-
-
-
-
-
 /**
  * Convert HSL to RGB formatted colour
  */
@@ -249,9 +236,6 @@ function hsl2rgb(h, s, l) {
     }
     return [r,g,b];
 }
-
-
-
 
 
 /**
@@ -394,9 +378,11 @@ function formatIRCMsg (msg) {
 }
 
 
-
-
 function formatDate (d) {
     d = d || new Date();
     return d.toLocaleDateString() + ', ' + d.getHours().toString() + ':' + d.getMinutes().toString() + ':' + d.getSeconds().toString();
+}
+
+function escapeRegex (str) {
+    return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
 }
