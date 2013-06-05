@@ -768,7 +768,8 @@ _kiwi.model.Application = function () {
                 nick = _kiwi.app.panels().active.get('name');
             }
 
-            _kiwi.app.connections.active_connection.gateway.raw('WHOIS ' + nick + ' ' + nick);
+            if (nick)
+                _kiwi.app.connections.active_connection.gateway.raw('WHOIS ' + nick + ' ' + nick);
         }
 
 
