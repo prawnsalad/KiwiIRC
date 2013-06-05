@@ -174,6 +174,8 @@
             // Show the last channel if we have one
             if (panels)
                 panels[panels.length - 1].view.show();
+
+            delete this.auto_join;
         }
     }
 
@@ -403,7 +405,7 @@
         panel.addMsg('[' + (event.nick||'') + ']', event.msg);
 
         // Show this notice to the active panel if it didn't have a set target
-        if (!event.from_server && panel === this.panels.server && !this.panels.server.isActive())
+        if (!event.from_server && panel === this.panels.server)
             _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
     }
 
@@ -675,26 +677,15 @@
             break;
         case 'nickname_in_use':
             this.panels.server.addMsg(' ', '== The nickname ' + event.nick + ' is already in use. Please select a new nickname', 'status');
-            if (this.panels.server !== this.panels.active) {
+            if (this.panels.server !== thia.panels.active) {
                 _kiwi.app.message.text('The nickname "' + event.nick + '" is already in use. Please select a new nickname');
             }
 
             // Only show the nickchange component if the controlbox is open
-            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
+            if (that.controlbox.$el.css('display') !== 'none') {
                 (new _kiwi.view.NickChangeBox()).render();
             }
 
-            break;
-        case 'erroneus_nickname':
-            this.panels.server.addMsg(' ', '== The nickname ' + event.nick + ' is not valid for this network. Please select a new nickname', 'status');
-            if (this.panels.server !== this.panels.active) {
-                _kiwi.app.message.text('The nickname "' + event.nick + '" is not valid for this network. Please select a new nickname');
-            }
-
-            // Only show the nickchange component if the controlbox is open
-            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
-                (new _kiwi.view.NickChangeBox()).render();
-            }
             break;
 
         case 'password_mismatch':
