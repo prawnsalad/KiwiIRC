@@ -167,6 +167,10 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 if (tokens[tokens.length-1] == ':')
                     tokens.pop();
 
+                // Only add the trailing text if not at the beginning of the line
+                if (tokens.length > 1)
+                    trailing = '';
+
                 nick  = tokens[tokens.length - 1];
 
                 if (this.tabcomplete.prefix === '') {
