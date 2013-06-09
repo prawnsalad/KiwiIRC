@@ -392,7 +392,13 @@ function findWebIrc(connect_data) {
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
         this.username = this.user.address.split('.').map(function(i, idx){
-            return parseInt(i, 10).toString(16);
+            var hex = parseInt(i, 10).toString(16);
+
+            // Pad out the hex value if it's a single char
+            if (hex.length === 1)
+                hex = '0' + hex;
+
+            return hex;
         }).join('');
 
     }
