@@ -160,6 +160,12 @@ _kiwi.view.ServerSelect = function () {
 
         infoBoxShow: function() {
             var $side_panel = this.$el.find('.side_panel');
+
+            // Some theme may hide the info panel so check before we
+            // resize ourselves
+            if (!$side_panel.is(':visible'))
+                return;
+
             this.$el.animate({
                 width: parseInt($side_panel.css('left'), 10) + $side_panel.find('.content:first').outerWidth()
             });
