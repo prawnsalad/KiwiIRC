@@ -905,6 +905,7 @@ html, body { height:100%; }
 }
 #kiwi.theme_mini .server_select .kiwi_logo img { display:inline; width:24px; }
 
+#kiwi.theme_mini .server_select .side_panel { display: none; }
 #kiwi.theme_mini .server_select .server_details {
     position: relative !important;
     float: none !important;
