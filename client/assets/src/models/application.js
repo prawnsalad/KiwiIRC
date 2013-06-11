@@ -76,7 +76,8 @@ _kiwi.model.Application = function () {
 
             var $info = $($('#tmpl_new_connection_info').html().trim());
 
-            if ($info.html()) {
+            // Some themes may hide the info box, so check that here also
+            if ($info.html() && $info.is(':visible')) {
                 connection_dialog.view.infoBoxSet($info);
                 connection_dialog.view.infoBoxShow();
             }
