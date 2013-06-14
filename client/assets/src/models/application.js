@@ -48,6 +48,7 @@ _kiwi.model.Application = function () {
 
             this.initializeClient();
             this.initializeGlobals();
+            this.applyDefaultClientSettings(this.server_settings.client.settings);
 
             this.view.barsHide(true);
 
@@ -135,6 +136,15 @@ _kiwi.model.Application = function () {
 
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
+        };
+
+
+        this.applyDefaultClientSettings = function (settings) {
+            _.each(settings, function (value, setting) {
+                if (typeof _kiwi.global.settings.get(setting) === 'undefined') {
+                    _kiwi.global.settings.set(setting, value);
+                }
+            });
         };
 
 
@@ -400,6 +410,7 @@ _kiwi.model.Application = function () {
                 '/me': '/action $1+',
                 '/j': '/join $1+',
                 '/q': '/query $1+',
+                '/w': '/whois $1+',
 
                 // Op related aliases
                 '/op': '/quote mode $channel +o $1+',
@@ -444,6 +455,8 @@ _kiwi.model.Application = function () {
             controlbox.on('command:ctcp', ctcpCommand);
 
             controlbox.on('command:server', serverCommand);
+
+            controlbox.on('command:whois', whoisCommand);
 
 
             controlbox.on('command:css', function (ev) {
@@ -743,6 +756,20 @@ _kiwi.model.Application = function () {
             
             _kiwi.app.connections.active_connection.panels.add(panel);
             panel.view.show();
+        }
+
+
+        function whoisCommand (ev) {
+            var nick;
+
+            if (ev.params[0]) {
+                nick = ev.params[0];
+            } else if (_kiwi.app.panels().active.isQuery()) {
+                nick = _kiwi.app.panels().active.get('name');
+            }
+
+            if (nick)
+                _kiwi.app.connections.active_connection.gateway.raw('WHOIS ' + nick + ' ' + nick);
         }
 
 

@@ -30,7 +30,8 @@ var IrcServer = function (irc_connection) {
         banned_from_channel:    onBannedFromChannel,
         bad_channel_key:        onBadChannelKey,
         chanop_privs_needed:    onChanopPrivsNeeded,
-        nickname_in_use:        onNicknameInUse
+        nickname_in_use:        onNicknameInUse,
+        erroneus_nickname:      onErroneusNickname
     };
     EventBinder.bindIrcEvents('server *', this.irc_events, this, this.irc_connection);
 
@@ -223,6 +224,14 @@ function onChanopPrivsNeeded(event) {
 function onNicknameInUse(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'nickname_in_use',
+        nick: event.nick,
+        reason: event.reason
+    });
+}
+
+function onErroneusNickname(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'erroneus_nickname',
         nick: event.nick,
         reason: event.reason
     });

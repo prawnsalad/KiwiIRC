@@ -127,7 +127,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             $next_tab.click();
             return false;
 
-        case (ev.keyCode === 9):                     // tab
+        case (ev.keyCode === 9     //Check if ONLY tab is pressed
+            && !ev.shiftKey        //(user could be using some brownser 
+            && !ev.altKey          //keyboard shortcut)
+            && !ev.metaKey 
+            && !ev.ctrlKey):                     
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
@@ -166,6 +170,10 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 tokens = inp_val.substring(0, inp[0].selectionStart).split(' ');
                 if (tokens[tokens.length-1] == ':')
                     tokens.pop();
+
+                // Only add the trailing text if not at the beginning of the line
+                if (tokens.length > 1)
+                    trailing = '';
 
                 nick  = tokens[tokens.length - 1];
 

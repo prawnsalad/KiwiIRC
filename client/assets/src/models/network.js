@@ -174,6 +174,8 @@
             // Show the last channel if we have one
             if (panels)
                 panels[panels.length - 1].view.show();
+
+            delete this.auto_join;
         }
     }
 

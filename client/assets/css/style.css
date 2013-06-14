@@ -776,6 +776,18 @@ html, body { height:100%; }
 
 
 
+#kiwi.theme_mini.chanlist_treeview .panels { left:160px; }
+#kiwi.theme_mini.chanlist_treeview .toolbar { position:static; }
+#kiwi.theme_mini.chanlist_treeview .toolbar .app_tools { float:none; }
+#kiwi.theme_mini.chanlist_treeview .toolbar > div { }
+#kiwi.theme_mini.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.theme_mini.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.theme_mini.chanlist_treeview .tabs ul li .activity { float:right; }
+#kiwi.theme_mini.chanlist_treeview .tabs ul li.active { padding-left:1em; }
+
+
+
+
 #kiwi.theme_mini .memberlists {
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
@@ -893,6 +905,7 @@ html, body { height:100%; }
 }
 #kiwi.theme_mini .server_select .kiwi_logo img { display:inline; width:24px; }
 
+#kiwi.theme_mini .server_select .side_panel { display: none; }
 #kiwi.theme_mini .server_select .server_details {
     position: relative !important;
     float: none !important;

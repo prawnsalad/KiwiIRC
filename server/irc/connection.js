@@ -392,7 +392,13 @@ function findWebIrc(connect_data) {
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
         this.username = this.user.address.split('.').map(function(i, idx){
-            return parseInt(i, 10).toString(16);
+            var hex = parseInt(i, 10).toString(16);
+
+            // Pad out the hex value if it's a single char
+            if (hex.length === 1)
+                hex = '0' + hex;
+
+            return hex;
         }).join('');
 
     }
@@ -407,7 +413,7 @@ function findWebIrc(connect_data) {
  * Deviates from the RFC a little to support the '/' character now used in some
  * IRCds
  */
-var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
 var parse = function (data) {
     var i,
@@ -417,7 +423,7 @@ var parse = function (data) {
         j,
         tags = [],
         tag;
-    
+
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
         this.hold_last = false;
@@ -462,11 +468,8 @@ var parse = function (data) {
                 trailing:   (msg[8]) ? msg[8].trim() : ''
             };
             msg.params = msg.params.split(' ');
-
-            this.emit('irc_' + msg.command.toUpperCase(), msg);
-
+            this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
         } else {
-
             // The line was not parsed correctly, must be malformed
             console.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
         }

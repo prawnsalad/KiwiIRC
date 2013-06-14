@@ -42,10 +42,12 @@ _kiwi.model.Member = Backbone.Model.extend({
         $.each(modes_to_add, function (index, item) {
             modes.push(item);
         });
-        
+
         modes = this.sortModes(modes);
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
         this.isOp();
+
+        this.view.render();
     },
     removeMode: function (mode) {
         var modes_to_remove = mode.split(''),
@@ -58,6 +60,8 @@ _kiwi.model.Member = Backbone.Model.extend({
 
         this.set({"prefix": this.getPrefix(modes), "modes": modes});
         this.isOp();
+
+        this.view.render();
     },
     getPrefix: function (modes) {
         var prefix = '';
