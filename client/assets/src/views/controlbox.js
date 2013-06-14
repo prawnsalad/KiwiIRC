@@ -128,7 +128,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             return false;
 
         case (ev.keyCode === 9     //Check if ONLY tab is pressed
-            && !ev.shiftKey        //(user could be using some brownser 
+            && !ev.shiftKey        //(user could be using some browser 
             && !ev.altKey          //keyboard shortcut)
             && !ev.metaKey 
             && !ev.ctrlKey):                     
