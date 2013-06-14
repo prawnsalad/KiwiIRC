@@ -18,34 +18,25 @@
 
 		loadSettings: function () {
 
-			var	settings = _kiwi.global.settings,
-				theme = settings.get('theme') || 'relaxed',
-				channel_style = settings.get('channel_list_style') || 'tabs',
-				scrollback = settings.get('scrollback') || '250';
+			var	that = this;
 
-			$('[data-setting="theme"][data-value="' + theme + '"]', this.$el).addClass('active');
+			$.each(_kiwi.global.settings.attributes, function(key, value) {
 
-			$('[data-setting="channel_list_style"][value="' + channel_style + '"]', this.$el).prop('checked', true);
-
-			if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
-				$('[data-setting="show_joins_parts"]', this.$el).prop('checked', true);
-			} else {
-				$('[data-setting="show_joins_parts"]', this.$el).prop('checked', false);
-			}
-
-			if (typeof settings.get('show_timestamps') === 'undefined' || settings.get('show_timestamps')) {
-				$('[data-setting="show_timestamps"]', this.$el).prop('checked', true);
-			} else {
-				$('[data-setting="show_timestamps"]', this.$el).prop('checked', false);
-			}
-
-			if (typeof settings.get('mute_sounds') === 'undefined' || settings.get('mute_sounds')) {
-				$('[data-setting="mute_sounds"]', this.$el).prop('checked', true);
-			} else {
-				$('[data-setting="mute_sounds"]', this.$el).prop('checked', false);
-			}
-
-			$('[data-setting="scrollback"]', this.$el).val(scrollback);
+				switch ($('[data-setting="' + key + '"]', that.$el).prop('type')) {
+					case 'checkbox':
+						$('[data-setting="' + key + '"]', that.$el).prop('checked', value);
+						break;
+					case 'radio':
+						$('[data-setting="' + key + '"][value="' + value + '"]', that.$el).prop('checked', true);
+						break;
+					case 'text':
+						$('[data-setting="' + key + '"]', that.$el).val(value);
+						break;
+					default:
+						$('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
+						break;
+				}
+			});
 		},
 
 		saveSettings: function (event) {
