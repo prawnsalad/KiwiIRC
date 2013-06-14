@@ -1,92 +1,95 @@
 (function () {
-    var View = Backbone.View.extend({
-        events: {
-            'click .save': 'saveSettings'
-        },
+	var View = Backbone.View.extend({
+		events: {
+			'change [data-setting]': 'saveSettings',
+			'click [data-setting="theme"]': 'selectTheme'
+		},
 
-        initialize: function (options) {
-            this.$el = $($('#tmpl_applet_settings').html().trim());
+		initialize: function (options) {
+			this.$el = $($('#tmpl_applet_settings').html().trim());
 
-            // Incase any settings change while we have this open, update them
-            _kiwi.global.settings.on('change', this.loadSettings, this);
+			// Incase any settings change while we have this open, update them
+			_kiwi.global.settings.on('change', this.loadSettings, this);
 
-            // Now actually show the current settings
-            this.loadSettings();
+			// Now actually show the current settings
+			this.loadSettings();
 
+		},
 
-        },
+		loadSettings: function () {
 
-        loadSettings: function () {
-            var settings = _kiwi.global.settings;
+			var	settings = _kiwi.global.settings,
+				theme = settings.get('theme') || 'relaxed',
+				channel_style = settings.get('channel_list_style') || 'tabs',
+				scrollback = settings.get('scrollback') || '250';
 
-            // TODO: Tidy this up
-            var theme = settings.get('theme') || 'relaxed';
-            this.$el.find('.setting-theme option').filter(function() {
-                return $(this).val() === theme;
-            }).prop('selected', true);
+			$('[data-setting="theme"][data-value="' + theme + '"]', this.$el).addClass('active');
 
-            var list_style = settings.get('channel_list_style') || 'tabs';
-            this.$el.find('.setting-channel_list_style option').filter(function() {
-                return $(this).val() === list_style;
-            }).prop('selected', true);
+			$('[data-setting="channel_list_style"][value="' + channel_style + '"]', this.$el).prop('checked', true);
 
-            this.$el.find('.setting-scrollback').val(settings.get('scrollback') || '250');
+			if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
+				$('[data-setting="show_joins_parts"]', this.$el).prop('checked', true);
+			} else {
+				$('[data-setting="show_joins_parts"]', this.$el).prop('checked', false);
+			}
 
-            if (typeof settings.get('show_joins_parts') === 'undefined' || settings.get('show_joins_parts')) {
-                this.$el.find('.setting-show_joins_parts').prop('checked', true);
-            } else {
-                this.$el.find('.setting-show_joins_parts').prop('checked', false);
-            }
+			if (typeof settings.get('show_timestamps') === 'undefined' || settings.get('show_timestamps')) {
+				$('[data-setting="show_timestamps"]', this.$el).prop('checked', true);
+			} else {
+				$('[data-setting="show_timestamps"]', this.$el).prop('checked', false);
+			}
 
-            if (typeof settings.get('show_timestamps') === 'undefined' || !settings.get('show_timestamps')) {
-                this.$el.find('.setting-show_timestamps').prop('checked', false);
-            } else {
-                this.$el.find('.setting-show_timestamps').prop('checked', true);
-            }
+			if (typeof settings.get('mute_sounds') === 'undefined' || settings.get('mute_sounds')) {
+				$('[data-setting="mute_sounds"]', this.$el).prop('checked', true);
+			} else {
+				$('[data-setting="mute_sounds"]', this.$el).prop('checked', false);
+			}
 
-            if (typeof settings.get('mute_sounds') === 'undefined' || settings.get('mute_sounds')) {
-                this.$el.find('.setting-mute_sounds').prop('checked', true);
-            } else {
-                this.$el.find('.setting-mute_sounds').prop('checked', false);
-            }
-        },
+			$('[data-setting="scrollback"]', this.$el).val(scrollback);
+		},
 
+		saveSettings: function (event) {
+			var value,
+				settings = _kiwi.global.settings,
+				$setting = $(event.currentTarget, this.$el)
 
-        saveSettings: function () {
-            var settings = _kiwi.global.settings,
-                feedback;
+			switch (event.currentTarget.type) {
+				case 'checkbox':
+					value = $setting.is(':checked');
+					break;
+				case 'radio':
+				case 'text':
+					value = $setting.val();
+					break;
+				default:
+					value = $setting.data('value');
+					break;
+			}
 
-            // Stop settings being updated while we're saving one by one
-            settings.off('change', this.loadSettings, this);
+			// Stop settings being updated while we're saving one by one
+			_kiwi.global.settings.off('change', this.loadSettings, this);
+			settings.set($setting.data('setting'), value);
+			settings.save();
 
-            settings.set('theme', $('.setting-theme', this.$el).val());
-            settings.set('channel_list_style', $('.setting-channel_list_style', this.$el).val());
-            settings.set('scrollback', $('.setting-scrollback', this.$el).val());
-            settings.set('show_joins_parts', $('.setting-show_joins_parts', this.$el).is(':checked'));
-            settings.set('show_timestamps', $('.setting-show_timestamps', this.$el).is(':checked'));
-            settings.set('mute_sounds', $('.setting-mute_sounds', this.$el).is(':checked'));
+			// Continue listening for setting changes
+			_kiwi.global.settings.on('change', this.loadSettings, this);
+		},
 
-            settings.save();
-
-            feedback = $('.feedback', this.$el);
-            feedback.fadeIn('slow', function () {
-                feedback.fadeOut('slow');
-            });
-
-            // Continue listening for setting changes
-            settings.on('change', this.loadSettings, this);
-        }
-    });
-
-
-
-    var Applet = Backbone.Model.extend({
-        initialize: function () {
-            this.set('title', 'Settings');
-            this.view = new View();
-        }
-    });
+		selectTheme: function(event) {
+			$('[data-setting="theme"].active', this.$el).removeClass('active');
+			$(event.currentTarget).addClass('active').trigger('change');
+			event.preventDefault();
+		}
+	});
 
 
-    _kiwi.model.Applet.register('kiwi_settings', Applet);
+	var Applet = Backbone.Model.extend({
+		initialize: function () {
+			this.set('title', 'Settings');
+			this.view = new View();
+		}
+	});
+
+
+	_kiwi.model.Applet.register('kiwi_settings', Applet);
 })();
