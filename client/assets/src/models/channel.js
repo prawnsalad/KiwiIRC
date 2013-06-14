@@ -27,16 +27,27 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
         members.bind("remove", function (member, members, options) {
             var show_message = _kiwi.global.settings.get('show_joins_parts');
-            if (show_message === false) {
-                return;
-            }
+
 
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
             if (options.type === 'quit') {
-                this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+                
+              this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+
             } else if(options.type === 'kick') {
-                this.addMsg(' ', '== ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
+               
+              if (!options.kicked) {
+              
+                if (show_message || options.kicker) { 
+                  this.addMsg(' ', '== ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
+                
+                }
+                
+              } else {
+                this.addMsg(' ', '=== You have been kicked by ' + options.by + ' '+msg, 'action kick');
+              }
+            
             } else {
                 this.addMsg(' ', '== ' + member.displayNick(true) + ' has left ' + msg, 'action part');
             }
