@@ -31,7 +31,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
-            if (options.type === 'quit') {
+            if (options.type === 'quit' && show_message) {
                 
               this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
 
@@ -48,7 +48,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
                 this.addMsg(' ', '=== You have been kicked by ' + options.by + ' '+msg, 'action kick');
               }
             
-            } else {
+            } else if (show_message) {
                 this.addMsg(' ', '== ' + member.displayNick(true) + ' has left ' + msg, 'action part');
             }
         }, this);
