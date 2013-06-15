@@ -23,6 +23,7 @@ irc_numerics = {
     '311': 'RPL_WHOISUSER',
     '312': 'RPL_WHOISSERVER',
     '313': 'RPL_WHOISOPERATOR',
+    '314': 'RPL_WHOWASUSER',
     '317': 'RPL_WHOISIDLE',
     '318': 'RPL_ENDOFWHOIS',
     '319': 'RPL_WHOISCHANNELS',
@@ -38,6 +39,7 @@ irc_numerics = {
     '366': 'RPL_ENDOFNAMES',
     '367': 'RPL_BANLIST',
     '368': 'RPL_ENDOFBANLIST',
+    '369': 'RPL_ENDOFWHOWAS',
     '372': 'RPL_MOTD',
     '375': 'RPL_MOTDSTART',
     '376': 'RPL_ENDOFMOTD',
@@ -45,6 +47,7 @@ irc_numerics = {
     '401': 'ERR_NOSUCHNICK',
     '404': 'ERR_CANNOTSENDTOCHAN',
     '405': 'ERR_TOOMANYCHANNELS',
+    '406': 'ERR_WASNOSUCHNICK',
     '421': 'ERR_UNKNOWNCOMMAND',
     '422': 'ERR_NOMOTD',
     '432': 'ERR_ERRONEUSNICKNAME',
@@ -171,7 +174,8 @@ handlers = {
     'RPL_WHOISSERVER': function (command) {
         this.irc_connection.emit('user ' + command.params[1] + ' whoisserver', {
             nick: command.params[1],
-            irc_server: command.params[2]
+            irc_server: command.params[2],
+            server_info: command.trailing
         });
     },
 
@@ -208,6 +212,27 @@ handlers = {
         this.irc_connection.emit('user ' + command.params[1] + ' whoisregnick', {
             nick: command.params[1],
             msg: command.trailing
+        });
+    },
+
+    'RPL_WHOWASUSER': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whowas', {
+            nick: command.params[1],
+            ident: command.params[2],
+            host: command.params[3],
+            real_name: command.trailing
+        });
+    },
+
+    'RPL_ENDOFWHOWAS': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' endofwhowas', {
+            nick: command.params[1]
+        });
+    },
+
+    'ERR_WASNOSUCHNICK': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' wasnosucknick', {
+            nick: command.params[1]
         });
     },
 

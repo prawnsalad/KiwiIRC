@@ -80,6 +80,7 @@
             this.gateway.on('userlist_end', onUserlistEnd, this);
             this.gateway.on('mode', onMode, this);
             this.gateway.on('whois', onWhois, this);
+            this.gateway.on('whowas', onWhowas, this);
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
             this.gateway.on('irc_error', onIrcError, this);
@@ -601,7 +602,7 @@
         } else if (event.chans) {
             panel.addMsg(event.nick, 'Channels: ' + event.chans, 'whois');
         } else if (event.irc_server) {
-            panel.addMsg(event.nick, 'Connected to server: ' + event.irc_server, 'whois');
+            panel.addMsg(event.nick, 'Connected to server: ' + event.irc_server + ' ' + event.server_info, 'whois');
         } else if (event.msg) {
             panel.addMsg(event.nick, event.msg, 'whois');
         } else if (event.logon) {
@@ -617,6 +618,19 @@
         }
     }
 
+    function onWhowas(event) {
+        var panel;
+
+        if (event.end)
+            return;
+
+        panel = _kiwi.app.panels().active;
+        if (event.host) {
+            panel.addMsg(event.nick, event.nick + ' [' + event.nick + ((event.ident)? '!' + event.ident : '') + '@' + event.host + '] * ' + event.real_name, 'whois');
+        } else {
+            panel.addMsg(event.nick, 'No such nick', 'whois');
+        }
+    }
 
 
     function onAway(event) {
