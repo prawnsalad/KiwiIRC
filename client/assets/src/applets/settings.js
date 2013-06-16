@@ -22,8 +22,6 @@
 
             $.each(_kiwi.global.settings.attributes, function(key, value) {
 
-                console.log(key, value);
-
                 var $el = $('[data-setting="' + key + '"]', that.$el);
 
                 // Only deal with settings we have a UI element for
