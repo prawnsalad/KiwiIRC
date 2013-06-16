@@ -279,6 +279,8 @@
         part_options.type = 'kick';
         part_options.by = event.nick;
         part_options.message = event.message || '';
+        part_options.current_user_kicked = (event.kicked == this.get('nick'))
+        part_options.current_user_initiated = (event.nick == this.get('nick'))
 
         channel = this.panels.getByName(event.channel);
         if (!channel) return;
@@ -289,10 +291,11 @@
         user = members.getByNick(event.kicked);
         if (!user) return;
 
+
         members.remove(user, part_options);
 
-        if (event.kicked === this.get('nick')) {
-            members.reset([]);
+        if (part_options.current_user_kicked) {
+            members.reset([]);        
         }
     }
 
