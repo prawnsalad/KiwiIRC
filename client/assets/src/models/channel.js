@@ -30,17 +30,20 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
             if (options.type === 'quit' && show_message) {
-              this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+                this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+
             } else if(options.type === 'kick') {
+
                 if (!options.current_user_kicked) {
                     //If user kicked someone, show the message regardless of settings.
-                    if (show_message || options.current_user_initiated) { 
-                      this.addMsg(' ', '== ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
+                    if (show_message || options.current_user_initiated) {
+                        this.addMsg(' ', '== ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
                     }
                 } else {
-                    this.addMsg(' ', '== You have been kicked by ' + options.by + ' '+msg, 'action kick');
+                    this.addMsg(' ', '== You have been kicked by ' + options.by + ' ' + msg, 'action kick');
                 }
             } else if (show_message) {
+
                 this.addMsg(' ', '== ' + member.displayNick(true) + ' has left ' + msg, 'action part');
             }
         }, this);
