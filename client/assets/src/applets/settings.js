@@ -28,7 +28,7 @@
 
                 // Only deal with settings we have a UI element for
                 if (!$el.length)
-                    return false;
+                    return;
 
                 switch ($el.prop('type')) {
                     case 'checkbox':
