@@ -127,7 +127,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             $next_tab.click();
             return false;
 
-        case (ev.keyCode === 9):                     // tab
+        case (ev.keyCode === 9     //Check if ONLY tab is pressed
+            && !ev.shiftKey        //(user could be using some browser 
+            && !ev.altKey          //keyboard shortcut)
+            && !ev.metaKey 
+            && !ev.ctrlKey):                     
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
