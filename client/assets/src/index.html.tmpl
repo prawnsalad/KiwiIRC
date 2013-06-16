@@ -172,54 +172,76 @@
     </script>
 
     <script type="text/html" id="tmpl_applet_settings">
-        <div class="settings">
-            ​<table>
-                <tr>
-                    <td class="label">Theme</td>
-                    <td class="setting">
-                        <select class="setting-theme">
-                            <option value="relaxed">Relaxed</option>
-                            <option value="mini">Mini</option>
-                            <option value="cli">CLI</option>
-                            <option value="basic">Basic</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">Channel list</td>
-                    <td class="setting">
-                        <select class="setting-channel_list_style">
-                            <option value="list">List</option>
-                            <option value="tabs">Tabs</option>
-                        </select>
+        <div class="settings_container">
+            <section>
+                <h6>Theme</h6>
+                <div class="control-group">
+                    <div class="thumbnails">
+                        <a class="thumbnail" data-setting="theme" data-value="relaxed" href="#">
+                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
+                            <div class="caption"><u>Relaxed</u></div>
+                        </a>
+                        <a class="thumbnail" data-setting="theme" data-value="mini" href="#">
+                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #fff;"></div></div>
+                            <div class="caption"><u>Mini</u></div>
+                        </a>
+                        <a class="thumbnail" data-setting="theme" data-value="cli" href="#">
+                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #222;"></div></div>
+                            <div class="caption"><u>CLI</u></div>
+                        </a>
+                        <a class="thumbnail" data-setting="theme" data-value="basic" href="#">
+                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
+                            <div class="caption"><u>Basic</u></div>
+                        </a>
+                    </div>
+                </div>
+            </section>
 
-                        <i style="font-size:0.9em;">Lots of channels? `List` may be more suited</i>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">Scrollback</td>
-                    <td class="setting"><input type="text" class="setting-scrollback" value="150" /></td>
-                </tr>
+            <section>
+                <h6>Channels</h6>
+                <div class="control-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
+                            Tabs
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
+                            List <small class="text-muted">(for large amouts of channels)</small>
+                        </label>
+                    </div>
+                </div>
+            </section>
 
-                <tr>
-                    <td class="label">Show joins/parts</td>
-                    <td class="setting"><input type="checkbox" class="setting-show_joins_parts" /></td>
-                </tr>
-
-                <tr>
-                    <td class="label">Show timestamps</td>
-                    <td class="setting"><input type="checkbox" class="setting-show_timestamps" /></td>
-                </tr>
-                
-                <tr>
-                    <td class="label">Mute sounds</td>
-                    <td class="setting"><input type="checkbox" class="setting-mute_sounds" /></td>
-                </tr>
-
-                <tr class="save">
-                    <td colspan="2"><button class="save">Save</button><br/><span class="feedback">Saved!</span></td>
-                </tr>
-            </table>
+            <section>
+                <h6>Chat window</h6>
+                <div class="control-group">
+                    <div class="checkbox">
+                        <label>
+                            <input data-setting="show_joins_parts" type="checkbox">
+                            Join/part channel notifications
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input data-setting="show_timestamps" type="checkbox">
+                            Timestamps
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input data-setting="mute_sounds" type="checkbox">
+                            Mute sound notifications
+                        </label>
+                    </div>
+                    <label>
+                        <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                        <span>messages in scroll history</span>
+                    </label>
+                </div>
+            </section>
         </div>
     </script>
 
