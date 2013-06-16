@@ -221,8 +221,169 @@ html, body { height:100%; }
 /* Settings applet */
 
 /* Some of these styles will move to global styling later */
-#kiwi .settings_container{padding:50px}#kiwi .settings_container .clearfix:before,#kiwi .settings_container .list-inline:before,#kiwi .settings_container .thumbnails:before,#kiwi .settings_container .clearfix:after,#kiwi .settings_container .list-inline:after,#kiwi .settings_container .thumbnails:after{content:' ';display:table}#kiwi .settings_container .clearfix:after,#kiwi .settings_container .list-inline:after,#kiwi .settings_container .thumbnails:after{clear:both}#kiwi .settings_container .list-unstyled,#kiwi .settings_container .list-inline,#kiwi .settings_container .thumbnails{list-style-type:none;margin:0;padding:0}#kiwi .settings_container .list-inline>li,#kiwi .settings_container .thumbnails>li{display:inline-block}#kiwi .settings_container h1,#kiwi .settings_container h2,#kiwi .settings_container h3{margin-top:22px;margin-bottom:11px}#kiwi .settings_container h4,#kiwi .settings_container h5,#kiwi .settings_container h6{margin-top:11px;margin-bottom:11px}#kiwi .settings_container h1{font-size:46px}#kiwi .settings_container h2{font-size:40px}#kiwi .settings_container h3{font-size:34px}#kiwi .settings_container h4{font-size:28px}#kiwi .settings_container h5{font-size:22px}#kiwi .settings_container h6{font-size:16px}#kiwi .settings_container label{cursor:pointer}#kiwi .settings_container input,#kiwi .settings_container select,#kiwi .settings_container textarea{width:100%}#kiwi .settings_container input[size],#kiwi .settings_container select[size],#kiwi .settings_container textarea[size]{width:auto}#kiwi .settings_container input[type="file"],#kiwi .settings_container input[type="image"],#kiwi .settings_container input[type="submit"],#kiwi .settings_container input[type="reset"],#kiwi .settings_container input[type="button"],#kiwi .settings_container input[type="radio"],#kiwi .settings_container input[type="checkbox"]{width:auto}#kiwi .settings_container input[type="radio"],#kiwi .settings_container input[type="checkbox"]{cursor:pointer;margin-top:2px}#kiwi .settings_container input[type="checkbox"]{margin-top:3px}#kiwi .settings_container .radio,#kiwi .settings_container .checkbox{margin-bottom:10px;padding-left:20px}#kiwi .settings_container .radio label,#kiwi .settings_container .checkbox label{cursor:pointer}#kiwi .settings_container .radio:last-child,#kiwi .settings_container .checkbox:last-child{margin-bottom:0}#kiwi .settings_container .radio input[type="radio"],#kiwi .settings_container .checkbox input[type="checkbox"]{float:left;margin-left:-20px}#kiwi .settings_container .radio+.radio,#kiwi .settings_container .checkbox+.checkbox{margin-top:-7px}#kiwi .settings_container .thumbnail{float:left;margin-right:15px;text-align:center}#kiwi .settings_container .thumbnail>.thumbnail_wrapper{border-radius:3px;padding:3px}#kiwi .settings_container .thumbnail>img{border-radius:2px}#kiwi .settings_container .thumbnail.active>.thumbnail_wrapper{background-color:#a6c42c;background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #a6c42c),color-stop(100%, #76bd2b));background-image:-webkit-linear-gradient(#a6c42c,#76bd2b);background-image:linear-gradient(#a6c42c,#76bd2b)}#kiwi .settings_container section{padding-bottom:20px}#kiwi .settings_container .theme_color{border-radius:2px;height:75px;width:75px}#kiwi .settings_container .control-group{margin:0 0 20px 20px}#kiwi .settings_container .control-group:last-child{margin-bottom:0}@media screen and (max-width: 768px){#kiwi .settings_container{padding:25px}}
+#kiwi .settings_container {
+    padding: 50px;
+}
 
+#kiwi .settings_container .thumbnails:before {
+    content: ' ';
+    display: table;
+}
+#kiwi .settings_container .thumbnails:after {
+    content: ' ';
+    display: table;
+    clear: both;
+}
+
+#kiwi .settings_container .thumbnails {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#kiwi .settings_container .thumbnails > li {
+    display: inline-block;
+}
+
+#kiwi .settings_container h1 {
+    margin-top: 22px;
+    margin-bottom: 11px;
+    font-size: 46px;
+}
+
+#kiwi .settings_container h2 {
+    margin-top: 22px;
+    margin-bottom: 11px;
+    font-size: 40px;
+}
+
+#kiwi .settings_container h3 {
+    margin-top: 22px;
+    margin-bottom: 11px;
+    font-size: 34px;
+}
+
+#kiwi .settings_container h4 {
+    margin-top: 11px;
+    margin-bottom: 11px;
+    font-size: 28px;
+}
+
+#kiwi .settings_container h5 {
+    margin-top: 11px;
+    margin-bottom: 11px;
+    font-size: 22px;
+}
+
+#kiwi .settings_container h6 {
+    margin-top: 11px;
+    margin-bottom: 11px;
+    font-size: 16px;
+}
+
+#kiwi .settings_container label {
+    cursor: pointer;
+}
+
+#kiwi .settings_container input,
+#kiwi .settings_container select,
+#kiwi .settings_container textarea {
+    width: 100%;
+}
+
+#kiwi .settings_container input[size],
+#kiwi .settings_container select[size],
+#kiwi .settings_container textarea[size] {
+    width: auto;
+}
+
+#kiwi .settings_container input[type="file"],
+#kiwi .settings_container input[type="image"],
+#kiwi .settings_container input[type="submit"],
+#kiwi .settings_container input[type="reset"],
+#kiwi .settings_container input[type="button"] {
+    width: auto;
+}
+
+#kiwi .settings_container input[type="radio"] {
+    width: auto;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+#kiwi .settings_container input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+#kiwi .settings_container .radio,
+#kiwi .settings_container .checkbox {
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+#kiwi .settings_container .radio:last-child,
+#kiwi .settings_container .checkbox:last-child {
+    margin-bottom: 0;
+}
+
+#kiwi .settings_container .radio input[type="radio"],
+#kiwi .settings_container .checkbox input[type="checkbox"] {
+    float: left;
+    margin-left: -20px;
+}
+
+#kiwi .settings_container .radio+.radio,
+#kiwi .settings_container .checkbox+.checkbox {
+    margin-top: -7px;
+}
+
+#kiwi .settings_container .thumbnail {
+    float: left;
+    margin-right: 15px;
+    text-align: center;
+}
+
+#kiwi .settings_container .thumbnail > .thumbnail_wrapper {
+    border-radius: 3px;
+    padding: 3px;
+}
+
+#kiwi .settings_container .thumbnail > img {
+    border-radius: 2px;
+}
+
+#kiwi .settings_container .thumbnail.active > .thumbnail_wrapper {
+    background-color: #a6c42c;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a6c42c), color-stop(100%, #76bd2b));
+    background-image: -webkit-linear-gradient(#a6c42c, #76bd2b);
+    background-image: linear-gradient(#a6c42c, #76bd2b);
+}
+
+#kiwi .settings_container section {
+    padding-bottom: 20px;
+}
+
+#kiwi .settings_container .theme_color {
+    border-radius: 2px;
+    height: 75px;
+    width: 75px;
+}
+
+#kiwi .settings_container .control-group {
+    margin: 0 0 20px 20px;
+}
+
+#kiwi .settings_container .control-group:last-child {
+    margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+    #kiwi .settings_container {
+        padding: 25px;
+    }
+}
 
 
 

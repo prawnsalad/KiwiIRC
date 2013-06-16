@@ -1,86 +1,86 @@
 (function () {
-	var View = Backbone.View.extend({
-		events: {
-			'change [data-setting]': 'saveSettings',
-			'click [data-setting="theme"]': 'selectTheme'
-		},
+    var View = Backbone.View.extend({
+        events: {
+            'change [data-setting]': 'saveSettings',
+            'click [data-setting="theme"]': 'selectTheme'
+        },
 
-		initialize: function (options) {
-			this.$el = $($('#tmpl_applet_settings').html().trim());
+        initialize: function (options) {
+            this.$el = $($('#tmpl_applet_settings').html().trim());
 
-			// Incase any settings change while we have this open, update them
-			_kiwi.global.settings.on('change', this.loadSettings, this);
+            // Incase any settings change while we have this open, update them
+            _kiwi.global.settings.on('change', this.loadSettings, this);
 
-			// Now actually show the current settings
-			this.loadSettings();
+            // Now actually show the current settings
+            this.loadSettings();
 
-		},
+        },
 
-		loadSettings: function () {
+        loadSettings: function () {
 
-			var	that = this;
+            var that = this;
 
-			$.each(_kiwi.global.settings.attributes, function(key, value) {
+            $.each(_kiwi.global.settings.attributes, function(key, value) {
 
-				switch ($('[data-setting="' + key + '"]', that.$el).prop('type')) {
-					case 'checkbox':
-						$('[data-setting="' + key + '"]', that.$el).prop('checked', value);
-						break;
-					case 'radio':
-						$('[data-setting="' + key + '"][value="' + value + '"]', that.$el).prop('checked', true);
-						break;
-					case 'text':
-						$('[data-setting="' + key + '"]', that.$el).val(value);
-						break;
-					default:
-						$('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
-						break;
-				}
-			});
-		},
+                switch ($('[data-setting="' + key + '"]', that.$el).prop('type')) {
+                    case 'checkbox':
+                        $('[data-setting="' + key + '"]', that.$el).prop('checked', value);
+                        break;
+                    case 'radio':
+                        $('[data-setting="' + key + '"][value="' + value + '"]', that.$el).prop('checked', true);
+                        break;
+                    case 'text':
+                        $('[data-setting="' + key + '"]', that.$el).val(value);
+                        break;
+                    default:
+                        $('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
+                        break;
+                }
+            });
+        },
 
-		saveSettings: function (event) {
-			var value,
-				settings = _kiwi.global.settings,
-				$setting = $(event.currentTarget, this.$el)
+        saveSettings: function (event) {
+            var value,
+                settings = _kiwi.global.settings,
+                $setting = $(event.currentTarget, this.$el)
 
-			switch (event.currentTarget.type) {
-				case 'checkbox':
-					value = $setting.is(':checked');
-					break;
-				case 'radio':
-				case 'text':
-					value = $setting.val();
-					break;
-				default:
-					value = $setting.data('value');
-					break;
-			}
+            switch (event.currentTarget.type) {
+                case 'checkbox':
+                    value = $setting.is(':checked');
+                    break;
+                case 'radio':
+                case 'text':
+                    value = $setting.val();
+                    break;
+                default:
+                    value = $setting.data('value');
+                    break;
+            }
 
-			// Stop settings being updated while we're saving one by one
-			_kiwi.global.settings.off('change', this.loadSettings, this);
-			settings.set($setting.data('setting'), value);
-			settings.save();
+            // Stop settings being updated while we're saving one by one
+            _kiwi.global.settings.off('change', this.loadSettings, this);
+            settings.set($setting.data('setting'), value);
+            settings.save();
 
-			// Continue listening for setting changes
-			_kiwi.global.settings.on('change', this.loadSettings, this);
-		},
+            // Continue listening for setting changes
+            _kiwi.global.settings.on('change', this.loadSettings, this);
+        },
 
-		selectTheme: function(event) {
-			$('[data-setting="theme"].active', this.$el).removeClass('active');
-			$(event.currentTarget).addClass('active').trigger('change');
-			event.preventDefault();
-		}
-	});
-
-
-	var Applet = Backbone.Model.extend({
-		initialize: function () {
-			this.set('title', 'Settings');
-			this.view = new View();
-		}
-	});
+        selectTheme: function(event) {
+            $('[data-setting="theme"].active', this.$el).removeClass('active');
+            $(event.currentTarget).addClass('active').trigger('change');
+            event.preventDefault();
+        }
+    });
 
 
-	_kiwi.model.Applet.register('kiwi_settings', Applet);
+    var Applet = Backbone.Model.extend({
+        initialize: function () {
+            this.set('title', 'Settings');
+            this.view = new View();
+        }
+    });
+
+
+    _kiwi.model.Applet.register('kiwi_settings', Applet);
 })();
