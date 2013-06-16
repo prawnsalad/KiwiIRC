@@ -411,6 +411,7 @@ _kiwi.model.Application = function () {
                 '/j': '/join $1+',
                 '/q': '/query $1+',
                 '/w': '/whois $1+',
+                '/raw': '/quote $1+',
 
                 // Op related aliases
                 '/op': '/quote mode $channel +o $1+',
