@@ -2,11 +2,11 @@ var net             = require('net'),
     tls             = require('tls'),
     util            = require('util'),
     _               = require('lodash'),
-    EventEmitter2   = require('eventemitter2').EventEmitter2,
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
+    EE              = require('../ee.js'),
     Socks;
 
 
@@ -23,7 +23,7 @@ if (version_values[1] >= 10) {
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     var that = this;
 
-    EventEmitter2.call(this,{
+    EE.call(this,{
         wildcard: true,
         delimiter: ' '
     });
@@ -95,7 +95,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
             that.connect();
         });
 };
-util.inherits(IrcConnection, EventEmitter2);
+util.inherits(IrcConnection, EE);
 
 module.exports.IrcConnection = IrcConnection;
 
