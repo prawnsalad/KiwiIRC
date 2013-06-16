@@ -22,15 +22,21 @@
 
             $.each(_kiwi.global.settings.attributes, function(key, value) {
 
-                switch ($('[data-setting="' + key + '"]', that.$el).prop('type')) {
+                var $el = $('[data-setting="' + key + '"]', that.$el);
+
+                // Only deal with settings we have a UI element for
+                if (!$el)
+                    return;
+
+                switch ($el.prop('type')) {
                     case 'checkbox':
-                        $('[data-setting="' + key + '"]', that.$el).prop('checked', value);
+                        $el.prop('checked', value);
                         break;
                     case 'radio':
                         $('[data-setting="' + key + '"][value="' + value + '"]', that.$el).prop('checked', true);
                         break;
                     case 'text':
-                        $('[data-setting="' + key + '"]', that.$el).val(value);
+                        $el.val(value);
                         break;
                     default:
                         $('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
