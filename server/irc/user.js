@@ -16,7 +16,11 @@ var IrcUser = function (irc_connection, nick) {
         whoismodes:     onWhoisModes,
         whoisidle:      onWhoisIdle,
         whoisregnick:   onWhoisRegNick,
+        whoisserver:    onWhoisServer,
         endofwhois:     onWhoisEnd,
+        whowas:         onWhoWas,
+        endofwhowas:    onWhoWasEnd,
+        wasnosuchnick:  onWasNoSuchNick,
         notice:         onNotice,
         ctcp_response:  onCtcpResponse,
         privmsg:        onPrivmsg,
@@ -88,6 +92,7 @@ function onWhoisServer(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         irc_server: event.irc_server,
+        server_info: event.server_info,
         end: false
     });
 }
@@ -137,6 +142,30 @@ function onWhoisEnd(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: event.msg,
+        end: true
+    });
+}
+
+function onWhoWas(event) {
+    this.irc_connection.clientEvent('whowas', {
+        nick: event.nick,
+        ident: event.user,
+        host: event.host,
+        real_name: event.real_name,
+        end: false
+    });
+}
+
+function onWasNoSuchNick(event) {
+    this.irc_connection.clientEvent('whowas', {
+        nick: event.nick,
+        end: false
+    });
+}
+
+function onWhoWasEnd(event) {
+    this.irc_connection.clientEvent('whowas', {
+        nick: event.nick,
         end: true
     });
 }
