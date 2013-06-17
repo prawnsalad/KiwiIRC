@@ -694,12 +694,12 @@
             break;
         case 'nickname_in_use':
             this.panels.server.addMsg(' ', '== The nickname ' + event.nick + ' is already in use. Please select a new nickname', 'status');
-            if (this.panels.server !== thia.panels.active) {
+            if (this.panels.server !== this.panels.active) {
                 _kiwi.app.message.text('The nickname "' + event.nick + '" is already in use. Please select a new nickname');
             }
 
             // Only show the nickchange component if the controlbox is open
-            if (that.controlbox.$el.css('display') !== 'none') {
+            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
                 (new _kiwi.view.NickChangeBox()).render();
             }
 
