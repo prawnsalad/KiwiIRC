@@ -82,7 +82,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             extra_html = _kiwi.view.MediaMessage.buildHtml(url);
 
             // Make the link clickable
-            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a> ' + extra_html;
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>' + extra_html;
         });
 
 

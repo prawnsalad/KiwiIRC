@@ -240,7 +240,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         command_raw = this.preprocessor.process(command_raw);
 
         // Extract the command and parameters
-        params = command_raw.split(' ');
+        params = command_raw.split(/\s/);
         if (params[0][0] === '/') {
             command = params[0].substr(1).toLowerCase();
             params = params.splice(1, params.length - 1);
