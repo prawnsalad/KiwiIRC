@@ -7,6 +7,7 @@ var net             = require('net'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
     EE              = require('../ee.js'),
+    iconv           = require('iconv-lite'),
     Socks;
 
 
@@ -167,8 +168,6 @@ IrcConnection.prototype.connect = function () {
         socketConnectHandler.call(that);
     });
 
-    this.socket.setEncoding('utf-8');
-
     this.socket.on('error', function (event) {
         that.emit('error', event);
     });
@@ -198,7 +197,9 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  * Write a line of data to the IRCd
  */
 IrcConnection.prototype.write = function (data, callback) {
-    this.socket.write(data + '\r\n', 'utf-8', callback);
+    //ENCODE string to encoding of the server
+    encoded_buffer = iconv.encode(data + '\r\n', "windows-1252");
+    this.socket.write(encoded_buffer);
 };
 
 
@@ -424,6 +425,9 @@ var parse = function (data) {
         tags = [],
         tag;
 
+    //DECODE server encoding 
+    data = iconv.decode(data, 'windows-1252');
+    console.log(data);
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
         this.hold_last = false;
@@ -445,7 +449,7 @@ var parse = function (data) {
             this.held_data = data[i];
             break;
         }
-
+        
         // Parse the complete line, removing any carriage returns
         msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
 
