@@ -226,8 +226,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         
         // The default command
         if (command_raw[0] !== '/' || command_raw.substr(0, 2) === '//') {
-            // Remove any slash escaping at the start (ie. //), convert whitespaces to regular
-            command_raw = command_raw.replace(/^\/\//, '/').replace(/\s/, ' ');
+            // Remove any slash escaping at the start (ie. //)
+            command_raw = command_raw.replace(/^\/\//, '/');
 
             // Prepend the default command
             command_raw = '/msg ' + _kiwi.app.panels().active.get('name') + ' ' + command_raw;
@@ -240,7 +240,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         command_raw = this.preprocessor.process(command_raw);
 
         // Extract the command and parameters
-        params = command_raw.split(' ');
+        params = command_raw.split(/\s/);
         if (params[0][0] === '/') {
             command = params[0].substr(1).toLowerCase();
             params = params.splice(1, params.length - 1);
