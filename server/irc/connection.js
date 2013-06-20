@@ -30,6 +30,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     });
     this.setMaxListeners(0);
 
+    // Set the first configured encoding as the default encoding
+    this.encoding = global.config.available_encodings[0];
+    
     // Socket state
     this.connected = false;
 
@@ -198,7 +201,7 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  */
 IrcConnection.prototype.write = function (data, callback) {
     //ENCODE string to encoding of the server
-    encoded_buffer = iconv.encode(data + '\r\n', "windows-1252");
+    encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
     this.socket.write(encoded_buffer);
 };
 
@@ -251,6 +254,18 @@ IrcConnection.prototype.disposeSocket = function () {
     }
 };
 
+/**
+ * Set a new encoding for this connection
+ * Return true in case of success
+ */
+
+IrcConnection.prototype.setEncoding = function (encoding) {
+  if (global.config.available_encodings.indexOf(encoding.toUpperCase()) >= 0) {
+    this.encoding = encoding.toUpperCase();
+    return true;
+  }
+  return false;
+};
 
 
 function onChannelJoin(event) {
@@ -426,8 +441,9 @@ var parse = function (data) {
         tag;
 
     //DECODE server encoding 
-    data = iconv.decode(data, 'windows-1252');
+    data = iconv.decode(data, this.encoding);
     console.log(data);
+
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
         this.hold_last = false;

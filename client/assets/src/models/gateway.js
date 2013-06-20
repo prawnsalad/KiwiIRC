@@ -247,8 +247,6 @@ _kiwi.model.Gateway = function () {
         });
     };
 
-
-
     this.isConnected = function () {
         return this.socket.socket.connected;
     };
@@ -536,6 +534,22 @@ _kiwi.model.Gateway = function () {
     };
 
     /**
+     *  Sends ENCODING change request to server.
+     *  @param  {String}     new_encoding  The new proposed encode
+     *  @param  {Fucntion}   callback      A callback function
+     */
+    this.setEncoding = function (connection_id, new_encoding, callback) {
+      var data = {
+          method: 'encoding',
+          args: {
+              encoding: new_encoding
+          }
+      };
+
+      this.sendData(connection_id, data, callback);
+    };
+
+    /**
     *   Sends data to a fellow Kiwi IRC user
     *   @param  {String}    target      The nick of the Kiwi IRC user to send to
     *   @param  {String}    data        The data to send
@@ -552,7 +566,6 @@ _kiwi.model.Gateway = function () {
 
         this.sendData(data, callback);
     };
-
 
     // Check a nick alongside our ignore list
     this.isNickIgnored = function (nick) {

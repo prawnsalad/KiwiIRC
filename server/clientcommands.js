@@ -154,5 +154,15 @@ var listeners = {
         if ((args.target) && (args.data)) {
             irc_connection.write('PRIVMSG ' + args.target + ': ' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1), callback);
         }
+    },
+
+    ENCODING: function (args, irc_connection, callback) {
+        if (args.encoding) {
+            if (irc_connection.setEncoding(args.encoding)) {
+              return callback('Encoding modified to '+args.encoding);
+            } else {
+              return callback(args.encoding+' is not a valid encoding');
+            }
+        }
     }
 };

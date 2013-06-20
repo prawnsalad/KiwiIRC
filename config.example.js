@@ -60,6 +60,12 @@ conf.max_client_conns = 5;
 //   - Kiwi is running in restricted server mode.
 conf.max_server_conns = 0;
 
+/*
+* Available encodings supported by the server
+* As specified and limited to iconv-lite library support.
+* All upper-case. Default is the first element on the list.
+*/
+conf.available_encodings = ['UTF-8', 'WINDOWS-1252'];
 
 /*
  * Client side plugins
