@@ -44,9 +44,8 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
 
     newMsg: function (msg) {
-        var re, line_msg, $this = this.$el,
+        var template_vars, re, line_msg, $this = this.$el,
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',
-            template_vars, time_difference,
             sb = this.model.get('scrollback'),
             prev_msg = sb[sb.length-2];
 
@@ -116,12 +115,8 @@ _kiwi.view.Panel = Backbone.View.extend({
         }
 
         template_vars = _.clone(msg);
-
-        if (prev_msg) {
-            time_difference = (template_vars.date.getTime() - prev_msg.date.getTime())/1000/60;
-            if (prev_msg.nick === template_vars.nick && time_difference < 1) {
-                template_vars.nick = '';
-            }
+        if (prev_msg && prev_msg.nick === template_vars.nick) {
+            template_vars.nick = '';
         }
 
         // Build up and add the line
