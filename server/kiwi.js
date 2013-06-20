@@ -1,5 +1,6 @@
 var fs          = require('fs'),
     _           = require('lodash'),
+    util        = require('util'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     rehash      = require('./rehash.js'),
@@ -28,7 +29,7 @@ if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
             var logfile = fs.openSync(log_file_name, 'a'),
                 out;
 
-            out = Array.prototype.join.apply(arguments, [' ']);
+            out = util.format.apply(util, arguments);
 
             // Make sure we out somthing to log and we have an open file
             if (!out || !logfile) return;
