@@ -16,7 +16,7 @@ _kiwi.model.Panel = Backbone.Model.extend({
 
         // Time defaults to now
         if (!opts || typeof opts.time === 'undefined') {
-            d = new Date();
+            d = opts.date = new Date();
             opts.time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
         }
 
@@ -26,7 +26,7 @@ _kiwi.model.Panel = Backbone.Model.extend({
         }
 
         // Run through the plugins
-        message_obj = {"msg": msg, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
+        message_obj = {"msg": msg, "date": opts.date, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
         //tmp = _kiwi.plugs.run('addmsg', message_obj);
         if (!message_obj) {
             return;
