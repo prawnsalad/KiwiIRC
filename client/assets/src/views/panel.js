@@ -46,7 +46,8 @@ _kiwi.view.Panel = Backbone.View.extend({
     newMsg: function (msg) {
         var template_vars, re, line_msg, $this = this.$el,
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',
-            sb = this.model.get('scrollback'), prev_msg = sb[sb.length-2];
+            sb = this.model.get('scrollback'),
+            prev_msg = sb[sb.length-2];
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
