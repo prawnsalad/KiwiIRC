@@ -159,9 +159,9 @@ var listeners = {
     ENCODING: function (args, irc_connection, callback) {
         if (args.encoding) {
             if (irc_connection.setEncoding(args.encoding)) {
-              return callback('Encoding modified to '+args.encoding);
+                return callback('Encoding modified to '+args.encoding);
             } else {
-              return callback(args.encoding+' is not a valid encoding');
+                return callback(args.encoding+' is not a valid encoding');
             }
         }
     }

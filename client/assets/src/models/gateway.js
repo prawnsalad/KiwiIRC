@@ -539,14 +539,13 @@ _kiwi.model.Gateway = function () {
      *  @param  {Fucntion}   callback      A callback function
      */
     this.setEncoding = function (connection_id, new_encoding, callback) {
-      var data = {
-          method: 'encoding',
-          args: {
-              encoding: new_encoding
-          }
-      };
-
-      this.sendData(connection_id, data, callback);
+        var data = {
+            method: 'encoding',
+            args: {
+                encoding: new_encoding
+            }
+        };
+        this.sendData(connection_id, data, callback);
     };
 
     /**

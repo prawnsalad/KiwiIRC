@@ -260,11 +260,11 @@ IrcConnection.prototype.disposeSocket = function () {
  */
 
 IrcConnection.prototype.setEncoding = function (encoding) {
-  if (global.config.available_encodings.indexOf(encoding.toUpperCase()) >= 0) {
-    this.encoding = encoding.toUpperCase();
-    return true;
-  }
-  return false;
+    if (global.config.available_encodings.indexOf(encoding.toUpperCase()) >= 0) {
+        this.encoding = encoding.toUpperCase();
+        return true;
+    }
+    return false;
 };
 
 
