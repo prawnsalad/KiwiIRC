@@ -44,8 +44,9 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
 
     newMsg: function (msg) {
-        var re, line_msg, $this = this.$el,
-            nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '';
+        var template_vars, re, line_msg, $this = this.$el,
+            nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',
+            sb = this.model.get('scrollback'), prev_msg = sb[sb.length-2];
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
@@ -112,10 +113,15 @@ _kiwi.view.Panel = Backbone.View.extend({
             msg_css_classes += ' nick_' + nick_hex;
         }
 
+        template_vars = _.clone(msg);
+        if (prev_msg && prev_msg.nick === template_vars.nick) {
+            template_vars.nick = '';
+        }
+
         // Build up and add the line
-        msg.msg_css_classes = msg_css_classes;
+        template_vars.msg_css_classes = msg_css_classes;
         line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
-        $this.append(_.template(line_msg, msg));
+        $this.append(_.template(line_msg, template_vars));
 
         // Activity/alerts based on the type of new message
         if (msg.type.match(/^action /)) {
