@@ -607,7 +607,7 @@ _kiwi.model.Application = function () {
             panels = that.connections.active_connection.createAndJoinChannels(channel_names);
 
             // Show the last channel if we have one
-            if (panels)
+            if (panels.length)
                 panels[panels.length - 1].view.show();
         }
 
