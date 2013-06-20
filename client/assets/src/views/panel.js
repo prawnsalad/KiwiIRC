@@ -118,6 +118,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         template_vars = _.clone(msg);
 
         if (prev_msg) {
+            // Time difference between this message and the last (in minutes)
             time_difference = (template_vars.date.getTime() - prev_msg.date.getTime())/1000/60;
             if (prev_msg.nick === template_vars.nick && time_difference < 1) {
                 template_vars.nick = '';
