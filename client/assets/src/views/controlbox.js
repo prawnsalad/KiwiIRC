@@ -1,7 +1,8 @@
 _kiwi.view.ControlBox = Backbone.View.extend({
     events: {
         'keydown .inp': 'process',
-        'click .nick': 'showNickChange'
+        'click .nick': 'showNickChange',
+        'click .btn_send': 'send'
     },
 
     initialize: function () {
@@ -34,6 +35,23 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     showNickChange: function (ev) {
         (new _kiwi.view.NickChangeBox()).render();
     },
+    
+    send: function(ev) {
+        var that = this,
+            inp = $('.inp'),
+            inp_val = inp.val().trim();
+
+        if (inp_val) {
+            $.each(inp_val.split('\n'), function (idx, line) {
+                that.processInput(line);
+            });
+
+            this.buffer.push(inp_val);
+            this.buffer_pos = this.buffer.length;
+        }
+
+        inp.val('');
+    },
 
     process: function (ev) {
         var that = this,
@@ -56,18 +74,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         
         switch (true) {
         case (ev.keyCode === 13):              // return
-            inp_val = inp_val.trim();
-
-            if (inp_val) {
-                $.each(inp_val.split('\n'), function (idx, line) {
-                    that.processInput(line);
-                });
-
-                this.buffer.push(inp_val);
-                this.buffer_pos = this.buffer.length;
-            }
-
-            inp.val('');
+            this.send();
             return false;
 
             break;

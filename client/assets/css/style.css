@@ -145,7 +145,8 @@ html, body { height:100%; }
 #kiwi .controlbox .nickchange button { }
 
 /* Plugin tools */
-#kiwi .controlbox .input_tools { float:right; }
+#kiwi .controlbox .input_right { float:right; }
+#kiwi .controlbox .input_right .input_tools { float: left; }
 #kiwi .controlbox .input_tools .tool { margin:0 1em; display:inline; }
 
 
