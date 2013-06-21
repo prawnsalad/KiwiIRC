@@ -16,8 +16,8 @@ _kiwi.model.DataStore = Backbone.Model.extend({
 
 	// Overload the original load() method
 	load: function () {
-		if (!localStorage) return;
-
+		if (typeof localStorage === 'undefined') return
+		
 		var data;
 
 		try {
