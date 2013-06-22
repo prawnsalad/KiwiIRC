@@ -233,7 +233,7 @@ _kiwi.model.Gateway = function () {
 
             if (!err) {
                 if (!_kiwi.app.connections.getByConnectionId(server_num)){
-                    connection = new _kiwi.model.Network({connection_id: server_num});
+                    connection = new _kiwi.model.Network({connection_id: server_num, nick: h.nick});
                     _kiwi.app.connections.add(connection);
                 }
 
