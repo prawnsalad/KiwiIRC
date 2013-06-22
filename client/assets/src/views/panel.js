@@ -46,7 +46,7 @@ _kiwi.view.Panel = Backbone.View.extend({
     newMsg: function (msg) {
         var re, line_msg, $this = this.$el,
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',
-            template_vars, time_difference,
+            time_difference,
             sb = this.model.get('scrollback'),
             prev_msg = sb[sb.length-2];
 
@@ -115,20 +115,18 @@ _kiwi.view.Panel = Backbone.View.extend({
             msg_css_classes += ' nick_' + nick_hex;
         }
 
-        template_vars = _.clone(msg);
-
         if (prev_msg) {
             // Time difference between this message and the last (in minutes)
-            time_difference = (template_vars.date.getTime() - prev_msg.date.getTime())/1000/60;
-            if (prev_msg.nick === template_vars.nick && time_difference < 1) {
+            time_difference = (msg.date.getTime() - prev_msg.date.getTime())/1000/60;
+            if (prev_msg.nick === msg.nick && time_difference < 1) {
                 msg_css_classes += ' repeated_nick';
             }
         }
 
         // Build up and add the line
-        template_vars.msg_css_classes = msg_css_classes;
+        msg.msg_css_classes = msg_css_classes;
         line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
-        $this.append(_.template(line_msg, template_vars));
+        $this.append(_.template(line_msg, msg));
 
         // Activity/alerts based on the type of new message
         if (msg.type.match(/^action /)) {
