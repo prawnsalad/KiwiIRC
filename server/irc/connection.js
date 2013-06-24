@@ -442,7 +442,6 @@ var parse = function (data) {
 
     //DECODE server encoding 
     data = iconv.decode(data, this.encoding);
-    console.log(data);
 
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
