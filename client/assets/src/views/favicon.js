@@ -58,7 +58,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
 
     _drawBubble: function (label, canvas) {
         var letter_spacing = -1.5,
-            text_width = 0, text_height = 0,
+            bubble_width = 0, bubble_height = 0,
             context = test = canvas.getContext('2d'),
             canvas_width = canvas.width,
             canvas_height = canvas.height;
@@ -68,17 +68,18 @@ _kiwi.view.Favicon = Backbone.View.extend({
         test.textAlign = 'right';
         this._renderText(test, label, 0, 0, letter_spacing);
 
-        // Calculate text width based on letter spacing and padding
-        text_width = test.measureText(label).width + letter_spacing * (label.length - 1) + 2;
-        text_height = 9;
+        // Calculate bubble width based on letter spacing and padding
+        bubble_width = test.measureText(label).width + letter_spacing * (label.length - 1) + 2;
+        // Canvas does not have any way of measuring text height, so we just do it manually and add 1px top/bottom padding
+        bubble_height = 9;
 
-        // Set bubble parameters
-        bubbleX = canvas_width - text_width;
-        bubbleY = canvas_height - text_height;
+        // Set bubble coordinates
+        bubbleX = canvas_width - bubble_width;
+        bubbleY = canvas_height - bubble_height;
 
         // Draw bubble background
         context.fillStyle = 'red';
-        context.fillRect(bubbleX, bubbleY, text_width, text_height);
+        context.fillRect(bubbleX, bubbleY, bubble_width, bubble_height);
 
         // Draw the text
         context.fillStyle = 'white';
