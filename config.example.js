@@ -191,7 +191,8 @@ conf.client = {
 //conf.restrict_server_nick = "kiwi_";
 
 
-
+// If set, use ZNC bouncer mode.
+conf.bouncer_mode = false;
 
 /*
  * Do not ammend the below lines unless you understand the changes!

@@ -180,6 +180,9 @@ html, body { height:100%; }
 #kiwi .server_select .basic .show_more { }
 #kiwi .server_select .basic tr.pass { display:none; }
 #kiwi .server_select .basic tr.key { display:none; }
+#kiwi .server_select .basic tr.network { display:none; }
+#kiwi .server_select.bouncer_mode .basic tr.network { display:table-row; }
+#kiwi .server_select.bouncer_mode .basic tr.have_pass { display: none; }
 #kiwi .server_select.single_server .basic { border:none; }
 #kiwi .server_select .status {  }
 

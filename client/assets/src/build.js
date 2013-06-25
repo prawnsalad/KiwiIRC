@@ -111,21 +111,21 @@ var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
 var vars = {
     base_path: config.get().http_base_path || '/kiwi',
     cache_buster: Math.ceil(Math.random() * 9000).toString(),
-    server_settings: {},
+    server_settings: {
+        bouncer_mode: !!config.get().bouncer_mode
+    },
     client_plugins: []
 };
 
 // Any restricted server mode set?
 if (config.get().restrict_server) {
-    vars.server_settings = {
-        connection: {
-            server: config.get().restrict_server,
-            port: config.get().restrict_server_port || 6667,
-            ssl: config.get().restrict_server_ssl,
-            channel: config.get().restrict_server_channel,
-            nick: config.get().restrict_server_nick,
-            allow_change: false
-        }
+    vars.server_settings.connection = {
+        server: config.get().restrict_server,
+        port: config.get().restrict_server_port || 6667,
+        ssl: config.get().restrict_server_ssl,
+        channel: config.get().restrict_server_channel,
+        nick: config.get().restrict_server_nick,
+        allow_change: false
     };
 }
 
