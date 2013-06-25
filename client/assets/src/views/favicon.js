@@ -3,6 +3,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
         var that = this,
             $win = $(window);
 
+        this.has_canvas_support = !!window.CanvasRenderingContext2D;
         this.has_focus = true;
         this.highlight_count = 0;
 
@@ -21,10 +22,12 @@ _kiwi.view.Favicon = Backbone.View.extend({
         var that = this;
         if (!this.has_focus) {
             this.highlight_count++;
-            this._drawFavicon(function(canvas) {
-                var bubbleCanvas = that._drawBubble(that.highlight_count.toString(), canvas);
-                that._refreshFavicon(bubbleCanvas.toDataURL());
-            });
+            if (this.has_canvas_support) {
+                this._drawFavicon(function(canvas) {
+                    var bubbleCanvas = that._drawBubble(that.highlight_count.toString(), canvas);
+                    that._refreshFavicon(bubbleCanvas.toDataURL());
+                });
+            }
         }
     },
 
@@ -60,43 +63,10 @@ _kiwi.view.Favicon = Backbone.View.extend({
             canvas_width = canvas.width,
             canvas_height = canvas.height;
 
-        // A hacky solution for letter-spacing, but works well with small favicon text
-        CanvasRenderingContext2D.prototype.renderText = function (text, x, y, letter_spacing) {
-            if (!text || typeof text !== 'string' || text.length === 0) {
-                return;
-            }
-            if (typeof letter_spacing === 'undefined') {
-                letter_spacing = 0;
-            }
-            // letter_spacing of 0 means normal letter-spacing
-            var characters = String.prototype.split.call(text, ''),
-                index = 0,
-                current,
-                currentPosition = x,
-                align = 1;
-
-            if (this.textAlign === 'right') {
-                characters = characters.reverse();
-                align = -1;
-            } else if (this.textAlign === 'center') {
-                var totalWidth = 0;
-                for (var i = 0; i < characters.length; i++) {
-                    totalWidth += (this.measureText(characters[i]).width + letter_spacing);
-                }
-                currentPosition = x - (totalWidth / 2);
-            }
-
-            while (index < text.length) {
-                current = characters[index++];
-                this.fillText(current, currentPosition, y);
-                currentPosition += (align * (this.measureText(current).width + letter_spacing));
-            }
-        }
-
         // Setup a test canvas to get text width
         test.font = context.font = 'bold 10px Arial';
         test.textAlign = 'right';
-        test.renderText(label, 0, 0, letter_spacing);
+        this._renderText(test, label, 0, 0, letter_spacing);
 
         // Calculate text width based on letter spacing and padding
         text_width = test.measureText(label).width + letter_spacing * (label.length - 1) + 2;
@@ -112,7 +82,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
 
         // Draw the text
         context.fillStyle = 'white';
-        context.renderText(label, canvas_width - 1, canvas_height - 1, letter_spacing);
+        this._renderText(context, label, canvas_width - 1, canvas_height - 1, letter_spacing);
 
         return canvas;
     },
@@ -128,5 +98,22 @@ _kiwi.view.Favicon = Backbone.View.extend({
         canvas.height = 16;
 
         return canvas;
+    },
+
+    _renderText: function (context, text, x, y, letter_spacing) {
+        // A hacky solution for letter-spacing, but works well with small favicon text
+        // Modified from http://jsfiddle.net/davidhong/hKbJ4/
+        var current,
+            characters = text.split('').reverse(),
+            index = 0,
+            currentPosition = x;
+
+        while (index < text.length) {
+            current = characters[index++];
+            context.fillText(current, currentPosition, y);
+            currentPosition += (-1 * (context.measureText(current).width + letter_spacing));
+        }
+
+        return context;
     }
 });
