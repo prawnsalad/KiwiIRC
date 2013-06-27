@@ -219,6 +219,8 @@ IrcConnection.prototype.end = function (data, callback) {
  * Clean up this IrcConnection instance and any sockets
  */
 IrcConnection.prototype.dispose = function () {
+    var that = this;
+
     _.each(this.irc_users, function (user) {
         user.dispose();
     });
@@ -233,8 +235,20 @@ IrcConnection.prototype.dispose = function () {
 
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
-    this.disposeSocket();
-    this.removeAllListeners();
+    // If we're still connected, wait until the socket is closed before disposing
+    // so that all the events are still correctly triggered
+    if (this.socket && this.connected) {
+        this.socket.once('close', function() {
+            that.disposeSocket();
+            that.removeAllListeners();
+        });
+
+        this.socket.end();
+
+    } else {
+        this.disposeSocket();
+        this.removeAllListeners();
+    }
 };
 
 
