@@ -34,9 +34,11 @@ _kiwi.view.Favicon = Backbone.View.extend({
     _resetHighlights: function () {
         var that = this;
         this.highlight_count = 0;
-        this._drawFavicon(function(canvas) {
-            that._refreshFavicon(canvas.toDataURL());
-        });
+        if (this.has_canvas_support) {
+            this._drawFavicon(function(canvas) {
+                that._refreshFavicon(canvas.toDataURL());
+            });
+        }
     },
 
     _drawFavicon: function (callback) {
