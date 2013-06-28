@@ -1193,7 +1193,7 @@ html, body { height:100%; }
 
 
 #kiwi.theme_cli .messages .msg > div { color:#6d6d6d; font-family: Inconsolata, Consolas, 'courier new', monospace; }
-#kiwi.theme_cli .messages .msg { border: none; }
+#kiwi.theme_cli .messages .msg { border: none; padding: 2px 5px; }
 #kiwi.theme_cli .messages .msg .time { display:inline; margin-right:1em; color:#777; }
 #kiwi.theme_cli .messages .msg .nick { display:inline; margin-right:1em; }
 #kiwi.theme_cli .messages .msg .nick:before { content:"<"; }
