@@ -2,11 +2,16 @@
     var View = Backbone.View.extend({
         events: {
             'change [data-setting]': 'saveSettings',
-            'click [data-setting="theme"]': 'selectTheme'
+            'click [data-setting="theme"]': 'selectTheme',
+            'click .registerProtocol': 'registerProtocol'
         },
 
         initialize: function (options) {
             this.$el = $($('#tmpl_applet_settings').html().trim());
+
+            if (!navigator.registerProtocolHandler) {
+                this.$el.find('.protoHandler').remove();
+            }
 
             // Incase any settings change while we have this open, update them
             _kiwi.global.settings.on('change', this.loadSettings, this);
@@ -76,6 +81,11 @@
             $('[data-setting="theme"].active', this.$el).removeClass('active');
             $(event.currentTarget).addClass('active').trigger('change');
             event.preventDefault();
+        },
+
+        registerProtocol: function (event) {
+            navigator.registerProtocolHandler('irc', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
+            navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
         }
     });
 
