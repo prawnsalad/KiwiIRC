@@ -27,6 +27,7 @@ _kiwi.view.Application = Backbone.View.extend({
             }
         };
 
+        this.favicon = new _kiwi.view.Favicon();
         this.initSound();
     },
 

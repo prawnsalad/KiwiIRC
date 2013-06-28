@@ -134,6 +134,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         } else if (is_highlight) {
             _kiwi.app.view.alertWindow('* People are talking!');
+            _kiwi.app.view.favicon.newHighlight();
             _kiwi.app.view.playSound('highlight');
             this.alert('highlight');
 
@@ -147,6 +148,9 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         if (this.model.isQuery() && !this.model.isActive()) {
             _kiwi.app.view.alertWindow('* People are talking!');
+            if (!is_highlight) {
+                _kiwi.app.view.favicon.newHighlight();
+            }
             _kiwi.app.view.playSound('highlight');
         }
 
