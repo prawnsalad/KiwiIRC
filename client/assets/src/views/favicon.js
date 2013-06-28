@@ -3,12 +3,15 @@ _kiwi.view.Favicon = Backbone.View.extend({
         var that = this,
             $win = $(window);
 
-        this.has_canvas_support = !!window.CanvasRenderingContext2D;
         this.has_focus = true;
         this.highlight_count = 0;
+        // Check for html5 canvas support
+        this.has_canvas_support = !!window.CanvasRenderingContext2D;
 
+        // Store the original favicon
         this.original_favicon = $('link[rel~="icon"]')[0].href;
 
+        // Reset favicon notifications when user focuses window
         $win.on('focus', function () {
             that.has_focus = true;
             that._resetHighlights();
@@ -48,6 +51,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
         favicon_image.src = this.original_favicon;
 
         favicon_image.onload = function() {
+            // Clear canvas from prevous iteration
             context.clearRect(0, 0, canvas.width, canvas.height);
             // Draw the favicon itself
             context.drawImage(favicon_image, 0, 0, favicon_image.width, favicon_image.height);
@@ -56,11 +60,19 @@ _kiwi.view.Favicon = Backbone.View.extend({
     },
 
     _drawBubble: function (label, canvas) {
-        var letter_spacing = -1.5,
+        var letter_spacing,
             bubble_width = 0, bubble_height = 0,
             context = test = canvas.getContext('2d'),
             canvas_width = canvas.width,
             canvas_height = canvas.height;
+
+        // Different letter spacing for MacOS 
+        if (navigator.appVersion.indexOf("Mac") !== -1) {
+            letter_spacing = -1.5;
+        }
+        else {
+            letter_spacing = -1;
+        }
 
         // Setup a test canvas to get text width
         test.font = context.font = 'bold 10px Arial';
@@ -93,6 +105,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
     },
 
     _getCanvas: function () {
+        // Check if canvas exists
         if (!this.canvas) {
             canvas = document.createElement('canvas');
             canvas.width = 16;
