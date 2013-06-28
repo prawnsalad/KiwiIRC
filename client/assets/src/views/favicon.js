@@ -11,6 +11,9 @@ _kiwi.view.Favicon = Backbone.View.extend({
         // Store the original favicon
         this.original_favicon = $('link[rel~="icon"]')[0].href;
 
+        // Create our favicon canvas
+        this._createCanvas();
+
         // Reset favicon notifications when user focuses window
         $win.on('focus', function () {
             that.has_focus = true;
@@ -42,7 +45,8 @@ _kiwi.view.Favicon = Backbone.View.extend({
 
     _drawFavicon: function (callback) {
         var that = this,
-            context = this._getCanvas().getContext('2d'),
+            canvas = this.canvas,
+            context = canvas.getContext('2d'),
             favicon_image = new Image();
 
         // Allow cross origin resource requests
@@ -62,7 +66,8 @@ _kiwi.view.Favicon = Backbone.View.extend({
     _drawBubble: function (label) {
         var letter_spacing,
             bubble_width = 0, bubble_height = 0,
-            context = test_canvas = this.canvas.getContext('2d'),
+            canvas = this.canvas,
+            context = test_context = canvas.getContext('2d'),
             canvas_width = canvas.width,
             canvas_height = canvas.height;
 
@@ -75,12 +80,12 @@ _kiwi.view.Favicon = Backbone.View.extend({
         }
 
         // Setup a test canvas to get text width
-        test_canvas.font = context.font = 'bold 10px Arial';
-        test_canvas.textAlign = 'right';
-        this._renderText(test_canvas, label, 0, 0, letter_spacing);
+        test_context.font = context.font = 'bold 10px Arial';
+        test_context.textAlign = 'right';
+        this._renderText(test_context, label, 0, 0, letter_spacing);
 
         // Calculate bubble width based on letter spacing and padding
-        bubble_width = test_canvas.measureText(label).width + letter_spacing * (label.length - 1) + 2;
+        bubble_width = test_context.measureText(label).width + letter_spacing * (label.length - 1) + 2;
         // Canvas does not have any way of measuring text height, so we just do it manually and add 1px top/bottom padding
         bubble_height = 9;
 
@@ -102,15 +107,12 @@ _kiwi.view.Favicon = Backbone.View.extend({
         $('<link rel="shortcut icon" href="' + url + '">').appendTo($('head'));
     },
 
-    _getCanvas: function () {
-        // Check if canvas exists
-        if (!this.canvas) {
-            canvas = document.createElement('canvas');
+    _createCanvas: function () {
+        var canvas = document.createElement('canvas');
             canvas.width = 16;
             canvas.height = 16;
-            this.canvas = canvas;
-        }
-        return this.canvas;
+        
+        this.canvas = canvas;
     },
 
     _renderText: function (context, text, x, y, letter_spacing) {
