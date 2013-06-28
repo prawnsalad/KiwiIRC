@@ -34,16 +34,12 @@ _kiwi.view.Favicon = Backbone.View.extend({
     _resetHighlights: function () {
         var that = this;
         this.highlight_count = 0;
-        if (this.has_canvas_support) {
-            this._drawFavicon(function(canvas) {
-                that._refreshFavicon(canvas.toDataURL());
-            });
-        }
+        this._refreshFavicon(this.original_favicon);
     },
 
     _drawFavicon: function (callback) {
         var that = this,
-            context = this._createCanvas().getContext('2d'),
+            context = this._getCanvas().getContext('2d'),
             favicon_image = new Image();
 
         // Allow cross origin resource requests
@@ -52,6 +48,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
         favicon_image.src = this.original_favicon;
 
         favicon_image.onload = function() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
             // Draw the favicon itself
             context.drawImage(favicon_image, 0, 0, favicon_image.width, favicon_image.height);
             callback(canvas);
@@ -95,12 +92,14 @@ _kiwi.view.Favicon = Backbone.View.extend({
         $('<link rel="shortcut icon" href="' + url + '">').appendTo($('head'));
     },
 
-    _createCanvas: function () {
-        canvas = document.createElement('canvas');
-        canvas.width = 16;
-        canvas.height = 16;
-
-        return canvas;
+    _getCanvas: function () {
+        if (!this.canvas) {
+            canvas = document.createElement('canvas');
+            canvas.width = 16;
+            canvas.height = 16;
+            this.canvas = canvas;
+        }
+        return this.canvas;
     },
 
     _renderText: function (context, text, x, y, letter_spacing) {
