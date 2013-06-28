@@ -51,6 +51,7 @@ var source_files = [
     __dirname + '/views/application.js',
     __dirname + '/views/apptoolbar.js',
     __dirname + '/views/controlbox.js',
+    __dirname + '/views/favicon.js',
     __dirname + '/views/mediamessage.js',
     __dirname + '/views/member.js',
     __dirname + '/views/memberlist.js',
