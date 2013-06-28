@@ -3,14 +3,14 @@
         events: {
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
-            'click .registerProtocol': 'registerProtocol'
+            'click .register_protocol': 'registerProtocol'
         },
 
         initialize: function (options) {
             this.$el = $($('#tmpl_applet_settings').html().trim());
 
             if (!navigator.registerProtocolHandler) {
-                this.$el.find('.protoHandler').remove();
+                this.$el.find('.protocol_handler').remove();
             }
 
             // Incase any settings change while we have this open, update them
