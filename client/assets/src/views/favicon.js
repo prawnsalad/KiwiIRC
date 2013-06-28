@@ -58,7 +58,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
             // Clear canvas from prevous iteration
             context.clearRect(0, 0, canvas.width, canvas.height);
             // Draw the favicon itself
-            context.drawImage(favicon_image, 0, 0, favicon_image.width, favicon_image.height);
+            context.drawImage(favicon_image, 0, 0, canvas.width, canvas.height);
             callback();
         };
     },
