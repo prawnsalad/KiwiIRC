@@ -1408,9 +1408,8 @@ html, body { height:100%; }
 #kiwi.theme_basic .messages.active { }
 #kiwi.theme_basic .messages a { text-decoration:underline; }
 
-#kiwi.theme_basic .messages .msg { }
+#kiwi.theme_basic .messages .msg { border: none; padding: 2px 5px; }
 #kiwi.theme_basic .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
-#kiwi.theme_basic .messages .msg { border: none; }
 #kiwi.theme_basic .messages .msg .time { display:none; margin-right:1em; margin-left:2px; color:gray; }
 #kiwi.theme_basic .messages .msg .nick { display:inline; margin-right:1em; }
 #kiwi.theme_basic .messages .msg .nick:before { content:"<"; }
