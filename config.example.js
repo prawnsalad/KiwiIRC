@@ -61,11 +61,10 @@ conf.max_client_conns = 5;
 conf.max_server_conns = 0;
 
 /*
-* Available encodings supported by the server
+* Default encoding to be used by the server
 * As specified and limited to iconv-lite library support.
-* All upper-case. Default is the first element on the list.
 */
-conf.available_encodings = ['UTF-8', 'WINDOWS-1252'];
+conf.default_encoding = 'UTF-8';
 
 /*
  * Client side plugins

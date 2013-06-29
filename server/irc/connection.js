@@ -31,7 +31,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.setMaxListeners(0);
 
     // Set the first configured encoding as the default encoding
-    this.encoding = global.config.available_encodings[0];
+    this.encoding = global.config.default_encoding;
     
     // Socket state
     this.connected = false;
@@ -260,11 +260,19 @@ IrcConnection.prototype.disposeSocket = function () {
  */
 
 IrcConnection.prototype.setEncoding = function (encoding) {
-    if (global.config.available_encodings.indexOf(encoding.toUpperCase()) >= 0) {
-        this.encoding = encoding.toUpperCase();
-        return true;
+    try {
+        encoded_test = iconv.encode("TEST", encoding);
+        //This test is done to check if this encoding also supports
+        //the ASCII charset required by the IRC protocols
+        //(Avoid the use of base64 or incompatible encodings)
+        if (encoded_test == "TEST") {
+            this.encoding = encoding;
+            return true;
+        }
+        return false;
+    } catch (err) {
+        return false;
     }
-    return false;
 };
 
 
