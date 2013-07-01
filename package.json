@@ -18,7 +18,7 @@
     "socket.io": "0.9.16",
     "range_check": "0.0.1",
     "lodash": "0.9.1",
-    "daemonize2": "0.4.0-rc.5",
+    "daemonize2": "0.4.2",
     "eventemitter2": "0.4.11",
     "ipaddr.js": "0.1.1",
     "socksjs": "0.3.3"
