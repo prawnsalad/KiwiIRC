@@ -461,6 +461,7 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:whowas', whowasCommand);
 
+            controlbox.on('command:encoding', encodingCommand);
 
             controlbox.on('command:css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
@@ -789,6 +790,20 @@ _kiwi.model.Application = function () {
                 _kiwi.app.connections.active_connection.gateway.raw('WHOWAS ' + nick);
         }
 
+        function encodingCommand (ev) {
+            if (ev.params[0]) {
+                _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
+                    if (success) {
+                        _kiwi.app.panels().active.addMsg('', "Encoding modified to "+ev.params[0]);
+                    } else {
+                        _kiwi.app.panels().active.addMsg('', ev.params[0]+' is not a valid encoding');
+                    }
+                });
+            } else {
+                _kiwi.app.panels().active.addMsg('', 'Encoding not specified');
+                _kiwi.app.panels().active.addMsg('', 'Usage: /encoding [NEW-ENCODING]');
+            }
+        }
 
         function serverCommand (ev) {
             var server, port, ssl, password, nick,

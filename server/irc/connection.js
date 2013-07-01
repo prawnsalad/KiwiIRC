@@ -7,6 +7,7 @@ var net             = require('net'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
     EE              = require('../ee.js'),
+    iconv           = require('iconv-lite'),
     Socks;
 
 
@@ -29,6 +30,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     });
     this.setMaxListeners(0);
 
+    // Set the first configured encoding as the default encoding
+    this.encoding = global.config.default_encoding;
+    
     // Socket state
     this.connected = false;
 
@@ -167,8 +171,6 @@ IrcConnection.prototype.connect = function () {
         socketConnectHandler.call(that);
     });
 
-    this.socket.setEncoding('utf-8');
-
     this.socket.on('error', function (event) {
         that.emit('error', event);
     });
@@ -198,7 +200,9 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  * Write a line of data to the IRCd
  */
 IrcConnection.prototype.write = function (data, callback) {
-    this.socket.write(data + '\r\n', 'utf-8', callback);
+    //ENCODE string to encoding of the server
+    encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
+    this.socket.write(encoded_buffer);
 };
 
 
@@ -264,6 +268,26 @@ IrcConnection.prototype.disposeSocket = function () {
     }
 };
 
+/**
+ * Set a new encoding for this connection
+ * Return true in case of success
+ */
+
+IrcConnection.prototype.setEncoding = function (encoding) {
+    try {
+        encoded_test = iconv.encode("TEST", encoding);
+        //This test is done to check if this encoding also supports
+        //the ASCII charset required by the IRC protocols
+        //(Avoid the use of base64 or incompatible encodings)
+        if (encoded_test == "TEST") {
+            this.encoding = encoding;
+            return true;
+        }
+        return false;
+    } catch (err) {
+        return false;
+    }
+};
 
 
 function onChannelJoin(event) {
@@ -438,6 +462,9 @@ var parse = function (data) {
         tags = [],
         tag;
 
+    //DECODE server encoding 
+    data = iconv.decode(data, this.encoding);
+
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
         this.hold_last = false;
@@ -459,7 +486,7 @@ var parse = function (data) {
             this.held_data = data[i];
             break;
         }
-
+        
         // Parse the complete line, removing any carriage returns
         msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
 
