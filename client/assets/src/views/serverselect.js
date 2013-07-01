@@ -23,6 +23,14 @@ _kiwi.view.ServerSelect = function () {
                     this.$el.addClass('single_server');
                 }
             }
+            
+            if (_kiwi.app.server_settings.bouncer_mode) {
+                // Assume that bouncers always have a password
+                this.$el.find('tr.have_pass input').prop('checked', true);
+                this.$el.find('tr.pass').show();
+                
+                this.$el.addClass('bouncer_mode');
+            }
 
             _kiwi.gateway.bind('onconnect', this.networkConnected, this);
             _kiwi.gateway.bind('connecting', this.networkConnecting, this);
@@ -66,10 +74,16 @@ _kiwi.view.ServerSelect = function () {
                 server: $('input.server', this.$el).val(),
                 port: $('input.port', this.$el).val(),
                 ssl: $('input.ssl', this.$el).prop('checked'),
-                password: $('input.password', this.$el).val(),
                 channel: $('input.channel', this.$el).val(),
                 channel_key: $('input.channel_key', this.$el).val()
             };
+
+            if (_kiwi.app.server_settings.bouncer_mode) {
+                // IRC bouncers like ZNC use a password in the form "username/network:password"
+                values.password = values.nick + '/' + $('input.network', this.$el).val() + ':' + $('input.password', this.$el).val();
+            } else {
+                values.password = $('input.password', this.$el).val();
+            }
 
             this.trigger('server_connect', values);
         },
