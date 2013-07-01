@@ -13,7 +13,7 @@
     "postinstall": "node client/assets/src/build.js"
   },
   "dependencies": {
-    "node-static": "0.5.9",
+    "node-static": "0.7.0",
     "uglify-js": "2.3.6",
     "socket.io": "0.9.16",
     "range_check": "0.0.1",
