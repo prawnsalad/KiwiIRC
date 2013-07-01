@@ -274,6 +274,8 @@ IrcConnection.prototype.disposeSocket = function () {
  */
 
 IrcConnection.prototype.setEncoding = function (encoding) {
+    var encoded_test;
+
     try {
         encoded_test = iconv.encode("TEST", encoding);
         //This test is done to check if this encoding also supports
