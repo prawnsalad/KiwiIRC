@@ -14,7 +14,7 @@ Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiir
 
 1. Download the Kiwi source or clone the git repository:
 
-    `$ git clone git@github.com:prawnsalad/KiwiIRC.git && cd KiwiIRC`
+    `$ git clone https://github.com/prawnsalad/KiwiIRC.git && cd KiwiIRC`
 
 2. Install the dependencies:
 
