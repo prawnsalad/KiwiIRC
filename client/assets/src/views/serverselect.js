@@ -12,9 +12,24 @@ _kiwi.view.ServerSelect = function () {
         },
 
         initialize: function () {
-            var that = this;
+            var that = this,
+                text = {
+                    think_nick: _kiwi.global.i18n.translate('Think of a nickname...').fetch(),
+                    nickname: _kiwi.global.i18n.translate('Nickname').fetch(),
+                    have_password: _kiwi.global.i18n.translate('I have a password').fetch(),
+                    password: _kiwi.global.i18n.translate('Password').fetch(),
+                    channel: _kiwi.global.i18n.translate('Channel').fetch(),
+                    channel_key: _kiwi.global.i18n.translate('Channel Key').fetch(),
+                    require_key: _kiwi.global.i18n.translate('Channel requires a key').fetch(),
+                    key: _kiwi.global.i18n.translate('Key').fetch(),
+                    start: _kiwi.global.i18n.translate('Start...').fetch(),
+                    server_network: _kiwi.global.i18n.translate('Server and network').fetch(),
+                    server: _kiwi.global.i18n.translate('Server').fetch(),
+                    port: _kiwi.global.i18n.translate('Port').fetch(),
+                    powered_by: _kiwi.global.i18n.translate('Powered by Kiwi IRC').fetch()
+                };
 
-            this.$el = $($('#tmpl_server_select').html().trim());
+            this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
 
             // Remove the 'more' link if the server has disabled server changing
             if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
@@ -42,7 +57,7 @@ _kiwi.view.ServerSelect = function () {
 
             // Make sure a nick is chosen
             if (!$('input.nick', this.$el).val().trim()) {
-                this.setStatus('Select a nickname first!');
+                this.setStatus(_kiwi.global.i18n.translate('Select a nickname first!').fetch());
                 $('input.nick', this.$el).select();
                 return;
             }
@@ -196,12 +211,12 @@ _kiwi.view.ServerSelect = function () {
         },
 
         networkConnected: function (event) {
-            this.setStatus('Connected :)', 'ok');
+            this.setStatus(_kiwi.global.i18n.translate('Connected').fetch() + ' :)', 'ok');
             $('form', this.$el).hide();
         },
 
         networkConnecting: function (event) {
-            this.setStatus('Connecting..', 'ok');
+            this.setStatus(_kiwi.global.i18n.translate('Connecting..').fetch(), 'ok');
         },
 
         onIrcError: function (data) {
@@ -209,17 +224,17 @@ _kiwi.view.ServerSelect = function () {
 
             switch(data.error) {
             case 'nickname_in_use':
-                this.setStatus('Nickname already taken');
+                this.setStatus(_kiwi.global.i18n.translate('Nickname already taken').fetch());
                 this.show('nick_change');
                 this.$el.find('.nick').select();
                 break;
             case 'erroneus_nickname':
-                this.setStatus('Erroneus nickname');
+                this.setStatus(_kiwi.global.i18n.translate('Erroneus nickname').fetch());
                 this.show('nick_change');
                 this.$el.find('.nick').select();
                 break;
             case 'password_mismatch':
-                this.setStatus('Incorrect Password');
+                this.setStatus(_kiwi.global.i18n.translate('Incorrect Password').fetch());
                 this.show('nick_change');
                 this.$el.find('.password').select();
                 break;
@@ -227,16 +242,16 @@ _kiwi.view.ServerSelect = function () {
         },
 
         showError: function (error_reason) {
-            var err_text = 'Error Connecting';
+            var err_text = _kiwi.global.i18n.translate('Error Connecting').fetch();
 
             if (error_reason) {
                 switch (error_reason) {
                 case 'ENOTFOUND':
-                    err_text = 'Server not found';
+                    err_text = _kiwi.global.i18n.translate('Server not found').fetch();
                     break;
 
                 case 'ECONNREFUSED':
-                    err_text += ' (Connection refused)';
+                    err_text += ' (' + _kiwi.global.i18n.translate('Connection refused').fetch() + ')';
                     break;
 
                 default:

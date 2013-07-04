@@ -26,7 +26,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Only show the loader if this is a channel (ie. not a query)
         if (this.model.isChannel()) {
-            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;">Joining channel.. <span class="loader"></span></div>');
+            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + _kiwi.global.i18n.translate('Joining channel..').fetch() + ' <span class="loader"></span></div>');
         }
     },
 
@@ -40,7 +40,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             topic = this.model.get("topic");
         }
 
-        this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
+        this.model.addMsg('', '== ' + _kiwi.global.i18n.translate('Topic for %s is: %s').fetch(this.model.get('name'), topic), 'topic');
 
         // If this is the active channel then update the topic bar
         if (_kiwi.app.panels().active === this) {

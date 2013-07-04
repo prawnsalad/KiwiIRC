@@ -12,7 +12,18 @@ _kiwi.view.UserBox = Backbone.View.extend({
     },
 
     initialize: function () {
-        this.$el = $($('#tmpl_userbox').html().trim());
+        var text = {
+            op: _kiwi.global.i18n.translate('Op').fetch(),
+            de_op: _kiwi.global.i18n.translate('De-op').fetch(),
+            voice: _kiwi.global.i18n.translate('Voice').fetch(),
+            de_voice: _kiwi.global.i18n.translate('De-voice').fetch(),
+            kick: _kiwi.global.i18n.translate('Kick').fetch(),
+            ban: _kiwi.global.i18n.translate('Ban').fetch(),
+            message: _kiwi.global.i18n.translate('Message').fetch(),
+            info: _kiwi.global.i18n.translate('Info').fetch(),
+            slap: _kiwi.global.i18n.translate('Slap!').fetch()
+        };
+        this.$el = $(_.template($('#tmpl_userbox').html().trim(), text));
     },
 
     queryClick: function (event) {

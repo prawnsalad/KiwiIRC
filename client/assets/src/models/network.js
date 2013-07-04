@@ -112,8 +112,8 @@
 
                 // If not a valid channel name, display a warning
                 if (!_kiwi.app.isChannelName(channel_name)) {
-                    that.panels.server.addMsg('', channel_name + ' is not a valid channel name');
-                    _kiwi.app.message.text(channel_name + ' is not a valid channel name', {timeout: 5000});
+                    that.panels.server.addMsg('', _kiwi.global.i18n.translate('%s is not a valid channel name').fetch(channel_name));
+                    _kiwi.app.message.text(_kiwi.global.i18n.translate('%s is not a valid channel name').fetch(channel_name), {timeout: 5000});
                     return;
                 }
 
@@ -153,7 +153,7 @@
     
     function onDisconnect(event) {
         $.each(this.panels.models, function (index, panel) {
-            panel.addMsg('', 'Disconnected from the IRC network', 'action quit');
+            panel.addMsg('', _kiwi.global.i18n.translate('Disconnected from the IRC network').fetch(), 'action quit');
         });
     }
 
@@ -345,7 +345,7 @@
             member = panel.get('members').getByNick(event.nick);
             if (member) {
                 member.set('nick', event.newnick);
-                panel.addMsg('', '== ' + event.nick + ' is now known as ' + event.newnick, 'action nick');
+                panel.addMsg('', '== ' + _kiwi.global.i18n.translate('%s is now known as %s').fetch(event.nick, event.newnick) , 'action nick');
             }
         });
     }
@@ -468,7 +468,7 @@
         if (!c) return;
 
         when = formatDate(new Date(event.when * 1000));
-        c.addMsg('', 'Topic set by ' + event.nick + ' at ' + when, 'topic');
+        c.addMsg('', _kiwi.global.i18n.translate('Topic set by %s at %s').fetch(event.nick, when), 'topic');
     }
 
 
@@ -575,11 +575,11 @@
                 }
             }
 
-            channel.addMsg('', '== ' + event.nick + ' sets mode ' + friendlyModeString(), 'action mode');
+            channel.addMsg('', '== ' + _kiwi.global.i18n.translate('%s sets mode %s').fetch(event.nick, friendlyModeString()), 'action mode');
         } else {
             // This is probably a mode being set on us.
             if (event.target.toLowerCase() === this.get("nick").toLowerCase()) {
-                this.panels.server.addMsg('', '== ' + event.nick + ' set mode ' + friendlyModeString(), 'action mode');
+                this.panels.server.addMsg('', '== ' + _kiwi.global.i18n.translate('%s set mode %s').fetch(event.nick, friendlyModeString()), 'action mode');
             } else {
                console.log('MODE command recieved for unknown target %s: ', event.target, event);
             }
@@ -603,9 +603,9 @@
         if (event.ident) {
             panel.addMsg(event.nick, event.nick + ' [' + event.nick + '!' + event.ident + '@' + event.host + '] * ' + event.msg, 'whois');
         } else if (event.chans) {
-            panel.addMsg(event.nick, 'Channels: ' + event.chans, 'whois');
+            panel.addMsg(event.nick, _kiwi.global.i18n.translate('Channels: %s').fetch(event.chans), 'whois');
         } else if (event.irc_server) {
-            panel.addMsg(event.nick, 'Connected to server: ' + event.irc_server + ' ' + event.server_info, 'whois');
+            panel.addMsg(event.nick, _kiwi.global.i18n.translate('Connected to server: %s %s').fetch(event.irc_server, event.server_info), 'whois');
         } else if (event.msg) {
             panel.addMsg(event.nick, event.msg, 'whois');
         } else if (event.logon) {
@@ -613,11 +613,11 @@
             logon_date.setTime(event.logon * 1000);
             logon_date = formatDate(logon_date);
 
-            panel.addMsg(event.nick, 'idle for ' + idle_time + ', signed on ' + logon_date, 'whois');
+            panel.addMsg(event.nick, _kiwi.global.i18n.translate('Idle for %s, signed on %s').fetch(idle_time, logon_date), 'whois');
         } else if (event.away_reason) {
-            panel.addMsg(event.nick, 'Away: ' + event.away_reason, 'whois');
+            panel.addMsg(event.nick, _kiwi.global.i18n.translate('Away: %s').fetch(event.away_reason), 'whois');
         } else {
-            panel.addMsg(event.nick, 'idle for ' + idle_time, 'whois');
+            panel.addMsg(event.nick, _kiwi.global.i18n.translate('Idle for %s').fetch(idle_time), 'whois');
         }
     }
 
@@ -631,7 +631,7 @@
         if (event.host) {
             panel.addMsg(event.nick, event.nick + ' [' + event.nick + ((event.ident)? '!' + event.ident : '') + '@' + event.host + '] * ' + event.real_name, 'whois');
         } else {
-            panel.addMsg(event.nick, 'No such nick', 'whois');
+            panel.addMsg(event.nick, _kiwi.global.i18n.translate('No such nick').fetch(), 'whois');
         }
     }
 
@@ -665,20 +665,20 @@
 
         switch (event.error) {
         case 'banned_from_channel':
-            panel.addMsg(' ', '== You are banned from ' + event.channel + '. ' + event.reason, 'status');
-            _kiwi.app.message.text('You are banned from ' + event.channel + '. ' + event.reason);
+            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('You are banned from %s. %s').fetch(event.channel, event.reason), 'status');
+            _kiwi.app.message.text(_kiwi.global.i18n.translate('You are banned from %s. %s').fetch(event.channel, event.reason));
             break;
         case 'bad_channel_key':
-            panel.addMsg(' ', '== Bad channel key for ' + event.channel, 'status');
-            _kiwi.app.message.text('Bad channel key or password for ' + event.channel);
+            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Bad channel key for %s').fetch(event.channel), 'status');
+            _kiwi.app.message.text(_kiwi.global.i18n.translate('Bad channel key for %s').fetch(event.channel));
             break;
         case 'invite_only_channel':
-            panel.addMsg(' ', '== ' + event.channel + ' is invite only.', 'status');
-            _kiwi.app.message.text(event.channel + ' is invite only');
+            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('%s is invite only.').fetch(event.channel), 'status');
+            _kiwi.app.message.text(_kiwi.global.i18n.translate('%s is invite only').fetch(event.channel));
             break;
         case 'channel_is_full':
-            panel.addMsg(' ', '== ' + event.channel + ' is full.', 'status');
-            _kiwi.app.message.text(event.channel + ' is full');
+            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('%s is full.').fetch(event.channel), 'status');
+            _kiwi.app.message.text(_kiwi.global.i18n.translate('%s is full').fetch(event.channel));
             break;
         case 'chanop_privs_needed':
             panel.addMsg(' ', '== ' + event.reason, 'status');
@@ -693,9 +693,9 @@
             }
             break;
         case 'nickname_in_use':
-            this.panels.server.addMsg(' ', '== The nickname ' + event.nick + ' is already in use. Please select a new nickname', 'status');
+            this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('The nickname "%s" is already in use. Please select a new nickname').fetch( event.nick), 'status');
             if (this.panels.server !== this.panels.active) {
-                _kiwi.app.message.text('The nickname "' + event.nick + '" is already in use. Please select a new nickname');
+                _kiwi.app.message.text(_kiwi.global.i18n.translate('The nickname "%s" is already in use. Please select a new nickname').fetch(event.nick));
             }
 
             // Only show the nickchange component if the controlbox is open
@@ -706,7 +706,7 @@
             break;
 
         case 'password_mismatch':
-            this.panels.server.addMsg(' ', '== Incorrect password given', 'status');
+            this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Incorrect password given').fetch(), 'status');
             break;
         default:
             // We don't know what data contains, so don't do anything with it.

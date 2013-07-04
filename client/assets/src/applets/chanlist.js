@@ -7,7 +7,12 @@
 
 
         initialize: function (options) {
-            this.$el = $($('#tmpl_channel_list').html().trim());
+            var text = {
+                channel_name: _kiwi.global.i18n.translate('Channel Name').fetch(),
+                users: _kiwi.global.i18n.translate('Users').fetch(),
+                topic: _kiwi.global.i18n.translate('Topic').fetch()
+            };
+            this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
 
             this.channels = [];
 
@@ -50,7 +55,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', 'Channel List');
+            this.set('title', _kiwi.global.i18n.translate('Channel List').fetch());
             this.view = new View();
 
             this.network = _kiwi.global.components.Network();

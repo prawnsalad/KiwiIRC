@@ -113,6 +113,8 @@ _kiwi.global = {
         _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
         _kiwi.global.settings.load();
 
+        _kiwi.global.i18n = new Jed();
+
 		_kiwi.app = new _kiwi.model.Application(opts);
 
 		if (opts.kiwi_server) {
