@@ -231,6 +231,10 @@ process.on('SIGUSR1', function() {
 });
 
 
+process.on('SIGUSR2', function() {
+    console.log('Connected clients: ' + _.size(global.clients.clients).toString());
+    console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+});
 
 
 /*
