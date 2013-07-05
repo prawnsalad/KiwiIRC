@@ -270,18 +270,17 @@ handlers = {
         var members = command.trailing.split(' ');
         var member_list = [];
         var that = this;
-        var i = 0;
         _.each(members, function (member) {
-            var j, k, modes = [];
+            var i = 0,
+                j = 0,
+                modes = [];
 
             // Make sure we have some prefixes already
             if (that.irc_connection.options.PREFIX) {
-                for (j = 0; j < member.length; j++) {
-                    for (k = 0; k < that.irc_connection.options.PREFIX.length; k++) {
-                        if (member.charAt(j) === that.irc_connection.options.PREFIX[k].symbol) {
-                            modes.push(that.irc_connection.options.PREFIX[k].mode);
-                            i++;
-                        }
+                for (j = 0; j < that.irc_connection.options.PREFIX.length; j++) {
+                    if (member.charAt(i) === that.irc_connection.options.PREFIX[j].symbol) {
+                        modes.push(that.irc_connection.options.PREFIX[j].mode);
+                        i++;
                     }
                 }
             }
