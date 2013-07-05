@@ -22,6 +22,7 @@
     "eventemitter2": "0.4.11",
     "ipaddr.js": "0.1.1",
     "socksjs": "0.3.3",
-    "iconv-lite" : "0.2.10"
+    "iconv-lite" : "0.2.10",
+    "po2json": "0.0.6"
   }
 }

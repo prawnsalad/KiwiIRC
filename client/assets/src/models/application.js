@@ -25,6 +25,7 @@ _kiwi.model.Application = function () {
 
             // Any options sent down from the server
             this.server_settings = options[0].server_settings || {};
+            this.translations = options[0].translations || {};
 
             // Best guess at where the kiwi server is
             this.detectKiwiServer();

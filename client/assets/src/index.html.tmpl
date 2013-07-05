@@ -245,6 +245,18 @@
                 </div>
             </section>
 
+            <section>
+                <h6>Language</h6>
+                <div class="control-group">
+                    <select data-setting="locale">
+                        <option value="en-gb">English (British)</option>
+                        <% _.forEach(languages, function(lang) { %>
+                            <option value="<%= lang.tag %>"><%= lang.language %></li>
+                        <% }); %>
+                    </select>
+                </div>
+            </section>
+
             <section class="protocol_handler">
                 <h6><%= default_client %></h6>
                 <div class="control-group">
@@ -395,7 +407,8 @@
                 //kiwi_server: 'http://kiwiirc.com:80',
 
                 server_settings: <%server_settings%>,
-                client_plugins: <%client_plugins%>
+                client_plugins: <%client_plugins%>,
+                translations: <%translations%>
             };
 
             // Start the app

@@ -1,0 +1,358 @@
+
+#: client/assets/src/applets/chanlist.js
+msgid "Channel Name"
+#msgstr ""
+
+msgid "Users"
+#msgstr ""
+
+msgid "Topic"
+#msgstr ""
+
+msgid "Channel List"
+#msgstr ""
+
+
+
+#: client/assets/src/applets/scripteditor.js
+msgid "Save"
+#msgstr ""
+
+msgid "Script error. %s"
+#msgstr ""
+
+msgid "Your script has been saved and is now active"
+#msgstr ""
+
+msgid "Script Editor"
+#msgstr
+
+
+
+#: client/assets/src/applets/settings.js
+msgid "Tabs"
+#msgstr ""
+
+msgid "List"
+#msgstr ""
+
+msgid "for large amouts of channels"
+#msgstr ""
+
+msgid "Join/part channel notifications"
+#msgstr ""
+
+msgid "Timestamps"
+#msgstr ""
+
+msgid "Mute sound notifications"
+#msgstr ""
+
+msgid "messages in scroll history"
+#msgstr ""
+
+msgid "Default IRC client"
+#msgstr ""
+
+msgid "Make Kiwi my default IRC client"
+#msgstr ""
+
+msgid "Note: Chrome or Chromium browser users may need to check their settings via %s if nothing happens"
+#msgstr ""
+
+msgid "Settings"
+#msgstr ""
+
+
+
+#: client/assets/src/models/applet.js
+msgid "Unknown Applet"
+#msgstr ""
+
+msgid "Loading.."
+#msgstr ""
+
+msgid "Not found"
+#msgstr ""
+
+
+
+#: client/assets/src/models/application.js
+msgid "You have been disconnected. Attempting to reconnect for you"
+#msgstr ""
+
+msgid "You have been disconnected. Attempting to reconnect again in %d seconds"
+#msgstr ""
+
+msgid "It's OK, you're connected again"
+#msgstr ""
+
+msgid "Settings have been saved"
+#msgstr ""
+
+msgid "Ignored nicks"
+#msgstr ""
+
+msgid "Not ignoring anybody"
+#msgstr ""
+
+msgid "Ignoring %s"
+#msgstr ""
+
+msgid "Specifiy which nick you wish to stop ignoring"
+#msgstr ""
+
+msgid "Stopped ignoring %s"
+#msgstr ""
+
+msgid "Applet "%s" does not exist"
+#msgstr ""
+
+msgid "Encoding modified to %s"
+#msgstr ""
+
+msgid "%s is not a valid encoding"
+#msgstr ""
+
+msgid "Encoding not specified"
+#msgstr ""
+
+msgid "Usage: /encoding [NEW-ENCODING]"
+#msgstr ""
+
+msgid "New Connection"
+#msgstr ""
+
+msgid "Connecting to %s:%s..."
+#msgstr ""
+
+msgid "Error connecting to %s:%s (%s)"
+#msgstr ""
+
+
+
+#: client/assets/src/models/channel.js
+msgid "%s has joined"
+#msgstr ""
+
+msgid "%s has quit %s"
+#msgstr ""
+
+msgid "%s was kicked by %s %s"
+#msgstr ""
+
+msgid "You have been kicked by %s %s"
+#msgstr ""
+
+msgid "%s has left %s"
+#msgstr ""
+
+
+
+#: client/assets/src/models/network.js
+msgid "%s is not a valid channel name"
+#msgstr ""
+
+msgid "Disconnected from the IRC network"
+#msgstr ""
+
+msgid "%s is now known as %s"
+#msgstr ""
+
+msgid "Topic set by %s at %s"
+#msgstr ""
+
+msgid "%s sets mode %s"
+#msgstr ""
+
+msgid "%s set mode %s"
+#msgstr ""
+
+msgid "Channels: %s"
+#msgstr ""
+
+msgid "Connected to server: %s %s"
+#msgstr ""
+
+msgid "Idle for %s, signed on %s"
+#msgstr ""
+
+msgid "Away: %s"
+#msgstr ""
+
+msgid "Idle for %s"
+#msgstr ""
+
+msgid "No such nick"
+#msgstr ""
+
+msgid "You are banned from %s. %s"
+#msgstr ""
+
+msgid "Bad channel key for %s"
+#msgstr ""
+
+msgid "%s is invite only."
+#msgstr ""
+
+msgid "%s is full."
+#msgstr ""
+
+msgid "The nickname "%s" is already in use. Please select a new nickname"
+#msgstr ""
+
+msgid "Incorrect password given"
+#msgstr ""
+
+
+
+#: client/assets/src/views/application.js
+msgid "This will close all KiwiIRC conversations. Are you sure you want to close this window?"
+#msgstr ""
+
+
+
+#: client/assets/src/views/channel.js
+msgid "Joining channel.."
+#msgstr ""
+
+msgid "Topic for %s is: %s"
+#msgstr ""
+
+
+
+#: client/assets/src/views/mediamessage.js
+msgid "Close media"
+#msgstr ""
+
+msgid "Not found"
+#msgstr ""
+
+msgid "Loading tweet"
+#msgstr ""
+
+msgid "Loading image"
+#msgstr ""
+
+msgid "Loading Reddit thread"
+#msgstr ""
+
+msgid "Loading gist"
+#msgstr ""
+
+
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "New nick"
+#msgstr ""
+
+msgid "Change"
+#msgstr ""
+
+msgid "Cancel"
+#msgstr ""
+
+
+
+#: client/assets/src/views/panel.js
+msgid "People are talking!"
+#msgstr ""
+
+
+
+#: client/assets/src/views/serverselect.js
+msgid "Think of a nickname..."
+#msgstr ""
+
+msgid "Nickname"
+#msgstr ""
+
+msgid "I have a password"
+#msgstr ""
+
+msgid "Password"
+#msgstr ""
+
+msgid "Channel"
+#msgstr ""
+
+msgid "Channel Key"
+#msgstr ""
+
+msgid "Channel requires a key"
+#msgstr ""
+
+msgid "Key"
+#msgstr ""
+
+msgid "Start..."
+#msgstr ""
+
+msgid "Server and network"
+#msgstr ""
+
+msgid "Server"
+#msgstr ""
+
+msgid "Port"
+#msgstr ""
+
+msgid "Powered by Kiwi IRC"
+#msgstr ""
+
+msgid "Select a nickname first!"
+#msgstr ""
+
+msgid "Connected"
+#msgstr ""
+
+msgid "Connecting.."
+#msgstr ""
+
+msgid "Nickname already taken"
+#msgstr ""
+
+msgid "Erroneus nickname"
+#msgstr ""
+
+msgid "Incorrect Password"
+#msgstr ""
+
+msgid "Error Connecting"
+#msgstr ""
+
+msgid "Server not found"
+#msgstr ""
+
+msgid "Connection refused"
+#msgstr ""
+
+
+
+#: client/assets/src/views/userbox.js
+msgid "Op"
+#msgstr ""
+
+msgid "De-op"
+#msgstr ""
+
+msgid "Voice"
+#msgstr ""
+
+msgid "De-voice"
+#msgstr ""
+
+msgid "Kick"
+#msgstr ""
+
+msgid "Ban"
+#msgstr ""
+
+msgid "Message"
+#msgstr ""
+
+msgid "Info"
+#msgstr ""
+
+msgid "Slap!"
+#msgstr ""

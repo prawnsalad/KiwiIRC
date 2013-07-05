@@ -104,6 +104,7 @@ _kiwi.global = {
 
 	// Entry point to start the kiwi application
 	start: function (opts) {
+		var continueStart, locale;
 		opts = opts || {};
 
         // Load the plugin manager
@@ -113,18 +114,33 @@ _kiwi.global = {
         _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
         _kiwi.global.settings.load();
 
-        _kiwi.global.i18n = new Jed();
+        continueStart = function (locale, s, xhr) {
+        	if (locale) {
+        		_kiwi.global.i18n = new Jed({locale_data: locale, domain: xhr.getResponseHeader('Content-Language')});
+        	} else {
+        		_kiwi.global.i18n = new Jed();
+        	}
 
-		_kiwi.app = new _kiwi.model.Application(opts);
+			_kiwi.app = new _kiwi.model.Application(opts);
 
-		if (opts.kiwi_server) {
-			_kiwi.app.kiwi_server = opts.kiwi_server;
-		}
+			if (opts.kiwi_server) {
+				_kiwi.app.kiwi_server = opts.kiwi_server;
+			}
 
-		// Start the client up
-		_kiwi.app.start();
+			// Start the client up
+			_kiwi.app.start();
+        };
 
-		return true;
+        locale = _kiwi.global.settings.get('locale')
+        if (!locale) {
+        	$.getJSON(opts.base_path + '/assets/locales/magic.json', continueStart);
+        } else {
+        	if (locale === 'en-gb') {
+        		continueStart();
+        	} else {
+        		$.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueStart);
+        	}
+        }
 	}
 };
 

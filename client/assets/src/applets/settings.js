@@ -15,6 +15,7 @@
                 timestamps: _kiwi.global.i18n.translate('Timestamps').fetch(),
                 mute: _kiwi.global.i18n.translate('Mute sound notifications').fetch(),
                 scroll_history: _kiwi.global.i18n.translate('messages in scroll history').fetch(),
+                languages: _kiwi.app.translations,
                 default_client: _kiwi.global.i18n.translate('Default IRC client').fetch(),
                 make_default: _kiwi.global.i18n.translate('Make Kiwi my default IRC client').fetch(),
                 default_note: _kiwi.global.i18n.translate('Note: Chrome or Chromium browser users may need to check their settings via %s if nothing happens').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>')
@@ -55,6 +56,9 @@
                     case 'text':
                         $el.val(value);
                         break;
+                    case 'select-one':
+                        $('[value="' + value + '"]', that.$el).prop('selected', true);
+                        break;
                     default:
                         $('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
                         break;
@@ -65,7 +69,7 @@
         saveSettings: function (event) {
             var value,
                 settings = _kiwi.global.settings,
-                $setting = $(event.currentTarget, this.$el)
+                $setting = $(event.currentTarget, this.$el);
 
             switch (event.currentTarget.type) {
                 case 'checkbox':
@@ -74,6 +78,9 @@
                 case 'radio':
                 case 'text':
                     value = $setting.val();
+                    break;
+                case 'select-one':
+                    value = $(event.currentTarget[$setting.prop('selectedIndex')]).val();
                     break;
                 default:
                     value = $setting.data('value');

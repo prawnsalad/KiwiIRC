@@ -1,5 +1,7 @@
 var url         = require('url'),
-    node_static = require ('node-static');
+    fs          = require('fs'),
+    node_static = require('node-static'),
+    _           = require('lodash');
 
 
 
@@ -21,7 +23,7 @@ HttpHandler.prototype.serve = function (request, response) {
     if (base_path.substr(base_path.length - 1) === '/') {
         base_path = base_path.substr(0, base_path.length - 1);
     }
-    
+
     // Build the regex to match the base_path
     base_path_regex = base_path.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 
@@ -33,6 +35,12 @@ HttpHandler.prototype.serve = function (request, response) {
         request.url = '/';
     }
 
+    // If the 'magic' translation is requested, figure out the best language to use from
+    // the Accept-Language HTTP header. If nothing is suitible, serve an empty response,
+    // Kiwi will just use the default en-gb strings baked in to it.
+    if (request.url === '/assets/locales/magic.json') {
+        return serveMagicLocale.call(this, request, response);
+    }
 
     this.file_server.serve(request, response, function (err) {
         if (err) {
@@ -40,4 +48,47 @@ HttpHandler.prototype.serve = function (request, response) {
             response.end();
         }
     });
+};
+
+var serveMagicLocale = function (request, response) {
+    var langs = [],
+        available = [],
+        i = 0;
+    if (request.headers['accept-language']) {
+        // Example: en-gb,en;q=0.5
+        langs = request.headers['accept-language'].split(',');
+        available = (function () {
+            var files = [],
+                l = [];
+            files = fs.readdirSync('client/assets/locales');
+            files.forEach(function (file) {
+                if (file.slice(-5) === '.json') {
+                    l.push(file.slice(0, -5));
+                }
+            });
+            return l;
+        })();
+        for (i = 0; i < langs.length; i++) {
+            langs[i] = langs[i].split(';q=');
+            langs[i][1] = (typeof langs[i][1] === 'string') ? parseFloat(langs[i][1]) : 1.0;
+        }
+        langs.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+
+        for (i = 0; i < langs.length; i++) {
+            if (langs[i][0] === '*') {
+                break;
+            } else if (_.contains(available, langs[i][0])) {
+                return this.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
+            }
+        }
+    }
+
+    response.writeHead(200, {
+        'Vary': 'Accept-Language',
+        'Content-Type': 'application/json',
+        'Content-Language': 'en-gb'
+    });
+    response.end('{"en-gb": {}}');
 };
