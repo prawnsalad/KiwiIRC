@@ -105,7 +105,7 @@ msgid "Specifiy which nick you wish to stop ignoring"
 msgid "Stopped ignoring %s"
 #msgstr ""
 
-msgid "Applet "%s" does not exist"
+msgid "Applet \"%s\" does not exist"
 #msgstr ""
 
 msgid "Encoding modified to %s"
@@ -198,7 +198,7 @@ msgid "%s is invite only."
 msgid "%s is full."
 #msgstr ""
 
-msgid "The nickname "%s" is already in use. Please select a new nickname"
+msgid "The nickname \"%s\" is already in use. Please select a new nickname"
 #msgstr ""
 
 msgid "Incorrect password given"
