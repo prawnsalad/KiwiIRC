@@ -40,6 +40,8 @@ HttpHandler.prototype.serve = function (request, response) {
     // Kiwi will just use the default en-gb strings baked in to it.
     if (request.url === '/assets/locales/magic.json') {
         return serveMagicLocale.call(this, request, response);
+    } else if (request.url.substr(0, 16) === '/assets/locales/') {
+        response.setHeader('Content-Language', request.url.substr(16, request.url.indexOf('.') - 16));
     }
 
     this.file_server.serve(request, response, function (err) {
