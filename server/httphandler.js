@@ -90,5 +90,5 @@ var serveMagicLocale = function (request, response) {
         'Content-Type': 'application/json',
         'Content-Language': 'en-gb'
     });
-    response.end('{"en-gb": {}}');
+    response.end('{"en-gb": {"":{}}}');
 };
