@@ -1,0 +1,358 @@
+
+#: client/assets/src/applets/chanlist.js
+msgid "Channel Name"
+msgstr "Raumname"
+
+msgid "Users"
+msgstr "Nutzer"
+
+msgid "Topic"
+msgstr "Thema"
+
+msgid "Channel List"
+msgstr "Raumliste"
+
+
+
+#: client/assets/src/applets/scripteditor.js
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Script error. %s"
+msgstr "Programm-Fehler. %s"
+
+msgid "Your script has been saved and is now active"
+msgstr "Dein Programm wurde gespeichert und ist nun aktiv."
+
+msgid "Script Editor"
+msgstr "Programm-Editor"
+
+
+
+#: client/assets/src/applets/settings.js
+msgid "Tabs"
+msgstr "Tabs"
+
+msgid "List"
+msgstr "Liste"
+
+msgid "for large amouts of channels"
+msgstr "für eine große Anzahl an Räumen"
+
+msgid "Join/part channel notifications"
+msgstr "Beitreten/Verlassen Benachrichtigungen"
+
+msgid "Timestamps"
+msgstr "Zeitstempel"
+
+msgid "Mute sound notifications"
+msgstr "Audio-Benachrichtigungen stummschalten"
+
+msgid "messages in scroll history"
+msgstr "Nachrichten im Verlauf"
+
+msgid "Default IRC client"
+msgstr "Standard IRC Client"
+
+msgid "Make Kiwi my default IRC client"
+msgstr "Setze Kiwi als mein Standard-IRC Client"
+
+msgid "Note: Chrome or Chromium browser users may need to check their settings via %s if nothing happens"
+msgstr "Notiz: Nutzer von Chrome oder Chromium müssen ihre Einstellungen durch %s testen, sofern nichts passiert"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+
+
+#: client/assets/src/models/applet.js
+msgid "Unknown Applet"
+msgstr "Unbekannte Anwendung"
+
+msgid "Loading.."
+msgstr "Lade.."
+
+msgid "Not found"
+msgstr "Nicht gefunden"
+
+
+
+#: client/assets/src/models/application.js
+msgid "You have been disconnected. Attempting to reconnect for you"
+msgstr "Deine Verbindung wurde getrennt. Ein erneuter Verbindungsaufbau wird versucht"
+
+msgid "You have been disconnected. Attempting to reconnect again in %d seconds"
+msgstr "Deine Verbindung wurde getrennt. Ein erneuter Verbindungsaufbau wird in %d Sekunden versucht"
+
+msgid "It's OK, you're connected again"
+msgstr "Alles OK, du bist wieder verbunden"
+
+msgid "Settings have been saved"
+msgstr "Einstellungen wurden gespeichert"
+
+msgid "Ignored nicks"
+msgstr "Ignorierte Namen"
+
+msgid "Not ignoring anybody"
+msgstr "Niemand wird ignoriert"
+
+msgid "Ignoring %s"
+msgstr "Ignoriere %s"
+
+msgid "Specifiy which nick you wish to stop ignoring"
+msgstr "Gebe den Namen ein, den du nicht mehr ignorieren möchtest"
+
+msgid "Stopped ignoring %s"
+msgstr "%s wird nicht mehr ignoriert"
+
+msgid "Applet \"%s\" does not exist"
+msgstr "Anwendung \"%s\" existiert nicht"
+
+msgid "Encoding modified to %s"
+msgstr "Kodierung wurde in %s geändert"
+
+msgid "%s is not a valid encoding"
+msgstr "%s ist keine gültige Kodierung"
+
+msgid "Encoding not specified"
+msgstr "Kodierung nicht angegeben"
+
+msgid "Usage: /encoding [NEW-ENCODING]"
+msgstr "Verwendung: /encoding [NEUE-KODIERUNG]"
+
+msgid "New Connection"
+msgstr "Neue Verbindung"
+
+msgid "Connecting to %s:%s..."
+msgstr "verbinde nach %s:%s..."
+
+msgid "Error connecting to %s:%s (%s)"
+msgstr "Fehler beim Verbindungsaufbau nach %s:%s (%s)"
+
+
+
+#: client/assets/src/models/channel.js
+msgid "%s has joined"
+msgstr "%s ist beigetreten"
+
+msgid "%s has quit %s"
+msgstr "%s ist gegangen %s"
+
+msgid "%s was kicked by %s %s"
+msgstr "%s wurde von %s rausgeschmissen %s"
+
+msgid "You have been kicked by %s %s"
+msgstr "Du wurdest von %s rausgeschmissen %s"
+
+msgid "%s has left %s"
+msgstr "%s verließ %s"
+
+
+
+#: client/assets/src/models/network.js
+msgid "%s is not a valid channel name"
+msgstr "%s ist kein gültiger Raumname"
+
+msgid "Disconnected from the IRC network"
+msgstr "Verbindung zum IRC-Netzwerk getrennt"
+
+msgid "%s is now known as %s"
+msgstr "%s ist nun bekannt als %s"
+
+msgid "Topic set by %s at %s"
+msgstr "Thema wurde von %s am %s gesetzt"
+
+msgid "%s sets mode %s"
+msgstr "%s setzt den Modus %s"
+
+msgid "%s set mode %s"
+msgstr "%s setzte den Modus %s"
+
+msgid "Channels: %s"
+msgstr "Räume: %s"
+
+msgid "Connected to server: %s %s"
+msgstr "Zum Server %s %s verbunden"
+
+msgid "Idle for %s, signed on %s"
+msgstr "Untätig seit %s, verbunden am %s"
+
+msgid "Away: %s"
+msgstr "Weg: %s"
+
+msgid "Idle for %s"
+msgstr "Untätig seit %s"
+
+msgid "No such nick"
+msgstr "Ungültiger Name"
+
+msgid "You are banned from %s. %s"
+msgstr "Du wurdest aus %s verbannt. %s"
+
+msgid "Bad channel key for %s"
+msgstr "Falsches Passwort für %s"
+
+msgid "%s is invite only."
+msgstr "Du benötigst eine Einladung für %s."
+
+msgid "%s is full."
+msgstr "%s ist voll."
+
+msgid "The nickname \"%s\" is already in use. Please select a new nickname"
+msgstr "Der Name \"%s\" wird bereits verwendet. Bitte wähle einen anderen Namen.""
+
+msgid "Incorrect password given"
+msgstr "Falsches Passwort"
+
+
+
+#: client/assets/src/views/application.js
+msgid "This will close all KiwiIRC conversations. Are you sure you want to close this window?"
+msgstr "Dies wird alle KiwiIRC Verbindungen beenden. Bist du sicher, dass du dieses Fenster schließen willst?"
+
+
+
+#: client/assets/src/views/channel.js
+msgid "Joining channel.."
+msgstr "Betrete Raum.."
+
+msgid "Topic for %s is: %s"
+msgstr "Thema für %s ist: %s"
+
+
+
+#: client/assets/src/views/mediamessage.js
+msgid "Close media"
+msgstr "Schließe Medium"
+
+msgid "Not found"
+msgstr "Nicht gefunden"
+
+msgid "Loading tweet"
+msgstr "Lade Tweet"
+
+msgid "Loading image"
+msgstr "Lade Bild"
+
+msgid "Loading Reddit thread"
+msgstr "Lade Reddit Thread"
+
+msgid "Loading gist"
+msgstr "Lade Gist"
+
+
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "New nick"
+msgstr "Neuer Name"
+
+msgid "Change"
+msgstr "Ändern"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+
+
+#: client/assets/src/views/panel.js
+msgid "People are talking!"
+msgstr "Es wird geredet!"
+
+
+
+#: client/assets/src/views/serverselect.js
+msgid "Think of a nickname..."
+msgstr "Denk an ein Nick..."
+
+msgid "Nickname"
+msgstr "Nickname"
+
+msgid "I have a password"
+msgstr "Ich habe ein Passwort"
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Channel"
+msgstr "Raum"
+
+msgid "Channel Key"
+msgstr "Raum-Passwort"
+
+msgid "Channel requires a key"
+msgstr "Raum benötigt ein Passwort"
+
+msgid "Key"
+msgstr "Passwort"
+
+msgid "Start..."
+msgstr "Start..."
+
+msgid "Server and network"
+msgstr "Server und Netzwerk"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Port"
+msgstr "Port"
+
+msgid "Powered by Kiwi IRC"
+msgstr "Präsentiert von Kiwi IRC"
+
+msgid "Select a nickname first!"
+msgstr "Wähle zuerst einen Namen!"
+
+msgid "Connected"
+msgstr "Verbunden"
+
+msgid "Connecting.."
+msgstr "Verbinde.."
+
+msgid "Nickname already taken"
+msgstr "Der Name wird bereits verwendet"
+
+msgid "Erroneus nickname"
+msgstr "Fehlerhafter Name"
+
+msgid "Incorrect Password"
+msgstr "Falsches Passwort"
+
+msgid "Error Connecting"
+msgstr "Fehler beim Verbinden"
+
+msgid "Server not found"
+msgstr "Server konnte nicht gefunden werden"
+
+msgid "Connection refused"
+msgstr "Verbindung wurde abgelehnt"
+
+
+
+#: client/assets/src/views/userbox.js
+msgid "Op"
+msgstr "Op"
+
+msgid "De-op"
+msgstr "De-Op"
+
+msgid "Voice"
+msgstr "Voice"
+
+msgid "De-voice"
+msgstr "De-Voice"
+
+msgid "Kick"
+msgstr "Rausschmeissen"
+
+msgid "Ban"
+msgstr "Verbannen"
+
+msgid "Message"
+msgstr "Nachricht"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Slap!"
+msgstr "Schlagen!"
