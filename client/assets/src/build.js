@@ -105,13 +105,16 @@ console.log('kiwi.js and kiwi.min.js built');
 *   Convert translations from .po to .json
 */
 var translations = [];
-var translation_files = fs.readdirSync(__dirname + '/../locales');
+var translation_files = fs.readdirSync(__dirname + '/translations');
+if (!fs.existsSync(__dirname + '/../locales')) {
+    fs.mkdirSync(__dirname + '/../locales');
+}
 translation_files.forEach(function (file) {
     var locale = file.slice(0, -3),
         json = '',
-        languages = JSON.parse(fs.readFileSync(__dirname + '/../locales/translations.json'));
+        languages = JSON.parse(fs.readFileSync(__dirname + '/translations/translations.json'));
     if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-        json = po2json.parseSync(__dirname + '/../locales/' + file);
+        json = po2json.parseSync(__dirname + '/translations/' + file);
         fs.writeFileSync(__dirname + '/../locales/' + locale + '.json', JSON.stringify(json));
         translations.push({tag: locale, language: languages[locale]});
         console.log('Built translation file %s', locale + '.json');
