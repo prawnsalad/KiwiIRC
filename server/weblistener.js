@@ -7,6 +7,7 @@ var ws          = require('socket.io'),
     dns         = require('dns'),
     url         = require('url'),
     _           = require('lodash'),
+    spdy        = require('spdy'),
     Client      = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler,
     rehash      = require('./rehash.js'),
@@ -57,8 +58,8 @@ var WebListener = function (web_config, transports) {
             }
         }
 
-        hs = https.createServer(opts, handleHttpRequest);
-        
+        hs = spdy.createServer(opts, handleHttpRequest);
+
         // Start socket.io listening on this weblistener
         this.ws = ws.listen(hs, _.extend({ssl: true}, ws_opts));
         hs.listen(web_config.port, web_config.address, function () {
