@@ -14,19 +14,19 @@ _kiwi.view.ServerSelect = function () {
         initialize: function () {
             var that = this,
                 text = {
-                    think_nick: _kiwi.global.i18n.translate('Think of a nickname...').fetch(),
-                    nickname: _kiwi.global.i18n.translate('Nickname').fetch(),
-                    have_password: _kiwi.global.i18n.translate('I have a password').fetch(),
-                    password: _kiwi.global.i18n.translate('Password').fetch(),
-                    channel: _kiwi.global.i18n.translate('Channel').fetch(),
-                    channel_key: _kiwi.global.i18n.translate('Channel Key').fetch(),
-                    require_key: _kiwi.global.i18n.translate('Channel requires a key').fetch(),
-                    key: _kiwi.global.i18n.translate('Key').fetch(),
-                    start: _kiwi.global.i18n.translate('Start...').fetch(),
-                    server_network: _kiwi.global.i18n.translate('Server and network').fetch(),
-                    server: _kiwi.global.i18n.translate('Server').fetch(),
-                    port: _kiwi.global.i18n.translate('Port').fetch(),
-                    powered_by: _kiwi.global.i18n.translate('Powered by Kiwi IRC').fetch()
+                    think_nick: _kiwi.global.i18n.translate('client_views_serverselect_form_title').fetch(),
+                    nickname: _kiwi.global.i18n.translate('client_views_serverselect_nickname').fetch(),
+                    have_password: _kiwi.global.i18n.translate('client_views_serverselect_enable_password').fetch(),
+                    password: _kiwi.global.i18n.translate('client_views_serverselect_password').fetch(),
+                    channel: _kiwi.global.i18n.translate('client_views_serverselect_channel').fetch(),
+                    channel_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey').fetch(),
+                    require_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey_required').fetch(),
+                    key: _kiwi.global.i18n.translate('client_views_serverselect_key').fetch(),
+                    start: _kiwi.global.i18n.translate('client_views_serverselect_connection_start').fetch(),
+                    server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
+                    server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
+                    port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
+                    powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
                 };
 
             this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
@@ -57,7 +57,7 @@ _kiwi.view.ServerSelect = function () {
 
             // Make sure a nick is chosen
             if (!$('input.nick', this.$el).val().trim()) {
-                this.setStatus(_kiwi.global.i18n.translate('Select a nickname first!').fetch());
+                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_error_empty').fetch());
                 $('input.nick', this.$el).select();
                 return;
             }
@@ -211,12 +211,12 @@ _kiwi.view.ServerSelect = function () {
         },
 
         networkConnected: function (event) {
-            this.setStatus(_kiwi.global.i18n.translate('Connected').fetch() + ' :)', 'ok');
+            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_connection_successfully').fetch() + ' :)', 'ok');
             $('form', this.$el).hide();
         },
 
         networkConnecting: function (event) {
-            this.setStatus(_kiwi.global.i18n.translate('Connecting..').fetch(), 'ok');
+            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_connection_trying').fetch(), 'ok');
         },
 
         onIrcError: function (data) {
@@ -224,17 +224,17 @@ _kiwi.view.ServerSelect = function () {
 
             switch(data.error) {
             case 'nickname_in_use':
-                this.setStatus(_kiwi.global.i18n.translate('Nickname already taken').fetch());
+                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_error_alreadyinuse').fetch());
                 this.show('nick_change');
                 this.$el.find('.nick').select();
                 break;
             case 'erroneus_nickname':
-                this.setStatus(_kiwi.global.i18n.translate('Erroneus nickname').fetch());
+                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
                 this.show('nick_change');
                 this.$el.find('.nick').select();
                 break;
             case 'password_mismatch':
-                this.setStatus(_kiwi.global.i18n.translate('Incorrect Password').fetch());
+                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_password_incorrect').fetch());
                 this.show('nick_change');
                 this.$el.find('.password').select();
                 break;
@@ -242,16 +242,16 @@ _kiwi.view.ServerSelect = function () {
         },
 
         showError: function (error_reason) {
-            var err_text = _kiwi.global.i18n.translate('Error Connecting').fetch();
+            var err_text = _kiwi.global.i18n.translate('client_views_serverselect_connection_error').fetch();
 
             if (error_reason) {
                 switch (error_reason) {
                 case 'ENOTFOUND':
-                    err_text = _kiwi.global.i18n.translate('Server not found').fetch();
+                    err_text = _kiwi.global.i18n.translate('client_views_serverselect_server_notfound').fetch();
                     break;
 
                 case 'ECONNREFUSED':
-                    err_text += ' (' + _kiwi.global.i18n.translate('Connection refused').fetch() + ')';
+                    err_text += ' (' + _kiwi.global.i18n.translate('client_views_serverselect_connection_refused').fetch() + ')';
                     break;
 
                 default:

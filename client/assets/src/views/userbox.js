@@ -13,15 +13,15 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     initialize: function () {
         var text = {
-            op: _kiwi.global.i18n.translate('Op').fetch(),
-            de_op: _kiwi.global.i18n.translate('De-op').fetch(),
-            voice: _kiwi.global.i18n.translate('Voice').fetch(),
-            de_voice: _kiwi.global.i18n.translate('De-voice').fetch(),
-            kick: _kiwi.global.i18n.translate('Kick').fetch(),
-            ban: _kiwi.global.i18n.translate('Ban').fetch(),
-            message: _kiwi.global.i18n.translate('Message').fetch(),
-            info: _kiwi.global.i18n.translate('Info').fetch(),
-            slap: _kiwi.global.i18n.translate('Slap!').fetch()
+            op: _kiwi.global.i18n.translate('client_views_userbox_op').fetch(),
+            de_op: _kiwi.global.i18n.translate('client_views_userbox_deop').fetch(),
+            voice: _kiwi.global.i18n.translate('client_views_userbox_voice').fetch(),
+            de_voice: _kiwi.global.i18n.translate('client_views_userbox_devoice').fetch(),
+            kick: _kiwi.global.i18n.translate('client_views_userbox_kick').fetch(),
+            ban: _kiwi.global.i18n.translate('client_views_userbox_ban').fetch(),
+            message: _kiwi.global.i18n.translate('client_views_userbox_query').fetch(),
+            info: _kiwi.global.i18n.translate('client_views_userbox_whois').fetch(),
+            slap: _kiwi.global.i18n.translate('client_views_userbox_slap').fetch()
         };
         this.$el = $(_.template($('#tmpl_userbox').html().trim(), text));
     },
