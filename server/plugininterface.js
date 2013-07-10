@@ -8,7 +8,11 @@
 function EmitCall (event_name, event_data) {
     var that = this,
         completed = false,
-        completed_fn = [];
+        completed_fn = [],
+
+        // Has event.preventDefault() been called
+        prevented = false,
+        prevented_fn = [];
 
 
     // Emit this event to an array of listeners
@@ -46,9 +50,14 @@ function EmitCall (event_name, event_data) {
                 // If wait is true, this callback must be called to continue running listeners
                 callback: function () {
                     // Invalidate this callback incase a listener decides to call it again
-                    callback = undefined;
+                    event_obj.callback = undefined;
 
                     nextListener.apply(that);
+                },
+
+                // Prevents the default 'done' functions from executing
+                preventDefault: function () {
+                    prevented = true;
                 }
             };
 
@@ -73,28 +82,47 @@ function EmitCall (event_name, event_data) {
     function emitComplete() {
         completed = true;
 
-        // Call the completed functions
-        (completed_fn || []).forEach(function (fn) {
+        var funcs = prevented ? prevented_fn : completed_fn;
+
+        // Call the completed/prevented functions
+        (funcs || []).forEach(function (fn) {
             if (typeof fn === 'function') fn();
         });
     }
 
 
 
-    function done(fn) {
+    function addCompletedFunc(fn) {
         // Only accept functions
         if (typeof fn !== 'function') return false;
 
         completed_fn.push(fn);
 
         // If we have already completed the emits, call this now
-        if (completed) fn();
+        if (completed && !prevented) fn();
+
+        return this;
+    }
+
+
+
+    function addPreventedFunc(fn) {
+        // Only accept functions
+        if (typeof fn !== 'function') return false;
+
+        prevented_fn.push(fn);
+
+        // If we have already completed the emits, call this now
+        if (completed && prevented) fn();
+
+        return this;
     }
 
 
     return {
         callListeners: callListeners,
-        done: done
+        done: addCompletedFunc,
+        prevented: addPreventedFunc
     };
 }
 
