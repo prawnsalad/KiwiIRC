@@ -115,31 +115,27 @@ _kiwi.global = {
         _kiwi.global.settings.load();
 
         continueStart = function (locale, s, xhr) {
-        	if (locale) {
-        		_kiwi.global.i18n = new Jed({locale_data: locale, domain: xhr.getResponseHeader('Content-Language')});
-        	} else {
-        		_kiwi.global.i18n = new Jed();
-        	}
+          if (locale) {
+            _kiwi.global.i18n = new Jed({locale_data: locale, domain: xhr.getResponseHeader('Content-Language')});
+          } else {
+            _kiwi.global.i18n = new Jed();
+          }
 
-			_kiwi.app = new _kiwi.model.Application(opts);
+          _kiwi.app = new _kiwi.model.Application(opts);
 
-			if (opts.kiwi_server) {
-				_kiwi.app.kiwi_server = opts.kiwi_server;
-			}
+          if (opts.kiwi_server) {
+            _kiwi.app.kiwi_server = opts.kiwi_server;
+          }
 
-			// Start the client up
-			_kiwi.app.start();
+          // Start the client up
+          _kiwi.app.start();
         };
 
         locale = _kiwi.global.settings.get('locale')
         if (!locale) {
         	$.getJSON(opts.base_path + '/assets/locales/magic.json', continueStart);
         } else {
-        	if (locale === 'en-gb') {
-        		continueStart();
-        	} else {
-        		$.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueStart);
-        	}
+        	$.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueStart);
         }
 	}
 };
