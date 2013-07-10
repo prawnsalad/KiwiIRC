@@ -67,7 +67,7 @@ modules.registerPublisher(global.modules);
 // Load any modules in the config
 if (global.config.module_dir) {
     (global.config.modules || []).forEach(function (module_name) {
-        if (modules.load(global.config.module_dir + module_name + '.js')) {
+        if (modules.load(module_name)) {
             console.log('Module ' + module_name + ' loaded successfuly');
         } else {
             console.log('Module ' + module_name + ' failed to load');
