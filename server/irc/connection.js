@@ -92,12 +92,6 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.held_data = '';
 
     this.applyIrcEvents();
-
-    // Call any modules before making the connection
-    global.modules.emit('irc connecting', {connection: this})
-        .done(function () {
-            that.connect();
-        });
 };
 util.inherits(IrcConnection, EE);
 

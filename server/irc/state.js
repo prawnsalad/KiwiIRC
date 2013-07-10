@@ -80,6 +80,12 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
         that.irc_connections[con_num] = null;
         global.servers.removeConnection(this);
     });
+
+    // Call any modules before making the connection
+    global.modules.emit('irc connecting', {connection: con})
+        .done(function () {
+            con.connect();
+        });
 };
 
 State.prototype.sendIrcCommand = function () {
