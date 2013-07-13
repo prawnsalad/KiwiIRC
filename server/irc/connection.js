@@ -1,6 +1,7 @@
 var net             = require('net'),
     tls             = require('tls'),
     util            = require('util'),
+    dns             = require('dns'),
     _               = require('lodash'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
@@ -121,8 +122,9 @@ IrcConnection.prototype.applyIrcEvents = function () {
  * Start the connection to the IRCd
  */
 IrcConnection.prototype.connect = function () {
-    var that = this;
-    var socks;
+    var that = this,
+        socks,
+        addSocketHandlers;
 
     // The socket connect event to listener for
     var socket_connect_event_name = 'connect';
@@ -133,53 +135,80 @@ IrcConnection.prototype.connect = function () {
 
     // Are we connecting through a SOCKS proxy?
     if (this.socks) {
-        this.socket = Socks.connect({
-            host: this.irc_host.hostname,
-            port: this.irc_host.port,
-            ssl: this.ssl,
-            rejectUnauthorized: global.config.reject_unauthorised_certificates
-        }, {host: this.socks.host,
-            port: this.socks.port,
-            user: this.socks.user,
-            pass: this.socks.pass
+        getConnectionFamily(this.socks.host, function (err, family, host) {
+            var outgoing;
+            if ((family === 'IPv6') && (global.config.outgoing_address.IPv6) && (global.config.outgoing_address.IPv6 !== '')) {
+                outgoing = global.config.outgoing_address.IPv6;
+            } else {
+                outgoing = global.config.outgoing_address.IPv4;
+            }
+            that.socket = Socks.connect({
+                host: that.irc_host.hostname,
+                port: that.irc_host.port,
+                ssl: that.ssl,
+                rejectUnauthorized: global.config.reject_unauthorised_certificates
+            }, {host: host,
+                port: that.socks.port,
+                user: that.socks.user,
+                pass: that.socks.pass,
+                localAddress: outgoing
+            });
+
+            addSocketHandlers.call(that);
         });
-
-    } else if (this.ssl) {
-        this.socket = tls.connect({
-            host: this.irc_host.hostname,
-            port: this.irc_host.port,
-            rejectUnauthorized: global.config.reject_unauthorised_certificates
-        });
-
-        socket_connect_event_name = 'secureConnect';
-
     } else {
-        this.socket = net.connect({
-            host: this.irc_host.hostname,
-            port: this.irc_host.port
+        getConnectionFamily(this.irc_host.hostname, function (err, family, host) {
+            var outgoing;
+            if ((family === 'IPv6') && (global.config.outgoing_addresses.IPv6) && (global.config.outgoing_addresses.IPv6 !== '')) {
+                outgoing = global.config.outgoing_addresses.IPv6;
+            } else {
+                outgoing = global.config.outgoing_addresses.IPv4;
+            }
+
+            if (that.ssl) {
+                that.socket = tls.connect({
+                    host: host,
+                    port: that.irc_host.port,
+                    rejectUnauthorized: global.config.reject_unauthorised_certificates,
+                    localAddress: outgoing
+                });
+
+                socket_connect_event_name = 'secureConnect';
+
+            } else {
+                that.socket = net.connect({
+                    host: host,
+                    port: that.irc_host.port,
+                    localAddress: outgoing
+                });
+            }
+
+            addSocketHandlers.call(that);
         });
     }
 
-    this.socket.on(socket_connect_event_name, function () {
-        that.connected = true;
-        socketConnectHandler.call(that);
-    });
+    addSocketHandlers = function () {
+        this.socket.on(socket_connect_event_name, function () {
+            that.connected = true;
+            socketConnectHandler.call(that);
+        });
 
-    this.socket.on('error', function (event) {
-        that.emit('error', event);
-    });
+        this.socket.on('error', function (event) {
+            that.emit('error', event);
+        });
 
-    this.socket.on('data', function () {
-        parse.apply(that, arguments);
-    });
+        this.socket.on('data', function () {
+            parse.apply(that, arguments);
+        });
 
-    this.socket.on('close', function (had_error) {
-        that.connected = false;
-        that.emit('close');
+        this.socket.on('close', function (had_error) {
+            that.connected = false;
+            that.emit('close');
 
-        // Close the whole socket down
-        that.disposeSocket();
-    });
+            // Close the whole socket down
+            that.disposeSocket();
+        });
+    };
 };
 
 /**
@@ -284,6 +313,30 @@ IrcConnection.prototype.setEncoding = function (encoding) {
         return false;
     }
 };
+
+function getConnectionFamily(host, callback) {
+    if (net.isIP(host)) {
+        if (net.isIPv4(host)) {
+            setImmediate(callback, null, 'IPv4', host);
+        } else {
+            setImmediate(callback, null, 'IPv6', host);
+        }
+    } else {
+        dns.resolve6(host, function (err, addresses) {
+            if (!err) {
+                callback(null, 'IPv6', addresses[0]);
+            } else {
+                dns.resolve4(host, function (err, addresses) {
+                    if (!err) {
+                        callback(null, 'IPv4',addresses[0]);
+                    } else {
+                        callback(err);
+                    }
+                });
+            }
+        });
+    }
+}
 
 
 function onChannelJoin(event) {

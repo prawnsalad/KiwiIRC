@@ -31,9 +31,9 @@ var WebListener = function (web_config, transports) {
 
 
     events.EventEmitter.call(this);
-    
+
     http_handler = new HttpHandler(web_config);
-    
+
     // Standard options for the socket.io connections
     ws_opts = {
         'log level': 0,
@@ -79,8 +79,8 @@ var WebListener = function (web_config, transports) {
 
     hs.on('error', function (err) {
         that.emit('error', err);
-    })
-    
+    });
+
     this.ws.enable('browser client minification');
     this.ws.enable('browser client etag');
     this.ws.set('transports', transports);
@@ -128,7 +128,7 @@ function authoriseConnection(handshakeData, callback) {
     }
 
     handshakeData.real_address = address;
-    
+
     // If enabled, don't go over the connection limit
     if (global.config.max_client_conns && global.config.max_client_conns > 0) {
         if (global.clients.numOnAddress(address) + 1 > global.config.max_client_conns) {
@@ -144,7 +144,7 @@ function authoriseConnection(handshakeData, callback) {
             } else {
                 handshakeData.revdns = _.first(domains) || address;
             }
-            
+
             // All is well, authorise the connection
             callback(null, true);
         });

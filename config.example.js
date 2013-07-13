@@ -33,6 +33,10 @@ conf.servers.push({
 //    ssl_cert: "cert.pem"
 //});
 
+conf.outgoing_addresses = {
+    IPv4: '0.0.0.0',
+    IPv6: '::'
+};
 
 
 // Do we want to enable the built in Identd server?
