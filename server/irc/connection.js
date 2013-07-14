@@ -122,52 +122,56 @@ IrcConnection.prototype.applyIrcEvents = function () {
  * Start the connection to the IRCd
  */
 IrcConnection.prototype.connect = function () {
-    var that = this,
-        socks,
-        addSocketHandlers;
+    var that = this;
 
     // The socket connect event to listener for
     var socket_connect_event_name = 'connect';
 
+    // The destination address
+    var dest_addr = this.socks ?
+        this.socks.host :
+        this.irc_host.hostname;
 
     // Make sure we don't already have an open connection
     this.disposeSocket();
 
-    // Are we connecting through a SOCKS proxy?
-    if (this.socks) {
-        getConnectionFamily(this.socks.host, function (err, family, host) {
-            var outgoing;
-            if ((family === 'IPv6') && (global.config.outgoing_address.IPv6) && (global.config.outgoing_address.IPv6 !== '')) {
+    // Get the IP family for the dest_addr (either socks or IRCd destination)
+    getConnectionFamily(dest_addr, function (err, family, host) {
+        var outgoing;
+
+        // Decide which net. interface to make the connection through
+        if (global.config.outgoing_address) {
+            if ((family === 'IPv6') && (global.config.outgoing_address.IPv6)) {
                 outgoing = global.config.outgoing_address.IPv6;
             } else {
-                outgoing = global.config.outgoing_address.IPv4;
+                outgoing = global.config.outgoing_address.IPv4 || '0.0.0.0';
             }
+
+        } else {
+            // No config was found so use the default
+            outgoing = '0.0.0.0';
+        }
+
+        // Are we connecting through a SOCKS proxy?
+        if (this.socks) {
             that.socket = Socks.connect({
                 host: that.irc_host.hostname,
                 port: that.irc_host.port,
                 ssl: that.ssl,
                 rejectUnauthorized: global.config.reject_unauthorised_certificates
-            }, {host: host,
+            }, {host: that.socks.host,
                 port: that.socks.port,
                 user: that.socks.user,
                 pass: that.socks.pass,
                 localAddress: outgoing
             });
 
-            addSocketHandlers.call(that);
-        });
-    } else {
-        getConnectionFamily(this.irc_host.hostname, function (err, family, host) {
-            var outgoing;
-            if ((family === 'IPv6') && (global.config.outgoing_addresses.IPv6) && (global.config.outgoing_addresses.IPv6 !== '')) {
-                outgoing = global.config.outgoing_addresses.IPv6;
-            } else {
-                outgoing = global.config.outgoing_addresses.IPv4;
-            }
+        } else {
+            // No socks connection, connect directly to the IRCd
 
             if (that.ssl) {
                 that.socket = tls.connect({
-                    host: host,
+                    host: that.irc_host.hostname,
                     port: that.irc_host.port,
                     rejectUnauthorized: global.config.reject_unauthorised_certificates,
                     localAddress: outgoing
@@ -182,33 +186,30 @@ IrcConnection.prototype.connect = function () {
                     localAddress: outgoing
                 });
             }
+        }
 
-            addSocketHandlers.call(that);
-        });
-    }
-
-    addSocketHandlers = function () {
-        this.socket.on(socket_connect_event_name, function () {
+        // Apply the socket listeners
+        that.socket.on(socket_connect_event_name, function () {
             that.connected = true;
             socketConnectHandler.call(that);
         });
 
-        this.socket.on('error', function (event) {
+        that.socket.on('error', function (event) {
             that.emit('error', event);
         });
 
-        this.socket.on('data', function () {
+        that.socket.on('data', function () {
             parse.apply(that, arguments);
         });
 
-        this.socket.on('close', function (had_error) {
+        that.socket.on('close', function (had_error) {
             that.connected = false;
             that.emit('close');
 
             // Close the whole socket down
             that.disposeSocket();
         });
-    };
+    });
 };
 
 /**
