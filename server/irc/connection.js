@@ -145,6 +145,11 @@ IrcConnection.prototype.connect = function () {
                 outgoing = global.config.outgoing_address.IPv6;
             } else {
                 outgoing = global.config.outgoing_address.IPv4 || '0.0.0.0';
+
+                // We don't have an IPv6 interface but dest_addr may still resolve to
+                // an IPv4 address. Reset `host` and try connecting anyway, letting it
+                // fail if an IPv4 resolved address is not found
+                host = dest_addr;
             }
 
         } else {
@@ -155,7 +160,7 @@ IrcConnection.prototype.connect = function () {
         // Are we connecting through a SOCKS proxy?
         if (this.socks) {
             that.socket = Socks.connect({
-                host: that.irc_host.hostname,
+                host: host,
                 port: that.irc_host.port,
                 ssl: that.ssl,
                 rejectUnauthorized: global.config.reject_unauthorised_certificates
@@ -171,7 +176,7 @@ IrcConnection.prototype.connect = function () {
 
             if (that.ssl) {
                 that.socket = tls.connect({
-                    host: that.irc_host.hostname,
+                    host: host,
                     port: that.irc_host.port,
                     rejectUnauthorized: global.config.reject_unauthorised_certificates,
                     localAddress: outgoing
