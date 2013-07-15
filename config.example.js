@@ -33,9 +33,10 @@ conf.servers.push({
 //    ssl_cert: "cert.pem"
 //});
 
-conf.outgoing_addresses = {
-    IPv4: '0.0.0.0',
-    IPv6: '::'
+// Network interface for outgoing connections
+conf.outgoing_address = {
+    IPv4: '0.0.0.0'
+    //IPv6: '::'
 };
 
 
