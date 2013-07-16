@@ -180,6 +180,9 @@ _kiwi.model.Application = function () {
 
                 if (this.server_settings.client.channel)
                     defaults.channel = this.server_settings.client.channel;
+
+                if (this.server_settings.client.channel_key)
+                    defaults.channel_key = this.server_settings.client.channel_key;
             }
 
 
@@ -282,6 +285,10 @@ _kiwi.model.Application = function () {
 
                 if (this.server_settings.connection.channel) {
                     defaults.channel = this.server_settings.connection.channel;
+                }
+
+                if (this.server_settings.connection.channel_key) {
+                    defaults.channel_key = this.server_settings.connection.channel_key;
                 }
 
                 if (this.server_settings.connection.nick) {
