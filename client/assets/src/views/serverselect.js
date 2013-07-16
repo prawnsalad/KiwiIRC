@@ -24,6 +24,8 @@ _kiwi.view.ServerSelect = function () {
                 }
             }
 
+            this.more_shown = false;
+
             _kiwi.gateway.bind('onconnect', this.networkConnected, this);
             _kiwi.gateway.bind('connecting', this.networkConnecting, this);
             _kiwi.gateway.bind('onirc_error', this.onIrcError, this);
@@ -100,8 +102,23 @@ _kiwi.view.ServerSelect = function () {
         },
 
         showMore: function (event) {
-            $('.more', this.$el).slideDown('fast');
-            $('input.server', this.$el).select();
+            if (!this.more_shown) {
+                $('.more', this.$el).slideDown('fast');
+                $('.show_more', this.$el)
+                    .children('.icon-caret-down')
+                    .removeClass('icon-caret-down')
+                    .addClass('icon-caret-up');
+                $('input.server', this.$el).select();
+                this.more_shown = true;
+            } else {
+                $('.more', this.$el).slideUp('fast');
+                $('.show_more', this.$el)
+                    .children('.icon-caret-up')
+                    .removeClass('icon-caret-up')
+                    .addClass('icon-caret-down');
+                $('input.nick', this.$el).select();
+                this.more_shown = false;
+            }
         },
 
         populateFields: function (defaults) {
