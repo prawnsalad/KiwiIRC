@@ -762,7 +762,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .server_select .basic tr.have_key { font-size:0.8em; }
 #kiwi.theme_relaxed .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_relaxed .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi.theme_relaxed .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
+#kiwi.theme_relaxed .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
 #kiwi.theme_relaxed .server_select.single_server .basic { border:none; }
 #kiwi.theme_relaxed .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 #kiwi.theme_relaxed .server_select .status.ok { }
@@ -1275,7 +1275,7 @@ html, body { height:100%; }
 #kiwi.theme_cli .server_select .basic tr.have_pass { font-size:0.8em; }
 #kiwi.theme_cli .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_cli .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi.theme_cli .server_select .basic .show_more { display: block; width:116px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
+#kiwi.theme_cli .server_select .basic .show_more { display: block; width:116px; margin:10px 0 0 0; font-size:0.8em; }
 #kiwi.theme_cli .server_select.single_server .basic { border:none; }
 #kiwi.theme_cli .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 #kiwi.theme_cli .server_select .status.ok { }
@@ -1592,7 +1592,7 @@ html, body { height:100%; }
 #kiwi.theme_basic .server_select .basic tr.have_pass { font-size:0.8em; }
 #kiwi.theme_basic .server_select .basic tr.channel td { padding-top:1em; }
 #kiwi.theme_basic .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi.theme_basic .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; background: url(../img/more.png) no-repeat right 7px; }
+#kiwi.theme_basic .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
 #kiwi.theme_basic .server_select.single_server .basic { border:none; }
 #kiwi.theme_basic .server_select .status { text-align: center; font-weight: bold; padding:1em; }
 #kiwi.theme_basic .server_select .status.ok { }
