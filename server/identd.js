@@ -1,6 +1,8 @@
 var net = require('net');
 
-function IdentdServer(opts) {
+var IdentdServer = module.exports = function(opts) {
+
+    var that = this;
 
     // Option defaults
     opts = opts || {};
@@ -11,21 +13,26 @@ function IdentdServer(opts) {
 
 
     var server = net.createServer(function(socket) {
-        var user, system;
+        var buffer = '';
 
-        if (typeof opts.user_id === 'function') {
-            user = opts.user_id(socket).toString();
-        } else {
-            user = opts.user_id.toString();
-        }
+        socket.on('data', function(data){
+            var data_line, response;
 
-        if (typeof opts.system_id === 'function') {
-            system = opts.system_id(socket).toString();
-        } else {
-            system = opts.system_id.toString();
-        }
+            buffer += data.toString();
 
-        socket.end('25,25 : USERID : ' + system + ' : ' + user);
+            // Wait until we have a full line of data before processing it
+            if (buffer.indexOf('\n') === -1)
+                return;
+
+            // Get the first line of data and process it for a rsponse
+            data_line = buffer.split('\n')[0];
+            response = that.processLine(data_line);
+
+            // Close down the socket while sending the response
+            socket.removeAllListeners();
+            socket.end(response);
+        });
+
     });
 
     server.on('listening', function() {
@@ -40,7 +47,42 @@ function IdentdServer(opts) {
     this.stop = function(callback) {
         server.close(callback);
     };
-}
 
 
-module.exports = IdentdServer;
+    /**
+     * Process a line of data for an Identd response
+     * 
+     * @param {String} The line of data to process
+     * @return {String} Data to send back to the Identd client
+     */
+    this.processLine = function(line) {
+        var ports = line.split(','),
+            port_here = 0,
+            port_there = 0;
+
+        // We need 2 port number to make this work
+        if (ports.length < 2)
+            return;
+
+        port_here = parseInt(ports[0], 10);
+        port_there = parseInt(ports[1], 10);
+
+        // Make sure we have both ports to work with
+        if (!port_here || !port_there)
+            return;
+
+        if (typeof opts.user_id === 'function') {
+            user = opts.user_id(port_here, port_there).toString();
+        } else {
+            user = opts.user_id.toString();
+        }
+
+        if (typeof opts.system_id === 'function') {
+            system = opts.system_id(port_here, port_there).toString();
+        } else {
+            system = opts.system_id.toString();
+        }
+
+        return port_here.toString() + ' , ' + port_there.toString() + ' : USERID : ' + system + ' : ' + user;
+    };
+};
