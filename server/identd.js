@@ -80,15 +80,15 @@ var IdentdServer = module.exports = function(opts) {
             return;
 
         if (typeof opts.user_id === 'function') {
-            user = opts.user_id(port_here, port_there).toString() || default_user_id;
+            user = (opts.user_id(port_here, port_there) || '').toString() || default_user_id;
         } else {
             user = opts.user_id.toString();
         }
 
         if (typeof opts.system_id === 'function') {
-            system = opts.system_id(port_here, port_there).toString();
+            system = (opts.system_id(port_here, port_there) || '').toString() || default_system_id;
         } else {
-            system = opts.system_id.toString() || default_system_id
+            system = opts.system_id.toString();
         }
 
         return port_here.toString() + ' , ' + port_there.toString() + ' : USERID : ' + system + ' : ' + user;
