@@ -83,6 +83,10 @@ global.clients = {
     clients: Object.create(null),
     addresses: Object.create(null),
 
+    // Local and foriegn port pairs for identd lookups
+    // {'65483_6667': client_obj, '54356_6697': client_obj}
+    port_pairs: {},
+
     add: function (client) {
         this.clients[client.hash] = client;
         if (typeof this.addresses[client.real_address] === 'undefined') {
@@ -147,10 +151,23 @@ global.servers = {
  * Identd server
  */
 if (global.config.identd && global.config.identd.enabled) {
-    new Identd({
+    var identd_resolve_user = function(port_here, port_there) {
+        var key = port_here.toString() + '_' + port_there.toString();
+
+        if (typeof global.clients.port_pairs[key] == 'undefined') {
+            return;
+        }
+
+        return global.clients.port_pairs[key].username;
+    };
+
+    var identd_server = new Identd({
         bind_addr: global.config.identd.address,
-        bind_port: global.config.identd.port
-    }).start();
+        bind_port: global.config.identd.port,
+        user_id: identd_resolve_user
+    });
+
+    identd_server.start();
 }
 
 

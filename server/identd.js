@@ -4,12 +4,15 @@ var IdentdServer = module.exports = function(opts) {
 
     var that = this;
 
+    var default_user_id = 'kiwi',
+        default_system_id = 'UNIX-KiwiIRC';
+
     // Option defaults
     opts = opts || {};
     opts.bind_addr = opts.bind_addr || '0.0.0.0';
     opts.bind_port = opts.bind_port || 113;
-    opts.system_id = opts.system_id || 'UNIX-KiwiIRC';
-    opts.user_id = opts.user_id || 'kiwi';
+    opts.system_id = opts.system_id || default_system_id;
+    opts.user_id = opts.user_id || default_user_id;
 
 
     var server = net.createServer(function(socket) {
@@ -20,13 +23,18 @@ var IdentdServer = module.exports = function(opts) {
 
             buffer += data.toString();
 
-            // Wait until we have a full line of data before processing it
-            if (buffer.indexOf('\n') === -1)
-                return;
+            // If we exceeed 512 bytes, presume a flood and disconnect
+            if (buffer.length < 512) {
 
-            // Get the first line of data and process it for a rsponse
-            data_line = buffer.split('\n')[0];
-            response = that.processLine(data_line);
+                // Wait until we have a full line of data before processing it
+                if (buffer.indexOf('\n') === -1)
+                    return;
+
+                // Get the first line of data and process it for a rsponse
+                data_line = buffer.split('\n')[0];
+                response = that.processLine(data_line);
+
+            }
 
             // Close down the socket while sending the response
             socket.removeAllListeners();
@@ -72,7 +80,7 @@ var IdentdServer = module.exports = function(opts) {
             return;
 
         if (typeof opts.user_id === 'function') {
-            user = opts.user_id(port_here, port_there).toString();
+            user = opts.user_id(port_here, port_there).toString() || default_user_id;
         } else {
             user = opts.user_id.toString();
         }
@@ -80,7 +88,7 @@ var IdentdServer = module.exports = function(opts) {
         if (typeof opts.system_id === 'function') {
             system = opts.system_id(port_here, port_there).toString();
         } else {
-            system = opts.system_id.toString();
+            system = opts.system_id.toString() || default_system_id
         }
 
         return port_here.toString() + ' , ' + port_there.toString() + ' : USERID : ' + system + ' : ' + user;
