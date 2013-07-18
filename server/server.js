@@ -39,8 +39,13 @@ switch (process.argv[2]) {
         daemon.sendSignal("SIGUSR1");
         break;
 
+    case 'stats':
+        console.log('Writing stats to log file..');
+        daemon.sendSignal("SIGUSR2");
+        break;
+
     case 'build':
-        require('../client/assets/dev/build.js');
+        require('../client/assets/src/build.js');
         break;
         
     default:

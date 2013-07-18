@@ -33,6 +33,20 @@ conf.servers.push({
 //    ssl_cert: "cert.pem"
 //});
 
+// Network interface for outgoing connections
+conf.outgoing_address = {
+    IPv4: '0.0.0.0'
+    //IPv6: '::'
+};
+
+
+// Do we want to enable the built in Identd server?
+conf.identd = {
+    enabled: false,
+    port: 113,
+    address: "0.0.0.0"
+};
+
 
 
 
@@ -44,6 +58,18 @@ conf.public_http = "client/";
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
+// Max connections per server. 0 to disable.
+// Setting is ignored if:
+//   - There is a WEBIRC password configured for the server,
+//   - Kiwi is configured to send the client's ip as a username for the server, or
+//   - Kiwi is running in restricted server mode.
+conf.max_server_conns = 0;
+
+/*
+* Default encoding to be used by the server
+* As specified and limited to iconv-lite library support.
+*/
+conf.default_encoding = 'UTF-8';
 
 /*
  * Client side plugins
@@ -79,8 +105,8 @@ conf.webirc_pass = {
 
 // Some IRCDs require the clients IP via the username/ident
 conf.ip_as_username = [
-	"irc.network.com",
-	"127.0.0.1"
+    //"irc.network.com",
+    //"127.0.0.1"
 ];
 
 // Whether to verify IRC servers' SSL certificates against built-in well-known certificate authorities
@@ -103,6 +129,33 @@ conf.http_proxy_ip_header = "x-forwarded-for";
 // Base HTTP path to the KIWI IRC client (eg. /kiwi)
 conf.http_base_path = "/kiwi";
 
+
+/*
+ * SOCKS (version 5) proxy settings
+ * This feature is only available on node 0.10.0 and above.
+ * Do not enable it if you're running 0.8 or below or Bad Things will happen.
+ */
+conf.socks_proxy = {};
+
+// Enable proxying outbound connections through a SOCKS proxy
+conf.socks_proxy.enabled = false;
+
+// Proxy *all* outbound connections through a SOCKS proxy
+conf.socks_proxy.all = false;
+
+// Use SOCKS proxy for these hosts only (if conf.sock_proxy.all === false)
+conf.socks_proxy.proxy_hosts = [
+    "irc.example.com"
+];
+
+// Host and port for the SOCKS proxy
+conf.socks_proxy.address = '127.0.0.1';
+conf.socks_proxy.port = 1080;
+
+// Username and password for the SOCKS proxy
+// Set user to null to disable password authentication
+conf.socks_proxy.user = null;
+conf.socks_proxy.pass = null;
 
 
 // Enabled transports for the browser to use
@@ -127,7 +180,16 @@ conf.client = {
     port:    6697,
     ssl:     true,
     channel: '#kiwiirc',
-    nick:    'kiwi_?'
+    channel_key: '',
+    nick:    'kiwi_?',
+    settings: {
+        theme: 'relaxed',
+        channel_list_style: 'tabs',
+        scrollback: 250,
+        show_joins_parts: true,
+        show_timestamps: false,
+        mute_sounds: false
+    }
 };
 
 
@@ -136,6 +198,7 @@ conf.client = {
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;
 //conf.restrict_server_channel = "#kiwiirc";
+//conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
 //conf.restrict_server_nick = "kiwi_";
 

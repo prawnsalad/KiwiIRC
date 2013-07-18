@@ -1,22 +1,39 @@
 var net             = require('net'),
     tls             = require('tls'),
     util            = require('util'),
+    dns             = require('dns'),
     _               = require('lodash'),
-    EventEmitter2   = require('eventemitter2').EventEmitter2,
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcChannel      = require('./channel.js'),
-    IrcUser         = require('./user.js');
+    IrcUser         = require('./user.js'),
+    EE              = require('../ee.js'),
+    iconv           = require('iconv-lite'),
+    Socks;
 
+
+
+// Break the Node.js version down into usable parts
+var version_values = process.version.substr(1).split('.').map(function (item) {
+    return parseInt(item, 10);
+});
+
+// If we have a suitable Nodejs version, bring int he socks functionality
+if (version_values[1] >= 10) {
+    Socks = require('socksjs');
+}
 
 var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_num) {
     var that = this;
 
-    EventEmitter2.call(this,{
+    EE.call(this,{
         wildcard: true,
-        delimiter: ':'
+        delimiter: ' '
     });
     this.setMaxListeners(0);
+
+    // Set the first configured encoding as the default encoding
+    this.encoding = global.config.default_encoding;
     
     // Socket state
     this.connected = false;
@@ -30,9 +47,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_
     // User information
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
-    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.]/, '');
+    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.password = pass;
-    
+
     // State object
     this.state = state;
     
@@ -41,10 +58,13 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_
 
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);
-    
+
     // IrcUser objects
     this.irc_users = Object.create(null);
-    
+
+    // TODO: use `this.nick` instead of `'*'` when using an IrcUser per nick
+    this.irc_users[this.nick] = new IrcUser(this, '*');
+
     // IrcChannel objects
     this.irc_channels = Object.create(null);
 
@@ -52,26 +72,33 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_
     this.irc_host = {hostname: hostname, port: port};
     this.ssl = !(!ssl);
 
+    // SOCKS proxy details
+    // TODO: Wildcard matching of hostnames and/or CIDR ranges of IP addresses
+    if ((global.config.socks_proxy && global.config.socks_proxy.enabled) && ((global.config.socks_proxy.all) || (_.contains(global.config.socks_proxy.proxy_hosts, this.irc_host.hostname)))) {
+        this.socks = {
+            host: global.config.socks_proxy.address,
+            port: global.config.socks_proxy.port,
+            user: global.config.socks_proxy.user,
+            pass: global.config.socks_proxy.pass
+        };
+    } else {
+        this.socks = false;
+    }
+
     // Options sent by the IRCd
     this.options = Object.create(null);
     this.cap = {requested: [], enabled: []};
 
     // Is SASL supported on the IRCd
     this.sasl = false;
-    
+
     // Buffers for data sent from the IRCd
     this.hold_last = false;
     this.held_data = '';
 
     this.applyIrcEvents();
-
-    // Call any modules before making the connection
-    global.modules.emit('irc:connecting', {connection: this})
-        .done(function () {
-            that.connect();
-        });
 };
-util.inherits(IrcConnection, EventEmitter2);
+util.inherits(IrcConnection, EE);
 
 module.exports.IrcConnection = IrcConnection;
 
@@ -80,15 +107,15 @@ module.exports.IrcConnection = IrcConnection;
 IrcConnection.prototype.applyIrcEvents = function () {
     // Listen for events on the IRC connection
     this.irc_events = {
-        'server:*:connect':  onServerConnect,
-        'channel:*:join':    onChannelJoin,
+        'server * connect':  onServerConnect,
+        'channel * join':    onChannelJoin,
 
         // TODO: uncomment when using an IrcUser per nick
         //'user:*:privmsg':    onUserPrivmsg,
-        'user:*:nick':       onUserNick,
-        'channel:*:part':    onUserParts,
-        'channel:*:quit':    onUserParts,
-        'channel:*:kick':    onUserParts
+        'user * nick':       onUserNick,
+        'channel * part':    onUserParts,
+        'channel * quit':    onUserParts,
+        'channel * kick':    onUserKick
     };
 
     EventBinder.bindIrcEvents('', this.irc_events, this, this);
@@ -104,49 +131,107 @@ IrcConnection.prototype.connect = function () {
     // The socket connect event to listener for
     var socket_connect_event_name = 'connect';
 
+    // The destination address
+    var dest_addr = this.socks ?
+        this.socks.host :
+        this.irc_host.hostname;
 
     // Make sure we don't already have an open connection
     this.disposeSocket();
 
-    // Open either a secure or plain text socket
-    if (this.ssl) {
-        this.socket = tls.connect({
-            host: this.irc_host.hostname,
-            port: this.irc_host.port,
-            rejectUnauthorized: global.config.reject_unauthorised_certificates
+    // Get the IP family for the dest_addr (either socks or IRCd destination)
+    getConnectionFamily(dest_addr, function (err, family, host) {
+        var outgoing;
+
+        // Decide which net. interface to make the connection through
+        if (global.config.outgoing_address) {
+            if ((family === 'IPv6') && (global.config.outgoing_address.IPv6)) {
+                outgoing = global.config.outgoing_address.IPv6;
+            } else {
+                outgoing = global.config.outgoing_address.IPv4 || '0.0.0.0';
+
+                // We don't have an IPv6 interface but dest_addr may still resolve to
+                // an IPv4 address. Reset `host` and try connecting anyway, letting it
+                // fail if an IPv4 resolved address is not found
+                host = dest_addr;
+            }
+
+        } else {
+            // No config was found so use the default
+            outgoing = '0.0.0.0';
+        }
+
+        // Are we connecting through a SOCKS proxy?
+        if (this.socks) {
+            that.socket = Socks.connect({
+                host: host,
+                port: that.irc_host.port,
+                ssl: that.ssl,
+                rejectUnauthorized: global.config.reject_unauthorised_certificates
+            }, {host: that.socks.host,
+                port: that.socks.port,
+                user: that.socks.user,
+                pass: that.socks.pass,
+                localAddress: outgoing
+            });
+
+        } else {
+            // No socks connection, connect directly to the IRCd
+
+            if (that.ssl) {
+                that.socket = tls.connect({
+                    host: host,
+                    port: that.irc_host.port,
+                    rejectUnauthorized: global.config.reject_unauthorised_certificates,
+                    localAddress: outgoing
+                });
+
+                socket_connect_event_name = 'secureConnect';
+
+            } else {
+                that.socket = net.connect({
+                    host: host,
+                    port: that.irc_host.port,
+                    localAddress: outgoing
+                });
+            }
+        }
+
+        // Apply the socket listeners
+        that.socket.on(socket_connect_event_name, function () {
+            that.connected = true;
+
+            // Make note of the port numbers for any identd lookups
+            // Nodejs < 0.9.6 has no socket.localPort so check this first
+            if (this.localPort) {
+                global.clients.port_pairs[this.localPort.toString() + '_' + this.remotePort.toString()] = that;
+            }
+
+            socketConnectHandler.call(that);
         });
 
-        socket_connect_event_name = 'secureConnect';
-
-    } else {
-        this.socket = net.connect({
-            host: this.irc_host.hostname,
-            port: this.irc_host.port
+        that.socket.on('error', function (event) {
+            that.emit('error', event);
         });
-    }
 
-    this.socket.setEncoding('utf-8');
+        that.socket.on('data', function () {
+            parse.apply(that, arguments);
+        });
 
-    this.socket.on(socket_connect_event_name, function () {
-        that.connected = true;
-        socketConnectHandler.apply(that, arguments);
-    });
+        that.socket.on('close', function (had_error) {
+            that.connected = false;
 
-    this.socket.on('error', function (event) {
-        that.emit('error', event);
+            // Remove this socket form the identd lookup
+            // Nodejs < 0.9.6 has no socket.localPort so check this first
+            if (this.localPort) {
+                delete global.clients.port_pairs[this.localPort.toString() + '_' + this.remotePort.toString()];
+            }
 
-    });
-    
-    this.socket.on('data', function () {
-        parse.apply(that, arguments);
-    });
-    
-    this.socket.on('close', function (had_error) {
-        that.connected = false;
-        that.emit('close');
+            that.emit('close');
 
-        // Close the whole socket down
-        that.disposeSocket();
+            // Close the whole socket down
+            that.disposeSocket();
+        });
     });
 };
 
@@ -162,7 +247,9 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  * Write a line of data to the IRCd
  */
 IrcConnection.prototype.write = function (data, callback) {
-    this.socket.write(data + '\r\n', 'utf-8', callback);
+    //ENCODE string to encoding of the server
+    encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
+    this.socket.write(encoded_buffer);
 };
 
 
@@ -173,7 +260,7 @@ IrcConnection.prototype.write = function (data, callback) {
 IrcConnection.prototype.end = function (data, callback) {
     if (data)
         this.write(data);
-    
+
     this.socket.end();
 };
 
@@ -183,6 +270,8 @@ IrcConnection.prototype.end = function (data, callback) {
  * Clean up this IrcConnection instance and any sockets
  */
 IrcConnection.prototype.dispose = function () {
+    var that = this;
+
     _.each(this.irc_users, function (user) {
         user.dispose();
     });
@@ -197,11 +286,27 @@ IrcConnection.prototype.dispose = function () {
 
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
+    // Remove this connection from persistant storage
     if (this.state.save_state)
         global.storage.delConnection(this.state.hash, this.con_num);
 
-    this.disposeSocket();
-    this.removeAllListeners();
+    this.emit('dispose');
+
+    // If we're still connected, wait until the socket is closed before disposing
+    // so that all the events are still correctly triggered
+    if (this.socket && this.connected) {
+        this.socket.once('close', function() {
+            that.disposeSocket();
+            that.removeAllListeners();
+        });
+
+        this.socket.end();
+
+    } else {
+
+        this.disposeSocket();
+        this.removeAllListeners();
+    }
 };
 
 
@@ -217,6 +322,52 @@ IrcConnection.prototype.disposeSocket = function () {
     }
 };
 
+/**
+ * Set a new encoding for this connection
+ * Return true in case of success
+ */
+
+IrcConnection.prototype.setEncoding = function (encoding) {
+    var encoded_test;
+
+    try {
+        encoded_test = iconv.encode("TEST", encoding);
+        //This test is done to check if this encoding also supports
+        //the ASCII charset required by the IRC protocols
+        //(Avoid the use of base64 or incompatible encodings)
+        if (encoded_test == "TEST") {
+            this.encoding = encoding;
+            return true;
+        }
+        return false;
+    } catch (err) {
+        return false;
+    }
+};
+
+function getConnectionFamily(host, callback) {
+    if (net.isIP(host)) {
+        if (net.isIPv4(host)) {
+            setImmediate(callback, null, 'IPv4', host);
+        } else {
+            setImmediate(callback, null, 'IPv6', host);
+        }
+    } else {
+        dns.resolve6(host, function (err, addresses) {
+            if (!err) {
+                callback(null, 'IPv6', addresses[0]);
+            } else {
+                dns.resolve4(host, function (err, addresses) {
+                    if (!err) {
+                        callback(null, 'IPv4',addresses[0]);
+                    } else {
+                        callback(err);
+                    }
+                });
+            }
+        });
+    }
+}
 
 
 function onChannelJoin(event) {
@@ -250,9 +401,6 @@ function handleChannelJoin(event){
 
 function onServerConnect(event) {
     this.nick = event.nick;
-
-    // TODO: use `event.nick` instead of `'*'` when using an IrcUser per nick
-    this.irc_users[event.nick] = new IrcUser(this, '*');
 }
 
 
@@ -293,6 +441,18 @@ function onUserParts(event) {
     }
 }
 
+function onUserKick(event){
+    // Only deal with ourselves being kicked from a channel
+    if (event.kicked !== this.nick)
+        return;
+
+    if (this.irc_channels[event.channel]) {
+        this.irc_channels[event.channel].dispose();
+        delete this.irc_channels[event.channel];
+    }
+
+}
+
 
 
 
@@ -314,7 +474,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc:authorize', connect_data).done(function () {
+    global.modules.emit('irc authorize', connect_data).done(function () {
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {
@@ -326,7 +486,7 @@ var socketConnectHandler = function () {
 
         if (that.password)
             that.write('PASS ' + that.password);
-        
+
         that.write('NICK ' + that.nick);
         that.write('USER ' + that.username + ' 0 0 :' + '[www.kiwiirc.com] ' + that.nick);
 
@@ -360,7 +520,13 @@ function findWebIrc(connect_data) {
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
         this.username = this.user.address.split('.').map(function(i, idx){
-            return parseInt(i, 10).toString(16);
+            var hex = parseInt(i, 10).toString(16);
+
+            // Pad out the hex value if it's a single char
+            if (hex.length === 1)
+                hex = '0' + hex;
+
+            return hex;
         }).join('');
 
     }
@@ -375,7 +541,7 @@ function findWebIrc(connect_data) {
  * Deviates from the RFC a little to support the '/' character now used in some
  * IRCds
  */
-var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-]+)!([a-z0-9~\.\-_|]+)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
 var parse = function (data) {
     var i,
@@ -385,7 +551,10 @@ var parse = function (data) {
         j,
         tags = [],
         tag;
-    
+
+    //DECODE server encoding 
+    data = iconv.decode(data, this.encoding);
+
     if (this.hold_last && this.held_data !== '') {
         data = this.held_data + data;
         this.hold_last = false;
@@ -407,7 +576,7 @@ var parse = function (data) {
             this.held_data = data[i];
             break;
         }
-
+        
         // Parse the complete line, removing any carriage returns
         msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
 
@@ -430,11 +599,8 @@ var parse = function (data) {
                 trailing:   (msg[8]) ? msg[8].trim() : ''
             };
             msg.params = msg.params.split(' ');
-
-            this.emit('irc_' + msg.command.toUpperCase(), msg);
-
+            this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
         } else {
-
             // The line was not parsed correctly, must be malformed
             console.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
         }

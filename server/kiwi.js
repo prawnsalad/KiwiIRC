@@ -1,9 +1,11 @@
 var fs          = require('fs'),
     _           = require('lodash'),
+    util        = require('util'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     rehash      = require('./rehash.js'),
-    modules     = require('./modules.js');
+    modules     = require('./modules.js'),
+    Identd      = require('./identd.js');
 
 
 
@@ -13,7 +15,7 @@ config.loadConfig();
 
 // If we're not running in the forground and we have a log file.. switch
 // console.log to output to a file
-if (process.argv.indexOf('-f') === -1 && global.config.log) {
+if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
     (function () {
         var log_file_name = global.config.log;
 
@@ -27,7 +29,7 @@ if (process.argv.indexOf('-f') === -1 && global.config.log) {
             var logfile = fs.openSync(log_file_name, 'a'),
                 out;
 
-            out = Array.prototype.join.apply(arguments, [' ']);
+            out = util.format.apply(util, arguments);
 
             // Make sure we out somthing to log and we have an open file
             if (!out || !logfile) return;
@@ -65,7 +67,7 @@ modules.registerPublisher(global.modules);
 // Load any modules in the config
 if (global.config.module_dir) {
     (global.config.modules || []).forEach(function (module_name) {
-        if (modules.load(global.config.module_dir + module_name + '.js')) {
+        if (modules.load(module_name)) {
             console.log('Module ' + module_name + ' loaded successfuly');
         } else {
             console.log('Module ' + module_name + ' failed to load');
@@ -80,6 +82,10 @@ if (global.config.module_dir) {
 global.clients = {
     clients: Object.create(null),
     addresses: Object.create(null),
+
+    // Local and foriegn port pairs for identd lookups
+    // {'65483_6667': client_obj, '54356_6697': client_obj}
+    port_pairs: {},
 
     add: function (client) {
         this.clients[client.hash] = client;
@@ -107,6 +113,62 @@ global.clients = {
         }
     }
 };
+
+global.servers = {
+    servers: Object.create(null),
+    
+    addConnection: function (connection) {
+        var host = connection.irc_host.hostname;
+        if (!this.servers[host]) {
+            this.servers[host] = [];
+        }
+        this.servers[host].push(connection);
+    },
+    
+    removeConnection: function (connection) {
+        var host = connection.irc_host.hostname
+        if (this.servers[host]) {
+            this.servers[host] = _.without(this.servers[host], connection);
+            if (this.servers[host].length === 0) {
+                delete this.servers[host];
+            }
+        }
+    },
+    
+    numOnHost: function (host) {
+        if (this.servers[host]) {
+            return this.servers[host].length;
+        } else {
+            return 0;
+        }
+    }
+};
+
+
+
+
+/*
+ * Identd server
+ */
+if (global.config.identd && global.config.identd.enabled) {
+    var identd_resolve_user = function(port_here, port_there) {
+        var key = port_here.toString() + '_' + port_there.toString();
+
+        if (typeof global.clients.port_pairs[key] == 'undefined') {
+            return;
+        }
+
+        return global.clients.port_pairs[key].username;
+    };
+
+    var identd_server = new Identd({
+        bind_addr: global.config.identd.address,
+        bind_port: global.config.identd.port,
+        user_id: identd_resolve_user
+    });
+
+    identd_server.start();
+}
 
 
 
@@ -160,7 +222,16 @@ _.each(global.config.servers, function (server) {
         clients.remove(client);
     });
 
-    wl.on('listening', webListenerRunning);
+    wl.on('listening', function () {
+        console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+        webListenerRunning();
+    });
+
+    wl.on('error', function (err) {
+        console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
+        // TODO: This should probably be refactored. ^JA
+        webListenerRunning();
+    });
 });
 
 // Once all the listeners are listening, set the processes UID/GID
@@ -209,6 +280,10 @@ process.on('SIGUSR1', function() {
 });
 
 
+process.on('SIGUSR2', function() {
+    console.log('Connected clients: ' + _.size(global.clients.clients).toString());
+    console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+});
 
 
 /*

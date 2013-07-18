@@ -7,9 +7,10 @@ var IrcServer = function (irc_connection) {
 
     this.list_buffer = [];
     this.motd_buffer = '';
+
     this.network_name = 'Network';
     this.server_options = {};
-    
+
     this.irc_events = {
         connect:                onConnect,
         options:                onOptions,
@@ -32,10 +33,10 @@ var IrcServer = function (irc_connection) {
         banned_from_channel:    onBannedFromChannel,
         bad_channel_key:        onBadChannelKey,
         chanop_privs_needed:    onChanopPrivsNeeded,
-        nickname_in_use:        onNicknameInUse
+        nickname_in_use:        onNicknameInUse,
+        erroneus_nickname:      onErroneusNickname
     };
-    EventBinder.bindIrcEvents('server:*', this.irc_events, this, this.irc_connection);
-    
+    EventBinder.bindIrcEvents('server *', this.irc_events, this, this.irc_connection);
 
 };
 
@@ -44,7 +45,7 @@ module.exports = IrcServer;
 
 
 IrcServer.prototype.dispose = function (){
-    EventBinder.unbindIrcEvents('server:*', this.irc_events, this.irc_connection);
+    EventBinder.unbindIrcEvents('server *', this.irc_events, this.irc_connection);
     this.irc_connection = undefined;
 };
 
@@ -54,7 +55,7 @@ function onConnect(event) {
     this.irc_connection.clientEvent('connect', {
         nick: event.nick
     });
-};
+}
 
 function onOptions(event) {
     // Keep a copy of these options for later use
@@ -68,21 +69,25 @@ function onOptions(event) {
         options: event.options,
         cap: event.cap
     });
-};
+}
 
 function onListStart(event) {
     this.irc_connection.clientEvent('list_start', {});
     this.list_buffer = [];
-};
+    this.busy_listing = true;
+}
 
 function onListChannel(event) {
     var buf;
+    if (!this.busy_listing) {
+      onListStart.call(this);
+    }
     this.list_buffer.push({
         channel: event.channel,
         num_users: event.num_users,
         topic: event.topic
     });
-    
+
     if (this.list_buffer.length > 200) {
         buf = _.sortBy(this.list_buffer, function (channel) {
             // sortBy sorts in ascending order, we want to sort by descending, hence using 0 - num_users.
@@ -93,11 +98,11 @@ function onListChannel(event) {
         });
         this.list_buffer = [];
     }
-};
+}
 
 function onListEnd(event) {
     var buf;
-    
+
     buf = _.sortBy(this.list_buffer, function (channel) {
         // sortBy sorts in ascending order, we want to sort by descending, hence using 0 - num_users.
         return 0 - channel.num_users;
@@ -106,31 +111,31 @@ function onListEnd(event) {
         chans: buf
     });
     this.list_buffer = [];
+    this.busy_listing = false;
 
-    
     this.irc_connection.clientEvent('list_end', {});
-};
+}
 
 function onMotdStart(event) {
     this.motd_buffer = '';
-};
+}
 
 function onMotd(event) {
     this.motd_buffer += event.motd;
-};
+}
 
 function onMotdEnd(event) {
     this.irc_connection.clientEvent('motd', {
         msg: this.motd_buffer
     });
-};
+}
 
 function onError(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'error',
         reason: event.reason
     });
-};
+}
 
 function onPasswordMismatch(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -143,7 +148,7 @@ function onChannelRedirect(event) {
         from: event.from,
         to: event.to
     });
-};
+}
 
 function onNoSuchNick(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -151,7 +156,7 @@ function onNoSuchNick(event) {
         nick: event.nick,
         reason: event.reason
     });
-};
+}
 
 function onCannotSendToChan(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -159,7 +164,7 @@ function onCannotSendToChan(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onTooManyChannels(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -167,7 +172,7 @@ function onTooManyChannels(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onUserNotInChannel(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -176,7 +181,7 @@ function onUserNotInChannel(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onNotOnChannel(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -184,7 +189,7 @@ function onNotOnChannel(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onChannelIsFull(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -192,7 +197,7 @@ function onChannelIsFull(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onInviteOnlyChannel(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -200,7 +205,7 @@ function onInviteOnlyChannel(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onBannedFromChannel(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -208,7 +213,7 @@ function onBannedFromChannel(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onBadChannelKey(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -216,7 +221,7 @@ function onBadChannelKey(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onChanopPrivsNeeded(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -224,7 +229,7 @@ function onChanopPrivsNeeded(event) {
         channel: event.channel,
         reason: event.reason
     });
-};
+}
 
 function onNicknameInUse(event) {
     this.irc_connection.clientEvent('irc_error', {
@@ -232,4 +237,12 @@ function onNicknameInUse(event) {
         nick: event.nick,
         reason: event.reason
     });
-};
+}
+
+function onErroneusNickname(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'erroneus_nickname',
+        nick: event.nick,
+        reason: event.reason
+    });
+}

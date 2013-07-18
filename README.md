@@ -2,15 +2,19 @@
 Kiwi IRC is a fully featured IRC client that can be extended to suit almost any needs.
 Using the web application is extremly simple even without any IRC knowledge as all the common needs are built directly into the UI.
 
-For more information see https://kiwiirc.com or an example of the application can be found at https://kiwiirc.com/client/.
-Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiirc
+For more information see https://kiwiirc.com or live instance of the application can be found at https://kiwiirc.com/client/.
+Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiirc.
+
+[![Visit our IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/kiwiirc.png)](https://kiwiirc.com/client/irc.freenode.net/#kiwiirc)
 
 
 ### Installation
 
+*Note: This requires Node.js to run. Make sure you have installed Node.js first! http://nodejs.org/download/*
+
 1. Download the Kiwi source or clone the git repository:
 
-    `$ git clone git@github.com:prawnsalad/KiwiIRC.git && cd KiwiIRC`
+    `$ git clone https://github.com/prawnsalad/KiwiIRC.git && cd KiwiIRC`
 
 2. Install the dependencies:
 

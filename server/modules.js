@@ -35,18 +35,18 @@ function registerPublisher (obj) {
  */
 
 // Hold the loaded modules
-var registered_modules = {};
+var registered_modules = [];
 
 function loadModule (module_file) {
-    var module;
+    var module,
+        full_module_filename = global.config.module_dir + module_file;
 
     // Get an instance of the module and remove it from the cache
     try {
-        module = require(module_file);
-        delete require.cache[require.resolve(module_file)];
+        module = require(full_module_filename);
+        delete require.cache[require.resolve(full_module_filename)];
     } catch (err) {
         // Module was not found
-        console.log(err);
         return false;
     }
 
@@ -56,12 +56,18 @@ function loadModule (module_file) {
 
 // Find a registered collection, .dispose() of it and remove it
 function unloadModule (module) {
+    var found_module = false;
+
     registered_modules = _.reject(registered_modules, function (registered_module) {
-        if (module === registered_module) {
-            module.dispose();
+        if (module.toLowerCase() === registered_module.module_name.toLowerCase()) {
+            found_module = true;
+
+            registered_module.dispose();
             return true;
         }
     });
+
+    return found_module;
 }
 
 
@@ -74,12 +80,13 @@ function unloadModule (module) {
  * To be created by modules to bind to server events
  */
 function Module (module_name) {
-    registered_modules[module_name] = this;
+    registered_modules.push(this);
+    this.module_name = module_name;
+
+    // Holder for all the bound events by this module
+    this._events = {};
 }
 
-
-// Holder for all the bound events by this module
-Module.prototype._events = {};
 
 
 // Keep track of this modules events and bind
@@ -126,7 +133,7 @@ Module.prototype.off = function (event_name, fn) {
         }
     }
 
-    active_publisher.removeListener(event_name, fn);
+    active_publisher.off(event_name, fn);
 };
 
 

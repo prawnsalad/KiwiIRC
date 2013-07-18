@@ -10,11 +10,15 @@ var net         = require('net'),
     config      = require('../server/configuration.js'),
     _           = require('lodash');
 
-var module = new kiwiModules.Module('Control');
+var control_module = new kiwiModules.Module('Control');
 
 
+/**
+ * The socket client
+ */
 function SocketClient (socket) {
     this.socket = socket;
+    this.socket_closing = false;
 
     this.remoteAddress = this.socket.remoteAddress;
     console.log('Control connection from ' + this.socket.remoteAddress + ' opened');
@@ -39,7 +43,8 @@ SocketClient.prototype.unbindEvents = function() {
 
 SocketClient.prototype.write = function(data, append) {
     if (typeof append === 'undefined') append = '\n';
-    this.socket.write(data + append);
+    if (this.socket && !this.socket_closing)
+        this.socket.write(data + append);
 };
 SocketClient.prototype.displayPrompt = function(prompt) {
     prompt = prompt || 'Kiwi > ';
@@ -51,38 +56,17 @@ SocketClient.prototype.displayPrompt = function(prompt) {
 SocketClient.prototype.onData = function(data) {
     data = data.toString().trim();
 
+
+
     try {
-        switch (data) {
-            case 'modules':
-                this.write('Loaded modules: ' + Object.keys(kiwiModules.getRegisteredModules()).join(', '));
-                break;
+        var data_split = data.split(' ');
 
-            case 'stats':
-                this.write('Connected clients: ' + _.size(global.clients.clients).toString());
-                this.write('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
-                break;
-
-            case 'rehash':
-                rehash.rehashAll();
-                this.write('Rehashed');
-                break;
-
-            case 'reconfig':
-                if (config.loadConfig()) {
-                    this.write('New config file loaded');
-                } else {
-                    this.write("No new config file was loaded");
-                }
-                break;
-
-            case 'exit':
-            case 'quit':
-                this.socket.destroy();
-                break;
-
-            default:
-                this.write('Unrecognised command: ' + data);
+        if (typeof socket_commands[data_split[0]] === 'function') {
+            socket_commands[data_split[0]].call(this, data_split.slice(1));
+        } else {
+            this.write('Unrecognised command: ' + data);
         }
+
     } catch (err) {
         console.log('[Control error] ' + err);
         this.write('An error occured. Check the Kiwi server log for more details');
@@ -94,13 +78,86 @@ SocketClient.prototype.onData = function(data) {
 
 SocketClient.prototype.onClose = function() {
     this.unbindEvents();
+    this.socket = null;
     console.log('Control connection from ' + this.remoteAddress + ' closed');
 };
 
 
 
+/**
+ * Available commands
+ * Each function is run in context of the SocketClient
+ */
+var socket_commands = {
+    module: function(data) {
+        switch(data[0]) {
+            case 'reload':
+                if (!data[1]) {
+                    this.write('A module name must be specified');
+                    return;
+                }
 
+                if (!kiwiModules.unload(data[1])) {
+                    this.write('Module ' + (data[1] || '') + ' is not loaded');
+                    return;
+                }
+
+                if (!kiwiModules.load(data[1])) {
+                    this.write('Error loading module ' + (data[1] || ''));
+                }
+                this.write('Module ' + data[1] + ' reloaded');
+
+                break;
+
+            case 'list':
+            case 'ls':
+            default:
+                var module_names = [];
+                kiwiModules.getRegisteredModules().forEach(function(module) {
+                    module_names.push(module.module_name);
+                });
+                this.write('Loaded modules: ' + module_names.join(', '));
+        }
+
+    },
+
+    stats: function(data) {
+        this.write('Connected clients: ' + _.size(global.clients.clients).toString());
+        this.write('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+    },
+
+    rehash: function(data) {
+        rehash.rehashAll();
+        this.write('Rehashed');
+    },
+
+    reconfig: function(data) {
+        if (config.loadConfig()) {
+            this.write('New config file loaded');
+        } else {
+            this.write("No new config file was loaded");
+        }
+    },
+
+    quit: function(data) {
+        this.socket.destroy();
+        this.socket_closing = true;
+    },
+    exit: function(data) {
+        this.socket.destroy();
+        this.socket_closing = true;
+    }
+};
+
+
+/**
+ * Start the control socket server to serve connections
+ */
 var server = net.createServer(function (socket) {
     new SocketClient(socket);
 });
 server.listen(8888);
+
+control_module.on('dispose', function() {
+    server.close();
+});

@@ -2,7 +2,8 @@ var util            = require('util'),
     events          = require('events'),
     crypto          = require('crypto'),
     _               = require('lodash'),
-    IrcConnection   = require('./connection.js').IrcConnection;
+    IrcConnection   = require('./connection.js').IrcConnection,
+    IrcCommands     = require('./commands.js');
 
 var State = function (save_state) {
     var that = this;
@@ -78,6 +79,16 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     var that = this;
     var con, con_num;
 
+    // Check the per-server limit on the number of connections
+    if ((global.config.max_server_conns > 0) &&
+        (!global.config.restrict_server) &&
+        (!(global.config.webirc_pass && global.config.webirc_pass[hostname])) &&
+        (!(global.config.ip_as_username && _.contains(global.config.ip_as_username, hostname))) &&
+        (global.servers.numOnHost(hostname) >= global.config.max_server_conns))
+    {
+        return callback('Too many connections to host', {host: hostname, limit: global.config.max_server_conns});
+    }
+
     // Get a connection number for this new connection object
     this.next_connection++;
     con_num = this.next_connection;
@@ -90,48 +101,46 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     }
 
     function doConnect() {
-        if (global.config.restrict_server) {
-            con = new IrcConnection(
-                global.config.restrict_server,
-                global.config.restrict_server_port,
-                global.config.restrict_server_ssl,
-                nick,
-                user,
-                global.config.restrict_server_password,
-                that,
-                con_num
-            );
-
-        } else {
-            con = new IrcConnection(
-                hostname,
-                port,
-                ssl,
-                nick,
-                user,
-                pass,
-                that,
-                con_num
-            );
-        }
-        
+        con = new IrcConnection(
+            hostname,
+            port,
+            ssl,
+            nick,
+            user,
+            pass,
+            that,
+            con_num
+        );
         
         that.irc_connections[con_num] = con;
         
-        new IrcCommands(con, con_num, that).bindEvents();
+        con.irc_commands = new IrcCommands(con, con_num, that);
         
         con.on('connected', function () {
+            global.servers.addConnection(this);
             return callback(null, con_num);
         });
         
         con.on('error', function (err) {
+            console.log('irc_connection error (' + hostname + '):', err);
             return callback(err.code, {server: con_num, error: err});
         });
 
         con.on('close', function () {
-            that.irc_connections[con_num].dispose();
-            that.irc_connections[con_num] = null;
+            // TODO: Can we get a better reason for the disconnection? Was it planned?
+            that.sendIrcCommand('disconnect', {server: con.con_num, reason: 'disconnected'});
         });
+
+        con.on('dispose', function () {
+            that.irc_connections[con_num] = null;
+            global.servers.removeConnection(this);
+        });
+
+        // Call any modules before making the connection
+        global.modules.emit('irc connecting', {connection: con})
+            .done(function () {
+                con.connect();
+            });
     }
 };
 
@@ -158,7 +167,7 @@ State.prototype.detachClient = function (old_client) {
             if (irc_connection) {
                 irc_connection.end('QUIT :' + (global.config.quit_message || ''));
                 irc_connection.dispose();
-                cons[i] = null;
+                global.servers.removeConnection(irc_connection);
             }
         });
         
