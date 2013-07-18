@@ -10,7 +10,7 @@ var net         = require('net'),
     config      = require('../server/configuration.js'),
     _           = require('lodash');
 
-var module = new kiwiModules.Module('Control');
+var control_module = new kiwiModules.Module('Control');
 
 
 /**
@@ -18,6 +18,7 @@ var module = new kiwiModules.Module('Control');
  */
 function SocketClient (socket) {
     this.socket = socket;
+    this.socket_closing = false;
 
     this.remoteAddress = this.socket.remoteAddress;
     console.log('Control connection from ' + this.socket.remoteAddress + ' opened');
@@ -42,7 +43,8 @@ SocketClient.prototype.unbindEvents = function() {
 
 SocketClient.prototype.write = function(data, append) {
     if (typeof append === 'undefined') append = '\n';
-    this.socket.write(data + append);
+    if (this.socket && !this.socket_closing)
+        this.socket.write(data + append);
 };
 SocketClient.prototype.displayPrompt = function(prompt) {
     prompt = prompt || 'Kiwi > ';
@@ -76,6 +78,7 @@ SocketClient.prototype.onData = function(data) {
 
 SocketClient.prototype.onClose = function() {
     this.unbindEvents();
+    this.socket = null;
     console.log('Control connection from ' + this.remoteAddress + ' closed');
 };
 
@@ -95,11 +98,13 @@ var socket_commands = {
                 }
 
                 if (!kiwiModules.unload(data[1])) {
-                    this.write('Module ' + (data[1] || '') + ' was not found');
+                    this.write('Module ' + (data[1] || '') + ' is not loaded');
                     return;
                 }
 
-                kiwiModules.load(data[1]);
+                if (!kiwiModules.load(data[1])) {
+                    this.write('Error loading module ' + (data[1] || ''));
+                }
                 this.write('Module ' + data[1] + ' reloaded');
 
                 break;
@@ -107,7 +112,11 @@ var socket_commands = {
             case 'list':
             case 'ls':
             default:
-                this.write('Loaded modules: ' + Object.keys(kiwiModules.getRegisteredModules()).join(', '));
+                var module_names = [];
+                kiwiModules.getRegisteredModules().forEach(function(module) {
+                    module_names.push(module.module_name);
+                });
+                this.write('Loaded modules: ' + module_names.join(', '));
         }
 
     },
@@ -132,9 +141,11 @@ var socket_commands = {
 
     quit: function(data) {
         this.socket.destroy();
+        this.socket_closing = true;
     },
     exit: function(data) {
         this.socket.destroy();
+        this.socket_closing = true;
     }
 };
 
@@ -146,3 +157,7 @@ var server = net.createServer(function (socket) {
     new SocketClient(socket);
 });
 server.listen(8888);
+
+control_module.on('dispose', function() {
+    server.close();
+});
