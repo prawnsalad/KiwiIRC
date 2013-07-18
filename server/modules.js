@@ -35,7 +35,7 @@ function registerPublisher (obj) {
  */
 
 // Hold the loaded modules
-var registered_modules = {};
+var registered_modules = [];
 
 function loadModule (module_file) {
     var module,
@@ -80,13 +80,13 @@ function unloadModule (module) {
  * To be created by modules to bind to server events
  */
 function Module (module_name) {
-    registered_modules[module_name] = this;
+    registered_modules.push(this);
     this.module_name = module_name;
+
+    // Holder for all the bound events by this module
+    this._events = {};
 }
 
-
-// Holder for all the bound events by this module
-Module.prototype._events = {};
 
 
 // Keep track of this modules events and bind
