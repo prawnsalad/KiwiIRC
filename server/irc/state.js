@@ -64,9 +64,9 @@ State.prototype.savePersistence = function(callback) {
                         );
                     });
             });
-
-            callback && callback();
         });
+        
+        callback && callback();
     });
 }
 State.prototype.stopPersistence = function(callback) {

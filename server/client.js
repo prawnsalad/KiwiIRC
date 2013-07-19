@@ -24,7 +24,7 @@ var Client = function (websocket) {
         .digest('hex');
     
     // TODO: Don't blindly add a state here, check if we're continuing a session first
-    this.state = new State(false);
+    this.state = new State(true);
     this.state.attachClient(this);
     
     this.buffer = {
