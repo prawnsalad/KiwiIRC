@@ -31,6 +31,11 @@ _kiwi.model.Application = function () {
 
             // Takes instances of model_network
             this.connections = new _kiwi.model.NetworkPanelList();
+
+            // Set any default settings before anything else is applied
+            if (this.server_settings && this.server_settings.client && this.server_settings.client.settings) {
+                this.applyDefaultClientSettings(this.server_settings.client.settings);
+            }
         };
 
 
@@ -48,7 +53,6 @@ _kiwi.model.Application = function () {
 
             this.initializeClient();
             this.initializeGlobals();
-            this.applyDefaultClientSettings(this.server_settings.client.settings);
 
             this.view.barsHide(true);
 
