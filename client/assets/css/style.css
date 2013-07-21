@@ -379,6 +379,8 @@ html, body { height:100%; }
     margin-bottom: 0;
 }
 
+#kiwi .settings_container section.language select { width:300px; }
+
 @media screen and (max-width: 768px) {
     #kiwi .settings_container {
         padding: 25px;

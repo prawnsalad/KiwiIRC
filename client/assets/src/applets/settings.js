@@ -18,6 +18,7 @@
                 languages: _kiwi.app.translations,
                 default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
                 make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
+                locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
                 default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>')
             };
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));

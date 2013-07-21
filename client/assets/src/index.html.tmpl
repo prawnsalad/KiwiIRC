@@ -245,7 +245,7 @@
                 </div>
             </section>
 
-            <section>
+            <section class="language">
                 <h6>Language</h6>
                 <div class="control-group">
                     <select data-setting="locale">
@@ -253,6 +253,8 @@
                             <option value="<%= lang.tag %>"><%= lang.language %></li>
                         <% }); %>
                     </select>
+                    <br>
+                    <small><%= locale_restart_needed %></small>
                 </div>
             </section>
 
