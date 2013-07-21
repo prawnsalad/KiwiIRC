@@ -26,7 +26,7 @@ module.on('irc connecting', function (event, event_data) {
 
     isBlacklisted(client_addr, function(is_blocked) {
         if (is_blocked) {
-            var err = new Error('DNSBL blocked');
+            var err = new Error('DNSBL blocked (' + client_addr + ')');
             err.code = 'Blacklisted';
 
             event_data.connection.emit('error', err);
