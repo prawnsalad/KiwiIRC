@@ -20,8 +20,8 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     open: function () {
         // Create the content div if we haven't already
         if (!this.$content) {
-            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> ' + _kiwi.global.i18n.translate('Close media').fetch() + '</a><br /><div class="content"></div></div>');
-            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || _kiwi.global.i18n.translate('Not found').fetch() + ' :(');
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> ' + _kiwi.global.i18n.translate('client_views_mediamessage_close').fetch() + '</a><br /><div class="content"></div></div>');
+            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || _kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch() + ' :(');
         }
 
         // Now show the content if not already
@@ -47,7 +47,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(data.html);
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('Loading tweet').fetch() + '...</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_tweet').fetch() + '...</div>');
         },
 
 
@@ -64,7 +64,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(img_html);
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('Loading image').fetch() + '...</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_image').fetch() + '...</div>');
         },
 
 
@@ -100,7 +100,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(_.template(tmpl, post));
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('Loading Reddit thread').fetch() + '...</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_reddit').fetch() + '...</div>');
         },
 
 
@@ -123,7 +123,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(data.div);
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('Loading gist').fetch() + '...</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_gist').fetch() + '...</div>');
         }
     }
     }, {

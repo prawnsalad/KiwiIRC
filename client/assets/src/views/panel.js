@@ -133,7 +133,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             this.alert('action');
 
         } else if (is_highlight) {
-            _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('People are talking!').fetch());
+            _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
             _kiwi.app.view.favicon.newHighlight();
             _kiwi.app.view.playSound('highlight');
             this.alert('highlight');
@@ -141,13 +141,13 @@ _kiwi.view.Panel = Backbone.View.extend({
         } else {
             // If this is the active panel, send an alert out
             if (this.model.isActive()) {
-                _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('People are talking!').fetch());
+                _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
             }
             this.alert('activity');
         }
 
         if (this.model.isQuery() && !this.model.isActive()) {
-            _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('People are talking!').fetch());
+            _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
             if (!is_highlight) {
                 _kiwi.app.view.favicon.newHighlight();
             }

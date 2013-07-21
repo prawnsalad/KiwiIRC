@@ -36,8 +36,7 @@ HttpHandler.prototype.serve = function (request, response) {
     }
 
     // If the 'magic' translation is requested, figure out the best language to use from
-    // the Accept-Language HTTP header. If nothing is suitible, serve an empty response,
-    // Kiwi will just use the default en-gb strings baked in to it.
+    // the Accept-Language HTTP header. If nothing is suitible, fallback to our en-gb default translation
     if (request.url.substr(0, 16) === '/assets/locales/') {
         if (request.url === '/assets/locales/magic.json') {
             return serveMagicLocale.call(this, request, response);
@@ -83,18 +82,9 @@ var serveMagicLocale = function (request, response) {
                     return this.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
                 }
             }
-            serveFallbackLocale(response);
         });
-    } else {
-        serveFallbackLocale(response);
     }
-};
-
-var serveFallbackLocale = function (response) {
-    response.writeHead(200, {
-        'Vary': 'Accept-Language',
-        'Content-Type': 'application/json',
-        'Content-Language': 'en-gb'
-    });
-    response.end('{"en-gb": {"":{}}}');
+    
+    //en-gb is our default language, so we serve this as the last possible answer for everything
+    return this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
 };

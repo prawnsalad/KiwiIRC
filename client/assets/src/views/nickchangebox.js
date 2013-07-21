@@ -6,9 +6,9 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
     initialize: function () {
         var text = {
-            new_nick: _kiwi.global.i18n.translate('New nick').fetch(),
-            change: _kiwi.global.i18n.translate('Change').fetch(),
-            cancel: _kiwi.global.i18n.translate('Cancel').fetch()
+            new_nick: _kiwi.global.i18n.translate('client_views_nickchangebox_new').fetch(),
+            change: _kiwi.global.i18n.translate('client_views_nickchangebox_change').fetch(),
+            cancel: _kiwi.global.i18n.translate('client_views_nickchangebox_cancel').fetch()
         };
         this.$el = $(_.template($('#tmpl_nickchange').html().trim(), text));
     },
