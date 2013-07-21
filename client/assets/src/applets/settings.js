@@ -8,17 +8,17 @@
 
         initialize: function (options) {
             var text = {
-                tabs: _kiwi.global.i18n.translate('Tabs').fetch(),
-                list: _kiwi.global.i18n.translate('List').fetch(),
-                large_amounts_of_chans: _kiwi.global.i18n.translate('for large amouts of channels').fetch(),
-                join_part: _kiwi.global.i18n.translate('Join/part channel notifications').fetch(),
-                timestamps: _kiwi.global.i18n.translate('Timestamps').fetch(),
-                mute: _kiwi.global.i18n.translate('Mute sound notifications').fetch(),
-                scroll_history: _kiwi.global.i18n.translate('messages in scroll history').fetch(),
+                tabs: _kiwi.global.i18n.translate('client_applets_settings_channelview_tabs').fetch(),
+                list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
+                large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
+                join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
+                timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
+                mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
+                scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
                 languages: _kiwi.app.translations,
-                default_client: _kiwi.global.i18n.translate('Default IRC client').fetch(),
-                make_default: _kiwi.global.i18n.translate('Make Kiwi my default IRC client').fetch(),
-                default_note: _kiwi.global.i18n.translate('Note: Chrome or Chromium browser users may need to check their settings via %s if nothing happens').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>')
+                default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
+                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
+                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>')
             };
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
 
@@ -111,7 +111,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', _kiwi.global.i18n.translate('Settings').fetch());
+            this.set('title', _kiwi.global.i18n.translate('client_applets_settings_title').fetch());
             this.view = new View();
         }
     });
