@@ -58,22 +58,22 @@
     
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="if_op op"><i class="icon-star"></i>Op</a>
-            <a class="if_op deop"><i class="icon-star-empty"></i>De-op</a>
-            <a class="if_op voice"><i class="icon-volume-up"></i>Voice</a>
-            <a class="if_op devoice"><i class="icon-volume-off"></i>De-voice</a>
-            <a class="if_op kick"><i class="icon-remove"></i>Kick</a>
-            <a class="if_op ban"><i class="icon-ban-circle"></i>Ban</a>
+            <a class="if_op op"><i class="icon-star"></i><%= op %></a>
+            <a class="if_op deop"><i class="icon-star-empty"></i><%= de_op %></a>
+            <a class="if_op voice"><i class="icon-volume-up"></i><%= voice %></a>
+            <a class="if_op devoice"><i class="icon-volume-off"></i><%= de_voice %></a>
+            <a class="if_op kick"><i class="icon-remove"></i><%= kick %></a>
+            <a class="if_op ban"><i class="icon-ban-circle"></i><%= ban %></a>
 
-            <a class="query"><i class="icon-comment"></i>Message</a>
-            <a class="info"><i class="icon-info-sign"></i>Info</a>
-            <a class="slap"><i class="icon-user-md"></i>Slap!</a>
+            <a class="query"><i class="icon-comment"></i><%= message %></a>
+            <a class="info"><i class="icon-info-sign"></i><%= info %></a>
+            <a class="slap"><i class="icon-user-md"></i><%= slap %></a>
         </div>
     </script>
     
     <script type="text/html" id="tmpl_nickchange">
         <form class="nickchange">
-            <label for="nickchange">New nick:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button>Change</button> <a class="cancel">Cancel</a>
+            <label for="nickchange"><%= new_nick %>:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button><%= change %></button> <a class="cancel"><%= cancel %></a>
         </form>
     </script>
 
@@ -95,66 +95,66 @@
             </div>
 
             <div class="server_details" style="position:relative;width:320px;">
-                <div class="status">Think of a nickname..</div>
+                <div class="status"><%= think_nick %></div>
 
                 <form>
                     <div class="basic">
                         <table>
                             <tr class="nick">
-                                <td><label for="server_select_nick">Nickname</label></td>
+                                <td><label for="server_select_nick"><%= nickname %></label></td>
                                 <td><input type="text" class="nick" id="server_select_nick"></td>
                             </tr>
 
                             <tr class="have_pass">
                                 <td colspan="2">
-                                    <label for="server_select_show_pass">I have a password</label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
+                                    <label for="server_select_show_pass"><%= have_password %></label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="pass">
-                                <td><label for="server_select_password">Password</label></td>
+                                <td><label for="server_select_password"><%= password %></label></td>
                                 <td><input type="password" class="password" id="server_select_password"></td>
                             </tr>
 
                             <tr class="channel">
-                                <td><label for="server_select_channel">Channel</label></td>
+                                <td><label for="server_select_channel"><%= channel %></label></td>
                                 <td>
                                     <div style="position:relative;">
                                         <input type="text" class="channel" id="server_select_channel">
-                                        <i class="icon-key" title="Channel Key"></i>
+                                        <i class="icon-key" title="<%= channel_key %>"></i>
                                     </div>
                                 </td>
                             </tr>
 
                             <tr class="have_key">
                                 <td colspan="2">
-                                    <label for="server_select_show_channel_key">Channel requires a key</label> <input type="checkbox" id="server_select_show_channel_key" style="width:auto;" />
+                                    <label for="server_select_show_channel_key"><%= require_key %></label> <input type="checkbox" id="server_select_show_channel_key" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="key">
-                                <td><label for="server_select_channel_key">Key</label></td>
+                                <td><label for="server_select_channel_key"><%= key %></label></td>
                                 <td><input type="password" class="channel_key" id="server_select_channel_key"></td>
                             </tr>
 
                             <tr class="start">
-                                <td colspan="2"><button type="submit">Start..</button></td>
+                                <td colspan="2"><button type="submit"><%= start %></button></td>
                             </tr>
                         </table>
 
-                        <a href="" onclick="return false;" class="show_more">Server and network <i class="icon-caret-down"></i></a>
+                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="icon-caret-down"></i></a>
                     </div>
 
 
                     <div class="more">
                         <table>
                             <tr class="server">
-                                <td><label for="server_select_server">Server</label></td>
+                                <td><label for="server_select_server"><%= server %></label></td>
                                 <td><input type="text" class="server" id="server_select_server"></td>
                             <tr>
 
                             <tr class="port">
-                                <td><label for="server_select_port">Port</label></td>
+                                <td><label for="server_select_port"><%= port %></label></td>
                                 <td><input type="text" class="port" id="server_select_port"></td>
                             </tr>
 
@@ -167,7 +167,7 @@
                 </form>
 
                 <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
-                    <h1><span>Powered by Kiwi IRC</span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
+                    <h1><span><%= powered_by %></span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
                 </a>
             </div>
         </div>
@@ -205,13 +205,13 @@
                     <div class="radio">
                         <label>
                             <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
-                            Tabs
+                            <%= tabs %>
                         </label>
                     </div>
                     <div class="radio">
                         <label>
                             <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
-                            List <small class="text-muted">(for large amouts of channels)</small>
+                            <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
                         </label>
                     </div>
                 </div>
@@ -223,34 +223,46 @@
                     <div class="checkbox">
                         <label>
                             <input data-setting="show_joins_parts" type="checkbox">
-                            Join/part channel notifications
+                            <%= join_part %>
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
                             <input data-setting="show_timestamps" type="checkbox">
-                            Timestamps
+                            <%= timestamps %>
                         </label>
                     </div>
                     <div class="checkbox">
                         <label>
                             <input data-setting="mute_sounds" type="checkbox">
-                            Mute sound notifications
+                            <%= mute %>
                         </label>
                     </div>
                     <label>
                         <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
-                        <span>messages in scroll history</span>
+                        <span><%= scroll_history %></span>
                     </label>
                 </div>
             </section>
 
-            <section class="protocol_handler">
-                <h6>Default IRC client</h6>
+            <section>
+                <h6>Language</h6>
                 <div class="control-group">
-                    <button class="register_protocol">Make Kiwi my default IRC client</button>
+                    <select data-setting="locale">
+                        <option value="en-gb">English (British)</option>
+                        <% _.forEach(languages, function(lang) { %>
+                            <option value="<%= lang.tag %>"><%= lang.language %></li>
+                        <% }); %>
+                    </select>
+                </div>
+            </section>
+
+            <section class="protocol_handler">
+                <h6><%= default_client %></h6>
+                <div class="control-group">
+                    <button class="register_protocol"><%= make_default %></button>
                     <br>
-                    <small>Note: Chrome or Chromium browser users may need to check their settings via <a href="chrome://settings/handlers">chrome://settings/handlers</a> if nothing happens</small>
+                    <small><%= default_note %></small>
                 </div>
             </section>
         </div>
@@ -262,9 +274,9 @@
             <table style="margin:1em 2em;">
                 <thead style="font-weight: bold;">
                     <tr>
-                        <td>Channel Name</td>
-                        <td>Users</td>
-                        <td style="padding-left: 2em;">Topic</td>
+                        <td><%= channel_name %></td>
+                        <td><%= users %></td>
+                        <td style="padding-left: 2em;"><%= topic %></td>
                     </tr>
                 </thead>
                 <tbody style="vertical-align: top;">
@@ -283,7 +295,7 @@
                 #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
             <div class="script_editor" style="height:100%; position:relative;">
-                <div class="se_toolbar"><button class="btn_save">Save <i class="icon-save"></i></button><span class="status"></span></div>
+                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="icon-save"></i></button><span class="status"></span></div>
                 <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
             </div>
         </div>
@@ -313,7 +325,7 @@
         // Common dependancies that are required at all times
         var scripts = [
             ['libs/jquery-1.9.1.min.js', 'libs/lodash.min.js'],
-            'libs/backbone.min.js'
+            'libs/backbone.min.js', 'libs/jed.js'
         ];
 
         // If in debug mode, load each development script
@@ -395,7 +407,8 @@
                 //kiwi_server: 'http://kiwiirc.com:80',
 
                 server_settings: <%server_settings%>,
-                client_plugins: <%client_plugins%>
+                client_plugins: <%client_plugins%>,
+                translations: <%translations%>
             };
 
             // Start the app

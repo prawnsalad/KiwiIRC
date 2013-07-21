@@ -23,6 +23,7 @@
     "ipaddr.js": "0.1.1",
     "socksjs": "0.4.1",
     "iconv-lite" : "0.2.10",
-    "spdy": "1.9.1"
+    "spdy": "1.9.1",
+    "po2json": "0.0.6"
   }
 }
