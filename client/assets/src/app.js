@@ -131,7 +131,7 @@ _kiwi.global = {
             _kiwi.app.start();
         };
 
-        locale = _kiwi.global.settings.get('locale')
+        locale = _kiwi.global.settings.get('locale');
         if (!locale) {
             $.getJSON(opts.base_path + '/assets/locales/magic.json', continueStart);
         } else {
