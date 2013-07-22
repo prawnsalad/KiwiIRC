@@ -9,7 +9,7 @@ msgstr "Nutzer"
 msgid "client_applets_chanlist_topic"
 msgstr "Thema"
 
-msgid "client_applets_chanlist_channellist
+msgid "client_applets_chanlist_channellist"
 msgstr "Raumliste"
 
 
@@ -58,7 +58,7 @@ msgid "client_applets_settings_default_client_enable"
 msgstr "Setze Kiwi als meinen Standard-IRC Client"
 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Notiz: Änderungen werden erst wirksam, nachdem Sie die Seite aktualisieren"
+msgstr "Notiz: Die Änderungen werden erst nach einem Neuladen der Seite wirksam"
 
 msgid "client_applets_settings_default_client_notice"
 msgstr "Notiz: Nutzer von Chrome oder Chromium müssen ihre Einstellungen durch %s testen, sofern nichts passiert"
