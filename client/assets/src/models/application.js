@@ -455,6 +455,8 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:query', queryCommand);
 
+            controlbox.on('command:invite', inviteCommand);
+
             controlbox.on('command:topic', topicCommand);
 
             controlbox.on('command:notice', noticeCommand);
@@ -772,6 +774,27 @@ _kiwi.model.Application = function () {
             
             _kiwi.app.connections.active_connection.panels.add(panel);
             panel.view.show();
+        }
+
+
+
+        function inviteCommand (ev) {
+            var nick, channel;
+
+            // A nick must be specified
+            if (!ev.params[0])
+                return;
+
+            // Can only invite into channels
+            if (!_kiwi.app.panels().active.isChannel())
+                return;
+
+            nick = ev.params[0];
+            channel = _kiwi.app.panels().active.get('name');
+
+            _kiwi.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
+
+            _kiwi.app.panels().active.addMsg('', '== ' + nick + ' has been invited to ' + channel, 'action');
         }
 
 
