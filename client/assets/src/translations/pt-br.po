@@ -57,8 +57,11 @@ msgstr "Cliente IRC padrão"
 msgid "client_applets_settings_default_client_enable"
 msgstr "Fazer do Kiwi meu cliente IRC padrão"
 
-msgid "client_applets_settings_default_client_notice"
+msgid "client_applets_settings_locale_restart_needed"
 msgstr "Nota: Mudanças só irão ter efeito após atualizar a página"
+
+msgid "client_applets_settings_default_client_notice"
+msgstr "Nota: Usuários do Chrome ou Chromium devem checar as configurações via %s se nada acontecer"
 
 msgid "client_applets_settings_title"
 msgstr "Configurações"
