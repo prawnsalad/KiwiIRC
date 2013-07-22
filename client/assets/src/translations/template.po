@@ -57,6 +57,9 @@ msgstr ""
 msgid "client_applets_settings_default_client_enable"
 msgstr ""
 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr ""
+
 msgid "client_applets_settings_default_client_notice"
 msgstr ""
 
