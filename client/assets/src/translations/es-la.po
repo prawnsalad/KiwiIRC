@@ -21,7 +21,7 @@ msgid "client_applets_scripteditor_error"
 msgstr "Error de script. %s"
 
 msgid "client_applets_scripteditor_saved"
-msgstr "Tu script se ha guardado y ya esta activado"
+msgstr "Tu script se ha guardado y ya está activado"
 
 msgid "client_applets_scripteditor_title"
 msgstr "Editor de Script"
@@ -36,7 +36,7 @@ msgid "client_applets_settings_channelview_list"
 msgstr "Lista"
 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "para un gran número canales"
+msgstr "para un gran número de canales"
 
 msgid "client_applets_settings_notification_joinpart"
 msgstr "Notificaciones de entrada/salida de canal"
@@ -45,10 +45,10 @@ msgid "client_applets_settings_timestamp"
 msgstr "Timestamps"
 
 msgid "client_applets_settings_notification_sound"
-msgstr "Silenciar notificaciones sonoras"
+msgstr "Quitar notificaciones sonoras"
 
 msgid "client_applets_settings_history_length"
-msgstr "mensajes recordados por ventana"
+msgstr "Historial de mensajes por ventana"
 
 msgid "client_applets_settings_default_client"
 msgstr "Cliente IRC por defecto"
@@ -60,7 +60,7 @@ msgid "client_applets_settings_locale_restart_needed"
 msgstr "Nota: Los cambios solo se aplicarán después de recargar la página"
 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Nota: Los usuarios de Chrome o Chromium quizás tengan que revisar sus configuraciones via %s si nada sucede"
+msgstr "Nota: Los usuarios de Chrome o Chromium quizás deban revisar sus configuraciones vía %s si nada sucede"
 
 msgid "client_applets_settings_title"
 msgstr "Configuración"
@@ -90,10 +90,10 @@ msgid "client_models_application_reconnect_successfully"
 msgstr "Todo OK, te has conectado de nuevo"
 
 msgid "client_models_application_settings_saved"
-msgstr "Configuración se guardó"
+msgstr "La configuración se guardó"
 
 msgid "client_models_application_ignore_title"
-msgstr "Nick ignorados"
+msgstr "Nicks ignorados"
 
 msgid "client_models_application_ignore_none"
 msgstr "Nadie ignorado"
@@ -108,10 +108,10 @@ msgid "client_models_application_ignore_stopped"
 msgstr "Dejaste de ignorar a %s"
 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" no existe"
+msgstr "El Applet \"%s\" no existe"
 
 msgid "client_models_application_encoding_changed"
-msgstr "Codificación cambiado a %s"
+msgstr "Codificación cambiada a %s"
 
 msgid "client_models_application_encoding_invalid"
 msgstr "%s no es una codificación válida "
@@ -120,16 +120,16 @@ msgid "client_models_application_encoding_notspecified"
 msgstr "Codificación no especificada"
 
 msgid "client_models_application_encoding_usage"
-msgstr "Uso: /encoding [Nueva-Codificación]"
+msgstr "Uso: /encoding [NUEVA-CODIFICACIÓN]"
 
 msgid "client_models_application_connection_create"
-msgstr "Nueva Conexión"
+msgstr "Nueva conexión"
 
 msgid "client_models_application_connection_connecting"
 msgstr "Conectando a %s:%s..."
 
 msgid "client_models_application_connection_error"
-msgstr ""
+msgstr "Error conectando a %s:%s (%s)"
 
 
 
@@ -180,7 +180,7 @@ msgid "client_models_network_idle_and_signon"
 msgstr "Inactivo por %s, conectado desde %s"
 
 msgid "client_models_network_away"
-msgstr "Away: %s"
+msgstr "Ausente: %s"
 
 msgid "client_models_network_idle"
 msgstr "Inactivo por %s"
@@ -195,13 +195,13 @@ msgid "client_models_network_channel_badkey"
 msgstr "Contraseña erronea para canal %s"
 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s es solo con invitacion"
+msgstr "%s es solo con invitación"
 
 msgid "client_models_network_channel_limitreached"
 msgstr "%s está lleno"
 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "El nick \"%s\" está en uso. Porfavor elige otro nick"
+msgstr "El nick \"%s\" está en uso. Por favor elige otro nick"
 
 msgid "client_models_network_badpassword"
 msgstr "Contraseña entregada incorrecta"
@@ -312,7 +312,7 @@ msgid "client_views_serverselect_connection_trying"
 msgstr "Conectando..."
 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Ese Nick ya esta siendo usado"
+msgstr "Ese Nick ya está en uso"
 
 msgid "client_views_serverselect_nickname_invalid"
 msgstr "Nick erroneo"
@@ -327,7 +327,7 @@ msgid "client_views_serverselect_server_notfound"
 msgstr "Servidor no encontrado"
 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Coneccion denegada"
+msgstr "Conexión denegada"
 
 
 
