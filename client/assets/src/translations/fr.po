@@ -5,43 +5,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: de\n"
+"Language: fr\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Raumname"
+msgstr "Canal"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Nutzer"
+msgstr "Utilisateurs"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Thema"
+msgstr "Sujet"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Raumliste"
+msgstr "Liste des canaux"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Speichern"
+msgstr "Enregistrer"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Programm-Fehler. %s"
+msgstr "Erreur de script : %s."
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Dein Programm wurde gespeichert und ist nun aktiv."
+msgstr "Votre script a été sauvegardé et est désormais actif."
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Programm-Editor"
+msgstr "Éditeur de Script"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Tabs"
+msgstr "Onglets"
 
 #: 
 msgid "client_applets_settings_channelview_list"
@@ -49,311 +49,311 @@ msgstr "Liste"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "für eine große Anzahl an Räumen"
+msgstr "pour un grand nombre de canaux"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Beitreten/Verlassen Benachrichtigungen"
+msgstr "Notifications de join/part"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Zeitstempel"
+msgstr "Horodatage"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Audio-Benachrichtigungen stummschalten"
+msgstr "Mettre en sourdine les notifications"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "Nachrichten im Verlauf"
+msgstr "Messages dans l'historique"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Standard IRC Client"
+msgstr "Client IRC par défaut"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Setze Kiwi als meinen Standard-IRC Client"
+msgstr "Faire de Kiwi mon client IRC par défaut"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Notiz: Die Änderungen werden erst nach einem Neuladen der Seite wirksam"
+msgstr "Note : Les changements ne prendront effet qu'après un rechargement de la page."
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Notiz: Nutzer von Chrome oder Chromium müssen ihre Einstellungen durch %s testen, sofern nichts passiert"
+msgstr "Note : Les utilisateurs des navigateurs Chrome ou Chromium peuvent avoir besoin de regarder leur paramètres via %s si rien ne se passe."
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Einstellungen"
+msgstr "Paramètres"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Unbekannte Anwendung"
+msgstr "Applet inconnu."
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Lade.."
+msgstr "Chargement..."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Nicht gefunden"
+msgstr "Introuvable."
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Deine Verbindung wurde getrennt. Ein erneuter Verbindungsaufbau wird versucht"
+msgstr "Vous avez été déconnecté. Tentative de reconnexion en cours."
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Deine Verbindung wurde getrennt. Ein erneuter Verbindungsaufbau wird in %d Sekunden versucht"
+msgstr "Vous avez été déconnecté. Tentative de reconnexion dans %d secondes."
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Alles OK, du bist wieder verbunden"
+msgstr "Super, vous êtes connecté de nouveau !"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Einstellungen wurden gespeichert"
+msgstr "Paramètres sauvegardés."
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Ignorierte Nicknamen"
+msgstr "Pseudonymes ignorés"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Niemand wird ignoriert"
+msgstr "Vous n'ignorez personne."
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Ignoriere %s"
+msgstr "Ignorer %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Gib den Nicknamen ein, den du nicht mehr ignorieren möchtest"
+msgstr "Specifiez le pseudonyme que vous souhaitez arrêter d'ignorer"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "%s wird nicht mehr ignoriert"
+msgstr "Vous n'ignorez plus %s."
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Anwendung \"%s\" existiert nicht"
+msgstr "L'applet \"%s\" n'existe pas."
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Kodierung wurde in %s geändert"
+msgstr "Encodage modifié : %s."
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s ist keine gültige Kodierung"
+msgstr "%s n'est pas un encodage valide."
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Kodierung nicht angegeben"
+msgstr "Encodage non spécifié."
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Verwendung: /encoding [NEUE-KODIERUNG]"
+msgstr "Utilisation: /encoding [NOUVEAU-ENCODAGE]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "Neue Verbindung"
+msgstr "Nouvelle connexion"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "verbinde nach %s:%s..."
+msgstr "Connexion à %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Fehler beim Verbindungsaufbau nach %s:%s (%s)"
+msgstr "Erreur de connexion à %s:%s (%s)."
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s ist beigetreten"
+msgstr "%s a rejoint"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s ist gegangen %s"
+msgstr "%s a quitté %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s wurde von %s rausgeschmissen %s"
+msgstr "%s a été expulsé par %s : %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Du wurdest von %s rausgeschmissen %s"
+msgstr "Vous avez été expulsé par %s : %s."
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s verließ %s"
+msgstr "%s est parti du canal %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s ist kein gültiger Raumname"
+msgstr "%s n'est pas un nom de canal valide."
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Verbindung zum IRC-Netzwerk getrennt"
+msgstr "Déconnecté du réseau IRC."
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s ist nun bekannt als %s"
+msgstr "%s est désormais connu comme %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Thema wurde von %s am %s gesetzt"
+msgstr "Sujet défini par %s le %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s setzt den Modus %s"
+msgstr "%s a modifié les modes : %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s setzte den Modus %s"
+msgstr "%s a modifié les modes : %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Räume: %s"
+msgstr "Canaux : %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Zum Server %s %s verbunden"
+msgstr "Connecté au serveur : %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Untätig seit %s, verbunden am %s"
+msgstr "Inactif depuis %s, connecté le %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "Abwesend: %s"
+msgstr "Absent : %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Untätig seit %s"
+msgstr "Inactif depuis %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Ungültiger Nickname"
+msgstr "Pseudonyme introuvable"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "Du wurdest aus %s verbannt. %s"
+msgstr "Vous êtes banni de %s : %s."
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Falsches Passwort für %s"
+msgstr "Mauvaise clef pour le canal %s."
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s kann nur nach Einladung betreten werden."
+msgstr "%s est sur invitation uniquement."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s ist voll."
+msgstr "%s est rempli."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Der Nickname \"%s\" wird bereits verwendet. Bitte wähle einen anderen Nicknamen."
+msgstr "Le pseudonyme \"%s\" est déjà utilisé. Veuillez en choisir un autre."
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Falsches Passwort"
+msgstr "Mot de passe incorrect."
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Dies wird alle KiwiIRC Verbindungen beenden. Bist du sicher, dass du dieses Fenster schließen willst?"
+msgstr "Ceci fermera toutes les conversations KiwiIRC. Êtes vous sur de vouloir fermer cette fenêtre ?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Betrete Raum.."
+msgstr "Connexion au canal..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Thema für %s ist: %s"
+msgstr "Le sujet de %s est : %s."
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Schließe Medium"
+msgstr "Fermer le média"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Nicht gefunden"
+msgstr "Introuvable."
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Lade Tweet"
+msgstr "Chargement du Tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Lade Bild"
+msgstr "Chargement de l'image"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Lade Reddit Thread"
+msgstr "Chargement du sujet Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Lade Gist"
+msgstr "Chargement du Gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Neuer Nickname"
+msgstr "Nouveau pseudonyme"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Ändern"
+msgstr "Changer"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Abbrechen"
+msgstr "Annuler"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Es wird geredet!"
+msgstr "Des gens parlent !"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Denk an einen Nicknamen..."
+msgstr "Pensez à un pseudonyme…"
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Nickname"
+msgstr "Pseudonyme"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Ich habe ein Passwort"
+msgstr "J'ai un mot de passe"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Passwort"
+msgstr "Mot de passe"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Raum"
+msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Raum-Passwort"
+msgstr "Clef du canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Raum benötigt ein Passwort"
+msgstr "Le canal est protégé par une clef."
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Passwort"
+msgstr "Clef"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Start..."
+msgstr "Démarrer…"
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Server und Netzwerk"
+msgstr "Serveur et réseau"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Server"
+msgstr "Serveur"
 
 #: 
 msgid "client_views_serverselect_port"
@@ -361,43 +361,43 @@ msgstr "Port"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Präsentiert von Kiwi IRC"
+msgstr "Propulsé par Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Wähle zuerst einen Nicknamen!"
+msgstr "Choisissez un pseudonyme en premier !"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Verbunden"
+msgstr "Connecté"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Verbinde.."
+msgstr "Connexion…"
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Der Nickname wird bereits verwendet"
+msgstr "Pseudonyme déjà utilisé."
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Fehlerhafter Nickname"
+msgstr "Pseudonyme invalide."
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Falsches Passwort"
+msgstr "Mot de passe incorrect."
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Fehler beim Verbinden"
+msgstr "Erreur de connexion."
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Server konnte nicht gefunden werden"
+msgstr "Serveur introuvable."
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Verbindung wurde abgelehnt"
+msgstr "Connexion refusée."
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -405,27 +405,27 @@ msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-Op"
+msgstr "Dé-op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voice"
+msgstr "Voix"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-Voice"
+msgstr "Dé-voix"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Rausschmeissen"
+msgstr "Expulser"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Verbannen"
+msgstr "Bannir"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Nachricht"
+msgstr "Message"
 
 #: 
 msgid "client_views_userbox_whois"
@@ -433,7 +433,7 @@ msgstr "Info"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Schlagen!"
+msgstr "Frapper !"
 
 #: 
 msgid "client_views_serverselect_ssl"
