@@ -54,13 +54,12 @@ HttpHandler.prototype.serve = function (request, response) {
 };
 
 var serveMagicLocale = function (request, response) {
+    var that = this;
     if (request.headers['accept-language']) {
-        // Example: en-gb,en;q=0.5
-        langs = request.headers['accept-language'].split(',');
         fs.readdir('client/assets/locales', function (err, files) {
             var available = [],
                 i = 0,
-                langs = [];
+                langs = request.headers['accept-language'].split(','); // Example: en-gb,en;q=0.5
 
             files.forEach(function (file) {
                 if (file.substr(-5) === '.json') {
@@ -79,12 +78,12 @@ var serveMagicLocale = function (request, response) {
                 if (langs[i][0] === '*') {
                     break;
                 } else if (_.contains(available, langs[i][0])) {
-                    return this.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
+                    return that.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
                 }
             }
         });
     }
-    
+
     //en-gb is our default language, so we serve this as the last possible answer for everything
     return this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
 };
