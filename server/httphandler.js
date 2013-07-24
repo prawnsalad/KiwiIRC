@@ -75,15 +75,21 @@ var serveMagicLocale = function (request, response) {
                 return b[1] - a[1];
             });
             for (i = 0; i < langs.length; i++) {
+                langs[i][0] = langs[i][0].toLowerCase();
                 if (langs[i][0] === '*') {
                     break;
                 } else if (_.contains(available, langs[i][0])) {
                     return that.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
                 }
             }
+            serveFallbackLocale.call(this, request, response);
         });
+    } else {
+        serveFallbackLocale.call(this, request, response);
     }
+};
 
+var serveFallbackLocale = function (request, response) {
     //en-gb is our default language, so we serve this as the last possible answer for everything
-    return this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
+    this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
 };
