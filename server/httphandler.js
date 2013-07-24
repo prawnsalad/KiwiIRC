@@ -54,37 +54,50 @@ HttpHandler.prototype.serve = function (request, response) {
 };
 
 var serveMagicLocale = function (request, response) {
+    var that = this;
+
     if (request.headers['accept-language']) {
-        // Example: en-gb,en;q=0.5
-        langs = request.headers['accept-language'].split(',');
         fs.readdir('client/assets/locales', function (err, files) {
             var available = [],
                 i = 0,
-                langs = [];
+                langs = request.headers['accept-language'].split(','); // Example: en-gb,en;q=0.5
 
+            // Get a list of the available translations we have
             files.forEach(function (file) {
                 if (file.substr(-5) === '.json') {
                     available.push(file.slice(0, -5));
                 }
             });
 
+            // Sanitise the browsers accepted languages and the qualities
             for (i = 0; i < langs.length; i++) {
                 langs[i]= langs[i].split(';q=');
+                langs[i][0] = langs[i][0].toLowerCase();
                 langs[i][1] = (typeof langs[i][1] === 'string') ? parseFloat(langs[i][1]) : 1.0;
             }
+
+            // Sort the accepted languages by quality
             langs.sort(function (a, b) {
                 return b[1] - a[1];
             });
+
+            // Serve the first language we have a translation for
             for (i = 0; i < langs.length; i++) {
                 if (langs[i][0] === '*') {
                     break;
                 } else if (_.contains(available, langs[i][0])) {
-                    return this.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
+                    return that.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
                 }
             }
+
+            serveFallbackLocale.call(that, request, response);
         });
+    } else {
+        serveFallbackLocale.call(that, request, response);
     }
-    
+};
+
+var serveFallbackLocale = function (request, response) {
     //en-gb is our default language, so we serve this as the last possible answer for everything
-    return this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
+    this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
 };
