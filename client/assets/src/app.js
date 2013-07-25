@@ -103,7 +103,7 @@ _kiwi.global = {
     },
 
     // Entry point to start the kiwi application
-    start: function (opts) {
+    start: function (opts, callback) {
         var continueStart, locale;
         opts = opts || {};
 
@@ -129,6 +129,8 @@ _kiwi.global = {
 
             // Start the client up
             _kiwi.app.start();
+
+            callback && callback();
         };
 
         locale = _kiwi.global.settings.get('locale');

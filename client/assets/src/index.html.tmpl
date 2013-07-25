@@ -413,14 +413,14 @@
             };
 
             // Start the app
-            kiwi.start(opts);
-
-            // Load any plugins
-            if (opts.client_plugins && opts.client_plugins.length > 0) {
-                _.each(opts.client_plugins, function (plugin_url) {
-                    kiwi.plugins.load(plugin_url);
-                });
-            }
+            kiwi.start(opts, function() {
+                // Load any plugins
+                if (opts.client_plugins && opts.client_plugins.length > 0) {
+                    _.each(opts.client_plugins, function (plugin_url) {
+                        kiwi.plugins.load(plugin_url);
+                    });
+                }
+            });
         }
 
 
