@@ -409,7 +409,7 @@
         panel.addMsg('[' + (event.nick||'') + ']', event.msg);
 
         // Show this notice to the active panel if it didn't have a set target
-        if (!event.from_server && panel === this.panels.server)
+        if (!event.from_server && panel === this.panels.server && _kiwi.app.panels().active !== this.panels.server)
             _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
     }
 
