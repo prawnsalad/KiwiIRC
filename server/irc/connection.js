@@ -37,6 +37,15 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     // Socket state
     this.connected = false;
 
+    // IRCd write buffers (flood controll)
+    this.write_buffer = [];
+
+    // In process of writing the buffer?
+    this.writing_buffer = false;
+
+    // Max number of lines to write a second
+    this.write_buffer_lines_second = 2;
+
     // If registeration with the IRCd has completed
     this.registered = false;
 
@@ -245,7 +254,47 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
 IrcConnection.prototype.write = function (data, callback) {
     //ENCODE string to encoding of the server
     encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
-    this.socket.write(encoded_buffer);
+
+    this.write_buffer.push(encoded_buffer);
+
+    // Only flush if we're not writing already
+    if (!this.writing_buffer)
+        this.flushWriteBuffer();
+};
+
+
+
+/**
+ * Flush the write buffer to the server in a throttled fashion
+ */
+IrcConnection.prototype.flushWriteBuffer = function () {
+    this.writing_buffer = true;
+
+    // Disabled write buffer? Send everything we have
+    if (!this.write_buffer_lines_second) {
+        console.log('write buffer disabled');
+        this.write_buffer.forEach(function(buffer, idx) {
+            this.socket.write(buffer);
+            this.write_buffer = null;
+        });
+
+        this.write_buffer = [];
+        this.writing_buffer = false;
+
+        return;
+    }
+
+    // Nothing to write? Stop writing and leave
+    if (this.write_buffer.length === 0) {
+        this.writing_buffer = false;
+        return;
+    }
+
+    this.socket.write(this.write_buffer[0]);
+    this.write_buffer = this.write_buffer.slice(1);
+
+    // Call this function again at some point
+    setTimeout(this.flushWriteBuffer.bind(this), 1000 / this.write_buffer_lines_second);
 };
 
 
