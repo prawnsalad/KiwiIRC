@@ -1,8 +1,7 @@
 var util            = require('util'),
     events          = require('events'),
     _               = require('lodash'),
-    IrcConnection   = require('./connection.js').IrcConnection,
-    IrcCommands     = require('./commands.js');
+    IrcConnection   = require('./connection.js').IrcConnection;
 
 var State = function (client, save_state) {
     var that = this;
@@ -48,6 +47,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
         return callback('Too many connections to host', {host: hostname, limit: global.config.max_server_conns});
     }
 
+    con_num = this.next_connection++;
     con = new IrcConnection(
         hostname,
         port,
@@ -55,13 +55,10 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
         nick,
         user,
         pass,
-        this);
+        this,
+        con_num);
 
-    con_num = this.next_connection++;
     this.irc_connections[con_num] = con;
-    con.con_num = con_num;
-
-    con.irc_commands = new IrcCommands(con, con_num, this);
 
     con.on('connected', function () {
         global.servers.addConnection(this);

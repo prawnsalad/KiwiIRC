@@ -5,6 +5,7 @@ var net             = require('net'),
     _               = require('lodash'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
+    IrcCommands     = require('./commands.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
     EE              = require('../ee.js'),
@@ -22,7 +23,7 @@ if (version_values[1] >= 10) {
     Socks = require('socksjs');
 }
 
-var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
+var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_num) {
     var that = this;
 
     EE.call(this,{
@@ -60,6 +61,12 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
 
     // State object
     this.state = state;
+
+    // Connection ID in the state
+    this.con_num = con_num;
+
+    // IRC protocol handling
+    this.irc_commands = new IrcCommands(this);
 
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);

@@ -72,10 +72,8 @@ irc_numerics = {
 };
 
 
-IrcCommands = function (irc_connection, con_num, client) {
+IrcCommands = function (irc_connection) {
     this.irc_connection = irc_connection;
-    this.con_num = con_num;
-    this.client = client;
 };
 module.exports = IrcCommands;
 
@@ -503,11 +501,11 @@ handlers = {
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             //CTCP request
             if (command.trailing.substr(1, 6) === 'ACTION') {
-                this.client.sendIrcCommand('action', {server: this.con_num, nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(7, command.trailing.length - 2)});
+                this.irc_connection.clientEvent('action', {nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(7, command.trailing.length - 2)});
             } else if (command.trailing.substr(1, 4) === 'KIWI') {
                 tmp = command.trailing.substr(6, command.trailing.length - 2);
                 namespace = tmp.split(' ', 1)[0];
-                this.client.sendIrcCommand('kiwi', {server: this.con_num, namespace: namespace, data: tmp.substr(namespace.length + 1)});
+                this.irc_connection.clientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length + 1)});
             } else if (command.trailing.substr(1, 7) === 'VERSION') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
             } else if (command.trailing.substr(1, 6) === 'SOURCE') {
@@ -850,8 +848,7 @@ function genericNotice (command, msg, is_error) {
     if (typeof is_error !== 'boolean')
         is_error = true;
 
-    this.client.sendIrcCommand('notice', {
-        server: this.con_num,
+    this.irc_connection.clientEvent('notice', {
         from_server: true,
         nick: command.prefix,
         ident: '',
