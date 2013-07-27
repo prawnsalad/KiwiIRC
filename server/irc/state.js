@@ -18,7 +18,6 @@ var State = function (client, save_state) {
             _.each(that.irc_connections, function (irc_connection, i, cons) {
                 if (irc_connection) {
                     irc_connection.end('QUIT :' + (global.config.quit_message || ''));
-                    irc_connection.dispose();
                     global.servers.removeConnection(irc_connection);
                     cons[i] = null;
                 }
