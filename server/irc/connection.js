@@ -211,12 +211,19 @@ IrcConnection.prototype.connect = function () {
 
         // Apply the socket listeners
         that.socket.on(socket_connect_event_name, function () {
+
+            // SSL connections have the actual socket as a property
+            var socket = (typeof this.socket !== 'undefined') ?
+                this.socket :
+                this;
+
             that.connected = true;
 
             // Make note of the port numbers for any identd lookups
             // Nodejs < 0.9.6 has no socket.localPort so check this first
-            if (this.localPort) {
-                global.clients.port_pairs[this.localPort.toString() + '_' + this.remotePort.toString()] = that;
+            if (socket.localPort) {
+                that.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
+                global.clients.port_pairs[that.identd_port_pair] = that;
             }
 
             socketConnectHandler.call(that);
@@ -234,9 +241,8 @@ IrcConnection.prototype.connect = function () {
             that.connected = false;
 
             // Remove this socket form the identd lookup
-            // Nodejs < 0.9.6 has no socket.localPort so check this first
-            if (this.localPort) {
-                delete global.clients.port_pairs[this.localPort.toString() + '_' + this.remotePort.toString()];
+            if (that.identd_port_pair) {
+                delete global.clients.port_pairs[that.identd_port_pair];
             }
 
             that.emit('close');
