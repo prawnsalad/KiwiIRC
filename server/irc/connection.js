@@ -330,6 +330,18 @@ IrcConnection.prototype.end = function (data, callback) {
 IrcConnection.prototype.dispose = function () {
     var that = this;
 
+    // If we're still connected, wait until the socket is closed before disposing
+    // so that all the events are still correctly triggered
+    if (this.socket && this.connected) {
+        this.socket.end();
+        return;
+    }
+
+    if (this.socket) {
+        this.disposeSocket();
+        this.removeAllListeners();
+    }
+
     _.each(this.irc_users, function (user) {
         user.dispose();
     });
@@ -342,22 +354,10 @@ IrcConnection.prototype.dispose = function () {
     this.server.dispose();
     this.server = undefined;
 
+    this.irc_commands = undefined;
+
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
-    // If we're still connected, wait until the socket is closed before disposing
-    // so that all the events are still correctly triggered
-    if (this.socket && this.connected) {
-        this.socket.once('close', function() {
-            that.disposeSocket();
-            that.removeAllListeners();
-        });
-
-        this.socket.end();
-
-    } else {
-        this.disposeSocket();
-        this.removeAllListeners();
-    }
 };
 
 
