@@ -281,11 +281,18 @@ IrcConnection.prototype.write = function (data, callback) {
  * Flush the write buffer to the server in a throttled fashion
  */
 IrcConnection.prototype.flushWriteBuffer = function () {
+
+    // In case the socket closed between writing our queue.. clean up
+    if (!this.connected) {
+        this.write_buffer = [];
+        this.writing_buffer = false;
+        return;
+    }
+
     this.writing_buffer = true;
 
     // Disabled write buffer? Send everything we have
     if (!this.write_buffer_lines_second) {
-        console.log('write buffer disabled');
         this.write_buffer.forEach(function(buffer, idx) {
             this.socket.write(buffer);
             this.write_buffer = null;
@@ -306,8 +313,13 @@ IrcConnection.prototype.flushWriteBuffer = function () {
     this.socket.write(this.write_buffer[0]);
     this.write_buffer = this.write_buffer.slice(1);
 
-    // Call this function again at some point
-    setTimeout(this.flushWriteBuffer.bind(this), 1000 / this.write_buffer_lines_second);
+    // Call this function again at some point if we still have data to write
+    if (this.write_buffer.length > 0) {
+        setTimeout(this.flushWriteBuffer.bind(this), 1000 / this.write_buffer_lines_second);
+    } else {
+        // No more buffers to write.. so we've finished
+        this.writing_buffer = false;
+    }
 };
 
 
@@ -328,18 +340,15 @@ IrcConnection.prototype.end = function (data, callback) {
  * Clean up this IrcConnection instance and any sockets
  */
 IrcConnection.prototype.dispose = function () {
-    var that = this;
-
     // If we're still connected, wait until the socket is closed before disposing
     // so that all the events are still correctly triggered
     if (this.socket && this.connected) {
-        this.socket.end();
+        this.end();
         return;
     }
 
     if (this.socket) {
         this.disposeSocket();
-        this.removeAllListeners();
     }
 
     _.each(this.irc_users, function (user) {
@@ -358,6 +367,7 @@ IrcConnection.prototype.dispose = function () {
 
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
+    this.removeAllListeners();
 };
 
 
