@@ -221,16 +221,16 @@ IrcConnection.prototype.onGetConnectionFamilyComplete = function (err, family, h
     }
 
     // Apply the socket listeners
-    this._onSocketConnect = this.bindCallback.bind(this);
+    this._onSocketConnect = this.onSocketConnect.bind(this);
     this.socket.on(socket_connect_event_name, this._onSocketConnect);
 
-    this._onSocketError = this.bindCallback.bind(this);
+    this._onSocketError = this.onSocketError.bind(this);
     this.socket.on('error', this._onSocketError);
 
-    this._onSocketData = this.bindCallback.bind(this);
+    this._onSocketData = this.onSocketData.bind(this);
     this.socket.on('data', this._onSocketData);
 
-    this._onSocketClose = this.bindCallback.bind(this);
+    this._onSocketClose = this.onSocketClose.bind(this);
     this.socket.on('close', this._onSocketClose);
 };
 
