@@ -221,24 +221,20 @@ IrcConnection.prototype.onGetConnectionFamilyComplete = function (err, family, h
     }
 
     // Apply the socket listeners
-    this._onSocketConnect = this.bindCallback(this.onSocketConnect);
+    this._onSocketConnect = this.bindCallback.bind(this);
     this.socket.on(socket_connect_event_name, this._onSocketConnect);
 
-    this._onSocketError = this.bindCallback(this.onSocketError);
+    this._onSocketError = this.bindCallback.bind(this);
     this.socket.on('error', this._onSocketError);
 
-    this._onSocketData = this.bindCallback(this.onSocketData);
+    this._onSocketData = this.bindCallback.bind(this);
     this.socket.on('data', this._onSocketData);
 
-    this._onSocketClose = this.bindCallback(this.onSocketClose);
+    this._onSocketClose = this.bindCallback.bind(this);
     this.socket.on('close', this._onSocketClose);
 };
 
-IrcConnection.prototype.bindCallback = function (fn) {
-    var bindCallbackContext = this;
-    var bindCallbackFunction = function() { fn.apply(bindCallbackContext, arguments); };
-    return bindCallbackFunction;
-};
+
 
 IrcConnection.prototype.onSocketConnect = function () {
     // SSL connections have the actual socket as a property
@@ -373,8 +369,6 @@ IrcConnection.prototype.dispose = function () {
     // If we're still connected, wait until the socket is closed before disposing
     // so that all the events are still correctly triggered
     if (this.socket && this.connected) {
-        this.socket.once('close', this.dispose.bind(this));
-
         this.end();
         return;
     }
@@ -400,10 +394,10 @@ IrcConnection.prototype.dispose = function () {
 
     this.removeAllListeners();
 
-    delete this._onSocketConnect;
-    delete this._onSocketError;
-    delete this._onSocketData;
-    delete this._onSocketClose;
+    this._onSocketConnect = null;
+    this._onSocketError = null;
+    this._onSocketData = null;
+    this._onSocketClose = null;
 };
 
 
