@@ -152,7 +152,7 @@ IrcConnection.prototype.connect = function () {
     this.disposeSocket();
 
     // Get the IP family for the dest_addr (either socks or IRCd destination)
-    getConnectionFamily(dest_addr, function (err, family, host) {
+    getConnectionFamily(dest_addr, function getConnectionFamilyCb(err, family, host) {
         var outgoing;
 
         // Decide which net. interface to make the connection through
@@ -210,7 +210,7 @@ IrcConnection.prototype.connect = function () {
         }
 
         // Apply the socket listeners
-        that.socket.on(socket_connect_event_name, function () {
+        that.socket.on(socket_connect_event_name, function socketConnectCb() {
 
             // SSL connections have the actual socket as a property
             var socket = (typeof this.socket !== 'undefined') ?
@@ -229,7 +229,7 @@ IrcConnection.prototype.connect = function () {
             socketConnectHandler.call(that);
         });
 
-        that.socket.on('error', function (event) {
+        that.socket.on('error', function socketErrorCb(event) {
             that.emit('error', event);
         });
 
@@ -237,7 +237,7 @@ IrcConnection.prototype.connect = function () {
             parse.apply(that, arguments);
         });
 
-        that.socket.on('close', function (had_error) {
+        that.socket.on('close', function socketCloseCb(had_error) {
             that.connected = false;
 
             // Remove this socket form the identd lookup
@@ -414,11 +414,11 @@ function getConnectionFamily(host, callback) {
             setImmediate(callback, null, 'IPv6', host);
         }
     } else {
-        dns.resolve6(host, function (err, addresses) {
+        dns.resolve6(host, function resolve6Cb(err, addresses) {
             if (!err) {
                 callback(null, 'IPv6', addresses[0]);
             } else {
-                dns.resolve4(host, function (err, addresses) {
+                dns.resolve4(host, function resolve4Cb(err, addresses) {
                     if (!err) {
                         callback(null, 'IPv4',addresses[0]);
                     } else {
@@ -525,7 +525,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc authorize', connect_data).done(function () {
+    global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {
@@ -570,7 +570,7 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.username = this.user.address.split('.').map(function(i, idx){
+        this.username = this.user.address.split('.').map(function ipSplitMapCb(i, idx){
             var hex = parseInt(i, 10).toString(16);
 
             // Pad out the hex value if it's a single char
