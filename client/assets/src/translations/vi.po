@@ -1,0 +1,431 @@
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Tên kênh"
+
+#: 
+msgid "client_applets_chanlist_users"
+msgstr "Người dùng"
+
+#: 
+msgid "client_applets_chanlist_topic"
+msgstr "Chủ đề"
+
+#: 
+msgid "client_applets_chanlist_channellist"
+msgstr "Danh sách kênh"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Lưu"
+
+#: 
+msgid "client_applets_scripteditor_error"
+msgstr "Lỗi script. %s"
+
+#: 
+msgid "client_applets_scripteditor_saved"
+msgstr "Script của bạn đã được lưu lại và hiện đang hoạt động"
+
+#: 
+msgid "client_applets_scripteditor_title"
+msgstr "Trình soạn thảo Script"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "Các thẻ"
+
+#: 
+msgid "client_applets_settings_channelview_list"
+msgstr "Danh sách"
+
+#: 
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "dành cho số lượng lớn các kênh"
+
+#: 
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Các thông báo Tham gia/Thoát kênh."
+
+#: 
+msgid "client_applets_settings_timestamp"
+msgstr "Hiển thị thời gian"
+
+#: 
+msgid "client_applets_settings_notification_sound"
+msgstr "Tắt âm thanh thông báo"
+
+#: 
+msgid "client_applets_settings_history_length"
+msgstr "các tin nhắn hiển thị trong lịch sử tán gẫu"
+
+#: 
+msgid "client_applets_settings_default_client"
+msgstr "Chương trình IRC mặc định"
+
+#: 
+msgid "client_applets_settings_default_client_enable"
+msgstr "Chọn Kiwi làm chương trình IRC mặc định"
+
+#: 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Ghi chú: Những thay đổi chỉ có hiệu lực khi bạn làm mới trang"
+
+#: 
+msgid "client_applets_settings_default_client_notice"
+msgstr "Ghi chú: Người dùng Chrome hay Chromium có thể cần xem lại tùy chỉnh qua %s nếu không có thay đổi gì xảy ra"
+
+#: 
+msgid "client_applets_settings_title"
+msgstr "Các thiết lập"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Applet lạ"
+
+#: 
+msgid "client_models_applet_loading"
+msgstr "Đang tải.."
+
+#: 
+msgid "client_models_applet_notfound"
+msgstr "Không tìm thấy"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Bạn đã bị mất kết nối. Đang cố gắng kết nối lại..."
+
+#: 
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "Bạn đã bị mất kết nối. Đang kết nối lại trong %d giây"
+
+#: 
+msgid "client_models_application_reconnect_successfully"
+msgstr "Xong! Bạn đã được kết nối lại."
+
+#: 
+msgid "client_models_application_settings_saved"
+msgstr "Các thiết lập đã được lưu"
+
+#: 
+msgid "client_models_application_ignore_title"
+msgstr "Danh sách tên bỏ qua"
+
+#: 
+msgid "client_models_application_ignore_none"
+msgstr "Không bỏ qua ai cả"
+
+#: 
+msgid "client_models_application_ignore_nick"
+msgstr "Lơ cái nickname %s này"
+
+#: 
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Những nickname bạn không muốn bỏ qua nữa"
+
+#: 
+msgid "client_models_application_ignore_stopped"
+msgstr "Không bỏ qua %s nữa"
+
+#: 
+msgid "client_models_application_applet_notfound"
+msgstr "Applet \"%s\" không tồn tại "
+
+#: 
+msgid "client_models_application_encoding_changed"
+msgstr "Kiểu mã hóa ký tự được chỉnh sửa thành %s"
+
+#: 
+msgid "client_models_application_encoding_invalid"
+msgstr "%s là kiểu mã hóa ký tự không hợp lệ"
+
+#: 
+msgid "client_models_application_encoding_notspecified"
+msgstr "Chưa chọn mã hóa ký tự"
+
+#: 
+msgid "client_models_application_encoding_usage"
+msgstr "Cách sử dụng: /encoding [MÃ-HÓA-MỚI]"
+
+#: 
+msgid "client_models_application_connection_create"
+msgstr "Kết nối mới"
+
+#: 
+msgid "client_models_application_connection_connecting"
+msgstr "Đang kết nối tới %s:%s..."
+
+#: 
+msgid "client_models_application_connection_error"
+msgstr "Lỗi kết nối tới %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "%s đã tham gia kênh"
+
+#: 
+msgid "client_models_channel_quit"
+msgstr "%s đã thoát %s"
+
+#: 
+msgid "client_models_channel_kicked"
+msgstr "%s đã văng khỏi kênh vì %s %s"
+
+#: 
+msgid "client_models_channel_selfkick"
+msgstr "Bạn đã văng khỏi kênh vì %s %s"
+
+#: 
+msgid "client_models_channel_part"
+msgstr "%s đã rời khỏi %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "Tên kênh %s không hợp lệ"
+
+#: 
+msgid "client_models_network_disconnected"
+msgstr "Đã thoát khỏi IRC"
+
+#: 
+msgid "client_models_network_nickname_changed"
+msgstr "%s đã đổi nickname thành %s"
+
+#: 
+msgid "client_models_network_topic"
+msgstr "Chủ đề được đặt bởi %s vào %s"
+
+#: 
+msgid "client_models_network_selfmode"
+msgstr "%s thiết lập chế độ %s"
+
+#: 
+msgid "client_models_network_mode"
+msgstr "%s thiết lập chế độ %s"
+
+#: 
+msgid "client_models_network_channels"
+msgstr "Các kênh: %s"
+
+#: 
+msgid "client_models_network_server"
+msgstr "Đã kết nối tới server: %s %s"
+
+#: 
+msgid "client_models_network_idle_and_signon"
+msgstr "Không có hoạt động trong %s gần đây, đã đăng nhập lúc %s"
+
+#: 
+msgid "client_models_network_away"
+msgstr "Lời nhắn: %s"
+
+#: 
+msgid "client_models_network_idle"
+msgstr "Không có hoạt động trong %s"
+
+#: 
+msgid "client_models_network_nickname_notfound"
+msgstr "Không tìm thấy nickname này."
+
+#: 
+msgid "client_models_network_banned"
+msgstr "Bạn đã bị cấm truy cập vào %s. %s"
+
+#: 
+msgid "client_models_network_channel_badkey"
+msgstr "Khóa kênh cho %s không đúng"
+
+#: 
+msgid "client_models_network_channel_inviteonly"
+msgstr "%s chỉ dành cho người được mời vào"
+
+#: 
+msgid "client_models_network_channel_limitreached"
+msgstr "%s đã đầy."
+
+#: 
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "Nickname \"%s\" đã có người dùng. Vui lòng chọn tên khác"
+
+#: 
+msgid "client_models_network_badpassword"
+msgstr "Mật khẩu nhập vào sai"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Hành động này sẽ đóng tất cả các hội thoại KiwiIRC. Bạn có chắc là muốn đóng cửa sổ này không?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Đang tham gia kênh.."
+
+#: 
+msgid "client_views_channel_topic"
+msgstr "Chủ đề cho %s là: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Đóng media"
+
+#: 
+msgid "client_views_mediamessage_notfound"
+msgstr "Không tìm thấy"
+
+#: 
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Đang tải tweet"
+
+#: 
+msgid "client_views_mediamessage_load_image"
+msgstr "Đang tải hình ảnh"
+
+#: 
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Đang tải Reddit"
+
+#: 
+msgid "client_views_mediamessage_load_gist"
+msgstr "Đang tải gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Tên mới"
+
+#: 
+msgid "client_views_nickchangebox_change"
+msgstr "Thay đổi"
+
+#: 
+msgid "client_views_nickchangebox_cancel"
+msgstr "Hủy bỏ"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Mọi người đang thảo luận!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Gợi ý một nickname..."
+
+#: 
+msgid "client_views_serverselect_nickname"
+msgstr "Nickname"
+
+#: 
+msgid "client_views_serverselect_enable_password"
+msgstr "Kích hoạt sử dụng mật khẩu"
+
+#: 
+msgid "client_views_serverselect_password"
+msgstr "Mật khẩu"
+
+#: 
+msgid "client_views_serverselect_channel"
+msgstr "Kênh"
+
+#: 
+msgid "client_views_serverselect_channelkey"
+msgstr "Khóa kênh"
+
+#: 
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Kênh yêu cầu nhập khóa"
+
+#: 
+msgid "client_views_serverselect_key"
+msgstr "Khóa"
+
+#: 
+msgid "client_views_serverselect_connection_start"
+msgstr "Bắt đầu kết nối..."
+
+#: 
+msgid "client_views_serverselect_server_and_network"
+msgstr "Server và network"
+
+#: 
+msgid "client_views_serverselect_server"
+msgstr "Server"
+
+#: 
+msgid "client_views_serverselect_port"
+msgstr "Port"
+
+#: 
+msgid "client_views_serverselect_poweredby"
+msgid_plural "Powered by Kiwi IRC"
+
+#: 
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Chọn nickname trước đã!"
+
+#: 
+msgid "client_views_serverselect_connection_successfully"
+msgstr "Đã kết nối"
+
+#: 
+msgid "client_views_serverselect_connection_trying"
+msgstr "Đang kết nối.."
+
+#: 
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Nickname đã có người sử dụng"
+
+#: 
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Nickname không hợp lệ"
+
+#: 
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Mật khẩu sai"
+
+#: 
+msgid "client_views_serverselect_connection_error"
+msgstr "Lỗi kết nối"
+
+#: 
+msgid "client_views_serverselect_server_notfound"
+msgstr "Không thấy server"
+
+#: 
+msgid "client_views_serverselect_connection_refused"
+msgstr "Từ chối kết nối"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Op"
+
+#: 
+msgid "client_views_userbox_deop"
+msgstr "De-Op"
+
+#: 
+msgid "client_views_userbox_voice"
+msgstr "Voice"
+
+#: 
+msgid "client_views_userbox_devoice"
+msgstr "De-Voice"
+
+#: 
+msgid "client_views_userbox_kick"
+msgstr "Đạp ra khỏi kênh"
+
+#: 
+msgid "client_views_userbox_ban"
+msgid_plural "Cấm truy cập kênh"
+
+#: 
+msgid "client_views_userbox_query"
+msgstr "Tin nhắn"
+
+#: 
+msgid "client_views_userbox_whois"
+msgstr "Thông tin"
+
+#: 
+msgid "client_views_userbox_slap"
+msgstr "Tát!"
+
+#: 
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
