@@ -100,7 +100,7 @@ msgstr "Bạn đã bị mất kết nối. Sẽ kết nối lại sau %d giây"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Xong! Bạn đã được kết nối lại."
+msgstr "Thật tuyệt, bạn có thể kết nối lại được rồi!"
 
 #: 
 msgid "client_models_application_settings_saved"
@@ -108,27 +108,27 @@ msgstr "Đã lưu thiết lập"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Những nick bị tránh mặt"
+msgstr "Nick bị từ chối"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Không tránh mặt ai cả"
+msgstr "Không từ chối một ai cả"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Tránh mặt nick %s này"
+msgstr "Từ chối %s."
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Hãy chỉ ra những nick bạn không muốn tránh mặt nữa"
+msgstr "Xác định nick nào bạn muốn bỏ từ chối."
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Không tránh mặt %s nữa"
+msgstr "Bỏ từ chối %s."
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" không tồn tại "
+msgstr "Applet \"%s\" không tồn tại."
 
 #: 
 msgid "client_models_application_encoding_changed"
@@ -304,15 +304,14 @@ msgstr "Mọi người đang thảo luận!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Gợi ý một nickname..."
+msgstr "Hãy chọn một nickname..."
 
-#: 
 msgid "client_views_serverselect_nickname"
 msgstr "Nickname"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Kích hoạt sử dụng mật khẩu"
+msgstr "Đăng nhập sử dụng mật khẩu"
 
 #: 
 msgid "client_views_serverselect_password"
@@ -340,15 +339,15 @@ msgstr "Bắt đầu kết nối..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Server và mạng"
+msgstr "Máy chủ và mạng"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Server"
+msgstr "Máy chủ"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Port"
+msgstr "Cổng"
 
 #: 
 msgid "client_views_serverselect_poweredby"
@@ -384,7 +383,7 @@ msgstr "Lỗi kết nối"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Không thấy server"
+msgstr "Không tìm thấy máy chủ"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
@@ -429,3 +428,4 @@ msgstr "Tát!"
 #: 
 msgid "client_views_serverselect_ssl"
 msgstr "SSL"
+
