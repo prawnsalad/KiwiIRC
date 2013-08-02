@@ -419,9 +419,9 @@ IrcConnection.prototype.setEncoding = function (encoding) {
 function getConnectionFamily(host, callback) {
     if (net.isIP(host)) {
         if (net.isIPv4(host)) {
-            setImmediate(callback, null, 'IPv4', host);
+            callback(null, 'IPv4', host);
         } else {
-            setImmediate(callback, null, 'IPv6', host);
+            callback(null, 'IPv6', host);
         }
     } else {
         dns.resolve6(host, function resolve6Cb(err, addresses) {
