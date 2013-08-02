@@ -59,17 +59,17 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
 
     this.irc_connections[con_num] = con;
 
-    con.on('connected', function () {
+    con.on('connected', function IrcConnectionConnection() {
         global.servers.addConnection(this);
         return callback(null, con_num);
     });
 
-    con.on('error', function (err) {
+    con.on('error', function IrcConnectionError(err) {
         console.log('irc_connection error (' + hostname + '):', err);
         return callback(err.code, {server: con_num, error: err});
     });
 
-    con.on('close', function () {
+    con.on('close', function IrcConnectionClose() {
         // TODO: Can we get a better reason for the disconnection? Was it planned?
         that.sendIrcCommand('disconnect', {server: con.con_num, reason: 'disconnected'});
 
