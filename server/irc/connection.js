@@ -106,7 +106,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_
 
     // Buffers for data sent from the IRCd
     this.hold_last = false;
-    this.held_data = '';
+    this.held_data = null;
 
     this.applyIrcEvents();
 };
@@ -611,35 +611,46 @@ var parse = function (data) {
         trm,
         j,
         tags = [],
-        tag;
+        tag,
+        buf_start = 0,
+        bufs = [],
+        line = '';
 
-    //DECODE server encoding 
-    data = iconv.decode(data, this.encoding);
+    // Split data chunk into individual lines
+    for (i = 0; i < data.length; i++) {
+        if (data[i] === 0x0A) { // Check if byte is a line feed
+            bufs.push(data.slice(buf_start, i));
+            buf_start = i + 1;
+        }
+    }
 
-    if (this.hold_last && this.held_data !== '') {
-        data = this.held_data + data;
+    // If we have an incomplete line held from the previous chunk of data
+    // merge it with the first line from this chunk of data
+    if (this.hold_last && this.held_data !== null) {
+        bufs[0] = Buffer.concat([this.held_data, bufs[0]]);
         this.hold_last = false;
-        this.held_data = '';
+        this.held_data = null;
     }
 
-    // If the last line is incomplete, hold it until we have more data
-    if (data.substr(-1) !== '\n') {
+    // If the last line of data in this chunk is not complete, hold it so
+    // it can be merged with the first line from the next chunk
+    if (buf_start < i) {
         this.hold_last = true;
+        this.held_data = new Buffer(data.length - buf_start);
+        data.copy(this.held_data, 0, buf_start);
     }
+
+    data = null;
 
     // Process our data line by line
-    data = data.split("\n");
-    for (i = 0; i < data.length; i++) {
-        if (!data[i]) break;
-
-        // If flagged to hold the last line, store it and move on
-        if (this.hold_last && (i === data.length - 1)) {
-            this.held_data = data[i];
-            break;
-        }
+    for (i = 0; i < bufs.length; i++) {
+        // Decode server encoding
+        line = iconv.decode(bufs[i], this.encoding);
+        bufs[i] = null;
+        if (!line) break;
         
         // Parse the complete line, removing any carriage returns
-        msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
+        msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 
         if (msg) {
             if (msg[1]) {
@@ -663,7 +674,7 @@ var parse = function (data) {
             this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
         } else {
             // The line was not parsed correctly, must be malformed
-            console.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
+            console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
         }
     }
 };
