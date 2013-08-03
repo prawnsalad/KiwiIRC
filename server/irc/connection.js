@@ -168,6 +168,15 @@ IrcConnection.prototype.connect = function () {
                 host = dest_addr;
             }
 
+            // If we have an array of interfaces, select a random one
+            if (typeof outgoing !== 'string' && outgoing.length) {
+                outgoing = outgoing[Math.floor(Math.random() * outgoing.length)];
+            }
+
+            // Make sure we have a valid interface address
+            if (typeof outgoing !== 'string')
+                outgoing = '0.0.0.0';
+
         } else {
             // No config was found so use the default
             outgoing = '0.0.0.0';
