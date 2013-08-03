@@ -69,7 +69,7 @@ conf.max_server_conns = 0;
 * Default encoding to be used by the server
 * As specified and limited to iconv-lite library support.
 */
-conf.default_encoding = 'UTF-8';
+conf.default_encoding = 'utf8';
 
 /*
  * Client side plugins
