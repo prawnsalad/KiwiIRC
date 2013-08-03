@@ -8,10 +8,10 @@ var ws          = require('socket.io'),
     url         = require('url'),
     _           = require('lodash'),
     spdy        = require('spdy'),
+    ipaddr      = require('ipaddr.js'),
     Client      = require('./client.js').Client,
     HttpHandler = require('./httphandler.js').HttpHandler,
-    rehash      = require('./rehash.js'),
-    range_check = require('range_check');
+    rehash      = require('./rehash.js');
 
 
 
@@ -99,11 +99,23 @@ util.inherits(WebListener, events.EventEmitter);
 
 function handleHttpRequest(request, response) {
     var uri = url.parse(request.url, true);
-    
+
     // If this isn't a socket.io request, pass it onto the http handler
     if (uri.pathname.substr(0, 10) !== '/socket.io') {
         http_handler.serve(request, response);
     }
+}
+
+function rangeCheck(addr, range) {
+    var i, ranges, parts;
+    ranges = (!_.isArray(range)) ? [range] : range;
+    for (i = 0; i < ranges.length; i++) {
+        parts = ranges[i].split('/');
+        if (ipaddr.process(addr).match(ipaddr.process(parts[0]), parts[1])) {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -117,7 +129,7 @@ function authoriseConnection(handshakeData, callback) {
     // If a forwarded-for header is found, switch the source address
     if (handshakeData.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
-        if (!global.config.http_proxies || !range_check.in_range(address, global.config.http_proxies)) {
+        if (!global.config.http_proxies || !rangeCheck(address, global.config.http_proxies)) {
             console.log('Unlisted proxy:', address);
             callback(null, false);
             return;
