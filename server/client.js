@@ -72,7 +72,7 @@ Client.prototype.dispose = function () {
 };
 
 function handleClientMessage(msg, callback) {
-    var server, args, obj, channels, keys;
+    var server;
 
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
@@ -103,11 +103,10 @@ function handleClientMessage(msg, callback) {
 
 
 function kiwiCommand(command, callback) {
-    var that = this;
-    
     if (typeof callback !== 'function') {
         callback = function () {};
     }
+
     switch (command.command) {
         case 'connect':
             if (command.hostname && command.port && command.nick) {
