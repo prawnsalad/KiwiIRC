@@ -1,25 +1,32 @@
+var redis = require('redis');
+
 var RedisStore = module.exports.Store = function() {
-	this._data = new Object(null);
+    this._client = redis.createClient();
 };
 
 
 RedisStore.prototype.get = function(name, callback) {
-	if (typeof callback === 'function')
-		callback(null, this._data[name]);
+    // No callback? No good getting anything then
+    if (typeof callback !== 'function')
+        return;
+
+    this._client.get(name, function (err, reply) {
+        callback(null, reply);
+    });
 };
 
 
 RedisStore.prototype.set = function(name, val, callback) {
-	this._data[name] = val;
+    this._client.set(name, val.toString());
 
-	if (typeof callback === 'function')
-		callback(null);
+    if (typeof callback === 'function')
+        callback(null);
 };
 
 
 RedisStore.prototype.del = function(name, callback) {
-	delete this._data[name];
+    this._client.del(name);
 
-	if (typeof callback === 'function')
-		callback(null);
+    if (typeof callback === 'function')
+        callback(null);
 };
