@@ -78,87 +78,157 @@ if (global.config.module_dir) {
 
 
 
-// Holder for all the connected clients
-global.clients = {
-    clients: Object.create(null),
-    addresses: Object.create(null),
+if (global.config.cluster) {
+    global.data = new (require('./stores/redis.js').Store)();
 
-    // Local and foriegn port pairs for identd lookups
-    // {'65483_6667': client_obj, '54356_6697': client_obj}
-    port_pairs: {},
+    switch (global.config.cluster.mode) {
+        //case 'clients':
+        //    setupClients();
+        //    break;
 
-    add: function (client) {
-        this.clients[client.hash] = client;
-        if (typeof this.addresses[client.real_address] === 'undefined') {
-            this.addresses[client.real_address] = Object.create(null);
-        }
-        this.addresses[client.real_address][client.hash] = client;
-    },
+        //case 'servers':
+        //    setupServers();
+        //    break;
 
-    remove: function (client) {
-        if (typeof this.clients[client.hash] !== 'undefined') {
-            delete this.clients[client.hash];
-            delete this.addresses[client.real_address][client.hash];
-            if (Object.keys(this.addresses[client.real_address]).length < 1) {
-                delete this.addresses[client.real_address];
+        case 'identd':
+            setupIdentd();
+            setProcessUid();
+            break;
+
+        default:
+            console.log('Invalid cluster mode');
+            process.exit(1);
+    }
+
+} else {
+    global.data = new (require('./stores/memory.js').Store)();
+
+    setupClients();
+    setupServers();
+
+    if (global.config.identd && global.config.identd.enabled)
+        setupIdentd();
+}
+
+
+function setupClients() {
+    // Holder for all the connected clients
+    global.clients = {
+        clients: Object.create(null),
+        addresses: Object.create(null),
+
+        add: function (client) {
+            this.clients[client.hash] = client;
+            if (typeof this.addresses[client.real_address] === 'undefined') {
+                this.addresses[client.real_address] = Object.create(null);
+            }
+            this.addresses[client.real_address][client.hash] = client;
+        },
+
+        remove: function (client) {
+            if (typeof this.clients[client.hash] !== 'undefined') {
+                delete this.clients[client.hash];
+                delete this.addresses[client.real_address][client.hash];
+                if (Object.keys(this.addresses[client.real_address]).length < 1) {
+                    delete this.addresses[client.real_address];
+                }
+            }
+        },
+
+        numOnAddress: function (addr) {
+            if (typeof this.addresses[addr] !== 'undefined') {
+                return Object.keys(this.addresses[addr]).length;
+            } else {
+                return 0;
             }
         }
-    },
+    };
+}
 
-    numOnAddress: function (addr) {
-        if (typeof this.addresses[addr] !== 'undefined') {
-            return Object.keys(this.addresses[addr]).length;
-        } else {
-            return 0;
-        }
-    }
-};
 
-global.servers = {
-    servers: Object.create(null),
-    
-    addConnection: function (connection) {
-        var host = connection.irc_host.hostname;
-        if (!this.servers[host]) {
-            this.servers[host] = [];
-        }
-        this.servers[host].push(connection);
-    },
-    
-    removeConnection: function (connection) {
-        var host = connection.irc_host.hostname
-        if (this.servers[host]) {
-            this.servers[host] = _.without(this.servers[host], connection);
-            if (this.servers[host].length === 0) {
-                delete this.servers[host];
+
+function setupServers() {
+    global.servers = {
+        servers: Object.create(null),
+
+        addConnection: function (connection) {
+            var host = connection.irc_host.hostname;
+            if (!this.servers[host]) {
+                this.servers[host] = [];
+            }
+            this.servers[host].push(connection);
+        },
+
+        removeConnection: function (connection) {
+            var host = connection.irc_host.hostname
+            if (this.servers[host]) {
+                this.servers[host] = _.without(this.servers[host], connection);
+                if (this.servers[host].length === 0) {
+                    delete this.servers[host];
+                }
+            }
+        },
+
+        numOnHost: function (host) {
+            if (this.servers[host]) {
+                return this.servers[host].length;
+            } else {
+                return 0;
             }
         }
-    },
-    
-    numOnHost: function (host) {
-        if (this.servers[host]) {
-            return this.servers[host].length;
-        } else {
-            return 0;
+    };
+
+
+
+
+    // Start up a weblistener for each found in the config
+    _.each(global.config.servers, function (server) {
+        var wl = new WebListener(server, global.config.transports);
+
+        wl.on('connection', function (client) {
+            clients.add(client);
+        });
+
+        wl.on('client_dispose', function (client) {
+            clients.remove(client);
+        });
+
+        wl.on('listening', function () {
+            console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            webListenerRunning();
+        });
+
+        wl.on('error', function (err) {
+            console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
+            // TODO: This should probably be refactored. ^JA
+            webListenerRunning();
+        });
+    });
+
+    // Once all the listeners are listening, set the processes UID/GID
+    var num_listening = 0;
+    function webListenerRunning() {
+        num_listening++;
+        if (num_listening === global.config.servers.length) {
+            setProcessUid();
         }
     }
-};
 
+
+}
 
 
 
 /*
  * Identd server
  */
-if (global.config.identd && global.config.identd.enabled) {
-    var identd_resolve_user = function(port_here, port_there) {
-        var key = port_here.toString() + '_' + port_there.toString();
+function setupIdentd() {
+    var identd_resolve_user = function(port_here, port_there, callback) {
+        var key = 'identd.usernames.' + port_here.toString() + '_' + port_there.toString();
 
-        if (typeof global.clients.port_pairs[key] == 'undefined') {
-            return;
-        }
-
-        return global.clients.port_pairs[key].username;
+        global.data.get(key, function(err, val) {
+            callback(val);
+        });
     };
 
     var identd_server = new Identd({
@@ -173,43 +243,6 @@ if (global.config.identd && global.config.identd.enabled) {
 
 
 
-/*
- * Web listeners
- */
-
-
-// Start up a weblistener for each found in the config
-_.each(global.config.servers, function (server) {
-    var wl = new WebListener(server, global.config.transports);
-
-    wl.on('connection', function (client) {
-        clients.add(client);
-    });
-
-    wl.on('client_dispose', function (client) {
-        clients.remove(client);
-    });
-
-    wl.on('listening', function () {
-        console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
-        webListenerRunning();
-    });
-
-    wl.on('error', function (err) {
-        console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
-        // TODO: This should probably be refactored. ^JA
-        webListenerRunning();
-    });
-});
-
-// Once all the listeners are listening, set the processes UID/GID
-var num_listening = 0;
-function webListenerRunning() {
-    num_listening++;
-    if (num_listening === global.config.servers.length) {
-        setProcessUid();
-    }
-}
 
 
 

@@ -220,21 +220,7 @@ IrcConnection.prototype.connect = function () {
 
         // Apply the socket listeners
         that.socket.on(socket_connect_event_name, function socketConnectCb() {
-
-            // SSL connections have the actual socket as a property
-            var socket = (typeof this.socket !== 'undefined') ?
-                this.socket :
-                this;
-
             that.connected = true;
-
-            // Make note of the port numbers for any identd lookups
-            // Nodejs < 0.9.6 has no socket.localPort so check this first
-            if (socket.localPort) {
-                that.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
-                global.clients.port_pairs[that.identd_port_pair] = that;
-            }
-
             socketConnectHandler.call(that);
         });
 
@@ -251,7 +237,7 @@ IrcConnection.prototype.connect = function () {
 
             // Remove this socket form the identd lookup
             if (that.identd_port_pair) {
-                delete global.clients.port_pairs[that.identd_port_pair];
+                global.data.del('identd.usernames.' + that.identd_port_pair);
             }
 
             that.emit('close');
@@ -545,6 +531,18 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
+        // SSL connections have the actual socket as a property
+        var socket = (typeof that.socket.socket !== 'undefined') ?
+            that.socket.socket :
+            that.socket;
+
+        // Make note of the port numbers for any identd lookups
+        // Nodejs < 0.9.6 has no socket.localPort so check this first
+        if (socket.localPort) {
+            that.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
+            global.data.set('identd.usernames.' + that.identd_port_pair, that.username);
+        }
+
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {

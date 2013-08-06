@@ -24,21 +24,22 @@ var IdentdServer = module.exports = function(opts) {
             buffer += data.toString();
 
             // If we exceeed 512 bytes, presume a flood and disconnect
-            if (buffer.length < 512) {
-
-                // Wait until we have a full line of data before processing it
-                if (buffer.indexOf('\n') === -1)
-                    return;
-
-                // Get the first line of data and process it for a rsponse
-                data_line = buffer.split('\n')[0];
-                response = that.processLine(data_line);
-
+            if (buffer.length > 512) {
+                socket.removeAllListeners();
+                socket.end();
+                return;
             }
 
-            // Close down the socket while sending the response
+            // Wait until we have a full line of data before processing it
+            if (buffer.indexOf('\n') === -1)
+                return;
+
+            // Get the first line of data and process it for a rsponse
+            data_line = buffer.split('\n')[0];
+            response = that.processLine(data_line, socket);
+
+            // No more listeners needed for this socket
             socket.removeAllListeners();
-            socket.end(response);
         });
 
     });
@@ -61,9 +62,9 @@ var IdentdServer = module.exports = function(opts) {
      * Process a line of data for an Identd response
      * 
      * @param {String} The line of data to process
-     * @return {String} Data to send back to the Identd client
+     * @param {Socket} The socket to send data back to
      */
-    this.processLine = function(line) {
+    this.processLine = function(line, socket) {
         var ports = line.split(','),
             port_here = 0,
             port_there = 0;
@@ -79,18 +80,21 @@ var IdentdServer = module.exports = function(opts) {
         if (!port_here || !port_there)
             return;
 
-        if (typeof opts.user_id === 'function') {
-            user = (opts.user_id(port_here, port_there) || '').toString() || default_user_id;
-        } else {
-            user = opts.user_id.toString();
-        }
-
         if (typeof opts.system_id === 'function') {
             system = (opts.system_id(port_here, port_there) || '').toString() || default_system_id;
         } else {
             system = opts.system_id.toString();
         }
 
-        return port_here.toString() + ' , ' + port_there.toString() + ' : USERID : ' + system + ' : ' + user;
+        if (typeof opts.user_id === 'function') {
+            // The function is expected to call our callback with the username
+            opts.user_id(port_here, port_there, function(username) {
+                username = (username || default_user_id).toString();
+                console.log(port_here.toString() + ' , ' + port_there.toString() + ' : USERID : ' + system + ' : ' + username);
+                socket.end(port_here.toString() + ' , ' + port_there.toString() + ' : USERID : ' + system + ' : ' + username);
+            });
+        } else {
+            user = opts.user_id.toString();
+        }
     };
 };

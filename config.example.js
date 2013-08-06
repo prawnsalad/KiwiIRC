@@ -47,6 +47,11 @@ conf.identd = {
     address: "0.0.0.0"
 };
 
+//conf.cluster = {
+//    mode: 'identd',
+//    server: '127.0.0.1',
+//    port: 6379
+//};
 
 
 
