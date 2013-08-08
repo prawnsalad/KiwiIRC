@@ -1,7 +1,9 @@
 var url         = require('url'),
     fs          = require('fs'),
+    crypto      = require('crypto'),
     node_static = require('node-static'),
-    _           = require('lodash');
+    _           = require('lodash'),
+    config      = require('./configuration.js');
 
 
 
@@ -43,6 +45,8 @@ HttpHandler.prototype.serve = function (request, response) {
         } else {
             response.setHeader('Content-Language', request.url.substr(16, request.url.indexOf('.') - 16));
         }
+    } else if (request.url.substr(0, 21) === '/assets/settings.json') {
+        return serveSettings.call(this, request, response);
     }
 
     this.file_server.serve(request, response, function (err) {
@@ -101,3 +105,149 @@ var serveFallbackLocale = function (request, response) {
     //en-gb is our default language, so we serve this as the last possible answer for everything
     this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
 };
+
+function serveSettings(request, response) {
+    var vars = {
+            server_settings: {},
+            client_plugins: [],
+            translations: [],
+            scripts: [
+                [
+                    'libs/lodash.min.js'
+                ],
+                'libs/backbone.min.js',
+                'libs/jed.js'
+            ]
+        },
+        referrer_url;
+
+    if (request.headers['referer']) {
+        referrer_url = url.parse(request.headers['referer'], true);
+    }
+    if (referrer_url && referrer_url.query && referrer_url.query.debug) {
+        vars.scripts = vars.scripts.concat([
+            'src/app.js',
+            [
+                'src/models/application.js',
+                'src/models/gateway.js'
+            ],
+            [
+                'src/models/newconnection.js',
+                'src/models/panellist.js',
+                'src/models/networkpanellist.js',
+                'src/models/panel.js',
+                'src/models/member.js',
+                'src/models/memberlist.js',
+                'src/models/network.js'
+            ],
+            
+            [
+                'src/models/query.js',
+                'src/models/channel.js',
+                'src/models/server.js',
+                'src/models/applet.js'
+            ],
+
+            [
+                'src/applets/settings.js',
+                'src/applets/chanlist.js',
+                'src/applets/scripteditor.js'
+            ],
+
+            [
+                'src/models/pluginmanager.js',
+                'src/models/datastore.js',
+                'src/helpers/utils.js'
+            ],
+
+            // Some views extend these, so make sure they're loaded beforehand
+            [
+                'src/views/panel.js'
+            ],
+
+            [
+                'src/views/channel.js',
+                'src/views/applet.js',
+                'src/views/application.js',
+                'src/views/apptoolbar.js',
+                'src/views/controlbox.js',
+                'src/views/favicon.js',
+                'src/views/mediamessage.js',
+                'src/views/member.js',
+                'src/views/memberlist.js',
+                'src/views/menubox.js',
+                'src/views/networktabs.js',
+                'src/views/nickchangebox.js',
+                'src/views/resizehandler.js',
+                'src/views/serverselect.js',
+                'src/views/statusmessage.js',
+                'src/views/tabs.js',
+                'src/views/topicbar.js',
+                'src/views/userbox.js'
+            ]
+        ]);
+    } else {
+        vars.scripts.push('kiwi.min.js');
+    }
+
+    // Any restricted server mode set?
+    if (config.get().restrict_server) {
+        vars.server_settings = {
+            connection: {
+                server: config.get().restrict_server,
+                port: config.get().restrict_server_port || 6667,
+                ssl: config.get().restrict_server_ssl,
+                channel: config.get().restrict_server_channel,
+                nick: config.get().restrict_server_nick,
+                allow_change: false
+            }
+        };
+    }
+
+    // Any client default settings?
+    if (config.get().client) {
+        vars.server_settings.client = config.get().client;
+    }
+
+    // Any client plugins?
+    if (config.get().client_plugins && config.get().client_plugins.length > 0) {
+        vars.client_plugins = config.get().client_plugins;
+    }
+
+    fs.readFile(__dirname + '/../client/assets/src/translations/translations.json', function (err, translations) {
+        if (err) {
+            response.statusCode = 500;
+            return response.end();
+        }
+
+        var translation_files;
+        translations = JSON.parse(translations);
+        fs.readdir(__dirname + '/../client/assets/src/translations/', function (err, pofiles) {
+            var hash;
+            if (err) {
+                response.statusCode = 500;
+                return response.end();
+            }
+
+            pofiles.forEach(function (file) {
+                var locale = file.slice(0, -3);
+                if ((file.slice(-3) === '.po') && (locale !== 'template')) {
+                    vars.translations.push({tag: locale, language: translations[locale]});
+                }
+            });
+
+            hash = crypto.createHash('md5').update(JSON.stringify(vars)).digest('hex');
+
+            if (request.headers['if-none-match'] && request.headers['if-none-match'] === hash) {
+                response.writeHead(304, 'Not Modified');
+                return response.end();
+            }
+
+            response.writeHead(200, {
+                'ETag': hash,
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify(vars));
+        });
+    });
+}

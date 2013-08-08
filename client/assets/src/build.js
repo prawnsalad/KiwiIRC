@@ -130,47 +130,13 @@ translation_files.forEach(function (file) {
  * Build the index.html file
  */
 
-var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
-var vars = {
-    base_path: config.get().http_base_path || '/kiwi',
-    cache_buster: Math.ceil(Math.random() * 9000).toString(),
-    server_settings: {},
-    client_plugins: []
-};
+var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING)
+    .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi');
 
-// Any restricted server mode set?
-if (config.get().restrict_server) {
-    vars.server_settings = {
-        connection: {
-            server: config.get().restrict_server,
-            port: config.get().restrict_server_port || 6667,
-            ssl: config.get().restrict_server_ssl,
-            channel: config.get().restrict_server_channel,
-            nick: config.get().restrict_server_nick,
-            allow_change: false
-        }
-    };
-}
-
-// Any client default settings?
-if (config.get().client) {
-    vars.server_settings.client = config.get().client;
-}
-
-// Any client plugins?
-if (config.get().client_plugins && config.get().client_plugins.length > 0) {
-    vars.client_plugins = config.get().client_plugins;
-}
-
-// Translations
-vars.translations = translations;
-
-_.each(vars, function(value, key) {
-    if (typeof value === 'object') value = JSON.stringify(value);
-    index_src = index_src.replace(new RegExp('<%' + key + '%>', 'g'), value);
+fs.writeFile(__dirname + '/../../index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
+    if (!err) {
+        console.log('index.html built');
+    } else {
+        console.log('Error building index.html');
+    }
 });
-
-fs.writeFileSync(__dirname + '/../../index.html', index_src, FILE_ENCODING);
-
-
-console.log('index.html built');
