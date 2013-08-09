@@ -390,7 +390,7 @@
             panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
 
             // Forward ChanServ messages to its associated channel
-            if (event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
+            if (event.nick && event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
                 channel_name = /\[([^ \]]+)\]/gi.exec(event.msg);
                 if (channel_name && channel_name[1]) {
                     channel_name = channel_name[1];
