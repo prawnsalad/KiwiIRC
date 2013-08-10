@@ -1,12 +1,18 @@
-var fs = require('fs');
+var fs      = require('fs'),
+    events  = require('events'),
+    util    = require('util');
 
 var config_filename = 'config.js',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/../'],
     environment = 'production',
     loaded_config = Object.create(null);
 
+var Config = function () {
+    events.EventEmitter.call(this);
+};
+util.inherits(Config, events.EventEmitter);
 
-function loadConfig() {
+Config.prototype.loadConfig = function () {
     var new_config,
         conf_filepath,
         i;
@@ -39,23 +45,24 @@ function loadConfig() {
     if (new_config) {
         loaded_config = new_config;
         global.config = new_config[environment] || {};
+        this.emit('loaded');
         return loaded_config;
     } else {
         return false;
     }
-}
+};
 
 
 
-module.exports.setEnvironment = function (new_environment) {
+Config.prototype.setEnvironment = function (new_environment) {
     environment = new_environment;
 };
 
 // Get the current config. Optionally for a different environment than currently set
-module.exports.get = function (specific_environment) {
+Config.prototype.get = function (specific_environment) {
     specific_environment = specific_environment || environment;
     
     return loaded_config[specific_environment] || {};
 };
 
-module.exports.loadConfig = loadConfig;
+module.exports = new Config();
