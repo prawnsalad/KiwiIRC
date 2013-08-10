@@ -325,10 +325,7 @@
             scripts = [],
             opts = {
                 container: $('#kiwi'),
-                base_path: base_path,
-
-                // Override the kiwi_server to use. (Think: running on standalone client..)
-                //kiwi_server: 'http://kiwiirc.com:80',
+                base_path: base_path
             };
 
         // Run after all dependancies have been loaded
@@ -378,6 +375,9 @@
             opts.client_plugins = data.client_plugins;
             opts.translations = data.translations;
             opts.locale = data.locale;
+
+            if (typeof data.kiwi_server !== 'undefined')
+                opts.kiwi_server = data.kiwi_server;
 
             // Start loading scripts
             loadNextScript();
