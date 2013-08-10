@@ -107,16 +107,22 @@ var serveFallbackLocale = function (request, response) {
 };
 
 var cached_settings = {
-    hash: '',
-    settings: ''
+    debug: {
+        hash: '',
+        settings: ''
+    },
+    production: {
+        hash: '',
+        settings: ''
+    }
 };
 
 config.on('loaded', function () {
-    cached_settings.settings = '';
-    cached_settings.hash = '';
+    cached_settings.debug.settings = cached_settings.production.settings = '';
+    cached_settings.debug.hash = cached_settings.production.hash = '';
 });
 
-function generateSettings(request, callback) {
+function generateSettings(request, debug, callback) {
     var vars = {
             server_settings: {},
             client_plugins: [],
@@ -128,13 +134,9 @@ function generateSettings(request, callback) {
                 'libs/backbone.min.js',
                 'libs/jed.js'
             ]
-        },
-        referrer_url;
+        };
 
-    if (request.headers['referer']) {
-        referrer_url = url.parse(request.headers['referer'], true);
-    }
-    if (referrer_url && referrer_url.query && referrer_url.query.debug) {
+    if (debug) {
         vars.scripts = vars.scripts.concat([
             'src/app.js',
             [
@@ -232,7 +234,7 @@ function generateSettings(request, callback) {
         var translation_files;
         translations = JSON.parse(translations);
         fs.readdir(__dirname + '/../client/assets/src/translations/', function (err, pofiles) {
-            var hash;
+            var hash, settings;
             if (err) {
                 return callback(err);
             }
@@ -244,17 +246,30 @@ function generateSettings(request, callback) {
                 }
             });
 
-            cached_settings.settings = JSON.stringify(vars);
-            cached_settings.hash = crypto.createHash('md5').update(cached_settings.settings).digest('hex');
+            settings = cached_settings[debug?'debug':'production'];
+            settings.settings = JSON.stringify(vars);
+            settings.hash = crypto.createHash('md5').update(cached_settings.settings).digest('hex');
 
-            return callback(null, cached_settings);
+            return callback(null, settings);
         });
     });
 }
 
 function serveSettings(request, response) {
-    if (cached_settings.settings === '') {
-        generateSettings(request, function (err, settings) {
+    var referrer_url,
+        debug = false,
+        settings;
+
+    if (request.headers['referer']) {
+        referrer_url = url.parse(request.headers['referer'], true);
+        if (referrer_url.query && referrer_url.query.debug) {
+            debug = true;
+        }
+    }
+
+    settings = cached_settings[debug?'debug':'production'];
+    if (settings.settings === '') {
+        generateSettings(request, debug, function (err, settings) {
             if (err) {
                 response.statusCode = 500;
                 response.end();
@@ -263,7 +278,7 @@ function serveSettings(request, response) {
             }
         });
     } else {
-        sendSettings.call(this, request, response, cached_settings);
+        sendSettings.call(this, request, response, settings);
     }
 }
 
