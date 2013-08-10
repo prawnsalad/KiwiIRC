@@ -106,7 +106,17 @@ var serveFallbackLocale = function (request, response) {
     this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
 };
 
-function serveSettings(request, response) {
+var cached_settings = {
+    hash: '',
+    settings: ''
+};
+
+config.on('loaded', function () {
+    cached_settings.settings = '';
+    cached_settings.hash = '';
+});
+
+function generateSettings(request, callback) {
     var vars = {
             server_settings: {},
             client_plugins: [],
@@ -216,8 +226,7 @@ function serveSettings(request, response) {
 
     fs.readFile(__dirname + '/../client/assets/src/translations/translations.json', function (err, translations) {
         if (err) {
-            response.statusCode = 500;
-            return response.end();
+            return callback(err);
         }
 
         var translation_files;
@@ -225,8 +234,7 @@ function serveSettings(request, response) {
         fs.readdir(__dirname + '/../client/assets/src/translations/', function (err, pofiles) {
             var hash;
             if (err) {
-                response.statusCode = 500;
-                return response.end();
+                return callback(err);
             }
 
             pofiles.forEach(function (file) {
@@ -236,18 +244,38 @@ function serveSettings(request, response) {
                 }
             });
 
-            hash = crypto.createHash('md5').update(JSON.stringify(vars)).digest('hex');
+            cached_settings.settings = JSON.stringify(vars);
+            cached_settings.hash = crypto.createHash('md5').update(cached_settings.settings).digest('hex');
 
-            if (request.headers['if-none-match'] && request.headers['if-none-match'] === hash) {
-                response.writeHead(304, 'Not Modified');
-                return response.end();
-            }
-
-            response.writeHead(200, {
-                'ETag': hash,
-                'Content-Type': 'application/json'
-            });
-            response.end(JSON.stringify(vars));
+            return callback(null, cached_settings);
         });
     });
+}
+
+function serveSettings(request, response) {
+    if (cached_settings.settings === '') {
+        generateSettings(request, function (err, settings) {
+            if (err) {
+                response.statusCode = 500;
+                response.end();
+            } else {
+                sendSettings.call(this, request, response, settings);
+            }
+        });
+    } else {
+        sendSettings.call(this, request, response, cached_settings);
+    }
+}
+
+function sendSettings(request, response, settings) {
+    if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
+        response.writeHead(304, 'Not Modified');
+        return response.end();
+    }
+
+    response.writeHead(200, {
+        'ETag': settings.hash,
+        'Content-Type': 'application/json'
+    });
+    response.end(settings.settings);
 }
