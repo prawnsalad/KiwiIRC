@@ -248,7 +248,7 @@ function generateSettings(request, debug, callback) {
 
             settings = cached_settings[debug?'debug':'production'];
             settings.settings = JSON.stringify(vars);
-            settings.hash = crypto.createHash('md5').update(cached_settings.settings).digest('hex');
+            settings.hash = crypto.createHash('md5').update(settings.settings).digest('hex');
 
             return callback(null, settings);
         });
@@ -267,7 +267,7 @@ function serveSettings(request, response) {
         }
     }
 
-    settings = cached_settings[debug?'debug':'production'];
+    settings = cached_settings[debug ? 'debug' : 'production'];
     if (settings.settings === '') {
         generateSettings(request, debug, function (err, settings) {
             if (err) {
