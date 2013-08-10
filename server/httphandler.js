@@ -6,6 +6,26 @@ var url         = require('url'),
     config      = require('./configuration.js');
 
 
+// Cache for settings.json
+var cached_settings = {
+    debug: {
+        hash: '',
+        settings: ''
+    },
+    production: {
+        hash: '',
+        settings: ''
+    }
+};
+
+// Clear the settings cache when the settings change
+config.on('loaded', function () {
+    cached_settings.debug.settings = cached_settings.production.settings = '';
+    cached_settings.debug.hash = cached_settings.production.hash = '';
+});
+
+
+
 
 var HttpHandler = function (config) {
     var public_html = config.public_html || 'client/';
@@ -57,14 +77,22 @@ HttpHandler.prototype.serve = function (request, response) {
     });
 };
 
+
+/**
+ * Handle the /assets/locales/magic.json request
+ * Find the closest translation we have for the language
+ * set in the browser.
+ **/
 var serveMagicLocale = function (request, response) {
-    var that = this;
+    var that = this,
+        default_locale_id = 'en-gb';
 
     if (request.headers['accept-language']) {
         fs.readdir('client/assets/locales', function (err, files) {
             var available = [],
                 i = 0,
-                langs = request.headers['accept-language'].split(','); // Example: en-gb,en;q=0.5
+                langs = request.headers['accept-language'].split(','), // Example: en-gb,en;q=0.5
+                found_locale = default_locale_id;
 
             // Get a list of the available translations we have
             files.forEach(function (file) {
@@ -90,38 +118,89 @@ var serveMagicLocale = function (request, response) {
                 if (langs[i][0] === '*') {
                     break;
                 } else if (_.contains(available, langs[i][0])) {
-                    return that.file_server.serveFile('/assets/locales/' + langs[i][0] + '.json', 200, {Vary: 'Accept-Language', 'Content-Language': langs[i][0]}, request, response);
+                    found_locale = langs[i][0];
+                    break;
                 }
             }
 
-            serveFallbackLocale.call(that, request, response);
+            return serveLocale.call(that, request, response, found_locale);
         });
     } else {
-        serveFallbackLocale.call(that, request, response);
+
+        // No accept-language specified in the request so send the default
+        return serveLocale.call(this, request, response, default_locale_id);
     }
+
 };
 
-var serveFallbackLocale = function (request, response) {
-    //en-gb is our default language, so we serve this as the last possible answer for everything
-    this.file_server.serveFile('/assets/locales/en-gb.json', 200, {Vary: 'Accept-Language', 'Content-Language': 'en-gb'}, request, response);
+
+/**
+ * Send a locale to the browser
+ */
+var serveLocale = function (request, response, locale_id) {
+    this.file_server.serveFile('/assets/locales/' + locale_id + '.json', 200, {
+        Vary: 'Accept-Language',
+        'Content-Language': locale_id
+    }, request, response);
 };
 
-var cached_settings = {
-    debug: {
-        hash: '',
-        settings: ''
-    },
-    production: {
-        hash: '',
-        settings: ''
+
+/**
+ * Handle the settings.json request
+ */
+function serveSettings(request, response) {
+    var referrer_url,
+        debug = false,
+        settings;
+
+    // Check the referrer for a debug option
+    if (request.headers['referer']) {
+        referrer_url = url.parse(request.headers['referer'], true);
+        if (referrer_url.query && referrer_url.query.debug) {
+            debug = true;
+        }
     }
-};
 
-config.on('loaded', function () {
-    cached_settings.debug.settings = cached_settings.production.settings = '';
-    cached_settings.debug.hash = cached_settings.production.hash = '';
-});
+    settings = cached_settings[debug ? 'debug' : 'production'];
 
+    // Generate the settings if we don't have them cached as yet
+    if (settings.settings === '') {
+        generateSettings(request, debug, function (err, settings) {
+            if (err) {
+                response.statusCode = 500;
+                response.end();
+            } else {
+                sendSettings.call(this, request, response, settings);
+            }
+        });
+
+    } else {
+        sendSettings.call(this, request, response, settings);
+    }
+}
+
+
+/**
+ * Send the the settings to the browser
+ */
+function sendSettings(request, response, settings) {
+    if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
+        response.writeHead(304, 'Not Modified');
+        return response.end();
+    }
+
+    response.writeHead(200, {
+        'ETag': settings.hash,
+        'Content-Type': 'application/json'
+    });
+    response.end(settings.settings);
+}
+
+
+/**
+ * Generate a settings object for the client.
+ * Settings include available translations, default client config, etc
+ */
 function generateSettings(request, debug, callback) {
     var vars = {
             server_settings: {},
@@ -226,6 +305,7 @@ function generateSettings(request, debug, callback) {
         vars.client_plugins = config.get().client_plugins;
     }
 
+    // Get a list of available translations
     fs.readFile(__dirname + '/../client/assets/src/translations/translations.json', function (err, translations) {
         if (err) {
             return callback(err);
@@ -255,42 +335,3 @@ function generateSettings(request, debug, callback) {
     });
 }
 
-function serveSettings(request, response) {
-    var referrer_url,
-        debug = false,
-        settings;
-
-    if (request.headers['referer']) {
-        referrer_url = url.parse(request.headers['referer'], true);
-        if (referrer_url.query && referrer_url.query.debug) {
-            debug = true;
-        }
-    }
-
-    settings = cached_settings[debug ? 'debug' : 'production'];
-    if (settings.settings === '') {
-        generateSettings(request, debug, function (err, settings) {
-            if (err) {
-                response.statusCode = 500;
-                response.end();
-            } else {
-                sendSettings.call(this, request, response, settings);
-            }
-        });
-    } else {
-        sendSettings.call(this, request, response, settings);
-    }
-}
-
-function sendSettings(request, response, settings) {
-    if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
-        response.writeHead(304, 'Not Modified');
-        return response.end();
-    }
-
-    response.writeHead(200, {
-        'ETag': settings.hash,
-        'Content-Type': 'application/json'
-    });
-    response.end(settings.settings);
-}
