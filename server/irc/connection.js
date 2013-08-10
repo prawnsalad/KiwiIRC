@@ -207,6 +207,9 @@ IrcConnection.prototype.connect = function () {
                     localAddress: outgoing
                 });
 
+                // We need the raw socket connect event
+                that.socket.socket.on('connect', function() { rawSocketConnect.call(that, this); });
+
                 socket_connect_event_name = 'secureConnect';
 
             } else {
@@ -221,19 +224,16 @@ IrcConnection.prototype.connect = function () {
         // Apply the socket listeners
         that.socket.on(socket_connect_event_name, function socketConnectCb() {
 
-            // SSL connections have the actual socket as a property
-            var socket = (typeof this.socket !== 'undefined') ?
-                this.socket :
-                this;
+            // TLS connections have the actual socket as a property
+            var is_tls = (typeof this.socket !== 'undefined') ?
+                true :
+                false;
+
+            // TLS sockets have already called this
+            if (!is_tls)
+                rawSocketConnect.call(that, this);
 
             that.connected = true;
-
-            // Make note of the port numbers for any identd lookups
-            // Nodejs < 0.9.6 has no socket.localPort so check this first
-            if (socket.localPort) {
-                that.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
-                global.clients.port_pairs[that.identd_port_pair] = that;
-            }
 
             socketConnectHandler.call(that);
         });
@@ -524,6 +524,19 @@ function onUserKick(event){
 }
 
 
+
+/**
+ * When a socket connects to an IRCd
+ * May be called before any socket handshake are complete (eg. TLS)
+ */
+var rawSocketConnect = function(socket) {
+    // Make note of the port numbers for any identd lookups
+    // Nodejs < 0.9.6 has no socket.localPort so check this first
+    if (typeof socket.localPort != 'undefined') {
+        this.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
+        global.clients.port_pairs[this.identd_port_pair] = this;
+    }
+};
 
 
 /**
