@@ -341,6 +341,8 @@ _kiwi.model.Application = function () {
 
 
         this.bindGatewayCommands = function (gw) {
+            var that = this;
+
             gw.on('onconnect', function (event) {
                 that.view.barsShow();
             });
@@ -407,6 +409,17 @@ _kiwi.model.Application = function () {
                 });
             })();
 
+            gw.on('kiwi:reconfig', function () {
+                $.getJSON(that.get('base_path') + '/assets/settings.json', function (data) {
+                    console.log(data);
+                    if (typeof data.kiwi_server !== 'undefined') {
+                        _kiwi.app.kiwi_server = data.kiwi_server;
+                    }
+
+                    that.server_settings = data.server_settings || {};
+                    that.translations = data.translations || {};
+                });
+            });
         };
 
 

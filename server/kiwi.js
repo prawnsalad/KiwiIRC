@@ -146,6 +146,13 @@ global.servers = {
 
 
 
+config.on('loaded', function () {
+    for (var client in global.clients.clients) {
+        global.clients.clients[client].sendKiwiCommand('reconfig');
+    }
+});
+
+
 
 /*
  * Identd server
