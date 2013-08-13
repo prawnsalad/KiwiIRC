@@ -147,9 +147,28 @@ global.servers = {
 
 
 config.on('loaded', function () {
+    var clients = [];
     for (var client in global.clients.clients) {
-        global.clients.clients[client].sendKiwiCommand('reconfig');
+        clients.push(global.clients.clients[client]);
     }
+    var sendReconfigCommand = function (list) {
+        var cutoff;
+        if (list.length >= 100) {
+            setTimeout(function () {
+                sendReconfigCommand(list.slice(100));
+            }, 200);
+            cutoff = 100;
+        } else {
+            cutoff = list.length;
+        }
+        list.slice(0, cutoff).forEach(function (client) {
+            if (!client.disposed) {
+                client.sendKiwiCommand('reconfig');
+            }
+        });
+    };
+
+    sendReconfigCommand(clients);
 });
 
 

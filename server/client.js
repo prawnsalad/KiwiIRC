@@ -45,6 +45,8 @@ var Client = function (websocket) {
     websocket.on('error', function () {
         websocketError.apply(that, arguments);
     });
+
+    this.disposed = false;
 };
 util.inherits(Client, events.EventEmitter);
 
@@ -67,6 +69,7 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 };
 
 Client.prototype.dispose = function () {
+    this.disposed = true;
     this.emit('dispose');
     this.removeAllListeners();
 };
