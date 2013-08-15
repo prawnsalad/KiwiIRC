@@ -17,7 +17,7 @@
             }
         }
 
-        filepicker.makeDropPane($("#kiwi #panels")[0], { onSuccess: uploaded });
+        filepicker.makeDropPane($("#kiwi .panels")[0], { onSuccess: uploaded });
 
         var $icon = $("<a class=\"upload\" title=\"Send File\"><i class=\"icon-upload-alt\"></i></a>");
         $icon.click(function () { filepicker.pickMultiple(uploaded); });
