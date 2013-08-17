@@ -4,30 +4,6 @@
 
 
 /**
-*   Suppresses console.log
-*   @param  {Boolean}   debug   Whether to re-enable console.log or not
-*/
-function manageDebug(debug) {
-    var log, consoleBackUp;
-    if (window.console) {
-        consoleBackUp = window.console.log;
-        window.console.log = function () {
-            if (debug) {
-                consoleBackUp.apply(console, arguments);
-            }
-        };
-    } else {
-        log = window.opera ? window.opera.postError : alert;
-        window.console = {};
-        window.console.log = function (str) {
-            if (debug) {
-                log(str);
-            }
-        };
-    }
-}
-
-/**
 *   Generate a random string of given length
 *   @param      {Number}    string_length   The length of the random string
 *   @returns    {String}                    The random string
@@ -138,7 +114,7 @@ function InputPreProcessor () {
 
                 // Did we find anything or does the word it refers to non-existant?
                 if (!num || !words[num[1]]) continue;
-                
+
                 if (num[2] === '+' && num[3]) {
                     // Add X number of words
                     compiled = compiled.concat(words.slice(parseInt(num[1], 10), parseInt(num[1], 10) + parseInt(num[3], 10)));
@@ -182,7 +158,7 @@ function InputPreProcessor () {
 
         if (this.aliases[words[0]]) {
             words = this.processInput(words);
-            
+
             if (this.aliases[words[0]]) {
                 words = this.process(words.join(' ')).split(' ');
             }

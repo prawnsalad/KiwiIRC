@@ -41,13 +41,6 @@ _kiwi.model.Application = function () {
 
 
         this.start = function () {
-            // Only debug if set in the querystring
-            if (!getQueryVariable('debug')) {
-                manageDebug(false);
-            } else {
-                //manageDebug(true);
-            }
-
             // Set the gateway up
             _kiwi.gateway = new _kiwi.model.Gateway();
             this.bindGatewayCommands(_kiwi.gateway);
