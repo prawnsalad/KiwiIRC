@@ -438,10 +438,12 @@ _kiwi.model.Application = function () {
                     var jump_server_interval = Math.random() * (90 - 60) + 60;
 
                     var msg = 'In 1 minutes time you will be reconnected to a more stable server. Get ready!';
+                    var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
                     that.message.text(msg, {timeout: 10000});
 
                     setTimeout(function forcedReconnect() {
                         var msg = 'Safely reconnecting you now..';
+                        var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_reconnect').fetch();
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
