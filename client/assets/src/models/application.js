@@ -345,7 +345,10 @@ _kiwi.model.Application = function () {
              * Handle the reconnections to the kiwi server
              */
             (function () {
+                // 0 = non-reconnecting state. 1 = reconnecting state.
                 var gw_stat = 0;
+
+                // If the current or upcoming disconnect was planned
                 var unplanned_disconnect = false;
 
                 gw.on('disconnect', function (event) {
@@ -393,7 +396,7 @@ _kiwi.model.Application = function () {
                         that.message.text(msg, {timeout: 5000});
                     }
 
-                    // Mention the disconnection on every channel
+                    // Mention the re-connection on every channel
                     _kiwi.app.connections.forEach(function(connection) {
                         connection.panels.server.addMsg('', msg, 'action join');
 
@@ -419,17 +422,25 @@ _kiwi.model.Application = function () {
 
 
             gw.on('kiwi:jumpserver', function (data) {
-                // Switching kiwi server?
-                if (typeof data.kiwi_server !== 'undefined') {
-                    _kiwi.app.kiwi_server = data.kiwi_server;
-                    _kiwi.gateway.set('kiwi_server', data.kiwi_server);
-                }
+                var serv;
+                // No server set? Then nowhere to jump to.
+                if (typeof data.kiwi_server === 'undefined')
+                    return;
+
+                serv = data.kiwi_server;
+
+                // Strip any trailing slash from the end
+                if (serv[serv.length-1] === '/')
+                    serv = serv.substring(0, serv.length-1);
+
+                _kiwi.app.kiwi_server = serv;
 
                 // Force the jumpserver now?
                 if (data.force) {
                     // Get an interval around 1 minute so everyone doesn't reconnect it all at once
                     var jump_server_interval = Math.random() * (90 - 60) + 60;
 
+                    // Tell the user we are going to disconnect, wait a minute then do the actual reconnect
                     var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
                     that.message.text(msg, {timeout: 10000});
 
@@ -438,7 +449,10 @@ _kiwi.model.Application = function () {
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
-                            _kiwi.gateway.reconnect();
+                            _kiwi.gateway.reconnect(function() {
+                                // Reconnect all the IRC connections
+                                that.connections.forEach(function(con){ con.reconnect(); });
+                            });
                         }, 5000);
 
                     }, jump_server_interval * 1000);
