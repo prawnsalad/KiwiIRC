@@ -3,9 +3,9 @@ var fs          = require('fs'),
     util        = require('util'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
-    rehash      = require('./rehash.js'),
     modules     = require('./modules.js'),
-    Identd      = require('./identd.js');
+    Identd      = require('./identd.js'),
+    ControlInterface = require('./controlinterface.js');
 
 
 
@@ -306,63 +306,5 @@ process.on('SIGUSR2', function() {
 /*
  * Listen for runtime commands
  */
-
 process.stdin.resume();
-process.stdin.on('data', function (buffered) {
-    var data = buffered.toString().trim(),
-        data_parts = data.split(' '),
-        cmd = data_parts[0] || null;
-
-    switch (cmd) {
-        case 'stats':
-            console.log('Connected clients: ' + _.size(global.clients.clients).toString());
-            console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
-            break;
-
-        case 'reconfig':
-            if (config.loadConfig()) {
-                console.log('New config file loaded');
-            } else {
-                console.log("No new config file was loaded");
-            }
-
-            break;
-
-
-        case 'rehash':
-            (function () {
-                rehash.rehashAll();
-                console.log('Rehashed');
-            })();
-
-            break;
-
-        case 'jumpserver':
-            (function() {
-                var num_clients = _.size(global.clients.clients),
-                    packet = {}, parts_idx;
-
-                if (num_clients === 0) {
-                    console.log('No connected clients');
-                    return;
-                }
-
-                // For each word in the line minus the last, add it to the packet
-                for(parts_idx=1; parts_idx<data_parts.length-1; parts_idx++){
-                    packet[data_parts[parts_idx]] = true;
-                }
-
-                packet.kiwi_server = data_parts[parts_idx];
-
-                console.log('Broadcasting jumpserver to ' + num_clients.toString() + ' clients..');
-                global.clients.broadcastKiwiCommand('jumpserver', packet, function() {
-                    console.log('Broadcast complete.');
-                });
-            })();
-
-            break;
-
-        default:
-            console.log('Unrecognised command: ' + data);
-    }
-});
+new ControlInterface(process.stdin, process.stdout, {prompt: ''});
