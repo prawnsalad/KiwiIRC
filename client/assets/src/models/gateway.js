@@ -50,11 +50,14 @@ _kiwi.model.Gateway = function () {
 
     this.initialize = function () {
         that = this;
-        
+
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
 
         this.applyEventHandlers();
+
+        // Used to check if a disconnection was unplanned
+        this.disconnect_requested = false;
     };
 
 
@@ -71,7 +74,7 @@ _kiwi.model.Gateway = function () {
         kiwi.gateway.on('quit', my_function);
         */
         var that = this;
-        
+
         // Some easier handler events
         this.on('onmsg', function (event) {
             var source,
@@ -79,7 +82,7 @@ _kiwi.model.Gateway = function () {
                 is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
-            
+
             that.trigger('message:' + source, event);
             that.trigger('message', event);
 
@@ -105,7 +108,7 @@ _kiwi.model.Gateway = function () {
                 is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
-            
+
             that.trigger('action:' + source, event);
 
             if (is_pm) {
@@ -126,6 +129,14 @@ _kiwi.model.Gateway = function () {
             that.trigger('join', event);
         });
 
+    };
+
+
+
+    this.reconnect = function (callback) {
+        this.disconnect_requested = true;
+        this.socket.disconnect();
+        this.connect(callback);
     };
 
 
@@ -177,18 +188,10 @@ _kiwi.model.Gateway = function () {
          * IRCD and the nick has been accepted.
          */
         this.socket.on('connect', function () {
+            // Reset the disconnect_requested flag
+            that.disconnect_requested = false;
+
             callback && callback();
-            /*
-            this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
-                if (!err) {
-                    that.server_num = server_num;
-                    console.log("_kiwi.gateway.socket.on('connect')");
-                } else {
-                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
-                    callback(err);
-                }
-            });
-            */
         });
 
         this.socket.on('too_many_connections', function () {
@@ -239,7 +242,7 @@ _kiwi.model.Gateway = function () {
 
                 console.log("_kiwi.gateway.socket.on('connect')");
                 callback_fn && callback_fn(err, connection);
-                
+
             } else {
                 console.log("_kiwi.gateway.socket.on('error')", {reason: err});
                 callback_fn && callback_fn(err);

@@ -111,12 +111,52 @@ global.clients = {
         } else {
             return 0;
         }
+    },
+
+    broadcastKiwiCommand: function (command, data, callback) {
+        var clients = [];
+
+        // Get an array of clients for us to work with
+        for (var client in global.clients.clients) {
+            clients.push(global.clients.clients[client]);
+        }
+
+
+        // Sending of the command in batches
+        var sendCommandBatch = function (list) {
+            var batch_size = 100,
+                cutoff;
+
+            if (list.length >= batch_size) {
+                // If we have more clients than our batch size, call ourself with the next batch
+                setTimeout(function () {
+                    sendCommandBatch(list.slice(batch_size));
+                }, 200);
+
+                cutoff = batch_size;
+
+            } else {
+                cutoff = list.length;
+            }
+
+            list.slice(0, cutoff).forEach(function (client) {
+                if (!client.disposed) {
+                    client.sendKiwiCommand(command, data);
+                }
+            });
+
+            if (cutoff === list.length && typeof callback === 'function') {
+                callback();
+            }
+        };
+
+        sendCommandBatch(clients);
     }
 };
 
 global.servers = {
     servers: Object.create(null),
-    
+
     addConnection: function (connection) {
         var host = connection.irc_host.hostname;
         if (!this.servers[host]) {
@@ -124,7 +164,7 @@ global.servers = {
         }
         this.servers[host].push(connection);
     },
-    
+
     removeConnection: function (connection) {
         var host = connection.irc_host.hostname
         if (this.servers[host]) {
@@ -134,7 +174,7 @@ global.servers = {
             }
         }
     },
-    
+
     numOnHost: function (host) {
         if (this.servers[host]) {
             return this.servers[host].length;
@@ -146,29 +186,12 @@ global.servers = {
 
 
 
+/**
+ * When a new config is loaded, send out an alert to the clients so
+ * so they can reload it
+ */
 config.on('loaded', function () {
-    var clients = [];
-    for (var client in global.clients.clients) {
-        clients.push(global.clients.clients[client]);
-    }
-    var sendReconfigCommand = function (list) {
-        var cutoff;
-        if (list.length >= 100) {
-            setTimeout(function () {
-                sendReconfigCommand(list.slice(100));
-            }, 200);
-            cutoff = 100;
-        } else {
-            cutoff = list.length;
-        }
-        list.slice(0, cutoff).forEach(function (client) {
-            if (!client.disposed) {
-                client.sendKiwiCommand('reconfig');
-            }
-        });
-    };
-
-    sendReconfigCommand(clients);
+    global.clients.broadcastKiwiCommand('reconfig');
 });
 
 
@@ -286,9 +309,11 @@ process.on('SIGUSR2', function() {
 
 process.stdin.resume();
 process.stdin.on('data', function (buffered) {
-    var data = buffered.toString().trim();
+    var data = buffered.toString().trim(),
+        data_parts = data.split(' '),
+        cmd = data_parts[0] || null;
 
-    switch (data) {
+    switch (cmd) {
         case 'stats':
             console.log('Connected clients: ' + _.size(global.clients.clients).toString());
             console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
@@ -308,6 +333,32 @@ process.stdin.on('data', function (buffered) {
             (function () {
                 rehash.rehashAll();
                 console.log('Rehashed');
+            })();
+
+            break;
+
+        case 'jumpserver':
+            (function() {
+                var num_clients = _.size(global.clients.clients),
+                    packet = {}, parts_idx;
+
+                if (num_clients === 0) {
+                    console.log('No connected clients');
+                    return;
+                }
+
+                // For each word in the line minus the last, add it to the packet
+                for(parts_idx=1; parts_idx<data_parts.length-1; parts_idx++){
+                    console.log('flag:', data_parts[parts_idx]);
+                    packet[data_parts[parts_idx]] = true;
+                }
+
+                packet.kiwi_server = data_parts[parts_idx];
+
+                console.log('Broadcasting jumpserver to ' + num_clients.toString() + ' clients..');
+                global.clients.broadcastKiwiCommand('jumpserver', packet, function() {
+                    console.log('Broadcast complete.');
+                });
             })();
 
             break;

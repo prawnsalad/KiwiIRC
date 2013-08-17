@@ -353,10 +353,15 @@ _kiwi.model.Application = function () {
              */
             (function () {
                 var gw_stat = 0;
+                var unplanned_disconnect = false;
 
                 gw.on('disconnect', function (event) {
-                    var msg = _kiwi.global.i18n.translate('client_models_application_reconnecting').fetch() + '...';
-                    that.message.text(msg, {timeout: 10000});
+                    unplanned_disconnect = !gw.disconnect_requested;
+
+                    if (unplanned_disconnect) {
+                        var msg = _kiwi.global.i18n.translate('client_models_application_reconnecting').fetch() + '...';
+                        that.message.text(msg, {timeout: 10000});
+                    }
 
                     that.view.$el.removeClass('connected');
 
@@ -390,8 +395,10 @@ _kiwi.model.Application = function () {
                     that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
 
-                    var msg = _kiwi.global.i18n.translate('client_models_application_reconnect_successfully').fetch() + ':)';
-                    that.message.text(msg, {timeout: 5000});
+                    if (unplanned_disconnect) {
+                        var msg = _kiwi.global.i18n.translate('client_models_application_reconnect_successfully').fetch() + ':)';
+                        that.message.text(msg, {timeout: 5000});
+                    }
 
                     // Mention the disconnection on every channel
                     _kiwi.app.connections.forEach(function(connection) {
@@ -409,16 +416,40 @@ _kiwi.model.Application = function () {
                 });
             })();
 
+
             gw.on('kiwi:reconfig', function () {
                 $.getJSON(that.get('base_path') + '/assets/settings.json', function (data) {
-                    console.log(data);
-                    if (typeof data.kiwi_server !== 'undefined') {
-                        _kiwi.app.kiwi_server = data.kiwi_server;
-                    }
-
                     that.server_settings = data.server_settings || {};
                     that.translations = data.translations || {};
                 });
+            });
+
+
+            gw.on('kiwi:jumpserver', function (data) {
+                // Switching kiwi server?
+                if (typeof data.kiwi_server !== 'undefined') {
+                    _kiwi.app.kiwi_server = data.kiwi_server;
+                    _kiwi.gateway.set('kiwi_server', data.kiwi_server);
+                }
+
+                // Force the jumpserver now?
+                if (data.force) {
+                    // Get an interval around 1 minute so everyone doesn't reconnect it all at once
+                    var jump_server_interval = Math.random() * (90 - 60) + 60;
+
+                    var msg = 'In 1 minutes time you will be reconnected to a more stable server. Get ready!';
+                    that.message.text(msg, {timeout: 10000});
+
+                    setTimeout(function forcedReconnect() {
+                        var msg = 'Safely reconnecting you now..';
+                        that.message.text(msg, {timeout: 8000});
+
+                        setTimeout(function forcedReconnectPartTwo() {
+                            _kiwi.gateway.reconnect();
+                        }, 5000);
+
+                    }, jump_server_interval * 1000);
+                }
             });
         };
 
@@ -502,7 +533,7 @@ _kiwi.model.Application = function () {
                 $script(ev.params[0] + '?' + (new Date().getTime()));
             });
 
-            
+
             controlbox.on('command:set', function (ev) {
                 if (!ev.params[0]) return;
 
@@ -572,7 +603,7 @@ _kiwi.model.Application = function () {
                 controlbox.preprocessor.aliases[name] = rule;
             });
 
-            
+
             controlbox.on('command:ignore', function (ev) {
                 var list = _kiwi.gateway.get('ignore_list');
 
@@ -652,7 +683,7 @@ _kiwi.model.Application = function () {
             }
 
             if (panel) panel.view.show();
-            
+
         }
 
         function msgCommand (ev) {
@@ -784,7 +815,7 @@ _kiwi.model.Application = function () {
                     return;
                 }
             }
-            
+
             _kiwi.app.connections.active_connection.panels.add(panel);
             panel.view.show();
         }
