@@ -349,7 +349,6 @@ process.stdin.on('data', function (buffered) {
 
                 // For each word in the line minus the last, add it to the packet
                 for(parts_idx=1; parts_idx<data_parts.length-1; parts_idx++){
-                    console.log('flag:', data_parts[parts_idx]);
                     packet[data_parts[parts_idx]] = true;
                 }
 
