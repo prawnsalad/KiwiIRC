@@ -30,7 +30,6 @@ function SocketClient (socket) {
 
     this.control_interface = new ControlInterface(socket);
     _.each(socket_commands, function(fn, command_name) {
-        console.log('adding command', command_name);
         that.control_interface.addCommand(command_name, fn.bind(that));
     });
 }
