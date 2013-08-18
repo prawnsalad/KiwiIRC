@@ -114,6 +114,11 @@ commands.jumpserver = function(args, raw) {
 
     packet.kiwi_server = args[args_idx];
 
+    if (!packet.kiwi_server) {
+        this.write('No Kiwi server specified');
+        return;
+    }
+
     this.write('Broadcasting jumpserver to ' + num_clients.toString() + ' clients..');
     global.clients.broadcastKiwiCommand('jumpserver', packet, function() {
         that.write('Broadcast complete.');
