@@ -199,7 +199,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             $media.data('media', media_message);
         }
 
-        media_message.open();
+        media_message.toggle();
     },
 
     // Cursor hovers over a message
