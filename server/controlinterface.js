@@ -84,25 +84,26 @@ commands.stats = function(args, raw) {
 
 commands.reconfig = function(args, raw) {
     if (config.loadConfig()) {
-        console.log('New config file loaded');
+        this.write('New config file loaded');
     } else {
-        console.log("No new config file was loaded");
+        this.write("No new config file was loaded");
     }
 };
 
 
 commands.rehash = function(args, raw) {
     rehash.rehashAll();
-    console.log('Rehashed');
+    this.write('Rehashed');
 };
 
 
 commands.jumpserver = function(args, raw) {
-    var num_clients = _.size(global.clients.clients),
+    var that = this,
+        num_clients = _.size(global.clients.clients),
         packet = {}, args_idx;
 
     if (num_clients === 0) {
-        console.log('No connected clients');
+        this.write('No connected clients');
         return;
     }
 
@@ -113,9 +114,9 @@ commands.jumpserver = function(args, raw) {
 
     packet.kiwi_server = args[args_idx];
 
-    console.log('Broadcasting jumpserver to ' + num_clients.toString() + ' clients..');
+    this.write('Broadcasting jumpserver to ' + num_clients.toString() + ' clients..');
     global.clients.broadcastKiwiCommand('jumpserver', packet, function() {
-        console.log('Broadcast complete.');
+        that.write('Broadcast complete.');
     });
 };
 
