@@ -118,7 +118,9 @@ function kiwiCommand(command, callback) {
                 this.state.connect(
                     (global.config.restrict_server || command.hostname),
                     (global.config.restrict_server_port || command.port),
-                    (global.config.restrict_server_ssl || command.ssl),
+                    (typeof global.config.restrict_server_ssl !== 'undefined' ?
+                        global.config.restrict_server_ssl :
+                        command.ssl),
                     command.nick,
                     {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
                     (global.config.restrict_server_password || command.password),
