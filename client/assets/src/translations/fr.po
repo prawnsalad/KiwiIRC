@@ -304,7 +304,7 @@ msgstr "Des gens parlent !"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Pensez à un pseudonyme…"
+msgstr "Choisissez un pseudonyme : "
 
 #: 
 msgid "client_views_serverselect_nickname"
