@@ -23,7 +23,7 @@ if (version_values[1] >= 10) {
     Socks = require('socksjs');
 }
 
-var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_num) {
+var IrcConnection = function (hostname, port, ssl, nick, user, options, state, con_num) {
     var that = this;
 
     EE.call(this,{
@@ -32,9 +32,8 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_
     });
     this.setMaxListeners(0);
 
-    // Set the first configured encoding as the default encoding
-    this.encoding = global.config.default_encoding;
-    
+    options = options || {};
+
     // Socket state
     this.connected = false;
 
@@ -57,7 +56,12 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state, con_
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
-    this.password = pass;
+    this.password = options.password || '';
+
+    // Set the passed encoding. or the default if none giving or it fails
+    if (!options.encoding || !this.setEncoding(options.encoding)) {
+        this.setEncoding(global.config.default_encoding);
+    }
 
     // State object
     this.state = state;
@@ -670,7 +674,7 @@ var parse = function (data) {
         line = iconv.decode(bufs[i], this.encoding);
         bufs[i] = null;
         if (!line) break;
-        
+
         // Parse the complete line, removing any carriage returns
         msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 

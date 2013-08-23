@@ -297,6 +297,9 @@ _kiwi.model.Application = function () {
             // Set any random numbers if needed
             defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
 
+            if (getQueryVariable('encoding'))
+                defaults.encoding = getQueryVariable('encoding');
+
             // Populate the server select box with defaults
             new_connection_dialog.view.populateFields(defaults);
         };

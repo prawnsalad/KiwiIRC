@@ -85,7 +85,8 @@ _kiwi.view.ServerSelect = function () {
                 ssl: $('input.ssl', this.$el).prop('checked'),
                 password: $('input.password', this.$el).val(),
                 channel: $('input.channel', this.$el).val(),
-                channel_key: $('input.channel_key', this.$el).val()
+                channel_key: $('input.channel_key', this.$el).val(),
+                options: this.server_options
             };
 
             this.trigger('server_connect', values);
@@ -164,6 +165,12 @@ _kiwi.view.ServerSelect = function () {
             if (!(!channel_key)) {
                 $('tr.key', this.$el).show();
             }
+
+            // Temporary values
+            this.server_options = {};
+
+            if (defaults.encoding)
+                this.server_options.encoding = defaults.encoding;
         },
 
         hide: function () {

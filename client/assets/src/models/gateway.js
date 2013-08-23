@@ -290,6 +290,10 @@ _kiwi.model.Gateway = function () {
             password:   connection_info.password
         };
 
+        // A few optional parameters
+        if (connection_info.options.encoding)
+            server_info.encoding = connection_info.options.encoding;
+
         this.socket.emit('kiwi', server_info, function (err, server_num) {
             if (!err) {
                 callback_fn && callback_fn(err, server_num);

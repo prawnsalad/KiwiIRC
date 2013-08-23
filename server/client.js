@@ -113,7 +113,13 @@ function kiwiCommand(command, callback) {
     switch (command.command) {
         case 'connect':
             if (command.hostname && command.port && command.nick) {
-                var con;
+                var options = {};
+
+                // Get any optional parameters that may have been passed
+                if (command.encoding)
+                    options.encoding = command.encoding;
+
+                options.password = global.config.restrict_server_password || command.password;
 
                 this.state.connect(
                     (global.config.restrict_server || command.hostname),
@@ -123,7 +129,7 @@ function kiwiCommand(command, callback) {
                         command.ssl),
                     command.nick,
                     {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
-                    (global.config.restrict_server_password || command.password),
+                    options,
                     callback);
             } else {
                 return callback('Hostname, port and nickname must be specified');
