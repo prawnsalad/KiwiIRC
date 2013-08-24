@@ -348,7 +348,8 @@
             scripts = [],
             opts = {
                 container: $('#kiwi'),
-                base_path: base_path
+                base_path: base_path,
+                settings_path: base_path + '/assets/settings.json'
             };
 
         normalizeConsole();
@@ -394,7 +395,7 @@
         }
 
         // Load application settings
-        $.getJSON(base_path + '/assets/settings.json', function (data) {
+        $.getJSON(opts.settings_path, function (data) {
             scripts = scripts.concat(data.scripts);
             opts.server_settings = data.server_settings;
             opts.client_plugins = data.client_plugins;

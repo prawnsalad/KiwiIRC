@@ -23,6 +23,12 @@ _kiwi.model.Application = function () {
             // The base url to the kiwi server
             this.set('base_path', options[0].base_path ? options[0].base_path : '/kiwi');
 
+            // Path for the settings.json file
+            this.set('settings_path', options[0].settings_path ?
+                    options[0].settings_path :
+                    this.get('base_path') + '/assets/settings.json'
+            );
+
             // Any options sent down from the server
             this.server_settings = options[0].server_settings || {};
             this.translations = options[0].translations || {};
@@ -417,7 +423,7 @@ _kiwi.model.Application = function () {
 
 
             gw.on('kiwi:reconfig', function () {
-                $.getJSON(that.get('base_path') + '/assets/settings.json', function (data) {
+                $.getJSON(that.get('settings_path'), function (data) {
                     that.server_settings = data.server_settings || {};
                     that.translations = data.translations || {};
                 });
