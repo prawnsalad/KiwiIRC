@@ -1,0 +1,432 @@
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "שם הערוץ"
+
+#: 
+msgid "client_applets_chanlist_users"
+msgstr "משתמשים"
+
+#: 
+msgid "client_applets_chanlist_topic"
+msgstr "כותרת"
+
+#: 
+msgid "client_applets_chanlist_channellist"
+msgstr "רשימת ערוצים"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "שמירה"
+
+#: 
+msgid "client_applets_scripteditor_error"
+msgstr "שגיאת סקריפט. %s"
+
+#: 
+msgid "client_applets_scripteditor_saved"
+msgstr "הסקריפט שלך נשמר והופעל"
+
+#: 
+msgid "client_applets_scripteditor_title"
+msgstr "עורך סקריפטים"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "חלונות"
+
+#: 
+msgid "client_applets_settings_channelview_list"
+msgstr "רשימה"
+
+#: 
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "עקב כמות גדולה של ערוצים"
+
+#: 
+msgid "client_applets_settings_notification_joinpart"
+msgstr "התראות הצטרפות \ עזיבה"
+
+#: 
+msgid "client_applets_settings_timestamp"
+msgstr "חותמת זמן"
+
+#: 
+msgid "client_applets_settings_notification_sound"
+msgstr "השתק צלילים"
+
+#: 
+msgid "client_applets_settings_history_length"
+msgstr "אורך היסטוריה"
+
+#: 
+msgid "client_applets_settings_default_client"
+msgstr "קליינט IRC ברירת מחדל"
+
+#: 
+msgid "client_applets_settings_default_client_enable"
+msgstr "הפוך את קיווי לקליינט ברירת מחדל"
+
+#: 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "שים לב: השינויים יכנסו לתוקפם לאחר רענון העמוד"
+
+#: 
+msgid "client_applets_settings_default_client_notice"
+msgstr "שים לב: ייתכן ומשתמשי Chrome או Chromium יידרשו לבדוק את ההגדרות שלהם בעזרת %s אם כלום לא קורה"
+
+#: 
+msgid "client_applets_settings_title"
+msgstr "הגדרות"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "יישום לא ידוע"
+
+#: 
+msgid "client_models_applet_loading"
+msgstr "טוען"
+
+#: 
+msgid "client_models_applet_notfound"
+msgstr "לא נמצא"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "נותקת מהשרת. מנסה לחדש את החיבור"
+
+#: 
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "נותקת מהשרת. מנסה לחדש את החיבור בעוד %d שניות"
+
+#: 
+msgid "client_models_application_reconnect_successfully"
+msgstr "הכל בסדר, אתה שוב מחובר לשרת"
+
+#: 
+msgid "client_models_application_settings_saved"
+msgstr "השינויים נשמרו"
+
+#: 
+msgid "client_models_application_ignore_title"
+msgstr "כינויים ברשימת ההתעלמות"
+
+#: 
+msgid "client_models_application_ignore_none"
+msgstr "אין כינויים ברשימת ההתעלמות"
+
+#: 
+msgid "client_models_application_ignore_nick"
+msgstr "מתעלם מ %s"
+
+#: 
+msgid "client_models_application_ignore_stop_notice"
+msgstr "ציין עבור איזה כינוי תרצה להפסיק להתעלם"
+
+#: 
+msgid "client_models_application_ignore_stopped"
+msgstr "%s הוסר מרשימת ההתעלמות"
+
+#: 
+msgid "client_models_application_applet_notfound"
+msgstr "יישום \"%s\" לא קיים"
+
+#: 
+msgid "client_models_application_encoding_changed"
+msgstr "קידוד עודכן ל %s"
+
+#: 
+msgid "client_models_application_encoding_invalid"
+msgstr "קידוד %s אינו תקין"
+
+#: 
+msgid "client_models_application_encoding_notspecified"
+msgstr "ציין קידוד"
+
+#: 
+msgid "client_models_application_encoding_usage"
+msgstr "/encoding [קידוד-חדש] "
+
+#: 
+msgid "client_models_application_connection_create"
+msgstr "חיבור חדש"
+
+#: 
+msgid "client_models_application_connection_connecting"
+msgstr "מתחבר אל %s: %s ..."
+
+#: 
+msgid "client_models_application_connection_error"
+msgstr "שגיאת התחברות אל %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "%s הצטרף"
+
+#: 
+msgid "client_models_channel_quit"
+msgstr "%s יצא %s"
+
+#: 
+msgid "client_models_channel_kicked"
+msgstr "%s נזרק מהערוץ על ידי %s %s"
+
+#: 
+msgid "client_models_channel_selfkick"
+msgstr "נזרקת מהערוץ על ידי %s %s"
+
+#: 
+msgid "client_models_channel_part"
+msgstr "%s עזב %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "%s אינו שם ערוץ תקין"
+
+#: 
+msgid "client_models_network_disconnected"
+msgstr "נותקת מהשרת"
+
+#: 
+msgid "client_models_network_nickname_changed"
+msgstr "%s נקרא כעת %s"
+
+#: 
+msgid "client_models_network_topic"
+msgstr "הכותרת עודכנה על ידי %s בשעה %s"
+
+#: 
+msgid "client_models_network_selfmode"
+msgstr "%s הגדיר מצב %s"
+
+#: 
+msgid "client_models_network_mode"
+msgstr "%s הגדיר מצב %s"
+
+#: 
+msgid "client_models_network_channels"
+msgstr "ערוצים: %s"
+
+#: 
+msgid "client_models_network_server"
+msgstr "מחובר לשרת: %s %s"
+
+#: 
+msgid "client_models_network_idle_and_signon"
+msgstr "לא פעיל במשך %s , התחבר ב %s"
+
+#: 
+msgid "client_models_network_away"
+msgstr "לא נמצא: %s"
+
+#: 
+msgid "client_models_network_idle"
+msgstr "לא פעיל במשך %s"
+
+#: 
+msgid "client_models_network_nickname_notfound"
+msgstr "לא נמצא כינוי כזה"
+
+#: 
+msgid "client_models_network_banned"
+msgstr "אתה מורחק מערוץ %s, %s"
+
+#: 
+msgid "client_models_network_channel_badkey"
+msgstr "מפתח לא נכון עבור %s"
+
+#: 
+msgid "client_models_network_channel_inviteonly"
+msgstr "ערוץ %s מוגדר למוזמנים בלבד"
+
+#: 
+msgid "client_models_network_channel_limitreached"
+msgstr "%s מלא"
+
+#: 
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "הכינוי %s נמצא בשימוש, נא לבחור כינוי חדש"
+
+#: 
+msgid "client_models_network_badpassword"
+msgstr "סיסמה לא נכונה"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "פעולה זו תסגור את כל החלונות של קיווי, האם אתה בטוח שברצונך לסגור חלון זה?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "מצטרף לערוץ..."
+
+#: 
+msgid "client_views_channel_topic"
+msgstr "כותרת %s היא: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "סגור מדיה"
+
+#: 
+msgid "client_views_mediamessage_notfound"
+msgstr "לא נמצא"
+
+#: 
+msgid "client_views_mediamessage_load_tweet"
+msgstr "טוען ציוץ"
+
+#: 
+msgid "client_views_mediamessage_load_image"
+msgstr "טוען תמונה"
+
+#: 
+msgid "client_views_mediamessage_load_reddit"
+msgstr "טוען שרשור Reddit"
+
+#: 
+msgid "client_views_mediamessage_load_gist"
+msgstr "טוען gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "כינוי חדש"
+
+#: 
+msgid "client_views_nickchangebox_change"
+msgstr "החלף"
+
+#: 
+msgid "client_views_nickchangebox_cancel"
+msgstr "ביטול"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "אנשים משוחחים!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "חשוב על כינוי..."
+
+#: 
+msgid "client_views_serverselect_nickname"
+msgstr "כינוי"
+
+#: 
+msgid "client_views_serverselect_enable_password"
+msgstr "יש לי סיסמה"
+
+#: 
+msgid "client_views_serverselect_password"
+msgstr "סיסמה"
+
+#: 
+msgid "client_views_serverselect_channel"
+msgstr "ערוץ"
+
+#: 
+msgid "client_views_serverselect_channelkey"
+msgstr "מפתח ערוץ"
+
+#: 
+msgid "client_views_serverselect_channelkey_required"
+msgstr "חובה להכניס מפתח"
+
+#: 
+msgid "client_views_serverselect_key"
+msgstr "מפתח"
+
+#: 
+msgid "client_views_serverselect_connection_start"
+msgstr "התחל..."
+
+#: 
+msgid "client_views_serverselect_server_and_network"
+msgstr "שרת ורשת"
+
+#: 
+msgid "client_views_serverselect_server"
+msgstr "שרת"
+
+#: 
+msgid "client_views_serverselect_port"
+msgstr "פורט"
+
+#: 
+msgid "client_views_serverselect_poweredby"
+msgstr "פועל בעזרת Kiwi IRC"
+
+#: 
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "בחר כינוי תחילה!"
+
+#: 
+msgid "client_views_serverselect_connection_successfully"
+msgstr "מחובר"
+
+#: 
+msgid "client_views_serverselect_connection_trying"
+msgstr "מתחבר..."
+
+#: 
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "הכינוי שנבחר בשימוש"
+
+#: 
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "כינוי לא תקין"
+
+#: 
+msgid "client_views_serverselect_password_incorrect"
+msgstr "סיסמה שגויה"
+
+#: 
+msgid "client_views_serverselect_connection_error"
+msgstr "שגיאת התחברות"
+
+#: 
+msgid "client_views_serverselect_server_notfound"
+msgstr "שרת לא נמצא"
+
+#: 
+msgid "client_views_serverselect_connection_refused"
+msgstr "סירוב התחברות"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "מנהל"
+
+#: 
+msgid "client_views_userbox_deop"
+msgstr "הורדה מניהול"
+
+#: 
+msgid "client_views_userbox_voice"
+msgstr "קול"
+
+#: 
+msgid "client_views_userbox_devoice"
+msgstr "הסרת קול"
+
+#: 
+msgid "client_views_userbox_kick"
+msgstr "בעיטה"
+
+#: 
+msgid "client_views_userbox_ban"
+msgstr "חסימה"
+
+#: 
+msgid "client_views_userbox_query"
+msgstr "הודעה"
+
+#: 
+msgid "client_views_userbox_whois"
+msgstr "מידע"
+
+#: 
+msgid "client_views_userbox_slap"
+msgstr "סטירה"
+
+#: 
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+

@@ -50,11 +50,14 @@ _kiwi.model.Gateway = function () {
 
     this.initialize = function () {
         that = this;
-        
+
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
 
         this.applyEventHandlers();
+
+        // Used to check if a disconnection was unplanned
+        this.disconnect_requested = false;
     };
 
 
@@ -71,7 +74,7 @@ _kiwi.model.Gateway = function () {
         kiwi.gateway.on('quit', my_function);
         */
         var that = this;
-        
+
         // Some easier handler events
         this.on('onmsg', function (event) {
             var source,
@@ -79,7 +82,7 @@ _kiwi.model.Gateway = function () {
                 is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
-            
+
             that.trigger('message:' + source, event);
             that.trigger('message', event);
 
@@ -105,7 +108,7 @@ _kiwi.model.Gateway = function () {
                 is_pm = (event.channel == connection.get('nick'));
 
             source = is_pm ? event.nick : event.channel;
-            
+
             that.trigger('action:' + source, event);
 
             if (is_pm) {
@@ -126,6 +129,31 @@ _kiwi.model.Gateway = function () {
             that.trigger('join', event);
         });
 
+    };
+
+
+
+    this.reconnect = function (callback) {
+        var that = this,
+            transport_path;
+
+        this.disconnect_requested = true;
+        this.socket.disconnect();
+
+        // To get around the allow-origin issues for requests, completely reload the
+        // transport source from the new server
+        window.io = null;
+
+        // Path to get the socket.io transport code
+        transport_path = _kiwi.app.kiwi_server + _kiwi.app.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
+        $script(transport_path, function() {
+            if (!window.io) {
+                return callback('err_kiwi_server_not_found');
+            }
+
+            that.set('kiwi_server', _kiwi.app.kiwi_server + '/kiwi');
+            that.connect(callback);
+        });
     };
 
 
@@ -185,18 +213,10 @@ _kiwi.model.Gateway = function () {
          * IRCD and the nick has been accepted.
          */
         this.socket.on('connect', function () {
+            // Reset the disconnect_requested flag
+            that.disconnect_requested = false;
+
             callback && callback();
-            /*
-            this.emit('kiwi', {command: 'connect', nick: that.get('nick'), hostname: host, port: port, ssl: ssl, password:password}, function (err, server_num) {
-                if (!err) {
-                    that.server_num = server_num;
-                    console.log("_kiwi.gateway.socket.on('connect')");
-                } else {
-                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
-                    callback(err);
-                }
-            });
-            */
         });
 
         this.socket.on('too_many_connections', function () {
@@ -264,28 +284,67 @@ _kiwi.model.Gateway = function () {
 
 
 
+    /**
+     * Return a new network object with the new connection details
+     */
     this.newConnection = function(connection_info, callback_fn) {
-        var that = this,
-            h = connection_info;
+        var that = this;
 
-        this.socket.emit('kiwi', {command: 'connect', nick: h.nick, hostname: h.host, port: h.port, ssl: h.ssl, password: h.password}, function (err, server_num) {
+        this.makeIrcConnection(connection_info, function(err, server_num) {
             var connection;
 
             if (!err) {
                 if (!_kiwi.app.connections.getByConnectionId(server_num)){
-                    connection = new _kiwi.model.Network({connection_id: server_num, nick: h.nick});
+                    var inf = {
+                        connection_id: server_num,
+                        nick: connection_info.nick,
+                        address: connection_info.host,
+                        port: connection_info.port,
+                        ssl: connection_info.ssl,
+                        password: connection_info.password
+                    };
+                    connection = new _kiwi.model.Network(inf);
                     _kiwi.app.connections.add(connection);
                 }
 
-                console.log("_kiwi.gateway.socket.on('connect')");
+                console.log("_kiwi.gateway.socket.on('connect')", connection);
                 callback_fn && callback_fn(err, connection);
-                
+
             } else {
                 console.log("_kiwi.gateway.socket.on('error')", {reason: err});
                 callback_fn && callback_fn(err);
             }
         });
     };
+
+
+    /**
+     * Make a new IRC connection and return its connection ID
+     */
+    this.makeIrcConnection = function(connection_info, callback_fn) {
+        var server_info = {
+            command:    'connect',
+            nick:       connection_info.nick,
+            hostname:   connection_info.host,
+            port:       connection_info.port,
+            ssl:        connection_info.ssl,
+            password:   connection_info.password
+        };
+
+        // A few optional parameters
+        if (connection_info.options.encoding)
+            server_info.encoding = connection_info.options.encoding;
+
+        this.socket.emit('kiwi', server_info, function (err, server_num) {
+            if (!err) {
+                callback_fn && callback_fn(err, server_num);
+
+            } else {
+                callback_fn && callback_fn(err);
+            }
+        });
+    };
+
 
     this.isConnected = function () {
         return this.socket &&

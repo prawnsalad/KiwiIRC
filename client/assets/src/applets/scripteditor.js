@@ -5,8 +5,11 @@
             },
 
             initialize: function (options) {
-                var that = this;
-                this.$el = $($('#tmpl_script_editor').html().trim());
+                var that = this,
+                    text = {
+                        save: _kiwi.global.i18n.translate('client_applets_scripteditor_save').fetch()
+                    };
+                this.$el = $(_.template($('#tmpl_script_editor').html().trim(), text));
 
                 this.model.on('applet_loaded', function () {
                     that.$el.parent().css('height', '100%');
@@ -53,7 +56,7 @@
                     _kiwi.user_script = new user_fn();
 
                 } catch (err) {
-                    this.setStatus('Script error. ' + err.toString());
+                    this.setStatus(_kiwi.global.i18n.translate('client_applets_scripteditor_error').fetch(err.toString()));
                     return;
                 }
 
@@ -61,7 +64,7 @@
                 _kiwi.global.settings.set('user_script', this.editor.getValue());
                 _kiwi.global.settings.save();
 
-                this.setStatus('Your script has been saved and is now active :)');
+                this.setStatus(_kiwi.global.i18n.translate('client_applets_scripteditor_saved').fetch() + ' :)');
             },
 
 
@@ -82,8 +85,8 @@
             initialize: function () {
                 var that = this;
 
-                this.set('title', 'Script Editor');
-                this.view = new view({model: this})
+                this.set('title', _kiwi.global.i18n.translate('client_applets_scripteditor_title').fetch());
+                this.view = new view({model: this});
 
             }
         });

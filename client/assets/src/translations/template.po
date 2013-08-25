@@ -1,0 +1,361 @@
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr ""
+
+msgid "client_applets_chanlist_users"
+msgstr ""
+
+msgid "client_applets_chanlist_topic"
+msgstr ""
+
+msgid "client_applets_chanlist_channellist"
+msgstr ""
+
+
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr ""
+
+msgid "client_applets_scripteditor_error"
+msgstr ""
+
+msgid "client_applets_scripteditor_saved"
+msgstr ""
+
+msgid "client_applets_scripteditor_title"
+msgstr ""
+
+
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr ""
+
+msgid "client_applets_settings_channelview_list"
+msgstr ""
+
+msgid "client_applets_settings_channelview_list_notice"
+msgstr ""
+
+msgid "client_applets_settings_notification_joinpart"
+msgstr ""
+
+msgid "client_applets_settings_timestamp"
+msgstr ""
+
+msgid "client_applets_settings_notification_sound"
+msgstr ""
+
+msgid "client_applets_settings_history_length"
+msgstr ""
+
+msgid "client_applets_settings_default_client"
+msgstr ""
+
+msgid "client_applets_settings_default_client_enable"
+msgstr ""
+
+msgid "client_applets_settings_locale_restart_needed"
+msgstr ""
+
+msgid "client_applets_settings_default_client_notice"
+msgstr ""
+
+msgid "client_applets_settings_title"
+msgstr ""
+
+
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr ""
+
+msgid "client_models_applet_loading"
+msgstr ""
+
+msgid "client_models_applet_notfound"
+msgstr ""
+
+
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr ""
+
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr ""
+
+msgid "client_models_application_reconnect_successfully"
+msgstr ""
+
+msgid "client_models_application_settings_saved"
+msgstr ""
+
+msgid "client_models_application_ignore_title"
+msgstr ""
+
+msgid "client_models_application_ignore_none"
+msgstr ""
+
+msgid "client_models_application_ignore_nick"
+msgstr ""
+
+msgid "client_models_application_ignore_stop_notice"
+msgstr ""
+
+msgid "client_models_application_ignore_stopped"
+msgstr ""
+
+msgid "client_models_application_applet_notfound"
+msgstr ""
+
+msgid "client_models_application_encoding_changed"
+msgstr ""
+
+msgid "client_models_application_encoding_invalid"
+msgstr ""
+
+msgid "client_models_application_encoding_notspecified"
+msgstr ""
+
+msgid "client_models_application_encoding_usage"
+msgstr ""
+
+msgid "client_models_application_connection_create"
+msgstr ""
+
+msgid "client_models_application_connection_connecting"
+msgstr ""
+
+msgid "client_models_application_connection_error"
+msgstr ""
+
+
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr ""
+
+msgid "client_models_channel_quit"
+msgstr ""
+
+msgid "client_models_channel_kicked"
+msgstr ""
+
+msgid "client_models_channel_selfkick"
+msgstr ""
+
+msgid "client_models_channel_part"
+msgstr ""
+
+
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr ""
+
+msgid "client_models_network_disconnected"
+msgstr ""
+
+msgid "client_models_network_nickname_changed"
+msgstr ""
+
+msgid "client_models_network_topic"
+msgstr ""
+
+msgid "client_models_network_selfmode"
+msgstr ""
+
+msgid "client_models_network_mode"
+msgstr ""
+
+msgid "client_models_network_channels"
+msgstr ""
+
+msgid "client_models_network_server"
+msgstr ""
+
+msgid "client_models_network_idle_and_signon"
+msgstr ""
+
+msgid "client_models_network_away"
+msgstr ""
+
+msgid "client_models_network_idle"
+msgstr ""
+
+msgid "client_models_network_nickname_notfound"
+msgstr ""
+
+msgid "client_models_network_banned"
+msgstr ""
+
+msgid "client_models_network_channel_badkey"
+msgstr ""
+
+msgid "client_models_network_channel_inviteonly"
+msgstr ""
+
+msgid "client_models_network_channel_limitreached"
+msgstr ""
+
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr ""
+
+msgid "client_models_network_badpassword"
+msgstr ""
+
+
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr ""
+
+
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr ""
+
+msgid "client_views_channel_topic"
+msgstr ""
+
+
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr ""
+
+msgid "client_views_mediamessage_notfound"
+msgstr ""
+
+msgid "client_views_mediamessage_load_tweet"
+msgstr ""
+
+msgid "client_views_mediamessage_load_image"
+msgstr ""
+
+msgid "client_views_mediamessage_load_reddit"
+msgstr ""
+
+msgid "client_views_mediamessage_load_gist"
+msgstr ""
+
+
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr ""
+
+msgid "client_views_nickchangebox_change"
+msgstr ""
+
+msgid "client_views_nickchangebox_cancel"
+msgstr ""
+
+
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr ""
+
+
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr ""
+
+msgid "client_views_serverselect_nickname"
+msgstr ""
+
+msgid "client_views_serverselect_enable_password"
+msgstr ""
+
+msgid "client_views_serverselect_password"
+msgstr ""
+
+msgid "client_views_serverselect_channel"
+msgstr ""
+
+msgid "client_views_serverselect_channelkey"
+msgstr ""
+
+msgid "client_views_serverselect_channelkey_required"
+msgstr ""
+
+msgid "client_views_serverselect_key"
+msgstr ""
+
+msgid "client_views_serverselect_connection_start"
+msgstr ""
+
+msgid "client_views_serverselect_server_and_network"
+msgstr ""
+
+msgid "client_views_serverselect_server"
+msgstr ""
+
+msgid "client_views_serverselect_port"
+msgstr ""
+
+msgid "client_views_serverselect_poweredby"
+msgstr ""
+
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr ""
+
+msgid "client_views_serverselect_connection_successfully"
+msgstr ""
+
+msgid "client_views_serverselect_connection_trying"
+msgstr ""
+
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr ""
+
+msgid "client_views_serverselect_nickname_invalid"
+msgstr ""
+
+msgid "client_views_serverselect_password_incorrect"
+msgstr ""
+
+msgid "client_views_serverselect_connection_error"
+msgstr ""
+
+msgid "client_views_serverselect_server_notfound"
+msgstr ""
+
+msgid "client_views_serverselect_connection_refused"
+msgstr ""
+
+
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr ""
+
+msgid "client_views_userbox_deop"
+msgstr ""
+
+msgid "client_views_userbox_voice"
+msgstr ""
+
+msgid "client_views_userbox_devoice"
+msgstr ""
+
+msgid "client_views_userbox_kick"
+msgstr ""
+
+msgid "client_views_userbox_ban"
+msgstr ""
+
+msgid "client_views_userbox_query"
+msgstr ""
+
+msgid "client_views_userbox_whois"
+msgstr ""
+
+msgid "client_views_userbox_slap"
+msgstr ""

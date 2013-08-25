@@ -8,6 +8,14 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         this.url = this.$el.data('url');
     },
 
+    toggle: function () {
+        if (!this.$content || !this.$content.is(':visible')) {
+            this.open();
+        } else {
+            this.close();
+        }
+    },
+
     // Close the media content and remove it from display
     close: function () {
         var that = this;
@@ -20,8 +28,8 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     open: function () {
         // Create the content div if we haven't already
         if (!this.$content) {
-            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> Close media</a><br /><div class="content"></div></div>');
-            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || 'Not found :(');
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> ' + _kiwi.global.i18n.translate('client_views_mediamessage_close').fetch() + '</a><br /><div class="content"></div></div>');
+            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || _kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch() + ' :(');
         }
 
         // Now show the content if not already
@@ -47,7 +55,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(data.html);
             });
 
-            return $('<div>Loading tweet..</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_tweet').fetch() + '...</div>');
         },
 
 
@@ -64,7 +72,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(img_html);
             });
 
-            return $('<div>Loading image..</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_image').fetch() + '...</div>');
         },
 
 
@@ -100,7 +108,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(_.template(tmpl, post));
             });
 
-            return $('<div>Loading Reddit thread..</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_reddit').fetch() + '...</div>');
         },
 
 
@@ -123,7 +131,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(data.div);
             });
 
-            return $('<div>Loading gist..</div>');
+            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_gist').fetch() + '...</div>');
         }
     }
     }, {

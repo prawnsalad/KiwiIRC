@@ -22,7 +22,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
                 return;
             }
 
-            this.addMsg(' ', '== ' + member.displayNick(true) + ' has joined', 'action join');
+            this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_join').fetch(member.displayNick(true)), 'action join');
         }, this);
 
         members.bind("remove", function (member, members, options) {
@@ -30,21 +30,21 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
             var msg = (options.message) ? '(' + options.message + ')' : '';
 
             if (options.type === 'quit' && show_message) {
-                this.addMsg(' ', '== ' + member.displayNick(true) + ' has quit ' + msg, 'action quit');
+                this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_quit').fetch(member.displayNick(true), msg), 'action quit');
 
             } else if(options.type === 'kick') {
 
                 if (!options.current_user_kicked) {
                     //If user kicked someone, show the message regardless of settings.
                     if (show_message || options.current_user_initiated) {
-                        this.addMsg(' ', '== ' + member.displayNick(true) + ' was kicked by ' + options.by + ' ' + msg, 'action kick');
+                        this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_kicked').fetch(member.displayNick(true), options.by, msg), 'action kick');
                     }
                 } else {
-                    this.addMsg(' ', '== You have been kicked by ' + options.by + ' ' + msg, 'action kick');
+                    this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_selfkick').fetch(options.by, msg), 'action kick');
                 }
             } else if (show_message) {
 
-                this.addMsg(' ', '== ' + member.displayNick(true) + ' has left ' + msg, 'action part');
+                this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_part').fetch(member.displayNick(true), msg), 'action part');
             }
         }, this);
     }

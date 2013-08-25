@@ -2,15 +2,14 @@ var util            = require('util'),
     events          = require('events'),
     crypto          = require('crypto'),
     _               = require('lodash'),
-    IrcConnection   = require('./connection.js').IrcConnection,
-    IrcCommands     = require('./commands.js');
+    IrcConnection   = require('./connection.js').IrcConnection;
 
 var State = function (save_state) {
     var that = this;
 
     events.EventEmitter.call(this);
     this.save_state = save_state || false;
-    
+
     this.irc_connections = [];
     this.next_connection = 0;
 
@@ -65,7 +64,7 @@ State.prototype.savePersistence = function(callback) {
                     });
             });
         });
-        
+
         callback && callback();
     });
 }
@@ -75,7 +74,8 @@ State.prototype.stopPersistence = function(callback) {
     this.saved_persistence = true;
 };
 
-State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callback) {
+
+State.prototype.connect = function (hostname, port, ssl, nick, user, options, callback) {
     var that = this;
     var con, con_num;
 
@@ -97,7 +97,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
     if (!this.save_state || this.saved_persistence) {
         doConnect();
     } else {
-        this.savePersistence(doConnect)
+        this.savePersistence(doConnect);
     }
 
     function doConnect() {
@@ -107,20 +107,18 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
             ssl,
             nick,
             user,
-            pass,
+            options,
             that,
             con_num
         );
-        
+
         that.irc_connections[con_num] = con;
-        
-        con.irc_commands = new IrcCommands(con, con_num, that);
-        
+
         con.on('connected', function () {
             global.servers.addConnection(this);
             return callback(null, con_num);
         });
-        
+
         con.on('error', function (err) {
             console.log('irc_connection error (' + hostname + '):', err);
             return callback(err.code, {server: con_num, error: err});
@@ -145,7 +143,6 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, pass, callb
 };
 
 
-
 State.prototype.attachClient = function (new_client) {
     if (!_.contains(this.client, new_client))
         this.client.push(new_client);
@@ -159,7 +156,7 @@ State.prototype.detachClient = function (old_client) {
     this.client = _.reject(this.client, function(client) {
         return client === old_client;
     });
-    
+
     // If we have no more connected clients and we're not saving this
     // state, dispose of everything
     if (_.size(this.client) === 0 && !that.save_state) {
@@ -168,9 +165,10 @@ State.prototype.detachClient = function (old_client) {
                 irc_connection.end('QUIT :' + (global.config.quit_message || ''));
                 irc_connection.dispose();
                 global.servers.removeConnection(irc_connection);
+                that.irc_connections[i] = null;
             }
         });
-        
+
         that.dispose();
     }
 };

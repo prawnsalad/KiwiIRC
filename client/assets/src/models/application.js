@@ -23,32 +23,36 @@ _kiwi.model.Application = function () {
             // The base url to the kiwi server
             this.set('base_path', options[0].base_path ? options[0].base_path : '/kiwi');
 
+            // Path for the settings.json file
+            this.set('settings_path', options[0].settings_path ?
+                    options[0].settings_path :
+                    this.get('base_path') + '/assets/settings.json'
+            );
+
             // Any options sent down from the server
             this.server_settings = options[0].server_settings || {};
+            this.translations = options[0].translations || {};
 
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
 
             // Takes instances of model_network
             this.connections = new _kiwi.model.NetworkPanelList();
+
+            // Set any default settings before anything else is applied
+            if (this.server_settings && this.server_settings.client && this.server_settings.client.settings) {
+                this.applyDefaultClientSettings(this.server_settings.client.settings);
+            }
         };
 
 
         this.start = function () {
-            // Only debug if set in the querystring
-            if (!getQueryVariable('debug')) {
-                manageDebug(false);
-            } else {
-                //manageDebug(true);
-            }
-
             // Set the gateway up
             _kiwi.gateway = new _kiwi.model.Gateway();
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();
             this.initializeGlobals();
-            this.applyDefaultClientSettings(this.server_settings.client.settings);
 
             this.view.barsHide(true);
 
@@ -311,6 +315,9 @@ _kiwi.model.Application = function () {
             // Set any random numbers if needed
             defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
 
+            if (getQueryVariable('encoding'))
+                defaults.encoding = getQueryVariable('encoding');
+
             // Populate the server select box with defaults
             new_connection_dialog.view.populateFields(defaults);
         };
@@ -348,6 +355,8 @@ _kiwi.model.Application = function () {
 
 
         this.bindGatewayCommands = function (gw) {
+            var that = this;
+
             gw.on('onconnect', function (event) {
                 that.view.barsShow();
             });
@@ -357,11 +366,19 @@ _kiwi.model.Application = function () {
              * Handle the reconnections to the kiwi server
              */
             (function () {
+                // 0 = non-reconnecting state. 1 = reconnecting state.
                 var gw_stat = 0;
 
+                // If the current or upcoming disconnect was planned
+                var unplanned_disconnect = false;
+
                 gw.on('disconnect', function (event) {
-                    var msg = 'You have been disconnected. Attempting to reconnect for you..';
-                    that.message.text(msg, {timeout: 10000});
+                    unplanned_disconnect = !gw.disconnect_requested;
+
+                    if (unplanned_disconnect) {
+                        var msg = _kiwi.global.i18n.translate('client_models_application_reconnecting').fetch() + '...';
+                        that.message.text(msg, {timeout: 10000});
+                    }
 
                     that.view.$el.removeClass('connected');
 
@@ -382,7 +399,7 @@ _kiwi.model.Application = function () {
 
 
                 gw.on('reconnecting', function (event) {
-                    var msg = 'You have been disconnected. Attempting to reconnect again in ' + (event.delay/1000) + ' seconds..';
+                    var msg = _kiwi.global.i18n.translate('client_models_application_reconnect_in_x_seconds').fetch(event.delay/1000) + '...';
 
                     // Only need to mention the repeating re-connection messages on server panels
                     _kiwi.app.connections.forEach(function(connection) {
@@ -395,10 +412,12 @@ _kiwi.model.Application = function () {
                     that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
 
-                    var msg = 'It\'s OK, you\'re connected again :)';
-                    that.message.text(msg, {timeout: 5000});
+                    if (unplanned_disconnect) {
+                        var msg = _kiwi.global.i18n.translate('client_models_application_reconnect_successfully').fetch() + ':)';
+                        that.message.text(msg, {timeout: 5000});
+                    }
 
-                    // Mention the disconnection on every channel
+                    // Mention the re-connection on every channel
                     _kiwi.app.connections.forEach(function(connection) {
                         connection.panels.server.addMsg('', msg, 'action join');
 
@@ -414,6 +433,52 @@ _kiwi.model.Application = function () {
                 });
             })();
 
+
+            gw.on('kiwi:reconfig', function () {
+                $.getJSON(that.get('settings_path'), function (data) {
+                    that.server_settings = data.server_settings || {};
+                    that.translations = data.translations || {};
+                });
+            });
+
+
+            gw.on('kiwi:jumpserver', function (data) {
+                var serv;
+                // No server set? Then nowhere to jump to.
+                if (typeof data.kiwi_server === 'undefined')
+                    return;
+
+                serv = data.kiwi_server;
+
+                // Strip any trailing slash from the end
+                if (serv[serv.length-1] === '/')
+                    serv = serv.substring(0, serv.length-1);
+
+                _kiwi.app.kiwi_server = serv;
+
+                // Force the jumpserver now?
+                if (data.force) {
+                    // Get an interval between 5 and 6 minutes so everyone doesn't reconnect it all at once
+                    var jump_server_interval = Math.random() * (360 - 300) + 300;
+
+                    // Tell the user we are going to disconnect, wait 5 minutes then do the actual reconnect
+                    var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
+                    that.message.text(msg, {timeout: 10000});
+
+                    setTimeout(function forcedReconnect() {
+                        var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_reconnect').fetch();
+                        that.message.text(msg, {timeout: 8000});
+
+                        setTimeout(function forcedReconnectPartTwo() {
+                            _kiwi.gateway.reconnect(function() {
+                                // Reconnect all the IRC connections
+                                that.connections.forEach(function(con){ con.reconnect(); });
+                            });
+                        }, 5000);
+
+                    }, jump_server_interval * 1000);
+                }
+            });
         };
 
 
@@ -462,6 +527,8 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:query', queryCommand);
 
+            controlbox.on('command:invite', inviteCommand);
+
             controlbox.on('command:topic', topicCommand);
 
             controlbox.on('command:notice', noticeCommand);
@@ -494,7 +561,7 @@ _kiwi.model.Application = function () {
                 $script(ev.params[0] + '?' + (new Date().getTime()));
             });
 
-            
+
             controlbox.on('command:set', function (ev) {
                 if (!ev.params[0]) return;
 
@@ -529,7 +596,7 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:save', function (ev) {
                 _kiwi.global.settings.save();
-                _kiwi.app.panels().active.addMsg('', 'Settings have been saved');
+                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_settings_saved').fetch());
             });
 
 
@@ -564,19 +631,19 @@ _kiwi.model.Application = function () {
                 controlbox.preprocessor.aliases[name] = rule;
             });
 
-            
+
             controlbox.on('command:ignore', function (ev) {
                 var list = _kiwi.gateway.get('ignore_list');
 
                 // No parameters passed so list them
                 if (!ev.params[0]) {
                     if (list.length > 0) {
-                        _kiwi.app.panels().active.addMsg(' ', 'Ignored nicks:');
+                        _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_title').fetch() + ':');
                         $.each(list, function (idx, ignored_pattern) {
                             _kiwi.app.panels().active.addMsg(' ', ignored_pattern);
                         });
                     } else {
-                        _kiwi.app.panels().active.addMsg(' ', 'Not ignoring anybody');
+                        _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_none').fetch());
                     }
                     return;
                 }
@@ -584,7 +651,7 @@ _kiwi.model.Application = function () {
                 // We have a parameter, so add it
                 list.push(ev.params[0]);
                 _kiwi.gateway.set('ignore_list', list);
-                _kiwi.app.panels().active.addMsg(' ', 'Ignoring ' + ev.params[0]);
+                _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_nick').fetch(ev.params[0]));
             });
 
 
@@ -592,7 +659,7 @@ _kiwi.model.Application = function () {
                 var list = _kiwi.gateway.get('ignore_list');
 
                 if (!ev.params[0]) {
-                    _kiwi.app.panels().active.addMsg(' ', 'Specifiy which nick you wish to stop ignoring');
+                    _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stop_notice').fetch());
                     return;
                 }
 
@@ -602,7 +669,7 @@ _kiwi.model.Application = function () {
 
                 _kiwi.gateway.set('ignore_list', list);
 
-                _kiwi.app.panels().active.addMsg(' ', 'Stopped ignoring ' + ev.params[0]);
+                _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stopped').fetch(ev.params[0]));
             });
 
 
@@ -644,7 +711,7 @@ _kiwi.model.Application = function () {
             }
 
             if (panel) panel.view.show();
-            
+
         }
 
         function msgCommand (ev) {
@@ -772,13 +839,34 @@ _kiwi.model.Application = function () {
                 if (_kiwi.applets[ev.params[0]]) {
                     panel.load(new _kiwi.applets[ev.params[0]]());
                 } else {
-                    _kiwi.app.panels().server.addMsg('', 'Applet "' + ev.params[0] + '" does not exist');
+                    _kiwi.app.panels().server.addMsg('', _kiwi.global.i18n.translate('client_models_application_applet_notfound').fetch(ev.params[0]));
                     return;
                 }
             }
-            
+
             _kiwi.app.connections.active_connection.panels.add(panel);
             panel.view.show();
+        }
+
+
+
+        function inviteCommand (ev) {
+            var nick, channel;
+
+            // A nick must be specified
+            if (!ev.params[0])
+                return;
+
+            // Can only invite into channels
+            if (!_kiwi.app.panels().active.isChannel())
+                return;
+
+            nick = ev.params[0];
+            channel = _kiwi.app.panels().active.get('name');
+
+            _kiwi.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
+
+            _kiwi.app.panels().active.addMsg('', '== ' + nick + ' has been invited to ' + channel, 'action');
         }
 
 
@@ -813,14 +901,14 @@ _kiwi.model.Application = function () {
             if (ev.params[0]) {
                 _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
                     if (success) {
-                        _kiwi.app.panels().active.addMsg('', "Encoding modified to "+ev.params[0]);
+                        _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_changed').fetch(ev.params[0]));
                     } else {
-                        _kiwi.app.panels().active.addMsg('', ev.params[0]+' is not a valid encoding');
+                        _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_invalid').fetch(ev.params[0]));
                     }
                 });
             } else {
-                _kiwi.app.panels().active.addMsg('', 'Encoding not specified');
-                _kiwi.app.panels().active.addMsg('', 'Usage: /encoding [NEW-ENCODING]');
+                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_notspecified').fetch());
+                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_usage').fetch());
             }
         }
 
@@ -830,7 +918,7 @@ _kiwi.model.Application = function () {
 
             // If no server address given, show the new connection dialog
             if (!ev.params[0]) {
-                tmp = new _kiwi.view.MenuBox('New Connection');
+                tmp = new _kiwi.view.MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
                 tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
                 tmp.show();
 
@@ -873,7 +961,7 @@ _kiwi.model.Application = function () {
             // Use the same nick as we currently have
             nick = _kiwi.app.connections.active_connection.get('nick');
 
-            _kiwi.app.panels().active.addMsg('', 'Connecting to ' + server + ':' + port.toString() + '..');
+            _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_connecting').fetch(server, port.toString()));
 
             _kiwi.gateway.newConnection({
                 nick: nick,
@@ -883,7 +971,7 @@ _kiwi.model.Application = function () {
                 password: password
             }, function(err, new_connection) {
                 if (err)
-                    _kiwi.app.panels().active.addMsg('', 'Error connecting to ' + server + ':' + port.toString() + ' (' + err.toString() + ')');
+                    _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_error').fetch(server, port.toString(), err.toString()));
             });
         }
 

@@ -25,7 +25,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
             if (applet_object.get || applet_object.extend) {
 
                 // Try find a title for the applet
-                this.set('title', applet_object.get('title') || 'Unknown Applet');
+                this.set('title', applet_object.get('title') || _kiwi.global.i18n.translate('client_models_applet_unknown').fetch());
 
                 // Update the tabs title if the applet changes it
                 applet_object.bind('change:title', function (obj, new_value) {
@@ -56,11 +56,11 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     loadFromUrl: function(applet_url, applet_name) {
         var that = this;
 
-        this.view.$el.html('Loading..');
+        this.view.$el.html(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
         $script(applet_url, function () {
             // Check if the applet loaded OK
             if (!_kiwi.applets[applet_name]) {
-                that.view.$el.html('Not found');
+                that.view.$el.html(_kiwi.global.i18n.translate('client_models_applet_notfound').fetch());
                 return;
             }
 

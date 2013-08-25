@@ -23,7 +23,7 @@ _kiwi.view.Application = Backbone.View.extend({
         // Confirmation require to leave the page
         window.onbeforeunload = function () {
             if (_kiwi.gateway.isConnected()) {
-                return 'This will close all KiwiIRC conversations. Are you sure you want to close this window?';
+                return _kiwi.global.i18n.translate('client_views_application_close_notice').fetch();
             }
         };
 

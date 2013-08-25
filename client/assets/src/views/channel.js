@@ -26,7 +26,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Only show the loader if this is a channel (ie. not a query)
         if (this.model.isChannel()) {
-            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;">Joining channel.. <span class="loader"></span></div>');
+            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + _kiwi.global.i18n.translate('client_views_channel_joining').fetch() + ' <span class="loader"></span></div>');
         }
     },
 
@@ -40,7 +40,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             topic = this.model.get("topic");
         }
 
-        this.model.addMsg('', '== Topic for ' + this.model.get('name') + ' is: ' + topic, 'topic');
+        this.model.addMsg('', '== ' + _kiwi.global.i18n.translate('client_views_channel_topic').fetch(this.model.get('name'), topic), 'topic');
 
         // If this is the active channel then update the topic bar
         if (_kiwi.app.panels().active === this) {
@@ -61,13 +61,15 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 userbox.member = member;
                 userbox.channel = this.model;
 
-                if (!member.get('is_op')) {
+                // Hide the op related items if we're not an op
+                if (!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
                     userbox.$el.children('.if_op').remove();
                 }
+
                 menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
                 menubox.show();
-                
+
                 // Position the userbox + menubox
                 (function() {
                     var t = event.pageY,

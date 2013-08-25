@@ -72,10 +72,8 @@ irc_numerics = {
 };
 
 
-IrcCommands = function (irc_connection, con_num, client) {
+IrcCommands = function (irc_connection) {
     this.irc_connection = irc_connection;
-    this.con_num = con_num;
-    this.client = client;
 };
 module.exports = IrcCommands;
 

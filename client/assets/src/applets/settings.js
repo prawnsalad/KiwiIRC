@@ -7,7 +7,21 @@
         },
 
         initialize: function (options) {
-            this.$el = $($('#tmpl_applet_settings').html().trim());
+            var text = {
+                tabs: _kiwi.global.i18n.translate('client_applets_settings_channelview_tabs').fetch(),
+                list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
+                large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
+                join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
+                timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
+                mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
+                scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
+                languages: _kiwi.app.translations,
+                default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
+                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
+                locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
+                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>')
+            };
+            this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
 
             if (!navigator.registerProtocolHandler) {
                 this.$el.find('.protocol_handler').remove();
@@ -43,6 +57,9 @@
                     case 'text':
                         $el.val(value);
                         break;
+                    case 'select-one':
+                        $('[value="' + value + '"]', that.$el).prop('selected', true);
+                        break;
                     default:
                         $('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
                         break;
@@ -53,7 +70,7 @@
         saveSettings: function (event) {
             var value,
                 settings = _kiwi.global.settings,
-                $setting = $(event.currentTarget, this.$el)
+                $setting = $(event.currentTarget, this.$el);
 
             switch (event.currentTarget.type) {
                 case 'checkbox':
@@ -62,6 +79,9 @@
                 case 'radio':
                 case 'text':
                     value = $setting.val();
+                    break;
+                case 'select-one':
+                    value = $(event.currentTarget[$setting.prop('selectedIndex')]).val();
                     break;
                 default:
                     value = $setting.data('value');
@@ -92,7 +112,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', 'Settings');
+            this.set('title', _kiwi.global.i18n.translate('client_applets_settings_title').fetch());
             this.view = new View();
         }
     });

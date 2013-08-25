@@ -3,9 +3,9 @@ var fs          = require('fs'),
     util        = require('util'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
-    rehash      = require('./rehash.js'),
     modules     = require('./modules.js'),
-    Identd      = require('./identd.js');
+    Identd      = require('./identd.js'),
+    ControlInterface = require('./controlinterface.js');
 
 
 
@@ -111,12 +111,52 @@ global.clients = {
         } else {
             return 0;
         }
+    },
+
+    broadcastKiwiCommand: function (command, data, callback) {
+        var clients = [];
+
+        // Get an array of clients for us to work with
+        for (var client in global.clients.clients) {
+            clients.push(global.clients.clients[client]);
+        }
+
+
+        // Sending of the command in batches
+        var sendCommandBatch = function (list) {
+            var batch_size = 100,
+                cutoff;
+
+            if (list.length >= batch_size) {
+                // If we have more clients than our batch size, call ourself with the next batch
+                setTimeout(function () {
+                    sendCommandBatch(list.slice(batch_size));
+                }, 200);
+
+                cutoff = batch_size;
+
+            } else {
+                cutoff = list.length;
+            }
+
+            list.slice(0, cutoff).forEach(function (client) {
+                if (!client.disposed) {
+                    client.sendKiwiCommand(command, data);
+                }
+            });
+
+            if (cutoff === list.length && typeof callback === 'function') {
+                callback();
+            }
+        };
+
+        sendCommandBatch(clients);
     }
 };
 
 global.servers = {
     servers: Object.create(null),
-    
+
     addConnection: function (connection) {
         var host = connection.irc_host.hostname;
         if (!this.servers[host]) {
@@ -124,7 +164,7 @@ global.servers = {
         }
         this.servers[host].push(connection);
     },
-    
+
     removeConnection: function (connection) {
         var host = connection.irc_host.hostname
         if (this.servers[host]) {
@@ -134,7 +174,7 @@ global.servers = {
             }
         }
     },
-    
+
     numOnHost: function (host) {
         if (this.servers[host]) {
             return this.servers[host].length;
@@ -144,6 +184,15 @@ global.servers = {
     }
 };
 
+
+
+/**
+ * When a new config is loaded, send out an alert to the clients so
+ * so they can reload it
+ */
+config.on('loaded', function () {
+    global.clients.broadcastKiwiCommand('reconfig');
+});
 
 
 
@@ -289,37 +338,5 @@ process.on('SIGUSR2', function() {
 /*
  * Listen for runtime commands
  */
-
 process.stdin.resume();
-process.stdin.on('data', function (buffered) {
-    var data = buffered.toString().trim();
-
-    switch (data) {
-        case 'stats':
-            console.log('Connected clients: ' + _.size(global.clients.clients).toString());
-            console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
-            console.log('Num. states: ' + _.size(global.states.states).toString());
-            break;
-
-        case 'reconfig':
-            if (config.loadConfig()) {
-                console.log('New config file loaded');
-            } else {
-                console.log("No new config file was loaded");
-            }
-
-            break;
-
-
-        case 'rehash':
-            (function () {
-                rehash.rehashAll();
-                console.log('Rehashed');
-            })();
-
-            break;
-
-        default:
-            console.log('Unrecognised command: ' + data);
-    }
-});
+new ControlInterface(process.stdin, process.stdout, {prompt: ''});
