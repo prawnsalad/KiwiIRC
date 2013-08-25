@@ -9,7 +9,7 @@ var sqlite3 = require('sqlite3'),
 
 function StorageSqlite(max_events) {
     this.max_events = max_events;
-    
+
     this.db = new sqlite3.Database('storage.sqlite3')
     this.initDb();
 }
@@ -168,7 +168,7 @@ StorageSqlite.prototype.putState = function(username, state_hash, callback) {
 
     this.db.get('SELECT id FROM users WHERE username LIKE ?', [username], function(err, row) {
         console.log('putState() args:', arguments);
-        if (!row) return (callback && callback()) || undefined;
+        if (!row) return (callback && callback('user_not_found')) || undefined;
 
         that.db.run('INSERT INTO states (user_id, hash, created) VALUES (?, ?, ?)', [
             row.id,
@@ -191,7 +191,7 @@ StorageSqlite.prototype.putConnection = function(state_hash, connection_num, con
 
     this.db.get(sql, [state_hash], function(err, row) {
         console.log('putConnection() args:', arguments);
-        if (!row) return (callback && callback()) || undefined;
+        if (!row) return (callback && callback('state_not_found')) || undefined;
 
         that.db.run('INSERT INTO connections (user_id, hash_id, num, obj, created) VALUES (?, ?, ?, ?, ?)', [
             row.user_id,
@@ -239,7 +239,7 @@ StorageSqlite.prototype.putEvent = function(state_hash, connection_num, channel_
     sql += 'LEFT JOIN states ON states.id = cons.hash_id ';
     sql += 'WHERE states.hash = ? AND cons.num = ? AND channels.name LIKE ? ';
     sql += 'LIMIT 1 ';
-    
+
     this.db.get(sql, [state_hash, connection_num, channel_name], function(err, row) {
         console.log('putEvent() args:', arguments);
         if (!row) return (callback && callback()) || undefined;
