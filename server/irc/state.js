@@ -37,37 +37,50 @@ State.prototype.savePersistence = function(callback) {
     var that = this;
 
     // Go through and save each irc_connection
-    global.storage.putState('darren', this.hash, function() {
+    global.storage.putState('darren', this.hash, function(err) {
         _.each(that.irc_connections, function (irc_connection) {
-            if (!irc_connection) return;
-
-            global.storage.putConnection(that.hash, irc_connection.con_num, {
-                nick: irc_connection.nick,
-                user: irc_connection.user,
-                username: irc_connection.username,
-                password: irc_connection.password,
-                server_host: irc_connection.irc_host.hostname,
-                server_port: irc_connection.irc_host.port,
-                server_ssl: irc_connection.ssl
-            }, function() {
-                    that.save_state = true;
-                    that.saved_persistence = true;
-
-                    // Save all the channels in this connection
-                    _.each(irc_connection.irc_channels, function(channel) {
-                        global.storage.putChannel(
-                            that.hash,
-                            irc_connection.con_num,
-                            channel.name,
-                            {name: channel.name}
-                        );
-                    });
-            });
+            if (irc_connection)
+                that.saveConnection(irc_connection);
         });
 
-        callback && callback();
+        that.save_state = true;
+        that.saved_persistence = true;
+
+        if (typeof callback === 'function')
+            callback();
     });
-}
+};
+
+State.prototype.saveConnection = function(irc_connection, callback) {
+    var that = this;
+
+    global.storage.putConnection(this.hash, irc_connection.con_num, {
+        nick: irc_connection.nick,
+        user: irc_connection.user,
+        username: irc_connection.username,
+        password: irc_connection.password,
+        server_host: irc_connection.irc_host.hostname,
+        server_port: irc_connection.irc_host.port,
+        server_ssl: irc_connection.ssl
+    }, putConnectionCb);
+
+    function putConnectionCb(err) {
+        console.log('putConnection err:', err);
+
+        // Save all the channels in this connection
+        _.each(irc_connection.irc_channels, function(channel) {
+            global.storage.putChannel(
+                that.hash,
+                irc_connection.con_num,
+                channel.name,
+                {name: channel.name}
+            );
+        });
+
+        if (typeof callback === 'function')
+            callback();
+    }
+};
 State.prototype.stopPersistence = function(callback) {
     global.storage.delState('darren', this.hash, callback);
     this.save_state = false;
@@ -133,6 +146,9 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
             that.irc_connections[con_num] = null;
             global.servers.removeConnection(this);
         });
+
+        if (that.saved_persistence)
+            that.saveConnection(con);
 
         // Call any modules before making the connection
         global.modules.emit('irc connecting', {connection: con})
