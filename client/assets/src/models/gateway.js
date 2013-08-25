@@ -186,7 +186,11 @@ _kiwi.model.Gateway = function () {
 
         // Make sure we have the transport loaded before we connect
         if (!window.io) {
-            this.loadTransport(function() {
+            this.loadTransport(function(err) {
+                if (err) {
+                    return callback(err);
+                }
+
                 that.connect(callback);
             });
         }

@@ -14,34 +14,12 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
         this.view.networkConnecting();
 
-        
-        // If we don't have socket.io loaded, load it before opening a new connection
-        if (!window.io) {
-            // Path to get the socket.io transport code
-            transport_path = _kiwi.app.kiwi_server + _kiwi.app.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
-                        
-            $script(transport_path, function() {
-                if (!window.io) {
-                    that.onKiwiServerNotFound();
-                    return;
-                }
-
-                _kiwi.gateway.set('kiwi_server', _kiwi.app.kiwi_server + '/kiwi');
-                _kiwi.gateway.connect(function() {
-                    that.makeConnection(new_connection_event);
-                });
-            });
-
-        } else {
-            this.makeConnection(new_connection_event);
-
-        }
-
-    },
-
-
-    onKiwiServerNotFound: function() {
-        this.view.showError();
+        _kiwi.gateway.connect(function(err) {
+            if (err) {
+                this.view.showError();
+            }
+            that.makeConnection(new_connection_event);
+        });
     },
 
 
