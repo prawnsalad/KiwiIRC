@@ -446,10 +446,10 @@ _kiwi.model.Application = function () {
 
                 // Force the jumpserver now?
                 if (data.force) {
-                    // Get an interval around 1 minute so everyone doesn't reconnect it all at once
-                    var jump_server_interval = Math.random() * (90 - 60) + 60;
+                    // Get an interval between 5 and 6 minutes so everyone doesn't reconnect it all at once
+                    var jump_server_interval = Math.random() * (360 - 300) + 300;
 
-                    // Tell the user we are going to disconnect, wait a minute then do the actual reconnect
+                    // Tell the user we are going to disconnect, wait 5 minutes then do the actual reconnect
                     var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
                     that.message.text(msg, {timeout: 10000});
 
