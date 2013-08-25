@@ -68,9 +68,6 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // State object
     this.state = state;
 
-    // Connection number given by the state object
-    this.con_num = con_num;
-
     // Connection ID in the state
     this.con_num = con_num;
 

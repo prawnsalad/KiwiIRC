@@ -137,8 +137,21 @@ _kiwi.model.Gateway = function () {
         var that = this,
             transport_path;
 
-        this.disconnect_requested = true;
-        this.socket.disconnect();
+        if (this.isConnected()) {
+            this.disconnect_requested = true;
+            this.socket.disconnect();
+        }
+
+        this.loadTransport(function(err) {
+            if (err) return callback(err);
+            that.connect(callback);
+        });
+    };
+
+
+
+    this.loadTransport = function (callback) {
+        var that = this;
 
         // To get around the allow-origin issues for requests, completely reload the
         // transport source from the new server
@@ -152,7 +165,7 @@ _kiwi.model.Gateway = function () {
             }
 
             that.set('kiwi_server', _kiwi.app.kiwi_server + '/kiwi');
-            that.connect(callback);
+            callback();
         });
     };
 
@@ -163,11 +176,19 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
-        var resource;
+        var that = this,
+            resource;
 
         if (this.isConnected()) {
             callback && callback();
             return;
+        }
+
+        // Make sure we have the transport loaded before we connect
+        if (!window.io) {
+            this.loadTransport(function() {
+                that.connect(callback);
+            });
         }
 
         // Work out the resource URL for socket.io
@@ -402,14 +423,6 @@ _kiwi.model.Gateway = function () {
                 that.set('cap', data.cap);
                 break;
 
-            /*
-            case 'sync':
-                if (_kiwi.gateway.onSync && _kiwi.gateway.syncing) {
-                    _kiwi.gateway.syncing = false;
-                    _kiwi.gateway.onSync(item);
-                }
-                break;
-            */
 
             case 'kiwi':
                 this.emit('_kiwi.' + data.namespace, data.data);

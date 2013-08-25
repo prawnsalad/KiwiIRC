@@ -66,8 +66,10 @@ _kiwi.model.Application = function () {
 
 
         this.syncSession = function (username, password) {
-            _kiwi.gateway.syncSession(username, password, function () {
-                that.view.barsShow();
+            _kiwi.gateway.connect(function doSync() {
+                _kiwi.gateway.syncSession(username, password, function () {
+                    that.view.barsShow();
+                });
             });
         };
 
@@ -478,6 +480,27 @@ _kiwi.model.Application = function () {
 
                     }, jump_server_interval * 1000);
                 }
+            });
+
+
+            gw.on('kiwi:sync_session_data', function (data) {
+                var that = this;
+
+                _.each(data.servers || [], function(server, idx) {
+                    var inf = {
+                        connection_id: server.id,
+                        nick: server.nick,
+                        address: server.host,
+                        port: server.port,
+                        ssl: !!server.ssl,
+                        password: server.password
+                    };
+
+                    connection = new _kiwi.model.Network(inf);
+                    _kiwi.app.connections.add(connection);
+                });
+
+                _kiwi.app.view.barsShow();
             });
         };
 

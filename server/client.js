@@ -87,28 +87,33 @@ Client.prototype.syncClient = function () {
         });
 
         servers.push({
+            id: irc_connection.con_num,
             network_name: irc_connection.server.network_name,
             nick: irc_connection.nick,
+            host: irc_connection.irc_host.hostname,
+            port: irc_connection.irc_host.port,
+            ssl: irc_connection.ssl,
+            password: '',          // Keep this blank for now
             channels: channels
         });
     });
 
-    this.sendKiwiCommand('sync_data', {servers: servers});
+    this.sendKiwiCommand('sync_session_data', {servers: servers});
 
 
     this.state.irc_connections.forEach(function(irc_connection, irc_connection_idx) {
         // TODO: This is hacky.. shouldn't be emitting this event from here
         // Force the MOTD + network options down to the client
-        irc_connection.emit('server:*:motd_end');
-        irc_connection.emit('server:*:options', irc_connection.server.server_options);
+        irc_connection.emit('server * motd_end');
+        irc_connection.emit('server * options', irc_connection.server.server_options);
 
         _.each(irc_connection.irc_channels, function(channel) {
             irc_connection.write('NAMES ' + channel.name);
 
             global.storage.getEvents(irc_connection.state.hash, irc_connection.con_num, channel.name, function(events){
                 _.each(events, function (event, idx) {
-                    console.log('channel:' + channel.name + ':' + event.name);
-                    irc_connection.emit('channel:' + channel.name + ':' + event.name, event.obj);
+                    console.log('channel ' + channel.name + ' ' + event.name);
+                    irc_connection.emit('channel ' + channel.name + ' ' + event.name, event.obj);
                 });
             });
         });
@@ -160,6 +165,8 @@ function handleClientMessage(msg, callback) {
 
 
 function kiwiCommand(command, callback) {
+    var that = this;
+
     if (typeof callback !== 'function') {
         callback = function () {};
     }
