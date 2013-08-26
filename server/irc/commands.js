@@ -390,7 +390,7 @@ handlers = {
 
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             // It's a CTCP response
-            namespace = (command.params[0] == this.irc_connection.nick) ? 'user' : 'channel';
+            namespace = (command.params[0].toLowerCase() == this.irc_connection.nick.toLowerCase()) ? 'user' : 'channel';
             this.irc_connection.emit(namespace + ' ' + command.params[0] + ' ctcp_response', {
                 nick: command.nick,
                 ident: command.ident,
@@ -399,7 +399,7 @@ handlers = {
                 msg: command.trailing.substr(1, command.trailing.length - 2)
             });
         } else {
-            namespace = (command.params[0] == this.irc_connection.nick || command.params[0] == '*') ?
+            namespace = (command.params[0].toLowerCase() == this.irc_connection.nick.toLowerCase() || command.params[0] == '*') ?
                 'user' :
                 'channel';
 
@@ -525,7 +525,7 @@ handlers = {
             }
         } else {
             // A message to a user (private message) or to a channel?
-            namespace = (command.params[0] === this.irc_connection.nick) ? 'user ' + command.nick : 'channel ' + command.params[0];
+            namespace = (command.params[0].toLowerCase() == this.irc_connection.nick.toLowerCase()) ? 'user ' + command.nick : 'channel ' + command.params[0];
             this.irc_connection.emit(namespace + ' privmsg', {
                 nick: command.nick,
                 ident: command.ident,
