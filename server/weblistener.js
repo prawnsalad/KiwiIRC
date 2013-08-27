@@ -26,7 +26,7 @@ rehash.on('rehashed', function (files) {
 var http_handler;
 
 
-var WebListener = function (web_config, transports) {
+var WebListener = module.exports = function (web_config, transports) {
     var hs, opts, ws_opts,
         that = this;
 
@@ -82,15 +82,8 @@ var WebListener = function (web_config, transports) {
         transports: ['websocket', 'polling', 'flashsocket'],
         path: (global.config.http_base_path || '') + '/transport'
     });
-    console.log((global.config.http_base_path || '') + '/transport');
-
-    //this.ws.enable('browser client minification');
-    //this.ws.enable('browser client etag');
-    //this.ws.set('transports', transports);
-    //this.ws.set('resource', (global.config.http_base_path || '') + '/transport');
 
     this.ws.on('connection', function(socket) {
-        console.log('Connection!');
         initialiseSocket(socket, function(err, authorised) {
             var client;
 
@@ -113,12 +106,7 @@ util.inherits(WebListener, events.EventEmitter);
 
 
 function handleHttpRequest(request, response) {
-    var uri = url.parse(request.url, true);
-
-    // If this isn't a socket.io request, pass it onto the http handler
-    if (uri.pathname.substr(0, 10) !== '/socket.io') {
-        http_handler.serve(request, response);
-    }
+    http_handler.serve(request, response);
 }
 
 function rangeCheck(addr, range) {
@@ -185,9 +173,3 @@ function initialiseSocket(socket, callback) {
         callback(null, true);
     }
 }
-
-
-
-
-
-module.exports = WebListener;
