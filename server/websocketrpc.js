@@ -28,9 +28,11 @@ WebsocketRpc.prototype._bindSocketListeners = function() {
 
 WebsocketRpc.prototype.dispose = function() {
     if (this._onMessageProxy) {
-        this._socket.off('message', this._onMessageProxy);
+        this._socket.removeListener('message', this._onMessageProxy);
         delete this._onMessageProxy;
     }
+
+    this.removeAllListeners();
 };
 
 

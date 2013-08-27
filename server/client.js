@@ -72,6 +72,7 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 
 Client.prototype.dispose = function () {
     this.disposed = true;
+    this.rpc.dispose();
     this.emit('dispose');
     this.removeAllListeners();
 };

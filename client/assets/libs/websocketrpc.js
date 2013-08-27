@@ -9,9 +9,6 @@ function WebsocketRpc(eio_socket) {
     this._callbacks = {};
     this._socket = eio_socket;
 
-    this._root_namespace = this;
-    this._namespaces = new Object(null);
-
     this._mixinEmitter();
     this._bindSocketListeners();
 }
@@ -31,20 +28,14 @@ WebsocketRpc.prototype._bindSocketListeners = function() {
 
 WebsocketRpc.prototype.dispose = function() {
     if (this._onMessageProxy) {
-        this._socket.off('message', this._onMessageProxy);
+        this._socket.removeListener('message', this._onMessageProxy);
         delete this._onMessageProxy;
     }
 
-    this.disposeNamespaces();
+    this.removeAllListeners();
 };
 
 
-WebsocketRpc.prototype.disposeNamespaces = function() {
-    for (var namespace in this._namespaces) {
-        this._namespaces[namespace].dispose();
-        this._namespaces[namespace] = null;
-    }
-};
 
 
 /**
@@ -76,21 +67,6 @@ WebsocketRpc.prototype._isResponse = function(packet) {
             typeof packet.response !== 'undefined');
 };
 
-
-
-WebsocketRpc.prototype.namespace = function(namespace) {
-    // Does this namespace already exist?
-    if (this._namespaces[namespace]) {
-        return this._namespaces[namespace];
-    }
-
-    var ns = new WebsocketRpcNamespace(this, namespace);
-    ns._root_namespace = this._root_namespace;
-console.log('Created namespace', namespace);
-    this._namespaces[namespace] = ns;
-
-    return ns;
-};
 
 
 /**
@@ -173,86 +149,11 @@ WebsocketRpc.prototype._onMessage = function(message_raw) {
         } else {
             returnFn = function noop(){};
         }
-console.log(packet.method);
+
         this.emit.apply(this, [packet.method, returnFn].concat(packet.params));
-
-        // Forward the call on to any matching namespaces
-        this._forwardCall(packet, returnFn);
     }
 };
 
-
-/**
- * Take a call and forward it on to any matching namespaces
- */
-WebsocketRpc.prototype._forwardCall = function(packet, returnFn) {
-    var ns;
-
-    for (var namespace in this._namespaces) {
-        ns = this._namespaces[namespace];
-
-        // If the method name is in this namespace, strip the namespace string off
-        // and emit the remaining method on the namespace object
-        // (namespace.api.method_name() becomes method_name())
-        if (packet.method.indexOf(namespace) === 0) {
-            ns.emit.apply(ns, [packet.method.replace(namespace + '.', ''), returnFn].concat(packet.params));
-            ns._forwardCall(packet, returnFn);
-        }
-    }
-};
-
-
-
-
-
-function WebsocketRpcNamespace(parent_rpc, new_namespace) {
-    var self = this,
-        to_bind, i;
-
-    this._namespaces = new Object(null);
-
-    this._parent = parent_rpc;
-    this._namespace = new_namespace;
-
-    if (this._namespace.substr(-1) !== '.')
-        this._namespace += '.';
-
-    // Proxy these functions from _parent, appending our namespace in the first argument
-    to_bind = ['namespace', 'on', 'once', 'off', 'removeListener', 'removeAllListeners', 'emit', 'listeners', 'hasListeners'];
-    for (i=0; i<to_bind.length; i++)
-        this.bindFnOverride(to_bind[i], true);
-
-    this.bindFnOverride('call', false, this._parent);
-
-    // Proxy these functions from _parent
-    to_bind = ['disposeNamespaces', '_forwardCall'];
-    for (i=0; i<to_bind.length; i++)
-        this[to_bind[i]] = this._parent[to_bind[i]];
-}
-
-
-WebsocketRpcNamespace.prototype.bindFnOverride = function(fn_name, append_first_arg, context) {
-    var self = this;
-
-    this[fn_name] = function appendNamespaceFnOverrideBound() {
-        var args;
-
-        if (append_first_arg) {
-            args = Array.prototype.slice.call(arguments, 0, arguments.length);
-            args[0] = self._namespace + args[0];
-        }
-
-        return self._parent[fn_name].apply(context || self, args || arguments);
-    };
-};
-
-
-WebsocketRpcNamespace.prototype.dispose = function() {
-    this.disposeNamespaces();
-    this.call = this.on = this.off = this.namespace = this.disposeNamespaces = null;
-    this._parent = null;
-    this.off();
-};
 
 
 
