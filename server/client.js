@@ -4,17 +4,19 @@ var util             = require('util'),
     _                = require('lodash'),
     State            = require('./irc/state.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
-    ClientCommands   = require('./clientcommands.js');
+    ClientCommands   = require('./clientcommands.js'),
+    WebsocketRpc     = require('./websocketrpc.js');
 
 
 var Client = function (websocket) {
     var that = this;
-    
+
     events.EventEmitter.call(this);
     this.websocket = websocket;
+    this.rpc = new WebsocketRpc(this.websocket);
 
     // Clients address
-    this.real_address = this.websocket.handshake.real_address;
+    this.real_address = this.websocket.kiwi.real_address;
 
     // A hash to identify this client instance
     this.hash = crypto.createHash('sha256')
@@ -22,24 +24,24 @@ var Client = function (websocket) {
         .update('' + Date.now())
         .update(Math.floor(Math.random() * 100000).toString())
         .digest('hex');
-    
+
     this.state = new State(this);
-    
+
     this.buffer = {
         list: [],
         motd: ''
     };
-    
+
     // Handler for any commands sent from the client
     this.client_commands = new ClientCommands(this);
 
-    websocket.on('irc', function () {
-        handleClientMessage.apply(that, arguments);
+    this.rpc.on('irc', function (response, data) {
+        handleClientMessage.call(that, data, response);
     });
-    websocket.on('kiwi', function () {
-        kiwiCommand.apply(that, arguments);
+    this.rpc.on('kiwi', function (response, data) {
+        kiwiCommand.call(that, data, response);
     });
-    websocket.on('disconnect', function () {
+    websocket.on('close', function () {
         websocketDisconnect.apply(that, arguments);
     });
     websocket.on('error', function () {
@@ -60,12 +62,12 @@ module.exports.Client = Client;
 
 Client.prototype.sendIrcCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.websocket.emit('irc', c, callback);
+    this.rpc.call('irc', c, callback);
 };
 
 Client.prototype.sendKiwiCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.websocket.emit('kiwi', c, callback);
+    this.rpc.call('kiwi', c, callback);
 };
 
 Client.prototype.dispose = function () {
@@ -128,7 +130,7 @@ function kiwiCommand(command, callback) {
                         global.config.restrict_server_ssl :
                         command.ssl),
                     command.nick,
-                    {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
+                    {hostname: this.websocket.kiwi.revdns, address: this.websocket.kiwi.real_address},
                     options,
                     callback);
             } else {
@@ -144,7 +146,7 @@ function kiwiCommand(command, callback) {
 // Websocket has disconnected, so quit all the IRC connections
 function websocketDisconnect() {
     this.emit('disconnect');
-    
+
     this.dispose();
 }
 
