@@ -51,6 +51,7 @@ HttpHandler.prototype.serve = function (request, response) {
 
     // Any asset request to head into the asset dir
     request.url = request.url.replace(base_path + '/assets/', '/assets/');
+console.log('request url:', request.url);
 
     // Any requests for /client to load the index file
     if (request.url.match(new RegExp('^' + base_path_regex + '([/$]|$)', 'i'))) {
@@ -231,7 +232,7 @@ function generateSettings(request, debug, callback) {
                 'src/models/memberlist.js',
                 'src/models/network.js'
             ],
-            
+
             [
                 'src/models/query.js',
                 'src/models/channel.js',
