@@ -78,6 +78,14 @@ msgstr "Notiz: Nutzer von Chrome oder Chromium müssen ihre Einstellungen durch 
 msgid "client_applets_settings_title"
 msgstr "Einstellungen"
 
+#:
+msgid "client_applets_settings_locale_html5_notifications"
+msgstr "HTML5 Benachrichtigungen"
+
+#:
+msgid "client_applets_settings_locale_enable_notifications"
+msgstr "Benachrichtigungen einschalten"
+
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
 msgstr "Unbekannte Anwendung"
