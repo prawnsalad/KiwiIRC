@@ -136,6 +136,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
             _kiwi.app.view.favicon.newHighlight();
             _kiwi.app.view.playSound('highlight');
+	    _kiwi.app.view.showNotification(msg.nick, msg.msg);
             this.alert('highlight');
 
         } else {
