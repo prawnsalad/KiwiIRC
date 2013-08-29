@@ -16,7 +16,7 @@ var Client = function (websocket) {
     this.rpc = new WebsocketRpc(this.websocket);
 
     // Clients address
-    this.real_address = this.websocket.kiwi.real_address;
+    this.real_address = this.websocket.meta.real_address;
 
     // A hash to identify this client instance
     this.hash = crypto.createHash('sha256')
@@ -131,7 +131,7 @@ function kiwiCommand(command, callback) {
                         global.config.restrict_server_ssl :
                         command.ssl),
                     command.nick,
-                    {hostname: this.websocket.kiwi.revdns, address: this.websocket.kiwi.real_address},
+                    {hostname: this.websocket.meta.revdns, address: this.websocket.meta.real_address},
                     options,
                     callback);
             } else {
