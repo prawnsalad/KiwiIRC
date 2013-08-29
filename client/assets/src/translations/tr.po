@@ -5,399 +5,399 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: vi\n"
+"Language: tr\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Tên kênh"
+msgstr "Kanal Adı"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Người dùng"
+msgstr "Kullanıcılar"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Chủ đề"
+msgstr "Başlık"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Danh sách kênh"
+msgstr "Kanal Listesi"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Lưu"
+msgstr "Kaydet"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Lỗi script. %s"
+msgstr "Script hatası. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Script của bạn đã được lưu lại và hiện đang hoạt động"
+msgstr "Script kaydedildi ve şu anda aktif"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Trình soạn thảo script"
+msgstr "Script Editörü"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Các tab"
+msgstr "Sekmeler"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "Danh sách"
+msgstr "Liste"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "dành cho số lượng lớn các kênh"
+msgstr "çok sayıda kanal için"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Các thông báo tham gia/rời khỏi kênh."
+msgstr "Giriş/çıkış kanal uyarıları"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Hiển thị thời gian"
+msgstr "Zaman damgaları"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Tắt âm thanh thông báo"
+msgstr "Ses uyarılarını kapat"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "các tin nhắn hiển thị trong lịch sử chat"
+msgstr "Konuşma geçmişinde gösterilecek mesaj sayısı"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Chương trình IRC mặc định"
+msgstr "Varsayılan IRC istemcisi"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Chọn Kiwi làm chương trình IRC mặc định"
+msgstr "Kiwi'yi varsayılan IRC istemcim yap"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Ghi chú: Thay đổi chỉ có hiệu lực khi bạn tải lại trang"
+msgstr "Not: Değişiklikler sayfayı yenilediğinizde gerçekleşecektir"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Ghi chú: Người dùng Chrome hay Chromium có thể cần xem lại tùy chỉnh ở %s nếu không có thay đổi gì xảy ra"
+msgstr "Not: Eğer bir şey olmazsa Chrome veya benzeri tarayıcı kullanıcılarının %s üzerinden ayarlarını kontrol etmeleri gerekebilir"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Thiết lập"
+msgstr "Ayarlar"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Applet lạ"
+msgstr "Bilinmeyen Applet"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Đang tải.."
+msgstr "Yükleniyor..."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Không tìm thấy"
+msgstr "Bulunamadı"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Bạn đã bị mất kết nối. Đang cố gắng kết nối lại..."
+msgstr "Bağlantınız koptu. Yeniden bağlanılıyor"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Bạn đã bị mất kết nối. Sẽ kết nối lại sau %d giây"
+msgstr "Bağlantınız koptu. %d saniye içinde tekrar bağlanılacak"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Thật tuyệt, bạn có thể kết nối lại được rồi!"
+msgstr "Tekrar bağlandınız"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Đã lưu thiết lập"
+msgstr "Ayarlar kaydedildi"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Nick bị từ chối"
+msgstr "Engellenen rumuzlar"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Không từ chối một ai cả"
+msgstr "Hiç kimse engellenmiyor"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Từ chối %s."
+msgstr "%s engelleniyor"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Xác định nick nào bạn muốn bỏ từ chối."
+msgstr "Engelini kaldırmak istediğiniz rumuzu belirtin"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Bỏ từ chối %s."
+msgstr "%s rumuzunun engeli kaldırıldı"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" không tồn tại."
+msgstr "\"%s\" diye bir Applet yok"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Kiểu mã hóa ký tự (encoding) được chỉnh sửa thành %s"
+msgstr "Kodlama %s olarak değiştirildi"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s là kiểu mã hóa ký tự (encoding) không hợp lệ"
+msgstr "%s geçerli bir kodlama türü değil"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Chưa chọn kiểu mã hóa ký tự (encoding)"
+msgstr "Kodlama türü belirtilmedi"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Cách sử dụng: /encoding [MÃ-HÓA-MỚI]"
+msgstr "Kullanımı: /encoding [YENİ-KODLAMA]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "Tạo kết nối mới"
+msgstr "Yeni Bağlantı"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Đang kết nối tới %s:%s..."
+msgstr "%s:%s adresine bağlanılıyor..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Không thể kết nối tới %s:%s (%s)"
+msgstr "%s:%s (%s) adresine bağlanırken hata oluştu"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s đã tham gia kênh này"
+msgstr "%s kanala girdi"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s đã rời khỏi %s"
+msgstr "%s sunucudan ayrıldı %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s đã bị kick bởi %s %s"
+msgstr "%s kanaldan %s tarafından atıldı %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Bạn đã bị kick bởi %s %s"
+msgstr "Kanaldan %s tarafından atıldınız %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s đã rời khỏi %s"
+msgstr "%s kanaldan ayrıldı %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s không phải là tên kênh hợp lệ"
+msgstr "%s geçerli bir kanal adı değil"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Đã thoát khỏi mạng IRC"
+msgstr "IRC ağı ile bağlantınız kesildi"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s đã đổi nickname thành %s"
+msgstr "%s rumuzunu %s olarak değiştirdi"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Chủ đề được đặt bởi %s vào %s"
+msgstr "Başlık %s tarafından %s tarihinde ayarlandı"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s đã đặt chế độ %s"
+msgstr "%s mod ayarladı: %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s đã đặt chế độ %s"
+msgstr "%s mod ayarladı: %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Các kênh: %s"
+msgstr "Kanallar: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Đã kết nối tới server: %s %s"
+msgstr "Bağlanılan sunucu: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Không có hoạt động trong %s, đã đăng nhập lúc %s"
+msgstr "Boşta olma süresi %s, giriş zamanı %s "
 
 #: 
 msgid "client_models_network_away"
-msgstr "Lời nhắn: %s"
+msgstr "Dışarda: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Không có hoạt động trong %s"
+msgstr "Boşta olma süresi %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Không tìm thấy nickname này."
+msgstr "Öyle bir rumuz yok"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "Bạn đã bị cấm truy cập vào %s. %s"
+msgstr "%s kanalından banlandınız. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Khóa truy cập kênh %s không đúng"
+msgstr "%s için yanlış kanal şifresi girdiniz"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s chỉ dành cho người được mời vào"
+msgstr "%s kanalına sadece davet edilenler girebilir"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s đã đầy."
+msgstr "%s kanalı dolu."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Nickname \"%s\" đã có người dùng. Vui lòng chọn tên khác"
+msgstr "\"%s\" zaten kullanımda. Lütfen yeni bir rumuz seçin"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Sai mật khẩu"
+msgstr "Yanlış şifre girdiniz"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Hành động này sẽ đóng tất cả các hội thoại KiwiIRC. Bạn có chắc chắn muốn đóng cửa sổ này không?"
+msgstr "Bu bütün KiwiIRC konuşmalarını kapatacak. Bu pencereyi kapatmak istediğinize emin misiniz ?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Đang tham gia kênh..."
+msgstr "Kanala giriliyor..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Chủ đề cho %s là: %s"
+msgstr "%s kanalının başlığı: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Đóng media"
+msgstr "Görseli kapat"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Không tìm thấy"
+msgstr "Bulunamadı"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Đang tải tweet"
+msgstr "Tweet yükleniyor"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Đang tải hình ảnh"
+msgstr "Görüntü yükleniyor"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Đang tải Reddit"
+msgstr "Reddit konusu yükleniyor"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Đang tải gist"
+msgstr "Gist yükleniyor"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nickname mới"
+msgstr "Yeni rumuz"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Thay đổi"
+msgstr "Değiştir"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Hủy bỏ"
+msgstr "İptal"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Mọi người đang thảo luận!"
+msgstr "İnsanlar konuşuyor!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Hãy chọn một nickname..."
+msgstr "Bir rumuz düşünün..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Nickname"
+msgstr "Rumuz"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Đăng nhập sử dụng mật khẩu"
+msgstr "Şifrem var"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Mật khẩu"
+msgstr "Şifre"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Kênh"
+msgstr "Kanal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Khóa truy cập kênh"
+msgstr "Kanal şifresi"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Kênh yêu cầu nhập khóa"
+msgstr "Kanal şifreli"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Khóa"
+msgstr "Şifre"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Bắt đầu kết nối..."
+msgstr "Başlat..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Máy chủ và mạng"
+msgstr "Sunucu ve ağ"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Máy chủ"
+msgstr "Sunucu"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Cổng"
+msgstr "Port"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Được vận hành bởi Kiwi IRC"
+msgstr "Kiwi IRC tarafından desteklenmektedir"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Hãy chọn nickname trước đã!"
+msgstr "İlk önce bir rumuz seçin!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Đã kết nối"
+msgstr "Bağlandı"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Đang kết nối.."
+msgstr "Bağlanıyor..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Nickname đã có người sử dụng"
+msgstr "Rumuz kullanımda"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Nickname không hợp lệ"
+msgstr "Hatalı rumuz"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Sai mật khẩu"
+msgstr "Yanlış şifre"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Lỗi kết nối"
+msgstr "Bağlantı hatası"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Không tìm thấy máy chủ"
+msgstr "Sunucu bulunamadı"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Kết nối bị từ chối"
+msgstr "Bağlantı reddedildi"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -405,7 +405,7 @@ msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-Op"
+msgstr "De-op"
 
 #: 
 msgid "client_views_userbox_voice"
@@ -413,27 +413,27 @@ msgstr "Voice"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-Voice"
+msgstr "De-voice"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Kick khỏi kênh"
+msgstr "Kick"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Cấm"
+msgstr "Ban"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Chat riêng"
+msgstr "Mesaj"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Thông tin"
+msgstr "Bilgi"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Tát!"
+msgstr "Tokatla!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -441,9 +441,9 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Hãy đợi trong 5 phút và bạn sẽ được kết nối lại vào các kênh đang truy cập."
+msgstr "5 dakika içerisinde yeniden bağlanmış olacaksınız. Hazır olun!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Đang kết nối lại một cách an toàn..."
+msgstr "Güvenli şekilde yeniden bağlanılıyor..."
 

@@ -1,11 +1,13 @@
 {
     "en-gb": "English (British)",
-    "de": "Deutsch",
+    "de-de": "Deutsch",
     "pt-br": "Português (Brasil)",
     "es-419": "Español (Latino America)",
     "no": "Norsk",
     "fr": "Français",
     "he": "Hebrew",
+    "nl": "Dutch",
     "ru": "русский",
-    "vi": "Tiếng Việt"
+    "vi": "Tiếng Việt",
+    "tr": "Türkçe"
 }

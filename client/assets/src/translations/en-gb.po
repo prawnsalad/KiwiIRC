@@ -441,7 +441,7 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "In 1 minutes time you will be reconnected to a faster server. Get ready!"
+msgstr "In 5 minutes you will be reconnected and your channels re-joined. Get ready!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"

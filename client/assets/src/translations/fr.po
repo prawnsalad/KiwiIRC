@@ -1,3 +1,12 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: fr\n"
+
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
 msgstr "Canal"
@@ -304,7 +313,7 @@ msgstr "Des gens parlent !"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Pensez à un pseudonyme…"
+msgstr "Choisissez un pseudonyme..."
 
 #: 
 msgid "client_views_serverselect_nickname"
@@ -424,9 +433,17 @@ msgstr "Info"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Frapper !"
+msgstr "Gifler !"
 
 #: 
 msgid "client_views_serverselect_ssl"
 msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "Vous serez re-connecté dans 5 minutes et les canaux seront automatiquement rejoints."
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Re-connection en cours..."
 
