@@ -27,20 +27,13 @@ var http_handler;
 
 
 var WebListener = module.exports = function (web_config, transports) {
-    var hs, opts, ws_opts,
+    var hs, opts,
         that = this;
 
 
     events.EventEmitter.call(this);
 
     http_handler = new HttpHandler(web_config);
-
-    // Standard options for the socket.io connections
-    ws_opts = {
-        'log level': 0,
-        'log colors': 0
-    };
-
 
     if (web_config.ssl) {
         opts = {
@@ -132,7 +125,7 @@ function initialiseSocket(socket, callback) {
 
     // Key/val data stored to the socket to be read later on
     // May also be synced to a redis DB to lookup clients
-    socket.kiwi = {};
+    socket.meta = {};
 
     // If a forwarded-for header is found, switch the source address
     if (request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
@@ -147,7 +140,7 @@ function initialiseSocket(socket, callback) {
         address = request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for'];
     }
 
-    socket.kiwi.real_address = address;
+    socket.meta.real_address = address;
 
     // If enabled, don't go over the connection limit
     if (global.config.max_client_conns && global.config.max_client_conns > 0) {
@@ -160,16 +153,16 @@ function initialiseSocket(socket, callback) {
     try {
         dns.reverse(address, function (err, domains) {
             if (err || domains.length === 0) {
-                socket.kiwi.revdns = address;
+                socket.meta.revdns = address;
             } else {
-                socket.kiwi.revdns = _.first(domains) || address;
+                socket.meta.revdns = _.first(domains) || address;
             }
 
             // All is well, authorise the connection
             callback(null, true);
         });
     } catch (err) {
-        socket.kiwi.revdns = address;
+        socket.meta.revdns = address;
         callback(null, true);
     }
 }
