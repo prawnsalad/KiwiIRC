@@ -1,0 +1,449 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: ro\n"
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Nume canal"
+
+#: 
+msgid "client_applets_chanlist_users"
+msgstr "Utilizatori"
+
+#: 
+msgid "client_applets_chanlist_topic"
+msgstr "Topic"
+
+#: 
+msgid "client_applets_chanlist_channellist"
+msgstr "Listă de canale"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Salvează"
+
+#: 
+msgid "client_applets_scripteditor_error"
+msgstr "Eroare script. %s"
+
+#: 
+msgid "client_applets_scripteditor_saved"
+msgstr "Scriptul a fost salvat și este acum activ"
+
+#: 
+msgid "client_applets_scripteditor_title"
+msgstr "Editor de scripturi"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "File"
+
+#: 
+msgid "client_applets_settings_channelview_list"
+msgstr "Listă"
+
+#: 
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "pentru cantități mari de canale"
+
+#: 
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Notificări de intrări/ieșiri din canale"
+
+#: 
+msgid "client_applets_settings_timestamp"
+msgstr "Afișare oră"
+
+#: 
+msgid "client_applets_settings_notification_sound"
+msgstr "Suprimă notificările audio"
+
+#: 
+msgid "client_applets_settings_history_length"
+msgstr "număr maxim de mesaje în fereastră"
+
+#: 
+msgid "client_applets_settings_default_client"
+msgstr "Client IRC implicit"
+
+#: 
+msgid "client_applets_settings_default_client_enable"
+msgstr "Fă Kiwi clientul meu implicit de IRC"
+
+#: 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Notă: Modificările au efect doar după reîncărcarea paginii"
+
+#: 
+msgid "client_applets_settings_default_client_notice"
+msgstr "Notă: Utilizatorii Chrome sau Chromium browser trebuie să verifice setările în %s dacă nu se întâmplă nimic"
+
+#: 
+msgid "client_applets_settings_title"
+msgstr "Setări"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Applet necunoscut"
+
+#: 
+msgid "client_models_applet_loading"
+msgstr "Se încarcă..."
+
+#: 
+msgid "client_models_applet_notfound"
+msgstr "Nu a fost găsit"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Conexiune terminată. Se încearcă reconectarea"
+
+#: 
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "Conexiune terminată. Se încearcă reconectarea în %d secunde"
+
+#: 
+msgid "client_models_application_reconnect_successfully"
+msgstr "Reconectare reușită"
+
+#: 
+msgid "client_models_application_settings_saved"
+msgstr "Setările au fost salvate"
+
+#: 
+msgid "client_models_application_ignore_title"
+msgstr "Utilizatori ignorați"
+
+#: 
+msgid "client_models_application_ignore_none"
+msgstr "Nu ai ignorat pe nimeni"
+
+#: 
+msgid "client_models_application_ignore_nick"
+msgstr "De acum se ignoră %s"
+
+#: 
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Specifică utilizatorul pe care vrei să nu-l mai ignori"
+
+#: 
+msgid "client_models_application_ignore_stopped"
+msgstr "De acum nu se mai ignoră %s"
+
+#: 
+msgid "client_models_application_applet_notfound"
+msgstr "Applet-ul \"%s\" nu există"
+
+#: 
+msgid "client_models_application_encoding_changed"
+msgstr "Codificare modificată în %s"
+
+#: 
+msgid "client_models_application_encoding_invalid"
+msgstr "%s nu este o codificare validă"
+
+#: 
+msgid "client_models_application_encoding_notspecified"
+msgstr "Codificarea nu este specificată"
+
+#: 
+msgid "client_models_application_encoding_usage"
+msgstr "Utilizare: /encoding [NEW-ENCODING]"
+
+#: 
+msgid "client_models_application_connection_create"
+msgstr "Conexiune nouă"
+
+#: 
+msgid "client_models_application_connection_connecting"
+msgstr "Conectare la %s:%s..."
+
+#: 
+msgid "client_models_application_connection_error"
+msgstr "Eroare de conectare la %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "%s a intrat"
+
+#: 
+msgid "client_models_channel_quit"
+msgstr "%s a ieșit din chat %s"
+
+#: 
+msgid "client_models_channel_kicked"
+msgstr "%s a fost dat afară de %s %s"
+
+#: 
+msgid "client_models_channel_selfkick"
+msgstr "%s te-a dat afară %s"
+
+#: 
+msgid "client_models_channel_part"
+msgstr "%s a ieșit din %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "%s nu este un nume valid de canal"
+
+#: 
+msgid "client_models_network_disconnected"
+msgstr "Conexiunea cu rețeaua IRC a fost terminată"
+
+#: 
+msgid "client_models_network_nickname_changed"
+msgstr "%s se numește acum %s"
+
+#: 
+msgid "client_models_network_topic"
+msgstr "Topic stabilit de %s la %s"
+
+#: 
+msgid "client_models_network_selfmode"
+msgstr "%s setează modul %s"
+
+#: 
+msgid "client_models_network_mode"
+msgstr "%s setează modul %s"
+
+#: 
+msgid "client_models_network_channels"
+msgstr "Canale: %s"
+
+#: 
+msgid "client_models_network_server"
+msgstr "Conexiune reușită la serverul: %s %s"
+
+#: 
+msgid "client_models_network_idle_and_signon"
+msgstr "Inactiv(ă) de %s, conectat(ă) la %s"
+
+#: 
+msgid "client_models_network_away"
+msgstr "Departe: %s"
+
+#: 
+msgid "client_models_network_idle"
+msgstr "Inactv(ă) de %s"
+
+#: 
+msgid "client_models_network_nickname_notfound"
+msgstr "Acest nume nu există"
+
+#: 
+msgid "client_models_network_banned"
+msgstr "Ești blocat(ă) în %s. %s"
+
+#: 
+msgid "client_models_network_channel_badkey"
+msgstr "Cheia de acces canalul %s nu este corectă"
+
+#: 
+msgid "client_models_network_channel_inviteonly"
+msgstr "În canalul %s se poate intra doar cu invitație."
+
+#: 
+msgid "client_models_network_channel_limitreached"
+msgstr "Canalul %s este plin."
+
+#: 
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "Numele \"%s\" este deja folosit. Alege un nume nou"
+
+#: 
+msgid "client_models_network_badpassword"
+msgstr "Ai introdus o parolă incorectă"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Aceasta va închide toate conversațiile KiwiIRC. Sigur vrei să închizi fereastra?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Conectare în canal..."
+
+#: 
+msgid "client_views_channel_topic"
+msgstr "Topicul %s este: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Închide media"
+
+#: 
+msgid "client_views_mediamessage_notfound"
+msgstr "Nu a fost găsit"
+
+#: 
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Se încarcă tweet"
+
+#: 
+msgid "client_views_mediamessage_load_image"
+msgstr "Se încarcă imaginea"
+
+#: 
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Se încarcă discuția Reddit"
+
+#: 
+msgid "client_views_mediamessage_load_gist"
+msgstr "Se încarcă gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Nume nou"
+
+#: 
+msgid "client_views_nickchangebox_change"
+msgstr "Modifică"
+
+#: 
+msgid "client_views_nickchangebox_cancel"
+msgstr "Anulează"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Utilizatorii discută!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Gândește-te la un nume..."
+
+#: 
+msgid "client_views_serverselect_nickname"
+msgstr "Nume"
+
+#: 
+msgid "client_views_serverselect_enable_password"
+msgstr "Am o parolă"
+
+#: 
+msgid "client_views_serverselect_password"
+msgstr "Parolă"
+
+#: 
+msgid "client_views_serverselect_channel"
+msgstr "Canal"
+
+#: 
+msgid "client_views_serverselect_channelkey"
+msgstr "Cheie canal"
+
+#: 
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Canalul este protejat cu cheie"
+
+#: 
+msgid "client_views_serverselect_key"
+msgstr "Cheie"
+
+#: 
+msgid "client_views_serverselect_connection_start"
+msgstr "Start..."
+
+#: 
+msgid "client_views_serverselect_server_and_network"
+msgstr "Server și rețea"
+
+#: 
+msgid "client_views_serverselect_server"
+msgstr "Server"
+
+#: 
+msgid "client_views_serverselect_port"
+msgstr "Port"
+
+#: 
+msgid "client_views_serverselect_poweredby"
+msgstr "Motorizat de Kiwi IRC"
+
+#: 
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Alege un nume mai întâi!"
+
+#: 
+msgid "client_views_serverselect_connection_successfully"
+msgstr "Conectare reușită"
+
+#: 
+msgid "client_views_serverselect_connection_trying"
+msgstr "Conectare..."
+
+#: 
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Numele este deja foloit"
+
+#: 
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Nume eronat"
+
+#: 
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Parolă incorectă"
+
+#: 
+msgid "client_views_serverselect_connection_error"
+msgstr "Eroare la conectare"
+
+#: 
+msgid "client_views_serverselect_server_notfound"
+msgstr "Serverul nu poate fi contactat"
+
+#: 
+msgid "client_views_serverselect_connection_refused"
+msgstr "Conexiune refuzată"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Op"
+
+#: 
+msgid "client_views_userbox_deop"
+msgstr "De-op"
+
+#: 
+msgid "client_views_userbox_voice"
+msgstr "Voice"
+
+#: 
+msgid "client_views_userbox_devoice"
+msgstr "De-voice"
+
+#: 
+msgid "client_views_userbox_kick"
+msgstr "Kick"
+
+#: 
+msgid "client_views_userbox_ban"
+msgstr "Ban"
+
+#: 
+msgid "client_views_userbox_query"
+msgstr "Mesaj"
+
+#: 
+msgid "client_views_userbox_whois"
+msgstr "Informații"
+
+#: 
+msgid "client_views_userbox_slap"
+msgstr "Dă-i o palmă!"
+
+#: 
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "În 5 minute vei fi reconectat(ă) și vei intra automat pe toate canalele deschise. Pregătește-te!"
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Reconectare în curs..."
+
