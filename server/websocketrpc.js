@@ -45,7 +45,8 @@ WebsocketRpc.prototype._mixinEmitter = function() {
     var funcs = ['on', 'once', 'off', 'removeListener', 'removeAllListeners', 'emit', 'listeners', 'hasListeners'];
 
     for (var i=0; i<funcs.length; i++) {
-        this[funcs[i]] = this._socket[funcs[i]];
+        if (typeof this._socket[funcs[i]] === 'function')
+            this[funcs[i]] = this._socket[funcs[i]];
     }
 };
 
