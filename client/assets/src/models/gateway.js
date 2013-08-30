@@ -141,23 +141,7 @@ _kiwi.model.Gateway = function () {
         this.socket.close();
 
         this.socket = null;
-        this.connect();
-        return;
-
-        // To get around the allow-origin issues for requests, completely reload the
-        // transport source from the new server
-        window.io = null;
-
-        // Path to get the socket.io transport code
-        transport_path = _kiwi.app.kiwi_server + _kiwi.app.get('base_path') + '/transport/socket.io.js?ts='+(new Date().getTime());
-        $script(transport_path, function() {
-            if (!window.io) {
-                return callback('err_kiwi_server_not_found');
-            }
-
-            that.set('kiwi_server', _kiwi.app.kiwi_server + '/kiwi');
-            that.connect(callback);
-        });
+        this.connect(callback);
     };
 
 
@@ -277,6 +261,8 @@ _kiwi.model.Gateway = function () {
             ssl:        connection_info.ssl,
             password:   connection_info.password
         };
+
+        connection_info.options = connection_info.options || {};
 
         // A few optional parameters
         if (connection_info.options.encoding)
