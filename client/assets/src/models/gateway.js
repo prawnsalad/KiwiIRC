@@ -184,6 +184,8 @@ _kiwi.model.Gateway = function () {
             // Reset the disconnect_requested flag
             that.disconnect_requested = false;
 
+            console.log("_kiwi.gateway.socket.on('open')");
+
             callback && callback();
         });
 
