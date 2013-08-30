@@ -1,3 +1,12 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: pt-br\n"
+
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
 msgstr "Nome do Canal"
@@ -429,4 +438,12 @@ msgstr "Dar Tapa!"
 #: 
 msgid "client_views_serverselect_ssl"
 msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "Em 5 minutos você será reconectado e seus canais serão reunidos. Preparem-se!"
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Segurança re-ligando-o agora.."
 

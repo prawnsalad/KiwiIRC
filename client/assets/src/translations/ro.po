@@ -5,399 +5,399 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: vi\n"
+"Language: ro\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Tên kênh"
+msgstr "Nume canal"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Người dùng"
+msgstr "Utilizatori"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Chủ đề"
+msgstr "Topic"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Danh sách kênh"
+msgstr "Listă de canale"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Lưu"
+msgstr "Salvează"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Lỗi script. %s"
+msgstr "Eroare script. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Script của bạn đã được lưu lại và hiện đang hoạt động"
+msgstr "Scriptul a fost salvat și este acum activ"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Trình soạn thảo script"
+msgstr "Editor de scripturi"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Các tab"
+msgstr "File"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "Danh sách"
+msgstr "Listă"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "dành cho số lượng lớn các kênh"
+msgstr "pentru cantități mari de canale"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Các thông báo tham gia/rời khỏi kênh."
+msgstr "Notificări de intrări/ieșiri din canale"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Hiển thị thời gian"
+msgstr "Afișare oră"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Tắt âm thanh thông báo"
+msgstr "Suprimă notificările audio"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "các tin nhắn hiển thị trong lịch sử chat"
+msgstr "număr maxim de mesaje în fereastră"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Chương trình IRC mặc định"
+msgstr "Client IRC implicit"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Chọn Kiwi làm chương trình IRC mặc định"
+msgstr "Fă Kiwi clientul meu implicit de IRC"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Ghi chú: Thay đổi chỉ có hiệu lực khi bạn tải lại trang"
+msgstr "Notă: Modificările au efect doar după reîncărcarea paginii"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Ghi chú: Người dùng Chrome hay Chromium có thể cần xem lại tùy chỉnh ở %s nếu không có thay đổi gì xảy ra"
+msgstr "Notă: Utilizatorii Chrome sau Chromium browser trebuie să verifice setările în %s dacă nu se întâmplă nimic"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Thiết lập"
+msgstr "Setări"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Applet lạ"
+msgstr "Applet necunoscut"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Đang tải.."
+msgstr "Se încarcă..."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Không tìm thấy"
+msgstr "Nu a fost găsit"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Bạn đã bị mất kết nối. Đang cố gắng kết nối lại..."
+msgstr "Conexiune terminată. Se încearcă reconectarea"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Bạn đã bị mất kết nối. Sẽ kết nối lại sau %d giây"
+msgstr "Conexiune terminată. Se încearcă reconectarea în %d secunde"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Thật tuyệt, bạn có thể kết nối lại được rồi!"
+msgstr "Reconectare reușită"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Đã lưu thiết lập"
+msgstr "Setările au fost salvate"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Nick bị từ chối"
+msgstr "Utilizatori ignorați"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Không từ chối một ai cả"
+msgstr "Nu ai ignorat pe nimeni"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Từ chối %s."
+msgstr "De acum se ignoră %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Xác định nick nào bạn muốn bỏ từ chối."
+msgstr "Specifică utilizatorul pe care vrei să nu-l mai ignori"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Bỏ từ chối %s."
+msgstr "De acum nu se mai ignoră %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" không tồn tại."
+msgstr "Applet-ul \"%s\" nu există"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Kiểu mã hóa ký tự (encoding) được chỉnh sửa thành %s"
+msgstr "Codificare modificată în %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s là kiểu mã hóa ký tự (encoding) không hợp lệ"
+msgstr "%s nu este o codificare validă"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Chưa chọn kiểu mã hóa ký tự (encoding)"
+msgstr "Codificarea nu este specificată"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Cách sử dụng: /encoding [MÃ-HÓA-MỚI]"
+msgstr "Utilizare: /encoding [NEW-ENCODING]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "Tạo kết nối mới"
+msgstr "Conexiune nouă"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Đang kết nối tới %s:%s..."
+msgstr "Conectare la %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Không thể kết nối tới %s:%s (%s)"
+msgstr "Eroare de conectare la %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s đã tham gia kênh này"
+msgstr "%s a intrat"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s đã rời khỏi %s"
+msgstr "%s a ieșit din chat %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s đã bị kick bởi %s %s"
+msgstr "%s a fost dat afară de %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Bạn đã bị kick bởi %s %s"
+msgstr "%s te-a dat afară %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s đã rời khỏi %s"
+msgstr "%s a ieșit din %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s không phải là tên kênh hợp lệ"
+msgstr "%s nu este un nume valid de canal"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Đã thoát khỏi mạng IRC"
+msgstr "Conexiunea cu rețeaua IRC a fost terminată"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s đã đổi nickname thành %s"
+msgstr "%s se numește acum %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Chủ đề được đặt bởi %s vào %s"
+msgstr "Topic stabilit de %s la %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s đã đặt chế độ %s"
+msgstr "%s setează modul %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s đã đặt chế độ %s"
+msgstr "%s setează modul %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Các kênh: %s"
+msgstr "Canale: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Đã kết nối tới server: %s %s"
+msgstr "Conexiune reușită la serverul: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Không có hoạt động trong %s, đã đăng nhập lúc %s"
+msgstr "Inactiv(ă) de %s, conectat(ă) la %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "Lời nhắn: %s"
+msgstr "Departe: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Không có hoạt động trong %s"
+msgstr "Inactv(ă) de %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Không tìm thấy nickname này."
+msgstr "Acest nume nu există"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "Bạn đã bị cấm truy cập vào %s. %s"
+msgstr "Ești blocat(ă) în %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Khóa truy cập kênh %s không đúng"
+msgstr "Cheia de acces canalul %s nu este corectă"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s chỉ dành cho người được mời vào"
+msgstr "În canalul %s se poate intra doar cu invitație."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s đã đầy."
+msgstr "Canalul %s este plin."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Nickname \"%s\" đã có người dùng. Vui lòng chọn tên khác"
+msgstr "Numele \"%s\" este deja folosit. Alege un nume nou"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Sai mật khẩu"
+msgstr "Ai introdus o parolă incorectă"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Hành động này sẽ đóng tất cả các hội thoại KiwiIRC. Bạn có chắc chắn muốn đóng cửa sổ này không?"
+msgstr "Aceasta va închide toate conversațiile KiwiIRC. Sigur vrei să închizi fereastra?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Đang tham gia kênh..."
+msgstr "Conectare în canal..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Chủ đề cho %s là: %s"
+msgstr "Topicul %s este: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Đóng media"
+msgstr "Închide media"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Không tìm thấy"
+msgstr "Nu a fost găsit"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Đang tải tweet"
+msgstr "Se încarcă tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Đang tải hình ảnh"
+msgstr "Se încarcă imaginea"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Đang tải Reddit"
+msgstr "Se încarcă discuția Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Đang tải gist"
+msgstr "Se încarcă gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nickname mới"
+msgstr "Nume nou"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Thay đổi"
+msgstr "Modifică"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Hủy bỏ"
+msgstr "Anulează"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Mọi người đang thảo luận!"
+msgstr "Utilizatorii discută!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Hãy chọn một nickname..."
+msgstr "Gândește-te la un nume..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Nickname"
+msgstr "Nume"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Đăng nhập sử dụng mật khẩu"
+msgstr "Am o parolă"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Mật khẩu"
+msgstr "Parolă"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Kênh"
+msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Khóa truy cập kênh"
+msgstr "Cheie canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Kênh yêu cầu nhập khóa"
+msgstr "Canalul este protejat cu cheie"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Khóa"
+msgstr "Cheie"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Bắt đầu kết nối..."
+msgstr "Start..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Máy chủ và mạng"
+msgstr "Server și rețea"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Máy chủ"
+msgstr "Server"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Cổng"
+msgstr "Port"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Được vận hành bởi Kiwi IRC"
+msgstr "Motorizat de Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Hãy chọn nickname trước đã!"
+msgstr "Alege un nume mai întâi!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Đã kết nối"
+msgstr "Conectare reușită"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Đang kết nối.."
+msgstr "Conectare..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Nickname đã có người sử dụng"
+msgstr "Numele este deja foloit"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Nickname không hợp lệ"
+msgstr "Nume eronat"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Sai mật khẩu"
+msgstr "Parolă incorectă"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Lỗi kết nối"
+msgstr "Eroare la conectare"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Không tìm thấy máy chủ"
+msgstr "Serverul nu poate fi contactat"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Kết nối bị từ chối"
+msgstr "Conexiune refuzată"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -405,7 +405,7 @@ msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-Op"
+msgstr "De-op"
 
 #: 
 msgid "client_views_userbox_voice"
@@ -413,27 +413,27 @@ msgstr "Voice"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-Voice"
+msgstr "De-voice"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Kick khỏi kênh"
+msgstr "Kick"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Cấm"
+msgstr "Ban"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Chat riêng"
+msgstr "Mesaj"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Thông tin"
+msgstr "Informații"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Tát!"
+msgstr "Dă-i o palmă!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -441,9 +441,9 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Hãy đợi trong 5 phút và bạn sẽ được kết nối lại vào các kênh đang truy cập."
+msgstr "În 5 minute vei fi reconectat(ă) și vei intra automat pe toate canalele deschise. Pregătește-te!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Đang kết nối lại một cách an toàn..."
+msgstr "Reconectare în curs..."
 
