@@ -129,6 +129,44 @@ concat(source_files, function (err, src) {
 
 
 /**
+ * Build the engineio client + tools libs
+ */
+concat([__dirname + '/../libs/engine.io.js', __dirname + '/../libs/engine.io.tools.js'], function (err, src) {
+    if (!err) {
+        fs.writeFile(__dirname + '/../libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
+            if (!err) {
+                console.log('Built engine.io.bundle.js');
+            } else {
+                console.error('Error building engine.io.bundle.js:', err);
+            }
+        });
+
+        var ast = uglifyJS.parse(src, {filename: 'engine.io.bundle.js'});
+        ast.figure_out_scope();
+        ast = ast.transform(uglifyJS.Compressor({warnings: false}));
+        ast.figure_out_scope();
+        ast.compute_char_frequency();
+        ast.mangle_names();
+        src = ast.print_to_string();
+
+        fs.writeFile(__dirname + '/../libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+            if (!err) {
+                console.log('Built engine.io.bundle.min.js');
+            } else {
+                console.error('Error building engine.io.bundle.min.js:', err);
+            }
+        });
+    } else {
+        console.error('Error building engine.io.bundle.js and engine.io.bundle.min.js:', err);
+    }
+});
+
+
+
+
+
+
+/**
 *   Convert translations from .po to .json
 */
 if (!fs.existsSync(__dirname + '/../locales')) {
