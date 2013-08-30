@@ -210,14 +210,17 @@ function generateSettings(request, debug, callback) {
                 [
                     'libs/lodash.min.js'
                 ],
-                'libs/backbone.min.js',
-                'libs/jed.js'
+                ['libs/backbone.min.js', 'libs/jed.js']
             ]
         };
 
     if (debug) {
         vars.scripts = vars.scripts.concat([
-            'src/app.js',
+            [
+                'src/app.js',
+                'libs/engine.io.js',
+                'libs/engine.io.tools.js'
+            ],
             [
                 'src/models/application.js',
                 'src/models/gateway.js'
@@ -278,7 +281,7 @@ function generateSettings(request, debug, callback) {
             ]
         ]);
     } else {
-        vars.scripts.push('kiwi.min.js');
+        vars.scripts.push(['kiwi.min.js', 'libs/engine.io.bundle.min.js']);
     }
 
     // Any restricted server mode set?

@@ -140,7 +140,7 @@ _kiwi.model.Gateway = function () {
         this.disconnect_requested = true;
         this.socket.close();
 
-        this.socket = eio();
+        this.socket = null;
         this.connect();
         return;
 
@@ -167,14 +167,14 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
-        this.socket = new reconnectingEioSocket(this.get('kiwi_server'), {
+        this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
             path: _kiwi.app.get('base_path') + '/transport',
             transports: ['websocket', 'polling', 'flashsocket'],
             reconnect_max_attempts: 5,
             reconnect_delay: 2000
         });
 
-        this.rpc = new WebsocketRpc(this.socket);
+        this.rpc = new EngineioTools.Rpc(this.socket);
 
         this.socket.on('connect_failed', function (reason) {
             this.socket.disconnect();
