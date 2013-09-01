@@ -122,7 +122,8 @@ WebsocketRpc.prototype.send = function(packet) {
 WebsocketRpc.prototype._onMessage = function(message_raw) {
     var self = this,
         packet,
-        returnFn;
+        returnFn,
+        callback;
 
     try {
         packet = JSON.parse(message_raw);
@@ -136,9 +137,12 @@ WebsocketRpc.prototype._onMessage = function(message_raw) {
         if (typeof this._rpc_callbacks[packet.id] !== 'function')
             return;
 
-        // Call and delete this callback once finished with it
-        this._rpc_callbacks[packet.id].apply(this, packet.response);
+        // Delete the callback before calling it. If any exceptions accur within the callback
+        // we don't have to worry about the delete not happening
+        callback = this._rpc_callbacks[packet.id];
         delete this._rpc_callbacks[packet.id];
+
+        callback.apply(this, packet.response);
 
     } else if (this._isCall(packet)) {
         // Calls with an ID may be responded to
