@@ -111,7 +111,7 @@ var EngineioTools = {
             var self = this;
 
             this._next_id = 0;
-            this._callbacks = {};
+            this._rpc_callbacks = {};
             this._socket = eio_socket;
 
             this._mixinEmitter();
@@ -203,7 +203,7 @@ var EngineioTools = {
                 packet.id = this._next_id;
 
                 this._next_id++;
-                this._callbacks[packet.id] = callback;
+                this._rpc_callbacks[packet.id] = callback;
             }
 
             this.send(packet);
@@ -236,12 +236,12 @@ var EngineioTools = {
 
             if (this._isResponse(packet)) {
                 // If we have no callback waiting for this response, don't do anything
-                if (typeof this._callbacks[packet.id] !== 'function')
+                if (typeof this._rpc_callbacks[packet.id] !== 'function')
                     return;
 
                 // Call and delete this callback once finished with it
-                this._callbacks[packet.id].apply(this, packet.response);
-                delete this._callbacks[packet.id];
+                this._rpc_callbacks[packet.id].apply(this, packet.response);
+                delete this._rpc_callbacks[packet.id];
 
             } else if (this._isCall(packet)) {
                 // Calls with an ID may be responded to
