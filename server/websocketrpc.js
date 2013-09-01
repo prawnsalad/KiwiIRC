@@ -1,5 +1,7 @@
 /*
+    TODO:
     Create a document explaining the protocol
+    Some way to expire unused callbacks? TTL? expireCallback() function?
 */
 
 function WebsocketRpc(eio_socket) {
@@ -80,10 +82,10 @@ WebsocketRpc.prototype._isResponse = function(packet) {
 WebsocketRpc.prototype.call = function(method) {
     var params, callback, packet;
 
-    // Get a normal array of passed in params
+    // Get a normal array of passed in arguments
     params = Array.prototype.slice.call(arguments, 1, arguments.length);
 
-    // If the last param is a function, take it as a callback and strip it out
+    // If the last argument is a function, take it as a callback and strip it out
     if (typeof params[params.length-1] === 'function') {
         callback = params[params.length-1];
         params = params.slice(0, params.length-1);
@@ -130,30 +132,48 @@ WebsocketRpc.prototype._onMessage = function(message_raw) {
     }
 
     if (this._isResponse(packet)) {
+        // If we have no callback waiting for this response, don't do anything
+        if (typeof this._callbacks[packet.id] !== 'function')
+            return;
+
+        // Call and delete this callback once finished with it
         this._callbacks[packet.id].apply(this, packet.response);
         delete this._callbacks[packet.id];
 
     } else if (this._isCall(packet)) {
         // Calls with an ID may be responded to
         if (typeof packet.id !== 'undefined') {
-            returnFn = function returnCallFn() {
-                var value = Array.prototype.slice.call(arguments, 0);
-
-                var ret_packet = {
-                    id: packet.id,
-                    response: value
-                };
-
-                self.send(ret_packet);
-            };
-
+            returnFn = this._createReturnCallFn(packet.id);
         } else {
-            returnFn = function noop(){};
+            returnFn = this._noop;
         }
 
         this.emit.apply(this, [packet.method, returnFn].concat(packet.params));
     }
 };
+
+
+/**
+ * Returns a function used as a callback when responding to a call
+ */
+WebsocketRpc.prototype._createReturnCallFn = function(packet_id) {
+    var self = this;
+
+    return function returnCallFn() {
+        var value = Array.prototype.slice.call(arguments, 0);
+
+        var ret_packet = {
+            id: packet_id,
+            response: value
+        };
+
+        self.send(ret_packet);
+    };
+};
+
+
+
+WebsocketRpc.prototype._noop = function() {};
 
 
 
