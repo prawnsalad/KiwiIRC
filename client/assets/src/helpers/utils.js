@@ -362,3 +362,88 @@ function formatDate (d) {
 function escapeRegex (str) {
     return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
 }
+
+function emoticonFromText(str) {
+    var words_in = str.split(' '),
+        words_out = [],
+        i,
+        pushEmoticon = function (alt, img) {
+            words_out.push('<img src="' + _kiwi.app.get('base_path') + '/assets/img/emoticons/' + img + '" alt="' + alt + ' " />');
+        };
+
+    for (i = 0; i < words_in.length; i++) {
+        switch(words_in[i]) {
+        case ':)':
+            pushEmoticon(':)', 'smiling.png');
+            break;
+        case ':(':
+            pushEmoticon(':(', 'frowning.png');
+            break;
+        case ':3':
+            pushEmoticon(':3', 'cute.png');
+            break;
+        case ';3':
+            pushEmoticon(';3', 'cute_winking.png');
+            break;
+        case ':s':
+            pushEmoticon(':s', 'confused.png');
+            break;
+        case ';(':
+            pushEmoticon(';(', 'crying.png');
+            break;
+        case ';)':
+            pushEmoticon(';)', 'winking.png');
+            break;
+        case ';D':
+            pushEmoticon(';D"', 'winking_grinning.png');
+            break;
+        case ':P':
+            pushEmoticon(':P', 'tongue_out.png');
+            break;
+        case 'xP':
+            pushEmoticon('xP', 'tongue_out_laughing.png');
+            break;
+        case ':o':
+        case ':O':
+            pushEmoticon(':o', 'gasping.png');
+            break;
+        case ':D':
+            pushEmoticon(':D', 'grinning.png');
+            break;
+        case '^^,':
+            pushEmoticon('^^,', 'happy.png');
+            break;
+        case '&lt;3':
+            pushEmoticon('<3', 'heart.png');
+            break;
+        case '&gt;.&lt;':
+            pushEmoticon('>.<', 'irritated_2.png');
+            break;
+        case '&gt;_&lt;':
+            pushEmoticon('>_<', 'irritated.png');
+            break;
+        case 'XD':
+        case 'xD':
+            pushEmoticon('xD', 'laughing.png');
+            break;
+        case 'o.0':
+            pushEmoticon('o.0', 'surprised.png');
+            break;
+        case '0.o':
+            pushEmoticon('0.o', 'surprised_2.png');
+            break;
+        case ':\\':
+        case '=\\':
+            pushEmoticon(':\\', 'unsure.png');
+            break;
+        case ':/':
+        case '=/':
+            pushEmoticon(':/', 'unsure_2.png');
+            break;
+        default:
+            words_out.push(words_in[i]);
+        }
+    }
+
+    return words_out.join(' ');
+}

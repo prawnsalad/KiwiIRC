@@ -92,6 +92,10 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         // Convert IRC formatting into HTML formatting
         msg.msg = formatIRCMsg(msg.msg);
 
+        // Replace text emoticons with images
+        if (_kiwi.global.settings.get('show_emoticons')) {
+            msg.msg = emoticonFromText(msg.msg);
+        }
 
         // Add some colours to the nick (Method based on IRSSIs nickcolor.pl)
         nick_colour_hex = (function (nick) {
