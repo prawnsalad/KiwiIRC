@@ -3,10 +3,6 @@ _kiwi.view.Panel = Backbone.View.extend({
     className: "panel messages",
 
     events: {
-        "click .chan": "chanClick",
-        'click .media .open': 'mediaClick',
-        'mouseenter .msg .nick': 'msgEnter',
-        'mouseleave .msg .nick': 'msgLeave'
     },
 
     initialize: function (options) {
@@ -177,64 +173,7 @@ _kiwi.view.Panel = Backbone.View.extend({
             this.msg_count--;
         }
     },
-    chanClick: function (event) {
-        if (event.target) {
-            _kiwi.gateway.join(null, $(event.target).data('channel'));
-        } else {
-            // IE...
-            _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
-        }
-    },
 
-    mediaClick: function (event) {
-        var $media = $(event.target).parents('.media');
-        var media_message;
-
-        if ($media.data('media')) {
-            media_message = $media.data('media');
-        } else {
-            media_message = new _kiwi.view.MediaMessage({el: $media[0]});
-
-            // Cache this MediaMessage instance for when it's opened again
-            $media.data('media', media_message);
-        }
-
-        media_message.toggle();
-    },
-
-    // Cursor hovers over a message
-    msgEnter: function (event) {
-        var nick_class;
-
-        // Find a valid class that this element has
-        _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
-            if (css_class.match(/^nick_[a-z0-9]+/i)) {
-                nick_class = css_class;
-            }
-        });
-
-        // If no class was found..
-        if (!nick_class) return;
-
-        $('.'+nick_class).addClass('global_nick_highlight');
-    },
-
-    // Cursor leaves message
-    msgLeave: function (event) {
-        var nick_class;
-
-        // Find a valid class that this element has
-        _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
-            if (css_class.match(/^nick_[a-z0-9]+/i)) {
-                nick_class = css_class;
-            }
-        });
-
-        // If no class was found..
-        if (!nick_class) return;
-
-        $('.'+nick_class).removeClass('global_nick_highlight');
-    },
 
     show: function () {
         var $this = this.$el;
