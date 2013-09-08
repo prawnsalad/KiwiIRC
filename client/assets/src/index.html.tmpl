@@ -55,7 +55,7 @@
 
 
 
-    
+
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
             <a class="if_op op"><i class="icon-star"></i><%= op %></a>
@@ -70,7 +70,7 @@
             <a class="slap"><i class="icon-user-md"></i><%= slap %></a>
         </div>
     </script>
-    
+
     <script type="text/html" id="tmpl_nickchange">
         <form class="nickchange">
             <label for="nickchange"><%= new_nick %>:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button><%= change %></button> <a class="cancel"><%= cancel %></a>
@@ -303,12 +303,34 @@
     </script>
 
 
+<script src="<%base_path%>/assets/libs/jquery-1.9.1.min.js"></script>
 <script>
 /* Script loader (https://github.com/ded/script.js) */
 (function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)
 
 
+    // Avoid `console` errors in browsers that lack a console. (https://github.com/h5bp/html5-boilerplate)
+    function normalizeConsole() {
+        var method;
+        var noop = function () {};
+        var methods = [
+            'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+            'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+            'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+            'timeStamp', 'trace', 'warn'
+        ];
+        var length = methods.length;
+        var console = (window.console = window.console || {});
 
+        while (length--) {
+            method = methods[length];
+
+            // Only stub undefined methods.
+            if (!console[method]) {
+                console[method] = noop;
+            }
+        }
+    };
 
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -322,96 +344,18 @@
     }
 
     window.onload = function () {
+        var base_path = '<%base_path%>', // Entry path for the kiwi application
+            scripts = [],
+            opts = {
+                container: $('#kiwi'),
+                base_path: base_path,
+                settings_path: base_path + '/assets/settings.json'
+            };
 
-        // Common dependancies that are required at all times
-        var scripts = [
-            ['libs/jquery-1.9.1.min.js', 'libs/lodash.min.js'],
-            'libs/backbone.min.js', 'libs/jed.js'
-        ];
-
-        // If in debug mode, load each development script
-        if (getQueryVariable('debug')) {
-            console.log('Loading debugging scripts');
-            scripts = scripts.concat([
-                'src/app.js',
-                [
-                    'src/models/application.js',
-                    'src/models/gateway.js'
-                ],
-                [
-                    'src/models/newconnection.js',
-                    'src/models/panellist.js',
-                    'src/models/networkpanellist.js',
-                    'src/models/panel.js',
-                    'src/models/member.js',
-                    'src/models/memberlist.js',
-                    'src/models/network.js'
-                ],
-                
-                [
-                    'src/models/query.js',
-                    'src/models/channel.js',
-                    'src/models/server.js',
-                    'src/models/applet.js'
-                ],
-
-                [
-                    'src/applets/settings.js',
-                    'src/applets/chanlist.js',
-                    'src/applets/scripteditor.js'
-                ],
-
-                [
-                    'src/models/pluginmanager.js',
-                    'src/models/datastore.js',
-                    'src/helpers/utils.js'
-                ],
-
-                // Some views extend these, so make sure they're loaded beforehand
-                [
-                    'src/views/panel.js'
-                ],
-
-                [
-                    'src/views/channel.js',
-                    'src/views/applet.js',
-                    'src/views/application.js',
-                    'src/views/apptoolbar.js',
-                    'src/views/controlbox.js',
-                    'src/views/favicon.js',
-                    'src/views/mediamessage.js',
-                    'src/views/member.js',
-                    'src/views/memberlist.js',
-                    'src/views/menubox.js',
-                    'src/views/networktabs.js',
-                    'src/views/nickchangebox.js',
-                    'src/views/resizehandler.js',
-                    'src/views/serverselect.js',
-                    'src/views/statusmessage.js',
-                    'src/views/tabs.js',
-                    'src/views/topicbar.js',
-                    'src/views/userbox.js'
-                ]
-            ]);
-        } else {
-            scripts.push('kiwi.min.js?<%cache_buster%>');
-        }
-
+        normalizeConsole();
 
         // Run after all dependancies have been loaded
         function startApp () {
-            var opts = {
-                container: $('#kiwi'),
-                base_path: base_path,
-
-                // Override the kiwi_server to use. (Think: running on standalone client..)
-                //kiwi_server: 'http://kiwiirc.com:80',
-
-                server_settings: <%server_settings%>,
-                client_plugins: <%client_plugins%>,
-                translations: <%translations%>
-            };
-
             // Start the app
             kiwi.start(opts, function() {
                 // Load any plugins
@@ -444,17 +388,26 @@
                     to_load.push(base + scripts[cur_script][idx]);
                 }
             }
-            
+
             $script(to_load, loadNextScript);
 
             cur_script++;
         }
 
-        // Entry path for the kiwi application
-        var base_path = '<%base_path%>';
+        // Load application settings
+        $.getJSON(opts.settings_path, function (data) {
+            scripts = scripts.concat(data.scripts);
+            opts.server_settings = data.server_settings;
+            opts.client_plugins = data.client_plugins;
+            opts.translations = data.translations;
+            opts.locale = data.locale;
 
-        // Start loading scripts
-        loadNextScript();
+            if (typeof data.kiwi_server !== 'undefined')
+                opts.kiwi_server = data.kiwi_server;
+
+            // Start loading scripts
+            loadNextScript();
+        });
     };
 </script>
 </body>

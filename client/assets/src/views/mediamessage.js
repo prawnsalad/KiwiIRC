@@ -8,6 +8,14 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         this.url = this.$el.data('url');
     },
 
+    toggle: function () {
+        if (!this.$content || !this.$content.is(':visible')) {
+            this.open();
+        } else {
+            this.close();
+        }
+    },
+
     // Close the media content and remove it from display
     close: function () {
         var that = this;

@@ -61,13 +61,15 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 userbox.member = member;
                 userbox.channel = this.model;
 
-                if (!member.get('is_op')) {
+                // Hide the op related items if we're not an op
+                if (!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
                     userbox.$el.children('.if_op').remove();
                 }
+
                 menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
                 menubox.show();
-                
+
                 // Position the userbox + menubox
                 (function() {
                     var t = event.pageY,

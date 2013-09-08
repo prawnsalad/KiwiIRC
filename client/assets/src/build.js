@@ -8,13 +8,29 @@ var FILE_ENCODING = 'utf-8',
     EOL = '\n';
 
 
-function concat(src) {
-    var file_list = src;
-    var out = file_list.map(function(file_path){
-        return fs.readFileSync(file_path, FILE_ENCODING) + '\n\n';
-    });
+function concat(file_list, callback) {
+    var num_files = file_list.length,
+        files = [],
+        loaded = 0,
+        error = false;
 
-    return out.join(EOL);
+    file_list.forEach(function (file_path, idx) {
+        if (error) {
+            return;
+        }
+        fs.readFile(file_path, { encoding: FILE_ENCODING }, function (err, data) {
+            if (error) {
+                return;
+            } else if (err) {
+                error = true;
+                return callback(err);
+            }
+            files[idx] = data + '\n\n';
+            if (++loaded === num_files) {
+                callback(null, files.join(EOL));
+            }
+        });
+    });
 }
 
 
@@ -71,30 +87,41 @@ var source_files = [
 /**
  * Build the kiwi.js/kiwi.min.js files
  */
-var src = concat(source_files);
-src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
+concat(source_files, function (err, src) {
+    if (!err) {
+        src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
+        fs.writeFile(__dirname + '/../kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
+            if (!err) {
+                console.log('Built kiwi.js');
+            } else {
+                console.error('Error building kiwi.js:', err);
+            }
+        });
 
-fs.writeFileSync(__dirname + '/../kiwi.js', src, FILE_ENCODING);
+        // Uglify can take take an array of filenames to produce minified code
+        // but it's not wraped in an IIFE and produces a slightly larger file
+        //src = uglifyJS.minify(source_files);
 
-// Uglify can take take an array of filenames to produce minified code
-// but it's not wraped in an IIFE and produces a slightly larger file
-//src = uglifyJS.minify(source_files);
+        var ast = uglifyJS.parse(src, {filename: 'kiwi.js'});
+        ast.figure_out_scope();
+        ast = ast.transform(uglifyJS.Compressor({warnings: false}));
+        ast.figure_out_scope();
+        ast.compute_char_frequency();
+        ast.mangle_names();
+        src = ast.print_to_string();
 
-var ast = uglifyJS.parse(src, {filename: 'kiwi.js'});
-ast.figure_out_scope();
-ast = ast.transform(uglifyJS.Compressor({warnings: false}));
-ast.figure_out_scope();
-ast.compute_char_frequency();
-ast.mangle_names();
-src = ast.print_to_string();
-
-fs.writeFileSync(__dirname + '/../kiwi.min.js', src, FILE_ENCODING);
-
-
-
-
-console.log('kiwi.js and kiwi.min.js built');
+        fs.writeFile(__dirname + '/../kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+            if (!err) {
+                console.log('Built kiwi.min.js');
+            } else {
+                console.error('Error building kiwi.min.js:', err);
+            }
+        });
+    } else {
+        console.error('Error building kiwi.js and kiwi.min.js:', err);
+    }
+});
 
 
 
@@ -104,20 +131,32 @@ console.log('kiwi.js and kiwi.min.js built');
 /**
 *   Convert translations from .po to .json
 */
-var translations = [];
-var translation_files = fs.readdirSync(__dirname + '/translations');
 if (!fs.existsSync(__dirname + '/../locales')) {
     fs.mkdirSync(__dirname + '/../locales');
 }
-translation_files.forEach(function (file) {
-    var locale = file.slice(0, -3),
-        json = '',
-        languages = JSON.parse(fs.readFileSync(__dirname + '/translations/translations.json'));
-    if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-        json = po2json.parseSync(__dirname + '/translations/' + file);
-        fs.writeFileSync(__dirname + '/../locales/' + locale + '.json', JSON.stringify(json));
-        translations.push({tag: locale, language: languages[locale]});
-        console.log('Built translation file %s', locale + '.json');
+fs.readdir(__dirname + '/translations', function (err, translation_files) {
+    if (!err) {
+        translation_files.forEach(function (file) {
+            var locale = file.slice(0, -3);
+
+            if ((file.slice(-3) === '.po') && (locale !== 'template')) {
+                po2json.parse(__dirname + '/translations/' + file, function (err, json) {
+                    if (!err) {
+                        fs.writeFile(__dirname + '/../locales/' + locale + '.json', JSON.stringify(json), function (err) {
+                            if (!err) {
+                                console.log('Built translation file %s.json', locale);
+                            } else {
+                                console.error('Error building translation file %s.json:', locale, err);
+                            }
+                        });
+                    } else {
+                        console.error('Error building translation file %s.json: ', locale, err);
+                    }
+                });
+            }
+        });
+    } else {
+        console.error('Error building translation files:', err);
     }
 });
 
@@ -130,47 +169,13 @@ translation_files.forEach(function (file) {
  * Build the index.html file
  */
 
-var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING);
-var vars = {
-    base_path: config.get().http_base_path || '/kiwi',
-    cache_buster: Math.ceil(Math.random() * 9000).toString(),
-    server_settings: {},
-    client_plugins: []
-};
+var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING)
+    .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi');
 
-// Any restricted server mode set?
-if (config.get().restrict_server) {
-    vars.server_settings = {
-        connection: {
-            server: config.get().restrict_server,
-            port: config.get().restrict_server_port || 6667,
-            ssl: config.get().restrict_server_ssl,
-            channel: config.get().restrict_server_channel,
-            nick: config.get().restrict_server_nick,
-            allow_change: false
-        }
-    };
-}
-
-// Any client default settings?
-if (config.get().client) {
-    vars.server_settings.client = config.get().client;
-}
-
-// Any client plugins?
-if (config.get().client_plugins && config.get().client_plugins.length > 0) {
-    vars.client_plugins = config.get().client_plugins;
-}
-
-// Translations
-vars.translations = translations;
-
-_.each(vars, function(value, key) {
-    if (typeof value === 'object') value = JSON.stringify(value);
-    index_src = index_src.replace(new RegExp('<%' + key + '%>', 'g'), value);
+fs.writeFile(__dirname + '/../../index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
+    if (!err) {
+        console.log('Built index.html');
+    } else {
+        console.error('Error building index.html');
+    }
 });
-
-fs.writeFileSync(__dirname + '/../../index.html', index_src, FILE_ENCODING);
-
-
-console.log('index.html built');

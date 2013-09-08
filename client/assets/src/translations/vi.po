@@ -1,403 +1,393 @@
-msgid ""
-msgstr ""
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
-"Project-Id-Version: Kiwi\n"
-"Language: en\n"
-
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Channel Name"
+msgstr "Tên kênh"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Users"
+msgstr "Người dùng"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Topic"
+msgstr "Chủ đề"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Channel List"
+msgstr "Danh sách kênh"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Save"
+msgstr "Lưu"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Script error. %s"
+msgstr "Lỗi script. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Your script has been saved and is now active"
+msgstr "Script của bạn đã được lưu lại và hiện đang hoạt động"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Script Editor"
+msgstr "Trình soạn thảo script"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Tabs"
+msgstr "Các tab"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "List"
+msgstr "Danh sách"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "for large amounts of channels"
+msgstr "dành cho số lượng lớn các kênh"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Join/part channel notifications"
+msgstr "Các thông báo tham gia/rời khỏi kênh."
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Timestamps"
+msgstr "Hiển thị thời gian"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Mute sound notifications"
+msgstr "Tắt âm thanh thông báo"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "messages in scroll history"
+msgstr "các tin nhắn hiển thị trong lịch sử chat"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Default IRC client"
+msgstr "Chương trình IRC mặc định"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Make Kiwi my default IRC client"
+msgstr "Chọn Kiwi làm chương trình IRC mặc định"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Note: Changes will only take effect after you refresh the page"
+msgstr "Ghi chú: Thay đổi chỉ có hiệu lực khi bạn tải lại trang"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Note: Chrome or Chromium browser users may need to check their settings via %s if nothing happens"
+msgstr "Ghi chú: Người dùng Chrome hay Chromium có thể cần xem lại tùy chỉnh ở %s nếu không có thay đổi gì xảy ra"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Settings"
+msgstr "Thiết lập"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Unknown Applet"
+msgstr "Applet lạ"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Loading.."
+msgstr "Đang tải.."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Not found"
+msgstr "Không tìm thấy"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "You have been disconnected. Attempting to reconnect for you"
+msgstr "Bạn đã bị mất kết nối. Đang cố gắng kết nối lại..."
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "You have been disconnected. Attempting to reconnect again in %d seconds"
+msgstr "Bạn đã bị mất kết nối. Sẽ kết nối lại sau %d giây"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "It's OK, you're connected again"
+msgstr "Thật tuyệt, bạn có thể kết nối lại được rồi!"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Settings have been saved"
+msgstr "Đã lưu thiết lập"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Ignored nicks"
+msgstr "Nick bị từ chối"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Not ignoring anybody"
+msgstr "Không từ chối một ai cả"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Ignoring %s"
+msgstr "Từ chối %s."
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Specifiy which nick you wish to stop ignoring"
+msgstr "Xác định nick nào bạn muốn bỏ từ chối."
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Stopped ignoring %s"
+msgstr "Bỏ từ chối %s."
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" does not exist"
+msgstr "Applet \"%s\" không tồn tại."
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Encoding modified to %s"
+msgstr "Kiểu mã hóa ký tự (encoding) được chỉnh sửa thành %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s is not a valid encoding"
+msgstr "%s là kiểu mã hóa ký tự (encoding) không hợp lệ"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Encoding not specified"
+msgstr "Chưa chọn kiểu mã hóa ký tự (encoding)"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Usage: /encoding [NEW-ENCODING]"
+msgstr "Cách sử dụng: /encoding [MÃ-HÓA-MỚI]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "New Connection"
+msgstr "Tạo kết nối mới"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Connecting to %s:%s..."
+msgstr "Đang kết nối tới %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Error connecting to %s:%s (%s)"
+msgstr "Không thể kết nối tới %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s has joined"
+msgstr "%s đã tham gia kênh này"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s has quit %s"
+msgstr "%s đã rời khỏi %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s was kicked by %s %s"
+msgstr "%s đã bị kick bởi %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "You have been kicked by %s %s"
+msgstr "Bạn đã bị kick bởi %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s has left %s"
+msgstr "%s đã rời khỏi %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s is not a valid channel name"
+msgstr "%s không phải là tên kênh hợp lệ"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Disconnected from the IRC network"
+msgstr "Đã thoát khỏi mạng IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s is now known as %s"
+msgstr "%s đã đổi nickname thành %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Topic set by %s at %s"
+msgstr "Chủ đề được đặt bởi %s vào %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s sets mode %s"
+msgstr "%s đã đặt chế độ %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s set mode %s"
+msgstr "%s đã đặt chế độ %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Channels: %s"
+msgstr "Các kênh: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Connected to server: %s %s"
+msgstr "Đã kết nối tới server: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Idle for %s, signed on %s"
+msgstr "Không có hoạt động trong %s, đã đăng nhập lúc %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "Away: %s"
+msgstr "Lời nhắn: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Idle for %s"
+msgstr "Không có hoạt động trong %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "No such nick"
+msgstr "Không tìm thấy nickname này."
 
 #: 
 msgid "client_models_network_banned"
-msgstr "You are banned from %s. %s"
+msgstr "Bạn đã bị cấm truy cập vào %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Bad channel key for %s"
+msgstr "Khóa truy cập kênh %s không đúng"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s is invite only."
+msgstr "%s chỉ dành cho người được mời vào"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s is full."
+msgstr "%s đã đầy."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "The nickname \"%s\" is already in use. Please select a new nickname"
+msgstr "Nickname \"%s\" đã có người dùng. Vui lòng chọn tên khác"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Incorrect password given"
+msgstr "Sai mật khẩu"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "This will close all KiwiIRC conversations. Are you sure you want to close this window?"
+msgstr "Hành động này sẽ đóng tất cả các hội thoại KiwiIRC. Bạn có chắc chắn muốn đóng cửa sổ này không?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Joining channel.."
+msgstr "Đang tham gia kênh..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Topic for %s is: %s"
+msgstr "Chủ đề cho %s là: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Close media"
+msgstr "Đóng media"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Not found"
+msgstr "Không tìm thấy"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Loading tweet"
+msgstr "Đang tải tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Loading image"
+msgstr "Đang tải hình ảnh"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Loading Reddit thread"
+msgstr "Đang tải Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Loading gist"
+msgstr "Đang tải gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "New nick"
+msgstr "Nickname mới"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Change"
+msgstr "Thay đổi"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Cancel"
+msgstr "Hủy bỏ"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "People are talking!"
+msgstr "Mọi người đang thảo luận!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Think of a nickname..."
+msgstr "Hãy chọn một nickname..."
 
-#: 
 msgid "client_views_serverselect_nickname"
 msgstr "Nickname"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "I have a password"
+msgstr "Đăng nhập sử dụng mật khẩu"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Password"
+msgstr "Mật khẩu"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Channel"
+msgstr "Kênh"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Channel Key"
+msgstr "Khóa truy cập kênh"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Channel requires a key"
+msgstr "Kênh yêu cầu nhập khóa"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Key"
+msgstr "Khóa"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Start..."
+msgstr "Bắt đầu kết nối..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Server and network"
+msgstr "Máy chủ và mạng"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Server"
+msgstr "Máy chủ"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Port"
+msgstr "Cổng"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Powered by Kiwi IRC"
+msgid_plural "Powered by Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Select a nickname first!"
+msgstr "Hãy chọn nickname trước đã!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Connected"
+msgstr "Đã kết nối"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Connecting.."
+msgstr "Đang kết nối.."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Nickname already taken"
+msgstr "Nickname đã có người sử dụng"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Erroneus nickname"
+msgstr "Nickname không hợp lệ"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Incorrect Password"
+msgstr "Sai mật khẩu"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Error Connecting"
+msgstr "Lỗi kết nối"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Server not found"
+msgstr "Không tìm thấy máy chủ"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Connection refused"
+msgstr "Kết nối bị từ chối"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -405,7 +395,7 @@ msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-op"
+msgstr "De-Op"
 
 #: 
 msgid "client_views_userbox_voice"
@@ -413,37 +403,29 @@ msgstr "Voice"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-voice"
+msgstr "De-Voice"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Kick"
+msgstr "Kick khỏi kênh"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Ban"
+msgid_plural "Cấm truy cập kênh"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Message"
+msgstr "Chat riêng"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Info"
+msgstr "Thông tin"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Slap!"
+msgstr "Tát!"
 
 #: 
 msgid "client_views_serverselect_ssl"
 msgstr "SSL"
-
-#: 
-msgid "client_models_application_jumpserver_prepare"
-msgstr "In 1 minutes time you will be reconnected to a faster server. Get ready!"
-
-#: 
-msgid "client_models_application_jumpserver_reconnect"
-msgstr "Safely reconnecting you now.."
 

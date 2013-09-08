@@ -16,6 +16,24 @@
             address: '',
 
             /**
+            *   The port for the network
+            *   @type    Int
+            */
+            port: 6667,
+
+            /**
+            *   If this network uses SSL
+            *   @type    Bool
+            */
+            ssl: false,
+
+            /**
+            *   The password to connect to this network
+            *   @type    String
+            */
+            password: '',
+
+            /**
             *   The current nickname
             *   @type   String
             */
@@ -36,8 +54,11 @@
 
 
         initialize: function () {
-            this.gateway = _kiwi.global.components.Network(this.get('connection_id'));
-            this.bindGatewayEvents();
+            // If we already have a connection, bind our events
+            if (typeof this.get('connection_id') !== 'undefined') {
+                this.gateway = _kiwi.global.components.Network(this.get('connection_id'));
+                this.bindGatewayEvents();
+            }
 
             // Create our panel list (tabs)
             this.panels = new _kiwi.model.PanelList([], this);
@@ -47,6 +68,34 @@
             var server_panel = new _kiwi.model.Server({name: 'Server'});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
+        },
+
+
+        reconnect: function(callback_fn) {
+            var that = this,
+                server_info = {
+                    nick:       this.get('nick'),
+                    host:   this.get('address'),
+                    port:       this.get('port'),
+                    ssl:        this.get('ssl'),
+                    password:   this.get('password')
+                };
+
+            _kiwi.gateway.makeIrcConnection(server_info, function(err, connection_id) {
+                if (!err) {
+                    that.gateway.dispose();
+
+                    that.set('connection_id', connection_id);
+                    that.gateway = _kiwi.global.components.Network(that.get('connection_id'));
+                    that.bindGatewayEvents();
+
+                    callback_fn && callback_fn(err);
+
+                } else {
+                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
+                    callback_fn && callback_fn(err);
+                }
+            });
         },
 
 
@@ -96,7 +145,7 @@
             var that = this,
                 panels = [];
 
-            // Multiple channels may come as comma-delimited 
+            // Multiple channels may come as comma-delimited
             if (typeof channels === 'string') {
                 channels = channels.split(',');
             }
@@ -150,7 +199,7 @@
     });
 
 
-    
+
     function onDisconnect(event) {
         $.each(this.panels.models, function (index, panel) {
             panel.addMsg('', _kiwi.global.i18n.translate('client_models_network_disconnected').fetch(), 'action quit');
@@ -296,7 +345,7 @@
         members.remove(user, part_options);
 
         if (part_options.current_user_kicked) {
-            members.reset([]);        
+            members.reset([]);
         }
     }
 
@@ -304,7 +353,7 @@
 
     function onMsg(event) {
         var panel,
-            is_pm = (event.channel == this.get('nick'));
+            is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
         if (_kiwi.gateway.isNickIgnored(event.nick)) {
@@ -390,7 +439,7 @@
             panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
 
             // Forward ChanServ messages to its associated channel
-            if (event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
+            if (event.nick && event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
                 channel_name = /\[([^ \]]+)\]/gi.exec(event.msg);
                 if (channel_name && channel_name[1]) {
                     channel_name = channel_name[1];
@@ -409,7 +458,7 @@
         panel.addMsg('[' + (event.nick||'') + ']', event.msg);
 
         // Show this notice to the active panel if it didn't have a set target
-        if (!event.from_server && panel === this.panels.server)
+        if (!event.from_server && panel === this.panels.server && _kiwi.app.panels().active !== this.panels.server)
             _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
     }
 
@@ -417,7 +466,7 @@
 
     function onAction(event) {
         var panel,
-            is_pm = (event.channel == this.get('nick'));
+            is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
         if (_kiwi.gateway.isNickIgnored(event.nick)) {

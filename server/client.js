@@ -2,7 +2,7 @@ var util             = require('util'),
     events           = require('events'),
     crypto           = require('crypto'),
     _                = require('lodash'),
-    State            = require('./irc/state.js');
+    State            = require('./irc/state.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     ClientCommands   = require('./clientcommands.js');
 
@@ -45,6 +45,8 @@ var Client = function (websocket) {
     websocket.on('error', function () {
         websocketError.apply(that, arguments);
     });
+
+    this.disposed = false;
 };
 util.inherits(Client, events.EventEmitter);
 
@@ -67,12 +69,13 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 };
 
 Client.prototype.dispose = function () {
+    this.disposed = true;
     this.emit('dispose');
     this.removeAllListeners();
 };
 
 function handleClientMessage(msg, callback) {
-    var server, args, obj, channels, keys;
+    var server;
 
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
@@ -103,23 +106,30 @@ function handleClientMessage(msg, callback) {
 
 
 function kiwiCommand(command, callback) {
-    var that = this;
-    
     if (typeof callback !== 'function') {
         callback = function () {};
     }
+
     switch (command.command) {
         case 'connect':
             if (command.hostname && command.port && command.nick) {
-                var con;
+                var options = {};
+
+                // Get any optional parameters that may have been passed
+                if (command.encoding)
+                    options.encoding = command.encoding;
+
+                options.password = global.config.restrict_server_password || command.password;
 
                 this.state.connect(
                     (global.config.restrict_server || command.hostname),
                     (global.config.restrict_server_port || command.port),
-                    (global.config.restrict_server_ssl || command.ssl),
+                    (typeof global.config.restrict_server_ssl !== 'undefined' ?
+                        global.config.restrict_server_ssl :
+                        command.ssl),
                     command.nick,
                     {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
-                    (global.config.restrict_server_password || command.password),
+                    options,
                     callback);
             } else {
                 return callback('Hostname, port and nickname must be specified');

@@ -24,7 +24,7 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.type = opt.type || '';
         opt.timeout = opt.timeout || 5000;
 
-        this.$el.html(text).addClass(opt.type);
+        this.$el.html(html).addClass(opt.type);
         this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
 
         if (opt.timeout) this.doTimeout(opt.timeout);

@@ -5,6 +5,7 @@ var net             = require('net'),
     _               = require('lodash'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
+    IrcCommands     = require('./commands.js'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
     EE              = require('../ee.js'),
@@ -22,7 +23,7 @@ if (version_values[1] >= 10) {
     Socks = require('socksjs');
 }
 
-var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
+var IrcConnection = function (hostname, port, ssl, nick, user, options, state, con_num) {
     var that = this;
 
     EE.call(this,{
@@ -31,11 +32,19 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     });
     this.setMaxListeners(0);
 
-    // Set the first configured encoding as the default encoding
-    this.encoding = global.config.default_encoding;
-    
+    options = options || {};
+
     // Socket state
     this.connected = false;
+
+    // IRCd write buffers (flood controll)
+    this.write_buffer = [];
+
+    // In process of writing the buffer?
+    this.writing_buffer = false;
+
+    // Max number of lines to write a second
+    this.write_buffer_lines_second = 2;
 
     // If registeration with the IRCd has completed
     this.registered = false;
@@ -47,10 +56,21 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
-    this.password = pass;
+    this.password = options.password || '';
+
+    // Set the passed encoding. or the default if none giving or it fails
+    if (!options.encoding || !this.setEncoding(options.encoding)) {
+        this.setEncoding(global.config.default_encoding);
+    }
 
     // State object
     this.state = state;
+
+    // Connection ID in the state
+    this.con_num = con_num;
+
+    // IRC protocol handling
+    this.irc_commands = new IrcCommands(this);
 
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);
@@ -90,7 +110,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, pass, state) {
 
     // Buffers for data sent from the IRCd
     this.hold_last = false;
-    this.held_data = '';
+    this.held_data = null;
 
     this.applyIrcEvents();
 };
@@ -136,7 +156,7 @@ IrcConnection.prototype.connect = function () {
     this.disposeSocket();
 
     // Get the IP family for the dest_addr (either socks or IRCd destination)
-    getConnectionFamily(dest_addr, function (err, family, host) {
+    getConnectionFamily(dest_addr, function getConnectionFamilyCb(err, family, host) {
         var outgoing;
 
         // Decide which net. interface to make the connection through
@@ -151,6 +171,15 @@ IrcConnection.prototype.connect = function () {
                 // fail if an IPv4 resolved address is not found
                 host = dest_addr;
             }
+
+            // If we have an array of interfaces, select a random one
+            if (typeof outgoing !== 'string' && outgoing.length) {
+                outgoing = outgoing[Math.floor(Math.random() * outgoing.length)];
+            }
+
+            // Make sure we have a valid interface address
+            if (typeof outgoing !== 'string')
+                outgoing = '0.0.0.0';
 
         } else {
             // No config was found so use the default
@@ -182,6 +211,9 @@ IrcConnection.prototype.connect = function () {
                     localAddress: outgoing
                 });
 
+                // We need the raw socket connect event
+                that.socket.socket.on('connect', function() { rawSocketConnect.call(that, this); });
+
                 socket_connect_event_name = 'secureConnect';
 
             } else {
@@ -194,19 +226,23 @@ IrcConnection.prototype.connect = function () {
         }
 
         // Apply the socket listeners
-        that.socket.on(socket_connect_event_name, function () {
-            that.connected = true;
+        that.socket.on(socket_connect_event_name, function socketConnectCb() {
 
-            // Make note of the port numbers for any identd lookups
-            // Nodejs < 0.9.6 has no socket.localPort so check this first
-            if (this.localPort) {
-                global.clients.port_pairs[this.localPort.toString() + '_' + this.remotePort.toString()] = that;
-            }
+            // TLS connections have the actual socket as a property
+            var is_tls = (typeof this.socket !== 'undefined') ?
+                true :
+                false;
+
+            // TLS sockets have already called this
+            if (!is_tls)
+                rawSocketConnect.call(that, this);
+
+            that.connected = true;
 
             socketConnectHandler.call(that);
         });
 
-        that.socket.on('error', function (event) {
+        that.socket.on('error', function socketErrorCb(event) {
             that.emit('error', event);
         });
 
@@ -214,13 +250,12 @@ IrcConnection.prototype.connect = function () {
             parse.apply(that, arguments);
         });
 
-        that.socket.on('close', function (had_error) {
+        that.socket.on('close', function socketCloseCb(had_error) {
             that.connected = false;
 
             // Remove this socket form the identd lookup
-            // Nodejs < 0.9.6 has no socket.localPort so check this first
-            if (this.localPort) {
-                delete global.clients.port_pairs[this.localPort.toString() + '_' + this.remotePort.toString()];
+            if (that.identd_port_pair) {
+                delete global.clients.port_pairs[that.identd_port_pair];
             }
 
             that.emit('close');
@@ -241,21 +276,83 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
 
 /**
  * Write a line of data to the IRCd
+ * @param data The line of data to be sent
+ * @param force Write the data now, ignoring any write queue
  */
-IrcConnection.prototype.write = function (data, callback) {
+IrcConnection.prototype.write = function (data, force) {
     //ENCODE string to encoding of the server
     encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
-    this.socket.write(encoded_buffer);
+
+    if (force) {
+        this.socket.write(encoded_buffer);
+        return;
+    }
+
+    this.write_buffer.push(encoded_buffer);
+
+    // Only flush if we're not writing already
+    if (!this.writing_buffer)
+        this.flushWriteBuffer();
 };
 
 
 
 /**
- * Close the connection to the IRCd after sending one last line
+ * Flush the write buffer to the server in a throttled fashion
+ */
+IrcConnection.prototype.flushWriteBuffer = function () {
+
+    // In case the socket closed between writing our queue.. clean up
+    if (!this.connected) {
+        this.write_buffer = [];
+        this.writing_buffer = false;
+        return;
+    }
+
+    this.writing_buffer = true;
+
+    // Disabled write buffer? Send everything we have
+    if (!this.write_buffer_lines_second) {
+        this.write_buffer.forEach(function(buffer, idx) {
+            this.socket.write(buffer);
+            this.write_buffer = null;
+        });
+
+        this.write_buffer = [];
+        this.writing_buffer = false;
+
+        return;
+    }
+
+    // Nothing to write? Stop writing and leave
+    if (this.write_buffer.length === 0) {
+        this.writing_buffer = false;
+        return;
+    }
+
+    this.socket.write(this.write_buffer[0]);
+    this.write_buffer = this.write_buffer.slice(1);
+
+    // Call this function again at some point if we still have data to write
+    if (this.write_buffer.length > 0) {
+        setTimeout(this.flushWriteBuffer.bind(this), 1000 / this.write_buffer_lines_second);
+    } else {
+        // No more buffers to write.. so we've finished
+        this.writing_buffer = false;
+    }
+};
+
+
+
+/**
+ * Close the connection to the IRCd after forcing one last line
  */
 IrcConnection.prototype.end = function (data, callback) {
+    if (!this.socket)
+        return;
+
     if (data)
-        this.write(data);
+        this.write(data, true);
 
     this.socket.end();
 };
@@ -266,7 +363,16 @@ IrcConnection.prototype.end = function (data, callback) {
  * Clean up this IrcConnection instance and any sockets
  */
 IrcConnection.prototype.dispose = function () {
-    var that = this;
+    // If we're still connected, wait until the socket is closed before disposing
+    // so that all the events are still correctly triggered
+    if (this.socket && this.connected) {
+        this.end();
+        return;
+    }
+
+    if (this.socket) {
+        this.disposeSocket();
+    }
 
     _.each(this.irc_users, function (user) {
         user.dispose();
@@ -280,22 +386,11 @@ IrcConnection.prototype.dispose = function () {
     this.server.dispose();
     this.server = undefined;
 
+    this.irc_commands = undefined;
+
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
-    // If we're still connected, wait until the socket is closed before disposing
-    // so that all the events are still correctly triggered
-    if (this.socket && this.connected) {
-        this.socket.once('close', function() {
-            that.disposeSocket();
-            that.removeAllListeners();
-        });
-
-        this.socket.end();
-
-    } else {
-        this.disposeSocket();
-        this.removeAllListeners();
-    }
+    this.removeAllListeners();
 };
 
 
@@ -337,16 +432,16 @@ IrcConnection.prototype.setEncoding = function (encoding) {
 function getConnectionFamily(host, callback) {
     if (net.isIP(host)) {
         if (net.isIPv4(host)) {
-            setImmediate(callback, null, 'IPv4', host);
+            callback(null, 'IPv4', host);
         } else {
-            setImmediate(callback, null, 'IPv6', host);
+            callback(null, 'IPv6', host);
         }
     } else {
-        dns.resolve6(host, function (err, addresses) {
+        dns.resolve6(host, function resolve6Cb(err, addresses) {
             if (!err) {
                 callback(null, 'IPv6', addresses[0]);
             } else {
-                dns.resolve4(host, function (err, addresses) {
+                dns.resolve4(host, function resolve4Cb(err, addresses) {
                     if (!err) {
                         callback(null, 'IPv4',addresses[0]);
                     } else {
@@ -434,6 +529,19 @@ function onUserKick(event){
 
 
 
+/**
+ * When a socket connects to an IRCd
+ * May be called before any socket handshake are complete (eg. TLS)
+ */
+var rawSocketConnect = function(socket) {
+    // Make note of the port numbers for any identd lookups
+    // Nodejs < 0.9.6 has no socket.localPort so check this first
+    if (typeof socket.localPort != 'undefined') {
+        this.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
+        global.clients.port_pairs[this.identd_port_pair] = this;
+    }
+};
+
 
 /**
  * Handle the socket connect event, starting the IRCd registration
@@ -453,7 +561,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc authorize', connect_data).done(function () {
+    global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {
@@ -498,7 +606,7 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.username = this.user.address.split('.').map(function(i, idx){
+        this.username = this.user.address.split('.').map(function ipSplitMapCb(i, idx){
             var hex = parseInt(i, 10).toString(16);
 
             // Pad out the hex value if it's a single char
@@ -529,35 +637,46 @@ var parse = function (data) {
         trm,
         j,
         tags = [],
-        tag;
+        tag,
+        buf_start = 0,
+        bufs = [],
+        line = '';
 
-    //DECODE server encoding 
-    data = iconv.decode(data, this.encoding);
+    // Split data chunk into individual lines
+    for (i = 0; i < data.length; i++) {
+        if (data[i] === 0x0A) { // Check if byte is a line feed
+            bufs.push(data.slice(buf_start, i));
+            buf_start = i + 1;
+        }
+    }
 
-    if (this.hold_last && this.held_data !== '') {
-        data = this.held_data + data;
+    // If we have an incomplete line held from the previous chunk of data
+    // merge it with the first line from this chunk of data
+    if (this.hold_last && this.held_data !== null) {
+        bufs[0] = Buffer.concat([this.held_data, bufs[0]]);
         this.hold_last = false;
-        this.held_data = '';
+        this.held_data = null;
     }
 
-    // If the last line is incomplete, hold it until we have more data
-    if (data.substr(-1) !== '\n') {
+    // If the last line of data in this chunk is not complete, hold it so
+    // it can be merged with the first line from the next chunk
+    if (buf_start < i) {
         this.hold_last = true;
+        this.held_data = new Buffer(data.length - buf_start);
+        data.copy(this.held_data, 0, buf_start);
     }
+
+    data = null;
 
     // Process our data line by line
-    data = data.split("\n");
-    for (i = 0; i < data.length; i++) {
-        if (!data[i]) break;
+    for (i = 0; i < bufs.length; i++) {
+        // Decode server encoding
+        line = iconv.decode(bufs[i], this.encoding);
+        bufs[i] = null;
+        if (!line) break;
 
-        // If flagged to hold the last line, store it and move on
-        if (this.hold_last && (i === data.length - 1)) {
-            this.held_data = data[i];
-            break;
-        }
-        
         // Parse the complete line, removing any carriage returns
-        msg = parse_regex.exec(data[i].replace(/^\r+|\r+$/, ''));
+        msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 
         if (msg) {
             if (msg[1]) {
@@ -581,7 +700,7 @@ var parse = function (data) {
             this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
         } else {
             // The line was not parsed correctly, must be malformed
-            console.log("Malformed IRC line: " + data[i].replace(/^\r+|\r+$/, ''));
+            console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
         }
     }
 };
