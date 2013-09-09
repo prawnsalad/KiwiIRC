@@ -396,7 +396,7 @@ handlers = {
                 ident: command.ident,
                 hostname: command.hostname,
                 channel: command.params[0],
-                msg: command.trailing.substr(1, command.trailing.length - 2)
+                msg: command.trailing.substring(1, command.trailing.length - 1)
             });
         } else {
             namespace = (command.params[0].toLowerCase() == this.irc_connection.nick.toLowerCase() || command.params[0] == '*') ?
@@ -501,9 +501,9 @@ handlers = {
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             //CTCP request
             if (command.trailing.substr(1, 6) === 'ACTION') {
-                this.irc_connection.clientEvent('action', {nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substr(7, command.trailing.length - 2)});
+                this.irc_connection.clientEvent('action', {nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substring(8, command.trailing.length - 1)});
             } else if (command.trailing.substr(1, 4) === 'KIWI') {
-                tmp = command.trailing.substr(6, command.trailing.length - 2);
+                tmp = command.trailing.substring(6, command.trailing.length - 1);
                 namespace = tmp.split(' ', 1)[0];
                 this.irc_connection.clientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length + 1)});
             } else if (command.trailing.substr(1, 7) === 'VERSION') {
@@ -519,8 +519,8 @@ handlers = {
                     ident: command.ident,
                     hostname: command.hostname,
                     target: command.params[0],
-                    type: (command.trailing.substr(1, command.trailing.length - 2).split(' ') || [null])[0],
-                    msg: command.trailing.substr(1, command.trailing.length - 2)
+                    type: (command.trailing.substring(1, command.trailing.length - 1).split(' ') || [null])[0],
+                    msg: command.trailing.substring(1, command.trailing.length - 1)
                 });
             }
         } else {
