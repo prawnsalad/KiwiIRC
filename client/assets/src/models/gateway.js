@@ -79,7 +79,7 @@ _kiwi.model.Gateway = function () {
         this.on('onmsg', function (event) {
             var source,
                 connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.channel == connection.get('nick'));
+                is_pm = (event.channel.toLowerCase() == connection.get('nick').toLowerCase());
 
             source = is_pm ? event.nick : event.channel;
 
@@ -105,7 +105,7 @@ _kiwi.model.Gateway = function () {
         this.on('onaction', function (event) {
             var source,
                 connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.channel == connection.get('nick'));
+                is_pm = (event.channel.toLowerCase() == connection.get('nick').toLowerCase());
 
             source = is_pm ? event.nick : event.channel;
 
