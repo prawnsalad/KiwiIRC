@@ -501,7 +501,7 @@ handlers = {
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             //CTCP request
             if (command.trailing.substr(1, 6) === 'ACTION') {
-                this.irc_connection.clientEvent('action', {nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substring(7, command.trailing.length - 1)});
+                this.irc_connection.clientEvent('action', {nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substring(8, command.trailing.length - 1)});
             } else if (command.trailing.substr(1, 4) === 'KIWI') {
                 tmp = command.trailing.substring(6, command.trailing.length - 1);
                 namespace = tmp.split(' ', 1)[0];
