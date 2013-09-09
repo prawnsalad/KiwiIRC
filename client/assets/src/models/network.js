@@ -353,7 +353,7 @@
 
     function onMsg(event) {
         var panel,
-            is_pm = (event.channel == this.get('nick'));
+            is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
         if (_kiwi.gateway.isNickIgnored(event.nick)) {
@@ -466,7 +466,7 @@
 
     function onAction(event) {
         var panel,
-            is_pm = (event.channel == this.get('nick'));
+            is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
         if (_kiwi.gateway.isNickIgnored(event.nick)) {
