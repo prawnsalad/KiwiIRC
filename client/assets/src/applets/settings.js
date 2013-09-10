@@ -3,7 +3,8 @@
         events: {
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
-            'click .register_protocol': 'registerProtocol'
+            'click .register_protocol': 'registerProtocol',
+	    'click .enable_notifications': 'enableNoticiations'
         },
 
         initialize: function (options) {
@@ -19,14 +20,20 @@
                 default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
                 make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
                 locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
-                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>')
+                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
+		html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_locale_html5_notifications').fetch(),
+		enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_locale_enable_notifications').fetch()
             };
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
 
             if (!navigator.registerProtocolHandler) {
                 this.$el.find('.protocol_handler').remove();
             }
-
+/*
+	    if (!window.webkitNotifications) {
+		this.$el.find('notification_enabler').remove();
+	    }
+*/
             // Incase any settings change while we have this open, update them
             _kiwi.global.settings.on('change', this.loadSettings, this);
 
@@ -106,7 +113,12 @@
         registerProtocol: function (event) {
             navigator.registerProtocolHandler('irc', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
             navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
-        }
+        },
+
+	enableNoticiations: function(event){
+	    window.webkitNotifications.requestPermission();
+	}
+
     });
 
 
