@@ -5,6 +5,8 @@ Using the web application is extremly simple even without any IRC knowledge as a
 For more information see https://kiwiirc.com or live instance of the application can be found at https://kiwiirc.com/client/.
 Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiirc.
 
+**Developing? Please use the development branch - not the master branch!**
+
 [![Visit our IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/kiwiirc.png)](https://kiwiirc.com/client/irc.freenode.net/#kiwiirc)
 
 
