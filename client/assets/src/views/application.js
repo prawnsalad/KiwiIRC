@@ -285,5 +285,12 @@ _kiwi.view.Application = Backbone.View.extend({
             return;
         
         soundManager.play(sound_id);
+    },
+
+    showNotification: function(sender, message) {
+    console.log(sender, message);
+	if (window.webkitNotifications && webkitNotifications.checkPermission() === 0){
+	    window.webkitNotifications.createNotification('/kiwi/assets/img/ico.png', sender, message).show();
+	}
     }
 });

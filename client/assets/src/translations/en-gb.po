@@ -87,6 +87,15 @@ msgstr "Note: Chrome or Chromium browser users may need to check their settings 
 msgid "client_applets_settings_title"
 msgstr "Settings"
 
+#:
+msgid "client_apllets_settings_html5_notifications"
+msgstr "HTML5 Notifications"
+
+#:
+msgid "client_apllets_settings_enable_notifications"
+msgstr "Enable notifications"
+
+
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
 msgstr "Unknown Applet"
