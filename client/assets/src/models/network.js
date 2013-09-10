@@ -409,7 +409,7 @@
 
         // Reply to a TIME ctcp
         if (event.msg.toUpperCase() === 'TIME') {
-            this.gateway.ctcp(null, false, event.type, event.nick, (new Date()).toString());
+            this.gateway.ctcp(false, event.type, event.nick, (new Date()).toString());
         }
     }
 
