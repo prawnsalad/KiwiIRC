@@ -11,15 +11,15 @@ msgstr ""
 msgid "client_applets_chanlist_channelname"
 msgstr "Channel Name"
 
-#: 
+#:
 msgid "client_applets_chanlist_users"
 msgstr "Users"
 
-#: 
+#:
 msgid "client_applets_chanlist_topic"
 msgstr "Topic"
 
-#: 
+#:
 msgid "client_applets_chanlist_channellist"
 msgstr "Channel List"
 
@@ -27,15 +27,15 @@ msgstr "Channel List"
 msgid "client_applets_scripteditor_save"
 msgstr "Save"
 
-#: 
+#:
 msgid "client_applets_scripteditor_error"
 msgstr "Script error. %s"
 
-#: 
+#:
 msgid "client_applets_scripteditor_saved"
 msgstr "Your script has been saved and is now active"
 
-#: 
+#:
 msgid "client_applets_scripteditor_title"
 msgstr "Script Editor"
 
@@ -43,56 +43,56 @@ msgstr "Script Editor"
 msgid "client_applets_settings_channelview_tabs"
 msgstr "Tabs"
 
-#: 
+#:
 msgid "client_applets_settings_channelview_list"
 msgstr "List"
 
-#: 
+#:
 msgid "client_applets_settings_channelview_list_notice"
 msgstr "for large amounts of channels"
 
-#: 
+#:
 msgid "client_applets_settings_notification_joinpart"
 msgstr "Join/part channel notifications"
 
-#: 
+#:
 msgid "client_applets_settings_timestamp"
 msgstr "Timestamps"
 
-#: 
+#:
 msgid "client_applets_settings_notification_sound"
 msgstr "Mute sound notifications"
 
-#: 
+#:
 msgid "client_applets_settings_history_length"
 msgstr "messages in scroll history"
 
-#: 
+#:
 msgid "client_applets_settings_default_client"
 msgstr "Default IRC client"
 
-#: 
+#:
 msgid "client_applets_settings_default_client_enable"
 msgstr "Make Kiwi my default IRC client"
 
-#: 
+#:
 msgid "client_applets_settings_locale_restart_needed"
 msgstr "Note: Changes will only take effect after you refresh the page"
 
-#: 
+#:
 msgid "client_applets_settings_default_client_notice"
 msgstr "Note: Chrome or Chromium browser users may need to check their settings via %s if nothing happens"
 
-#: 
+#:
 msgid "client_applets_settings_title"
 msgstr "Settings"
 
 #:
-msgid "client_apllets_settings_html5_notifications"
+msgid "client_applets_settings_html5_notifications"
 msgstr "HTML5 Notifications"
 
 #:
-msgid "client_apllets_settings_enable_notifications"
+msgid "client_applets_settings_enable_notifications"
 msgstr "Enable notifications"
 
 
@@ -100,11 +100,11 @@ msgstr "Enable notifications"
 msgid "client_models_applet_unknown"
 msgstr "Unknown Applet"
 
-#: 
+#:
 msgid "client_models_applet_loading"
 msgstr "Loading.."
 
-#: 
+#:
 msgid "client_models_applet_notfound"
 msgstr "Not found"
 
@@ -112,67 +112,67 @@ msgstr "Not found"
 msgid "client_models_application_reconnecting"
 msgstr "You have been disconnected. Attempting to reconnect for you"
 
-#: 
+#:
 msgid "client_models_application_reconnect_in_x_seconds"
 msgstr "You have been disconnected. Attempting to reconnect again in %d seconds"
 
-#: 
+#:
 msgid "client_models_application_reconnect_successfully"
 msgstr "It's OK, you're connected again"
 
-#: 
+#:
 msgid "client_models_application_settings_saved"
 msgstr "Settings have been saved"
 
-#: 
+#:
 msgid "client_models_application_ignore_title"
 msgstr "Ignored nicks"
 
-#: 
+#:
 msgid "client_models_application_ignore_none"
 msgstr "Not ignoring anybody"
 
-#: 
+#:
 msgid "client_models_application_ignore_nick"
 msgstr "Ignoring %s"
 
-#: 
+#:
 msgid "client_models_application_ignore_stop_notice"
 msgstr "Specifiy which nick you wish to stop ignoring"
 
-#: 
+#:
 msgid "client_models_application_ignore_stopped"
 msgstr "Stopped ignoring %s"
 
-#: 
+#:
 msgid "client_models_application_applet_notfound"
 msgstr "Applet \"%s\" does not exist"
 
-#: 
+#:
 msgid "client_models_application_encoding_changed"
 msgstr "Encoding modified to %s"
 
-#: 
+#:
 msgid "client_models_application_encoding_invalid"
 msgstr "%s is not a valid encoding"
 
-#: 
+#:
 msgid "client_models_application_encoding_notspecified"
 msgstr "Encoding not specified"
 
-#: 
+#:
 msgid "client_models_application_encoding_usage"
 msgstr "Usage: /encoding [NEW-ENCODING]"
 
-#: 
+#:
 msgid "client_models_application_connection_create"
 msgstr "New Connection"
 
-#: 
+#:
 msgid "client_models_application_connection_connecting"
 msgstr "Connecting to %s:%s..."
 
-#: 
+#:
 msgid "client_models_application_connection_error"
 msgstr "Error connecting to %s:%s (%s)"
 
@@ -180,19 +180,19 @@ msgstr "Error connecting to %s:%s (%s)"
 msgid "client_models_channel_join"
 msgstr "%s has joined"
 
-#: 
+#:
 msgid "client_models_channel_quit"
 msgstr "%s has quit %s"
 
-#: 
+#:
 msgid "client_models_channel_kicked"
 msgstr "%s was kicked by %s %s"
 
-#: 
+#:
 msgid "client_models_channel_selfkick"
 msgstr "You have been kicked by %s %s"
 
-#: 
+#:
 msgid "client_models_channel_part"
 msgstr "%s has left %s"
 
@@ -200,71 +200,71 @@ msgstr "%s has left %s"
 msgid "client_models_network_channel_invalid_name"
 msgstr "%s is not a valid channel name"
 
-#: 
+#:
 msgid "client_models_network_disconnected"
 msgstr "Disconnected from the IRC network"
 
-#: 
+#:
 msgid "client_models_network_nickname_changed"
 msgstr "%s is now known as %s"
 
-#: 
+#:
 msgid "client_models_network_topic"
 msgstr "Topic set by %s at %s"
 
-#: 
+#:
 msgid "client_models_network_selfmode"
 msgstr "%s sets mode %s"
 
-#: 
+#:
 msgid "client_models_network_mode"
 msgstr "%s set mode %s"
 
-#: 
+#:
 msgid "client_models_network_channels"
 msgstr "Channels: %s"
 
-#: 
+#:
 msgid "client_models_network_server"
 msgstr "Connected to server: %s %s"
 
-#: 
+#:
 msgid "client_models_network_idle_and_signon"
 msgstr "Idle for %s, signed on %s"
 
-#: 
+#:
 msgid "client_models_network_away"
 msgstr "Away: %s"
 
-#: 
+#:
 msgid "client_models_network_idle"
 msgstr "Idle for %s"
 
-#: 
+#:
 msgid "client_models_network_nickname_notfound"
 msgstr "No such nick"
 
-#: 
+#:
 msgid "client_models_network_banned"
 msgstr "You are banned from %s. %s"
 
-#: 
+#:
 msgid "client_models_network_channel_badkey"
 msgstr "Bad channel key for %s"
 
-#: 
+#:
 msgid "client_models_network_channel_inviteonly"
 msgstr "%s is invite only."
 
-#: 
+#:
 msgid "client_models_network_channel_limitreached"
 msgstr "%s is full."
 
-#: 
+#:
 msgid "client_models_network_nickname_alreadyinuse"
 msgstr "The nickname \"%s\" is already in use. Please select a new nickname"
 
-#: 
+#:
 msgid "client_models_network_badpassword"
 msgstr "Incorrect password given"
 
@@ -276,7 +276,7 @@ msgstr "This will close all KiwiIRC conversations. Are you sure you want to clos
 msgid "client_views_channel_joining"
 msgstr "Joining channel.."
 
-#: 
+#:
 msgid "client_views_channel_topic"
 msgstr "Topic for %s is: %s"
 
@@ -284,23 +284,23 @@ msgstr "Topic for %s is: %s"
 msgid "client_views_mediamessage_close"
 msgstr "Close media"
 
-#: 
+#:
 msgid "client_views_mediamessage_notfound"
 msgstr "Not found"
 
-#: 
+#:
 msgid "client_views_mediamessage_load_tweet"
 msgstr "Loading tweet"
 
-#: 
+#:
 msgid "client_views_mediamessage_load_image"
 msgstr "Loading image"
 
-#: 
+#:
 msgid "client_views_mediamessage_load_reddit"
 msgstr "Loading Reddit thread"
 
-#: 
+#:
 msgid "client_views_mediamessage_load_gist"
 msgstr "Loading gist"
 
@@ -308,11 +308,11 @@ msgstr "Loading gist"
 msgid "client_views_nickchangebox_new"
 msgstr "New nick"
 
-#: 
+#:
 msgid "client_views_nickchangebox_change"
 msgstr "Change"
 
-#: 
+#:
 msgid "client_views_nickchangebox_cancel"
 msgstr "Cancel"
 
@@ -324,87 +324,87 @@ msgstr "People are talking!"
 msgid "client_views_serverselect_form_title"
 msgstr "Think of a nickname..."
 
-#: 
+#:
 msgid "client_views_serverselect_nickname"
 msgstr "Nickname"
 
-#: 
+#:
 msgid "client_views_serverselect_enable_password"
 msgstr "I have a password"
 
-#: 
+#:
 msgid "client_views_serverselect_password"
 msgstr "Password"
 
-#: 
+#:
 msgid "client_views_serverselect_channel"
 msgstr "Channel"
 
-#: 
+#:
 msgid "client_views_serverselect_channelkey"
 msgstr "Channel Key"
 
-#: 
+#:
 msgid "client_views_serverselect_channelkey_required"
 msgstr "Channel requires a key"
 
-#: 
+#:
 msgid "client_views_serverselect_key"
 msgstr "Key"
 
-#: 
+#:
 msgid "client_views_serverselect_connection_start"
 msgstr "Start..."
 
-#: 
+#:
 msgid "client_views_serverselect_server_and_network"
 msgstr "Server and network"
 
-#: 
+#:
 msgid "client_views_serverselect_server"
 msgstr "Server"
 
-#: 
+#:
 msgid "client_views_serverselect_port"
 msgstr "Port"
 
-#: 
+#:
 msgid "client_views_serverselect_poweredby"
 msgstr "Powered by Kiwi IRC"
 
-#: 
+#:
 msgid "client_views_serverselect_nickname_error_empty"
 msgstr "Select a nickname first!"
 
-#: 
+#:
 msgid "client_views_serverselect_connection_successfully"
 msgstr "Connected"
 
-#: 
+#:
 msgid "client_views_serverselect_connection_trying"
 msgstr "Connecting.."
 
-#: 
+#:
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
 msgstr "Nickname already taken"
 
-#: 
+#:
 msgid "client_views_serverselect_nickname_invalid"
 msgstr "Erroneus nickname"
 
-#: 
+#:
 msgid "client_views_serverselect_password_incorrect"
 msgstr "Incorrect Password"
 
-#: 
+#:
 msgid "client_views_serverselect_connection_error"
 msgstr "Error Connecting"
 
-#: 
+#:
 msgid "client_views_serverselect_server_notfound"
 msgstr "Server not found"
 
-#: 
+#:
 msgid "client_views_serverselect_connection_refused"
 msgstr "Connection refused"
 
@@ -412,47 +412,47 @@ msgstr "Connection refused"
 msgid "client_views_userbox_op"
 msgstr "Op"
 
-#: 
+#:
 msgid "client_views_userbox_deop"
 msgstr "De-op"
 
-#: 
+#:
 msgid "client_views_userbox_voice"
 msgstr "Voice"
 
-#: 
+#:
 msgid "client_views_userbox_devoice"
 msgstr "De-voice"
 
-#: 
+#:
 msgid "client_views_userbox_kick"
 msgstr "Kick"
 
-#: 
+#:
 msgid "client_views_userbox_ban"
 msgstr "Ban"
 
-#: 
+#:
 msgid "client_views_userbox_query"
 msgstr "Message"
 
-#: 
+#:
 msgid "client_views_userbox_whois"
 msgstr "Info"
 
-#: 
+#:
 msgid "client_views_userbox_slap"
 msgstr "Slap!"
 
-#: 
+#:
 msgid "client_views_serverselect_ssl"
 msgstr "SSL"
 
-#: 
+#:
 msgid "client_models_application_jumpserver_prepare"
 msgstr "In 5 minutes you will be reconnected and your channels re-joined. Get ready!"
 
-#: 
+#:
 msgid "client_models_application_jumpserver_reconnect"
 msgstr "Safely reconnecting you now.."
 

@@ -27,6 +27,17 @@ _kiwi.view.Application = Backbone.View.extend({
             }
         };
 
+        // Keep tabs on the browser having focus
+        this.has_focus = true;
+
+        $(window).on('focus', function () {
+            that.has_focus = true;
+        });
+        $(window).on('blur', function () {
+            that.has_focus = false;
+        });
+
+
         this.favicon = new _kiwi.view.Favicon();
         this.initSound();
     },
@@ -57,13 +68,13 @@ _kiwi.view.Application = Backbone.View.extend({
         if (layout_style === _kiwi.global.settings) {
             layout_style = arguments[1];
         }
-        
+
         if (layout_style == 'list') {
             this.$el.addClass('chanlist_treeview');
         } else {
             this.$el.removeClass('chanlist_treeview');
         }
-        
+
         this.doLayout();
     },
 
@@ -283,14 +294,23 @@ _kiwi.view.Application = Backbone.View.extend({
 
         if (_kiwi.global.settings.get('mute_sounds'))
             return;
-        
+
         soundManager.play(sound_id);
     },
 
-    showNotification: function(sender, message) {
-    console.log(sender, message);
-	if (window.webkitNotifications && webkitNotifications.checkPermission() === 0){
-	    window.webkitNotifications.createNotification('/kiwi/assets/img/ico.png', sender, message).show();
-	}
+
+    showNotification: function(title, message) {
+        var icon = this.model.get('base_path') + '/assets/img/ico.png';
+
+        // Check if we have notification support
+        if (!window.webkitNotifications)
+            return;
+
+        if (this.has_focus)
+            return;
+
+        if (webkitNotifications.checkPermission() === 0){
+            window.webkitNotifications.createNotification(icon, title, message).show();
+        }
     }
 });

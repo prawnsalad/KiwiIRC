@@ -136,7 +136,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
             _kiwi.app.view.favicon.newHighlight();
             _kiwi.app.view.playSound('highlight');
-            _kiwi.app.view.showNotification(msg.nick, msg.msg);
+            _kiwi.app.view.showNotification(this.model.get('name'), msg.msg);
             this.alert('highlight');
 
         } else {
@@ -149,9 +149,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         if (this.model.isQuery() && !this.model.isActive()) {
             _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+
+            // Highlights have already been dealt with above
             if (!is_highlight) {
                 _kiwi.app.view.favicon.newHighlight();
             }
+
+            _kiwi.app.view.showNotification(this.model.get('name'), msg.msg);
             _kiwi.app.view.playSound('highlight');
         }
 
