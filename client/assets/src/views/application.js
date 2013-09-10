@@ -15,6 +15,9 @@ _kiwi.view.Application = Backbone.View.extend({
 
         _kiwi.global.settings.on('change:show_timestamps', this.displayTimestamps, this);
         this.displayTimestamps(_kiwi.global.settings.get('show_timestamps'));
+        
+        _kiwi.global.settings.on('change:show_send_button', this.showSendButton, this);
+        this.showSendButton(_kiwi.global.settings.get('show_send_button'));
 
         this.doLayout();
 
@@ -92,6 +95,17 @@ _kiwi.view.Application = Backbone.View.extend({
         }
     },
 
+    showSendButton: function (show_send_button) {
+        // If called by the settings callback, get the correct new_value
+        if (show_send_button === _kiwi.global.settings) {
+            show_send_button = arguments[1];
+        }
+        
+        $('.btn_send').css("display", show_send_button ? "block" : "none")        
+        
+        this.doLayout();
+    },
+
 
     // Globally shift focus to the command input box on a keypress
     setKeyFocus: function (ev) {
@@ -162,7 +176,7 @@ _kiwi.view.Application = Backbone.View.extend({
             el_resize_handle.css('left', el_panels.outerWidth(true));
         }
 
-        var input_wrap_width = parseInt($('#kiwi .controlbox .input_tools').outerWidth());
+        var input_wrap_width = parseInt($('#kiwi .controlbox .input_right').outerWidth());
         el_controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
     },
 

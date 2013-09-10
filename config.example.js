@@ -188,7 +188,8 @@ conf.client = {
         scrollback: 250,
         show_joins_parts: true,
         show_timestamps: false,
-        mute_sounds: false
+        mute_sounds: false,
+        show_send_button: false
     }
 };
 

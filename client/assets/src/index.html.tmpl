@@ -46,7 +46,10 @@
             <div class="input">
                 <span class="nick"> </span>
                 <div class="input_wrap"><textarea class="inp"></textarea></div>
-                <div class="input_tools"></div>
+                <div class="input_right">
+                    <div class="input_tools"></div>
+                    <button class="btn_send">Send</button>
+                </div>
             </div>
         </div>
     </div>
@@ -236,6 +239,12 @@
                         <label>
                             <input data-setting="mute_sounds" type="checkbox">
                             <%= mute %>
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input data-setting="show_send_button" type="checkbox">
+                            Show send button
                         </label>
                     </div>
                     <label>
