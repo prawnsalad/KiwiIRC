@@ -212,7 +212,7 @@ msgstr "連線到伺服器：%s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "發呆了 %s，%s 開始活動"
+msgstr "於 %2$s 進入, 發呆了 %1$s"
 
 #: 
 msgid "client_models_network_away"
