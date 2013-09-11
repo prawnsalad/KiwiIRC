@@ -117,7 +117,7 @@ conf.reject_unauthorised_certificates = false;
 /*
  * Reverse proxy settings
  * Reverse proxies that have been reported to work can be found at:
- *     http://github.com/prawnsalad/KiwiIRC/wiki/Running-behind-a-proxy
+ *     https://kiwiirc.com/docs/installing/proxies
  */
 
 // Whitelisted HTTP proxies in CIDR format
