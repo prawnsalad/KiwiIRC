@@ -116,7 +116,32 @@ html, body { height:100%; }
 
 
 /* Emoticons */
-#kiwi .emoticon { display: inline-block; height: 15px; width: 17px; overflow: hidden; font-size: 0; background-repeat: no-repeat; }
+#kiwi .emoticon {
+    display: inline-block;
+    height: 15px; width: 17px;
+    overflow: hidden;
+    font-size: 0;
+    background: url(../img/emoticons.png) no-repeat;
+}
+#kiwi .emoticon.smile { background-position:0px 0; }
+#kiwi .emoticon.sad { background-position:-25px 0; }
+#kiwi .emoticon.lion { background-position:-50px 0; }
+#kiwi .emoticon.winky_lion { background-position:-75px 0; }
+#kiwi .emoticon.confused { background-position:-100px 0; }
+#kiwi .emoticon.cry { background-position:-125px 0; }
+#kiwi .emoticon.wink { background-position:-150px 0; }
+#kiwi .emoticon.wink_happy { background-position:-175px 0; }
+#kiwi .emoticon.tongue { background-position:-200px 0; }
+#kiwi .emoticon.cringe_tongue { background-position:-225px 0; }
+#kiwi .emoticon.shocked { background-position:-250px 0; }
+#kiwi .emoticon.happy { background-position:-275px 0; }
+#kiwi .emoticon.eyebrows { background-position:-300px 0; }
+#kiwi .emoticon.heart { background-position:-325px 0; }
+#kiwi .emoticon.doh { background-position:-373px 0; }
+#kiwi .emoticon.big_grin { background-position:-398px 0; }
+#kiwi .emoticon.wide_eye_right { background-position:-423px 0; }
+#kiwi .emoticon.wide_eye_left { background-position:-448px 0; }
+#kiwi .emoticon.unsure { background-position:-473px 0; }
 
 
 /**
