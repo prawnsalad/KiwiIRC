@@ -15,6 +15,7 @@
                 join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
                 timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
                 mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
+                emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
                 scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
                 languages: _kiwi.app.translations,
                 default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),

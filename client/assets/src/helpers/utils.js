@@ -362,3 +362,87 @@ function formatDate (d) {
 function escapeRegex (str) {
     return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
 }
+
+function emoticonFromText(str) {
+    var words_in = str.split(' '),
+        words_out = [],
+        i,
+        emoticon_location = _kiwi.app.get('base_path') + '/assets/img/emoticons.png',
+        pushEmoticon = function (alt, offset) {
+            words_out.push('<i class="emoticon" style="background-image:url(' + emoticon_location + '); background-position:-' + offset+ 'px 0px">' + alt + '</i>');
+        };
+
+    for (i = 0; i < words_in.length; i++) {
+        switch(words_in[i]) {
+        case ':)':
+            pushEmoticon(':)', 0);
+            break;
+        case ':(':
+            pushEmoticon(':(', 25);
+            break;
+        case ':3':
+            pushEmoticon(':3', 50);
+            break;
+        case ';3':
+            pushEmoticon(';3', 75);
+            break;
+        case ':s':
+            pushEmoticon(':s', 100);
+            break;
+        case ';(':
+            pushEmoticon(';(', 125);
+            break;
+        case ';)':
+            pushEmoticon(';)', 150);
+            break;
+        case ';D':
+            pushEmoticon(';D"', 175);
+            break;
+        case ':P':
+            pushEmoticon(':P', 200);
+            break;
+        case 'xP':
+            pushEmoticon('xP', 225);
+            break;
+        case ':o':
+        case ':O':
+            pushEmoticon(':o', 250);
+            break;
+        case ':D':
+            pushEmoticon(':D', 275);
+            break;
+        case '^^,':
+            pushEmoticon('^^,', 300);
+            break;
+        case '&lt;3':
+            pushEmoticon('<3', 325);
+            break;
+        case '&gt;.&lt;':
+            pushEmoticon('>.<', 348);
+            break;
+        case '&gt;_&lt;':
+            pushEmoticon('>_<', 373);
+            break;
+        case 'XD':
+        case 'xD':
+            pushEmoticon('xD', 398);
+            break;
+        case 'o.0':
+            pushEmoticon('o.0', 423);
+            break;
+        case '0.o':
+            pushEmoticon('0.o', 448);
+            break;
+        case ':\\':
+        case '=\\':
+        case ':/':
+        case '=/':
+            pushEmoticon(':\\', 473);
+            break;
+        default:
+            words_out.push(words_in[i]);
+        }
+    }
+
+    return words_out.join(' ');
+}

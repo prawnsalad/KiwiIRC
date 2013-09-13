@@ -48,6 +48,9 @@ msgstr ""
 msgid "client_applets_settings_notification_sound"
 msgstr ""
 
+msgid "client_applets_settings_emoticons"
+msgstr ""
+
 msgid "client_applets_settings_history_length"
 msgstr ""
 

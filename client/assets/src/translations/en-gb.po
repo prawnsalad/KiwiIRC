@@ -64,6 +64,10 @@ msgid "client_applets_settings_notification_sound"
 msgstr "Mute sound notifications"
 
 #:
+msgid "client_applets_settings_emoticons"
+msgstr "Emoticons"
+
+#: 
 msgid "client_applets_settings_history_length"
 msgstr "messages in scroll history"
 
