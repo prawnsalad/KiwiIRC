@@ -115,6 +115,9 @@ html, body { height:100%; }
 #kiwi .userbox a i { }
 
 
+/* Emoticons */
+#kiwi .emoticon { display: inline-block; height: 15px; width: 17px; overflow: hidden; font-size: 0; background-repeat: no-repeat; }
+
 
 /**
  * Control box
