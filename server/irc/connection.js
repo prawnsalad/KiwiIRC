@@ -651,7 +651,7 @@ var parse = function (data) {
     // If we have an incomplete line held from the previous chunk of data
     // merge it with the first line from this chunk of data
     if (this.hold_last && this.held_data !== null) {
-        bufs[0] = Buffer.concat([this.held_data, bufs[0]]);
+        bufs[0] = Buffer.concat([this.held_data, bufs[0]], this.held_data.length + bufs[0].length);
         this.hold_last = false;
         this.held_data = null;
     }
