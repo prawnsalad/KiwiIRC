@@ -638,13 +638,33 @@ var parse = function (data) {
         tag,
         buf_start = 0,
         bufs = [],
-        line = '';
+        line = '',
+        max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
+                                // May need tweaking when IRCv3 message tags are more widespread
 
     // Split data chunk into individual lines
     for (i = 0; i < data.length; i++) {
         if (data[i] === 0x0A) { // Check if byte is a line feed
             bufs.push(data.slice(buf_start, i));
             buf_start = i + 1;
+        }
+    }
+
+    // If this chunk does not contain an \n byte, check to see if buffering it would exceed the max buffer size
+    if (!bufs[0]) {
+        if (((this.held_data) ? this.held_data.length : 0 ) + data.length > max_buffer_size) {
+            // Buffering this data would exeed our max buffer size
+            this.emit('error', 'Message buffer too large');
+            this.socket.destroy();
+            return;
+        } else {
+            if (this.held_data) {
+                this.held_data = Buffer.concat([this.held_data, data], this.held_data.length + data.length);
+            } else {
+                this.held_data = data;
+            }
+            // No complete line so no need to continue parsing this chunk
+            return;
         }
     }
 
@@ -659,6 +679,12 @@ var parse = function (data) {
     // If the last line of data in this chunk is not complete, hold it so
     // it can be merged with the first line from the next chunk
     if (buf_start < i) {
+        if ((data.length - buf_start) > max_buffer_size) {
+            // Buffering this data would exeed our max buffer size
+            this.emit('error', 'Message buffer too large');
+            this.socket.destroy();
+            return;
+        }
         this.hold_last = true;
         this.held_data = new Buffer(data.length - buf_start);
         data.copy(this.held_data, 0, buf_start);
