@@ -633,8 +633,6 @@ var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|
 var parse = function (data) {
     var i,
         msg,
-        msg2,
-        trm,
         j,
         tags = [],
         tag,
