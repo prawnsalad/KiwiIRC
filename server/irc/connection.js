@@ -633,14 +633,14 @@ var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|
 var parse = function (data) {
     var i,
         msg,
-        msg2,
-        trm,
         j,
         tags = [],
         tag,
         buf_start = 0,
         bufs = [],
-        line = '';
+        line = '',
+        max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
+                                // May need tweaking when IRCv3 message tags are more widespread
 
     // Split data chunk into individual lines
     for (i = 0; i < data.length; i++) {
@@ -650,10 +650,28 @@ var parse = function (data) {
         }
     }
 
+    // If this chunk does not contain an \n byte, check to see if buffering it would exceed the max buffer size
+    if (!bufs[0]) {
+        if (((this.held_data) ? this.held_data.length : 0 ) + data.length > max_buffer_size) {
+            // Buffering this data would exeed our max buffer size
+            this.emit('error', 'Message buffer too large');
+            this.socket.destroy();
+            return;
+        } else {
+            if (this.held_data) {
+                this.held_data = Buffer.concat([this.held_data, data], this.held_data.length + data.length);
+            } else {
+                this.held_data = data;
+            }
+            // No complete line so no need to continue parsing this chunk
+            return;
+        }
+    }
+
     // If we have an incomplete line held from the previous chunk of data
     // merge it with the first line from this chunk of data
     if (this.hold_last && this.held_data !== null) {
-        bufs[0] = Buffer.concat([this.held_data, bufs[0]]);
+        bufs[0] = Buffer.concat([this.held_data, bufs[0]], this.held_data.length + bufs[0].length);
         this.hold_last = false;
         this.held_data = null;
     }
@@ -661,6 +679,12 @@ var parse = function (data) {
     // If the last line of data in this chunk is not complete, hold it so
     // it can be merged with the first line from the next chunk
     if (buf_start < i) {
+        if ((data.length - buf_start) > max_buffer_size) {
+            // Buffering this data would exeed our max buffer size
+            this.emit('error', 'Message buffer too large');
+            this.socket.destroy();
+            return;
+        }
         this.hold_last = true;
         this.held_data = new Buffer(data.length - buf_start);
         data.copy(this.held_data, 0, buf_start);
