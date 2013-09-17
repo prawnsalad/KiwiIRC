@@ -247,7 +247,7 @@ IrcConnection.prototype.connect = function () {
         });
 
         that.socket.on('data', function () {
-            parse.apply(that, arguments);
+            socketOnData.apply(that, arguments);
         });
 
         that.socket.on('close', function socketCloseCb(had_error) {
@@ -622,20 +622,11 @@ function findWebIrc(connect_data) {
 }
 
 
-
 /**
- * The regex that parses a line of data from the IRCd
- * Deviates from the RFC a little to support the '/' character now used in some
- * IRCds
+ * Buffer any data we get from the IRCd until we have complete lines.
  */
-var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
-
-var parse = function (data) {
-    var msg,
-        i, j,
-        data_pos,               // Current position within the data Buffer
-        tags = [],
-        tag,
+function socketOnData(data) {
+    var data_pos,               // Current position within the data Buffer
         line_start = 0,
         lines = [],
         line = '',
@@ -694,42 +685,62 @@ var parse = function (data) {
         data.copy(this.held_data, 0, line_start);
     }
 
-    // Don't need the data buffer any more, get rid of it
-    data = null;
-
     // Process our data line by line
-    for (i = 0; i < lines.length; i++) {
-        // Decode server encoding
-        line = iconv.decode(lines[i], this.encoding);
-        lines[i] = null;
-        if (!line) break;
+    for (i = 0; i < lines.length; i++)
+        parseIrcLine.call(this, lines[i]);
 
-        // Parse the complete line, removing any carriage returns
-        msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
+}
 
-        if (msg) {
-            if (msg[1]) {
-                tags = msg[1].split(';');
-                for (j = 0; j < tags.length; j++) {
-                    tag = tags[j].split('=');
-                    tags[j] = {tag: tag[0], value: tag[1]};
-                }
-            }
-            msg = {
-                tags:       tags,
-                prefix:     msg[2],
-                nick:       msg[3],
-                ident:      msg[4],
-                hostname:   msg[5] || '',
-                command:    msg[6],
-                params:     msg[7] || '',
-                trailing:   (msg[8]) ? msg[8].trim() : ''
-            };
-            msg.params = msg.params.split(' ');
-            this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
-        } else {
-            // The line was not parsed correctly, must be malformed
-            console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
+
+
+/**
+ * The regex that parses a line of data from the IRCd
+ * Deviates from the RFC a little to support the '/' character now used in some
+ * IRCds
+ */
+var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+
+function parseIrcLine(buffer_line) {
+    var msg,
+        i, j,
+        tags = [],
+        tag,
+        line = '';
+
+    // Decode server encoding
+    line = iconv.decode(buffer_line, this.encoding);
+    if (!line) return;
+
+    // Parse the complete line, removing any carriage returns
+    msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
+
+    if (!msg) {
+        // The line was not parsed correctly, must be malformed
+        console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
+        return;
+    }
+
+    // Extract any tags (msg[1])
+    if (msg[1]) {
+        tags = msg[1].split(';');
+
+        for (j = 0; j < tags.length; j++) {
+            tag = tags[j].split('=');
+            tags[j] = {tag: tag[0], value: tag[1]};
         }
     }
-};
+
+    msg = {
+        tags:       tags,
+        prefix:     msg[2],
+        nick:       msg[3],
+        ident:      msg[4],
+        hostname:   msg[5] || '',
+        command:    msg[6],
+        params:     msg[7] || '',
+        trailing:   (msg[8]) ? msg[8].trim() : ''
+    };
+
+    msg.params = msg.params.split(' ');
+    this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
+}
