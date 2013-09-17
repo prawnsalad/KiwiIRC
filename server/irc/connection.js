@@ -631,72 +631,77 @@ function findWebIrc(connect_data) {
 var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
 var parse = function (data) {
-    var i,
-        msg,
-        j,
+    var msg,
+        i, j,
+        data_pos,               // Current position within the data Buffer
         tags = [],
         tag,
-        buf_start = 0,
-        bufs = [],
+        line_start = 0,
+        lines = [],
         line = '',
         max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
                                 // May need tweaking when IRCv3 message tags are more widespread
 
     // Split data chunk into individual lines
-    for (i = 0; i < data.length; i++) {
-        if (data[i] === 0x0A) { // Check if byte is a line feed
-            bufs.push(data.slice(buf_start, i));
-            buf_start = i + 1;
+    for (data_pos = 0; data_pos < data.length; data_pos++) {
+        if (data[data_pos] === 0x0A) { // Check if byte is a line feed
+            lines.push(data.slice(line_start, data_pos));
+            line_start = data_pos + 1;
         }
     }
 
-    // If this chunk does not contain an \n byte, check to see if buffering it would exceed the max buffer size
-    if (!bufs[0]) {
-        if (((this.held_data) ? this.held_data.length : 0 ) + data.length > max_buffer_size) {
+    // No complete lines of data? Check to see if buffering the data would exceed the max buffer size
+    if (!lines[0]) {
+        if ((this.held_data ? this.held_data.length : 0 ) + data.length > max_buffer_size) {
             // Buffering this data would exeed our max buffer size
             this.emit('error', 'Message buffer too large');
             this.socket.destroy();
-            return;
+
         } else {
+
+            // Append the incomplete line to our held_data and wait for more
             if (this.held_data) {
                 this.held_data = Buffer.concat([this.held_data, data], this.held_data.length + data.length);
             } else {
                 this.held_data = data;
             }
-            // No complete line so no need to continue parsing this chunk
-            return;
         }
+
+        // No complete lines to process..
+        return;
     }
 
     // If we have an incomplete line held from the previous chunk of data
     // merge it with the first line from this chunk of data
     if (this.hold_last && this.held_data !== null) {
-        bufs[0] = Buffer.concat([this.held_data, bufs[0]], this.held_data.length + bufs[0].length);
+        lines[0] = Buffer.concat([this.held_data, lines[0]], this.held_data.length + lines[0].length);
         this.hold_last = false;
         this.held_data = null;
     }
 
     // If the last line of data in this chunk is not complete, hold it so
     // it can be merged with the first line from the next chunk
-    if (buf_start < i) {
-        if ((data.length - buf_start) > max_buffer_size) {
+    if (line_start < data_pos) {
+        if ((data.length - line_start) > max_buffer_size) {
             // Buffering this data would exeed our max buffer size
             this.emit('error', 'Message buffer too large');
             this.socket.destroy();
             return;
         }
+
         this.hold_last = true;
-        this.held_data = new Buffer(data.length - buf_start);
-        data.copy(this.held_data, 0, buf_start);
+        this.held_data = new Buffer(data.length - line_start);
+        data.copy(this.held_data, 0, line_start);
     }
 
+    // Don't need the data buffer any more, get rid of it
     data = null;
 
     // Process our data line by line
-    for (i = 0; i < bufs.length; i++) {
+    for (i = 0; i < lines.length; i++) {
         // Decode server encoding
-        line = iconv.decode(bufs[i], this.encoding);
-        bufs[i] = null;
+        line = iconv.decode(lines[i], this.encoding);
+        lines[i] = null;
         if (!line) break;
 
         // Parse the complete line, removing any carriage returns
