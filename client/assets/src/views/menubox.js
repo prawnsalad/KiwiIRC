@@ -1,6 +1,6 @@
 _kiwi.view.MenuBox = Backbone.View.extend({
     events: {
-        'click .ui_menu_foot .close': 'dispose'
+        'click .ui_menu_foot .close, a': 'dispose'
     },
 
     initialize: function(title) {
