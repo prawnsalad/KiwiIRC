@@ -192,7 +192,7 @@ msgstr "%s 變成 %s 了"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "%s 重新設定了主題 (%s)"
+msgstr "%s 設定了主題 (%s)"
 
 #: 
 msgid "client_models_network_selfmode"
