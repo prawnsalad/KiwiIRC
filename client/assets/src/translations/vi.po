@@ -1,3 +1,12 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+
 msgid ""
 msgstr ""
 "MIME-Version: 1.0\n"
@@ -446,4 +455,52 @@ msgstr "Hãy đợi trong 5 phút và bạn sẽ được kết nối lại vào
 #: 
 msgid "client_models_application_jumpserver_reconnect"
 msgstr "Đang kết nối lại một cách an toàn..."
+
+#: 
+msgid "client_applets_settings_html5_notifications"
+msgstr "Desktop notifications"
+
+#: 
+msgid "client_applets_settings_enable_notifications"
+msgstr "Enable notifications"
+
+#: 
+msgid "client_applets_settings_emoticons"
+msgstr "Show emoticons"
+
+#: 
+msgid "client_applet_about"
+msgstr "About Kiwi"
+
+#: 
+msgid "client_applet_about_homepage"
+msgstr "Project homepage"
+
+#: 
+msgid "client_applet_about_link_channel"
+msgstr "Link to this channel"
+
+#: 
+msgid "client_applet_about_share_channel"
+msgstr "Share this channel"
+
+#: 
+msgid "client_applet_fav_my_networks"
+msgstr "My networks"
+
+#: 
+msgid "client_applet_fav_networks"
+msgstr "Favourite networks"
+
+#: 
+msgid "client_applet_fav_add"
+msgstr "Add network"
+
+#: 
+msgid "client_applet_fav_save"
+msgstr "Save network"
+
+#: 
+msgid "client_applet_fav_delete"
+msgstr "Delete network"
 

@@ -1,3 +1,21 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: es-mx\n"
+
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
 msgstr "Nombre del Canal"
@@ -429,4 +447,60 @@ msgstr "Cachetear!"
 #: 
 msgid "client_views_serverselect_ssl"
 msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "En 5 minutos serás reconectado y reintegrado a tus canales. Preparate!"
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Reconectando de forma segura..."
+
+#: 
+msgid "client_applets_settings_html5_notifications"
+msgstr "Notificaciones por HTML5"
+
+#: 
+msgid "client_applets_settings_enable_notifications"
+msgstr "Habilitar notificaciones"
+
+#: 
+msgid "client_applets_settings_emoticons"
+msgstr "Emoticonos"
+
+#: 
+msgid "client_applet_about"
+msgstr "About Kiwi"
+
+#: 
+msgid "client_applet_about_homepage"
+msgstr "Project homepage"
+
+#: 
+msgid "client_applet_about_link_channel"
+msgstr "Link to this channel"
+
+#: 
+msgid "client_applet_about_share_channel"
+msgstr "Share this channel"
+
+#: 
+msgid "client_applet_fav_my_networks"
+msgstr "My networks"
+
+#: 
+msgid "client_applet_fav_networks"
+msgstr "Favourite networks"
+
+#: 
+msgid "client_applet_fav_add"
+msgstr "Add network"
+
+#: 
+msgid "client_applet_fav_save"
+msgstr "Save network"
+
+#: 
+msgid "client_applet_fav_delete"
+msgstr "Delete network"
 
