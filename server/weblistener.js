@@ -91,6 +91,9 @@ var WebListener = module.exports = function (web_config, transports) {
             });
 
             that.emit('connection', client);
+
+            // Call any modules listening for new clients
+            global.modules.emit('client created', {client: client});
         });
     });
 };
