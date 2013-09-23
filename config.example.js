@@ -158,17 +158,6 @@ conf.socks_proxy.user = null;
 conf.socks_proxy.pass = null;
 
 
-// Enabled transports for the browser to use
-conf.transports = [
-    "websocket",
-    "flashsocket",
-    "htmlfile",
-    "xhr-polling",
-    "jsonp-polling"
-];
-
-
-
 
 // Default quit message
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";

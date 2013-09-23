@@ -26,7 +26,7 @@ rehash.on('rehashed', function (files) {
 var http_handler;
 
 
-var WebListener = module.exports = function (web_config, transports) {
+var WebListener = module.exports = function (web_config) {
     var hs, opts,
         that = this;
 
