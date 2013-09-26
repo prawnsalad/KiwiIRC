@@ -76,17 +76,17 @@ _kiwi.model.Member = Backbone.Model.extend({
         return prefix;
     },
     stripPrefix: function (nick) {
-        var tmp = nick, i, j, k, j_char;
+        var tmp = nick, i, j, k, nick_char;
         var user_prefixes = _kiwi.gateway.get('user_prefixes');
         i = 0;
 
-        j_loop:
+        nick_character_loop:
         for (j = 0; j < nick.length; j++) {
-            j_char = nick.charAt(j);
+            nick_char = nick.charAt(j);
             for (k = 0; k < user_prefixes.length; k++) {
-                if (j_char === user_prefixes[k].symbol) {
+                if (nick_char === user_prefixes[k].symbol) {
                     i++;
-                    continue j_loop;
+                    continue nick_character_loop;
                 }
             }
             break;
