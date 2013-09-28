@@ -30,6 +30,7 @@ irc_numerics = {
     '321': 'RPL_LISTSTART',
     '322': 'RPL_LIST',
     '323': 'RPL_LISTEND',
+    '330': 'RPL_WHOISACCOUNT',
     '331': 'RPL_NOTOPIC',
     '332': 'RPL_TOPIC',
     '333': 'RPL_TOPICWHOTIME',
@@ -43,6 +44,7 @@ irc_numerics = {
     '372': 'RPL_MOTD',
     '375': 'RPL_MOTDSTART',
     '376': 'RPL_ENDOFMOTD',
+    '378': 'RPL_WHOISHOST',
     '379': 'RPL_WHOISMODES',
     '401': 'ERR_NOSUCHNICK',
     '404': 'ERR_CANNOTSENDTOCHAN',
@@ -54,6 +56,7 @@ irc_numerics = {
     '433': 'ERR_NICKNAMEINUSE',
     '441': 'ERR_USERNOTINCHANNEL',
     '442': 'ERR_NOTONCHANNEL',
+    '443': 'ERR_USERONCHANNEL',
     '451': 'ERR_NOTREGISTERED',
     '464': 'ERR_PASSWDMISMATCH',
     '470': 'ERR_LINKCHANNEL',
@@ -64,6 +67,7 @@ irc_numerics = {
     '481': 'ERR_NOPRIVILEGES',
     '482': 'ERR_CHANOPRIVSNEEDED',
     '670': 'RPL_STARTTLS',
+    '671': 'RPL_WHOISSECURE',
     '900': 'RPL_SASLAUTHENTICATED',
     '903': 'RPL_SASLLOGGEDIN',
     '904': 'ERR_SASLNOTAUTHORISED',
@@ -85,7 +89,7 @@ IrcCommands.prototype.dispatch = function (command, data) {
     if (handlers[command]) {
         handlers[command].call(this, data);
     } else {
-        unknownCommand(command, data);
+        unknownCommand.call(this, command, data);
     }
 };
 
@@ -101,8 +105,26 @@ IrcCommands.addNumeric = function (numeric, handler_name) {
 };
 
 unknownCommand = function (command, data) {
-    // TODO: Do something here, log?
-};
+    var params = _.clone(data.params);
+
+    this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' unknown_command', {
+        command: command,
+        params: params,
+        trailing: data.trailing
+    });
+
+
+/*
+            this.irc_connection.emit(namespace + ' ' + command.params[0] + ' notice', {
+                from_server: command.prefix ? true : false,
+                nick: command.nick || command.prefix || undefined,
+                ident: command.ident,
+                hostname: command.hostname,
+                target: command.params[0],
+                msg: command.trailing
+            });
+            */
+ };
 
 
 handlers = {
@@ -210,6 +232,26 @@ handlers = {
         this.irc_connection.emit('user ' + command.params[1] + ' whoisregnick', {
             nick: command.params[1],
             msg: command.trailing
+        });
+    },
+
+    'RPL_WHOISHOST': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whoishost', {
+            nick: command.params[1],
+            msg: command.trailing
+        });
+    },
+
+    'RPL_WHOISSECURE': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whoissecure', {
+            nick: command.params[1]
+        });
+    },
+
+    'RPL_WHOISACCOUNT': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whoisaccount', {
+            nick: command.params[1],
+            account: command.params[2]
         });
     },
 
@@ -694,6 +736,13 @@ handlers = {
         this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' not_on_channel', {
             channel: command.params[1],
             reason: command.trailing
+        });
+    },
+
+    ERR_USERONCHANNEL: function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' user_on_channel', {
+            nick: command.params[1],
+            channel: command.params[2]
         });
     },
 

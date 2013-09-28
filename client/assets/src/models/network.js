@@ -133,6 +133,7 @@
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
             this.gateway.on('irc_error', onIrcError, this);
+            this.gateway.on('unknown_command', onUnknownCommand, this);
         },
 
 
@@ -725,6 +726,9 @@
             panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch(event.channel), 'status');
             _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch(event.channel));
             break;
+        case 'user_on_channel':
+            panel.addMsg(' ', '== ' + event.nick + ' is already on this channel');
+            break;
         case 'channel_is_full':
             panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel), 'status');
             _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
@@ -761,6 +765,21 @@
             // We don't know what data contains, so don't do anything with it.
             //_kiwi.front.tabviews.server.addMsg(null, ' ', '== ' + data, 'status');
         }
+    }
+
+
+    function onUnknownCommand(event) {
+        var display_params = _.clone(event.params);
+
+        // A lot of commands have our nick as the first parameter. This is redundant for us
+        if (display_params[0] && display_params[0] == this.get('nick')) {
+            display_params.shift();
+        }
+
+        if (event.trailing)
+            display_params.push(event.trailing);
+
+        this.panels.server.addMsg('', '[' + event.command + '] ' + display_params.join(', ', ''));
     }
 }
 

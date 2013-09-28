@@ -27,11 +27,13 @@ var IrcServer = function (irc_connection) {
         not_on_channel:         onNotOnChannel,
         channel_is_full:        onChannelIsFull,
         invite_only_channel:    onInviteOnlyChannel,
+        user_on_channel:        onUserAlreadyInChannel,
         banned_from_channel:    onBannedFromChannel,
         bad_channel_key:        onBadChannelKey,
         chanop_privs_needed:    onChanopPrivsNeeded,
         nickname_in_use:        onNicknameInUse,
-        erroneus_nickname:      onErroneusNickname
+        erroneus_nickname:      onErroneusNickname,
+        unknown_command:        onUnknownCommand
     };
     EventBinder.bindIrcEvents('server *', this.irc_events, this, this.irc_connection);
 
@@ -197,6 +199,14 @@ function onInviteOnlyChannel(event) {
     });
 }
 
+function onUserAlreadyInChannel(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'user_on_channel',
+        channel: event.channel,
+        nick: event.nick
+    });
+}
+
 function onBannedFromChannel(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'banned_from_channel',
@@ -234,5 +244,14 @@ function onErroneusNickname(event) {
         error: 'erroneus_nickname',
         nick: event.nick,
         reason: event.reason
+    });
+}
+
+function onUnknownCommand(event) {
+    this.irc_connection.clientEvent('unknown_command', {
+        error: 'unknown_command',
+        command: event.command,
+        params: event.params,
+        trailing: event.trailing
     });
 }
