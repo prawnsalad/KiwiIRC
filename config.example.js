@@ -74,6 +74,7 @@ conf.default_encoding = 'utf8';
 
 /*
 * Default GECOS (real name) for IRC connections
+* %n will be replaced with the users nick
 */
 //conf.default_gecos = 'Web IRC Client';
 
