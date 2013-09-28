@@ -1,4 +1,4 @@
-_kiwi.model.Server = _kiwi.model.Panel.extend({
+_kiwi.model.Server = _kiwi.model.Channel.extend({
     // Used to determine if this is a server panel
     server: true,
 

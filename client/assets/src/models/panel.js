@@ -8,63 +8,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
         }, {"silent": true});
     },
 
-    addMsg: function (nick, msg, type, opts) {
-        var message_obj, bs, d,
-            scrollback = (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250);
-
-        opts = opts || {};
-
-        // Time defaults to now
-        if (!opts || typeof opts.time === 'undefined') {
-            d = opts.date = new Date();
-            opts.time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
-        }
-
-        // CSS style defaults to empty string
-        if (!opts || typeof opts.style === 'undefined') {
-            opts.style = '';
-        }
-
-        // Run through the plugins
-        message_obj = {"msg": msg, "date": opts.date, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
-        //tmp = _kiwi.plugs.run('addmsg', message_obj);
-        if (!message_obj) {
-            return;
-        }
-
-        // The CSS class (action, topic, notice, etc)
-        if (typeof message_obj.type !== "string") {
-            message_obj.type = '';
-        }
-
-        // Make sure we don't have NaN or something
-        if (typeof message_obj.msg !== "string") {
-            message_obj.msg = '';
-        }
-
-        // Update the scrollback
-        bs = this.get("scrollback");
-        if (bs) {
-            bs.push(message_obj);
-
-            // Keep the scrolback limited
-            if (bs.length > scrollback) {
-                bs.splice(scrollback);
-            }
-            this.set({"scrollback": bs}, {silent: true});
-        }
-
-        this.trigger("msg", message_obj);
-    },
-
-
-    clearMessages: function () {
-        this.set({'scrollback': []}, {silent: true});
-        this.addMsg('', 'Window cleared');
-
-        this.view.render();
-    },
-
     closePanel: function () {
         if (this.view) {
             this.view.unbind();
