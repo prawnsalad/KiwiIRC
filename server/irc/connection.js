@@ -562,6 +562,8 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
+        var gecos = '[www.kiwiirc.com] ' + that.nick;
+
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {
@@ -575,7 +577,7 @@ var socketConnectHandler = function () {
             that.write('PASS ' + that.password);
 
         that.write('NICK ' + that.nick);
-        that.write('USER ' + that.username + ' 0 0 :' + '[www.kiwiirc.com] ' + that.nick);
+        that.write('USER ' + that.username + ' 0 0 :' + (global.config.default_gecos || gecos));
 
         that.emit('connected');
     });

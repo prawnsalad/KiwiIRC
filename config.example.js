@@ -71,6 +71,13 @@ conf.max_server_conns = 0;
 */
 conf.default_encoding = 'utf8';
 
+
+/*
+* Default GECOS (real name) for IRC connections
+*/
+//conf.default_gecos = 'Web IRC Client';
+
+
 /*
  * Client side plugins
  * Array of URLs that will be loaded into the browser when the client first loads up
