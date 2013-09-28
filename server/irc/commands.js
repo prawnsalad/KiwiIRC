@@ -539,7 +539,7 @@ handlers = {
     'CAP': function (command) {
         // TODO: capability modifiers
         // i.e. - for disable, ~ for requires ACK, = for sticky
-        var capabilities = command.trailing.replace(/[\-~=]/, '').split(' ');
+        var capabilities = command.trailing.replace(/(?:^| )[\-~=]/, '').split(' ');
         var request;
 
         // Which capabilities we want to enable
