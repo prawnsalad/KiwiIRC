@@ -220,7 +220,7 @@
 
         // Auto joining channels
         if (this.auto_join && this.auto_join.channel) {
-            panels = this.createAndJoinChannels(this.auto_join.channel + ' ' + (this.auto_join.channel_key || ''));
+            panels = this.createAndJoinChannels(this.auto_join.channel + ' ' + (this.auto_join.key || ''));
 
             // Show the last channel if we have one
             if (panels)
