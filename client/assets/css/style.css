@@ -606,7 +606,7 @@ html, body { height:100%; }
 #kiwi.theme_relaxed.timestamps .messages .msg .text { margin-left:17em; }
 
 #kiwi.theme_relaxed .messages .msg.global_nick_highlight,
-#kiwi.theme_relaxed .messages .msg.highlight { background:#D9D9D9; }
+#kiwi.theme_relaxed .messages .msg.highlight { transition: background 0.3s; background:#D9D9D9; }
 #kiwi.theme_relaxed .messages .msg.repeated_nick .nick { visibility:hidden; }
 
 /* Narrow styling (window width < 400px) */
