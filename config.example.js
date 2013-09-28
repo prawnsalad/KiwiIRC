@@ -82,11 +82,6 @@ conf.client_plugins = [
 
 
 
-// Enabled CAP extensions (See ENTER URL TO CAP INFO HERE PLS)
-conf.cap_options = [];
-
-
-
 
 // Directory to find the server modules
 conf.module_dir = "../server_modules/";
