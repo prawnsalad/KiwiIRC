@@ -43,6 +43,16 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     },
 
 
+    render: function () {
+        var that = this;
+
+        this.$messages.empty();
+        _.each(this.model.get('scrollback'), function (msg) {
+            that.newMsg(msg);
+        });
+    },
+
+
     newMsg: function (msg) {
         var re, line_msg,
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',

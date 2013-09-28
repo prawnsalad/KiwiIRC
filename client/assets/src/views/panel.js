@@ -28,12 +28,6 @@ _kiwi.view.Panel = Backbone.View.extend({
     },
 
     render: function () {
-        var that = this;
-
-        //this.$el.empty();
-        //_.each(this.model.get('scrollback'), function (msg) {
-        //    that.newMsg(msg);
-        //});
     },
 
 
