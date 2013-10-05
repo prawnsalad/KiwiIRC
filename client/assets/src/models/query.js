@@ -1,4 +1,4 @@
-_kiwi.model.Query = _kiwi.model.Panel.extend({
+_kiwi.model.Query = _kiwi.model.Channel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;

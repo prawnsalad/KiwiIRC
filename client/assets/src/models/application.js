@@ -687,9 +687,12 @@ _kiwi.model.Application = function () {
         }
 
         function queryCommand (ev) {
-            var destination, panel;
+            var destination, message, panel;
 
             destination = ev.params[0];
+            ev.params.shift();
+
+            message = ev.params.join(' ');
 
             // Check if we have the panel already. If not, create it
             panel = that.connections.active_connection.panels.getByName(destination);
@@ -699,6 +702,11 @@ _kiwi.model.Application = function () {
             }
 
             if (panel) panel.view.show();
+
+            if (message) {
+                that.connections.active_connection.gateway.msg(panel.get('name'), message);
+                panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+            }
 
         }
 
