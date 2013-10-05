@@ -236,12 +236,12 @@ function generateSettings(request, debug, callback) {
             ],
 
             [
-                'src/models/query.js',
                 'src/models/channel.js',
                 'src/models/applet.js'
             ],
 
             [
+                'src/models/query.js',
                 'src/models/server.js',     // Depends on models/channel.js
                 'src/applets/settings.js',
                 'src/applets/chanlist.js',
