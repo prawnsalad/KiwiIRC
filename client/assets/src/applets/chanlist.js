@@ -2,6 +2,7 @@
 
     var View = Backbone.View.extend({
         events: {
+            "click .chan": "chanClick",
         },
 
 
@@ -47,6 +48,16 @@
                 tbody[0].appendChild(this.channels[i].dom);
             }
             table[0].appendChild(tbody[0]);
+        },
+
+
+        chanClick: function (event) {
+            if (event.target) {
+                _kiwi.gateway.join(null, $(event.target).data('channel'));
+            } else {
+                // IE...
+                _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
+            }
         }
     });
 
