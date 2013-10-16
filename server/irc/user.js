@@ -48,7 +48,8 @@ function onNick(event) {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        newnick: event.newnick
+        newnick: event.newnick,
+        time: event.time
     });
 
     // TODO: uncomment when using an IrcUser per nick
@@ -60,7 +61,8 @@ function onNick(event) {
 function onAway(event) {
     this.irc_connection.clientEvent('away', {
         nick: event.nick,
-        msg: event.msg
+        msg: event.msg,
+        time: event.time
     });
 }
 
@@ -69,7 +71,8 @@ function onQuit(event) {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        message: event.trailing
+        message: event.trailing,
+        time: event.time
     });
 }
 
@@ -204,7 +207,8 @@ function onNotice(event) {
         ident: event.ident,
         hostname: event.hostname,
         target: event.target,
-        msg: event.msg
+        msg: event.msg,
+        time: event.time
     });
 }
 
@@ -214,7 +218,8 @@ function onCtcpResponse(event) {
         ident: event.ident,
         hostname: event.hostname,
         channel: event.channel,
-        msg: event.msg
+        msg: event.msg,
+        time: event.time
     });
 }
 
@@ -224,7 +229,8 @@ function onPrivmsg(event) {
         ident: event.ident,
         hostname: event.hostname,
         channel: event.channel,
-        msg: event.msg
+        msg: event.msg,
+        time: event.time
     });
 }
 
@@ -235,7 +241,8 @@ function onCtcpRequest(event) {
         hostname: event.hostname,
         target: event.target,
         type: event.type,
-        msg: event.msg
+        msg: event.msg,
+        time: event.time
     });
 }
 
@@ -243,6 +250,7 @@ function onMode(event) {
     this.irc_connection.clientEvent('mode', {
         target: event.target,
         nick: event.nick,
-        modes: event.modes
+        modes: event.modes,
+        time: event.time
     });
 }

@@ -16,35 +16,34 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
         members = this.get("members");
         members.channel = this;
-        members.bind("add", function (member) {
+        members.bind("add", function (member, members, options) {
             var show_message = _kiwi.global.settings.get('show_joins_parts');
             if (show_message === false) {
                 return;
             }
 
-            this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_join').fetch(member.displayNick(true)), 'action join');
+            this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_join').fetch(member.displayNick(true)), 'action join', {time: options.kiwi.time});
         }, this);
 
         members.bind("remove", function (member, members, options) {
             var show_message = _kiwi.global.settings.get('show_joins_parts');
-            var msg = (options.message) ? '(' + options.message + ')' : '';
+            var msg = (options.kiwi.message) ? '(' + options.kiwi.message + ')' : '';
 
-            if (options.type === 'quit' && show_message) {
-                this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_quit').fetch(member.displayNick(true), msg), 'action quit');
+            if (options.kiwi.type === 'quit' && show_message) {
+                this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_quit').fetch(member.displayNick(true), msg), 'action quit', {time: options.kiwi.time});
 
-            } else if(options.type === 'kick') {
+            } else if (options.kiwi.type === 'kick') {
 
-                if (!options.current_user_kicked) {
+                if (!options.kiwi.current_user_kicked) {
                     //If user kicked someone, show the message regardless of settings.
-                    if (show_message || options.current_user_initiated) {
-                        this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_kicked').fetch(member.displayNick(true), options.by, msg), 'action kick');
+                    if (show_message || options.kiwi.current_user_initiated) {
+                        this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_kicked').fetch(member.displayNick(true), options.kiwi.by, msg), 'action kick', {time: options.kiwi.time});
                     }
                 } else {
-                    this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_selfkick').fetch(options.by, msg), 'action kick');
+                    this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_selfkick').fetch(options.kiwi.by, msg), 'action kick', {time: options.kiwi.time});
                 }
             } else if (show_message) {
-
-                this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_part').fetch(member.displayNick(true), msg), 'action part');
+                this.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_channel_part').fetch(member.displayNick(true), msg), 'action part', {time: options.kiwi.time});
             }
         }, this);
     },
@@ -57,9 +56,10 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
         opts = opts || {};
 
         // Time defaults to now
-        if (!opts || typeof opts.time === 'undefined') {
-            d = opts.date = new Date();
-            opts.time = d.getHours().toString().lpad(2, "0") + ":" + d.getMinutes().toString().lpad(2, "0") + ":" + d.getSeconds().toString().lpad(2, "0");
+        if (typeof opts.time === 'undefined') {
+            opts.time = new Date();
+        } else if (typeof opts.time === 'string') {
+            opts.time = parseISO8601(opts.time);
         }
 
         // CSS style defaults to empty string

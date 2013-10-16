@@ -382,53 +382,100 @@ handlers = {
     },
 
     'JOIN': function (command) {
-        var channel;
+        var channel, time;
         if (typeof command.trailing === 'string' && command.trailing !== '') {
             channel = command.trailing;
         } else if (typeof command.params[0] === 'string' && command.params[0] !== '') {
             channel = command.params[0];
         }
 
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         this.irc_connection.emit('channel ' + channel + ' join', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
-            channel: channel
+            channel: channel,
+            time: time
         });
     },
 
     'PART': function (command) {
+        var time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         this.irc_connection.emit('channel ' + command.params[0] + ' part', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
             channel: command.params[0],
-            message: command.trailing
+            message: command.trailing,
+            time: time
         });
     },
 
     'KICK': function (command) {
+        var time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         this.irc_connection.emit('channel ' + command.params[0] + ' kick', {
             kicked: command.params[1],
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
             channel: command.params[0],
-            message: command.trailing
+            message: command.trailing,
+            time: time
         });
     },
 
     'QUIT': function (command) {
+        var time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         this.irc_connection.emit('user ' + command.nick + ' quit', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
-            message: command.trailing
+            message: command.trailing,
+            time: time
         });
     },
 
     'NOTICE': function (command) {
-        var namespace;
+        var namespace,
+            time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
 
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             // It's a CTCP response
@@ -438,7 +485,8 @@ handlers = {
                 ident: command.ident,
                 hostname: command.hostname,
                 channel: command.params[0],
-                msg: command.trailing.substring(1, command.trailing.length - 1)
+                msg: command.trailing.substring(1, command.trailing.length - 1),
+                time: time
             });
         } else {
             namespace = (command.params[0].toLowerCase() == this.irc_connection.nick.toLowerCase() || command.params[0] == '*') ?
@@ -451,23 +499,43 @@ handlers = {
                 ident: command.ident,
                 hostname: command.hostname,
                 target: command.params[0],
-                msg: command.trailing
+                msg: command.trailing,
+                time: time
             });
         }
     },
 
     'NICK': function (command) {
+        var time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         this.irc_connection.emit('user ' + command.nick + ' nick', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
-            newnick: command.trailing || command.params[0]
+            newnick: command.trailing || command.params[0],
+            time: time
         });
     },
 
     'TOPIC': function (command) {
+        var time;
+
         // If we don't have an associated channel, no need to continue
         if (!command.params[0]) return;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
 
         var channel = command.params[0],
             topic = command.trailing || '';
@@ -475,7 +543,8 @@ handlers = {
         this.irc_connection.emit('channel ' + channel + ' topic', {
             nick: command.nick,
             channel: channel,
-            topic: topic
+            topic: topic,
+            time: time
         });
     },
 
@@ -484,7 +553,14 @@ handlers = {
             prefixes = this.irc_connection.options.PREFIX || [],
             always_param = (chanmodes[0] || '').concat((chanmodes[1] || '')),
             modes = [],
-            has_param, i, j, add, event;
+            has_param, i, j, add, event, time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
 
         prefixes = _.reduce(prefixes, function (list, prefix) {
             list.push(prefix.mode);
@@ -534,20 +610,40 @@ handlers = {
         this.irc_connection.emit(event, {
             target: command.params[0],
             nick: command.nick || command.prefix || '',
-            modes: modes
+            modes: modes,
+            time: time
         });
     },
 
     'PRIVMSG': function (command) {
-        var tmp, namespace;
+        var tmp, namespace, time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             //CTCP request
             if (command.trailing.substr(1, 6) === 'ACTION') {
-                this.irc_connection.clientEvent('action', {nick: command.nick, ident: command.ident, hostname: command.hostname, channel: command.params[0], msg: command.trailing.substring(8, command.trailing.length - 1)});
+                this.irc_connection.clientEvent('action', {
+                    nick: command.nick,
+                    ident: command.ident,
+                    hostname: command.hostname,
+                    channel: command.params[0],
+                    msg: command.trailing.substring(8, command.trailing.length - 1),
+                    time: time
+                });
             } else if (command.trailing.substr(1, 4) === 'KIWI') {
                 tmp = command.trailing.substring(6, command.trailing.length - 1);
                 namespace = tmp.split(' ', 1)[0];
-                this.irc_connection.clientEvent('kiwi', {namespace: namespace, data: tmp.substr(namespace.length + 1)});
+                this.irc_connection.clientEvent('kiwi', {
+                    namespace: namespace,
+                    data: tmp.substr(namespace.length + 1),
+                    time: time
+                });
             } else if (command.trailing.substr(1, 7) === 'VERSION') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
             } else if (command.trailing.substr(1, 6) === 'SOURCE') {
@@ -562,7 +658,8 @@ handlers = {
                     hostname: command.hostname,
                     target: command.params[0],
                     type: (command.trailing.substring(1, command.trailing.length - 1).split(' ') || [null])[0],
-                    msg: command.trailing.substring(1, command.trailing.length - 1)
+                    msg: command.trailing.substring(1, command.trailing.length - 1),
+                    time: time
                 });
             }
         } else {
@@ -573,7 +670,8 @@ handlers = {
                 ident: command.ident,
                 hostname: command.hostname,
                 channel: command.params[0],
-                msg: command.trailing
+                msg: command.trailing,
+                time: time
             });
         }
     },
@@ -581,11 +679,11 @@ handlers = {
     'CAP': function (command) {
         // TODO: capability modifiers
         // i.e. - for disable, ~ for requires ACK, = for sticky
-        var capabilities = command.trailing.replace(/[\-~=]/, '').split(' ');
+        var capabilities = command.trailing.replace(/(?:^| )[\-~=]/, '').split(' ');
         var request;
 
         // Which capabilities we want to enable
-        var want = ['multi-prefix', 'away-notify'];
+        var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso'];
 
         if (this.irc_connection.password) {
             want.push('sasl');
@@ -655,9 +753,19 @@ handlers = {
     },
 
     'AWAY': function (command) {
+        var time;
+
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
+            time = _.find(command.tags, function (tag) {
+                return tag.tag === 'time';
+            });
+            time = time ? time.value : undefined;
+        }
+
         this.irc_connection.emit('user ' + command.nick + ' away', {
             nick: command.nick,
-            msg: command.trailing
+            msg: command.trailing,
+            time: time
         });
     },
 
@@ -906,4 +1014,13 @@ function genericNotice (command, msg, is_error) {
         msg: msg,
         numeric: parseInt(command.command, 10)
     });
+}
+
+function capContainsAny (caps) {
+    var intersection;
+    if (caps !instanceof Array) {
+        caps = [caps];
+    }
+    intersection = _.intersection(this.irc_connection.cap.enabled, caps);
+    return intersection.length > 0;
 }
