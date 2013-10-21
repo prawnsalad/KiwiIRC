@@ -315,7 +315,7 @@ _kiwi.model.Application = function () {
             var that = this;
 
             _kiwi.gateway.set('kiwi_server', this.kiwi_server);
-            _kiwi.gateway.syncState(username, password, function(err, data) {
+            _kiwi.gateway.resumeSession(username, password, function(err, data) {
                 console.log('resumeSession()', err, data);
             });
         };
