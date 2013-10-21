@@ -217,6 +217,32 @@ _kiwi.model.Gateway = function () {
     };
 
 
+    this.resumeSession = function(username, password, callback) {
+        var fn = function() {
+            _kiwi.gateway.rpc.call('kiwi', {
+                command: 'session_resume',
+                username: username,
+                password: password,
+            }, callback);
+        };
+
+        if (this.isConnected()) {
+            fn();
+        } else {
+            this.connect(fn);
+        }
+    };
+
+
+    this.saveSession = function(username, password, callback) {
+        _kiwi.gateway.rpc.call('kiwi', {
+            command: 'session_save',
+            username: username,
+            password: password,
+        }, callback);
+    };
+
+
     /**
      * Return a new network object with the new connection details
      */
@@ -291,6 +317,31 @@ _kiwi.model.Gateway = function () {
     this.parseKiwi = function (command, data) {
         this.trigger('kiwi:' + command, data);
         this.trigger('kiwi', data);
+
+        switch (command) {
+            case 'connection_sync':
+                _.each(data, function(connection) {
+                    var new_connection,
+                        inf = {
+                            connection_id: connection.id,
+                            nick: connection.nick,
+                            address: connection.host,
+                            port: connection.port,
+                            ssl: connection.ssl
+                        };
+
+                    new_connection = new _kiwi.model.Network(inf);
+                    new_connection.parseOptions(connection.options.options, connection.options.cap);
+
+                    _kiwi.app.connections.add(new_connection);
+                });
+
+                // Let the application know we have connected to an IRCd
+                if (data && data.length)
+                    this.trigger('onconnect');
+
+                break;
+        }
     };
     /*
         Events:

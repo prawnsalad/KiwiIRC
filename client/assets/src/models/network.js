@@ -196,6 +196,37 @@
 
                 that.gateway.join(panel.get('name'));
             });
+        },
+
+
+        /**
+         * Parse IRC network options as given by the network
+         */
+        parseOptions: function(options, capabilities) {
+            var that = this;
+
+            if (options) {
+                $.each(options, function (name, value) {
+                    switch (name) {
+                    case 'CHANTYPES':
+                        that.set('channel_prefix', value.join(''));
+                        // TODO: This shoulddn't be here, but legacy code needs it
+                        _kiwi.gateway.set('user_prefixes', value);
+                        break;
+                    case 'NETWORK':
+                        that.set('name', value);
+                        break;
+                    case 'PREFIX':
+                        that.set('user_prefixes', value);
+                        // TODO: This shoulddn't be here, but legacy code needs it
+                        _kiwi.gateway.set('user_prefixes', value);
+                        break;
+                    }
+                });
+            }
+
+            if (capabilities)
+                this.set('cap', capabilities);
         }
     });
 
@@ -233,23 +264,7 @@
 
 
     function onOptions(event) {
-        var that = this;
-
-        $.each(event.options, function (name, value) {
-            switch (name) {
-            case 'CHANTYPES':
-                that.set('channel_prefix', value.join(''));
-                break;
-            case 'NETWORK':
-                that.set('name', value);
-                break;
-            case 'PREFIX':
-                that.set('user_prefixes', value);
-                break;
-            }
-        });
-
-        this.set('cap', event.cap);
+        this.parseOptions(event.options, event.cap);
     }
 
 
@@ -524,11 +539,22 @@
 
 
     function onUserlist(event) {
-        var channel;
+        var channel, members;
         channel = this.panels.getByName(event.channel);
 
-        // If we didn't find a channel for this, may aswell leave
-        if (!channel) return;
+        // If we didn't find a channel for this for some odd reason, create it now
+        // (May happen when channel syncing with a persisted state)
+        if (!channel) {
+            channel = this.panels.getByName(event.channel);
+            if (!channel) {
+                channel = new _kiwi.model.Channel({name: event.channel});
+                this.panels.add(channel);
+            }
+
+            members = channel.get('members');
+            if (!members) return;
+
+        }
 
         channel.temp_userlist = channel.temp_userlist || [];
         _.each(event.users, function (item) {

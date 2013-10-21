@@ -185,6 +185,25 @@ global.servers = {
 };
 
 
+global.states = {
+    states: Object.create(null),
+
+    addState: function (state) {
+        this.states[state.hash] = state;
+        console.log('Added state ' + state.hash);
+    },
+
+    removeState: function (state) {
+        delete this.states[state.hash];
+    },
+
+    getState: function(state_hash) {
+        console.log('Retrieved state ' + state_hash, !!(this.states[state_hash]));
+        return this.states[state_hash];
+    }
+};
+
+
 
 /**
  * When a new config is loaded, send out an alert to the clients so

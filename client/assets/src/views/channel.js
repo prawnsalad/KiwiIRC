@@ -24,13 +24,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.model.bind('change:topic', this.topic, this);
 
         if (this.model.get('members')) {
-            this.model.get('members').bind('add', function (member) {
-                if (member.get('nick') === this.model.collection.network.get('nick')) {
-                    this.$el.find('.initial_loader').slideUp(function () {
-                        $(this).remove();
-                    });
-                }
-            }, this);
+            this.model.get('members').bind('add', this.removeLoader, this);
+            this.model.get('members').bind('reset', this.removeLoader, this);
         }
 
         // Only show the loader if this is a channel (ie. not a query)
@@ -50,6 +45,18 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         _.each(this.model.get('scrollback'), function (msg) {
             that.newMsg(msg);
         });
+    },
+
+
+    removeLoader: function (member) {
+        if (this.initial_loader_removed)
+            return;
+
+        this.$el.find('.initial_loader').slideUp(function () {
+            $(this).remove();
+        });
+
+        this.initial_loader_removed = true;
     },
 
 

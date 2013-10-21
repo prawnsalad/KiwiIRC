@@ -311,6 +311,23 @@ _kiwi.model.Application = function () {
         };
 
 
+        this.resumeSession = function(username, password) {
+            var that = this;
+
+            _kiwi.gateway.set('kiwi_server', this.kiwi_server);
+            _kiwi.gateway.syncState(username, password, function(err, data) {
+                console.log('resumeSession()', err, data);
+            });
+        };
+
+
+        this.saveSession = function(username, password) {
+            _kiwi.gateway.saveSession(username, password, function(err, data) {
+                console.log('saveSession()', err, data);
+            });
+        };
+
+
         this.panels = (function() {
             var fn = function(panel_type) {
                 var panels;

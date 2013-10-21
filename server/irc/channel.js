@@ -40,6 +40,16 @@ IrcChannel.prototype.dispose = function (){
 };
 
 
+IrcChannel.prototype.refreshNickList = function() {
+    this.irc_connection.write('NAMES ' + this.name);
+};
+
+
+IrcChannel.prototype.refreshTopic = function() {
+    this.irc_connection.write('TOPIC ' + this.name);
+};
+
+
 
 function onJoin(event) {
     this.irc_connection.clientEvent('join', {

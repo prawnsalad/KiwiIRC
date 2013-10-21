@@ -8,6 +8,10 @@ var IrcServer = function (irc_connection) {
     this.list_buffer = [];
     this.motd_buffer = '';
 
+    this.cache = {
+        options: null
+    };
+
     this.irc_events = {
         connect:                onConnect,
         options:                onOptions,
@@ -57,10 +61,13 @@ function onConnect(event) {
 }
 
 function onOptions(event) {
-    this.irc_connection.clientEvent('options', {
+    // The options may be used later on, so cache it
+    this.cache.options = {
         options: event.options,
         cap: event.cap
-    });
+    };
+
+    this.irc_connection.clientEvent('options', this.cache.options);
 }
 
 function onListStart(event) {

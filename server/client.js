@@ -25,7 +25,8 @@ var Client = function (websocket) {
         .update(Math.floor(Math.random() * 100000).toString())
         .digest('hex');
 
-    this.state = new State(this);
+    this.state = new State(false);
+    this.state.addClient(this);
 
     this.buffer = {
         list: [],
@@ -109,38 +110,46 @@ function handleClientMessage(msg, callback) {
 
 
 function kiwiCommand(command, callback) {
+    var that = this;
+
     if (typeof callback !== 'function') {
         callback = function () {};
     }
 
-    switch (command.command) {
-        case 'connect':
-            if (command.hostname && command.port && command.nick) {
-                var options = {};
+    global.modules.emit('client command kiwi', {client: this, command: command, callback: callback})
+    .done(function ircAuthorizeCb() {
+        switch (command.command) {
+            case 'connect':
+                if (command.hostname && command.port && command.nick) {
+                    var options = {};
 
-                // Get any optional parameters that may have been passed
-                if (command.encoding)
-                    options.encoding = command.encoding;
+                    // Get any optional parameters that may have been passed
+                    if (command.encoding)
+                        options.encoding = command.encoding;
 
-                options.password = global.config.restrict_server_password || command.password;
+                    options.password = global.config.restrict_server_password || command.password;
 
-                this.state.connect(
-                    (global.config.restrict_server || command.hostname),
-                    (global.config.restrict_server_port || command.port),
-                    (typeof global.config.restrict_server_ssl !== 'undefined' ?
-                        global.config.restrict_server_ssl :
-                        command.ssl),
-                    command.nick,
-                    {hostname: this.websocket.meta.revdns, address: this.websocket.meta.real_address},
-                    options,
-                    callback);
-            } else {
-                return callback('Hostname, port and nickname must be specified');
-            }
-        break;
-        default:
-            callback();
-    }
+                    that.state.connect(
+                        (global.config.restrict_server || command.hostname),
+                        (global.config.restrict_server_port || command.port),
+                        (typeof global.config.restrict_server_ssl !== 'undefined' ?
+                            global.config.restrict_server_ssl :
+                            command.ssl),
+                        command.nick,
+                        {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
+                        options,
+                        callback);
+                } else {
+                    return callback('Hostname, port and nickname must be specified');
+                }
+
+                break;
+
+            default:
+                callback();
+        }
+    })
+    .prevented(callback);
 }
 
 

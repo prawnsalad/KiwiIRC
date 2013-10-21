@@ -79,6 +79,7 @@ var commands = {};
 commands.stats = function(args, raw) {
     this.write('Connected clients: ' + _.size(global.clients.clients).toString());
     this.write('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+    this.write('Num. states: ' + _.size(global.states.states).toString());
 };
 
 
