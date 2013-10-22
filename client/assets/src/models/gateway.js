@@ -334,6 +334,15 @@ _kiwi.model.Gateway = function () {
                     new_connection.parseOptions(connection.options.options, connection.options.cap);
 
                     _kiwi.app.connections.add(new_connection);
+
+                    _.each(connection.channels, function(channel_info, idx) {
+                        var channel = new_connection.panels.getByName(channel_info.name);
+
+                        if (!channel) {
+                            channel = new _kiwi.model.Channel({name: channel_info.name});
+                            new_connection.panels.add(channel);
+                        }
+                    });
                 });
 
                 // Let the application know we have connected to an IRCd

@@ -103,6 +103,12 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
 State.prototype.sendIrcCommand = function () {
     var args = arguments;
+
+    this.emit('client_event', 'irc', {
+        client: this,
+        event: Array.prototype.slice.call(arguments)
+    });
+
     _.each(this.clients, function(client, idx) {
         client.sendIrcCommand.apply(client, args);
     });
@@ -110,6 +116,12 @@ State.prototype.sendIrcCommand = function () {
 
 State.prototype.sendKiwiCommand = function () {
     var args = arguments;
+
+    this.emit('client_event', 'kiwi', {
+        client: this,
+        event: Array.prototype.slice.call(arguments)
+    });
+
     _.each(this.clients, function(client, idx) {
         client.sendKiwicommand.apply(client, args);
     });

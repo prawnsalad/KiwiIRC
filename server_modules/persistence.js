@@ -9,6 +9,7 @@ var kiwiModules = require('../server/modules'),
 // TODO: Add password hashing (username:password:salt)
 var StorageMemory = function() {
     this.user_states = {};
+    this.state_map = {};
 };
 StorageMemory.prototype.userExists = function(username, callback) {
     callback(!!(this.user_states[username]));
@@ -41,23 +42,63 @@ StorageMemory.prototype.setUserState = function(username, password, state, callb
     user.password = password;
     user.last_used = new Date();
     user.state_id = state.hash;
+    user.events = [];
 
+    this.state_map[state.hash] = username;
     callback();
+};
+StorageMemory.prototype.putStateEvent = function(state_id, event, callback) {
+    if (!this.state_map[state_id])
+        return callback();
+
+    var username = this.state_map[state_id],
+        user = this.user_states[username];
+
+    user.events.push(event);
+
+    // Trim the events down to the latest 5 only
+    if (user.events.length > 5)
+        user.events.shift();
+
+    return callback ? callback() : null;
+};
+StorageMemory.prototype.getStateEvents = function(state_id, callback) {
+    if (!this.state_map[state_id])
+        return callback(false);
+
+    var username = this.state_map[state_id],
+        user = this.user_states[username];
+
+    return callback(user.events);
 };
 
 
 
+var module = new kiwiModules.Module('persistence');
 var storage = new StorageMemory();
 
-var module = new kiwiModules.Module('persistence');
 
-module.on('client created', function (event, event_data) {
-    var client = event_data.client;
+/**
+ * Store events for a state that are sent to the client for persistence
+ */
+function handleEvents(state) {
+    var state_id = state.hash;
 
-    client.on('dispose', function() {
-        // Clean up
+    state.on('client_event', function(type, args) {
+        if (type !== 'irc')
+            return;
+
+        // Only store certain event types (types the user will be visually interested in)
+        var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode'];
+        if (allowed_events.indexOf(args.event[0]) === -1)
+            return;
+
+        storage.putStateEvent(state_id, args.event);
     });
-});
+}
+
+
+
 
 
 module.on('client command kiwi', function(event, event_data) {
@@ -75,11 +116,13 @@ module.on('client command kiwi', function(event, event_data) {
                 if (state) {
                     state.save_state = false;
                     state.dispose();
+                    state = null;
                 }
 
                 storage.setUserState(username, password, event_data.client.state, function() {
                     event_data.client.state.save_state = true;
 
+                    handleEvents(event_data.client.state);
                     event_data.callback(null, 'Sate will now persist');
                 });
             });
@@ -111,14 +154,23 @@ module.on('client command kiwi', function(event, event_data) {
                     if (!irc_connection)
                         return;
 
-                    connections.push({
+                    var connection = {
                         connection_id: irc_connection.con_num,
                         options: irc_connection.server.cache.options || {},
                         nick: irc_connection.nick,
                         address: irc_connection.irc_host.hostname,
                         port: irc_connection.irc_host.port,
-                        ssl: irc_connection.ssl
+                        ssl: irc_connection.ssl,
+                        channels: []
+                    };
+
+                    _.each(irc_connection.irc_channels, function(chan, chan_name) {
+                        connection.channels.push({
+                            name: chan_name
+                        });
                     });
+
+                    connections.push(connection);
                 });
 
                 // Send the connection information to the client
@@ -135,6 +187,16 @@ module.on('client command kiwi', function(event, event_data) {
                     _.each(irc_connection.irc_channels, function(chan, chan_name) {
                         chan.refreshNickList();
                         chan.refreshTopic();
+                    });
+
+                    // Send any persisted events we have
+                    storage.getStateEvents(state.hash, function(events) {
+                        if (!events)
+                            return;
+
+                        _.each(events, function(event, idx) {
+                            event_data.client.sendIrcCommand(event[0], event[1]);
+                        });
                     });
                 });
             });
