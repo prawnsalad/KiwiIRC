@@ -1,8 +1,20 @@
-var _ = require('lodash'),
+var stream  = require('stream'),
+    util    = require('util'),
+    _       = require('lodash'),
     irc_numerics,
     IrcCommands,
     handlers,
     unknownCommand;
+
+// Break the Node.js version down into usable parts
+var version_values = process.version.substr(1).split('.').map(function (item) {
+    return parseInt(item, 10);
+});
+
+// If this version of node is older than 0.10.x, bring in the streams2 shim
+if (version_values[0] === 0 && version_values[1] < 10) {
+    stream = require('readable-stream');
+}
 
 irc_numerics = {
     '001': 'RPL_WELCOME',
@@ -77,20 +89,27 @@ irc_numerics = {
 
 
 IrcCommands = function (irc_connection) {
+    stream.Writable.call(this, {objectMode: true});
     this.irc_connection = irc_connection;
 };
+
+util.inherits(IrcCommands, stream.Writable);
+
 module.exports = IrcCommands;
 
-IrcCommands.prototype.dispatch = function (command, data) {
-    command += '';
-    if (irc_numerics[command]) {
-        command = irc_numerics[command];
+IrcCommands.prototype._write = function (command, encoding, callback) {
+    var cmd = command.command;
+
+    if (irc_numerics[cmd]) {
+        cmd = irc_numerics[cmd];
     }
-    if (handlers[command]) {
-        handlers[command].call(this, data);
+    if (handlers[cmd]) {
+        handlers[cmd].call(this, command);
     } else {
-        unknownCommand.call(this, command, data);
+        unknownCommand.call(this, cmd, command);
     }
+
+    callback();
 };
 
 IrcCommands.addHandler = function (command, handler) {
@@ -98,10 +117,14 @@ IrcCommands.addHandler = function (command, handler) {
         return false;
     }
     handlers[command] = handler;
+
+    return this;
 };
 
 IrcCommands.addNumeric = function (numeric, handler_name) {
     irc_numerics[numeric + ''] = handler_name +'';
+
+    return this;
 };
 
 unknownCommand = function (command, data) {
@@ -124,7 +147,7 @@ unknownCommand = function (command, data) {
                 msg: command.trailing
             });
             */
- };
+};
 
 
 handlers = {

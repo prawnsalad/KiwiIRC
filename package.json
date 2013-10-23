@@ -24,5 +24,8 @@
     "iconv-lite" : "0.2.10",
     "spdy": "1.10.0",
     "po2json": "0.0.6"
+  },
+  "optionalDependencies": {
+    "readable-stream": "1.1.9"
   }
 }
