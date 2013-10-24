@@ -319,7 +319,7 @@ IrcConnection.prototype.write = function (data, force) {
 };
 
 IrcConnection.prototype._write = function (data, enc, callback) {
-    //ENCOE string to encoding of the server
+    //ENCODE string to encoding of the server
     var encoded_buffer = iconv.encode(data + '\r\n', this.irc_encoding);
 
     this.socket.write(encoded_buffer, callback);
