@@ -182,7 +182,13 @@ conf.client = {
         show_timestamps: false,
         mute_sounds: false,
         show_emoticons: true
-    }
+    },
+    themes: [
+        'relaxed',
+        'mini',
+        'cli',
+        'basic'
+    ]
 };
 
 
