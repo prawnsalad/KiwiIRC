@@ -34,6 +34,7 @@ IrcParser.prototype._transform = function (data, encoding, callback) {
     line_start = 0,
     lines = [],
     i,
+    msg,
     max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
                             // May need tweaking when IRCv3 message tags are more widespread
 
@@ -88,7 +89,11 @@ IrcParser.prototype._transform = function (data, encoding, callback) {
 
     // Process our data line by line
     for (i = 0; i < lines.length; i++) {
-        parseIrcLine.call(this, lines[i]);
+        msg = parseIrcLine(lines[i], this.irc_encoding);
+        // Avoid passing null to this.push, that ends the stream
+        if (msg) {
+            this.push(msg);
+        }
     }
 
     callback();
@@ -105,7 +110,7 @@ IrcParser.prototype.setIrcEncoding = function (new_encoding) {
  */
 var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
-function parseIrcLine(buffer_line) {
+function parseIrcLine(buffer_line, encoding) {
     var msg,
         i,
         tags = [],
@@ -113,7 +118,7 @@ function parseIrcLine(buffer_line) {
         line = '';
 
     // Decode server encoding
-    line = iconv.decode(buffer_line, this.irc_encoding);
+    line = iconv.decode(buffer_line, encoding);
     if (!line) {
         return;
     }
@@ -149,5 +154,5 @@ function parseIrcLine(buffer_line) {
     };
 
     msg.params = msg.params.split(' ');
-    this.push(msg);
+    return msg;
 }
