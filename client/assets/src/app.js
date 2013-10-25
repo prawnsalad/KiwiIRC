@@ -116,14 +116,13 @@ _kiwi.global = {
 
         if (opts.server_settings.client.themes) {
             _.each(opts.server_settings.client.themes, function (theme) {
-                link = $.parseHTML('<link rel="alternate stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/src/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" disabled/>');
+                var link = $.parseHTML('<link rel="alternate stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/src/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" disabled/>');
                 link.disabled = true;
                 $(link).appendTo($('head'));
             });
         }
 
         continueStart = function (locale, s, xhr) {
-            var set_theme;
             if (locale) {
                 _kiwi.global.i18n = new Jed({locale_data: locale, domain: xhr.getResponseHeader('Content-Language')});
             } else {
