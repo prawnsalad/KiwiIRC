@@ -173,28 +173,22 @@
         </div>
     </script>
 
+    <script type="text/html" id="tmpl_theme_thumbnail">
+        <a class="thumbnail" data-setting="theme" data-value="<%= name.toLowerCase() %>" href="#">
+            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: <%= thumbnail_colour %>;"></div></div>
+            <div class="caption"><u><%= name %></u></div>
+        </a>
+    </script>
+
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
             <section>
                 <h6>Theme</h6>
                 <div class="control-group">
                     <div class="thumbnails">
-                        <a class="thumbnail" data-setting="theme" data-value="relaxed" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                            <div class="caption"><u>Relaxed</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="mini" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #fff;"></div></div>
-                            <div class="caption"><u>Mini</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="cli" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #222;"></div></div>
-                            <div class="caption"><u>CLI</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="basic" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                            <div class="caption"><u>Basic</u></div>
-                        </a>
+                        <% _.forEach(theme_thumbnails, function(thumbnail) { %>
+                            <%= thumbnail %>
+                        <% }); %>
                     </div>
                 </div>
             </section>

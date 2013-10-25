@@ -8,24 +8,28 @@
         },
 
         initialize: function (options) {
-            var text = {
-                tabs: _kiwi.global.i18n.translate('client_applets_settings_channelview_tabs').fetch(),
-                list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
-                large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
-                join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
-                timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
-                mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
-                emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
-                scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
-                languages: _kiwi.app.translations,
-                default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
-                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
-                locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
-                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
-                html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_html5_notifications').fetch(),
-                enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch()
-            };
-            this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
+            var template_vars = {
+                    tabs: _kiwi.global.i18n.translate('client_applets_settings_channelview_tabs').fetch(),
+                    list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
+                    large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
+                    join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
+                    timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
+                    mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
+                    emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
+                    scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
+                    languages: _kiwi.app.translations,
+                    default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
+                    make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
+                    locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
+                    default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
+                    html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_html5_notifications').fetch(),
+                    enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch(),
+                    theme_thumbnails: _.map(_kiwi.app.server_settings.client.themes, function (theme) {
+                        return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
+                    })
+                };
+
+            this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), template_vars));
 
             if (!navigator.registerProtocolHandler) {
                 this.$el.find('.protocol_handler').remove();
