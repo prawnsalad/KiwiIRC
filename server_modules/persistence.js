@@ -57,7 +57,7 @@ StorageMemory.prototype.putStateEvent = function(state_id, event, callback) {
     user.events.push(event);
 
     // Trim the events down to the latest 5 only
-    if (user.events.length > 5)
+    if (user.events.length > 50)
         user.events.shift();
 
     return callback ? callback() : null;
