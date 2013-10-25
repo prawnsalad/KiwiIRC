@@ -355,7 +355,7 @@ function readThemeInfo(themes, prev, callback) {
         prev = [];
     }
 
-    fs.readFile(__dirname + '/../client/assets/src/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
+    fs.readFile(__dirname + '/../client/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
         if (err) {
             return callback(err);
         }

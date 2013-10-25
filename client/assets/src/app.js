@@ -116,7 +116,7 @@ _kiwi.global = {
 
         if (opts.server_settings.client.themes) {
             _.each(opts.server_settings.client.themes, function (theme) {
-                var link = $.parseHTML('<link rel="alternate stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/src/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" disabled/>');
+                var link = $.parseHTML('<link rel="alternate stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" disabled/>');
                 link.disabled = true;
                 $(link).appendTo($('head'));
             });
