@@ -368,8 +368,61 @@
 
         normalizeConsole();
 
+        /**
+         * Job bootup manager
+         * Once all jobs have completed, call any registered completed functions
+         */
+        var jobs = new (function BootManager() {
+            var completed_jobs = {  };
+
+            // Functions to call once all jobs have completed
+            var completed_callbacks = [];
+
+
+            function callCompletedFunctions(fn) {
+                $.each(completed_callbacks, function(idx, fn) {
+                    fn();
+                });
+
+                completed_callbacks = [];
+            };
+
+
+            this.finishJob = function(job_name) {
+                if (typeof completed_jobs[job_name] === 'undefined') {
+                    return;
+                }
+
+                completed_jobs[job_name] = true;
+
+                // Check if all our jobs have completed
+                var all_jobs_completed = true;
+                $.each(completed_jobs, function(idx, completed) {
+                    if (!completed) {
+                        all_jobs_completed = false;
+                        return false;
+                    }
+                });
+
+                if (all_jobs_completed) {
+                    callCompletedFunctions();
+                }
+            };
+
+
+            this.onFinish = function(fn) {
+                completed_callbacks.push(fn);
+            };
+
+
+            this.registerJob = function(job_name) {
+                completed_jobs[job_name] = false;
+            };
+        })();
+
+
         // Run after all dependancies have been loaded
-        function startApp () {
+        jobs.onFinish(function startApp() {
             // Start the app
             kiwi.start(opts, function() {
                 // Load any plugins
@@ -379,10 +432,11 @@
                     });
                 }
             });
-        }
+        });
 
 
         // Load each script
+        jobs.registerJob('load_scripts');
         var cur_script = 0;
         function loadNextScript () {
             var to_load,
@@ -390,7 +444,7 @@
 
             // Start the kiwi app if all scripts have been loaded
             if (cur_script === scripts.length) {
-                startApp();
+                jobs.finishJob('load_scripts');
                 return;
             }
 
@@ -408,9 +462,24 @@
             cur_script++;
         }
 
+        // If we're not interested in debug libs, start loading production files
+        if (!getQueryVariable('debug')) {
+            scripts.push(['libs/lodash.min.js']);
+            scripts.push([
+                'libs/backbone.min.js',
+                'libs/jed.js'
+            ]);
+            scripts.push([
+                'kiwi.min.js',
+                'libs/engine.io.bundle.min.js'
+            ]);
+
+            loadNextScript();
+        }
+
         // Load application settings
+        jobs.registerJob('load_settings');
         $.getJSON(opts.settings_path, function (data) {
-            scripts = scripts.concat(data.scripts);
             opts.server_settings = data.server_settings;
             opts.client_plugins = data.client_plugins;
             opts.translations = data.translations;
@@ -419,8 +488,13 @@
             if (typeof data.kiwi_server !== 'undefined')
                 opts.kiwi_server = data.kiwi_server;
 
-            // Start loading scripts
-            loadNextScript();
+            jobs.finishJob('load_settings');
+
+            // If debugging, grab the debug scripts and load them
+            if (getQueryVariable('debug')) {
+                scripts = scripts.concat(data.scripts);
+                loadNextScript();
+            }
         });
     };
 </script>
