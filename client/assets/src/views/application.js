@@ -2,9 +2,11 @@ _kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         var that = this;
 
+        this.$el.append($('#tmpl_application').html().trim());
+
         $(window).resize(function() { that.doLayout.apply(that); });
         this.$el.find('.toolbar').resize(function() { that.doLayout.apply(that); });
-        $('#kiwi .controlbox').resize(function() { that.doLayout.apply(that); });
+        this.$el.find('.controlbox').resize(function() { that.doLayout.apply(that); });
 
         // Change the theme when the config is changed
         _kiwi.global.settings.on('change:theme', this.updateTheme, this);
@@ -16,6 +18,7 @@ _kiwi.view.Application = Backbone.View.extend({
         _kiwi.global.settings.on('change:show_timestamps', this.displayTimestamps, this);
         this.displayTimestamps(_kiwi.global.settings.get('show_timestamps'));
 
+        this.$el.appendTo($('body'));
         this.doLayout();
 
         $(document).keydown(this.setKeyFocus);
@@ -116,6 +119,10 @@ _kiwi.view.Application = Backbone.View.extend({
         var el_toolbar = this.$el.find('.toolbar');
         var el_controlbox = $('#kiwi .controlbox');
         var el_resize_handle = $('#kiwi .memberlists_resize_handle');
+
+        if (!el_kiwi.is(':visible')) {
+            return;
+        }
 
         var css_heights = {
             top: el_toolbar.outerHeight(true),

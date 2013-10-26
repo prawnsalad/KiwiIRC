@@ -16,44 +16,43 @@
 <![endif]-->
 </head>
 <body>
-    <div id="kiwi" class="theme_relaxed">
-        <div class="toolbar">
-            <div class="app_tools">
-                <ul class="main">
-                    <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
-                    <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
-                </ul>
+
+    <script type="text/html" id="tmpl_application">
+        <div id="kiwi" class="theme_relaxed">
+            <div class="toolbar">
+                <div class="app_tools">
+                    <ul class="main">
+                        <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
+                        <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
+                    </ul>
+                </div>
+
+                <div class="tabs"></div>
+
+                <div class="topic">
+                    <div contenteditable="true"></div>
+                </div>
+
+                <div class="status_message"></div>
             </div>
 
-            <div class="tabs"></div>
+            <div class="memberlists_resize_handle"></div>
 
-            <div class="topic">
-                <div contenteditable="true"></div>
+            <div class="panels">
+                <div class="panel_container container1"></div>
             </div>
 
-            <div class="status_message"></div>
-        </div>
+            <div class="memberlists disabled"></div>
 
-        <div class="memberlists_resize_handle"></div>
-
-        <div class="panels">
-            <div class="panel_container container1"></div>
-        </div>
-
-        <div class="memberlists disabled"></div>
-
-        <div class="controlbox">
-            <div class="input">
-                <span class="nick"> </span>
-                <div class="input_wrap"><textarea class="inp"></textarea></div>
-                <div class="input_tools"></div>
+            <div class="controlbox">
+                <div class="input">
+                    <span class="nick"> </span>
+                    <div class="input_wrap"><textarea class="inp"></textarea></div>
+                    <div class="input_tools"></div>
+                </div>
             </div>
         </div>
-    </div>
-
-
-
-
+    </script>
 
 
     <script type="text/html" id="tmpl_userbox">
@@ -357,11 +356,11 @@
         }
     }
 
-    window.onload = function () {
+    (function () {
         var base_path = '<%base_path%>', // Entry path for the kiwi application
             scripts = [],
             opts = {
-                container: $('#kiwi'),
+                container: $('body'),
                 base_path: base_path,
                 settings_path: base_path + '/assets/settings.json'
             };
@@ -496,7 +495,12 @@
                 loadNextScript();
             }
         });
-    };
+
+        jobs.registerJob('window_load');
+        window.onload = function() {
+            jobs.finishJob('window_load');
+        };
+    })();
 </script>
 </body>
 </html>
