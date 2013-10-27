@@ -389,7 +389,7 @@ handlers = {
             channel = command.params[0];
         }
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -408,7 +408,7 @@ handlers = {
     'PART': function (command) {
         var time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -428,7 +428,7 @@ handlers = {
     'KICK': function (command) {
         var time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -449,7 +449,7 @@ handlers = {
     'QUIT': function (command) {
         var time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -469,7 +469,7 @@ handlers = {
         var namespace,
             time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -508,7 +508,7 @@ handlers = {
     'NICK': function (command) {
         var time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -530,7 +530,7 @@ handlers = {
         // If we don't have an associated channel, no need to continue
         if (!command.params[0]) return;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -555,7 +555,7 @@ handlers = {
             modes = [],
             has_param, i, j, add, event, time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -618,7 +618,7 @@ handlers = {
     'PRIVMSG': function (command) {
         var tmp, namespace, time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -683,7 +683,7 @@ handlers = {
         var request;
 
         // Which capabilities we want to enable
-        var want = ['multi-prefix', 'away-notify', 'server-time'];
+        var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso'];
 
         if (this.irc_connection.password) {
             want.push('sasl');
@@ -755,7 +755,7 @@ handlers = {
     'AWAY': function (command) {
         var time;
 
-        if (_.contains(this.irc_connection.cap.enabled, 'server-time') && command.tags && command.tags.length > 0) {
+        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
             time = _.find(command.tags, function (tag) {
                 return tag.tag === 'time';
             });
@@ -1014,4 +1014,13 @@ function genericNotice (command, msg, is_error) {
         msg: msg,
         numeric: parseInt(command.command, 10)
     });
+}
+
+function capContainsAny (caps) {
+    var intersection;
+    if (caps !instanceof Array) {
+        caps = [caps];
+    }
+    intersection = _.intersection(this.irc_connection.cap.enabled, caps);
+    return intersection.length > 0;
 }
