@@ -28,8 +28,8 @@ config.on('loaded', function () {
 
 
 var HttpHandler = function (config) {
-    var public_html = config.public_html || 'client/';
-    this.file_server = new node_static.Server(public_html);
+    var public_http = config.public_http || 'client/';
+    this.file_server = new node_static.Server(public_http);
 };
 
 module.exports.HttpHandler = HttpHandler;
