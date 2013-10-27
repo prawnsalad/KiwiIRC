@@ -2,7 +2,7 @@ var fs        = require('fs'),
     uglifyJS  = require('uglify-js'),
     _         = require('lodash'),
     po2json   = require('po2json'),
-    config    = require('./../../../server/configuration.js');
+    config    = require('../server/configuration.js');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -39,48 +39,48 @@ config.loadConfig();
 
 
 var source_files = [
-    __dirname + '/app.js',
-    __dirname + '/models/application.js',
-    __dirname + '/models/gateway.js',
-    __dirname + '/models/network.js',
-    __dirname + '/models/member.js',
-    __dirname + '/models/memberlist.js',
-    __dirname + '/models/newconnection.js',
-    __dirname + '/models/panel.js',
-    __dirname + '/models/panellist.js',
-    __dirname + '/models/networkpanellist.js',
-    __dirname + '/models/query.js',
-    __dirname + '/models/channel.js',
-    __dirname + '/models/server.js',
-    __dirname + '/models/applet.js',
-    __dirname + '/models/pluginmanager.js',
-    __dirname + '/models/datastore.js',
+    __dirname + '/src/app.js',
+    __dirname + '/src/models/application.js',
+    __dirname + '/src/models/gateway.js',
+    __dirname + '/src/models/network.js',
+    __dirname + '/src/models/member.js',
+    __dirname + '/src/models/memberlist.js',
+    __dirname + '/src/models/newconnection.js',
+    __dirname + '/src/models/panel.js',
+    __dirname + '/src/models/panellist.js',
+    __dirname + '/src/models/networkpanellist.js',
+    __dirname + '/src/models/channel.js',
+    __dirname + '/src/models/query.js',
+    __dirname + '/src/models/server.js',
+    __dirname + '/src/models/applet.js',
+    __dirname + '/src/models/pluginmanager.js',
+    __dirname + '/src/models/datastore.js',
 
-    __dirname + '/applets/settings.js',
-    __dirname + '/applets/chanlist.js',
-    __dirname + '/applets/scripteditor.js',
+    __dirname + '/src/applets/settings.js',
+    __dirname + '/src/applets/chanlist.js',
+    __dirname + '/src/applets/scripteditor.js',
 
-    __dirname + '/helpers/utils.js',
+    __dirname + '/src/helpers/utils.js',
 
-    __dirname + '/views/panel.js',
-    __dirname + '/views/channel.js',
-    __dirname + '/views/applet.js',
-    __dirname + '/views/application.js',
-    __dirname + '/views/apptoolbar.js',
-    __dirname + '/views/controlbox.js',
-    __dirname + '/views/favicon.js',
-    __dirname + '/views/mediamessage.js',
-    __dirname + '/views/member.js',
-    __dirname + '/views/memberlist.js',
-    __dirname + '/views/menubox.js',
-    __dirname + '/views/networktabs.js',
-    __dirname + '/views/nickchangebox.js',
-    __dirname + '/views/resizehandler.js',
-    __dirname + '/views/serverselect.js',
-    __dirname + '/views/statusmessage.js',
-    __dirname + '/views/tabs.js',
-    __dirname + '/views/topicbar.js',
-    __dirname + '/views/userbox.js'
+    __dirname + '/src/views/panel.js',
+    __dirname + '/src/views/channel.js',
+    __dirname + '/src/views/applet.js',
+    __dirname + '/src/views/application.js',
+    __dirname + '/src/views/apptoolbar.js',
+    __dirname + '/src/views/controlbox.js',
+    __dirname + '/src/views/favicon.js',
+    __dirname + '/src/views/mediamessage.js',
+    __dirname + '/src/views/member.js',
+    __dirname + '/src/views/memberlist.js',
+    __dirname + '/src/views/menubox.js',
+    __dirname + '/src/views/networktabs.js',
+    __dirname + '/src/views/nickchangebox.js',
+    __dirname + '/src/views/resizehandler.js',
+    __dirname + '/src/views/serverselect.js',
+    __dirname + '/src/views/statusmessage.js',
+    __dirname + '/src/views/tabs.js',
+    __dirname + '/src/views/topicbar.js',
+    __dirname + '/src/views/userbox.js'
 ];
 
 
@@ -91,7 +91,7 @@ concat(source_files, function (err, src) {
     if (!err) {
         src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
-        fs.writeFile(__dirname + '/../kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(__dirname + '/assets/kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built kiwi.js');
             } else {
@@ -111,7 +111,7 @@ concat(source_files, function (err, src) {
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(__dirname + '/../kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(__dirname + '/assets/kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built kiwi.min.js');
             } else {
@@ -131,9 +131,9 @@ concat(source_files, function (err, src) {
 /**
  * Build the engineio client + tools libs
  */
-concat([__dirname + '/../libs/engine.io.js', __dirname + '/../libs/engine.io.tools.js'], function (err, src) {
+concat([__dirname + '/assets/libs/engine.io.js', __dirname + '/assets/libs/engine.io.tools.js'], function (err, src) {
     if (!err) {
-        fs.writeFile(__dirname + '/../libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(__dirname + '/assets/libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built engine.io.bundle.js');
             } else {
@@ -149,7 +149,7 @@ concat([__dirname + '/../libs/engine.io.js', __dirname + '/../libs/engine.io.too
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(__dirname + '/../libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(__dirname + '/assets/libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built engine.io.bundle.min.js');
             } else {
@@ -169,18 +169,18 @@ concat([__dirname + '/../libs/engine.io.js', __dirname + '/../libs/engine.io.too
 /**
 *   Convert translations from .po to .json
 */
-if (!fs.existsSync(__dirname + '/../locales')) {
-    fs.mkdirSync(__dirname + '/../locales');
+if (!fs.existsSync(__dirname + '/assets/locales')) {
+    fs.mkdirSync(__dirname + '/assets/locales');
 }
-fs.readdir(__dirname + '/translations', function (err, translation_files) {
+fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
     if (!err) {
         translation_files.forEach(function (file) {
             var locale = file.slice(0, -3);
 
             if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                po2json.parse(__dirname + '/translations/' + file, function (err, json) {
+                po2json.parse(__dirname + '/src/translations/' + file, function (err, json) {
                     if (!err) {
-                        fs.writeFile(__dirname + '/../locales/' + locale + '.json', JSON.stringify(json), function (err) {
+                        fs.writeFile(__dirname + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
                             if (!err) {
                                 console.log('Built translation file %s.json', locale);
                             } else {
@@ -207,10 +207,10 @@ fs.readdir(__dirname + '/translations', function (err, translation_files) {
  * Build the index.html file
  */
 
-var index_src = fs.readFileSync(__dirname + '/index.html.tmpl', FILE_ENCODING)
+var index_src = fs.readFileSync(__dirname + '/src/index.html.tmpl', FILE_ENCODING)
     .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi');
 
-fs.writeFile(__dirname + '/../../index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
+fs.writeFile(__dirname + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {
         console.log('Built index.html');
     } else {

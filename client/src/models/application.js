@@ -36,9 +36,6 @@ _kiwi.model.Application = function () {
             // Best guess at where the kiwi server is
             this.detectKiwiServer();
 
-            // Takes instances of model_network
-            this.connections = new _kiwi.model.NetworkPanelList();
-
             // Set any default settings before anything else is applied
             if (this.server_settings && this.server_settings.client && this.server_settings.client.settings) {
                 this.applyDefaultClientSettings(this.server_settings.client.settings);
@@ -107,6 +104,9 @@ _kiwi.model.Application = function () {
 
         this.initializeClient = function () {
             this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
+
+            // Takes instances of model_network
+            this.connections = new _kiwi.model.NetworkPanelList();
 
             // Applets panel list
             this.applet_panels = new _kiwi.model.PanelList();
@@ -687,9 +687,12 @@ _kiwi.model.Application = function () {
         }
 
         function queryCommand (ev) {
-            var destination, panel;
+            var destination, message, panel;
 
             destination = ev.params[0];
+            ev.params.shift();
+
+            message = ev.params.join(' ');
 
             // Check if we have the panel already. If not, create it
             panel = that.connections.active_connection.panels.getByName(destination);
@@ -699,6 +702,11 @@ _kiwi.model.Application = function () {
             }
 
             if (panel) panel.view.show();
+
+            if (message) {
+                that.connections.active_connection.gateway.msg(panel.get('name'), message);
+                panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+            }
 
         }
 

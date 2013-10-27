@@ -16,44 +16,43 @@
 <![endif]-->
 </head>
 <body>
-    <div id="kiwi" class="theme_relaxed">
-        <div class="toolbar">
-            <div class="app_tools">
-                <ul class="main">
-                    <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
-                    <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
-                </ul>
+
+    <script type="text/html" id="tmpl_application">
+        <div id="kiwi" class="theme_relaxed">
+            <div class="toolbar">
+                <div class="app_tools">
+                    <ul class="main">
+                        <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
+                        <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
+                    </ul>
+                </div>
+
+                <div class="tabs"></div>
+
+                <div class="topic">
+                    <div contenteditable="true"></div>
+                </div>
+
+                <div class="status_message"></div>
             </div>
 
-            <div class="tabs"></div>
+            <div class="memberlists_resize_handle"></div>
 
-            <div class="topic">
-                <div contenteditable="true"></div>
+            <div class="panels">
+                <div class="panel_container container1"></div>
             </div>
 
-            <div class="status_message"></div>
-        </div>
+            <div class="memberlists disabled"></div>
 
-        <div class="memberlists_resize_handle"></div>
-
-        <div class="panels">
-            <div class="panel_container container1"></div>
-        </div>
-
-        <div class="memberlists disabled"></div>
-
-        <div class="controlbox">
-            <div class="input">
-                <span class="nick"> </span>
-                <div class="input_wrap"><textarea class="inp"></textarea></div>
-                <div class="input_tools"></div>
+            <div class="controlbox">
+                <div class="input">
+                    <span class="nick"> </span>
+                    <div class="input_wrap"><textarea class="inp"></textarea></div>
+                    <div class="input_tools"></div>
+                </div>
             </div>
         </div>
-    </div>
-
-
-
-
+    </script>
 
 
     <script type="text/html" id="tmpl_userbox">
@@ -79,7 +78,7 @@
 
     <script type="text/html" id="tmpl_new_connection_info">
         <div style="margin:1em 20px;">
-            <img src="https://kiwiirc.com/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" style="display:block; margin:0 auto;"/> <br />
+            <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" style="display:block; margin:0 auto;"/> <br />
             <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
 
             <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://www.kiwiirc.com/">Kiwi IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a> page. This network of people may not be associated with Kiwi IRC itself.</p>
@@ -317,7 +316,7 @@
     </script>
 
 
-<script src="<%base_path%>/assets/libs/jquery-1.9.1.min.js"></script>
+<script src="<%base_path%>/assets/libs/jquery-1.10.2.min.js"></script>
 <script>
 /* Script loader (https://github.com/ded/script.js) */
 (function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)
@@ -357,19 +356,72 @@
         }
     }
 
-    window.onload = function () {
+    (function () {
         var base_path = '<%base_path%>', // Entry path for the kiwi application
             scripts = [],
             opts = {
-                container: $('#kiwi'),
+                container: $('body'),
                 base_path: base_path,
                 settings_path: base_path + '/assets/settings.json'
             };
 
         normalizeConsole();
 
+        /**
+         * Job bootup manager
+         * Once all jobs have completed, call any registered completed functions
+         */
+        var jobs = new (function BootManager() {
+            var completed_jobs = {  };
+
+            // Functions to call once all jobs have completed
+            var completed_callbacks = [];
+
+
+            function callCompletedFunctions(fn) {
+                $.each(completed_callbacks, function(idx, fn) {
+                    fn();
+                });
+
+                completed_callbacks = [];
+            };
+
+
+            this.finishJob = function(job_name) {
+                if (typeof completed_jobs[job_name] === 'undefined') {
+                    return;
+                }
+
+                completed_jobs[job_name] = true;
+
+                // Check if all our jobs have completed
+                var all_jobs_completed = true;
+                $.each(completed_jobs, function(idx, completed) {
+                    if (!completed) {
+                        all_jobs_completed = false;
+                        return false;
+                    }
+                });
+
+                if (all_jobs_completed) {
+                    callCompletedFunctions();
+                }
+            };
+
+
+            this.onFinish = function(fn) {
+                completed_callbacks.push(fn);
+            };
+
+
+            this.registerJob = function(job_name) {
+                completed_jobs[job_name] = false;
+            };
+        })();
+
+
         // Run after all dependancies have been loaded
-        function startApp () {
+        jobs.onFinish(function startApp() {
             // Start the app
             kiwi.start(opts, function() {
                 // Load any plugins
@@ -379,18 +431,19 @@
                     });
                 }
             });
-        }
+        });
 
 
         // Load each script
+        jobs.registerJob('load_scripts');
         var cur_script = 0;
         function loadNextScript () {
             var to_load,
-                base = base_path + '/assets/';
+                base = base_path + '/';
 
             // Start the kiwi app if all scripts have been loaded
             if (cur_script === scripts.length) {
-                startApp();
+                jobs.finishJob('load_scripts');
                 return;
             }
 
@@ -408,9 +461,24 @@
             cur_script++;
         }
 
+        // If we're not interested in debug libs, start loading production files
+        if (!getQueryVariable('debug')) {
+            scripts.push(['assets/libs/lodash.min.js']);
+            scripts.push([
+                'assets/libs/backbone.min.js',
+                'assets/libs/jed.js'
+            ]);
+            scripts.push([
+                'assets/kiwi.min.js',
+                'assets/libs/engine.io.bundle.min.js'
+            ]);
+
+            loadNextScript();
+        }
+
         // Load application settings
+        jobs.registerJob('load_settings');
         $.getJSON(opts.settings_path, function (data) {
-            scripts = scripts.concat(data.scripts);
             opts.server_settings = data.server_settings;
             opts.client_plugins = data.client_plugins;
             opts.translations = data.translations;
@@ -419,10 +487,20 @@
             if (typeof data.kiwi_server !== 'undefined')
                 opts.kiwi_server = data.kiwi_server;
 
-            // Start loading scripts
-            loadNextScript();
+            jobs.finishJob('load_settings');
+
+            // If debugging, grab the debug scripts and load them
+            if (getQueryVariable('debug')) {
+                scripts = scripts.concat(data.scripts);
+                loadNextScript();
+            }
         });
-    };
+
+        jobs.registerJob('window_load');
+        window.onload = function() {
+            jobs.finishJob('window_load');
+        };
+    })();
 </script>
 </body>
 </html>
