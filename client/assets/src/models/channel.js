@@ -56,10 +56,10 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
         opts = opts || {};
 
         // Time defaults to now
-        if (typeof opts.time === 'undefined') {
+        if (typeof opts.time === 'number') {
+            opts.time = new Date(opts.time);
+        } else {
             opts.time = new Date();
-        } else if (typeof opts.time === 'string') {
-            opts.time = parseISO8601(opts.time);
         }
 
         // CSS style defaults to empty string

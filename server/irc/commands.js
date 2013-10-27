@@ -389,12 +389,8 @@ handlers = {
             channel = command.params[0];
         }
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         this.irc_connection.emit('channel ' + channel + ' join', {
             nick: command.nick,
@@ -408,12 +404,8 @@ handlers = {
     'PART': function (command) {
         var time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         this.irc_connection.emit('channel ' + command.params[0] + ' part', {
             nick: command.nick,
@@ -428,12 +420,8 @@ handlers = {
     'KICK': function (command) {
         var time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         this.irc_connection.emit('channel ' + command.params[0] + ' kick', {
             kicked: command.params[1],
@@ -449,12 +437,8 @@ handlers = {
     'QUIT': function (command) {
         var time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         this.irc_connection.emit('user ' + command.nick + ' quit', {
             nick: command.nick,
@@ -469,12 +453,8 @@ handlers = {
         var namespace,
             time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
 
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
@@ -508,12 +488,8 @@ handlers = {
     'NICK': function (command) {
         var time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         this.irc_connection.emit('user ' + command.nick + ' nick', {
             nick: command.nick,
@@ -530,12 +506,8 @@ handlers = {
         // If we don't have an associated channel, no need to continue
         if (!command.params[0]) return;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         var channel = command.params[0],
             topic = command.trailing || '';
@@ -555,12 +527,8 @@ handlers = {
             modes = [],
             has_param, i, j, add, event, time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         prefixes = _.reduce(prefixes, function (list, prefix) {
             list.push(prefix.mode);
@@ -618,12 +586,8 @@ handlers = {
     'PRIVMSG': function (command) {
         var tmp, namespace, time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         if ((command.trailing.charAt(0) === String.fromCharCode(1)) && (command.trailing.charAt(command.trailing.length - 1) === String.fromCharCode(1))) {
             //CTCP request
@@ -683,7 +647,7 @@ handlers = {
         var request;
 
         // Which capabilities we want to enable
-        var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso'];
+        var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso', 'znc.in/server-time'];
 
         if (this.irc_connection.password) {
             want.push('sasl');
@@ -755,12 +719,8 @@ handlers = {
     'AWAY': function (command) {
         var time;
 
-        if (capContainsAny.call(this, ['server-time', 'znc.in/server-time-iso']) && command.tags && command.tags.length > 0) {
-            time = _.find(command.tags, function (tag) {
-                return tag.tag === 'time';
-            });
-            time = time ? time.value : undefined;
-        }
+        // Check if we have a server-time
+        time = getServerTime.call(this, command);
 
         this.irc_connection.emit('user ' + command.nick + ' away', {
             nick: command.nick,
@@ -1016,11 +976,78 @@ function genericNotice (command, msg, is_error) {
     });
 }
 
+
+function getServerTime(command) {
+    var time;
+
+    // No tags? No times.
+    if (!command.tags || command.tags.length === 0) {
+        return time;
+    }
+
+    if (capContainsAny.call(this, ['server-time', 'znc.in/server-time', 'znc.in/server-time-iso'])) {
+        time = _.find(command.tags, function (tag) {
+            return tag.tag === 'time';
+        });
+
+        time = time ? time.value : undefined;
+
+        // Convert the time value to a unixtimestamp
+        if (typeof time === 'string') {
+            if (time.indexOf('T') > -1) {
+                time = parseISO8601(opts.time);
+
+            } else if(time.match(/^[0-9.]+$/)) {
+                // A string formatted unix timestamp
+                time = new Date(time * 1000);
+            }
+
+            time = time.getTime();
+
+        } else if (typeof time === 'number') {
+            time = new Date(time * 1000);
+            time = time.getTime();
+        }
+    }
+
+    return time;
+}
+
+
 function capContainsAny (caps) {
     var intersection;
-    if (caps !instanceof Array) {
+    if (!caps instanceof Array) {
         caps = [caps];
     }
     intersection = _.intersection(this.irc_connection.cap.enabled, caps);
     return intersection.length > 0;
+}
+
+
+// Code based on http://anentropic.wordpress.com/2009/06/25/javascript-iso8601-parser-and-pretty-dates/#comment-154
+function parseISO8601(str) {
+    if (Date.prototype.toISOString) {
+        return new Date(str);
+    } else {
+        var parts = str.split('T'),
+            dateParts = parts[0].split('-'),
+            timeParts = parts[1].split('Z'),
+            timeSubParts = timeParts[0].split(':'),
+            timeSecParts = timeSubParts[2].split('.'),
+            timeHours = Number(timeSubParts[0]),
+            _date = new Date();
+
+        _date.setUTCFullYear(Number(dateParts[0]));
+        _date.setUTCDate(1);
+        _date.setUTCMonth(Number(dateParts[1])-1);
+        _date.setUTCDate(Number(dateParts[2]));
+        _date.setUTCHours(Number(timeHours));
+        _date.setUTCMinutes(Number(timeSubParts[1]));
+        _date.setUTCSeconds(Number(timeSecParts[0]));
+        if (timeSecParts[1]) {
+            _date.setUTCMilliseconds(Number(timeSecParts[1]));
+        }
+
+        return _date;
+    }
 }
