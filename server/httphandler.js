@@ -57,7 +57,7 @@ HttpHandler.prototype.serve = function (request, response) {
 
     // Any requests for /client to load the index file
     if (request.url.match(new RegExp('^' + base_path_regex + '([/$]|$)', 'i'))) {
-        request.url = '/assets/index.html';
+        request.url = '/index.html';
     }
 
     // If the 'magic' translation is requested, figure out the best language to use from

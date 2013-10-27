@@ -210,7 +210,7 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
 var index_src = fs.readFileSync(__dirname + '/src/index.html.tmpl', FILE_ENCODING)
     .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi');
 
-fs.writeFile(__dirname + '/assets/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
+fs.writeFile(__dirname + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {
         console.log('Built index.html');
     } else {
