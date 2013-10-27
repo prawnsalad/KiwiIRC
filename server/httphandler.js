@@ -28,8 +28,8 @@ config.on('loaded', function () {
 
 
 var HttpHandler = function (config) {
-    var public_html = config.public_html || 'client/';
-    this.file_server = new node_static.Server(public_html);
+    var public_http = config.public_http || 'client/';
+    this.file_server = new node_static.Server(public_http);
 };
 
 module.exports.HttpHandler = HttpHandler;
@@ -52,9 +52,12 @@ HttpHandler.prototype.serve = function (request, response) {
     // Any asset request to head into the asset dir
     request.url = request.url.replace(base_path + '/assets/', '/assets/');
 
+    // Any src request to head into the src dir
+    request.url = request.url.replace(base_path + '/src/', '/src/');
+
     // Any requests for /client to load the index file
     if (request.url.match(new RegExp('^' + base_path_regex + '([/$]|$)', 'i'))) {
-        request.url = '/';
+        request.url = '/index.html';
     }
 
     // If the 'magic' translation is requested, figure out the best language to use from
@@ -208,9 +211,9 @@ function generateSettings(request, debug, callback) {
             translations: [],
             scripts: [
                 [
-                    'libs/lodash.min.js'
+                    'assets/libs/lodash.min.js'
                 ],
-                ['libs/backbone.min.js', 'libs/jed.js']
+                ['assets/libs/backbone.min.js', 'assets/libs/jed.js']
             ]
         };
 
@@ -218,8 +221,8 @@ function generateSettings(request, debug, callback) {
         vars.scripts = vars.scripts.concat([
             [
                 'src/app.js',
-                'libs/engine.io.js',
-                'libs/engine.io.tools.js'
+                'assets/libs/engine.io.js',
+                'assets/libs/engine.io.tools.js'
             ],
             [
                 'src/models/application.js',
@@ -281,7 +284,7 @@ function generateSettings(request, debug, callback) {
             ]
         ]);
     } else {
-        vars.scripts.push(['kiwi.min.js', 'libs/engine.io.bundle.min.js']);
+        vars.scripts.push(['assets/kiwi.min.js', 'assets/libs/engine.io.bundle.min.js']);
     }
 
     // Any restricted server mode set?
@@ -309,14 +312,14 @@ function generateSettings(request, debug, callback) {
     }
 
     // Get a list of available translations
-    fs.readFile(__dirname + '/../client/assets/src/translations/translations.json', function (err, translations) {
+    fs.readFile(__dirname + '/../client/src/translations/translations.json', function (err, translations) {
         if (err) {
             return callback(err);
         }
 
         var translation_files;
         translations = JSON.parse(translations);
-        fs.readdir(__dirname + '/../client/assets/src/translations/', function (err, pofiles) {
+        fs.readdir(__dirname + '/../client/src/translations/', function (err, pofiles) {
             var hash, settings;
             if (err) {
                 return callback(err);

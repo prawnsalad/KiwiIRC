@@ -7,7 +7,7 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
         this.model.on('add', this.networkAdded, this);
         this.model.on('remove', this.networkRemoved, this);
 
-        this.$el.appendTo($('#kiwi .tabs'));
+        this.$el.appendTo(_kiwi.app.view.$el.find('.tabs'));
     },
 
     networkAdded: function(network) {
