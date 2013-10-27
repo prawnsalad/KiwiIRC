@@ -1,7 +1,7 @@
 // TODO: Add password hashing (username:password:salt)
 
 
-var StorageMemory = module.exports = function() {
+var StorageMemory = module.exports = function StorageMemory() {
     this.user_states = {};
     this.state_map = {};
 };

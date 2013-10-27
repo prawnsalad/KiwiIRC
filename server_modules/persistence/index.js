@@ -5,10 +5,18 @@
 var kiwiModules = require('../../server/modules'),
     express = require('express'),
     express_app = express(),
-    storage = new require('./drivers/memory');
+    storage, storage_engine;
 
 
+// Create a storage engine, default being memory
+if (global.config.persistence && global.config.persistence.storage) {
+    storage_engine = global.config.persistence.storage;
+} else {
+    storage_engine = 'memory';
+}
 
+storage = require('./drivers/' + storage_engine);
+storage = new storage();
 
 
 var module = new kiwiModules.Module('persistence');
