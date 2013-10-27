@@ -20,7 +20,7 @@
     "daemonize2": "0.4.2",
     "eventemitter2": "0.4.13",
     "ipaddr.js": "0.1.1",
-    "socksjs": "0.4.1",
+    "socksjs": "0.4.3",
     "iconv-lite" : "0.2.11",
     "spdy": "1.14.11",
     "po2json": "0.0.6"
