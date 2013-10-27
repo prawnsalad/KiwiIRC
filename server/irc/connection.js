@@ -704,7 +704,7 @@ function socketOnData(data) {
  * Deviates from the RFC a little to support the '/' character now used in some
  * IRCds
  */
-var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
 function parseIrcLine(buffer_line) {
     var msg,

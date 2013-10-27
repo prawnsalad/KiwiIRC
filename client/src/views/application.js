@@ -2,7 +2,10 @@ _kiwi.view.Application = Backbone.View.extend({
     initialize: function () {
         var that = this;
 
-        this.$el.append($('#tmpl_application').html().trim());
+        this.$el = $($('#tmpl_application').html().trim());
+        this.el = this.$el[0];
+
+        $(this.model.get('container') || 'body').append(this.$el);
 
         this.elements = {
             panels:        this.$el.find('.panels'),

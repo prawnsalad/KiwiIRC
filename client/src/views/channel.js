@@ -138,7 +138,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         if (prev_msg) {
             // Time difference between this message and the last (in minutes)
-            time_difference = (msg.date.getTime() - prev_msg.date.getTime())/1000/60;
+            time_difference = (msg.time.getTime() - prev_msg.time.getTime())/1000/60;
             if (prev_msg.nick === msg.nick && time_difference < 1) {
                 msg_css_classes += ' repeated_nick';
             }
@@ -146,7 +146,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Build up and add the line
         msg.msg_css_classes = msg_css_classes;
-        line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+        msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+        line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         this.$messages.append(_.template(line_msg, msg));
 
         // Activity/alerts based on the type of new message

@@ -287,7 +287,7 @@
         if (!members) return;
 
         user = new _kiwi.model.Member({nick: event.nick, ident: event.ident, hostname: event.hostname});
-        members.add(user);
+        members.add(user, {kiwi: event});
     }
 
 
@@ -298,6 +298,7 @@
 
         part_options.type = 'part';
         part_options.message = event.message || '';
+        part_options.time = event.time;
 
         channel = this.panels.getByName(event.channel);
         if (!channel) return;
@@ -314,7 +315,7 @@
         user = members.getByNick(event.nick);
         if (!user) return;
 
-        members.remove(user, part_options);
+        members.remove(user, {kiwi: part_options});
     }
 
 
@@ -325,13 +326,14 @@
 
         quit_options.type = 'quit';
         quit_options.message = event.message || '';
+        quit_options.time = event.time;
 
         $.each(this.panels.models, function (index, panel) {
             if (!panel.isChannel()) return;
 
             member = panel.get('members').getByNick(event.nick);
             if (member) {
-                panel.get('members').remove(member, quit_options);
+                panel.get('members').remove(member, {kiwi: quit_options});
             }
         });
     }
@@ -345,8 +347,9 @@
         part_options.type = 'kick';
         part_options.by = event.nick;
         part_options.message = event.message || '';
-        part_options.current_user_kicked = (event.kicked == this.get('nick'))
-        part_options.current_user_initiated = (event.nick == this.get('nick'))
+        part_options.current_user_kicked = (event.kicked == this.get('nick'));
+        part_options.current_user_initiated = (event.nick == this.get('nick'));
+        part_options.time = event.time;
 
         channel = this.panels.getByName(event.channel);
         if (!channel) return;
@@ -358,7 +361,7 @@
         if (!user) return;
 
 
-        members.remove(user, part_options);
+        members.remove(user, {kiwi: part_options});
 
         if (part_options.current_user_kicked) {
             members.reset([]);
@@ -393,7 +396,7 @@
             }
         }
 
-        panel.addMsg(event.nick, event.msg);
+        panel.addMsg(event.nick, event.msg, 'privmsg', {time: event.time});
     }
 
 
@@ -410,7 +413,7 @@
             member = panel.get('members').getByNick(event.nick);
             if (member) {
                 member.set('nick', event.newnick);
-                panel.addMsg('', '== ' + _kiwi.global.i18n.translate('client_models_network_nickname_changed').fetch(event.nick, event.newnick) , 'action nick');
+                panel.addMsg('', '== ' + _kiwi.global.i18n.translate('client_models_network_nickname_changed').fetch(event.nick, event.newnick) , 'action nick', {time: event.time});
             }
         });
     }
@@ -437,7 +440,7 @@
             return;
         }
 
-        this.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg);
+        this.panels.server.addMsg('[' + event.nick + ']', 'CTCP ' + event.msg, 'ctcp', {time: event.time});
     }
 
 
@@ -471,11 +474,11 @@
             panel = this.panels.server;
         }
 
-        panel.addMsg('[' + (event.nick||'') + ']', event.msg);
+        panel.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
 
         // Show this notice to the active panel if it didn't have a set target
         if (!event.from_server && panel === this.panels.server && _kiwi.app.panels().active !== this.panels.server)
-            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg);
+            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
     }
 
 
@@ -506,7 +509,7 @@
             }
         }
 
-        panel.addMsg('', '* ' + event.nick + ' ' + event.msg, 'action');
+        panel.addMsg('', '* ' + event.nick + ' ' + event.msg, 'action', {time: event.time});
     }
 
 
@@ -651,7 +654,7 @@
                 }
             }
 
-            channel.addMsg('', '== ' + _kiwi.global.i18n.translate('client_models_network_mode').fetch(event.nick, friendlyModeString()), 'action mode');
+            channel.addMsg('', '== ' + _kiwi.global.i18n.translate('client_models_network_mode').fetch(event.nick, friendlyModeString()), 'action mode', {time: event.time});
         } else {
             // This is probably a mode being set on us.
             if (event.target.toLowerCase() === this.get("nick").toLowerCase()) {
