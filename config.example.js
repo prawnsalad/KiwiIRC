@@ -53,7 +53,7 @@ conf.identd = {
 
 
 // Where the client files are
-conf.public_http = "client/";
+conf.public_html = "client/";
 
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
