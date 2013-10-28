@@ -182,14 +182,16 @@ conf.client = {
         show_timestamps: false,
         mute_sounds: false,
         show_emoticons: true
-    },
-    themes: [
-        'relaxed',
-        'mini',
-        'cli',
-        'basic'
-    ]
+    }
 };
+
+// List of themes available for the user to choose from
+conf.client_themes = [
+    'relaxed',
+    'mini',
+    'cli',
+    'basic'
+];
 
 
 // If set, the client may only connect to this 1 IRC server

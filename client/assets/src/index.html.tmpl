@@ -409,9 +409,21 @@
             opts.client_plugins = data.client_plugins;
             opts.translations = data.translations;
             opts.locale = data.locale;
+            opts.themes = data.themes;
 
             if (typeof data.kiwi_server !== 'undefined')
                 opts.kiwi_server = data.kiwi_server;
+
+            // Load themes
+            if (opts.themes) {
+                opts.themes.forEach(function (theme) {
+                    var disabled = (opts.server_settings.client.settings.theme !== theme),
+                        rel = (disabled?'alternate ':'') + 'stylesheet' /*+ (disabled?' prefetch':'')*/;
+                    var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '"' + (disabled?'disabled':'') + '/>');
+                    link.disabled = disabled;
+                    $(link).appendTo($('head'));
+                });
+            }
 
             // Start loading scripts
             loadNextScript();

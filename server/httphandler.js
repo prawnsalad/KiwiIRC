@@ -169,6 +169,7 @@ function serveSettings(request, response) {
             if (err) {
                 response.statusCode = 500;
                 response.end();
+                console.log(err);
             } else {
                 sendSettings.call(this, request, response, settings);
             }
@@ -309,12 +310,12 @@ function generateSettings(request, debug, callback) {
     }
 
     // Read theme information
-    readThemeInfo(vars.server_settings.client.themes, function (err, themes) {
+    readThemeInfo(config.get().client_themes, function (err, themes) {
         if (err) {
             return callback(err);
         }
         
-        vars.server_settings.client.themes = themes;
+        vars.themes = themes;
 
         // Get a list of available translations
         fs.readFile(__dirname + '/../client/assets/src/translations/translations.json', function (err, translations) {
@@ -348,7 +349,7 @@ function generateSettings(request, debug, callback) {
 
 function readThemeInfo(themes, prev, callback) {
     "use strict";
-    var theme = themes.shift();
+    var theme = themes[0];
 
     if (typeof prev === 'function') {
         callback = prev;
@@ -368,8 +369,8 @@ function readThemeInfo(themes, prev, callback) {
 
         prev.push(theme_json);
 
-        if (themes.length > 0) {
-            return readThemeInfo(themes, prev, callback);
+        if (themes.length > 1) {
+            return readThemeInfo(themes.slice(1), prev, callback);
         }
 
         callback(null, prev);
