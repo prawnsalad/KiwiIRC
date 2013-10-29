@@ -48,11 +48,6 @@ function onJoin(event) {
         ident: event.ident,
         hostname: event.hostname
     });
-
-    // If we've just joined this channel then request get a nick list
-    if (event.nick === this.irc_connection.nick) {
-        this.irc_connection.write('NAMES ' + this.name);
-    }
 }
 
 
