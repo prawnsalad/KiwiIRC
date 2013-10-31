@@ -10,7 +10,7 @@
         "url": "https://github.com/prawnsalad/KiwiIRC.git"
     },
   "scripts": {
-    "postinstall": "node client/assets/src/build.js"
+    "postinstall": "node client/build.js"
   },
   "dependencies": {
     "node-static": "0.7.2",
