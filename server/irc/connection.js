@@ -187,7 +187,7 @@ IrcConnection.prototype.connect = function () {
         }
 
         // Are we connecting through a SOCKS proxy?
-        if (this.socks) {
+        if (that.socks) {
             that.socket = Socks.connect({
                 host: host,
                 port: that.irc_host.port,
