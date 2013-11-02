@@ -33,9 +33,21 @@ function handleEvents(state) {
             return;
 
         // Only store certain event types (types the user will be visually interested in)
-        var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode'];
+        var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode', 'join', 'part', 'kick', 'quit'];
         if (allowed_events.indexOf(args.event[0]) === -1)
             return;
+
+
+        // TODO: Find a way to get the IrcConnection object this event relates to
+        // If channel joining/parting does not involve us, don't store it.
+        var special_events = ['join', 'part', 'kick', 'quit'];
+        if (special_events.indexOf(args.event[0]) !== -1) {
+            if (args.event[0] == 'kick' && args[1].kicked !== THE_CONNECTION.nick) {
+                return;
+            } else if (args[1].nick !== THE_CONNECTION.nick) {
+                return;
+            }
+        }
 
         storage.putStateEvent(state_id, args.event);
     });
