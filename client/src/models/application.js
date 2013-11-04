@@ -711,13 +711,15 @@ _kiwi.model.Application = function () {
         }
 
         function msgCommand (ev) {
-            var destination = ev.params[0],
+            var message,
+                destination = ev.params[0],
                 panel = that.connections.active_connection.panels.getByName(destination) || that.panels().server;
 
             ev.params.shift();
+            message = formatToIrcMsg(ev.params.join(' '));
 
-            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), ev.params.join(' '));
-            _kiwi.gateway.privmsg(null, destination, ev.params.join(' '));
+            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+            _kiwi.gateway.privmsg(null, destination, message);
         }
 
         function actionCommand (ev) {
