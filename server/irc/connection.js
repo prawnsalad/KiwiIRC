@@ -10,8 +10,8 @@ var net             = require('net'),
     IrcChannel      = require('./channel.js'),
     IrcUser         = require('./user.js'),
     IrcParser       = require('./parser.js'),
+    Transcoder      = require('./transcoder.js'),
     EE              = require('../ee.js'),
-    iconv           = require('iconv-lite'),
     Socks;
 
 
@@ -64,11 +64,6 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.password = options.password || '';
 
-    // Set the passed encoding. or the default if none giving or it fails
-    if (!options.encoding || !this.setEncoding(options.encoding)) {
-        this.setEncoding(global.config.default_encoding);
-    }
-
     // State object
     this.state = state;
 
@@ -114,7 +109,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Is SASL supported on the IRCd
     this.sasl = false;
 
-    this.parser = new IrcParser({ ircEncoding: this.irc_encoding });
+    this.transcoder = new Transcoder(options.encoding);
+
+    this.parser = new IrcParser({ transcoder: this.transcoder });
     this.parser.pipe(that.irc_commands);
     this.parser.on('error', function (err) {
         that.emit('error', err);
@@ -282,6 +279,7 @@ IrcConnection.prototype.connect = function () {
         });
 
         that.socket.pipe(that.parser);
+        that.transcoder.out.pipe(that.socket);
     });
 };
 
@@ -319,10 +317,7 @@ IrcConnection.prototype.write = function (data, force) {
 };
 
 IrcConnection.prototype._write = function (data, enc, callback) {
-    //ENCODE string to encoding of the server
-    var encoded_buffer = iconv.encode(data + '\r\n', this.irc_encoding);
-
-    this.socket.write(encoded_buffer, callback);
+    this.transcoder.out.write(data + '\r\n', callback);
 };
 
 
@@ -436,22 +431,7 @@ IrcConnection.prototype.disposeSocket = function () {
  */
 
 IrcConnection.prototype.setEncoding = function (encoding) {
-    var encoded_test;
-
-    try {
-        encoded_test = iconv.encode("TEST", encoding);
-        //This test is done to check if this encoding also supports
-        //the ASCII charset required by the IRC protocols
-        //(Avoid the use of base64 or incompatible encodings)
-        if (encoded_test === "TEST") {
-            this.irc_encoding = encoding;
-            this.parser.setIrcEncoding(encoding);
-            return true;
-        }
-        return false;
-    } catch (err) {
-        return false;
-    }
+    this.transcoder.setEncoding(encoding);
 };
 
 function getConnectionFamily(host, callback) {

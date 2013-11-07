@@ -1,6 +1,5 @@
 var stream          = require('stream'),
-    util            = require('util'),
-    iconv           = require('iconv-lite');
+    util            = require('util');
 
 
 // Break the Node.js version down into usable parts
@@ -14,6 +13,7 @@ if (version_values[0] === 0 && version_values[1] < 10) {
 }
 
 var IrcParser = function (options) {
+    var that = this;
     stream.Transform.call(this);
     this._writableState.objectMode = false;
     this._readableState.objectMode = true;
@@ -22,7 +22,14 @@ var IrcParser = function (options) {
     this.hold_last = false;
     this.held_data = null;
 
-    this.irc_encoding = options.ircEncoding || 'utf8';
+    this.transcoder = options.transcoder;
+    this.transcoder.in.on('data', function (data) {
+        var msg = parseIrcLine.call(that, data.toString());
+        // Guard against pushing null, as that will end the stream
+        if (msg) {
+            that.push(msg);
+        }
+    });
 };
 
 util.inherits(IrcParser, stream.Transform);
@@ -89,11 +96,7 @@ IrcParser.prototype._transform = function (data, encoding, callback) {
 
     // Process our data line by line
     for (i = 0; i < lines.length; i++) {
-        msg = parseIrcLine(lines[i], this.irc_encoding);
-        // Avoid passing null to this.push, that ends the stream
-        if (msg) {
-            this.push(msg);
-        }
+        this.transcoder.in.write(lines[i]);
     }
 
     callback();
@@ -110,15 +113,12 @@ IrcParser.prototype.setIrcEncoding = function (new_encoding) {
  */
 var parse_regex = /^(?:(?:(?:(@[^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
 
-function parseIrcLine(buffer_line, encoding) {
+function parseIrcLine(line) {
     var msg,
         i,
         tags = [],
-        tag,
-        line = '';
+        tag;
 
-    // Decode server encoding
-    line = iconv.decode(buffer_line, encoding);
     if (!line) {
         return;
     }
