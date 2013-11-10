@@ -78,6 +78,11 @@ conf.default_encoding = 'utf8';
 */
 //conf.default_gecos = 'Web IRC Client';
 
+/*
+* Window title
+*/
+conf.window_title = 'Kiwi IRC';
+
 
 /*
  * Client side plugins
