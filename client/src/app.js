@@ -107,13 +107,6 @@ _kiwi.global = {
         var continueStart, locale;
         opts = opts || {};
 
-        // Load the plugin manager
-        _kiwi.global.plugins = new _kiwi.model.PluginManager();
-
-        // Set up the settings datastore
-        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
-        _kiwi.global.settings.load();
-
         continueStart = function (locale, s, xhr) {
             if (locale) {
                 _kiwi.global.i18n = new Jed({locale_data: locale, domain: xhr.getResponseHeader('Content-Language')});
@@ -130,8 +123,15 @@ _kiwi.global = {
             // Start the client up
             _kiwi.app.start();
 
+            // Now everything has started up, load the plugin manager for third party plugins
+            _kiwi.global.plugins = new _kiwi.model.PluginManager();
+
             callback && callback();
         };
+
+        // Set up the settings datastore
+        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
+        _kiwi.global.settings.load();
 
         locale = _kiwi.global.settings.get('locale');
         if (!locale) {
