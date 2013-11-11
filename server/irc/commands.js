@@ -34,6 +34,7 @@ irc_numerics = {
     '331': 'RPL_NOTOPIC',
     '332': 'RPL_TOPIC',
     '333': 'RPL_TOPICWHOTIME',
+    '341': 'RPL_INVITING',
     '353': 'RPL_NAMEREPLY',
     '364': 'RPL_LINKS',
     '365': 'RPL_ENDOFLINKS',
@@ -374,6 +375,13 @@ handlers = {
             nick: command.params[2],
             channel: command.params[1],
             when: command.params[3]
+        });
+    },
+
+    'RPL_INVITING': function (command) {
+        this.irc_connection.emit('channel ' + command.params[1] + ' invited', {
+            nick: command.params[0],
+            channel: command.params[1]
         });
     },
 
