@@ -24,6 +24,7 @@ irc_numerics = {
     '312': 'RPL_WHOISSERVER',
     '313': 'RPL_WHOISOPERATOR',
     '314': 'RPL_WHOWASUSER',
+    '315': 'RPL_ENDOFWHO',
     '317': 'RPL_WHOISIDLE',
     '318': 'RPL_ENDOFWHOIS',
     '319': 'RPL_WHOISCHANNELS',
@@ -35,6 +36,7 @@ irc_numerics = {
     '332': 'RPL_TOPIC',
     '333': 'RPL_TOPICWHOTIME',
     '341': 'RPL_INVITING',
+    '352': 'RPL_WHOREPLY',
     '353': 'RPL_NAMEREPLY',
     '364': 'RPL_LINKS',
     '365': 'RPL_ENDOFLINKS',
@@ -339,6 +341,18 @@ handlers = {
         this.irc_connection.emit('channel ' + command.params[1] + ' userlist_end', {
             channel: command.params[1]
         });
+    },
+
+    'RPL_WHOREPLY': function (command) {
+        // For the time being, NOOP this command so they don't get passed
+        // down to the client. Waste of bandwidth since we do not use it yet
+        // TODO: Impliment RPL_WHOREPLY
+    },
+
+    'RPL_ENDOFWHO': function (command) {
+        // For the time being, NOOP this command so they don't get passed
+        // down to the client. Waste of bandwidth since we do not use it yet
+        // TODO: Impliment RPL_ENDOFWHO
     },
 
     'RPL_BANLIST': function (command) {
