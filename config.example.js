@@ -78,10 +78,6 @@ conf.default_encoding = 'utf8';
 */
 //conf.default_gecos = 'Web IRC Client';
 
-/*
-* Window title
-*/
-conf.window_title = 'Kiwi IRC';
 
 
 /*
@@ -187,7 +183,8 @@ conf.client = {
         show_timestamps: false,
         mute_sounds: false,
         show_emoticons: true
-    }
+    },
+    window_title: 'Kiwi IRC'
 };
 
 

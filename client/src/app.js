@@ -134,7 +134,7 @@ _kiwi.global = {
         _kiwi.global.settings.load();
 
         // Set the window title
-        window.document.title = opts.server_settings.window_title || 'Kiwi IRC';
+        window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
         locale = _kiwi.global.settings.get('locale');
         if (!locale) {

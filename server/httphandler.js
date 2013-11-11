@@ -306,13 +306,6 @@ function generateSettings(request, debug, callback) {
         vars.server_settings.client = config.get().client;
     }
 
-    // Get the window title
-    if (config.get().window_title) {
-        vars.server_settings.window_title = config.get().window_title;
-    } else {
-        vars.server_settings.window_title = 'Kiwi IRC';
-    }
-
     // Any client plugins?
     if (config.get().client_plugins && config.get().client_plugins.length > 0) {
         vars.client_plugins = config.get().client_plugins;
