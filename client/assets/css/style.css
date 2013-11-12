@@ -510,8 +510,13 @@ html, body { height:100%; }
 }
 #kiwi.theme_relaxed .toolbar {
     background-color:#1B1B1B; font-size:0.9em;
+    box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);
+    z-index: 1;
 }
-#kiwi.theme_relaxed .controlbox { background-color:#1B1B1B; }
+#kiwi.theme_relaxed .controlbox {
+    background-color:#1B1B1B;
+    box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);
+}
 #kiwi.theme_relaxed .memberlists_resize_handle {
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
