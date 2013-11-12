@@ -11,21 +11,23 @@ var IrcChannel = function(irc_connection, name) {
 
     // Listen for events on the IRC connection
     this.irc_events = {
-        join:           onJoin,
-        part:           onPart,
-        kick:           onKick,
-        quit:           onQuit,
-        privmsg:        onMsg,
-        notice:         onNotice,
-        ctcp_request:   onCtcpRequest,
-        ctcp_response:  onCtcpResponse,
-        topic:          onTopic,
-        userlist:       onNicklist,
-        userlist_end:   onNicklistEnd,
-        banlist:        onBanList,
-        banlist_end:    onBanListEnd,
-        topicsetby:     onTopicSetBy,
-        mode:           onMode
+        join:               onJoin,
+        part:               onPart,
+        kick:               onKick,
+        quit:               onQuit,
+        privmsg:            onMsg,
+        notice:             onNotice,
+        ctcp_request:       onCtcpRequest,
+        ctcp_response:      onCtcpResponse,
+        topic:              onTopic,
+        userlist:           onNicklist,
+        userlist_end:       onNicklistEnd,
+        who_channel:        onChannelWho,
+        who_channel_end:    onChannelWhoEnd,
+        banlist:            onBanList,
+        banlist_end:        onBanListEnd,
+        topicsetby:         onTopicSetBy,
+        mode:               onMode
     };
     EventBinder.bindIrcEvents('channel ' + this.name, this.irc_events, this, irc_connection);
 };
@@ -49,6 +51,23 @@ function onJoin(event) {
         hostname: event.hostname,
         time: event.time
     });
+
+    // If we want a rich nicklist
+    if(config.rich_nicklist) {
+        // We've just joined, get the WHO for the entire channel
+        if (event.nick === this.irc_connection.nick) {
+            var that = this;
+            
+            var who = function () {
+                that.irc_connection.write('WHO ' + that.name);
+            };
+            // To avoid overload during join, we wait 2 sec before running WHO
+            setTimeout(who, 2000);
+        } else { // A user has joined the channel, get the WHO for him
+            this.irc_connection.write('WHO ' + event.nick);
+        }
+        
+    }
 }
 
 
@@ -157,6 +176,21 @@ function onNicklistEnd(event) {
     });
     // TODO: uncomment when using an IrcUser per nick
     //updateUsersList.call(this, event.users);
+}
+
+function onChannelWho(event) {
+    this.irc_connection.clientEvent('who_channel', {
+        users: event.users,
+        channel: this.name
+    });
+}
+
+
+function onChannelWhoEnd(event) {
+    this.irc_connection.clientEvent('who_channel_end', {
+        users: event.users,
+        channel: this.name
+    });
 }
 
 function updateUsersList(users) {

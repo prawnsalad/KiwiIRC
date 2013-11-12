@@ -362,3 +362,28 @@ msgstr ""
 
 msgid "client_views_userbox_slap"
 msgstr ""
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_years_old"
+msgstr ""
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_M"
+msgstr ""
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_F"
+msgstr ""
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_U"
+msgstr ""
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_ircop"
+msgstr ""
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_away"
+msgstr ""
+

@@ -288,6 +288,7 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  * @param force Write the data now, ignoring any write queue
  */
 IrcConnection.prototype.write = function (data, force) {
+    //console.log('WRITE', data);
     //ENCODE string to encoding of the server
     encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
 
@@ -724,6 +725,7 @@ function parseIrcLine(buffer_line) {
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
     if (!line) return;
+    //console.log('READ', line);
 
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));

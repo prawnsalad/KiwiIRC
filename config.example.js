@@ -165,6 +165,8 @@ conf.socks_proxy.pass = null;
 // Default quit message
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
+// Option to make the nicklist support status and ASL tracking
+conf.rich_nicklist = false;
 
 // Default settings for the client. These may be changed in the browser
 conf.client = {

@@ -127,6 +127,10 @@
             this.gateway.on('topicsetby', onTopicSetBy, this);
             this.gateway.on('userlist', onUserlist, this);
             this.gateway.on('userlist_end', onUserlistEnd, this);
+            this.gateway.on('who_channel', onChannelWho, this);
+            this.gateway.on('who_channel_end', onChannelWhoEnd, this);
+            this.gateway.on('who_user', onUserWho, this);
+            this.gateway.on('who_user_end', onUserWhoEnd, this);
             this.gateway.on('mode', onMode, this);
             this.gateway.on('whois', onWhois, this);
             this.gateway.on('whowas', onWhowas, this);
@@ -558,6 +562,49 @@
 
 
 
+    function onChannelWho(event) {
+        var channel;
+        channel = this.panels.getByName(event.channel);
+        // If we didn't find a channel for this, may aswell leave
+        if (!channel) return;
+        
+        // Current channel member list
+        var members = channel.get('members');
+
+        // Need to push user rich info into the members table
+        _.each(event.users, function(item) {
+            var user = members.getByNick(item.nick);
+
+            // Use the rich userlist info
+            user.richUserlist(item.flags, item.realname);
+        });
+    }
+
+
+
+    function onChannelWhoEnd(event) {
+        return;
+    }
+    
+
+    function onUserWho(event) {
+        var channel = this.panels.getByName(event.channel),
+            members, user;
+        
+        if(channel != undefined) {
+            members = channel.get('members');
+            user = members.getByNick(event.nick);
+        
+            user.richUserlist(event.flags, event.realname);
+        }
+    }
+
+
+    function onUserWhoEnd(event) {
+        return;
+    }
+    
+    
     function onMode(event) {
         var channel, i, prefixes, members, member, find_prefix;
 

@@ -124,5 +124,73 @@ _kiwi.model.Member = Backbone.Model.extend({
         } else {
             this.set({"is_op": false}, {silent: true});
         }
+    },
+    richUserlist: function(flags, realname) {
+        // Detect and set away status
+        if (flags.indexOf('G') > -1) {
+            this.set({"is_away": true}, {silent: true});
+        } else {
+            this.set({"is_away": false}, {silent: true});
+        }
+        
+        // Detect and set ircop status
+        if (flags.indexOf('*') > -1) {
+            this.set({"is_ircop": true}, {silent: true});
+        } else {
+            this.set({"is_ircop": false}, {silent: true});
+        }
+
+        // Detect and set age
+        var checkAge = realname.trim().search(/[0-9]{1,3}/);
+        if (checkAge > -1) {
+            // Find the complete substring for the age and set it
+            var indexEndAge = realname.search(/[A-Z \/\[]/i);
+            this.set({"age": realname.substring(checkAge.index, indexEndAge)}, {silent: true});
+            
+            // For next steps we'll keep a shorter version of the realname
+            var trailingRealname = realname.substring(indexEndAge).trim();
+        } else {
+            var trailingRealname = realname.trim();
+            this.set({"age": ''}, {silent: true});
+        }
+        
+        // Detect and set genders
+        genders = {'M': ['M002', 'h ', '/H/'], 'F': ['F001', 'f ', '/F/', ' f '], 'U': ['U003']};
+        
+        for(var gender in genders) {
+            var regexList = genders[gender].join('|');
+            
+            // If gender info is in realname
+            if (trailingRealname.match(new RegExp(regexList, 'i'))) {
+                this.set({"gender": gender}, {silent: true});
+                
+                // Find the gender info length to remove it from realname
+                for(var myRegex in genders[gender]) {
+                    if (trailingRealname.match(new RegExp(genders[gender][myRegex], 'i'))) {
+                        var trailingRealname = trailingRealname.substring(genders[gender][myRegex].length).trim();
+                        break;
+                    }
+                }
+                break;
+            }
+            // If we have an age, we'll try a bit harder
+            else if (indexEndAge > -1) {
+                if (trailingRealname.match(new RegExp(gender, 'i'))) {
+                    this.set({"gender": gender}, {silent: true});
+                    break;
+                }
+                trailingRealname = trailingRealname.substring(gender.length);
+            }
+            else {
+                this.set({"gender": 'U'}, {silent: true});
+            }
+        }
+
+        // Set the remaining realname info (should be user's location or realname for users that haven't set ASL)
+        this.set({"info": trailingRealname}, {silent: true});
+        
+        
+        // All rich nicklist info is set, time to render the nicklist
+        this.view.enrich();
     }
 });

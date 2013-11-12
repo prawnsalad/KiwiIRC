@@ -24,6 +24,7 @@ irc_numerics = {
     '312': 'RPL_WHOISSERVER',
     '313': 'RPL_WHOISOPERATOR',
     '314': 'RPL_WHOWASUSER',
+    '315': 'RPL_ENDOFWHO',
     '317': 'RPL_WHOISIDLE',
     '318': 'RPL_ENDOFWHOIS',
     '319': 'RPL_WHOISCHANNELS',
@@ -34,6 +35,7 @@ irc_numerics = {
     '331': 'RPL_NOTOPIC',
     '332': 'RPL_TOPIC',
     '333': 'RPL_TOPICWHOTIME',
+    '352': 'RPL_WHOREPLY',
     '353': 'RPL_NAMEREPLY',
     '364': 'RPL_LINKS',
     '365': 'RPL_ENDOFLINKS',
@@ -340,6 +342,49 @@ handlers = {
         });
     },
 
+    'RPL_WHOREPLY': function (command) {
+        // This method is called once for each user in the channel - Gotta be carefull
+        if (typeof this.who_members == "undefined") {
+            this.who_members = [];
+        }
+        var that = this,
+            channel = command.params['1'],
+            nick = command.params['5'],
+            flags = command.params['6'],
+            realname = command.trailing.substring(command.trailing.indexOf(' ') + 1); // Getting rid of useless hops info
+
+        this.who_members.push({nick: nick, realname: realname, flags: flags, channel: channel});
+    },
+
+    'RPL_ENDOFWHO': function (command) {
+        // If it's a channel WHO
+        if (command.params[1].substring(0, 1) === '#') {
+            this.irc_connection.emit('channel ' + command.params[1] + ' who_channel', {
+                users: this.who_members,
+                channel: command.params[1]
+            });
+            this.irc_connection.emit('channel ' + command.params[1] + ' who_channel_end', {
+                channel: command.params[1]
+            });
+        } else { // It's a user WHO
+            var who_member = this.who_members[0],
+                nick = command.params[1];
+                
+            this.irc_connection.emit('user ' + nick + ' who_user', {
+                nick: nick,
+                realname: who_member.realname,
+                flags: who_member.flags,
+                channel: who_member.channel
+            });
+            this.irc_connection.emit('user ' + nick + ' who_user_end', {
+                nick: nick
+            });
+
+        }
+        // Reset who_members
+        this.who_members = [];
+    },
+    
     'RPL_BANLIST': function (command) {
         this.irc_connection.emit('channel ' + command.params[1] + ' banlist', {
             channel: command.params[1],

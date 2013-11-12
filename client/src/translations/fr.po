@@ -504,3 +504,27 @@ msgstr "Sauvegarder le réseau"
 msgid "client_applet_fav_delete"
 msgstr "Supprimer le réseau"
 
+#: client/assets/src/views/member.js
+msgid "client_views_member_years_old"
+msgstr "ans"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_M"
+msgstr "Homme"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_F"
+msgstr "Femme"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_U"
+msgstr "Inconnu"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_ircop"
+msgstr "Opérateur du chat"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_away"
+msgstr "Absent"
+
