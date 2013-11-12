@@ -1145,7 +1145,7 @@ html, body { height:100%; }
 
 
 /* CLI theme */
-#kiwi.theme_cli { background:#222222; color:#6d6d6d; }
+#kiwi.theme_cli { background:#191919; color:#6d6d6d; }
 #kiwi.theme_cli,
 #kiwi.theme_cli input,
 #kiwi.theme_cli button,
@@ -1241,7 +1241,7 @@ html, body { height:100%; }
 }
 
 
-#kiwi.theme_cli .memberlists { background:#222222; }
+#kiwi.theme_cli .memberlists { background:#252525; }
 #kiwi.theme_cli .memberlists ul li { padding: 0.2em 1em; }
 #kiwi.theme_cli .memberlists ul li a.nick { color:#6d6d6d; }
 #kiwi.theme_cli .memberlists ul li:hover {
