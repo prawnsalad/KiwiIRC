@@ -79,6 +79,7 @@ conf.default_encoding = 'utf8';
 //conf.default_gecos = 'Web IRC Client';
 
 
+
 /*
  * Client side plugins
  * Array of URLs that will be loaded into the browser when the client first loads up
@@ -184,7 +185,8 @@ conf.client = {
         show_timestamps: false,
         mute_sounds: false,
         show_emoticons: true
-    }
+    },
+    window_title: 'Kiwi IRC'
 };
 
 

@@ -192,7 +192,7 @@ _kiwi.view.Application = Backbone.View.extend({
                 var tmr;
                 var has_focus = true;
                 var state = 0;
-                var default_title = 'Kiwi IRC';
+                var default_title = _kiwi.app.server_settings.client.window_title;
                 var title = 'Kiwi IRC';
 
                 this.setTitle = function (new_title) {

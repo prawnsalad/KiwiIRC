@@ -1,6 +1,7 @@
 _kiwi.model.PluginManager = Backbone.Model.extend({
     initialize: function () {
-        this.$plugin_holder = $('<div id="kiwi_plugins" style="display:none;"></div>').appendTo('#kiwi');
+        this.$plugin_holder = $('<div id="kiwi_plugins" style="display:none;"></div>')
+            .appendTo(_kiwi.app.view.$el);
         this.loaded_plugins = {};
     },
 
