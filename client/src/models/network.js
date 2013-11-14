@@ -576,7 +576,9 @@
             var user = members.getByNick(item.nick);
 
             // Use the rich userlist info
-            user.richUserlist(item.flags, item.realname);
+            if(user) {
+                user.richUserlist(item.flags, item.realname);
+            }
         });
     }
 
@@ -591,7 +593,7 @@
         var channel = this.panels.getByName(event.channel),
             members, user;
         
-        if(channel != undefined) {
+        if(channel) {
             members = channel.get('members');
             user = members.getByNick(event.nick);
         

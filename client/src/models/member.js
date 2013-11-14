@@ -126,68 +126,66 @@ _kiwi.model.Member = Backbone.Model.extend({
         }
     },
     richUserlist: function(flags, realname) {
+        var is_away = false,
+            is_ircop = false,
+            age = '',
+            gender = 'U',
+            info = '',
+            trailing_realname = realname.trim(),
+            check_age;
+        
         // Detect and set away status
         if (flags.indexOf('G') > -1) {
-            this.set({"is_away": true}, {silent: true});
-        } else {
-            this.set({"is_away": false}, {silent: true});
+            is_away = true;
         }
         
         // Detect and set ircop status
         if (flags.indexOf('*') > -1) {
-            this.set({"is_ircop": true}, {silent: true});
-        } else {
-            this.set({"is_ircop": false}, {silent: true});
+            is_ircop = true;
         }
 
         // Detect and set age
-        var checkAge = realname.trim().search(/[0-9]{1,3}/);
-        if (checkAge > -1) {
+        check_age = realname.trim().search(/[0-9]{1,3}/);
+        if (check_age > -1) {
             // Find the complete substring for the age and set it
-            var indexEndAge = realname.search(/[A-Z \/\[]/i);
-            this.set({"age": realname.substring(checkAge.index, indexEndAge)}, {silent: true});
+            var index_end_age = realname.search(/[A-Z \/\[]/i);
+            age = realname.substring(check_age.index, index_end_age);
             
             // For next steps we'll keep a shorter version of the realname
-            var trailingRealname = realname.substring(indexEndAge).trim();
-        } else {
-            var trailingRealname = realname.trim();
-            this.set({"age": ''}, {silent: true});
+            trailing_realname = realname.substring(index_end_age).trim();
         }
         
         // Detect and set genders
         genders = {'M': ['M002', 'h ', '/H/'], 'F': ['F001', 'f ', '/F/', ' f '], 'U': ['U003']};
         
-        for(var gender in genders) {
-            var regexList = genders[gender].join('|');
+        for(var temp_gender in genders) {
+            var regex_list = genders[temp_gender].join('|');
             
             // If gender info is in realname
-            if (trailingRealname.match(new RegExp(regexList, 'i'))) {
-                this.set({"gender": gender}, {silent: true});
+            if (trailing_realname.match(new RegExp(regex_list, 'i'))) {
+                gender = temp_gender;
                 
                 // Find the gender info length to remove it from realname
-                for(var myRegex in genders[gender]) {
-                    if (trailingRealname.match(new RegExp(genders[gender][myRegex], 'i'))) {
-                        var trailingRealname = trailingRealname.substring(genders[gender][myRegex].length).trim();
+                for(var my_regex in genders[temp_gender]) {
+                    if (trailing_realname.match(new RegExp(genders[temp_gender][my_regex], 'i'))) {
+                        trailing_realname = trailing_realname.substring(genders[temp_gender][my_regex].length).trim();
                         break;
                     }
                 }
                 break;
             }
             // If we have an age, we'll try a bit harder
-            else if (indexEndAge > -1) {
-                if (trailingRealname.match(new RegExp(gender, 'i'))) {
-                    this.set({"gender": gender}, {silent: true});
+            else if (index_end_age > -1) {
+                if (trailing_realname.match(new RegExp(temp_gender, 'i'))) {
+                    gender = temp_gender;
                     break;
                 }
-                trailingRealname = trailingRealname.substring(gender.length);
-            }
-            else {
-                this.set({"gender": 'U'}, {silent: true});
+                trailing_realname = trailing_realname.substring(temp_gender.length);
             }
         }
 
         // Set the remaining realname info (should be user's location or realname for users that haven't set ASL)
-        this.set({"info": trailingRealname}, {silent: true});
+        this.set({'is_away': is_away, 'is_ircop': is_ircop, 'age': age, 'gender': gender, 'info': trailing_realname}, {silent: true});
         
         
         // All rich nicklist info is set, time to render the nicklist

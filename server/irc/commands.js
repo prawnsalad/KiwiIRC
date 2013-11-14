@@ -345,13 +345,13 @@ handlers = {
 
     'RPL_WHOREPLY': function (command) {
         // This method is called once for each user in the channel - Gotta be carefull
-        if (typeof this.who_members == "undefined") {
+        if (typeof this.who_members === "undefined") {
             this.who_members = [];
         }
         var that = this,
-            channel = command.params['1'],
-            nick = command.params['5'],
-            flags = command.params['6'],
+            channel = command.params[1],
+            nick = command.params[5],
+            flags = command.params[6],
             realname = command.trailing.substring(command.trailing.indexOf(' ') + 1); // Getting rid of useless hops info
 
         this.who_members.push({nick: nick, realname: realname, flags: flags, channel: channel});

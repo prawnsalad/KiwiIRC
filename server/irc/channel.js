@@ -58,11 +58,10 @@ function onJoin(event) {
         if (event.nick === this.irc_connection.nick) {
             var that = this;
             
-            var who = function () {
-                that.irc_connection.write('WHO ' + that.name);
-            };
             // To avoid overload during join, we wait 2 sec before running WHO
-            setTimeout(who, 2000);
+            setTimeout(function () {
+                that.irc_connection.write('WHO ' + that.name);
+            }, 2000);
         } else { // A user has joined the channel, get the WHO for him
             this.irc_connection.write('WHO ' + event.nick);
         }

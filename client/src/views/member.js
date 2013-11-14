@@ -16,8 +16,8 @@ _kiwi.view.Member = Backbone.View.extend({
     enrich: function () {
         var gender = this.model.get('gender'),
             $this = this.$el,
-            tooltipContent,
-            status,
+            status = '',
+            tooltip_content,
             style;
         
         if(this.model.get('is_ircop')) {
@@ -25,41 +25,46 @@ _kiwi.view.Member = Backbone.View.extend({
         } else if (this.model.get('is_away')) {
             status = 'away';
         }
+        
         // If we've got some rich info to display
-        if(gender != undefined) {
+        if(gender) {
             // Style the nick
             style = gender + ' ' + status;
             $this.addClass('rich_userlist ' + style);
             
             // Build the info tooltip content
-            tooltipContent = '<div class="tooltipNick">' + this.model.get('nick') + '</div>';
-            if (this.model.get('age') != '') {
-                tooltipContent += this.model.get('age') + ' ' + _kiwi.global.i18n.translate('client_views_member_years_old').fetch() + ', ';
+            tooltip_content = '<div class="tooltipNick">' + this.model.get('nick') + '</div>';
+            if (this.model.get('age') !== '') {
+                tooltip_content += this.model.get('age') + ' ' + _kiwi.global.i18n.translate('client_views_member_years_old').fetch() + ', ';
             }
-            tooltipContent += _kiwi.global.i18n.translate('client_views_member_gender_' + gender).fetch();
-            tooltipContent += '<br />';
+            tooltip_content += _kiwi.global.i18n.translate('client_views_member_gender_' + gender).fetch();
+            tooltip_content += '<br />';
 
             if(this.model.get('is_ircop')) {
-                tooltipContent += _kiwi.global.i18n.translate('client_views_member_ircop').fetch() + '<br />';
+                tooltip_content += _kiwi.global.i18n.translate('client_views_member_ircop').fetch() + '<br />';
             }
             if (this.model.get('is_away')) {
-                tooltipContent += _kiwi.global.i18n.translate('client_views_member_away').fetch() + '<br />';
+                tooltip_content += _kiwi.global.i18n.translate('client_views_member_away').fetch() + '<br />';
             }
             
-            if (this.model.get('info') != '') {
-                tooltipContent += this.model.get('info');
+            if (this.model.get('info') !== '') {
+                tooltip_content += this.model.get('info');
             }
             
             // Add the tooltip in the dom
-            if(tooltipContent != '') {
-                var infoHtml = '<div class="tooltip">' + tooltipContent + '</div>';
-                $this.append(infoHtml);
-                
-                $this.attr('onmouseover', "var top = $('#"+this.model.cid+"').offset().top; var left = $('#"+this.model.cid+"').offset().left -221; $('#"+this.model.cid+"').find('.tooltip').css({'top': top, 'left': left}).show();");
-                $this.attr({'onmouseout': "$('#"+this.model.cid+"').find('.tooltip').css({'top': 'auto', 'left': 'auto'}).hide()"});
+            if(tooltip_content !== '') {
+                var info_html = '<div class="tooltip">' + tooltip_content + '</div>';
+                $this.append(info_html);
+
+                var id = this.model.cid;
+                $this.mouseover(function(){
+                    $('#' + id).find('.tooltip').css({'top': $('#' + id).offset().top, 'left': $('#' + id).offset().left -221}).show();
+                });
+                $this.mouseout(function(){
+                    $('#' + id).find('.tooltip').css({'top': 'auto', 'left': 'auto'}).hide();
+                });
             }
         }
-        
         return this;
     }
 });
