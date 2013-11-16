@@ -215,6 +215,30 @@ function hsl2rgb(h, s, l) {
 
 
 /**
+ * Formats a kiwi message to IRC format
+ */
+function formatToIrcMsg(message) {
+    // Format any colour codes (eg. $c4)
+    message = message.replace(/%C(\d)/ig, function(match, colour_number) {
+        return String.fromCharCode(3) + colour_number.toString();
+    });
+
+    var formatters = {
+        B: '\x02',    // Bold
+        I: '\x1D',    // Italics
+        U: '\x1F',    // Underline
+        O: '\x0F'     // Out / Clear formatting
+    };
+    message = message.replace(/%([BIUO])/ig, function(match, format_code) {
+        if (typeof formatters[format_code.toUpperCase()] !== 'undefined')
+            return formatters[format_code.toUpperCase()];
+    });
+
+    return message;
+}
+
+
+/**
 *   Formats a message. Adds bold, underline and colouring
 *   @param      {String}    msg The message to format
 *   @returns    {String}        The HTML formatted message

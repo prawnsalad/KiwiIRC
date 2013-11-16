@@ -37,16 +37,24 @@ _kiwi.view.MemberList = Backbone.View.extend({
         (function() {
             var t = event.pageY,
                 m_bottom = t + menu.$el.outerHeight(),  // Where the bottom of menu will be
-                memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight();
+                memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight(),
+                l = event.pageX,
+                m_right = l + menu.$el.outerWidth(),  // Where the left of menu will be
+                memberlist_right = this.$el.parent().offset().left + this.$el.parent().outerWidth();
 
             // If the bottom of the userbox is going to be too low.. raise it
             if (m_bottom > memberlist_bottom){
                 t = memberlist_bottom - menu.$el.outerHeight();
             }
 
+            // If the right of the userbox is going off screen.. bring it in
+            if (m_right > memberlist_right){
+                l = memberlist_right - menu.$el.outerWidth();
+            }
+
             // Set the new positon
             menu.$el.offset({
-                left: _kiwi.app.view.$el.width() - menu.$el.outerWidth() - 20,
+                left: l,
                 top: t
             });
         }).call(this);

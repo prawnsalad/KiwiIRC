@@ -192,6 +192,11 @@ _kiwi.view.ServerSelect = function () {
                 $('.more', this.$el).hide();
                 $('.show_more', this.$el).hide();
                 $('input.nick', this.$el).select();
+
+            } else if (new_state === 'enter_password') {
+                $('.more', this.$el).hide();
+                $('.show_more', this.$el).hide();
+                $('input.password', this.$el).select();
             }
 
             state = new_state;
@@ -259,7 +264,7 @@ _kiwi.view.ServerSelect = function () {
                 break;
             case 'password_mismatch':
                 this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_password_incorrect').fetch());
-                this.show('nick_change');
+                this.show('enter_password');
                 this.$el.find('.password').select();
                 break;
             }
