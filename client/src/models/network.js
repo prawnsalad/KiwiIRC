@@ -568,18 +568,20 @@
         // If we didn't find a channel for this, may aswell leave
         if (!channel) return;
         
-        // Current channel member list
-        var members = channel.get('members');
-
-        // Need to push user rich info into the members table
-        _.each(event.users, function(item) {
-            var user = members.getByNick(item.nick);
-
-            // Use the rich userlist info
-            if(user) {
-                user.richUserlist(item.flags, item.realname);
-            }
-        });
+        if(_kiwi.global.settings.get('rich_nicklist')) {
+            // Current channel member list
+            var members = channel.get('members');
+    
+            // Need to push user rich info into the members table
+            _.each(event.users, function(item) {
+                var user = members.getByNick(item.nick);
+    
+                // Use the rich userlist info
+                if(user) {
+                    user.richUserlist(item.flags, item.realname);
+                }
+            });
+        }
     }
 
 

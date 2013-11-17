@@ -53,7 +53,7 @@ function onJoin(event) {
     });
 
     // If we want a rich nicklist
-    if(config.rich_nicklist) {
+    if(config.client.settings.rich_nicklist) {
         // We've just joined, get the WHO for the entire channel
         if (event.nick === this.irc_connection.nick) {
             var that = this;

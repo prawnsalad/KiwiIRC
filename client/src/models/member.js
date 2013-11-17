@@ -126,66 +126,69 @@ _kiwi.model.Member = Backbone.Model.extend({
         }
     },
     richUserlist: function(flags, realname) {
-        var is_away = false,
+        var genders, info, temp_gender, regex_list, my_regex, gender_string,
+            is_away = false,
             is_ircop = false,
             age = '',
             gender = 'U',
-            info = '',
-            trailing_realname = realname.trim(),
-            check_age;
+            temp_realname = [];
         
         // Detect and set away status
-        if (flags.indexOf('G') > -1) {
+        if (_kiwi.global.settings.get('rich_nicklist_track_away') && flags.indexOf('G') > -1) {
             is_away = true;
         }
         
         // Detect and set ircop status
-        if (flags.indexOf('*') > -1) {
+        if (_kiwi.global.settings.get('rich_nicklist_track_ircop') && flags.indexOf('*') > -1) {
             is_ircop = true;
         }
 
-        // Detect and set age
-        check_age = realname.trim().search(/[0-9]{1,3}/);
-        if (check_age > -1) {
-            // Find the complete substring for the age and set it
-            var index_end_age = realname.search(/[A-Z \/\[]/i);
-            age = realname.substring(check_age.index, index_end_age);
+        if (_kiwi.global.settings.get('rich_nicklist_track_asl')) {
+            // Detect ASL
+            genders = _kiwi.global.settings.get('rich_nicklist_gender_regexes');
+            // If we didn't find the genders regexes, stop here
+            if (!genders) return;
             
-            // For next steps we'll keep a shorter version of the realname
-            trailing_realname = realname.substring(index_end_age).trim();
-        }
-        
-        // Detect and set genders
-        genders = {'M': ['M002', 'h ', '/H/'], 'F': ['F001', 'f ', '/F/', ' f '], 'U': ['U003']};
-        
-        for(var temp_gender in genders) {
-            var regex_list = genders[temp_gender].join('|');
-            
-            // If gender info is in realname
-            if (trailing_realname.match(new RegExp(regex_list, 'i'))) {
-                gender = temp_gender;
-                
-                // Find the gender info length to remove it from realname
-                for(var my_regex in genders[temp_gender]) {
-                    if (trailing_realname.match(new RegExp(genders[temp_gender][my_regex], 'i'))) {
-                        trailing_realname = trailing_realname.substring(genders[temp_gender][my_regex].length).trim();
-                        break;
+            for(temp_gender in genders) {
+                regex_list = genders[temp_gender].join('|');
+    
+                // If gender info is in realname
+                if (realname.match(new RegExp(regex_list, 'i'))) {
+                    gender = temp_gender;
+                    
+                    // Fing the gender info to split realname into ASL
+                    for(my_regex in genders[temp_gender]) {
+                        // Test the different gender regexes
+                        if (realname.match(new RegExp(genders[temp_gender][my_regex], 'i'))) {
+                            // Clean the gender regex to split the realname around it
+                            gender_string = genders[temp_gender][my_regex].replace(/[\^\$]/g, '');
+                            temp_realname = realname.split(new RegExp(gender_string, 'i'));
+                            
+                            // Push the traling realname into info
+                            if(temp_realname.length > 1) {
+                                info = temp_realname[1];
+                            }
+                            // If we've got here we've found all we can so stop looping
+                            break;
+                        }
                     }
                 }
-                break;
-            }
-            // If we have an age, we'll try a bit harder
-            else if (index_end_age > -1) {
-                if (trailing_realname.match(new RegExp(temp_gender, 'i'))) {
-                    gender = temp_gender;
-                    break;
+                // Set the age
+                if (temp_realname[0] && temp_realname[0].match(/[0-9]/)) {
+                    age = temp_realname[0];
                 }
-                trailing_realname = trailing_realname.substring(temp_gender.length);
+                
+                // If we've got an age or a gender at this stage, we've done the job
+                if (age !== '' | gender !== 'U') {
+                    break;
+                } else {
+                    info = realname;
+                }
             }
         }
 
         // Set the remaining realname info (should be user's location or realname for users that haven't set ASL)
-        this.set({'is_away': is_away, 'is_ircop': is_ircop, 'age': age, 'gender': gender, 'info': trailing_realname}, {silent: true});
+        this.set({'is_away': is_away, 'is_ircop': is_ircop, 'age': age, 'gender': gender, 'info': info}, {silent: true});
         
         
         // All rich nicklist info is set, time to render the nicklist

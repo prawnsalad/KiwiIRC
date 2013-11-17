@@ -57,12 +57,15 @@ _kiwi.view.Member = Backbone.View.extend({
                 $this.append(info_html);
 
                 var id = this.model.cid;
+                /* This is the smart way, but it breaks once a new user joins the channel... Need to fix before using.
                 $this.mouseover(function(){
                     $('#' + id).find('.tooltip').css({'top': $('#' + id).offset().top, 'left': $('#' + id).offset().left -221}).show();
                 });
                 $this.mouseout(function(){
                     $('#' + id).find('.tooltip').css({'top': 'auto', 'left': 'auto'}).hide();
-                });
+                });*/
+                $this.attr('onmouseover', "var top = $('#" + id +"').offset().top; var left = $('#" + id +"').offset().left -221; $('#" + id +"').find('.tooltip').css({'top': top, 'left': left}).show();");
+                $this.attr({'onmouseout': "$('#" + id +"').find('.tooltip').css({'top': 'auto', 'left': 'auto'}).hide()"});
             }
         }
         return this;
