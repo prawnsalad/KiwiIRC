@@ -1048,7 +1048,7 @@ function getServerTime(command) {
         // Convert the time value to a unixtimestamp
         if (typeof time === 'string') {
             if (time.indexOf('T') > -1) {
-                time = parseISO8601(opts.time);
+                time = parseISO8601(time);
 
             } else if(time.match(/^[0-9.]+$/)) {
                 // A string formatted unix timestamp
