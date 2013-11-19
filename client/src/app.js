@@ -88,7 +88,7 @@ _kiwi.global = {
         ControlInput: function() {
             var obj = new this.EventComponent(_kiwi.app.controlbox);
             var funcs = {
-                processInput: 'run', addPluginIcon: 'addPluginIcon'
+                run: 'processInput', addPluginIcon: 'addPluginIcon'
             };
 
             _.each(funcs, function(controlbox_fn, func_name) {
