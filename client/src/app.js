@@ -91,7 +91,7 @@ _kiwi.global = {
                 processInput: 'run', addPluginIcon: 'addPluginIcon'
             };
 
-            _.each(funcs, function(controlbox_fn, func_name) {
+            _.each(funcs, function(func_name, controlbox_fn) {
                 obj[func_name] = function() {
                     var fn_name = controlbox_fn;
                     return _kiwi.app.controlbox[fn_name].apply(_kiwi.app.controlbox, arguments);
