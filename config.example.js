@@ -201,6 +201,6 @@ conf.client = {
 
 
 /*
- * Do not ammend the below lines unless you understand the changes!
+ * Do not amend the below lines unless you understand the changes!
  */
 module.exports.production = conf;
