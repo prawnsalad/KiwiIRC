@@ -755,6 +755,6 @@ function parseIrcLine(buffer_line) {
         trailing:   (msg[8]) ? msg[8].trim() : ''
     };
 
-    msg.params = msg.params.split(' ');
+    msg.params = msg.params.split(' ').filter(String);
     this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
 }
