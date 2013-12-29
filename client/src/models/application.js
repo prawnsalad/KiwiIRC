@@ -475,6 +475,8 @@ _kiwi.model.Application = function () {
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
+                            _kiwi.gateway.set('kiwi_server', _kiwi.app.kiwi_server);
+
                             _kiwi.gateway.reconnect(function() {
                                 // Reconnect all the IRC connections
                                 that.connections.forEach(function(con){ con.reconnect(); });
