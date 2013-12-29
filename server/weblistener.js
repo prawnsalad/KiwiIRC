@@ -72,7 +72,6 @@ var WebListener = module.exports = function (web_config) {
     });
 
     this.ws = engine.attach(hs, {
-        transports: ['websocket', 'polling', 'flashsocket'],
         path: (global.config.http_base_path || '') + '/transport'
     });
 
