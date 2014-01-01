@@ -235,7 +235,8 @@ function generateSettings(request, debug, callback) {
                 'src/models/panel.js',
                 'src/models/member.js',
                 'src/models/memberlist.js',
-                'src/models/network.js'
+                'src/models/network.js',
+                'src/models/channelinfo.js'
             ],
 
             [
@@ -280,7 +281,8 @@ function generateSettings(request, debug, callback) {
                 'src/views/statusmessage.js',
                 'src/views/tabs.js',
                 'src/views/topicbar.js',
-                'src/views/userbox.js'
+                'src/views/userbox.js',
+                'src/views/channelinfo.js'
             ]
         ]);
     } else {

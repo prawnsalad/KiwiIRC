@@ -55,6 +55,57 @@
     </script>
 
 
+    <script type="text/html" id="tmpl_channel_info">
+        <div class="channel_info">
+            <h6><%= channel_name %></h6>
+            <b class="channel_url"><a href=""></a></b>
+
+            <div class="control-group">
+                <form class="channel_info_modes">
+                    <label>
+                        <input type="checkbox" name="channel_mute" class="channel-mode" data-mode="m" />
+                        Moderated chat
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_invite" class="channel-mode" data-mode="i" />
+                        Invite only
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_topic" class="channel-mode" data-mode="t" />
+                        Only operators can change the topic
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_external_messages" class="channel-mode" data-mode="n" />
+                        Block messages from outside this channel
+                    </label>
+                    <label>
+                        Password
+                        <input type="text" name="channel_key" class="channel-mode" data-mode="k" />
+                    </label>
+                </form>
+            </div>
+
+            <div class="control-group">
+                <form class="channel_banlist">
+                    <button class="show_banlist">Show banlist</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Bank Mask</td>
+                                <td>Added By</td>
+                                <td>Date Added</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </script>
+
+
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
             <a class="close_menu if_op op"><i class="icon-star"></i><%= op %></a>
@@ -175,111 +226,112 @@
 
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
-            <section>
-                <h6>Theme</h6>
-                <div class="control-group">
-                    <div class="thumbnails">
-                        <a class="thumbnail" data-setting="theme" data-value="relaxed" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                            <div class="caption"><u>Relaxed</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="mini" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #fff;"></div></div>
-                            <div class="caption"><u>Mini</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="cli" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #222;"></div></div>
-                            <div class="caption"><u>CLI</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="basic" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                            <div class="caption"><u>Basic</u></div>
-                        </a>
+            <form>
+                <section>
+                    <h6>Theme</h6>
+                    <div class="control-group">
+                        <div class="thumbnails">
+                            <a class="thumbnail" data-setting="theme" data-value="relaxed" href="#">
+                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
+                                <div class="caption"><u>Relaxed</u></div>
+                            </a>
+                            <a class="thumbnail" data-setting="theme" data-value="mini" href="#">
+                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #fff;"></div></div>
+                                <div class="caption"><u>Mini</u></div>
+                            </a>
+                            <a class="thumbnail" data-setting="theme" data-value="cli" href="#">
+                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #222;"></div></div>
+                                <div class="caption"><u>CLI</u></div>
+                            </a>
+                            <a class="thumbnail" data-setting="theme" data-value="basic" href="#">
+                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
+                                <div class="caption"><u>Basic</u></div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section>
-                <h6>Channels</h6>
-                <div class="control-group">
-                    <div class="radio">
+                <section>
+                    <h6>Channels</h6>
+                    <div class="control-group">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
+                                <%= tabs %>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
+                                <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h6>Chat window</h6>
+                    <div class="control-group">
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_joins_parts" type="checkbox">
+                                <%= join_part %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_timestamps" type="checkbox">
+                                <%= timestamps %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="mute_sounds" type="checkbox">
+                                <%= mute %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_emoticons" type="checkbox">
+                                <%= emoticons %>
+                            </label>
+                        </div>
                         <label>
-                            <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
-                            <%= tabs %>
+                            <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                            <span><%= scroll_history %></span>
                         </label>
                     </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
-                            <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
-                        </label>
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            <section>
-                <h6>Chat window</h6>
-                <div class="control-group">
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="show_joins_parts" type="checkbox">
-                            <%= join_part %>
-                        </label>
+                <section class="language">
+                    <h6>Language</h6>
+                    <div class="control-group">
+                        <select data-setting="locale">
+                            <% _.forEach(languages, function(lang) { %>
+                                <option value="<%= lang.tag %>"><%= lang.language %></li>
+                            <% }); %>
+                        </select>
+                        <br>
+                        <small><%= locale_restart_needed %></small>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="show_timestamps" type="checkbox">
-                            <%= timestamps %>
-                        </label>
+                </section>
+
+                <section class="protocol_handler">
+                    <h6><%= default_client %></h6>
+                    <div class="control-group">
+                        <button class="register_protocol"><%= make_default %></button>
+                        <br>
+                        <small><%= default_note %></small>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="mute_sounds" type="checkbox">
-                            <%= mute %>
-                        </label>
+                </section>
+
+                <section class="notification_enabler">
+                    <h6><%= html5_notifications %></h6>
+                    <div class="control-group">
+                        <button class="enable_notifications"><%= enable_notifications %></button>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="show_emoticons" type="checkbox">
-                            <%= emoticons %>
-                        </label>
-                    </div>
-                    <label>
-                        <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
-                        <span><%= scroll_history %></span>
-                    </label>
-                </div>
-            </section>
-
-            <section class="language">
-                <h6>Language</h6>
-                <div class="control-group">
-                    <select data-setting="locale">
-                        <% _.forEach(languages, function(lang) { %>
-                            <option value="<%= lang.tag %>"><%= lang.language %></li>
-                        <% }); %>
-                    </select>
-                    <br>
-                    <small><%= locale_restart_needed %></small>
-                </div>
-            </section>
-
-            <section class="protocol_handler">
-                <h6><%= default_client %></h6>
-                <div class="control-group">
-                    <button class="register_protocol"><%= make_default %></button>
-                    <br>
-                    <small><%= default_note %></small>
-                </div>
-            </section>
-
-            <section class="notification_enabler">
-                <h6><%= html5_notifications %></h6>
-                <div class="control-group">
-                    <button class="enable_notifications"><%= enable_notifications %></button>
-                </div>
-            </section>
-
+                </section>
+            </form>
         </div>
     </script>
 

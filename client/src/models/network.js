@@ -127,6 +127,7 @@
             this.gateway.on('topicsetby', onTopicSetBy, this);
             this.gateway.on('userlist', onUserlist, this);
             this.gateway.on('userlist_end', onUserlistEnd, this);
+            this.gateway.on('banlist', onBanlist, this);
             this.gateway.on('mode', onMode, this);
             this.gateway.on('whois', onWhois, this);
             this.gateway.on('whowas', onWhowas, this);
@@ -134,6 +135,7 @@
             this.gateway.on('list_start', onListStart, this);
             this.gateway.on('irc_error', onIrcError, this);
             this.gateway.on('unknown_command', onUnknownCommand, this);
+            this.gateway.on('channel_info', onChannelInfo, this);
         },
 
 
@@ -170,7 +172,7 @@
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
-                    channel = new _kiwi.model.Channel({name: channel_name});
+                    channel = new _kiwi.model.Channel({name: channel_name, network: that});
                     that.panels.add(channel);
                 }
 
@@ -264,7 +266,7 @@
         var c, members, user;
         c = this.panels.getByName(event.channel);
         if (!c) {
-            c = new _kiwi.model.Channel({name: event.channel});
+            c = new _kiwi.model.Channel({name: event.channel, network: this});
             this.panels.add(c);
         }
 
@@ -481,7 +483,7 @@
             // If a panel isn't found for this PM, create one
             panel = this.panels.getByName(event.nick);
             if (!panel) {
-                panel = new _kiwi.model.Channel({name: event.nick});
+                panel = new _kiwi.model.Channel({name: event.nick, network: this});
                 this.panels.add(panel);
             }
 
@@ -526,6 +528,19 @@
 
 
 
+    function onChannelInfo(event) {
+        var channel = this.panels.getByName(event.channel);
+        if (!channel) return;
+
+        if (event.url) {
+            channel.set('info_url', event.url);
+        } else if (event.modes) {
+            channel.set('info_modes', event.modes);
+        }
+    }
+
+
+
     function onUserlist(event) {
         var channel;
         channel = this.panels.getByName(event.channel);
@@ -554,6 +569,17 @@
 
         // Clear the temporary userlist
         delete channel.temp_userlist;
+    }
+
+
+
+    function onBanlist(event) {
+        console.log('banlist', event);
+        var channel = this.panels.getByName(event.channel);
+        if (!channel)
+            return;
+
+        channel.set('banlist', event.bans || []);
     }
 
 

@@ -495,6 +495,8 @@ _kiwi.model.Application = function () {
                 '/voice': '/quote mode $channel +v $1+',
                 '/devoice': '/quote mode $channel -v $1+',
                 '/k': '/kick $channel $1+',
+                '/ban': '/quote mode $channel +b $1+',
+                '/unban': '/quote mode $channel -b $1+',
 
                 // Misc aliases
                 '/slap': '/me slaps $1 around a bit with a large trout'
@@ -538,6 +540,15 @@ _kiwi.model.Application = function () {
             controlbox.on('command:whowas', whowasCommand);
 
             controlbox.on('command:encoding', encodingCommand);
+
+            controlbox.on('command:info', function(ev) {
+                var active_panel = _kiwi.app.panels().active;
+
+                if (!active_panel.isChannel())
+                    return;
+
+                new _kiwi.model.ChannelInfo({channel: _kiwi.app.panels().active});
+            });
 
             controlbox.on('command:css', function (ev) {
                 var queryString = '?reload=' + new Date().getTime();

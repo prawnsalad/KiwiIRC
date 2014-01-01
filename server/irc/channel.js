@@ -25,7 +25,8 @@ var IrcChannel = function(irc_connection, name) {
         banlist:        onBanList,
         banlist_end:    onBanListEnd,
         topicsetby:     onTopicSetBy,
-        mode:           onMode
+        mode:           onMode,
+        info:           onChannelInfo
     };
     EventBinder.bindIrcEvents('channel ' + this.name, this.irc_events, this, irc_connection);
 };
@@ -181,15 +182,24 @@ function onTopic(event) {
 }
 
 
+function onChannelInfo(event) {
+    // Channel info event may contain 1 of several types of info,
+    // including creation time, modes. So just pipe the event
+    // right through to the client
+    this.irc_connection.clientEvent('channel_info', event);
+}
+
+
 function onBanList(event) {
     this.ban_list_buffer.push(event);
 }
 
 function onBanListEnd(event) {
-    var that = this;
-    this.ban_list_buffer.forEach(function (ban) {
-        that.irc_connection.clientEvent('banlist', ban);
+    this.irc_connection.clientEvent('banlist', {
+        channel: this.name,
+        bans: this.ban_list_buffer
     });
+
     this.ban_list_buffer = [];
 }
 

@@ -66,7 +66,6 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     addItem: function(item_name, $item) {
-        $item = $($item);
         if ($item.is('a')) $item.addClass('icon-chevron-right');
         this._items[item_name] = $item;
     },
