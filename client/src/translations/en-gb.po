@@ -64,9 +64,9 @@ msgstr "for large amounts of channels"
 msgid "client_applets_settings_notification_joinpart"
 msgstr "Join/part channel notifications"
 
-#: 
-msgid "client_applets_settings_notification_countjoinparts"
-msgstr "Count join/part messages as notifications"
+#:
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
 
 #: 
 msgid "client_applets_settings_timestamp"

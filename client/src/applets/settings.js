@@ -13,7 +13,7 @@
                 list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
                 large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
                 join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
-                count_joins_parts: _kiwi.global.i18n.translate('client_applets_settings_notification_countjoinparts').fetch(),
+                count_all_activity: _kiwi.global.i18n.translate('client_applets_settings_notification_count_all_activity').fetch(),
                 timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
                 mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
                 emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
