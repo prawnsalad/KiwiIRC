@@ -180,7 +180,17 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             if (this.model.isActive()) return;
 
             var $act = this.model.tab.find('.activity');
-            $act.text((parseInt($act.text(), 10) || 0) + 1);
+            var count_joins_parts = _kiwi.global.settings.get('count_joins_parts');
+            if (typeof count_joins_parts === 'undefined') {
+                count_joins_parts = true;
+            }
+
+            if (count_joins_parts || msg.type === 'privmsg') {
+                $act.text((parseInt($act.text(), 10) || 0) + 1);
+            } else {
+                $act.text((parseInt($act.text(), 10) || 0));
+            }
+
             if ($act.text() === '0') {
                 $act.addClass('zero');
             } else {

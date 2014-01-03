@@ -65,6 +65,10 @@ msgid "client_applets_settings_notification_joinpart"
 msgstr "Join/part channel notifications"
 
 #: 
+msgid "client_applets_settings_notification_countjoinparts"
+msgstr "Count join/part messages as notifications"
+
+#: 
 msgid "client_applets_settings_timestamp"
 msgstr "Timestamps"
 
