@@ -24,6 +24,8 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         this.menu.$el.appendTo(channel.view.$container);
         this.menu.show();
 
+        this.menu.$el.offset({top: _kiwi.app.view.$el.find('.panels').offset().top});
+
         // Menu box will call this destroy on closing
         this.$el.dispose = _.bind(this.dispose, this);
 
@@ -86,7 +88,9 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
     updateInfo: function (channel, new_val) {
         var that = this,
-            modes, url, banlist;
+            title, modes, url, banlist;
+
+        this.menu.setTitle(channel.get('name'));
 
         modes = channel.get('info_modes');
         if (modes) {
@@ -109,7 +113,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
         url = channel.get('info_url');
         if (url) {
-            this.$el.find('.channel_url a')
+            this.$el.find('.channel_url')
                 .text(url)
                 .attr('href', url);
 
@@ -118,7 +122,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
         banlist = channel.get('banlist');
         if (banlist && banlist.length) {
-            var $table = this.$el.find('.channel_banlist table tbody');
+            var $table = this.$el.find('.channel-banlist table tbody');
 
             $table.empty();
             _.each(banlist, function(ban) {
@@ -131,6 +135,8 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
                 $table.append($tr);
             });
+
+            this.$el.find('.channel-banlist table').slideDown();
         }
     },
 

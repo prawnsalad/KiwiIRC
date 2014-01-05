@@ -404,6 +404,7 @@ html, body { height:100%; }
 #kiwi .channel_info .channel_url {
     display: none;
 }
+#kiwi .channel_info .channel-banlist table { display: none; }
 #kiwi .channel_info .remove-ban { cursor: pointer; }
 
 
