@@ -20,10 +20,10 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
         this.$el.find('*').remove();
 
+        $('<div class="ui_menu_title"></div>').appendTo(this.$el);
         if (this._title) {
-            $('<div class="ui_menu_title"></div>')
-                .text(this._title)
-                .appendTo(this.$el);
+            this.$el.find('.ui_menu_title')
+                .text(this._title);
         }
 
 
@@ -36,6 +36,16 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
         if (this._display_footer)
             this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="icon-remove"></i></a></div>');
+    },
+
+
+    setTitle: function(new_title) {
+        this._title = new_title;
+
+        if (!this._title)
+            return;
+
+        this.$el.find('.ui_menu_title').text(this._title);
     },
 
 
