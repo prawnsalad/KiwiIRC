@@ -574,7 +574,7 @@ var socketConnectHandler = function () {
 
         if (global.config.default_gecos) {
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
-            gecos = gecos.toString().replace('%h', that.irc_host.hostname);
+            gecos = gecos.toString().replace('%h', that.user.hostname);
         }
 
         // Send any initial data for webirc/etc
