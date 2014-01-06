@@ -57,11 +57,10 @@
 
     <script type="text/html" id="tmpl_channel_info">
         <div class="channel_info">
-            <h6><%= channel_name %></h6>
             <b class="channel_url"><a href=""></a></b>
 
-            <div class="control-group">
-                <form class="channel_info_modes">
+            <form>
+                <div class="control-group channel_info_modes">
                     <label>
                         <input type="checkbox" name="channel_mute" class="channel-mode" data-mode="m" />
                         Moderated chat
@@ -78,16 +77,18 @@
                         <input type="checkbox" name="channel_external_messages" class="channel-mode" data-mode="n" />
                         Block messages from outside this channel
                     </label>
+                </div>
+
+                <div class="control-group">
                     <label>
                         Password
                         <input type="text" name="channel_key" class="channel-mode" data-mode="k" />
                     </label>
-                </form>
-            </div>
+                </div>
 
-            <div class="control-group">
-                <form class="channel_banlist">
-                    <button class="show_banlist">Show banlist</button>
+
+                <div class="control-group channel-banlist">
+                    <button class="show_banlist">Show banlist</button> <span class="banlist-status"></span>
                     <table>
                         <thead>
                             <tr>
@@ -100,8 +101,8 @@
                         <tbody>
                         </tbody>
                     </table>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </script>
 

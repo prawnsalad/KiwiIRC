@@ -585,7 +585,8 @@
 
 
     function onMode(event) {
-        var channel, i, prefixes, members, member, find_prefix;
+        var channel, i, prefixes, members, member, find_prefix,
+            request_updated_banlist = false;
 
         // Build a nicely formatted string to be displayed to a regular human
         function friendlyModeString (event_modes, alt_target) {
@@ -645,16 +646,24 @@
                             member.removeMode(event.modes[i].mode[1]);
                         }
                         members.sort();
-                        //channel.addMsg('', '== ' + event.nick + ' set mode ' + event.modes[i].mode + ' ' + event.modes[i].param, 'action mode');
                     }
                 } else {
                     // Channel mode being set
                     // TODO: Store this somewhere?
                     //channel.addMsg('', 'CHANNEL === ' + event.nick + ' set mode ' + event.modes[i].mode + ' on ' + event.target, 'action mode');
                 }
+
+                // TODO: Be smart, remove this specific ban from the banlist rather than request a whole banlist
+                if (event.modes[i].mode[1] == 'b')
+                    request_updated_banlist = true;
             }
 
             channel.addMsg('', '== ' + _kiwi.global.i18n.translate('client_models_network_mode').fetch(event.nick, friendlyModeString()), 'action mode', {time: event.time});
+
+            // TODO: Be smart, remove the specific ban from the banlist rather than request a whole banlist
+            if (request_updated_banlist)
+                this.gateway.raw('MODE ' + channel.get('name') + ' +b');
+
         } else {
             // This is probably a mode being set on us.
             if (event.target.toLowerCase() === this.get("nick").toLowerCase()) {

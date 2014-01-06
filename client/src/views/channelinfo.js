@@ -124,6 +124,8 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         if (banlist && banlist.length) {
             var $table = this.$el.find('.channel-banlist table tbody');
 
+            this.$el.find('.banlist-status').text('');
+
             $table.empty();
             _.each(banlist, function(ban) {
                 var $tr = $('<tr></tr>').data('ban', ban);
@@ -137,6 +139,10 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
             });
 
             this.$el.find('.channel-banlist table').slideDown();
+
+        } else {
+            this.$el.find('.banlist-status').text('Banlist empty');
+            this.$el.find('.channel-banlist table').hide();
         }
     },
 
