@@ -442,8 +442,6 @@ _kiwi.model.Application = function () {
                 if (serv[serv.length-1] === '/')
                     serv = serv.substring(0, serv.length-1);
 
-                _kiwi.app.kiwi_server = serv;
-
                 // Force the jumpserver now?
                 if (data.force) {
                     // Get an interval between 5 and 6 minutes so everyone doesn't reconnect it all at once
@@ -458,7 +456,7 @@ _kiwi.model.Application = function () {
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
-                            _kiwi.gateway.set('kiwi_server', _kiwi.app.kiwi_server);
+                            _kiwi.app.kiwi_server = serv;
 
                             _kiwi.gateway.reconnect(function() {
                                 // Reconnect all the IRC connections
