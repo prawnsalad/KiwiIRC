@@ -116,10 +116,6 @@ _kiwi.global = {
 
             _kiwi.app = new _kiwi.model.Application(opts);
 
-            if (opts.kiwi_server) {
-                _kiwi.app.kiwi_server = opts.kiwi_server;
-            }
-
             // Start the client up
             _kiwi.app.start();
 
