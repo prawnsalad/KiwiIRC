@@ -399,7 +399,6 @@ html, body { height:100%; }
 }
 
 
-#kiwi .schannel_info {}
 #kiwi .channel_info label { display: block; }
 #kiwi .channel_info .channel_url {
     display: none;
@@ -872,6 +871,15 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
 #kiwi.theme_relaxed .ui_menu .ui_menu_foot .close:hover { color: #222; }
 
+
+#kiwi.theme_relaxed .channel_info .channel_url {
+    display: block;
+    margin: 5px 1em;
+    font-style: italic;
+}
+#kiwi.theme_relaxed .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi.theme_relaxed .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi.theme_relaxed .channel_info .remove-ban:hover { color: #900; }
 
 
 
@@ -1389,6 +1397,9 @@ html, body { height:100%; }
 #kiwi.theme_cli .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
 #kiwi.theme_cli .ui_menu .ui_menu_foot .close:hover { color: #222; }
 
+#kiwi.theme_cli .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi.theme_cli .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi.theme_cli .channel_info .remove-ban:hover { color: #900; }
 
 
 
@@ -1702,3 +1713,7 @@ html, body { height:100%; }
 
 #kiwi.theme_basic .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
 #kiwi.theme_basic .ui_menu .ui_menu_foot .close:hover { color: #222; }
+
+#kiwi.theme_basic .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi.theme_basic .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi.theme_basic .channel_info .remove-ban:hover { color: #900; }
