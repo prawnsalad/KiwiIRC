@@ -19,7 +19,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
 
         // Create the menu box this view will sit inside
-        this.menu = new _kiwi.view.MenuBox();
+        this.menu = new _kiwi.view.MenuBox(channel.get('name'));
         this.menu.addItem('channel_info', this.$el);
         this.menu.$el.appendTo(channel.view.$container);
         this.menu.show();
@@ -89,8 +89,6 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
     updateInfo: function (channel, new_val) {
         var that = this,
             title, modes, url, banlist;
-
-        this.menu.setTitle(channel.get('name'));
 
         modes = channel.get('info_modes');
         if (modes) {
