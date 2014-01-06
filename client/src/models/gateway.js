@@ -151,6 +151,9 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
+        // Keep note of the server we are connecting to
+        this.set('kiwi_server', _kiwi.app.kiwi_server);
+
         this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
             path: _kiwi.app.get('base_path') + '/transport',
             reconnect_max_attempts: 5,

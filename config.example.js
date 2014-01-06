@@ -75,6 +75,7 @@ conf.default_encoding = 'utf8';
 /*
 * Default GECOS (real name) for IRC connections
 * %n will be replaced with the users nick
+* %h will be replaced with the users hostname
 */
 //conf.default_gecos = 'Web IRC Client';
 
@@ -182,7 +183,8 @@ conf.client = {
         show_joins_parts: true,
         show_timestamps: false,
         mute_sounds: false,
-        show_emoticons: true
+        show_emoticons: true,
+        count_all_activity: true
     },
     window_title: 'Kiwi IRC'
 };

@@ -33,8 +33,8 @@ _kiwi.model.Application = function () {
             this.server_settings = options[0].server_settings || {};
             this.translations = options[0].translations || {};
 
-            // Best guess at where the kiwi server is
-            this.detectKiwiServer();
+            // Best guess at where the kiwi server is if not already specified
+            this.kiwi_server = options[0].kiwi_server || this.detectKiwiServer();
 
             // Set any default settings before anything else is applied
             if (this.server_settings && this.server_settings.client && this.server_settings.client.settings) {
@@ -60,10 +60,10 @@ _kiwi.model.Application = function () {
         this.detectKiwiServer = function () {
             // If running from file, default to localhost:7777 by default
             if (window.location.protocol === 'file:') {
-                this.kiwi_server = 'http://localhost:7778';
+                return 'http://localhost:7778';
             } else {
                 // Assume the kiwi server is on the same server
-                this.kiwi_server = window.location.protocol + '//' + window.location.host;
+                return window.location.protocol + '//' + window.location.host;
             }
         };
 
@@ -442,8 +442,6 @@ _kiwi.model.Application = function () {
                 if (serv[serv.length-1] === '/')
                     serv = serv.substring(0, serv.length-1);
 
-                _kiwi.app.kiwi_server = serv;
-
                 // Force the jumpserver now?
                 if (data.force) {
                     // Get an interval between 5 and 6 minutes so everyone doesn't reconnect it all at once
@@ -458,7 +456,7 @@ _kiwi.model.Application = function () {
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
-                            _kiwi.gateway.set('kiwi_server', _kiwi.app.kiwi_server);
+                            _kiwi.app.kiwi_server = serv;
 
                             _kiwi.gateway.reconnect(function() {
                                 // Reconnect all the IRC connections
