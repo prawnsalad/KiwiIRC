@@ -408,6 +408,32 @@ msgstr "Server not found"
 msgid "client_views_serverselect_connection_refused"
 msgstr "Connection refused"
 
+#: 
+msgid "client_views_serverselect_age"
+msgstr "Age"
+
+#: 
+msgid "client_views_serverselect_gender"
+msgstr "Gender"
+
+#: 
+msgid "client_views_serverselect_gender_f"
+msgstr "Female"
+
+#: 
+msgid "client_views_serverselect_gender_m"
+msgstr "Male"
+
+#: 
+msgid "client_views_serverselect_gender_u"
+msgstr "Other"
+
+#: 
+msgid "client_views_serverselect_location"
+msgstr "Location"
+
+
+
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
 msgstr "Op"

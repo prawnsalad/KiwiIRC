@@ -179,7 +179,7 @@ _kiwi.model.Member = Backbone.Model.extend({
                 }
                 
                 // If we've got an age or a gender at this stage, we've done the job
-                if (age !== '' | gender !== 'U') {
+                if (age !== '' || gender !== 'U') {
                     break;
                 } else {
                     info = realname;

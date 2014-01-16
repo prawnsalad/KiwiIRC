@@ -408,6 +408,31 @@ msgstr "Serveur introuvable."
 msgid "client_views_serverselect_connection_refused"
 msgstr "Connexion refusée."
 
+#: 
+msgid "client_views_serverselect_age"
+msgstr "Age"
+
+#: 
+msgid "client_views_serverselect_gender"
+msgstr "Sexe"
+
+#: 
+msgid "client_views_serverselect_gender_f"
+msgstr "Femme"
+
+#: 
+msgid "client_views_serverselect_gender_m"
+msgstr "Homme"
+
+#: 
+msgid "client_views_serverselect_gender_u"
+msgstr "Autre"
+
+#: 
+msgid "client_views_serverselect_location"
+msgstr "Ville"
+
+
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
 msgstr "Op"

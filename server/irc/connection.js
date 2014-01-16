@@ -57,6 +57,12 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.password = options.password || '';
+    
+    if (global.config.client.settings.rich_nicklist && global.config.client.settings.rich_nicklist_track_asl) {
+        this.age = options.age || '';
+        this.gender = options.gender || '';
+        this.location = options.location || '';
+    }
 
     // Set the passed encoding. or the default if none giving or it fails
     if (!options.encoding || !this.setEncoding(options.encoding)) {
@@ -571,10 +577,14 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
-        var gecos = '[www.kiwiirc.com] ' + that.nick;
+        var gecos;
 
-        if (global.config.default_gecos) {
+        if (global.config.client.settings.rich_nicklist && global.config.client.settings.rich_nicklist_track_asl) {
+            gecos = that.age + ' ' + that.gender + ' ' + that.location;
+        } else if (global.config.default_gecos) {
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
+        } else {
+            gecos = '[www.kiwiirc.com] ' + that.nick;
         }
 
         // Send any initial data for webirc/etc

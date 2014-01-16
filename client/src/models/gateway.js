@@ -234,7 +234,10 @@ _kiwi.model.Gateway = function () {
                         address: connection_info.host,
                         port: connection_info.port,
                         ssl: connection_info.ssl,
-                        password: connection_info.password
+                        password: connection_info.password,
+                        age: connection_info.age,
+                        gender: connection_info.gender,
+                        location: connection_info.location
                     };
                     connection = new _kiwi.model.Network(inf);
                     _kiwi.app.connections.add(connection);
@@ -261,7 +264,10 @@ _kiwi.model.Gateway = function () {
             hostname:   connection_info.host,
             port:       connection_info.port,
             ssl:        connection_info.ssl,
-            password:   connection_info.password
+            password:   connection_info.password,
+            age:        connection_info.age,
+            gender:        connection_info.gender,
+            location:        connection_info.location
         };
 
         connection_info.options = connection_info.options || {};
