@@ -80,6 +80,8 @@ _kiwi.view.Application = Backbone.View.extend({
         if (link.length > 0) {
             link.attr('rel', 'stylesheet').attr('disabled', false)[0].disabled = false;
         }
+
+        this.doLayout();
     },
 
 
