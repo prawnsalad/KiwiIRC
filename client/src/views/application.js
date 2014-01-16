@@ -70,13 +70,13 @@ _kiwi.view.Application = Backbone.View.extend({
         theme_name = theme_name.toLowerCase();
 
         // Clear any current theme
-        $('[data-theme]:not([disabled])').each(function (idx, link) {
+        $('link [data-theme]:not([disabled])').each(function (idx, link) {
             var $link = $(link);
             $link.attr('rel', 'alternate ' + $link.attr('rel')).attr('disabled', true)[0].disabled = true;
         });
 
         // Apply the new theme
-        var link = $('[data-theme][title=' + theme_name + ']');
+        var link = $('link [data-theme][title=' + theme_name + ']');
         if (link.length > 0) {
             link.attr('rel', 'stylesheet').attr('disabled', false)[0].disabled = false;
         }
