@@ -65,15 +65,21 @@ _kiwi.view.Application = Backbone.View.extend({
         }
 
         // If we have no theme specified, get it from the settings
-        if (!theme_name) theme_name = _kiwi.global.settings.get('theme');
+        if (!theme_name) theme_name = _kiwi.global.settings.get('theme') || 'relaxed';
+
+        theme_name = theme_name.toLowerCase();
 
         // Clear any current theme
-        this.$el.removeClass(function (i, css) {
-            return (css.match(/\btheme_\S+/g) || []).join(' ');
+        $('[data-theme]:not([disabled])').each(function (idx, link) {
+            var $link = $(link);
+            $link.attr('rel', 'alternate ' + $link.attr('rel')).attr('disabled', true)[0].disabled = true;
         });
 
         // Apply the new theme
-        this.$el.addClass('theme_' + (theme_name || 'relaxed'));
+        var link = $('[data-theme][title=' + theme_name + ']');
+        if (link.length > 0) {
+            link.attr('rel', 'stylesheet').attr('disabled', false)[0].disabled = false;
+        }
     },
 
 
