@@ -105,5 +105,10 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
         this.addMsg('', 'Window cleared');
 
         this.view.render();
+    },
+
+
+    setMode: function(mode_string) {
+        this.get('network').gateway.mode(this.get('name'), mode_string);
     }
 });

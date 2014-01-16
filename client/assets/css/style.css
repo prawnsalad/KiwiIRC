@@ -14,6 +14,25 @@ html, body { height:100%; }
 #kiwi a img { border:none; }
 #kiwi .format_span a { color: inherit; background-color: inherit; text-decoration: inherit; font-style: inherit; font-weight: inherit;}
 
+#kiwi h1,
+#kiwi h2,
+#kiwi h3 {
+    margin-top: 22px;
+    margin-bottom: 11px;
+}
+#kiwi h4,
+#kiwi h5,
+#kiwi h6 {
+    margin-top: 11px;
+    margin-bottom: 11px;
+}
+#kiwi h1 { font-size: 46px; }
+#kiwi h2 { font-size: 40px; }
+#kiwi h3 { font-size: 34px; }
+#kiwi h4 { font-size: 28px; }
+#kiwi h5 { font-size: 22px; }
+#kiwi h6 { font-size: 16px; }
+
 
 /**
  * Main layout blocks
@@ -271,97 +290,63 @@ html, body { height:100%; }
     display: inline-block;
 }
 
-#kiwi .settings_container h1 {
-    margin-top: 22px;
-    margin-bottom: 11px;
-    font-size: 46px;
-}
-
-#kiwi .settings_container h2 {
-    margin-top: 22px;
-    margin-bottom: 11px;
-    font-size: 40px;
-}
-
-#kiwi .settings_container h3 {
-    margin-top: 22px;
-    margin-bottom: 11px;
-    font-size: 34px;
-}
-
-#kiwi .settings_container h4 {
-    margin-top: 11px;
-    margin-bottom: 11px;
-    font-size: 28px;
-}
-
-#kiwi .settings_container h5 {
-    margin-top: 11px;
-    margin-bottom: 11px;
-    font-size: 22px;
-}
-
-#kiwi .settings_container h6 {
-    margin-top: 11px;
-    margin-bottom: 11px;
-    font-size: 16px;
-}
-
 #kiwi .settings_container label {
     cursor: pointer;
 }
 
-#kiwi .settings_container input,
-#kiwi .settings_container select,
-#kiwi .settings_container textarea {
-    width: 100%;
+#kiwi_ form label { display: block; }
+#kiwi form input,
+#kiwi form select,
+#kiwi form textarea {
+    /*width: 100%;
+    box-sizing: border-box;*/
 }
 
-#kiwi .settings_container input[size],
-#kiwi .settings_container select[size],
-#kiwi .settings_container textarea[size] {
+#kiwi form input[size],
+#kiwi form select[size],
+#kiwi form textarea[size] {
     width: auto;
 }
 
-#kiwi .settings_container input[type="file"],
-#kiwi .settings_container input[type="image"],
-#kiwi .settings_container input[type="submit"],
-#kiwi .settings_container input[type="reset"],
-#kiwi .settings_container input[type="button"] {
+#kiwi form input[type="file"],
+#kiwi form input[type="image"],
+#kiwi form input[type="submit"],
+#kiwi form input[type="reset"],
+#kiwi form input[type="button"] {
     width: auto;
 }
 
-#kiwi .settings_container input[type="radio"] {
+#kiwi form input[type="radio"] {
     width: auto;
     cursor: pointer;
     margin-top: 2px;
 }
 
-#kiwi .settings_container input[type="checkbox"] {
+#kiwi form input[type="checkbox"] {
     width: auto;
     cursor: pointer;
     margin-top: 3px;
 }
 
-#kiwi .settings_container .radio,
-#kiwi .settings_container .checkbox {
+#kiwi form .radio,
+#kiwi form .checkbox {
     margin-bottom: 10px;
     padding-left: 20px;
 }
 
-#kiwi .settings_container .radio:last-child,
-#kiwi .settings_container .checkbox:last-child {
+#kiwi form .radio:last-child,
+#kiwi form .checkbox:last-child {
     margin-bottom: 0;
 }
 
-#kiwi .settings_container .radio input[type="radio"],
-#kiwi .settings_container .checkbox input[type="checkbox"] {
+#kiwi form .radio input[type="radio"],
+#kiwi form .checkbox input[type="checkbox"] {
     float: left;
     margin-left: -20px;
 }
 
-#kiwi .settings_container .radio+.radio,
-#kiwi .settings_container .checkbox+.checkbox {
+#kiwi form .radio+.radio,
+#kiwi form .checkbox+.checkbox {
     margin-top: -7px;
 }
 
@@ -397,11 +382,11 @@ html, body { height:100%; }
     width: 75px;
 }
 
-#kiwi .settings_container .control-group {
+#kiwi .control-group {
     margin: 0 0 20px 20px;
 }
 
-#kiwi .settings_container .control-group:last-child {
+#kiwi .control-group:last-child {
     margin-bottom: 0;
 }
 
@@ -412,6 +397,14 @@ html, body { height:100%; }
         padding: 25px;
     }
 }
+
+
+#kiwi .channel_info label { display: block; }
+#kiwi .channel_info .channel_url {
+    display: none;
+}
+#kiwi .channel_info .channel-banlist table { display: none; }
+#kiwi .channel_info .remove-ban { cursor: pointer; }
 
 
 
@@ -777,7 +770,7 @@ html, body { height:100%; }
     padding:10px; left: 0px;
     background: #1B1B1B; color:#eeeeee;
 }
-#kiwi.theme_relaxed .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; }
+#kiwi.theme_relaxed .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; width: 165px; }
 #kiwi.theme_relaxed .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
 
 
@@ -910,6 +903,15 @@ html, body { height:100%; }
 #kiwi.theme_relaxed .ui_menu .ui_menu_foot .close:hover { color: #222; }
 
 
+#kiwi.theme_relaxed .channel_info .channel_url {
+    display: block;
+    margin: 5px 1em;
+    font-style: italic;
+}
+#kiwi.theme_relaxed .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi.theme_relaxed .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi.theme_relaxed .channel_info .remove-ban:hover { color: #900; }
+
 
 
 
@@ -995,7 +997,7 @@ html, body { height:100%; }
 
 #kiwi.theme_mini .messages .msg { border-bottom: 1px solid #DEDEDE; padding: 5px; font-family:arial; font-size:0.9em; }
 #kiwi.theme_mini .messages .msg .time { display:none; }
-#kiwi.theme_mini .messages .msg .nick { display:block; font-family:Arial; text-transform:capitalize; }
+#kiwi.theme_mini .messages .msg .nick { display:block; font-family:Arial; text-tranform:capitalize; }
 #kiwi.theme_mini .messages .msg .text { display:block; white-space:pre-wrap; word-wrap:break-word; font-family:arial; }
 
 #kiwi.theme_mini .messages .msg.action .nick { }
@@ -1489,6 +1491,9 @@ html, body { height:100%; }
 #kiwi.theme_cli .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
 #kiwi.theme_cli .ui_menu .ui_menu_foot .close:hover { color: #222; }
 
+#kiwi.theme_cli .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi.theme_cli .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi.theme_cli .channel_info .remove-ban:hover { color: #900; }
 
 
 
@@ -1833,3 +1838,7 @@ html, body { height:100%; }
 
 #kiwi.theme_basic .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
 #kiwi.theme_basic .ui_menu .ui_menu_foot .close:hover { color: #222; }
+
+#kiwi.theme_basic .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi.theme_basic .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi.theme_basic .channel_info .remove-ban:hover { color: #900; }

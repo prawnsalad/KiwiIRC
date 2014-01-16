@@ -78,7 +78,8 @@ Client.prototype.dispose = function () {
 };
 
 function handleClientMessage(msg, callback) {
-    var server;
+    var that = this,
+        server;
 
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
@@ -102,7 +103,13 @@ function handleClientMessage(msg, callback) {
     }
 
     // Run the client command
-    this.client_commands.run(msg.data.method, msg.data.args, server, callback);
+    global.modules.emit('client command', {
+        command: msg.data,
+        server: server
+    })
+    .done(function() {
+        that.client_commands.run(msg.data.method, msg.data.args, server, callback);
+    });
 }
 
 

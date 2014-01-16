@@ -31,6 +31,9 @@ irc_numerics = {
     '321': 'RPL_LISTSTART',
     '322': 'RPL_LIST',
     '323': 'RPL_LISTEND',
+    '324': 'RPL_CHANNELMODEIS',
+    '328': 'RPL_CHANNEL_URL',
+    '329': 'RPL_CREATIONTIME',
     '330': 'RPL_WHOISACCOUNT',
     '331': 'RPL_NOTOPIC',
     '332': 'RPL_TOPIC',
@@ -292,6 +295,34 @@ handlers = {
             channel: command.params[1],
             num_users: parseInt(command.params[2], 10),
             topic: command.trailing
+        });
+    },
+
+    'RPL_CHANNELMODEIS': function (command) {
+        var channel = command.params[1],
+            modes = parseModeList.call(this, command.params[2], command.params.slice(3));
+
+        this.irc_connection.emit('channel ' + channel + ' info', {
+            channel: channel,
+            modes: modes
+        });
+    },
+
+    'RPL_CREATIONTIME': function (command) {
+        var channel = command.params[1];
+
+        this.irc_connection.emit('channel ' + channel + ' info', {
+            channel: channel,
+            created_at: parseInt(command.params[2], 10)
+        });
+    },
+
+    'RPL_CHANNEL_URL': function (command) {
+        var channel = command.params[1];
+
+        this.irc_connection.emit('channel ' + channel + ' info', {
+            channel: channel,
+            url: command.trailing
         });
     },
 
@@ -574,58 +605,13 @@ handlers = {
     },
 
     'MODE': function (command) {
-        var chanmodes = this.irc_connection.options.CHANMODES || [],
-            prefixes = this.irc_connection.options.PREFIX || [],
-            always_param = (chanmodes[0] || '').concat((chanmodes[1] || '')),
-            modes = [],
-            has_param, i, j, add, event, time;
+        var modes = [], event, time;
 
         // Check if we have a server-time
         time = getServerTime.call(this, command);
 
-        prefixes = _.reduce(prefixes, function (list, prefix) {
-            list.push(prefix.mode);
-            return list;
-        }, []);
-        always_param = always_param.split('').concat(prefixes);
-
-        has_param = function (mode, add) {
-            if (_.find(always_param, function (m) {
-                return m === mode;
-            })) {
-                return true;
-            } else if (add && _.find((chanmodes[2] || '').split(''), function (m) {
-                return m === mode;
-            })) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-
-        if (!command.params[1]) {
-            command.params[1] = command.trailing;
-        }
-
-        j = 0;
-        for (i = 0; i < command.params[1].length; i++) {
-            switch (command.params[1][i]) {
-                case '+':
-                    add = true;
-                    break;
-                case '-':
-                    add = false;
-                    break;
-                default:
-                    if (has_param(command.params[1][i], add)) {
-                        modes.push({mode: (add ? '+' : '-') + command.params[1][i], param: command.params[2 + j]});
-                        j++;
-                    } else {
-                        modes.push({mode: (add ? '+' : '-') + command.params[1][i], param: null});
-                    }
-            }
-        }
-
+        // Get a JSON representation of the modes
+        modes = parseModeList.call(this, command.params[1] || command.trailing, command.params.slice(2));
         event = (_.contains(this.irc_connection.options.CHANTYPES, command.params[0][0]) ? 'channel ' : 'user ') + command.params[0] + ' mode';
 
         this.irc_connection.emit(event, {
@@ -1027,6 +1013,62 @@ function genericNotice (command, msg, is_error) {
         msg: msg,
         numeric: parseInt(command.command, 10)
     });
+}
+
+
+/**
+ * Convert a mode string such as '+k pass', or '-i' to a readable
+ * format.
+ * [ { mode: '+k', param: 'pass' } ]
+ * [ { mode: '-i', param: null } ]
+ */
+function parseModeList(mode_string, mode_params) {
+    var chanmodes = this.irc_connection.options.CHANMODES || [],
+        prefixes = this.irc_connection.options.PREFIX || [],
+        always_param = (chanmodes[0] || '').concat((chanmodes[1] || '')),
+        modes = [],
+        has_param, i, j, add;
+
+    prefixes = _.reduce(prefixes, function (list, prefix) {
+        list.push(prefix.mode);
+        return list;
+    }, []);
+    always_param = always_param.split('').concat(prefixes);
+
+    has_param = function (mode, add) {
+        if (_.find(always_param, function (m) {
+            return m === mode;
+        })) {
+            return true;
+        } else if (add && _.find((chanmodes[2] || '').split(''), function (m) {
+            return m === mode;
+        })) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    j = 0;
+    for (i = 0; i < mode_string.length; i++) {
+        switch (mode_string[i]) {
+            case '+':
+                add = true;
+                break;
+            case '-':
+                add = false;
+                break;
+            default:
+                if (has_param(mode_string[i], add)) {
+                    modes.push({mode: (add ? '+' : '-') + mode_string[i], param: mode_params[j]});
+                    j++;
+                } else {
+                    modes.push({mode: (add ? '+' : '-') + mode_string[i], param: null});
+                }
+        }
+    }
+
+    return modes;
 }
 
 

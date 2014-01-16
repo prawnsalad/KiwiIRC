@@ -75,6 +75,7 @@ conf.default_encoding = 'utf8';
 /*
 * Default GECOS (real name) for IRC connections
 * %n will be replaced with the users nick
+* %h will be replaced with the users hostname
 */
 //conf.default_gecos = 'Web IRC Client';
 
@@ -188,7 +189,8 @@ conf.client = {
                                         'U': ['U003', '/U/']},
         rich_nicklist_track_asl: true,
         rich_nicklist_track_away: true,
-        rich_nicklist_track_ircop: true
+        rich_nicklist_track_ircop: true,
+        count_all_activity: true
     },
     window_title: 'Kiwi IRC'
 };
@@ -207,6 +209,6 @@ conf.client = {
 
 
 /*
- * Do not ammend the below lines unless you understand the changes!
+ * Do not amend the below lines unless you understand the changes!
  */
 module.exports.production = conf;

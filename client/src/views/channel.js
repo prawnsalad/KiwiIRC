@@ -179,8 +179,29 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             // Only inrement the counters if we're not the active panel
             if (this.model.isActive()) return;
 
-            var $act = this.model.tab.find('.activity');
-            $act.text((parseInt($act.text(), 10) || 0) + 1);
+            var $act = this.model.tab.find('.activity'),
+                count_all_activity = _kiwi.global.settings.get('count_all_activity'),
+                exclude_message_types;
+
+            // Set the default config value
+            if (typeof count_all_activity === 'undefined') {
+                count_all_activity = false;
+            }
+
+            // Do not increment the counter for these message types
+            exclude_message_types = [
+                'action join',
+                'action quit',
+                'action part',
+                'action kick',
+                'action nick',
+                'action mode'
+            ];
+
+            if (count_all_activity || exclude_message_types.indexOf(msg.type) === -1) {
+                $act.text((parseInt($act.text(), 10) || 0) + 1);
+            }
+
             if ($act.text() === '0') {
                 $act.addClass('zero');
             } else {

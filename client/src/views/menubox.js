@@ -6,7 +6,7 @@ _kiwi.view.MenuBox = Backbone.View.extend({
     initialize: function(title) {
         var that = this;
 
-        this.$el = $('<div class="ui_menu"></div>');
+        this.$el = $('<div class="ui_menu"><div class="items"></div></div>');
 
         this._title = title || '';
         this._items = {};
@@ -16,26 +16,39 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     render: function() {
-        var that = this;
+        var that = this,
+            $title,
+            $items = that.$el.find('.items');
 
-        this.$el.find('*').remove();
+        $items.find('*').remove();
 
         if (this._title) {
-            $('<div class="ui_menu_title"></div>')
-                .text(this._title)
-                .appendTo(this.$el);
-        }
+            $title = $('<div class="ui_menu_title"></div>')
+                .text(this._title);
 
+            this.$el.prepend($title);
+        }
 
         _.each(this._items, function(item) {
             var $item = $('<div class="ui_menu_content hover"></div>')
                 .append(item);
 
-            that.$el.append($item);
+            $items.append($item);
         });
 
         if (this._display_footer)
             this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="icon-remove"></i></a></div>');
+
+    },
+
+
+    setTitle: function(new_title) {
+        this._title = new_title;
+
+        if (!this._title)
+            return;
+
+        this.$el.find('.ui_menu_title').text(this._title);
     },
 
 
@@ -66,7 +79,6 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     addItem: function(item_name, $item) {
-        $item = $($item);
         if ($item.is('a')) $item.addClass('icon-chevron-right');
         this._items[item_name] = $item;
     },
@@ -88,10 +100,21 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     show: function() {
-        var that = this;
+        var that = this,
+            $controlbox, menu_height;
 
         this.render();
         this.$el.appendTo(_kiwi.app.view.$el);
+
+        // Ensure the menu doesn't get too tall to overlap the input bar at the bottom
+        $controlbox = _kiwi.app.view.$el.find('.controlbox');
+        $items = this.$el.find('.items');
+        menu_height = this.$el.outerHeight() - $items.outerHeight();
+
+        $items.css({
+            'overflow-y': 'auto',
+            'max-height': $controlbox.offset().top - this.$el.offset().top - menu_height
+        });
 
         // We add this document click listener on the next javascript tick.
         // If the current tick is handling an existing click event (such as the nicklist click handler),

@@ -151,6 +151,9 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
+        // Keep note of the server we are connecting to
+        this.set('kiwi_server', _kiwi.app.kiwi_server);
+
         this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
             path: _kiwi.app.get('base_path') + '/transport',
             reconnect_max_attempts: 5,
@@ -472,6 +475,20 @@ _kiwi.model.Gateway = function () {
     };
 
     /**
+    *   Retrieves channel information
+    */
+    this.channelInfo = function (connection_id, channel, callback) {
+        var data = {
+            method: 'channel_info',
+            args: {
+                channel: channel
+            }
+        };
+
+        this.sendData(connection_id, data, callback);
+    };
+
+    /**
     *   Leaves a channel
     *   @param  {String}    channel     The channel to part
     *   @param  {Function}  callback    A callback function
@@ -573,6 +590,21 @@ _kiwi.model.Gateway = function () {
 
         this.sendData(connection_id, data, callback);
     };
+
+    /**
+    * Sets a mode for a target
+    */
+    this.mode = function (connection_id, target, mode_string, callback) {
+        data = {
+            method: 'raw',
+            args: {
+                data: 'MODE ' + target + ' ' + mode_string
+            }
+        };
+
+        this.sendData(connection_id, data, callback);
+    };
+
 
     /**
      *  Sends ENCODING change request to server.

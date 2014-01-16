@@ -226,13 +226,21 @@ function onCtcpResponse(event) {
 }
 
 function onPrivmsg(event) {
-    this.irc_connection.clientEvent('msg', {
-        nick: event.nick,
-        ident: event.ident,
-        hostname: event.hostname,
-        channel: event.channel,
-        msg: event.msg,
-        time: event.time
+    var that = this;
+
+    global.modules.emit('irc message', {
+        connection: this.irc_connection,
+        irc_event: event
+    })
+    .done(function() {
+        that.irc_connection.clientEvent('msg', {
+            nick: event.nick,
+            ident: event.ident,
+            hostname: event.hostname,
+            channel: event.channel,
+            msg: event.msg,
+            time: event.time
+        });
     });
 }
 

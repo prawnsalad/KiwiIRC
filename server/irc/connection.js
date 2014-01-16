@@ -582,7 +582,7 @@ var socketConnectHandler = function () {
         if (global.config.client.settings.rich_nicklist && global.config.client.settings.rich_nicklist_track_asl) {
             gecos = that.age + ' ' + that.gender + ' ' + that.location;
         } else if (global.config.default_gecos) {
-            gecos = global.config.default_gecos.toString().replace('%n', that.nick);
+            gecos = gecos.toString().replace('%h', that.user.hostname);
         } else {
             gecos = '[www.kiwiirc.com] ' + that.nick;
         }
@@ -723,7 +723,7 @@ function socketOnData(data) {
  * Deviates from the RFC a little to support the '/' character now used in some
  * IRCds
  */
-var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([^\s!]+)|([^\s!]+)!([^\s@]+)@?([^\s]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.*))?$/i;
 
 function parseIrcLine(buffer_line) {
     var msg,
@@ -767,6 +767,6 @@ function parseIrcLine(buffer_line) {
         trailing:   (msg[8]) ? msg[8].trim() : ''
     };
 
-    msg.params = msg.params.split(' ');
+    msg.params = msg.params.split(/ +/);
     this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
 }
