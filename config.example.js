@@ -189,6 +189,14 @@ conf.client = {
     window_title: 'Kiwi IRC'
 };
 
+// List of themes available for the user to choose from
+conf.client_themes = [
+    'relaxed',
+    'mini',
+    'cli',
+    'basic'
+];
+
 
 // If set, the client may only connect to this 1 IRC server
 //conf.restrict_server = "irc.kiwiirc.com";

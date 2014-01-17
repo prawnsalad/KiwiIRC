@@ -24,7 +24,10 @@
                 locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
                 default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
                 html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_html5_notifications').fetch(),
-                enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch()
+                enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch(),
+                theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
+                    return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
+                })
             };
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
 

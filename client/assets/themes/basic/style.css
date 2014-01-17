@@ -1,0 +1,306 @@
+#kiwi {
+    background: url(background-light.png) left top repeat-x #E3E3E3;
+    color: #555555;
+}
+#kiwi,
+#kiwi input,
+#kiwi button,
+#kiwi textarea {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px; line-height:1.4em;
+}
+#kiwi button, #kiwi input { padding: 3px 7px; }
+#kiwi input, #kiwi textarea {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 3px;
+}
+#kiwi button {
+    border-radius: 2px;
+    border: none;
+    background: #8ab746;
+    cursor: pointer;
+    color: #1b1b1b;
+}
+#kiwi button:disabled { color: #464646; background:#9cc164; }
+
+#kiwi .toolbar {
+    background-color:#1B1B1B; font-size:0.9em;
+}
+#kiwi .controlbox { background-color:#1B1B1B; }
+#kiwi .memberlists_resize_handle {
+    /*display:none; width:0;*/
+}
+#kiwi .toolbar .panellist li {
+    line-height: 1.4em;
+    vertical-align: middle;
+
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -khtml-border-radius:5px;
+
+    border: 1px solid #333;
+    background-color: #eee;
+}
+
+#kiwi .toolbar .tabs { margin-right:0 !important; }
+#kiwi .toolbar .panellist .alert_highlight { font-weight:bold; color:red; }
+#kiwi .toolbar .panellist .alert_activity { font-weight:normal; color:green; }
+#kiwi .toolbar .panellist .alert_action { font-weight:normal; color:green; }
+
+#kiwi .toolbar .panellist .active { padding-right:25px; border-top:2px solid #df6b26; border-bottom:none; }
+#kiwi .toolbar .panellist li .part {}
+#kiwi .toolbar .panellist li .part:before { content:"[x]"; }
+
+#kiwi .toolbar .panellist li.server span { padding-left: 5px; }
+#kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi .toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
+
+
+/* Tab texts are within a span */
+#kiwi .toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
+
+#kiwi .toolbar .panellist li .activity { display:inline; margin-left:0.5em; font-style:italic; font-size:0.8em; }
+#kiwi .toolbar .panellist li .activity:before { content:"("; }
+#kiwi .toolbar .panellist li .activity:after { content:")"; }
+
+#kiwi .status_message {
+    background: #FEEFB3; color: #9F6000;
+    border-bottom: 1px solid;
+    padding: 0.9em;
+    text-align: center; font-size:1.1em;
+}
+#kiwi .status_message.err { color:#D8000C; background:#FFBABA; }
+
+#kiwi .messages {  }
+#kiwi .messages.active { }
+#kiwi .messages a { text-decoration:underline; }
+
+#kiwi .messages .msg { border: none; padding: 2px 5px; }
+#kiwi .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
+#kiwi .messages .msg .time { display:none; margin-right:1em; margin-left:2px; color:gray; }
+#kiwi .messages .msg .nick { display:inline; margin-right:1em; }
+#kiwi .messages .msg .nick:before { content:"<"; }
+#kiwi .messages .msg .nick:after { content:">"; }
+#kiwi .messages .msg .text { white-space:pre-wrap; word-wrap:break-word; color:#1e1e1e; }
+
+#kiwi .messages .msg.action .nick,
+#kiwi .messages .msg.static .nick,
+#kiwi .messages .msg.topic .nick { display:none; }
+
+#kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
+#kiwi .messages .msg.action.join { color:#009900; }
+#kiwi .messages .msg.action.part .text { color:#900; }
+#kiwi .messages .msg.action.quit .text { color:#900; }
+#kiwi .messages .msg.action.kick .text { color:#900; }
+
+#kiwi .messages .msg.motd { border:none; }
+/*#kiwi .messages .msg.motd .nick { display:none; }*/
+#kiwi .messages .msg.motd .text { color:#666; }
+#kiwi .messages .msg.whois .nick { font-weight:normal; }
+#kiwi .messages .msg.whois .text { padding-left:1em; border-left:1px dashed #999; }
+#kiwi .messages .msg.error .text {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}
+
+#kiwi.timestamps .messages .msg .time { display:inline; }
+#kiwi.timestamps .messages .msg .text { }
+
+#kiwi .messages .msg.global_nick_highlight,
+#kiwi .messages .msg.highlight { background:#D9D9D9; }
+
+/* Narrow styling (window width < 400px) */
+#kiwi.narrow .messages .msg .nick { width: auto; }
+#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
+#kiwi.narrow .messages .msg.action .text { margin-left: 1em; }
+
+#kiwi .messages .msg .media { margin-left:0.5em; }
+#kiwi .messages .msg .media a { text-decoration:none; }
+#kiwi .messages .msg .media .media_close { font-size:0.9em; }
+#kiwi .messages .msg .media .media_content { margin:10px 0 0 2em; overflow:hidden; }
+#kiwi .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
+#kiwi .messages .msg .media .media_content > .content {
+    background: white;
+    overflow: hidden;
+    padding: 10px;
+    border: #DDD 1px solid;
+    border-top-color: #EEE;
+    border-bottom-color: #BBB;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    float: left;
+}
+
+#kiwi .messages .msg .media.twitter .media_content > .content {
+    background: transparent;
+    border:none;
+    overflow: hidden;
+    box-shadow: none;
+    padding: 0;
+}
+#kiwi .messages .msg .media.reddit .thumbnail_nsfw {
+    display: inline-block;
+    float: left;
+}
+#kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
+
+
+
+#kiwi .memberlists {
+    background-color: #DADADA;
+    border-left: 1px dashed #8A8A8A;
+}
+#kiwi .memberlists ul { list-style: none; margin-left:2px; }
+#kiwi .memberlists ul.active { }
+#kiwi .memberlists ul li { padding:0 2px; }
+#kiwi .memberlists ul li:hover {}
+#kiwi .memberlists ul li a.nick { display:block; color:black; }
+
+#kiwi .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
+
+
+#kiwi .controlbox .input {
+    background:#fff; margin:3px;
+    height:1.7em;
+}
+#kiwi .controlbox .input .nick {
+    text-align: right;
+    width: 11em;
+    left: 0px;
+    position: absolute;
+    padding: 2px;
+    overflow: hidden;
+}
+#kiwi .controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
+#kiwi .controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi .controlbox .input .input_wrap {
+    position:absolute;
+    right:3px; left:12em;
+    height:1.7em;
+}
+#kiwi .controlbox .input .inp {
+    line-height:1.7em;
+    border: medium none;
+    box-shadow: none;
+    border-radius: 0;
+    resize:none;
+    overflow:hidden;
+    position:relative;
+    height:100%; width:100%;
+    display: block;
+    outline: none;
+}
+
+
+#kiwi .controlbox .nickchange {
+    padding:10px; left: 0px;
+    background: #1B1B1B; color:#eeeeee;
+}
+#kiwi .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; }
+#kiwi .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
+
+
+
+#kiwi .toolbar .topic {  }
+#kiwi .toolbar .topic div {
+    top:2; bottom:2px; left:0; width:100%;
+    padding: 0.2em 1em;
+    text-align: center;
+    box-shadow: none;
+    border-radius: 0;
+    background-color:#FFF;
+    height: 1.5em;
+    overflow: hidden;
+    outline: none;
+}
+#kiwi .toolbar .topic:hover div {
+    min-height:1.5em;
+    white-space:pre-wrap; word-wrap:break-word;
+    overflow:visible;
+    background-color:#FFF;
+    z-index: 1;
+    height:auto; bottom:auto;
+    border-bottom: 1px dotted #1B1B1B;
+}
+
+
+#kiwi .toolbar .app_tools { padding-left:10px; color:#D4D4D4; }
+#kiwi .toolbar .app_tools ul li {
+    font-size:26px;
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    transition: all .3s ease;
+    margin-left:10px;
+}
+#kiwi .toolbar .app_tools ul li:hover { color:#88C56A; }
+#kiwi .toolbar .app_tools img { }
+
+
+/* The server select dialog */
+#kiwi .server_select { margin-left:auto; margin-right:auto; }
+#kiwi .server_select a { text-decoration: none; }
+#kiwi .server_select .more { display: none; width:270px; margin:0 auto; }
+#kiwi .server_select table tr td { padding:5px; }
+#kiwi .server_select button {
+    /*padding: 10px 25px;*/
+    padding: 0.5em 1em;
+    font-size: 1.1em;
+    width: 196px;
+    margin: 20px auto;
+    display: block;
+}
+#kiwi .server_select input { padding:3px 7px; width:150px; }
+#kiwi .server_select label { }
+#kiwi .server_select br { clear:both; }
+#kiwi .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
+#kiwi .server_select .basic input { width:170px; }
+#kiwi .server_select .basic label { font-size:1.3em; margin-top:4px; }
+#kiwi .server_select .basic tr.have_pass { font-size:0.8em; }
+#kiwi .server_select .basic tr.channel td { padding-top:1em; }
+#kiwi .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
+#kiwi .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
+#kiwi .server_select.single_server .basic { border:none; }
+#kiwi .server_select .status { text-align: center; font-weight: bold; padding:1em; }
+#kiwi .server_select .status.ok { }
+#kiwi .server_select .status.error {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}
+
+
+#kiwi .server_select .kiwi_logo { margin-top:30px; text-align:center; display:block; }
+#kiwi .server_select .kiwi_logo h1 {
+    font-size:14px;
+    line-height:48px; vertical-align: middle;
+    color: #555555;
+}
+#kiwi .server_select .kiwi_logo img { display:inline; width:24px; }
+
+
+#kiwi.chanlist_treeview .panels { left:160px; }
+#kiwi.chanlist_treeview .toolbar { position:static; }
+#kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
+#kiwi.chanlist_treeview .tabs ul li.active {
+    margin-right:0;
+    border-right-width:0;
+    border-bottom-right-radius:0;
+    border-top-right-radius:0;
+}
+
+
+#kiwi .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#kiwi .ui_menu .ui_menu_foot .close:hover { color: #222; }
+
+#kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi .channel_info .remove-ban:hover { color: #900; }

@@ -172,6 +172,7 @@ function serveSettings(request, response) {
             if (err) {
                 response.statusCode = 500;
                 response.end();
+                console.log(err);
             } else {
                 sendSettings.call(this, request, response, settings);
             }
@@ -313,33 +314,70 @@ function generateSettings(request, debug, callback) {
         vars.client_plugins = config.get().client_plugins;
     }
 
-    // Get a list of available translations
-    fs.readFile(__dirname + '/../client/src/translations/translations.json', function (err, translations) {
+    // Read theme information
+    readThemeInfo(config.get().client_themes || ['relaxed'], function (err, themes) {
         if (err) {
             return callback(err);
         }
 
-        var translation_files;
-        translations = JSON.parse(translations);
-        fs.readdir(__dirname + '/../client/src/translations/', function (err, pofiles) {
-            var hash, settings;
+        vars.themes = themes;
+
+        // Get a list of available translations
+        fs.readFile(__dirname + '/../client/src/translations/translations.json', function (err, translations) {
             if (err) {
                 return callback(err);
             }
 
-            pofiles.forEach(function (file) {
-                var locale = file.slice(0, -3);
-                if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                    vars.translations.push({tag: locale, language: translations[locale]});
+            translations = JSON.parse(translations);
+            fs.readdir(__dirname + '/../client/src/translations/', function (err, pofiles) {
+                var settings;
+                if (err) {
+                    return callback(err);
                 }
+
+                pofiles.forEach(function (file) {
+                    var locale = file.slice(0, -3);
+                    if ((file.slice(-3) === '.po') && (locale !== 'template')) {
+                        vars.translations.push({tag: locale, language: translations[locale]});
+                    }
+                });
+
+                settings = cached_settings[debug?'debug':'production'];
+                settings.settings = JSON.stringify(vars);
+                settings.hash = crypto.createHash('md5').update(settings.settings).digest('hex');
+
+                return callback(null, settings);
             });
-
-            settings = cached_settings[debug?'debug':'production'];
-            settings.settings = JSON.stringify(vars);
-            settings.hash = crypto.createHash('md5').update(settings.settings).digest('hex');
-
-            return callback(null, settings);
         });
     });
 }
 
+function readThemeInfo(themes, prev, callback) {
+    "use strict";
+    var theme = themes[0];
+
+    if (typeof prev === 'function') {
+        callback = prev;
+        prev = [];
+    }
+
+    fs.readFile(__dirname + '/../client/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
+        if (err) {
+            return callback(err);
+        }
+
+        try {
+            theme_json = JSON.parse(theme_json);
+        } catch (e) {
+            return callback(e);
+        }
+
+        prev.push(theme_json);
+
+        if (themes.length > 1) {
+            return readThemeInfo(themes.slice(1), prev, callback);
+        }
+
+        callback(null, prev);
+    });
+}
