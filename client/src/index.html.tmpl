@@ -247,6 +247,13 @@
         </div>
     </script>
 
+    <script type="text/html" id="tmpl_theme_thumbnail">
+        <a class="thumbnail" data-setting="theme" data-value="<%= name.toLowerCase() %>" href="#">
+            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: <%= thumbnail_colour %>;"></div></div>
+            <div class="caption"><u><%= name %></u></div>
+        </a>
+    </script>
+
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
             <form>
@@ -254,22 +261,9 @@
                     <h6>Theme</h6>
                     <div class="control-group">
                         <div class="thumbnails">
-                            <a class="thumbnail" data-setting="theme" data-value="relaxed" href="#">
-                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                                <div class="caption"><u>Relaxed</u></div>
-                            </a>
-                            <a class="thumbnail" data-setting="theme" data-value="mini" href="#">
-                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #fff;"></div></div>
-                                <div class="caption"><u>Mini</u></div>
-                            </a>
-                            <a class="thumbnail" data-setting="theme" data-value="cli" href="#">
-                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #222;"></div></div>
-                                <div class="caption"><u>CLI</u></div>
-                            </a>
-                            <a class="thumbnail" data-setting="theme" data-value="basic" href="#">
-                                <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                                <div class="caption"><u>Basic</u></div>
-                            </a>
+                            <% _.forEach(theme_thumbnails, function(thumbnail) { %>
+                                <%= thumbnail %>
+                            <% }); %>
                         </div>
                     </div>
                 </section>
@@ -565,6 +559,7 @@
             opts.client_plugins = data.client_plugins;
             opts.translations = data.translations;
             opts.locale = data.locale;
+            opts.themes = data.themes;
 
             if (typeof data.kiwi_server !== 'undefined')
                 opts.kiwi_server = data.kiwi_server;
@@ -575,6 +570,19 @@
             if (getQueryVariable('debug')) {
                 scripts = scripts.concat(data.scripts);
                 loadNextScript();
+            }
+
+            // Load themes
+            if (opts.themes) {
+                $.each(opts.themes, function (theme_idx, theme) {
+                    var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase()),
+                        rel = (disabled?'alternate ':'') + 'stylesheet' /*+ (disabled?' prefetch':'')*/;
+
+                    var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
+                    link.disabled = disabled;
+
+                    $(link).appendTo($('head'));
+                });
             }
         });
 
