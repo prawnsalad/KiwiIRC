@@ -1,28 +1,9 @@
 var url         = require('url'),
     fs          = require('fs'),
-    crypto      = require('crypto'),
     node_static = require('node-static'),
     _           = require('lodash'),
-    config      = require('./configuration.js');
-
-
-// Cache for settings.json
-var cached_settings = {
-    debug: {
-        hash: '',
-        settings: ''
-    },
-    production: {
-        hash: '',
-        settings: ''
-    }
-};
-
-// Clear the settings cache when the settings change
-config.on('loaded', function () {
-    cached_settings.debug.settings = cached_settings.production.settings = '';
-    cached_settings.debug.hash = cached_settings.production.hash = '';
-});
+    config      = require('./configuration.js'),
+    SettingsGenerator = require('./settingsgenerator.js');
 
 
 
@@ -90,50 +71,48 @@ var serveMagicLocale = function (request, response) {
     var that = this,
         default_locale_id = 'en-gb';
 
-    if (request.headers['accept-language']) {
-        fs.readdir('client/assets/locales', function (err, files) {
-            var available = [],
-                i = 0,
-                langs = request.headers['accept-language'].split(','), // Example: en-gb,en;q=0.5
-                found_locale = default_locale_id;
-
-            // Get a list of the available translations we have
-            files.forEach(function (file) {
-                if (file.substr(-5) === '.json') {
-                    available.push(file.slice(0, -5));
-                }
-            });
-
-            // Sanitise the browsers accepted languages and the qualities
-            for (i = 0; i < langs.length; i++) {
-                langs[i]= langs[i].split(';q=');
-                langs[i][0] = langs[i][0].toLowerCase();
-                langs[i][1] = (typeof langs[i][1] === 'string') ? parseFloat(langs[i][1]) : 1.0;
-            }
-
-            // Sort the accepted languages by quality
-            langs.sort(function (a, b) {
-                return b[1] - a[1];
-            });
-
-            // Serve the first language we have a translation for
-            for (i = 0; i < langs.length; i++) {
-                if (langs[i][0] === '*') {
-                    break;
-                } else if (_.contains(available, langs[i][0])) {
-                    found_locale = langs[i][0];
-                    break;
-                }
-            }
-
-            return serveLocale.call(that, request, response, found_locale);
-        });
-    } else {
-
+    if (!request.headers['accept-language']) {
         // No accept-language specified in the request so send the default
         return serveLocale.call(this, request, response, default_locale_id);
     }
 
+    fs.readdir('client/assets/locales', function (err, files) {
+        var available = [],
+            i = 0,
+            langs = request.headers['accept-language'].split(','), // Example: en-gb,en;q=0.5
+            found_locale = default_locale_id;
+
+        // Get a list of the available translations we have
+        files.forEach(function (file) {
+            if (file.substr(-5) === '.json') {
+                available.push(file.slice(0, -5));
+            }
+        });
+
+        // Sanitise the browsers accepted languages and the qualities
+        for (i = 0; i < langs.length; i++) {
+            langs[i]= langs[i].split(';q=');
+            langs[i][0] = langs[i][0].toLowerCase();
+            langs[i][1] = (typeof langs[i][1] === 'string') ? parseFloat(langs[i][1]) : 1.0;
+        }
+
+        // Sort the accepted languages by quality
+        langs.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+
+        // Serve the first language we have a translation for
+        for (i = 0; i < langs.length; i++) {
+            if (langs[i][0] === '*') {
+                break;
+            } else if (_.contains(available, langs[i][0])) {
+                found_locale = langs[i][0];
+                break;
+            }
+        }
+
+        return serveLocale.call(that, request, response, found_locale);
+    });
 };
 
 
@@ -151,7 +130,7 @@ var serveLocale = function (request, response, locale_id) {
 /**
  * Handle the settings.json request
  */
-function serveSettings(request, response) {
+var serveSettings = function(request, response) {
     var referrer_url,
         debug = false,
         settings;
@@ -164,220 +143,16 @@ function serveSettings(request, response) {
         }
     }
 
-    settings = cached_settings[debug ? 'debug' : 'production'];
+    SettingsGenerator.get(debug, function(settings) {
+        if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
+            response.writeHead(304, 'Not Modified');
+            return response.end();
+        }
 
-    // Generate the settings if we don't have them cached as yet
-    if (settings.settings === '') {
-        generateSettings(request, debug, function (err, settings) {
-            if (err) {
-                response.statusCode = 500;
-                response.end();
-                console.log(err);
-            } else {
-                sendSettings.call(this, request, response, settings);
-            }
+        response.writeHead(200, {
+            'ETag': settings.hash,
+            'Content-Type': 'application/json'
         });
-
-    } else {
-        sendSettings.call(this, request, response, settings);
-    }
-}
-
-
-/**
- * Send the the settings to the browser
- */
-function sendSettings(request, response, settings) {
-    if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
-        response.writeHead(304, 'Not Modified');
-        return response.end();
-    }
-
-    response.writeHead(200, {
-        'ETag': settings.hash,
-        'Content-Type': 'application/json'
+        response.end(settings.settings);
     });
-    response.end(settings.settings);
-}
-
-
-/**
- * Generate a settings object for the client.
- * Settings include available translations, default client config, etc
- */
-function generateSettings(request, debug, callback) {
-    var vars = {
-            server_settings: {},
-            client_plugins: [],
-            translations: [],
-            scripts: [
-                [
-                    'assets/libs/lodash.min.js'
-                ],
-                ['assets/libs/backbone.min.js', 'assets/libs/jed.js']
-            ]
-        };
-
-    if (debug) {
-        vars.scripts = vars.scripts.concat([
-            [
-                'src/app.js',
-                'assets/libs/engine.io.js',
-                'assets/libs/engine.io.tools.js'
-            ],
-            [
-                'src/models/application.js',
-                'src/models/gateway.js'
-            ],
-            [
-                'src/models/newconnection.js',
-                'src/models/panellist.js',
-                'src/models/networkpanellist.js',
-                'src/models/panel.js',
-                'src/models/member.js',
-                'src/models/memberlist.js',
-                'src/models/network.js',
-                'src/models/channelinfo.js'
-            ],
-
-            [
-                'src/models/channel.js',
-                'src/models/applet.js'
-            ],
-
-            [
-                'src/models/query.js',
-                'src/models/server.js',     // Depends on models/channel.js
-                'src/applets/settings.js',
-                'src/applets/chanlist.js',
-                'src/applets/scripteditor.js'
-            ],
-
-            [
-                'src/models/pluginmanager.js',
-                'src/models/datastore.js',
-                'src/helpers/utils.js'
-            ],
-
-            // Some views extend these, so make sure they're loaded beforehand
-            [
-                'src/views/panel.js'
-            ],
-
-            [
-                'src/views/channel.js',
-                'src/views/applet.js',
-                'src/views/application.js',
-                'src/views/apptoolbar.js',
-                'src/views/controlbox.js',
-                'src/views/favicon.js',
-                'src/views/mediamessage.js',
-                'src/views/member.js',
-                'src/views/memberlist.js',
-                'src/views/menubox.js',
-                'src/views/networktabs.js',
-                'src/views/nickchangebox.js',
-                'src/views/resizehandler.js',
-                'src/views/serverselect.js',
-                'src/views/statusmessage.js',
-                'src/views/tabs.js',
-                'src/views/topicbar.js',
-                'src/views/userbox.js',
-                'src/views/channelinfo.js'
-            ]
-        ]);
-    } else {
-        vars.scripts.push(['assets/kiwi.min.js', 'assets/libs/engine.io.bundle.min.js']);
-    }
-
-    // Any restricted server mode set?
-    if (config.get().restrict_server) {
-        vars.server_settings = {
-            connection: {
-                server: config.get().restrict_server,
-                port: config.get().restrict_server_port || 6667,
-                ssl: config.get().restrict_server_ssl,
-                channel: config.get().restrict_server_channel,
-                nick: config.get().restrict_server_nick,
-                allow_change: false
-            }
-        };
-    }
-
-    // Any client default settings?
-    if (config.get().client) {
-        vars.server_settings.client = config.get().client;
-    }
-
-    // Any client plugins?
-    if (config.get().client_plugins && config.get().client_plugins.length > 0) {
-        vars.client_plugins = config.get().client_plugins;
-    }
-
-    // Read theme information
-    readThemeInfo(config.get().client_themes || ['relaxed'], function (err, themes) {
-        if (err) {
-            return callback(err);
-        }
-
-        vars.themes = themes;
-
-        // Get a list of available translations
-        fs.readFile(__dirname + '/../client/src/translations/translations.json', function (err, translations) {
-            if (err) {
-                return callback(err);
-            }
-
-            translations = JSON.parse(translations);
-            fs.readdir(__dirname + '/../client/src/translations/', function (err, pofiles) {
-                var settings;
-                if (err) {
-                    return callback(err);
-                }
-
-                pofiles.forEach(function (file) {
-                    var locale = file.slice(0, -3);
-                    if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                        vars.translations.push({tag: locale, language: translations[locale]});
-                    }
-                });
-
-                settings = cached_settings[debug?'debug':'production'];
-                settings.settings = JSON.stringify(vars);
-                settings.hash = crypto.createHash('md5').update(settings.settings).digest('hex');
-
-                return callback(null, settings);
-            });
-        });
-    });
-}
-
-function readThemeInfo(themes, prev, callback) {
-    "use strict";
-    var theme = themes[0];
-
-    if (typeof prev === 'function') {
-        callback = prev;
-        prev = [];
-    }
-
-    fs.readFile(__dirname + '/../client/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
-        if (err) {
-            return callback(err);
-        }
-
-        try {
-            theme_json = JSON.parse(theme_json);
-        } catch (e) {
-            return callback(e);
-        }
-
-        prev.push(theme_json);
-
-        if (themes.length > 1) {
-            return readThemeInfo(themes.slice(1), prev, callback);
-        }
-
-        callback(null, prev);
-    });
-}
+};
