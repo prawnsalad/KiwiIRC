@@ -55,6 +55,7 @@ var source_files = [
     __dirname + '/src/models/applet.js',
     __dirname + '/src/models/pluginmanager.js',
     __dirname + '/src/models/datastore.js',
+    __dirname + '/src/models/channelinfo.js',
 
     __dirname + '/src/applets/settings.js',
     __dirname + '/src/applets/chanlist.js',
@@ -80,7 +81,8 @@ var source_files = [
     __dirname + '/src/views/statusmessage.js',
     __dirname + '/src/views/tabs.js',
     __dirname + '/src/views/topicbar.js',
-    __dirname + '/src/views/userbox.js'
+    __dirname + '/src/views/userbox.js',
+    __dirname + '/src/views/channelinfo.js'
 ];
 
 
