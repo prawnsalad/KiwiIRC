@@ -10,6 +10,7 @@ var net             = require('net'),
     IrcUser         = require('./user.js'),
     EE              = require('../ee.js'),
     iconv           = require('iconv-lite'),
+    Proxy           = require('../proxy.js'),
     Socks;
 
 
@@ -207,6 +208,12 @@ IrcConnection.prototype.connect = function () {
                 pass: that.socks.pass,
                 localAddress: outgoing
             });
+
+        } else if (true || that.proxy) {
+            that.socket = new Proxy.ProxySocket(7779, '127.0.0.1', {
+                username: that.username,
+            });
+            that.socket.connect(that.irc_host.port, host);
 
         } else {
             // No socks connection, connect directly to the IRCd

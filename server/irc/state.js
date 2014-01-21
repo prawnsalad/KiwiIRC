@@ -66,7 +66,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
     con.on('error', function IrcConnectionError(err) {
         console.log('irc_connection error (' + hostname + '):', err);
-        return callback(err.code);
+        return callback(err.message);
     });
 
     con.on('close', function IrcConnectionClose() {
