@@ -34,6 +34,7 @@ _kiwi.view.Member = Backbone.View.extend({
             
             // Build the info tooltip content
             tooltip_content = '<div class="tooltipNick">' + this.model.get('nick') + '</div>';
+            tooltip_content += '<div class="tooltipInfo">';
             if (this.model.get('age') !== '') {
                 tooltip_content += this.model.get('age') + ' ' + _kiwi.global.i18n.translate('client_views_member_years_old').fetch() + ', ';
             }
@@ -50,6 +51,7 @@ _kiwi.view.Member = Backbone.View.extend({
             if (this.model.get('info') !== '') {
                 tooltip_content += this.model.get('info');
             }
+            tooltip_content += '</div>';
             
             // Add the tooltip in the dom
             if(tooltip_content !== '') {
