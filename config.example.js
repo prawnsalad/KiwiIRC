@@ -167,7 +167,6 @@ conf.socks_proxy.pass = null;
 // Default quit message
 conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
-
 // Default settings for the client. These may be changed in the browser
 conf.client = {
     server: 'irc.kiwiirc.com',
@@ -184,6 +183,13 @@ conf.client = {
         show_timestamps: false,
         mute_sounds: false,
         show_emoticons: true,
+        rich_nicklist: false,
+        rich_nicklist_gender_regexes: {'F': ['F001', ' f ', '/f/', '^f ', ' f$', '^f$'],
+                                        'M': ['M002', ' h ', '/H/', ' m ', '^h ', ' h$', '^m ', ' m$', '^h$', '^m$',],
+                                        'U': ['U003', '/U/']},
+        rich_nicklist_track_asl: true,
+        rich_nicklist_track_away: true,
+        rich_nicklist_track_ircop: true,
         count_all_activity: true
     },
     window_title: 'Kiwi IRC'

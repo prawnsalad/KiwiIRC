@@ -26,7 +26,13 @@ _kiwi.view.ServerSelect = function () {
                     server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
                     server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
                     port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
-                    powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
+                    powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch(),
+                    age: _kiwi.global.i18n.translate('client_views_serverselect_age').fetch(),
+                    gender: _kiwi.global.i18n.translate('client_views_serverselect_gender').fetch(),
+                    gender_f: _kiwi.global.i18n.translate('client_views_serverselect_gender_f').fetch(),
+                    gender_m: _kiwi.global.i18n.translate('client_views_serverselect_gender_m').fetch(),
+                    gender_u: _kiwi.global.i18n.translate('client_views_serverselect_gender_u').fetch(),
+                    location: _kiwi.global.i18n.translate('client_views_serverselect_location').fetch()
                 };
 
             this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
@@ -37,6 +43,13 @@ _kiwi.view.ServerSelect = function () {
                     this.$el.find('.show_more').remove();
                     this.$el.addClass('single_server');
                 }
+            }
+            
+            // Remove the ASL fields if disabled
+            if(!_kiwi.global.settings.get('rich_nicklist') || !_kiwi.global.settings.get('rich_nicklist_track_asl')) {
+                this.$el.find('tr.age').remove();
+                this.$el.find('tr.gender').remove();
+                this.$el.find('tr.location').remove();
             }
 
             this.more_shown = false;
@@ -88,7 +101,16 @@ _kiwi.view.ServerSelect = function () {
                 channel_key: $('input.channel_key', this.$el).val(),
                 options: this.server_options
             };
-
+            
+            // ASL
+            if (_kiwi.global.settings.get('rich_nicklist') && _kiwi.global.settings.get('rich_nicklist_track_asl')) {
+                $.extend(values, {
+                    age: $('input.age', this.$el).val(),
+                    gender: $('select.gender', this.$el).val(),
+                    location: $('input.location', this.$el).val()
+                });
+            }
+            
             this.trigger('server_connect', values);
         },
 

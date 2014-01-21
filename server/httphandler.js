@@ -59,6 +59,28 @@ HttpHandler.prototype.serve = function (request, response) {
             response.end();
         }
     });
+
+    // Catch POST and GET variables
+    var url = require('url'),
+        querystring = require('querystring'),
+        data = '',
+        post_data = {},
+        get_data = {};
+
+    if(request.method === "POST") {
+        request.on("data", function(chunk) {
+            data += chunk;
+        });
+        
+        request.on("end", function() {
+            post_data = querystring.parse(data);
+            console.log('POST', post_data);
+        });
+    } else if (request.method === "GET" && request.url.match(/\?/g)) { // No time to waist if there's no querystring !
+        data = url.parse(request.url, true);
+        get_data = data.query;
+        console.log('GET', get_data);
+    }
 };
 
 

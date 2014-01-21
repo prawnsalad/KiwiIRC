@@ -57,6 +57,12 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.password = options.password || '';
+    
+    if (global.config.client.settings.rich_nicklist && global.config.client.settings.rich_nicklist_track_asl) {
+        this.age = options.age || '';
+        this.gender = options.gender || '';
+        this.location = options.location || '';
+    }
 
     // Set the passed encoding. or the default if none giving or it fails
     if (!options.encoding || !this.setEncoding(options.encoding)) {
@@ -288,6 +294,7 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  * @param force Write the data now, ignoring any write queue
  */
 IrcConnection.prototype.write = function (data, force) {
+    //console.log('WRITE', data);
     //ENCODE string to encoding of the server
     encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
 
@@ -570,11 +577,14 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
-        var gecos = '[www.kiwiirc.com] ' + that.nick;
+        var gecos;
 
-        if (global.config.default_gecos) {
-            gecos = global.config.default_gecos.toString().replace('%n', that.nick);
+        if (global.config.client.settings.rich_nicklist && global.config.client.settings.rich_nicklist_track_asl) {
+            gecos = that.age + ' ' + that.gender + ' ' + that.location;
+        } else if (global.config.default_gecos) {
             gecos = gecos.toString().replace('%h', that.user.hostname);
+        } else {
+            gecos = '[www.kiwiirc.com] ' + that.nick;
         }
 
         // Send any initial data for webirc/etc
@@ -725,6 +735,7 @@ function parseIrcLine(buffer_line) {
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
     if (!line) return;
+    //console.log('READ', line);
 
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
