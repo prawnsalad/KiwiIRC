@@ -71,6 +71,7 @@ html, body { height:100%; }
 
 #kiwi .toolbar .connections { overflow:hidden; }
 #kiwi .toolbar .connections .connection { float:left; }
+#kiwi.chanlist_treeview .toolbar .connections .connection { float:none; }
 #kiwi .toolbar .connections .panellist { display:inline; }
 #kiwi .toolbar .connections .panellist:after { content:""; }
 
