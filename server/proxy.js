@@ -1,8 +1,8 @@
 var stream = require('stream'),
     util   = require('util'),
+    events = require('events'),
     net    = require("net"),
-    tls    = require("tls"),
-    Identd = require('./identd');
+    tls    = require("tls");
 
 
 module.exports = {
@@ -29,35 +29,21 @@ var RESPONSE_ETIMEDOUT     = '5';
  * Listens for connections from a kiwi server, dispatching ProxyPipe
  * instances for each connection
  */
-function ProxyServer() {}
+function ProxyServer() {
+    events.EventEmitter.call(this);
+}
+util.inherits(ProxyServer, events.EventEmitter);
 
 
 ProxyServer.prototype.listen = function(listen_port, listen_addr) {
     var that = this;
 
-    // Username lookup function for the identd
-    var identdResolveUser = function(port_here, port_there, callback) {
-        var key = port_here.toString() + '_' + port_there.toString();
-
-        global.data.get(key, function(err, val) {
-            callback(val);
-        });
-    };
-    /*
-    this.identd_server = new Identd({
-        bind_addr: global.config.identd.address,
-        bind_port: global.config.identd.port,
-        user_id: identdResolveUser
-    });
-
-    this.identd_server.start();
-    */
     // Start listening for proxy connections connections
     this.server = new net.Server();
     this.server.listen(listen_port, listen_addr);
 
     this.server.on('connection', function(socket) {
-        new ProxyPipe(socket);
+        new ProxyPipe(socket, that);
     });
 };
 
@@ -82,11 +68,12 @@ ProxyServer.prototype.close = function(callback) {
  * 3. Reply to the kiwi server with connection status
  * 4. If all ok, pipe data between the 2 sockets as a proxy
  */
-function ProxyPipe(kiwi_socket) {
-    this.kiwi_socket = kiwi_socket;
-    this.irc_socket  = null;
-    this.buffer      = '';
-    this.meta        = null;
+function ProxyPipe(kiwi_socket, proxy_server) {
+    this.kiwi_socket  = kiwi_socket;
+    this.proxy_server = proxy_server;
+    this.irc_socket   = null;
+    this.buffer       = '';
+    this.meta         = null;
 
     kiwi_socket.setEncoding('utf8');
     kiwi_socket.on('readable', this.kiwiSocketOnReadable.bind(this));
@@ -157,6 +144,8 @@ ProxyPipe.prototype.makeIrcConnection = function() {
 ProxyPipe.prototype._onSocketConnect = function() {
     debug('[KiwiProxy] ProxyPipe::_onSocketConnect()');
 
+    this.proxy_server.emit('connection_open', this);
+
     // Now that we're connected to the detination, return no
     // error back to the kiwi server and start piping
     this.kiwi_socket.write(new Buffer(RESPONSE_OK.toString()), this.startPiping.bind(this));
@@ -185,6 +174,7 @@ ProxyPipe.prototype._onSocketTimeout = function() {
 
 ProxyPipe.prototype._onSocketClose = function() {
     debug('[KiwiProxy] IRC Socket closed');
+    this.proxy_server.emit('connection_close', this);
     this.destroy();
 };
 
