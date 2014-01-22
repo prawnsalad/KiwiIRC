@@ -195,6 +195,7 @@ conf.client = {
     window_title: 'Kiwi IRC'
 };
 
+
 // List of themes available for the user to choose from
 conf.client_themes = [
     'relaxed',
