@@ -212,7 +212,6 @@ conf.client_themes = [
 //conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
 //conf.restrict_server_nick = "kiwi_";
-//
 
 
 
