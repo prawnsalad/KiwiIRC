@@ -195,7 +195,6 @@ conf.client = {
     window_title: 'Kiwi IRC'
 };
 
-
 // List of themes available for the user to choose from
 conf.client_themes = [
     'relaxed',
@@ -213,7 +212,7 @@ conf.client_themes = [
 //conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
 //conf.restrict_server_nick = "kiwi_";
-
+//
 
 
 
