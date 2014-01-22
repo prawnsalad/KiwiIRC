@@ -5,7 +5,7 @@ var port_pairs = {};
 
 
 var serv = new Proxy.ProxyServer();
-serv.listen(7779, '127.0.0.1');
+serv.listen(7779, '0.0.0.0');
 
 serv.on('connection_open', function(pipe) {
     pipe.identd_pair = pipe.irc_socket.localPort.toString() + '_' + pipe.irc_socket.remotePort.toString();
@@ -25,7 +25,7 @@ serv.on('connection_close', function(pipe) {
 var identdResolveUser = function(port_here, port_there, callback) {
     var key = port_here.toString() + '_' + port_there.toString();
     console.log('[IDENTD] lookup ' + key);
-    callback(port_pairs[key].username);
+    return port_pairs[key].username;
 };
 
 var identd_server = new Identd({
