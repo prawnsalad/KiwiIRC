@@ -240,13 +240,16 @@ _.each(global.config.servers, function (server) {
         });
 
         serv.on('socket_connected', function(pipe) {
-            pipe.identd_pair = pipe.irc_socket.localPort.toString() + '_' + pipe.irc_socket.remotePort.toString();
-            console.log('[IDENTD] opened ' + pipe.identd_pair);
+            // SSL connections have the raw socket as a property
+            var socket = pipe.irc_socket.socket ?
+                    pipe.irc_socket.socket :
+                    pipe.irc_socket;
+
+            pipe.identd_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
             global.clients.port_pairs[pipe.identd_pair] = pipe.meta;
         });
 
         serv.on('connection_close', function(pipe) {
-            console.log('[IDENTD] closed ' + pipe.identd_pair);
             delete global.clients.port_pairs[pipe.identd_pair];
         });
 
