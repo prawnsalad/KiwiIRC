@@ -102,6 +102,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         this.socks = false;
     }
 
+    // Kiwi proxy info may be set within a server module. {port: 7779, host: 'kiwi.proxy.com'}
+    this.proxy = false;
+
     // Net. interface this connection should be made through
     this.outgoing_interface = false;
 
@@ -152,9 +155,14 @@ IrcConnection.prototype.connect = function () {
     var socket_connect_event_name = 'connect';
 
     // The destination address
-    var dest_addr = this.socks ?
-        this.socks.host :
-        this.irc_host.hostname;
+    var dest_addr;
+    if (this.socks) {
+        dest_addr = this.socks.host;
+    } else if (this.proxy) {
+        dest_addr = this.proxy.host;
+    } else {
+        dest_addr = this.irc_host.hostname;
+    }
 
     // Make sure we don't already have an open connection
     this.disposeSocket();
@@ -198,22 +206,22 @@ IrcConnection.prototype.connect = function () {
         // Are we connecting through a SOCKS proxy?
         if (that.socks) {
             that.socket = Socks.connect({
-                host: host,
+                host: that.irc_host.host,
                 port: that.irc_host.port,
                 ssl: that.ssl,
                 rejectUnauthorized: global.config.reject_unauthorised_certificates
-            }, {host: that.socks.host,
+            }, {host: host,
                 port: that.socks.port,
                 user: that.socks.user,
                 pass: that.socks.pass,
                 localAddress: outgoing
             });
 
-        } else if (true || that.proxy) {
-            that.socket = new Proxy.ProxySocket(7779, '127.0.0.1', {
+        } else if (that.proxy) {
+            that.socket = new Proxy.ProxySocket(that.proxy.port, host, {
                 username: that.username,
             });
-            that.socket.connect(that.irc_host.port, host);
+            that.socket.connect(that.irc_host.port, that.irc_host.hostname);
 
         } else {
             // No socks connection, connect directly to the IRCd
