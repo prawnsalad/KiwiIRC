@@ -11,7 +11,7 @@ module.exports = {
 };
 
 function debug() {
-    console.log.apply(console, arguments);
+    //console.log.apply(console, arguments);
 }
 
 // Socket connection responses
@@ -40,7 +40,9 @@ ProxyServer.prototype.listen = function(listen_port, listen_addr) {
 
     // Start listening for proxy connections connections
     this.server = new net.Server();
-    this.server.listen(listen_port, listen_addr);
+    this.server.listen(listen_port, listen_addr, function() {
+        that.emit('listening');
+    });
 
     this.server.on('connection', function(socket) {
         new ProxyPipe(socket, that);
