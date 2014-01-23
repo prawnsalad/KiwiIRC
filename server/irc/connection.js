@@ -102,7 +102,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         this.socks = false;
     }
 
-    // Kiwi proxy info may be set within a server module. {port: 7779, host: 'kiwi.proxy.com'}
+    // Kiwi proxy info may be set within a server module. {port: 7779, host: 'kiwi.proxy.com', ssl: false}
     this.proxy = false;
 
     // Net. interface this connection should be made through

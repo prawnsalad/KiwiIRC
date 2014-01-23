@@ -233,12 +233,13 @@ ProxyPipe.prototype.startPiping = function() {
  * ProxySocket
  * Transparent socket interface to a kiwi proxy
  */
-function ProxySocket(proxy_port, proxy_addr, meta) {
+function ProxySocket(proxy_port, proxy_addr, meta, proxy_opts) {
     stream.Duplex.call(this);
 
     this.connected_fn = null;
     this.proxy_addr   = proxy_addr;
     this.proxy_port   = proxy_port;
+    this.proxy_opts   = proxy_opts || {};
     this.meta         = meta || {};
 
     this.state = 'disconnected';
@@ -263,7 +264,9 @@ ProxySocket.prototype.connect = function(dest_port, dest_addr, connected_fn) {
     }
 
     debug('[KiwiProxy] Connecting to proxy ' + this.proxy_addr + ':' + this.proxy_port.toString());
-    this.socket = net.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this));
+    this.socket = this.proxy_opts.ssl ?
+        tls.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this)) :
+        net.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this));
     this.socket.setTimeout(10000);
 
     this.socket.on('data', this._onSocketData.bind(this));
