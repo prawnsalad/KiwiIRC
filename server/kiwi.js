@@ -239,7 +239,7 @@ _.each(global.config.servers, function (server) {
             console.log('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
         });
 
-        serv.on('connection_open', function(pipe) {
+        serv.on('socket_connected', function(pipe) {
             pipe.identd_pair = pipe.irc_socket.localPort.toString() + '_' + pipe.irc_socket.remotePort.toString();
             console.log('[IDENTD] opened ' + pipe.identd_pair);
             global.clients.port_pairs[pipe.identd_pair] = pipe.meta;

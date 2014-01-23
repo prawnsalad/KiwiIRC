@@ -169,6 +169,18 @@ ProxyPipe.prototype.makeIrcConnection = function() {
     this.irc_socket.setTimeout(10000);
     this.irc_socket.on('error', this._onSocketError.bind(this));
     this.irc_socket.on('timeout', this._onSocketTimeout.bind(this));
+
+    // We need the raw socket connect event, not after any SSL handshakes or anything
+    if (this.irc_socket.socket) {
+        this.irc_socket.socket.on('connect', this._onRawSocketConnect.bind(this));
+    } else {
+        this.irc_socket.on('connect', this._onRawSocketConnect.bind(this));
+    }
+};
+
+
+ProxyPipe.prototype._onRawSocketConnect = function() {
+    this.proxy_server.emit('socket_connected', this);
 };
 
 
@@ -253,6 +265,12 @@ ProxySocket.prototype.setMeta = function(meta) {
 };
 
 
+ProxySocket.prototype.connectTls = function() {
+    this.meta.ssl = true;
+    return this.connect.apply(this, arguments);
+};
+
+
 ProxySocket.prototype.connect = function(dest_port, dest_addr, connected_fn) {
     this.meta.host = dest_addr;
     this.meta.port = dest_port;
@@ -267,8 +285,8 @@ ProxySocket.prototype.connect = function(dest_port, dest_addr, connected_fn) {
     this.socket = this.proxy_opts.ssl ?
         tls.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this)) :
         net.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this));
-    this.socket.setTimeout(10000);
 
+    this.socket.setTimeout(10000);
     this.socket.on('data', this._onSocketData.bind(this));
     this.socket.on('close', this._onSocketClose.bind(this));
     this.socket.on('error', this._onSocketError.bind(this));

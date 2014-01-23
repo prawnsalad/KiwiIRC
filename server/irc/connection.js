@@ -221,7 +221,12 @@ IrcConnection.prototype.connect = function () {
             that.socket = new Proxy.ProxySocket(that.proxy.port, host, {
                 username: that.username,
             });
-            that.socket.connect(that.irc_host.port, that.irc_host.hostname);
+
+            if (that.ssl) {
+                that.socket.connectTls(that.irc_host.port, that.irc_host.hostname);
+            } else {
+                that.socket.connect(that.irc_host.port, that.irc_host.hostname);
+            }
 
         } else {
             // No socks connection, connect directly to the IRCd
