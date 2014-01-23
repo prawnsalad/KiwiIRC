@@ -233,7 +233,7 @@ _.each(global.config.servers, function (server) {
     if (server.type == 'proxy') {
         // Start up a kiwi proxy server
         var serv = new Proxy.ProxyServer();
-        serv.listen(server.port, server.address);
+        serv.listen(server.port, server.address, server);
 
         serv.on('listening', function() {
             console.log('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));

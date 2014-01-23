@@ -1,8 +1,9 @@
 var stream = require('stream'),
     util   = require('util'),
     events = require('events'),
-    net    = require("net"),
-    tls    = require("tls");
+    net    = require('net'),
+    tls    = require('tls'),
+    fs     = require('fs');
 
 
 module.exports = {
@@ -35,11 +36,39 @@ function ProxyServer() {
 util.inherits(ProxyServer, events.EventEmitter);
 
 
-ProxyServer.prototype.listen = function(listen_port, listen_addr) {
-    var that = this;
+ProxyServer.prototype.listen = function(listen_port, listen_addr, opts) {
+    var that = this,
+        serv_opts = {};
 
-    // Start listening for proxy connections connections
-    this.server = new net.Server();
+    opts = opts || {};
+
+    // Listen using SSL?
+    if (opts.ssl) {
+        serv_opts = {
+            key: fs.readFileSync(opts.ssl_key),
+            cert: fs.readFileSync(opts.ssl_cert)
+        };
+
+        // Do we have an intermediate certificate?
+        if (typeof opts.ssl_ca !== 'undefined') {
+            // An array of them?
+            if (typeof opts.ssl_ca.map !== 'undefined') {
+                serv_opts.ca = opts.ssl_ca.map(function (f) { return fs.readFileSync(f); });
+
+            } else {
+                serv_opts.ca = fs.readFileSync(opts.ssl_ca);
+            }
+        }
+
+        this.server = tls.createServer(serv_opts);
+
+    }
+
+    // No SSL, start a simple clear text server
+    else {
+        this.server = new net.Server();
+    }
+
     this.server.listen(listen_port, listen_addr, function() {
         that.emit('listening');
     });
