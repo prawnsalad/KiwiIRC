@@ -12,7 +12,7 @@ module.exports = {
 };
 
 function debug() {
-    console.log.apply(console, arguments);
+    //console.log.apply(console, arguments);
 }
 
 // Socket connection responses
