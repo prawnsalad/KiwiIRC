@@ -220,7 +220,7 @@ IrcConnection.prototype.connect = function () {
         } else if (that.proxy) {
             that.socket = new Proxy.ProxySocket(that.proxy.port, host, {
                 username: that.username,
-            });
+            }, {ssl: that.proxy.ssl});
 
             if (that.ssl) {
                 that.socket.connectTls(that.irc_host.port, that.irc_host.hostname);

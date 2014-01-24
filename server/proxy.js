@@ -12,7 +12,7 @@ module.exports = {
 };
 
 function debug() {
-    //console.log.apply(console, arguments);
+    console.log.apply(console, arguments);
 }
 
 // Socket connection responses
@@ -38,7 +38,8 @@ util.inherits(ProxyServer, events.EventEmitter);
 
 ProxyServer.prototype.listen = function(listen_port, listen_addr, opts) {
     var that = this,
-        serv_opts = {};
+        serv_opts = {},
+        connection_event = 'connection';
 
     opts = opts || {};
 
@@ -62,6 +63,8 @@ ProxyServer.prototype.listen = function(listen_port, listen_addr, opts) {
 
         this.server = tls.createServer(serv_opts);
 
+        connection_event = 'secureConnection';
+
     }
 
     // No SSL, start a simple clear text server
@@ -73,7 +76,7 @@ ProxyServer.prototype.listen = function(listen_port, listen_addr, opts) {
         that.emit('listening');
     });
 
-    this.server.on('connection', function(socket) {
+    this.server.on(connection_event, function(socket) {
         new ProxyPipe(socket, that);
     });
 };
@@ -100,12 +103,15 @@ ProxyServer.prototype.close = function(callback) {
  * 4. If all ok, pipe data between the 2 sockets as a proxy
  */
 function ProxyPipe(kiwi_socket, proxy_server) {
+    debug('[KiwiProxy] New Kiwi connection');
+
     this.kiwi_socket  = kiwi_socket;
     this.proxy_server = proxy_server;
     this.irc_socket   = null;
     this.buffer       = '';
     this.meta         = null;
 
+    debug('[KiwiProxy] Setting encoding to utf8');
     kiwi_socket.setEncoding('utf8');
     kiwi_socket.on('readable', this.kiwiSocketOnReadable.bind(this));
 }
@@ -141,13 +147,16 @@ ProxyPipe.prototype.kiwiSocketOnReadable = function() {
         return;
 
     try {
+        debug('[KiwiProxy] Found a complete line in the buffer');
         meta = JSON.parse(this.buffer.substr(0, this.buffer.indexOf('\n')));
     } catch (err) {
+        debug('[KiwiProxy] Error parsing meta');
         this.destroy();
         return;
     }
 
     if (!meta.username) {
+        debug('[KiwiProxy] Meta does not contain a username');
         this.destroy();
         return;
     }
@@ -161,10 +170,17 @@ ProxyPipe.prototype.kiwiSocketOnReadable = function() {
 
 
 ProxyPipe.prototype.makeIrcConnection = function() {
-    debug('[KiwiProxy] Proxied connection to: ' + this.meta.host + ':' + this.meta.port.toString());
-    this.irc_socket = this.meta.ssl ?
-        tls.connect(parseInt(this.meta.port, 10), this.meta.host, this._onSocketConnect.bind(this)) :
-        net.connect(parseInt(this.meta.port, 10), this.meta.host, this._onSocketConnect.bind(this));
+    debug('[KiwiProxy] Opening proxied connection to: ' + this.meta.host + ':' + this.meta.port.toString());
+    if (this.meta.ssl) {
+        this.irc_socket = tls.connect({
+            port: parseInt(this.meta.port, 10),
+            host: this.meta.host,
+            rejectUnauthorized: global.config.reject_unauthorised_certificates,
+        }, this._onSocketConnect.bind(this));
+
+    } else {
+        this.irc_socket = net.connect(parseInt(this.meta.port, 10), this.meta.host, this._onSocketConnect.bind(this));
+    }
 
     this.irc_socket.setTimeout(10000);
     this.irc_socket.on('error', this._onSocketError.bind(this));
@@ -281,10 +297,17 @@ ProxySocket.prototype.connect = function(dest_port, dest_addr, connected_fn) {
         return false;
     }
 
-    debug('[KiwiProxy] Connecting to proxy ' + this.proxy_addr + ':' + this.proxy_port.toString());
-    this.socket = this.proxy_opts.ssl ?
-        tls.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this)) :
-        net.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this));
+    debug('[KiwiProxy] Connecting to proxy ' + this.proxy_addr + ':' + this.proxy_port.toString() + ' SSL: ' + (!!this.proxy_opts.ssl).toString());
+    if (this.proxy_opts.ssl) {
+        this.socket = tls.connect({
+            port: this.proxy_port,
+            host: this.proxy_addr,
+            rejectUnauthorized: !!global.config.reject_unauthorised_certificates,
+        }, this._onSocketConnect.bind(this));
+
+    } else {
+        this.socket = net.connect(this.proxy_port, this.proxy_addr, this._onSocketConnect.bind(this));
+    }
 
     this.socket.setTimeout(10000);
     this.socket.on('data', this._onSocketData.bind(this));
@@ -326,6 +349,7 @@ ProxySocket.prototype._write = function(chunk, encoding, callback) {
     if (this.state === 'connected' && this.socket) {
         return this.socket.write(chunk, encoding, callback);
     } else {
+        debug('[KiwiProxy] Trying to write to an unfinished socket. State=' + this.state);
         callback('Not connected');
     }
 };
@@ -379,6 +403,7 @@ ProxySocket.prototype._onSocketData = function(data) {
 
 
 ProxySocket.prototype._onSocketClose = function(had_error) {
+    debug('[KiwiProxy] _onSocketClose() had_error=' + had_error.toString());
     if (this.state === 'connected') {
         this.emit('close', had_error);
         return;
@@ -390,6 +415,7 @@ ProxySocket.prototype._onSocketClose = function(had_error) {
 
 
 ProxySocket.prototype._onSocketError = function(err) {
+    debug('[KiwiProxy] _onSocketError() err=' + err.toString());
     this.ignore_close = true;
     this.emit('error', err);
 };
