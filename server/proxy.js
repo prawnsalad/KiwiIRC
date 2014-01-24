@@ -171,15 +171,25 @@ ProxyPipe.prototype.kiwiSocketOnReadable = function() {
 
 ProxyPipe.prototype.makeIrcConnection = function() {
     debug('[KiwiProxy] Opening proxied connection to: ' + this.meta.host + ':' + this.meta.port.toString());
+
+    var local_address = this.meta.interface ?
+        this.meta.interface :
+        '0.0.0.0';
+
     if (this.meta.ssl) {
         this.irc_socket = tls.connect({
             port: parseInt(this.meta.port, 10),
             host: this.meta.host,
             rejectUnauthorized: global.config.reject_unauthorised_certificates,
+            localAddress: local_address
         }, this._onSocketConnect.bind(this));
 
     } else {
-        this.irc_socket = net.connect(parseInt(this.meta.port, 10), this.meta.host, this._onSocketConnect.bind(this));
+        this.irc_socket = net.connect({
+            port: parseInt(this.meta.port, 10),
+            host: this.meta.host,
+            localAddress: local_address
+        }, this._onSocketConnect.bind(this));
     }
 
     this.irc_socket.setTimeout(10000);
@@ -268,7 +278,8 @@ function ProxySocket(proxy_port, proxy_addr, meta, proxy_opts) {
     this.proxy_addr   = proxy_addr;
     this.proxy_port   = proxy_port;
     this.proxy_opts   = proxy_opts || {};
-    this.meta         = meta || {};
+
+    this.setMeta(meta || {});
 
     this.state = 'disconnected';
 }
