@@ -5,6 +5,7 @@ var fs          = require('fs'),
     config      = require('./configuration.js'),
     modules     = require('./modules.js'),
     Identd      = require('./identd.js'),
+    Proxy       = require('./proxy.js'),
     ControlInterface = require('./controlinterface.js');
 
 
@@ -229,26 +230,52 @@ if (global.config.identd && global.config.identd.enabled) {
 
 // Start up a weblistener for each found in the config
 _.each(global.config.servers, function (server) {
-    var wl = new WebListener(server, global.config.transports);
+    if (server.type == 'proxy') {
+        // Start up a kiwi proxy server
+        var serv = new Proxy.ProxyServer();
+        serv.listen(server.port, server.address, server);
 
-    wl.on('connection', function (client) {
-        clients.add(client);
-    });
+        serv.on('listening', function() {
+            console.log('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+        });
 
-    wl.on('client_dispose', function (client) {
-        clients.remove(client);
-    });
+        serv.on('socket_connected', function(pipe) {
+            // SSL connections have the raw socket as a property
+            var socket = pipe.irc_socket.socket ?
+                    pipe.irc_socket.socket :
+                    pipe.irc_socket;
 
-    wl.on('listening', function () {
-        console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
-        webListenerRunning();
-    });
+            pipe.identd_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
+            global.clients.port_pairs[pipe.identd_pair] = pipe.meta;
+        });
 
-    wl.on('error', function (err) {
-        console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
-        // TODO: This should probably be refactored. ^JA
-        webListenerRunning();
-    });
+        serv.on('connection_close', function(pipe) {
+            delete global.clients.port_pairs[pipe.identd_pair];
+        });
+
+    } else {
+        // Start up a kiwi web server
+        var wl = new WebListener(server, global.config.transports);
+
+        wl.on('connection', function (client) {
+            clients.add(client);
+        });
+
+        wl.on('client_dispose', function (client) {
+            clients.remove(client);
+        });
+
+        wl.on('listening', function () {
+            console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            webListenerRunning();
+        });
+
+        wl.on('error', function (err) {
+            console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
+            // TODO: This should probably be refactored. ^JA
+            webListenerRunning();
+        });
+    }
 });
 
 // Once all the listeners are listening, set the processes UID/GID
