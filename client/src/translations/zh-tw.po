@@ -504,3 +504,7 @@ msgstr "儲存網路"
 msgid "client_applet_fav_delete"
 msgstr "刪除網路"
 
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
+

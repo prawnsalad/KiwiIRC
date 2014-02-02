@@ -458,49 +458,53 @@ msgstr "Reconectare în curs..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Desktop notifications"
+msgstr "Notificări pe ecran"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Enable notifications"
+msgstr "Activează notificările"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Show emoticons"
+msgstr "Arată figurinele"
 
 #: 
 msgid "client_applet_about"
-msgstr "About Kiwi"
+msgstr "Despre Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Project homepage"
+msgstr "Pagina proiectului"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link to this channel"
+msgstr "Legătură spre acest canal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Share this channel"
+msgstr "Distribuie acest canal"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "My networks"
+msgstr "Rețelele mele"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favourite networks"
+msgstr "Rețelele favorite"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Add network"
+msgstr "Adaugă o rețea"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Save network"
+msgstr "Salvează rețeaua"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Delete network"
+msgstr "Șterge rețeaua"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
 
