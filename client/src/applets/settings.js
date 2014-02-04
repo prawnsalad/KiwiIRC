@@ -15,6 +15,7 @@
                 join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
                 count_all_activity: _kiwi.global.i18n.translate('client_applets_settings_notification_count_all_activity').fetch(),
                 timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
+                timestamp_24: _kiwi.global.i18n.translate('client_applets_settings_timestamp_24_hour').fetch(),
                 mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
                 emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
                 scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
