@@ -11,7 +11,18 @@ var fs          = require('fs'),
 
 
 process.chdir(__dirname + '/../');
-config.loadConfig();
+
+(function (argv) {
+    var conf_switch = argv.indexOf('-c');
+    if (conf_switch !== -1) {
+        if (argv[conf_switch + 1]) {
+            return config.loadConfig(argv[conf_switch + 1]);
+        }
+    }
+
+    config.loadConfig();
+
+})(process.argv);
 
 
 // If we're not running in the forground and we have a log file.. switch
