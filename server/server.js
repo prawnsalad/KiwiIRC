@@ -49,5 +49,5 @@ switch (process.argv[2]) {
         break;
         
     default:
-        console.log('Usage: [-f|start|stop|restart|status|reconfig|build]');
+        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-c <config file>]]');
 }
