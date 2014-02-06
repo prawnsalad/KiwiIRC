@@ -110,6 +110,7 @@
 
 
         dispose: function () {
+            console.log("Dispose oooooo");
             this.view.channels = null;
             this.view.unbind();
             this.view.$el.html('');

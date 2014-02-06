@@ -85,7 +85,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
     panelRemoved: function (panel) {
         panel.tab.remove();
         delete panel.tab;
-
         _kiwi.app.view.doLayout();
     },
 
@@ -100,6 +99,16 @@ _kiwi.view.Tabs = Backbone.View.extend({
         if (!panel.isServer()) {
             panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
+
+        var panel_index = _kiwi.app.panel_access.indexOf(panel.cid);
+
+        if (panel_index > -1) {
+            _kiwi.app.panel_access.splice(panel_index, 1);
+        }
+
+        //Make this panel the most recently accessed
+        _kiwi.app.panel_access.unshift(panel.cid);
+
     },
 
     tabClick: function (e) {

@@ -128,6 +128,8 @@ _kiwi.model.Application = function () {
 
             this.resize_handle = new _kiwi.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
+            this.panel_access = new Array();
+
             // Rejigg the UI sizes
             this.view.doLayout();
         };
