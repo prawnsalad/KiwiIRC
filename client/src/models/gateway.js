@@ -151,6 +151,8 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
+        this.connect_callback = callback;
+
         // Keep note of the server we are connecting to
         this.set('kiwi_server', _kiwi.app.kiwi_server);
 
@@ -188,8 +190,6 @@ _kiwi.model.Gateway = function () {
             that.disconnect_requested = false;
 
             console.log("_kiwi.gateway.socket.on('open')");
-
-            callback && callback();
         });
 
         this.rpc.on('too_many_connections', function () {
@@ -294,6 +294,13 @@ _kiwi.model.Gateway = function () {
     this.parseKiwi = function (command, data) {
         this.trigger('kiwi:' + command, data);
         this.trigger('kiwi', data);
+
+        switch (command) {
+        case 'connected':
+            this.connect_callback && this.connect_callback();
+            delete this.connect_callback;
+            break;
+        }
     };
     /*
         Events:
