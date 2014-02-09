@@ -541,7 +541,7 @@ _kiwi.model.Application = function () {
 
             controlbox.on('command:encoding', encodingCommand);
 
-            controlbox.on('command:info', function(ev) {
+            controlbox.on('command:channel', function(ev) {
                 var active_panel = _kiwi.app.panels().active;
 
                 if (!active_panel.isChannel())
