@@ -3,47 +3,70 @@
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
+            "click #channels_name": "sortChannelsByNameClick",
+            "click #users": "sortChannelsByUsersClick"
         },
 
-
-
+        
+        
         initialize: function (options) {
             var text = {
-                channel_name: _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch(),
-                users: _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch(),
+                channel_name: '<a id="channels_name">' + _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch() + '</a>',
+                users: '<a id="users">' + _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch() + '</a>',
                 topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
             };
             this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
 
             this.channels = [];
 
-            // Sort the table by num. users?
-            this.ordered = true;
+            // Sort the table
+            this.order = '';
+
 
             // Waiting to add the table back into the DOM?
             this.waiting = false;
         },
 
-
-        render: function () {
+        render: function (override_channels) {
             var table = $('table', this.$el),
                 tbody = table.children('tbody:first').detach(),
                 that = this,
                 channels_length = this.channels.length,
+                icon_asc = '<span class="icon-sort-up">&nbsp;&nbsp;</span>',
+                icon_desc = '<span class="icon-sort-down">&nbsp;&nbsp;</span>',
                 i;
-
+            
             tbody.children().each(function (idx, child) {
                 if (that.channels[idx].channel === $(child.querySelector('.chan')).data('channel')) {
                     that.channels[idx].dom = tbody[0].removeChild(child);
                 }
             });
 
-            if (this.ordered) {
-                this.channels.sort(function (a, b) {
-                    return b.num_users - a.num_users;
-                });
+            if (override_channels != undefined) {
+                that.channels = override_channels;
+                tbody.remove();
+            } else {
+                that.channels = this.sortChannels(this.channels, this.order);
             }
 
+            // Clean the sorting icon and add the new one
+            $('#chanlist').find('span').remove();
+            switch (this.order) {
+                case 'user_desc':
+                default:
+                    $('#users').append(icon_desc);
+                    break;
+                case 'user_asc':
+                    $('#users').append(icon_asc);
+                    break;
+                case 'name_asc':
+                    $('#channels_name').append(icon_asc);
+                    break;
+                case 'name_desc':
+                    $('#channels_name').append(icon_desc);
+                    break;
+            }
+            
             for (i = 0; i < channels_length; i++) {
                 tbody[0].appendChild(this.channels[i].dom);
             }
@@ -58,9 +81,95 @@
                 // IE...
                 _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
             }
+        },
+        
+        sortChannelsByNameClick: function (event) {
+            // Revert the sorting to switch between orders
+            switch (this.order) {
+                case '':
+                case 'name_desc':
+                case 'user_asc':
+                case 'user_desc':
+                default:
+                    this.order = 'name_asc';
+                    break;
+                case 'name_asc':
+                    this.order = 'name_desc';
+                    break;
+            }
+            
+            this.sortChannelsClick(this.order);
+        },
+        
+        sortChannelsByUsersClick: function (event) {
+            // Revert the sorting to switch between orders
+            switch (this.order) {
+                case 'user_asc':
+                case 'name_asc':
+                case 'name_desc':
+                default:
+                    this.order = 'user_desc';
+                    break;
+                case '':
+                case 'user_desc':
+                    this.order = 'user_asc';
+                    break;
+            }
+            
+            this.sortChannelsClick(this.order);
+        },
+        
+        sortChannelsClick: function(order) {
+            var that = this;
+            that.channels = this.sortChannels(this.channels, order);
+
+            this.render(that.channels);
+        },
+        
+        sortChannels: function (channels, order) {
+            var counter = 0,
+                sort_channels = [];
+            
+            // First we create a light copy of the channels object to do the sorting
+            _.each(this.channels, function (chan) {
+                sort_channels.push({'counter': counter, 'num_users': chan.num_users, 'channel': chan.channel});
+                
+                counter += 1;
+            });
+            
+            // Second, we apply the sorting
+            sort_channels.sort(function (a, b) {
+                switch (order) {
+                    case 'user_asc':
+                        return a.num_users - b.num_users;
+                        break;
+                    case 'user_desc':
+                        return b.num_users - a.num_users;
+                        break;                
+                    case 'name_asc':
+                        if (a.channel.toLowerCase() > b.channel.toLowerCase()) return 1;
+                        if (a.channel.toLowerCase() < b.channel.toLowerCase()) return -1;
+                        break;
+                    case 'name_desc':
+                        if (a.channel.toLowerCase() < b.channel.toLowerCase()) return 1;
+                        if (a.channel.toLowerCase() > b.channel.toLowerCase()) return -1;
+                        break;
+                    default:
+                        return b.num_users - a.num_users;
+                        break;
+                }
+                return 0;
+            });
+            
+            // Third, we re-shuffle the chanlist according to the sort order
+            var new_channels = [];
+            _.each(sort_channels, function (chan) {
+                new_channels.push(channels[chan.counter]);
+            });
+            
+            return new_channels;
         }
     });
-
 
 
 
