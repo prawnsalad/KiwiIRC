@@ -249,6 +249,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
                 menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
+                menu.showFooter(false);
                 menubox.show();
 
                 // Position the userbox + menubox

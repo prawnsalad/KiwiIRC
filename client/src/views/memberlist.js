@@ -30,6 +30,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
         var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);
+        menu.showFooter(false);
         menu.show();
 
         // Position the userbox + menubox
@@ -44,6 +45,11 @@ _kiwi.view.MemberList = Backbone.View.extend({
             // If the bottom of the userbox is going to be too low.. raise it
             if (m_bottom > memberlist_bottom){
                 t = memberlist_bottom - menu.$el.outerHeight();
+            }
+
+            // If the top of the userbox is going to be too high.. lower it
+            if (t < 0){
+                t = 0;
             }
 
             // If the right of the userbox is going off screen.. bring it in

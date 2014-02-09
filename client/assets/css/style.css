@@ -138,9 +138,9 @@ html, body { height:100%; }
 #kiwi .memberlists ul li a.nick { }
 
 /* The userbox shown when clicking a nick */
-#kiwi .userbox { position:relative; }
+#kiwi .userbox { position:relative; width:100px; }
 #kiwi .userbox a { }
-#kiwi .userbox a i { }
+#kiwi .userbox a i { width:1em; text-align:center; }
 
 
 /* Emoticons */
