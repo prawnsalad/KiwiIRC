@@ -9,7 +9,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         this.elements = {
             panels:        this.$el.find('.panels'),
-            memberlists:   this.$el.find('.memberlists'),
+            right_bar:     this.$el.find('.right_bar'),
             toolbar:       this.$el.find('.toolbar'),
             controlbox:    this.$el.find('.controlbox'),
             resize_handle: this.$el.find('.memberlists_resize_handle')
@@ -134,7 +134,7 @@ _kiwi.view.Application = Backbone.View.extend({
     doLayout: function () {
         var el_kiwi = this.$el;
         var el_panels = this.elements.panels;
-        var el_memberlists = this.elements.memberlists;
+        var el_right_bar = this.elements.right_bar;
         var el_toolbar = this.elements.toolbar;
         var el_controlbox = this.elements.controlbox;
         var el_resize_handle = this.elements.resize_handle;
@@ -160,7 +160,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Apply the CSS sizes
         el_panels.css(css_heights);
-        el_memberlists.css(css_heights);
+        el_right_bar.css(css_heights);
         el_resize_handle.css(css_heights);
 
         // If we have channel tabs on the side, adjust the height
@@ -176,11 +176,11 @@ _kiwi.view.Application = Backbone.View.extend({
         }
 
         // Set the panels width depending on the memberlist visibility
-        if (el_memberlists.css('display') != 'none') {
+        if (el_right_bar.css('display') != 'none') {
             // Panels to the side of the memberlist
-            el_panels.css('right', el_memberlists.outerWidth(true));
+            el_panels.css('right', el_right_bar.outerWidth(true));
             // The resize handle sits overlapping the panels and memberlist
-            el_resize_handle.css('left', el_memberlists.position().left - (el_resize_handle.outerWidth(true) / 2));
+            el_resize_handle.css('left', el_right_bar.position().left - (el_resize_handle.outerWidth(true) / 2));
         } else {
             // Memberlist is hidden so panels to the right edge
             el_panels.css('right', 0);

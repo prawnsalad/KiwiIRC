@@ -1,8 +1,10 @@
 _kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
     events: {
-        "click .nick": "nickClick"
+        "click .nick": "nickClick",
+        "click .channel_info": "channelInfoClick"
     },
+
     initialize: function (options) {
         this.model.bind('all', this.render, this);
         $(this.el).appendTo('#kiwi .memberlists');
@@ -59,6 +61,13 @@ _kiwi.view.MemberList = Backbone.View.extend({
             });
         }).call(this);
     },
+
+
+    channelInfoClick: function(event) {
+        new _kiwi.model.ChannelInfo({channel: this.model.channel});
+    },
+
+
     show: function () {
         $('#kiwi .memberlists').children().removeClass('active');
         $(this.el).addClass('active');

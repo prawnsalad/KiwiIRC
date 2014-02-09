@@ -123,6 +123,7 @@ _kiwi.model.Application = function () {
             this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
 
             new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
+            new _kiwi.view.ChannelTools({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
 
             this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
 

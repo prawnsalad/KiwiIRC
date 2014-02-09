@@ -23,7 +23,7 @@ _kiwi.view.ResizeHandler = Backbone.View.extend({
         if (!this.dragging) return;
 
         this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2));
-        $('#kiwi .memberlists').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
+        $('#kiwi .right_bar').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
         _kiwi.app.view.doLayout();
     }
 });

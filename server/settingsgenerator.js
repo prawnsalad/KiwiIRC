@@ -248,6 +248,7 @@ function addScripts(vars, debug) {
             'src/views/tabs.js',
             'src/views/topicbar.js',
             'src/views/userbox.js',
+            'src/views/channeltools.js',
             'src/views/channelinfo.js'
         ]
     ]);
