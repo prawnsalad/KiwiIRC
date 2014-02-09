@@ -454,7 +454,7 @@ msgstr "Em 5 minutos você será reconectado e seus canais serão reunidos. Prep
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Segurança re-ligando-o agora.."
+msgstr "Segurança re-ligando-o agora..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"

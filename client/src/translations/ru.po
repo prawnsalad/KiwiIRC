@@ -102,7 +102,7 @@ msgstr "неизвестный апплет"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Загрузка.."
+msgstr "Загрузка..."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -275,7 +275,7 @@ msgstr "Это приведет к закрытию всех окон KiwiIRC. �
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Вход на канал.."
+msgstr "Вход на канал..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -383,7 +383,7 @@ msgstr "Подключено"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Подключение.."
+msgstr "Подключение..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
@@ -455,7 +455,7 @@ msgstr "Через 5 минут вы будете переподключены �
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Безопасное переподключение вас.."
+msgstr "Безопасное переподключение вас..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"

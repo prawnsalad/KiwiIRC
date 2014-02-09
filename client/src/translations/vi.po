@@ -102,7 +102,7 @@ msgstr "Applet lạ"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Đang tải.."
+msgstr "Đang tải..."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -382,7 +382,7 @@ msgstr "Đã kết nối"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Đang kết nối.."
+msgstr "Đang kết nối..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
