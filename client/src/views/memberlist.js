@@ -21,15 +21,12 @@ _kiwi.view.MemberList = Backbone.View.extend({
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member'),
-            userbox;
+            userbox,
+            are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
         userbox = new _kiwi.view.UserBox();
-        userbox.member = member;
-        userbox.channel = this.model.channel;
-
-        if (!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
-            userbox.$el.children('.if_op').remove();
-        }
+        userbox.setTargets(member, this.model.channel);
+        userbox.displayOpItems(are_we_an_op);
 
         var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);

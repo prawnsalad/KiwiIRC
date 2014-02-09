@@ -237,19 +237,15 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     nickClick: function (event) {
         var nick = $(event.currentTarget).text(),
             members = this.model.get('members'),
+            are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
             member, query, userbox, menubox;
 
         if (members) {
             member = members.getByNick(nick);
             if (member) {
                 userbox = new _kiwi.view.UserBox();
-                userbox.member = member;
-                userbox.channel = this.model;
-
-                // Hide the op related items if we're not an op
-                if (!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
-                    userbox.$el.children('.if_op').remove();
-                }
+                userbox.setTargets(member, this.model);
+                userbox.displayOpItems(are_we_an_op);
 
                 menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
