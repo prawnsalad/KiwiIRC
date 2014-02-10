@@ -3,16 +3,16 @@
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
-            "click #channels_name": "sortChannelsByNameClick",
-            "click #users": "sortChannelsByUsersClick"
+            "click #channel_name_title": "sortChannelsByNameClick",
+            "click #users_title": "sortChannelsByUsersClick"
         },
 
         
         
         initialize: function (options) {
             var text = {
-                channel_name: '<a id="channels_name">' + _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch() + '</a>',
-                users: '<a id="users">' + _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch() + '</a>',
+                channel_name: '<a id="channel_name_title">' + _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch() + '</a>',
+                users: '<a id="users_title">' + _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch() + '</a>',
                 topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
             };
             this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
@@ -45,21 +45,21 @@
             }
 
             // Clean the sorting icon and add the new one
-            $('#chanlist #users').find('span').remove();
-            $('#chanlist #channels_name').find('span').remove();
+            $('#chanlist #users_title').find('span').remove();
+            $('#chanlist #channel_name_title').find('span').remove();
             switch (this.order) {
                 case 'user_desc':
                 default:
-                    $('#users').append(icon_desc);
+                    $('#users_title').append(icon_desc);
                     break;
                 case 'user_asc':
-                    $('#users').append(icon_asc);
+                    $('#users_title').append(icon_asc);
                     break;
                 case 'name_asc':
-                    $('#channels_name').append(icon_asc);
+                    $('#channel_name_title').append(icon_asc);
                     break;
                 case 'name_desc':
-                    $('#channels_name').append(icon_desc);
+                    $('#channel_name_title').append(icon_desc);
                     break;
             }
             
@@ -209,7 +209,7 @@
             _.each(channels, function (chan) {
                 var row;
                 row = document.createElement("tr");
-                row.innerHTML = '<td><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(_.escape(chan.topic)) + '</td>';
+                row.innerHTML = '<td class="chanlist_name"><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="chanlist_num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;" class="chanlist_topic">' + formatIRCMsg(_.escape(chan.topic)) + '</td>';
                 chan.dom = row;
                 that.view.channels.push(chan);
             });

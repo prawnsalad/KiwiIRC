@@ -357,6 +357,29 @@
     border-bottom-right-radius:0;
     border-top-right-radius:0;
 }
+#kiwi #chanlist {
+    margin: 0.5em 1em;
+}
+#kiwi #chanlist table {
+    border-collapse: collapse;
+    width: 100%;
+}
+#kiwi #chanlist thead {
+    text-align: center;
+}
+#kiwi #chanlist tbody td {
+    border: 1px solid #C4C4C4;
+    padding: 0.3em 1em;
+}
+#kiwi #chanlist .chanlist_name, #kiwi #chanlist .chanlist_num_users {
+    border-width: 0 1px 0 0;
+}
+#kiwi #chanlist .chanlist_topic {
+    border-width: 0;
+}
+#kiwi #chanlist tr:nth-child(even) {
+    background: none repeat scroll 0 0 #DBDBDB;
+}
 
 
 #kiwi .applet > div.settings button.save {
