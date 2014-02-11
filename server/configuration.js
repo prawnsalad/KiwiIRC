@@ -1,6 +1,7 @@
 var fs      = require('fs'),
     events  = require('events'),
-    util    = require('util');
+    util    = require('util'),
+    path    = require('path');
 
 var config_filename = 'config.js',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/../'],
@@ -17,7 +18,8 @@ Config.prototype.loadConfig = function (manual_config_file) {
         conf_filepath,
         i;
 
-    if (manual_config_file) {
+    if ((manual_config_file) || (this.manual_config_file)) {
+        manual_config_file =  path.resolve(path.normalize(manual_config_file || this.manual_config_file));
         if (fs.existsSync(manual_config_file)) {
             try {
                 if (fs.lstatSync(manual_config_file).isFile() === true) {
