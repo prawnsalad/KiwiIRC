@@ -28,6 +28,9 @@ Config.prototype.loadConfig = function (manual_config_file) {
 
                     // Try load the new config file
                     new_config = require(manual_config_file);
+
+                    // Save location of configuration file so that we can re-load it later
+                    this.manual_config_file = manual_config_file;
                 }
             } catch (e) {
                 console.log('An error occured parsing the config file ' + manual_config_file + ': ' + e.message);
