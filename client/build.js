@@ -181,8 +181,9 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
             var locale = file.slice(0, -3);
 
             if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                po2json.parse(__dirname + '/src/translations/' + file, function (err, json) {
+                po2json.parseFile(__dirname + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
                     if (!err) {
+
                         fs.writeFile(__dirname + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
                             if (!err) {
                                 console.log('Built translation file %s.json', locale);
