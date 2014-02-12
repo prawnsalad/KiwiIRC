@@ -13,7 +13,7 @@
     "postinstall": "node client/build.js"
   },
   "dependencies": {
-    "node-static": "0.7.2",
+    "node-static": "0.7.3",
     "uglify-js": "2.4.1",
     "engine.io": "0.9.0",
     "lodash": "2.4.1",
