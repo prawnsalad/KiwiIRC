@@ -110,7 +110,7 @@ _kiwi.global = {
 
         continueStart = function (locale, s, xhr) {
             if (locale) {
-                _kiwi.global.i18n = new Jed({locale_data: locale, domain: xhr.getResponseHeader('Content-Language')});
+                _kiwi.global.i18n = new Jed(locale);
             } else {
                 _kiwi.global.i18n = new Jed();
             }
