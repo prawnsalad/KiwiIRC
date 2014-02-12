@@ -209,7 +209,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             }
         }).apply(this);
 
-        this.scrollToBottom();
+        if(this.model.isActive()) this.scrollToBottom();
 
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
