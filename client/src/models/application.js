@@ -1,50 +1,45 @@
-_kiwi.model.Application = function () {
-    // Set to a reference to this object within initialize()
-    var that = null;
+(function () {
 
-
-    var model = function () {
+    _kiwi.model.Application = Backbone.Model.extend({
         /** _kiwi.view.Application */
-        this.view = null;
+        view: null,
 
         /** _kiwi.view.StatusMessage */
-        this.message = null;
+        message: null,
 
         /* Address for the kiwi server */
-        this.kiwi_server = null;
+        kiwi_server: null,
 
-        this.initialize = function (options) {
-            that = this;
-
-            if (options[0].container) {
-                this.set('container', options[0].container);
+        initialize: function (options) {
+            if (options.container) {
+                this.set('container', options.container);
             }
 
             // The base url to the kiwi server
-            this.set('base_path', options[0].base_path ? options[0].base_path : '/kiwi');
+            this.set('base_path', options.base_path ? options.base_path : '/kiwi');
 
             // Path for the settings.json file
-            this.set('settings_path', options[0].settings_path ?
-                    options[0].settings_path :
+            this.set('settings_path', options.settings_path ?
+                    options.settings_path :
                     this.get('base_path') + '/assets/settings.json'
             );
 
             // Any options sent down from the server
-            this.server_settings = options[0].server_settings || {};
-            this.translations = options[0].translations || {};
-            this.themes = options[0].themes || [];
+            this.server_settings = options.server_settings || {};
+            this.translations = options.translations || {};
+            this.themes = options.themes || [];
 
             // Best guess at where the kiwi server is if not already specified
-            this.kiwi_server = options[0].kiwi_server || this.detectKiwiServer();
+            this.kiwi_server = options.kiwi_server || this.detectKiwiServer();
 
             // Set any default settings before anything else is applied
             if (this.server_settings && this.server_settings.client && this.server_settings.client.settings) {
                 this.applyDefaultClientSettings(this.server_settings.client.settings);
             }
-        };
+        },
 
 
-        this.start = function () {
+        start: function () {
             // Set the gateway up
             _kiwi.gateway = new _kiwi.model.Gateway();
             this.bindGatewayCommands(_kiwi.gateway);
@@ -55,10 +50,10 @@ _kiwi.model.Application = function () {
             this.view.barsHide(true);
 
             this.showIntialConenctionDialog();
-        };
+        },
 
 
-        this.detectKiwiServer = function () {
+        detectKiwiServer: function () {
             // If running from file, default to localhost:7777 by default
             if (window.location.protocol === 'file:') {
                 return 'http://localhost:7778';
@@ -66,10 +61,10 @@ _kiwi.model.Application = function () {
                 // Assume the kiwi server is on the same server
                 return window.location.protocol + '//' + window.location.host;
             }
-        };
+        },
 
 
-        this.showIntialConenctionDialog = function() {
+        showIntialConenctionDialog: function() {
             var connection_dialog = new _kiwi.model.NewConnection();
             this.populateDefaultServerSettings(connection_dialog);
 
@@ -100,10 +95,10 @@ _kiwi.model.Application = function () {
 
             };
             _kiwi.gateway.on('onconnect', fn);
-        };
+        },
 
 
-        this.initializeClient = function () {
+        initializeClient: function () {
             this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
 
             // Takes instances of model_network
@@ -131,10 +126,10 @@ _kiwi.model.Application = function () {
 
             // Rejigg the UI sizes
             this.view.doLayout();
-        };
+        },
 
 
-        this.initializeGlobals = function () {
+        initializeGlobals: function () {
             _kiwi.global.connections = this.connections;
 
             _kiwi.global.panels = this.panels;
@@ -142,19 +137,19 @@ _kiwi.model.Application = function () {
 
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
-        };
+        },
 
 
-        this.applyDefaultClientSettings = function (settings) {
+        applyDefaultClientSettings: function (settings) {
             _.each(settings, function (value, setting) {
                 if (typeof _kiwi.global.settings.get(setting) === 'undefined') {
                     _kiwi.global.settings.set(setting, value);
                 }
             });
-        };
+        },
 
 
-        this.populateDefaultServerSettings = function (new_connection_dialog) {
+        populateDefaultServerSettings: function (new_connection_dialog) {
             var parts;
             var defaults = {
                 nick: '',
@@ -310,10 +305,10 @@ _kiwi.model.Application = function () {
 
             // Populate the server select box with defaults
             new_connection_dialog.view.populateFields(defaults);
-        };
+        },
 
 
-        this.panels = (function() {
+        panels: (function() {
             var fn = function(panel_type) {
                 var panels;
 
@@ -341,10 +336,10 @@ _kiwi.model.Application = function () {
             _.extend(fn, Backbone.Events);
 
             return fn;
-        })();
+        })(),
 
 
-        this.bindGatewayCommands = function (gw) {
+        bindGatewayCommands: function (gw) {
             var that = this;
 
             gw.on('onconnect', function (event) {
@@ -469,101 +464,82 @@ _kiwi.model.Application = function () {
                     }, jump_server_interval * 1000);
                 }
             });
-        };
+        },
 
 
 
         /**
          * Bind to certain commands that may be typed into the control box
          */
-        this.bindControllboxCommands = function (controlbox) {
+        bindControllboxCommands: function (controlbox) {
+            var that = this;
+
             // Default aliases
             $.extend(controlbox.preprocessor.aliases, {
                 // General aliases
-                '/p': '/part $1+',
-                '/me': '/action $1+',
-                '/j': '/join $1+',
-                '/q': '/query $1+',
-                '/w': '/whois $1+',
-                '/raw': '/quote $1+',
+                '/p':    '/part $1+',
+                '/me':   '/action $1+',
+                '/j':    '/join $1+',
+                '/q':    '/query $1+',
+                '/w':    '/whois $1+',
+                '/raw':  '/quote $1+',
 
                 // Op related aliases
-                '/op': '/quote mode $channel +o $1+',
-                '/deop': '/quote mode $channel -o $1+',
-                '/hop': '/quote mode $channel +h $1+',
-                '/dehop': '/quote mode $channel -h $1+',
-                '/voice': '/quote mode $channel +v $1+',
-                '/devoice': '/quote mode $channel -v $1+',
-                '/k': '/kick $channel $1+',
-                '/ban': '/quote mode $channel +b $1+',
-                '/unban': '/quote mode $channel -b $1+',
+                '/op':       '/quote mode $channel +o $1+',
+                '/deop':     '/quote mode $channel -o $1+',
+                '/hop':      '/quote mode $channel +h $1+',
+                '/dehop':    '/quote mode $channel -h $1+',
+                '/voice':    '/quote mode $channel +v $1+',
+                '/devoice':  '/quote mode $channel -v $1+',
+                '/k':        '/kick $channel $1+',
+                '/ban':      '/quote mode $channel +b $1+',
+                '/unban':    '/quote mode $channel -b $1+',
 
                 // Misc aliases
-                '/slap': '/me slaps $1 around a bit with a large trout'
+                '/slap':     '/me slaps $1 around a bit with a large trout'
             });
 
-            controlbox.on('unknown_command', unknownCommand);
+            // Functions to bind to controlbox events
+            var fn_to_bind = {
+                'unknown_command':     unknownCommand,
+                'command':             allCommands,
+                'command:msg':         msgCommand,
+                'command:action':      actionCommand,
+                'command:join':        joinCommand,
+                'command:part':        partCommand,
+                'command:nick':        nickCommand,
+                'command:query':       queryCommand,
+                'command:invite':      inviteCommand,
+                'command:topic':       topicCommand,
+                'command:notice':      noticeCommand,
+                'command:quote':       quoteCommand,
+                'command:kick':        kickCommand,
+                'command:clear':       clearCommand,
+                'command:ctcp':        ctcpCommand,
+                'command:server':      serverCommand,
+                'command:whois':       whoisCommand,
+                'command:whowas':      whowasCommand,
+                'command:encoding':    encodingCommand,
+                'command:channel':     channelCommand,
+                'command:applet':      appletCommand,
+                'command:settings':    settingsCommand,
+                'command:script':      scriptCommand
+            };
 
-            controlbox.on('command', allCommands);
-            controlbox.on('command:msg', msgCommand);
-
-            controlbox.on('command:action', actionCommand);
-
-            controlbox.on('command:join', joinCommand);
-
-            controlbox.on('command:part', partCommand);
-
-            controlbox.on('command:nick', function (ev) {
-                _kiwi.gateway.changeNick(null, ev.params[0]);
-            });
-
-            controlbox.on('command:query', queryCommand);
-
-            controlbox.on('command:invite', inviteCommand);
-
-            controlbox.on('command:topic', topicCommand);
-
-            controlbox.on('command:notice', noticeCommand);
-
-            controlbox.on('command:quote', quoteCommand);
-
-            controlbox.on('command:kick', kickCommand);
-
-            controlbox.on('command:clear', clearCommand);
-
-            controlbox.on('command:ctcp', ctcpCommand);
-
-            controlbox.on('command:server', serverCommand);
-
-            controlbox.on('command:whois', whoisCommand);
-
-            controlbox.on('command:whowas', whowasCommand);
-
-            controlbox.on('command:encoding', encodingCommand);
-
-            controlbox.on('command:channel', function(ev) {
-                var active_panel = _kiwi.app.panels().active;
-
-                if (!active_panel.isChannel())
-                    return;
-
-                new _kiwi.model.ChannelInfo({channel: _kiwi.app.panels().active});
-            });
-
-            controlbox.on('command:css', function (ev) {
+            fn_to_bind['command:css'] = function (ev) {
                 var queryString = '?reload=' + new Date().getTime();
                 $('link[rel="stylesheet"]').each(function () {
                     this.href = this.href.replace(/\?.*|$/, queryString);
                 });
-            });
+            };
 
-            controlbox.on('command:js', function (ev) {
+            fn_to_bind['command:js'] = function (ev) {
                 if (!ev.params[0]) return;
                 $script(ev.params[0] + '?' + (new Date().getTime()));
-            });
+            };
 
 
-            controlbox.on('command:set', function (ev) {
+            fn_to_bind['command:set'] = function (ev) {
                 if (!ev.params[0]) return;
 
                 var setting = ev.params[0],
@@ -592,16 +568,16 @@ _kiwi.model.Application = function () {
 
                 // Read the value to the user
                 _kiwi.app.panels().active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting).toString());
-            });
+            };
 
 
-            controlbox.on('command:save', function (ev) {
+            fn_to_bind['command:save'] = function (ev) {
                 _kiwi.global.settings.save();
                 _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_settings_saved').fetch());
-            });
+            };
 
 
-            controlbox.on('command:alias', function (ev) {
+            fn_to_bind['command:alias'] = function (ev) {
                 var name, rule;
 
                 // No parameters passed so list them
@@ -630,10 +606,10 @@ _kiwi.model.Application = function () {
 
                 // Now actually add the alias
                 controlbox.preprocessor.aliases[name] = rule;
-            });
+            };
 
 
-            controlbox.on('command:ignore', function (ev) {
+            fn_to_bind['command:ignore'] = function (ev) {
                 var list = _kiwi.gateway.get('ignore_list');
 
                 // No parameters passed so list them
@@ -653,10 +629,10 @@ _kiwi.model.Application = function () {
                 list.push(ev.params[0]);
                 _kiwi.gateway.set('ignore_list', list);
                 _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_nick').fetch(ev.params[0]));
-            });
+            };
 
 
-            controlbox.on('command:unignore', function (ev) {
+            fn_to_bind['command:unignore'] = function (ev) {
                 var list = _kiwi.gateway.get('ignore_list');
 
                 if (!ev.params[0]) {
@@ -671,337 +647,344 @@ _kiwi.model.Application = function () {
                 _kiwi.gateway.set('ignore_list', list);
 
                 _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stopped').fetch(ev.params[0]));
+            };
+
+
+            _.each(fn_to_bind, function(fn, event_name) {
+                controlbox.on(event_name, _.bind(fn, that));
             });
+        },
 
 
-            controlbox.on('command:applet', appletCommand);
-            controlbox.on('command:settings', settingsCommand);
-            controlbox.on('command:script', scriptCommand);
-        };
-
-        // A fallback action. Send a raw command to the server
-        function unknownCommand (ev) {
-            var raw_cmd = ev.command + ' ' + ev.params.join(' ');
-            console.log('RAW: ' + raw_cmd);
-            _kiwi.gateway.raw(null, raw_cmd);
-        }
-
-        function allCommands (ev) {}
-
-        function joinCommand (ev) {
-            var panels, channel_names;
-
-            channel_names = ev.params.join(' ').split(',');
-            panels = that.connections.active_connection.createAndJoinChannels(channel_names);
-
-            // Show the last channel if we have one
-            if (panels.length)
-                panels[panels.length - 1].view.show();
-        }
-
-        function queryCommand (ev) {
-            var destination, message, panel;
-
-            destination = ev.params[0];
-            ev.params.shift();
-
-            message = ev.params.join(' ');
-
-            // Check if we have the panel already. If not, create it
-            panel = that.connections.active_connection.panels.getByName(destination);
-            if (!panel) {
-                panel = new _kiwi.model.Query({name: destination});
-                that.connections.active_connection.panels.add(panel);
-            }
-
-            if (panel) panel.view.show();
-
-            if (message) {
-                that.connections.active_connection.gateway.msg(panel.get('name'), message);
-                panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
-            }
-
-        }
-
-        function msgCommand (ev) {
-            var message,
-                destination = ev.params[0],
-                panel = that.connections.active_connection.panels.getByName(destination) || that.panels().server;
-
-            ev.params.shift();
-            message = formatToIrcMsg(ev.params.join(' '));
-
-            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
-            _kiwi.gateway.privmsg(null, destination, message);
-        }
-
-        function actionCommand (ev) {
-            if (_kiwi.app.panels().active.isServer()) {
-                return;
-            }
-
-            var panel = _kiwi.app.panels().active;
-            panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
-            _kiwi.gateway.action(null, panel.get('name'), ev.params.join(' '));
-        }
-
-        function partCommand (ev) {
-            if (ev.params.length === 0) {
-                _kiwi.gateway.part(null, _kiwi.app.panels().active.get('name'));
-            } else {
-                _.each(ev.params, function (channel) {
-                    _kiwi.gateway.part(null, channel);
-                });
-            }
-        }
-
-        function topicCommand (ev) {
-            var channel_name;
-
-            if (ev.params.length === 0) return;
-
-            if (that.isChannelName(ev.params[0])) {
-                channel_name = ev.params[0];
-                ev.params.shift();
-            } else {
-                channel_name = _kiwi.app.panels().active.get('name');
-            }
-
-            _kiwi.gateway.topic(null, channel_name, ev.params.join(' '));
-        }
-
-        function noticeCommand (ev) {
-            var destination;
-
-            // Make sure we have a destination and some sort of message
-            if (ev.params.length <= 1) return;
-
-            destination = ev.params[0];
-            ev.params.shift();
-
-            _kiwi.gateway.notice(null, destination, ev.params.join(' '));
-        }
-
-        function quoteCommand (ev) {
-            var raw = ev.params.join(' ');
-            _kiwi.gateway.raw(null, raw);
-        }
-
-        function kickCommand (ev) {
-            var nick, panel = _kiwi.app.panels().active;
-
-            if (!panel.isChannel()) return;
-
-            // Make sure we have a nick
-            if (ev.params.length === 0) return;
-
-            nick = ev.params[0];
-            ev.params.shift();
-
-            _kiwi.gateway.kick(null, panel.get('name'), nick, ev.params.join(' '));
-        }
-
-        function clearCommand (ev) {
-            // Can't clear a server or applet panel
-            if (_kiwi.app.panels().active.isServer() || _kiwi.app.panels().active.isApplet()) {
-                return;
-            }
-
-            if (_kiwi.app.panels().active.clearMessages) {
-                _kiwi.app.panels().active.clearMessages();
-            }
-        }
-
-        function ctcpCommand(ev) {
-            var target, type;
-
-            // Make sure we have a target and a ctcp type (eg. version, time)
-            if (ev.params.length < 2) return;
-
-            target = ev.params[0];
-            ev.params.shift();
-
-            type = ev.params[0];
-            ev.params.shift();
-
-            _kiwi.gateway.ctcp(null, true, type, target, ev.params.join(' '));
-        }
-
-        function settingsCommand (ev) {
-            var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
-            settings.view.show();
-        }
-
-        function scriptCommand (ev) {
-            var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
-            editor.view.show();
-        }
-
-        function appletCommand (ev) {
-            if (!ev.params[0]) return;
-
-            var panel = new _kiwi.model.Applet();
-
-            if (ev.params[1]) {
-                // Url and name given
-                panel.load(ev.params[0], ev.params[1]);
-            } else {
-                // Load a pre-loaded applet
-                if (_kiwi.applets[ev.params[0]]) {
-                    panel.load(new _kiwi.applets[ev.params[0]]());
-                } else {
-                    _kiwi.app.panels().server.addMsg('', _kiwi.global.i18n.translate('client_models_application_applet_notfound').fetch(ev.params[0]));
-                    return;
-                }
-            }
-
-            _kiwi.app.connections.active_connection.panels.add(panel);
-            panel.view.show();
-        }
-
-
-
-        function inviteCommand (ev) {
-            var nick, channel;
-
-            // A nick must be specified
-            if (!ev.params[0])
-                return;
-
-            // Can only invite into channels
-            if (!_kiwi.app.panels().active.isChannel())
-                return;
-
-            nick = ev.params[0];
-            channel = _kiwi.app.panels().active.get('name');
-
-            _kiwi.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
-
-            _kiwi.app.panels().active.addMsg('', '== ' + nick + ' has been invited to ' + channel, 'action');
-        }
-
-
-        function whoisCommand (ev) {
-            var nick;
-
-            if (ev.params[0]) {
-                nick = ev.params[0];
-            } else if (_kiwi.app.panels().active.isQuery()) {
-                nick = _kiwi.app.panels().active.get('name');
-            }
-
-            if (nick)
-                _kiwi.app.connections.active_connection.gateway.raw('WHOIS ' + nick + ' ' + nick);
-        }
-
-
-        function whowasCommand (ev) {
-            var nick;
-
-            if (ev.params[0]) {
-                nick = ev.params[0];
-            } else if (_kiwi.app.panels().active.isQuery()) {
-                nick = _kiwi.app.panels().active.get('name');
-            }
-
-            if (nick)
-                _kiwi.app.connections.active_connection.gateway.raw('WHOWAS ' + nick);
-        }
-
-        function encodingCommand (ev) {
-            if (ev.params[0]) {
-                _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
-                    if (success) {
-                        _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_changed').fetch(ev.params[0]));
-                    } else {
-                        _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_invalid').fetch(ev.params[0]));
-                    }
-                });
-            } else {
-                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_notspecified').fetch());
-                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_usage').fetch());
-            }
-        }
-
-        function serverCommand (ev) {
-            var server, port, ssl, password, nick,
-                tmp;
-
-            // If no server address given, show the new connection dialog
-            if (!ev.params[0]) {
-                tmp = new _kiwi.view.MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
-                tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
-                tmp.show();
-
-                // Center screen the dialog
-                tmp.$el.offset({
-                    top: (that.view.$el.height() / 2) - (tmp.$el.height() / 2),
-                    left: (that.view.$el.width() / 2) - (tmp.$el.width() / 2)
-                });
-
-                return;
-            }
-
-            // Port given in 'host:port' format and no specific port given after a space
-            if (ev.params[0].indexOf(':') > 0) {
-                tmp = ev.params[0].split(':');
-                server = tmp[0];
-                port = tmp[1];
-
-                password = ev.params[1] || undefined;
-
-            } else {
-                // Server + port given as 'host port'
-                server = ev.params[0];
-                port = ev.params[1] || 6667;
-
-                password = ev.params[2] || undefined;
-            }
-
-            // + in the port means SSL
-            if (port.toString()[0] === '+') {
-                ssl = true;
-                port = parseInt(port.substring(1), 10);
-            } else {
-                ssl = false;
-            }
-
-            // Default port if one wasn't found
-            port = port || 6667;
-
-            // Use the same nick as we currently have
-            nick = _kiwi.app.connections.active_connection.get('nick');
-
-            _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_connecting').fetch(server, port.toString()));
-
-            _kiwi.gateway.newConnection({
-                nick: nick,
-                host: server,
-                port: port,
-                ssl: ssl,
-                password: password
-            }, function(err, new_connection) {
-                if (err)
-                    _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_error').fetch(server, port.toString(), err.toString()));
-            });
-        }
-
-
-
-
-
-        this.isChannelName = function (channel_name) {
+        isChannelName: function (channel_name) {
             var channel_prefix = _kiwi.gateway.get('channel_prefix');
 
             if (!channel_name || !channel_name.length) return false;
             return (channel_prefix.indexOf(channel_name[0]) > -1);
-        };
+        }
+    });
 
 
-    };
 
 
-    model = Backbone.Model.extend(new model());
+    // A fallback action. Send a raw command to the server
+    function unknownCommand (ev) {
+        var raw_cmd = ev.command + ' ' + ev.params.join(' ');
+        console.log('RAW: ' + raw_cmd);
+        _kiwi.gateway.raw(null, raw_cmd);
+    }
 
-    return new model(arguments);
-};
+    function allCommands (ev) {}
+
+    function joinCommand (ev) {
+        var panels, channel_names;
+
+        channel_names = ev.params.join(' ').split(',');
+        panels = this.connections.active_connection.createAndJoinChannels(channel_names);
+
+        // Show the last channel if we have one
+        if (panels.length)
+            panels[panels.length - 1].view.show();
+    }
+
+    function queryCommand (ev) {
+        var destination, message, panel;
+
+        destination = ev.params[0];
+        ev.params.shift();
+
+        message = ev.params.join(' ');
+
+        // Check if we have the panel already. If not, create it
+        panel = this.connections.active_connection.panels.getByName(destination);
+        if (!panel) {
+            panel = new _kiwi.model.Query({name: destination});
+            this.connections.active_connection.panels.add(panel);
+        }
+
+        if (panel) panel.view.show();
+
+        if (message) {
+            this.connections.active_connection.gateway.msg(panel.get('name'), message);
+            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+        }
+
+    }
+
+    function msgCommand (ev) {
+        var message,
+            destination = ev.params[0],
+            panel = this.connections.active_connection.panels.getByName(destination) || this.panels().server;
+
+        ev.params.shift();
+        message = formatToIrcMsg(ev.params.join(' '));
+
+        panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+        _kiwi.gateway.privmsg(null, destination, message);
+    }
+
+    function actionCommand (ev) {
+        if (_kiwi.app.panels().active.isServer()) {
+            return;
+        }
+
+        var panel = _kiwi.app.panels().active;
+        panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
+        _kiwi.gateway.action(null, panel.get('name'), ev.params.join(' '));
+    }
+
+    function partCommand (ev) {
+        if (ev.params.length === 0) {
+            _kiwi.gateway.part(null, _kiwi.app.panels().active.get('name'));
+        } else {
+            _.each(ev.params, function (channel) {
+                _kiwi.gateway.part(null, channel);
+            });
+        }
+    }
+
+    function nickCommand (ev) {
+        _kiwi.gateway.changeNick(null, ev.params[0]);
+    }
+
+    function topicCommand (ev) {
+        var channel_name;
+
+        if (ev.params.length === 0) return;
+
+        if (this.isChannelName(ev.params[0])) {
+            channel_name = ev.params[0];
+            ev.params.shift();
+        } else {
+            channel_name = _kiwi.app.panels().active.get('name');
+        }
+
+        _kiwi.gateway.topic(null, channel_name, ev.params.join(' '));
+    }
+
+    function noticeCommand (ev) {
+        var destination;
+
+        // Make sure we have a destination and some sort of message
+        if (ev.params.length <= 1) return;
+
+        destination = ev.params[0];
+        ev.params.shift();
+
+        _kiwi.gateway.notice(null, destination, ev.params.join(' '));
+    }
+
+    function quoteCommand (ev) {
+        var raw = ev.params.join(' ');
+        _kiwi.gateway.raw(null, raw);
+    }
+
+    function kickCommand (ev) {
+        var nick, panel = _kiwi.app.panels().active;
+
+        if (!panel.isChannel()) return;
+
+        // Make sure we have a nick
+        if (ev.params.length === 0) return;
+
+        nick = ev.params[0];
+        ev.params.shift();
+
+        _kiwi.gateway.kick(null, panel.get('name'), nick, ev.params.join(' '));
+    }
+
+    function clearCommand (ev) {
+        // Can't clear a server or applet panel
+        if (_kiwi.app.panels().active.isServer() || _kiwi.app.panels().active.isApplet()) {
+            return;
+        }
+
+        if (_kiwi.app.panels().active.clearMessages) {
+            _kiwi.app.panels().active.clearMessages();
+        }
+    }
+
+    function ctcpCommand(ev) {
+        var target, type;
+
+        // Make sure we have a target and a ctcp type (eg. version, time)
+        if (ev.params.length < 2) return;
+
+        target = ev.params[0];
+        ev.params.shift();
+
+        type = ev.params[0];
+        ev.params.shift();
+
+        _kiwi.gateway.ctcp(null, true, type, target, ev.params.join(' '));
+    }
+
+    function settingsCommand (ev) {
+        var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
+        settings.view.show();
+    }
+
+    function scriptCommand (ev) {
+        var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
+        editor.view.show();
+    }
+
+    function appletCommand (ev) {
+        if (!ev.params[0]) return;
+
+        var panel = new _kiwi.model.Applet();
+
+        if (ev.params[1]) {
+            // Url and name given
+            panel.load(ev.params[0], ev.params[1]);
+        } else {
+            // Load a pre-loaded applet
+            if (_kiwi.applets[ev.params[0]]) {
+                panel.load(new _kiwi.applets[ev.params[0]]());
+            } else {
+                _kiwi.app.panels().server.addMsg('', _kiwi.global.i18n.translate('client_models_application_applet_notfound').fetch(ev.params[0]));
+                return;
+            }
+        }
+
+        _kiwi.app.connections.active_connection.panels.add(panel);
+        panel.view.show();
+    }
+
+
+
+    function inviteCommand (ev) {
+        var nick, channel;
+
+        // A nick must be specified
+        if (!ev.params[0])
+            return;
+
+        // Can only invite into channels
+        if (!_kiwi.app.panels().active.isChannel())
+            return;
+
+        nick = ev.params[0];
+        channel = _kiwi.app.panels().active.get('name');
+
+        _kiwi.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
+
+        _kiwi.app.panels().active.addMsg('', '== ' + nick + ' has been invited to ' + channel, 'action');
+    }
+
+
+    function whoisCommand (ev) {
+        var nick;
+
+        if (ev.params[0]) {
+            nick = ev.params[0];
+        } else if (_kiwi.app.panels().active.isQuery()) {
+            nick = _kiwi.app.panels().active.get('name');
+        }
+
+        if (nick)
+            _kiwi.app.connections.active_connection.gateway.raw('WHOIS ' + nick + ' ' + nick);
+    }
+
+
+    function whowasCommand (ev) {
+        var nick;
+
+        if (ev.params[0]) {
+            nick = ev.params[0];
+        } else if (_kiwi.app.panels().active.isQuery()) {
+            nick = _kiwi.app.panels().active.get('name');
+        }
+
+        if (nick)
+            _kiwi.app.connections.active_connection.gateway.raw('WHOWAS ' + nick);
+    }
+
+    function encodingCommand (ev) {
+        if (ev.params[0]) {
+            _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
+                if (success) {
+                    _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_changed').fetch(ev.params[0]));
+                } else {
+                    _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_invalid').fetch(ev.params[0]));
+                }
+            });
+        } else {
+            _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_notspecified').fetch());
+            _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_usage').fetch());
+        }
+    }
+
+    function channelCommand (ev) {
+        var active_panel = _kiwi.app.panels().active;
+
+        if (!active_panel.isChannel())
+            return;
+
+        new _kiwi.model.ChannelInfo({channel: _kiwi.app.panels().active});
+    }
+
+    function serverCommand (ev) {
+        var server, port, ssl, password, nick,
+            tmp;
+
+        // If no server address given, show the new connection dialog
+        if (!ev.params[0]) {
+            tmp = new _kiwi.view.MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
+            tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
+            tmp.show();
+
+            // Center screen the dialog
+            tmp.$el.offset({
+                top: (this.view.$el.height() / 2) - (tmp.$el.height() / 2),
+                left: (this.view.$el.width() / 2) - (tmp.$el.width() / 2)
+            });
+
+            return;
+        }
+
+        // Port given in 'host:port' format and no specific port given after a space
+        if (ev.params[0].indexOf(':') > 0) {
+            tmp = ev.params[0].split(':');
+            server = tmp[0];
+            port = tmp[1];
+
+            password = ev.params[1] || undefined;
+
+        } else {
+            // Server + port given as 'host port'
+            server = ev.params[0];
+            port = ev.params[1] || 6667;
+
+            password = ev.params[2] || undefined;
+        }
+
+        // + in the port means SSL
+        if (port.toString()[0] === '+') {
+            ssl = true;
+            port = parseInt(port.substring(1), 10);
+        } else {
+            ssl = false;
+        }
+
+        // Default port if one wasn't found
+        port = port || 6667;
+
+        // Use the same nick as we currently have
+        nick = _kiwi.app.connections.active_connection.get('nick');
+
+        _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_connecting').fetch(server, port.toString()));
+
+        _kiwi.gateway.newConnection({
+            nick: nick,
+            host: server,
+            port: port,
+            ssl: ssl,
+            password: password
+        }, function(err, new_connection) {
+            if (err)
+                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_error').fetch(server, port.toString(), err.toString()));
+        });
+    }
+
+})();
