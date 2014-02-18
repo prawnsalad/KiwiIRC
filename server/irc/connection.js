@@ -3,6 +3,7 @@ var net             = require('net'),
     util            = require('util'),
     dns             = require('dns'),
     _               = require('lodash'),
+    winston         = require('winston'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcCommands     = require('./commands.js'),
@@ -752,7 +753,8 @@ function parseIrcLine(buffer_line) {
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
-        console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
+        //console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
+        winston.warn('Malformed IRC line: %s', line.replace(/^\r+|\r+$/, ''));
         return;
     }
 

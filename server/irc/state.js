@@ -1,6 +1,7 @@
 var util            = require('util'),
     events          = require('events'),
     _               = require('lodash'),
+    winston         = require('winston'),
     IrcConnection   = require('./connection.js').IrcConnection;
 
 var State = function (client, save_state) {
@@ -65,7 +66,8 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
     });
 
     con.on('error', function IrcConnectionError(err) {
-        console.log('irc_connection error (' + hostname + '):', err);
+        //console.log('irc_connection error (' + hostname + '):', err);
+        winston.warn('irc_connection error (%s): %s', hostname, err);
         return callback(err.message);
     });
 

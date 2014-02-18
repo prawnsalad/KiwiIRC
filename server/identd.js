@@ -1,4 +1,5 @@
-var net = require('net');
+var net     = require('net'),
+    winston = require('winston');
 
 var IdentdServer = module.exports = function(opts) {
 
@@ -44,7 +45,9 @@ var IdentdServer = module.exports = function(opts) {
     });
 
     server.on('listening', function() {
-        console.log('Ident Server listening on ' + server.address().address + ':' +  server.address().port);
+        var addr = server.address();
+        //console.log('Ident Server listening on ' + server.address().address + ':' +  server.address().port);
+        winston.info('Ident Server listening on %s:%s', addr.address, addr.port);
     });
 
 
