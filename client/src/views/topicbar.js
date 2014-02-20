@@ -29,7 +29,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            _kiwi.gateway.topic(null, _kiwi.app.panels().active.get('name'), inp_val);
+            _kiwi.app.connections.active_connection.gateway.topic(_kiwi.app.panels().active.get('name'), inp_val);
             return false;
         }
     },

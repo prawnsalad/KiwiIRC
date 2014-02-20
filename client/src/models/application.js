@@ -610,7 +610,7 @@
 
 
             fn_to_bind['command:ignore'] = function (ev) {
-                var list = _kiwi.gateway.get('ignore_list');
+                var list = this.connections.active_connection.get('ignore_list');
 
                 // No parameters passed so list them
                 if (!ev.params[0]) {
@@ -627,13 +627,13 @@
 
                 // We have a parameter, so add it
                 list.push(ev.params[0]);
-                _kiwi.gateway.set('ignore_list', list);
+                this.connections.active_connection.set('ignore_list', list);
                 _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_nick').fetch(ev.params[0]));
             };
 
 
             fn_to_bind['command:unignore'] = function (ev) {
-                var list = _kiwi.gateway.get('ignore_list');
+                var list = this.connections.active_connection.get('ignore_list');
 
                 if (!ev.params[0]) {
                     _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stop_notice').fetch());
@@ -644,7 +644,7 @@
                     return pattern === ev.params[0];
                 });
 
-                _kiwi.gateway.set('ignore_list', list);
+                this.connections.active_connection.set('ignore_list', list);
 
                 _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stopped').fetch(ev.params[0]));
             };
@@ -671,7 +671,7 @@
     function unknownCommand (ev) {
         var raw_cmd = ev.command + ' ' + ev.params.join(' ');
         console.log('RAW: ' + raw_cmd);
-        _kiwi.gateway.raw(null, raw_cmd);
+        this.connections.active_connection.gateway.raw(raw_cmd);
     }
 
     function allCommands (ev) {}
@@ -720,7 +720,7 @@
         message = formatToIrcMsg(ev.params.join(' '));
 
         panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
-        _kiwi.gateway.privmsg(null, destination, message);
+        this.connections.active_connection.gateway.privmsg(destination, message);
     }
 
     function actionCommand (ev) {
@@ -730,21 +730,21 @@
 
         var panel = _kiwi.app.panels().active;
         panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
-        _kiwi.gateway.action(null, panel.get('name'), ev.params.join(' '));
+        this.connections.active_connection.gateway.action(panel.get('name'), ev.params.join(' '));
     }
 
     function partCommand (ev) {
         if (ev.params.length === 0) {
-            _kiwi.gateway.part(null, _kiwi.app.panels().active.get('name'));
+            this.connections.active_connection.gateway.part(_kiwi.app.panels().active.get('name'));
         } else {
             _.each(ev.params, function (channel) {
-                _kiwi.gateway.part(null, channel);
+                this.connections.active_connection.gateway.part(channel);
             });
         }
     }
 
     function nickCommand (ev) {
-        _kiwi.gateway.changeNick(null, ev.params[0]);
+        this.connections.active_connection.gateway.changeNick(ev.params[0]);
     }
 
     function topicCommand (ev) {
@@ -759,7 +759,7 @@
             channel_name = _kiwi.app.panels().active.get('name');
         }
 
-        _kiwi.gateway.topic(null, channel_name, ev.params.join(' '));
+        this.connections.active_connection.gateway.topic(channel_name, ev.params.join(' '));
     }
 
     function noticeCommand (ev) {
@@ -771,12 +771,12 @@
         destination = ev.params[0];
         ev.params.shift();
 
-        _kiwi.gateway.notice(null, destination, ev.params.join(' '));
+        this.connections.active_connection.gateway.notice(destination, ev.params.join(' '));
     }
 
     function quoteCommand (ev) {
         var raw = ev.params.join(' ');
-        _kiwi.gateway.raw(null, raw);
+        this.connections.active_connection.gateway.raw(raw);
     }
 
     function kickCommand (ev) {
@@ -790,7 +790,7 @@
         nick = ev.params[0];
         ev.params.shift();
 
-        _kiwi.gateway.kick(null, panel.get('name'), nick, ev.params.join(' '));
+        this.connections.active_connection.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
     }
 
     function clearCommand (ev) {
@@ -816,7 +816,7 @@
         type = ev.params[0];
         ev.params.shift();
 
-        _kiwi.gateway.ctcp(null, true, type, target, ev.params.join(' '));
+        this.connections.active_connection.gateway.ctcp(true, type, target, ev.params.join(' '));
     }
 
     function settingsCommand (ev) {

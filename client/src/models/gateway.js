@@ -3,51 +3,6 @@ _kiwi.model.Gateway = function () {
     // Set to a reference to this object within initialize()
     var that = null;
 
-    this.defaults = {
-        /**
-        *   The name of the network
-        *   @type    String
-        */
-        name: 'Server',
-
-        /**
-        *   The address (URL) of the network
-        *   @type    String
-        */
-        address: '',
-
-        /**
-        *   The current nickname
-        *   @type   String
-        */
-        nick: '',
-
-        /**
-        *   The channel prefix for this network
-        *   @type    String
-        */
-        channel_prefix: '#',
-
-        /**
-        *   The user prefixes for channel owner/admin/op/voice etc. on this network
-        *   @type   Array
-        */
-        user_prefixes: ['~', '&', '@', '+'],
-
-        /**
-        *   The URL to the Kiwi server
-        *   @type   String
-        */
-        kiwi_server: '//kiwi',
-
-        /**
-        *   List of nicks we are ignoring
-        *   @type Array
-        */
-        ignore_list: []
-    };
-
-
     this.initialize = function () {
         that = this;
 
@@ -638,23 +593,6 @@ _kiwi.model.Gateway = function () {
         };
 
         this.sendData(data, callback);
-    };
-
-    // Check a nick alongside our ignore list
-    this.isNickIgnored = function (nick) {
-        var idx, list = this.get('ignore_list');
-        var pattern, regex;
-
-        for (idx = 0; idx < list.length; idx++) {
-            pattern = list[idx].replace(/([.+^$[\]\\(){}|-])/g, "\\$1")
-                .replace('*', '.*')
-                .replace('?', '.');
-
-            regex = new RegExp(pattern, 'i');
-            if (regex.test(nick)) return true;
-        }
-
-        return false;
     };
 
 
