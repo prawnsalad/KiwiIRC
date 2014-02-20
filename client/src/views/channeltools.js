@@ -11,6 +11,6 @@ _kiwi.view.ChannelTools = Backbone.View.extend({
     },
 
     partClick: function (event) {
-        _kiwi.gateway.part(null, _kiwi.app.panels().active.get('name'));
+        _kiwi.app.connections.active_connection.gateway.part(_kiwi.app.panels().active.get('name'));
     }
 });

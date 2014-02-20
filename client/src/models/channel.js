@@ -110,5 +110,9 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
     setMode: function(mode_string) {
         this.get('network').gateway.mode(this.get('name'), mode_string);
+    },
+
+    isChannel: function() {
+        return true;
     }
 });
