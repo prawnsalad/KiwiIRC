@@ -1,9 +1,4 @@
 _kiwi.model.Applet = _kiwi.model.Panel.extend({
-    // Used to determine if this is an applet panel. Applet panel tabs are treated
-    // differently than others
-    applet: true,
-
-
     initialize: function (attributes) {
         // Temporary name
         var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
@@ -82,6 +77,10 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
         }
 
         this.closePanel();
+    },
+
+    isApplet: function () {
+        return true;
     }
 },
 
