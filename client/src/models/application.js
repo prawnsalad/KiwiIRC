@@ -720,7 +720,7 @@
         message = formatToIrcMsg(ev.params.join(' '));
 
         panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
-        this.connections.active_connection.gateway.privmsg(destination, message);
+        this.connections.active_connection.gateway.msg(destination, message);
     }
 
     function actionCommand (ev) {
