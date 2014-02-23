@@ -137,7 +137,7 @@ handlers = {
     'RPL_WELCOME': function (command) {
         var nick =  command.params[0];
         this.irc_connection.registered = true;
-        this.cap_negotation = false;
+        this.cap_negotiation = false;
         this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' connect', {
             nick: nick
         });
@@ -670,7 +670,7 @@ handlers = {
                     this.irc_connection.write('CAP REQ :' + request.join(' '));
                 } else {
                     this.irc_connection.write('CAP END');
-                    this.irc_connection.cap_negotation = false;
+                    this.irc_connection.cap_negotiation = false;
                 }
                 break;
             case 'ACK':
@@ -686,7 +686,7 @@ handlers = {
                         this.irc_connection.write('AUTHENTICATE PLAIN');
                     } else {
                         this.irc_connection.write('CAP END');
-                        this.irc_connection.cap_negotation = false;
+                        this.irc_connection.cap_negotiation = false;
                     }
                 }
                 break;
@@ -696,7 +696,7 @@ handlers = {
                 }
                 if (this.irc_connection.cap.requested.length > 0) {
                     this.irc_connection.write('CAP END');
-                    this.irc_connection.cap_negotation = false;
+                    this.irc_connection.cap_negotiation = false;
                 }
                 break;
             case 'LIST':
@@ -720,7 +720,7 @@ handlers = {
             }
         } else {
             this.irc_connection.write('CAP END');
-            this.irc_connection.cap_negotation = false;
+            this.irc_connection.cap_negotiation = false;
         }
     },
 
@@ -739,24 +739,25 @@ handlers = {
 
     'RPL_SASLAUTHENTICATED': function (command) {
         this.irc_connection.write('CAP END');
-        this.irc_connection.cap_negotation = false;
+        this.irc_connection.cap_negotiation = false;
         this.irc_connection.sasl = true;
     },
 
     'RPL_SASLLOGGEDIN': function (command) {
-        if (this.irc_connection.cap_negotation === false) {
+        if (this.irc_connection.cap_negotiation === true) {
             this.irc_connection.write('CAP END');
+            this.irc_connection.cap_negotiation = false;
         }
     },
 
     'ERR_SASLNOTAUTHORISED': function (command) {
         this.irc_connection.write('CAP END');
-        this.irc_connection.cap_negotation = false;
+        this.irc_connection.cap_negotiation = false;
     },
 
     'ERR_SASLABORTED': function (command) {
         this.irc_connection.write('CAP END');
-        this.irc_connection.cap_negotation = false;
+        this.irc_connection.cap_negotiation = false;
     },
 
     'ERR_SASLALREADYAUTHED': function (command) {
