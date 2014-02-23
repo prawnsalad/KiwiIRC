@@ -679,6 +679,11 @@
     function joinCommand (ev) {
         var panels, channel_names;
 
+        // Add a # in front of the first channel if missing
+        if (ev.params[0].substring(0,1) != '#') {
+            ev.params[0] = '#' + ev.params[0];
+        }
+        
         channel_names = ev.params.join(' ').split(',');
         panels = this.connections.active_connection.createAndJoinChannels(channel_names);
 
