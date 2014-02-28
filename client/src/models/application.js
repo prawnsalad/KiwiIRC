@@ -734,11 +734,13 @@
     }
 
     function partCommand (ev) {
+        var that = this;
+
         if (ev.params.length === 0) {
             this.connections.active_connection.gateway.part(_kiwi.app.panels().active.get('name'));
         } else {
             _.each(ev.params, function (channel) {
-                this.connections.active_connection.gateway.part(channel);
+                that.connections.active_connection.gateway.part(channel);
             });
         }
     }
