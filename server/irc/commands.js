@@ -455,17 +455,25 @@ handlers = {
     },
 
     'PART': function (command) {
-        var time;
+        var time, channel, message;
 
         // Check if we have a server-time
         time = getServerTime.call(this, command);
+
+        // Some IRCds (Note: Nefarious) send the channel as the trailing param
+        if (!command.params[0]) {
+            channel = command.trailing;
+        } else {
+            channel = command.params[0];
+            message = command.trailing;
+        }
 
         this.irc_connection.emit('channel ' + command.params[0] + ' part', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
-            channel: command.params[0],
-            message: command.trailing,
+            channel: channel,
+            message: message,
             time: time
         });
     },
