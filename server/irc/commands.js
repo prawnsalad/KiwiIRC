@@ -468,7 +468,7 @@ handlers = {
             message = command.trailing;
         }
 
-        this.irc_connection.emit('channel ' + command.params[0] + ' part', {
+        this.irc_connection.emit('channel ' + channel + ' part', {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
