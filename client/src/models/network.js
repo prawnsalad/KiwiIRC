@@ -167,12 +167,10 @@
 
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
-
-                // If not a valid channel name, display a warning
-                if (!that.isChannelName(channel_name)) {
-                    that.panels.server.addMsg('', _kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(channel_name));
-                    _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(channel_name), {timeout: 5000});
-                    return;
+                
+                // Add channel_prefix in front of the first channel if missing
+                if (channel_name[0] != that.get('channel_prefix')) {
+                    channel_name = that.get('channel_prefix') + channel_name;
                 }
 
                 // Check if we have the panel already. If not, create it
