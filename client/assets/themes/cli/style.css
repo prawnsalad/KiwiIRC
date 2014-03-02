@@ -233,27 +233,27 @@
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
 #kiwi.chanlist_treeview .tabs ul li.active { padding-left:1em; }
-#kiwi #chanlist {
+#kiwi .applet_chanlist {
     margin: 0.5em 1em;
 }
-#kiwi #chanlist table {
+#kiwi .applet_chanlist table {
     border-collapse: collapse;
     width: 100%;
 }
-#kiwi #chanlist thead {
+#kiwi .applet_chanlist thead {
     text-align: center;
 }
-#kiwi #chanlist tbody td {
+#kiwi .applet_chanlist tbody td {
     border: 1px solid #454545;
     padding: 0.3em 1em;
 }
-#kiwi #chanlist .chanlist_name, #kiwi #chanlist .chanlist_num_users {
+#kiwi .applet_chanlist .chanlist_name, #kiwi .applet_chanlist .chanlist_num_users {
     border-width: 0 1px 0 0;
 }
-#kiwi #chanlist .chanlist_topic {
+#kiwi .applet_chanlist .chanlist_topic {
     border-width: 0;
 }
-#kiwi #chanlist tr:nth-child(even) {
+#kiwi .applet_chanlist tr:nth-child(even) {
     background: none repeat scroll 0 0 #2B2929;
 }
 

@@ -45,8 +45,8 @@
             }
 
             // Clean the sorting icon and add the new one
-            $('#chanlist #users_title').find('span').remove();
-            $('#chanlist #channel_name_title').find('span').remove();
+            $('.applet_chanlist #users_title').find('span').remove();
+            $('.applet_chanlist #channel_name_title').find('span').remove();
             switch (this.order) {
                 case 'user_desc':
                 default:

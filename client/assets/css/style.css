@@ -467,9 +467,9 @@ html, body { height:100%; }
 }
 #kiwi .ui_menu .ui_menu_foot .close { }
 
-#kiwi .applet #chanlist .icon-sort-down:before, #kiwi .applet #chanlist .icon-sort-up:before {
+#kiwi .applet .applet_chanlist .icon-sort-down:before, #kiwi .applet .applet_chanlist .icon-sort-up:before {
     padding-left: 1em;
 }
-#kiwi .applet #chanlist td {
+#kiwi .applet .applet_chanlist td {
     min-width: 120px;
 }
