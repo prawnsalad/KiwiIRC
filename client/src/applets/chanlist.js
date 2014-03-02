@@ -3,16 +3,16 @@
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
-            "click #channel_name_title": "sortChannelsByNameClick",
-            "click #users_title": "sortChannelsByUsersClick"
+            "click .channel_name_title": "sortChannelsByNameClick",
+            "click .users_title": "sortChannelsByUsersClick"
         },
 
         
         
         initialize: function (options) {
             var text = {
-                channel_name: '<a id="channel_name_title">' + _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch() + '</a>',
-                users: '<a id="users_title">' + _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch() + '</a>',
+                channel_name: '<a class="channel_name_title">' + _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch() + '</a>',
+                users: '<a class="users_title">' + _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch() + '</a>',
                 topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
             };
             this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
@@ -45,21 +45,21 @@
             }
 
             // Clean the sorting icon and add the new one
-            $('.applet_chanlist #users_title').find('span').remove();
-            $('.applet_chanlist #channel_name_title').find('span').remove();
+            $('.applet_chanlist .users_title').find('span').remove();
+            $('.applet_chanlist .channel_name_title').find('span').remove();
             switch (this.order) {
                 case 'user_desc':
                 default:
-                    $('#users_title').append(icon_desc);
+                    $('.users_title').append(icon_desc);
                     break;
                 case 'user_asc':
-                    $('#users_title').append(icon_asc);
+                    $('.users_title').append(icon_asc);
                     break;
                 case 'name_asc':
-                    $('#channel_name_title').append(icon_asc);
+                    $('.channel_name_title').append(icon_asc);
                     break;
                 case 'name_desc':
-                    $('#channel_name_title').append(icon_desc);
+                    $('.channel_name_title').append(icon_desc);
                     break;
             }
             
@@ -87,17 +87,10 @@
         
         sortChannelsByNameClick: function (event) {
             // Revert the sorting to switch between orders
-            switch (this.order) {
-                case '':
-                case 'name_desc':
-                case 'user_asc':
-                case 'user_desc':
-                default:
-                    this.order = 'name_asc';
-                    break;
-                case 'name_asc':
-                    this.order = 'name_desc';
-                    break;
+            if (this.order == 'name_asc') {
+                this.order = 'name_desc';
+            } else {
+                this.order = 'name_asc';
             }
             
             this.sortChannelsClick(this.order);
@@ -105,17 +98,10 @@
         
         sortChannelsByUsersClick: function (event) {
             // Revert the sorting to switch between orders
-            switch (this.order) {
-                case 'user_asc':
-                case 'name_asc':
-                case 'name_desc':
-                default:
-                    this.order = 'user_desc';
-                    break;
-                case '':
-                case 'user_desc':
-                    this.order = 'user_asc';
-                    break;
+            if (this.order == 'user_desc') {
+                this.order = 'user_asc';
+            } else {
+                this.order = 'user_desc';
             }
             
             this.sortChannelsClick(this.order);
