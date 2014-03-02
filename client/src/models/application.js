@@ -309,6 +309,8 @@
 
 
         panels: (function() {
+            var active_panel;
+
             var fn = function(panel_type) {
                 var panels;
 
@@ -325,7 +327,7 @@
                 }
 
                 // Active panels / server
-                panels.active = this.connections.active_panel;
+                panels.active = active_panel;
                 panels.server = this.connections.active_connection ?
                     this.connections.active_connection.panels.server :
                     null;
@@ -334,6 +336,11 @@
             };
 
             _.extend(fn, Backbone.Events);
+
+            // Keep track of the active panel. Channel/query/server or applet
+            fn.bind('active', function (new_active_panel) {
+                active_panel = new_active_panel;
+            });
 
             return fn;
         })(),
