@@ -98,7 +98,7 @@
         
         sortChannelsByUsersClick: function (event) {
             // Revert the sorting to switch between orders
-            if (this.order == 'user_desc') {
+            if (this.order == 'user_desc' || this.order == '') {
                 this.order = 'user_asc';
             } else {
                 this.order = 'user_desc';
