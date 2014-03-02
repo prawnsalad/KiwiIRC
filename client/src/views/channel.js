@@ -147,7 +147,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         } else {
             hour = msg.time.getHours();
             pm = hour > 11;
-            hour = (hour === 0) ? 12 : hour % 12;
+
+            hour = hour % 12;
+            if (hour === 0)
+                hour = 12;
+
             if (pm) {
                 msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_pm').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
             } else {
