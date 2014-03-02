@@ -167,10 +167,11 @@
 
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
-                
+
                 // Add channel_prefix in front of the first channel if missing
-                if (channel_name[0] != that.get('channel_prefix')) {
-                    channel_name = that.get('channel_prefix') + channel_name;
+                if (that.get('channel_prefix').indexOf(channel_name[0]) === -1) {
+                    // Could be many prefixes but '#' is highly likely the required one
+                    channel_name = '#' + channel_name;
                 }
 
                 // Check if we have the panel already. If not, create it
