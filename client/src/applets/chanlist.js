@@ -50,16 +50,16 @@
             switch (this.order) {
                 case 'user_desc':
                 default:
-                    $('.users_title').append(icon_desc);
+                    this.$('.users_title').append(icon_desc);
                     break;
                 case 'user_asc':
-                    $('.users_title').append(icon_asc);
+                    this.$('.users_title').append(icon_asc);
                     break;
                 case 'name_asc':
-                    $('.channel_name_title').append(icon_asc);
+                    this.$('.channel_name_title').append(icon_asc);
                     break;
                 case 'name_desc':
-                    $('.channel_name_title').append(icon_desc);
+                    this.$('.channel_name_title').append(icon_desc);
                     break;
             }
             
