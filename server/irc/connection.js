@@ -237,7 +237,8 @@ IrcConnection.prototype.connect = function () {
                     host: host,
                     port: that.irc_host.port,
                     rejectUnauthorized: global.config.reject_unauthorised_certificates,
-                    localAddress: outgoing
+                    localAddress: outgoing,
+                    secureProtocol: 'SSLv3_method'
                 });
 
                 // We need the raw socket connect event
