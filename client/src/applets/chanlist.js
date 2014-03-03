@@ -31,7 +31,6 @@
             var table = $('table', this.$el),
                 tbody = table.children('tbody:first').detach(),
                 that = this,
-                channels_length = this.channels.length,
                 i;
             
             if (override_channels !== undefined) {
@@ -79,7 +78,7 @@
                 }
             });
 
-            for (i = 0; i < channels_length; i++) {
+            for (i = 0; i < this.channels.length; i++) {
                 tbody[0].appendChild(this.channels[i].dom);
             }
             table[0].appendChild(tbody[0]);
