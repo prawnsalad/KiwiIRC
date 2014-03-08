@@ -213,12 +213,6 @@ function addScripts(vars, debug) {
         [
             'src/models/query.js',
             'src/models/server.js',     // Depends on models/channel.js
-            'src/applets/settings.js',
-            'src/applets/chanlist.js',
-            'src/applets/scripteditor.js'
-        ],
-
-        [
             'src/models/pluginmanager.js',
             'src/models/datastore.js',
             'src/helpers/utils.js'
@@ -250,6 +244,12 @@ function addScripts(vars, debug) {
             'src/views/userbox.js',
             'src/views/channeltools.js',
             'src/views/channelinfo.js'
+        ],
+        [
+            'src/applets/settings.js',
+            'src/applets/chanlist.js',
+            'src/applets/scripteditor.js',
+            'src/applets/startup.js'
         ]
     ]);
 }

@@ -462,7 +462,7 @@
 
 
     function onNotice(event) {
-        var panel, channel_name;
+        var panel, active_panel, channel_name;
 
         // An ignored user? don't do anything with it
         if (!event.from_server && event.nick && this.isNickIgnored(event.nick)) {
@@ -492,9 +492,13 @@
 
         panel.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
 
-        // Show this notice to the active panel if it didn't have a set target
-        if (!event.from_server && panel === this.panels.server && _kiwi.app.panels().active !== this.panels.server)
-            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
+        // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
+        active_panel = _kiwi.app.panels().active;
+
+        if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
+            if (active_panel.isChannel() || active_panel.isQuery())
+                active_panel.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
+        }
     }
 
 
