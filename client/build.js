@@ -57,10 +57,6 @@ var source_files = [
     __dirname + '/src/models/datastore.js',
     __dirname + '/src/models/channelinfo.js',
 
-    __dirname + '/src/applets/settings.js',
-    __dirname + '/src/applets/chanlist.js',
-    __dirname + '/src/applets/scripteditor.js',
-
     __dirname + '/src/helpers/utils.js',
 
     __dirname + '/src/views/panel.js',
@@ -83,7 +79,12 @@ var source_files = [
     __dirname + '/src/views/topicbar.js',
     __dirname + '/src/views/userbox.js',
     __dirname + '/src/views/channeltools.js',
-    __dirname + '/src/views/channelinfo.js'
+    __dirname + '/src/views/channelinfo.js',
+
+    __dirname + '/src/applets/settings.js',
+    __dirname + '/src/applets/chanlist.js',
+    __dirname + '/src/applets/scripteditor.js',
+    __dirname + '/src/applets/startup.js'
 ];
 
 
