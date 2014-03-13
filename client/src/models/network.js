@@ -763,7 +763,7 @@
 
             member = panel.get('members').getByNick(event.nick);
             if (member) {
-                member.set('away', !(!event.trailing));
+                member.set('away', !(!event.reason));
             }
         });
     }
@@ -846,9 +846,6 @@
         if (display_params[0] && display_params[0] == this.get('nick')) {
             display_params.shift();
         }
-
-        if (event.trailing)
-            display_params.push(event.trailing);
 
         this.panels.server.addMsg('', '[' + event.command + '] ' + display_params.join(', ', ''));
     }

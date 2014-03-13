@@ -738,14 +738,17 @@ var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([^\s!]+)|([^\s!]+)!([^\s@]+)@?([^\
 
 function parseIrcLine(buffer_line) {
     var msg,
-        i, j,
+        i,
         tags = [],
         tag,
-        line = '';
+        line = '',
+        msgObj;
 
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
-    if (!line) return;
+    if (!line) {
+        return;
+    }
 
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
@@ -760,23 +763,28 @@ function parseIrcLine(buffer_line) {
     if (msg[1]) {
         tags = msg[1].split(';');
 
-        for (j = 0; j < tags.length; j++) {
-            tag = tags[j].split('=');
-            tags[j] = {tag: tag[0], value: tag[1]};
+        for (i = 0; i < tags.length; i++) {
+            tag = tags[i].split('=');
+            tags[i] = {tag: tag[0], value: tag[1]};
         }
     }
 
-    msg = {
+    //console.log(msg);
+
+    msgObj = {
         tags:       tags,
         prefix:     msg[2],
         nick:       msg[3],
         ident:      msg[4],
         hostname:   msg[5] || '',
         command:    msg[6],
-        params:     msg[7] || '',
-        trailing:   (msg[8]) ? msg[8].trim() : ''
+        params:     msg[7] ? msg[7].split(/ +/) : []
     };
 
-    msg.params = msg.params.split(/ +/);
-    this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
+    if (msg[8]) {
+        msgObj.params.push(msg[8].trim());
+    }
+
+    console.log(msgObj);
+    this.irc_commands.dispatch(msgObj.command.toUpperCase(), msgObj);
 }

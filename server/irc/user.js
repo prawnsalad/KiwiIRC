@@ -71,7 +71,7 @@ function onQuit(event) {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        message: event.trailing,
+        message: event.message,
         time: event.time
     });
 }
