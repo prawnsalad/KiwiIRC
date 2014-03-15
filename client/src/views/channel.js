@@ -216,7 +216,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 'action mode'
             ];
 
-            if (count_all_activity || exclude_message_types.indexOf(msg.type) === -1) {
+            if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
                 $act.text((parseInt($act.text(), 10) || 0) + 1);
             }
 
