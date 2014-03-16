@@ -742,7 +742,7 @@ function parseIrcLine(buffer_line) {
         tags = [],
         tag,
         line = '',
-        msgObj;
+        msg_obj;
 
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
@@ -769,9 +769,7 @@ function parseIrcLine(buffer_line) {
         }
     }
 
-    //console.log(msg);
-
-    msgObj = {
+    msg_obj = {
         tags:       tags,
         prefix:     msg[2],
         nick:       msg[3],
@@ -782,9 +780,8 @@ function parseIrcLine(buffer_line) {
     };
 
     if (msg[8]) {
-        msgObj.params.push(msg[8].trim());
+        msg_obj.params.push(msg[8].trim());
     }
 
-    console.log(msgObj);
-    this.irc_commands.dispatch(msgObj.command.toUpperCase(), msgObj);
+    this.irc_commands.dispatch(msg_obj.command.toUpperCase(), msg_obj);
 }
