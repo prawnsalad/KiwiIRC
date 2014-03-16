@@ -106,7 +106,7 @@ msgstr "Unknown Applet"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Loading.."
+msgstr "Loading..."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -278,7 +278,7 @@ msgstr "This will close all KiwiIRC conversations. Are you sure you want to clos
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Joining channel.."
+msgstr "Joining channel..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -394,7 +394,7 @@ msgstr "Connected"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Connecting.."
+msgstr "Connecting..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
@@ -466,7 +466,7 @@ msgstr "In 5 minutes you will be reconnected and your channels re-joined. Get re
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Safely reconnecting you now.."
+msgstr "Safely reconnecting you now..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"

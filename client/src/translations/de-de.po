@@ -102,7 +102,7 @@ msgstr "Unbekannte Anwendung"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Lade.."
+msgstr "Lade..."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -274,7 +274,7 @@ msgstr "Dies wird alle KiwiIRC Verbindungen beenden. Bist du sicher, dass du die
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Betrete Raum.."
+msgstr "Betrete Raum..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -382,7 +382,7 @@ msgstr "Verbunden"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Verbinde.."
+msgstr "Verbinde..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
@@ -454,7 +454,7 @@ msgstr "In 5 Minuten wirst du neu verbunden und alle deine Räume werden neu bet
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Du wirst neu verbunden.."
+msgstr "Du wirst neu verbunden..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"

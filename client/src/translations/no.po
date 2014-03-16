@@ -102,7 +102,7 @@ msgstr "Ukjent applet"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Laster.."
+msgstr "Laster..."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -274,7 +274,7 @@ msgstr "Dette vil lukke alle KiwiIRC-samtaler. Er du sikker på at du vil lukke 
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Blir med i kanal.."
+msgstr "Blir med i kanal..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -382,7 +382,7 @@ msgstr "Tilkoblet"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Kobler til.."
+msgstr "Kobler til..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
