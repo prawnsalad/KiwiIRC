@@ -1,0 +1,15 @@
+{
+  "client_models_channel_join": "%C3== %I%T",
+  "client_models_channel_part": "%C5== %I%T",
+  "client_models_channel_quit": "%C5== %I%T",
+  "client_models_channel_kicked": "%C5== %I%T",
+  "client_models_channel_selfkick": "%C5== %I%T",
+  "client_models_network_badpassword": "%C3== %I%T",
+  "client_models_network_mode": "%C3== %I%T",
+  "client_models_network_selfmode": "%C3== %I%T",
+  "client_models_network_banned": "%C3== %I%T",
+  "client_models_network_channel_badkey": "%C3== %I%T",
+  "client_models_network_channel_inviteonly": "%C3== %I%T",
+  "client_models_network_channel_limitreached": "%C3== %I%T",
+  "client_models_network_nickname_alreadyinuse": "%C3== %I%T"
+}

@@ -114,7 +114,7 @@ _kiwi.global = {
             } else {
                 _kiwi.global.i18n = new Jed();
             }
-
+            
             _kiwi.app = new _kiwi.model.Application(opts);
 
             // Start the client up
@@ -125,6 +125,12 @@ _kiwi.global = {
 
             callback && callback();
         };
+        
+        igniteTextTheme = function(text_theme, s, xhr) {
+            _kiwi.global.text_theme = new _kiwi.view.TextTheme(text_theme);
+            
+            callback && callback();
+        }
 
         // Set up the settings datastore
         _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
@@ -139,6 +145,14 @@ _kiwi.global = {
         } else {
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueStart);
         }
+
+        text_theme = _kiwi.global.settings.get('text_theme');
+        if (!text_theme) {
+            $.getJSON(opts.base_path + '/assets/text_themes/default.json', igniteTextTheme);
+        } else {
+            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', igniteTextTheme);
+        }
+
     }
 };
 
