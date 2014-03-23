@@ -132,7 +132,37 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             });
 
             return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_gist').fetch() + '...</div>');
-        }
+        },
+
+        spotify: function () {
+            var uri = this.$el.data('uri');
+            var method = this.$el.data('method');
+            var that = this;
+
+            switch (method) {
+                case "track":
+                case "album":
+                     var spot = {
+                         url: 'https://embed.spotify.com/?uri=' + uri,
+                         width: 300,
+                         height: 80 
+                     };
+                     break;
+                case "artist":
+                     var spot = {
+                         url: 'https://embed.spotify.com/follow/1/?uri=' + uri +'&size=detail&theme=dark',
+                         width: 300,
+                         height: 56
+                     };
+                     break;
+            };
+
+            var html = '<iframe src="' + spot.url + '" width="' + spot.width + '" height="' + spot.height + '" frameborder="0" allowtransparency="true"></iframe>';
+
+            return $(html);
+        },
+
+
     }
     }, {
 
@@ -194,6 +224,15 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         matches = (/https?:\/\/gist\.github\.com\/(?:[a-z0-9-]*\/)?([a-z0-9]+)(\#(.+))?$/i).exec(url);
         if (matches) {
             html += '<span class="media gist" data-type="gist" data-url="' + url + '" data-gist_id="' + matches[1] + '" title="GitHub Gist"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+        }
+
+        // Is this a spotify link?
+        matches = (/http:\/\/(?:play|open\.)?spotify.com\/(album|track|artist)\/([a-zA-Z0-9]+)\/?/i).exec(url);
+        if (matches) {
+            // Make it a Spotify URI! (spotify:<type>:<id>)
+            var method = matches[1],
+                uri = "spotify:" + matches[1] + ":" + matches[2];
+            html += '<span class="media spotify" data-type="spotify" data-uri="' + uri + '" data-method="' + method + '" title="Spotify ' + method + '"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         }
 
         return html;
