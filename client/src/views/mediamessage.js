@@ -136,9 +136,30 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     }
     }, {
 
+    /**
+     * Add a media message type to append HTML after a matching URL
+     * match() should return true if it wants to handle this URL
+     * buildHtml() should return the HTML string to append after the URL in the message
+     */
+    addType: function(match, buildHtml) {
+        if (typeof match !== 'function' || typeof buildHtml !== 'function')
+            return;
+
+        this.types = this.types || [];
+        this.types.push({match: match, buildHtml: buildHtml});
+    },
+
+
     // Build the closed media HTML from a URL
     buildHtml: function (url) {
         var html = '', matches;
+
+        _.each(this.types || [], function(type) {
+            if (!type.match(url))
+                return;
+
+            html += type.buildHtml(url);
+        });
 
         // Is it an image?
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {

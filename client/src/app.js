@@ -24,15 +24,19 @@ _kiwi.global = {
     // TODO: think of a better term for this as it will also refer to queries
     channels: undefined, // TODO: Limited access to panels list
 
+    addMediaMessageType: function(match, buildHtml) {
+        _kiwi.view.MediaMessage.addType(match, buildHtml);
+    },
+
     // Event managers for plugins
     components: {
         EventComponent: function(event_source, proxy_event_name) {
             function proxyEvent(event_name, event_data) {
                 if (proxy_event_name !== 'all') {
                     event_data = event_name.event_data;
-                    event_name = event_name.event_name
+                    event_name = event_name.event_name;
                 }
-//console.log(proxy_event_name, event_name, event_data);
+
                 this.trigger(event_name, event_data);
             }
 
