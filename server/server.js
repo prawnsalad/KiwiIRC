@@ -1,16 +1,21 @@
 var kiwi_app = './kiwi.js';
 var pidfile = '../kiwiirc.pid';
+var pidfile_arg;
 
 // Check if a pidfile has been set as an argument
-var pidfile_arg = process.argv[process.argv.indexOf('-p') + 1];
-if (pidfile_arg) {
-    // Don't set the relative path if we have an absolute path given to us
-    if (['/', '\\', '.'].indexOf(pidfile_arg[0]) === -1) {
-        pidfile = '../' + pidfile_arg;
-    } else {
-        pidfile = pidfile_arg;
+if (process.argv.indexOf('-p') > -1) {
+    pidfile_arg = process.argv[process.argv.indexOf('-p') + 1];
+
+    if (pidfile_arg) {
+        // Don't set the relative path if we have an absolute path given to us
+        if (['/', '\\', '.'].indexOf(pidfile_arg[0]) === -1) {
+            pidfile = '../' + pidfile_arg;
+        } else {
+            pidfile = pidfile_arg;
+        }
     }
 }
+
 
 var daemon = require('daemonize2').setup({
     main: kiwi_app,
