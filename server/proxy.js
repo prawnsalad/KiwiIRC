@@ -108,17 +108,15 @@ function ProxyPipe(kiwi_socket, proxy_server) {
     this.kiwi_socket  = kiwi_socket;
     this.proxy_server = proxy_server;
     this.irc_socket   = null;
-    this.buffer       = '';
+    this.buffers      = [];
     this.meta         = null;
 
-    debug('[KiwiProxy] Setting encoding to utf8');
-    kiwi_socket.setEncoding('utf8');
     kiwi_socket.on('readable', this.kiwiSocketOnReadable.bind(this));
 }
 
 
 ProxyPipe.prototype.destroy = function() {
-    this.buffer = null;
+    this.buffers = null;
     this.meta = null;
 
     if (this.irc_socket) {
@@ -136,19 +134,23 @@ ProxyPipe.prototype.destroy = function() {
 
 
 ProxyPipe.prototype.kiwiSocketOnReadable = function() {
-    var chunk, meta;
+    var chunk, buffer, meta;
 
     while ((chunk = this.kiwi_socket.read()) !== null) {
-        this.buffer += chunk;
+        this.buffers.push(chunk);
     }
 
     // Not got a complete line yet? Wait some more
-    if (this.buffer.indexOf('\n') === -1)
+    chunk = this.buffers[this.buffers.length-1];
+    if (!chunk || chunk[chunk.length-1] !== 0x0A)
         return;
+
+    buffer = new Buffer.concat(this.buffers);
+    this.buffers = null;
 
     try {
         debug('[KiwiProxy] Found a complete line in the buffer');
-        meta = JSON.parse(this.buffer.substr(0, this.buffer.indexOf('\n')));
+        meta = JSON.parse(buffer.toString('utf8'));
     } catch (err) {
         debug('[KiwiProxy] Error parsing meta');
         this.destroy();
@@ -161,7 +163,6 @@ ProxyPipe.prototype.kiwiSocketOnReadable = function() {
         return;
     }
 
-    this.buffer = '';
     this.meta = meta;
     this.kiwi_socket.removeAllListeners('readable');
 
@@ -256,8 +257,6 @@ ProxyPipe.prototype.startPiping = function() {
     this.irc_socket.removeAllListeners('timeout');
 
     this.irc_socket.on('close', this._onSocketClose.bind(this));
-
-    this.kiwi_socket.setEncoding('binary');
 
     this.kiwi_socket.pipe(this.irc_socket);
     this.irc_socket.pipe(this.kiwi_socket);
