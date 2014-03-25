@@ -105,6 +105,10 @@ _kiwi.model.Member = Backbone.Model.extend({
 
         return display;
     },
+    getMemberMask: function () {
+        // Why to use %N and %H is quite clear here. %J is because %I is already for italic and %U for underlines. Better ideas ?
+        return {'%N': this.get('nick'), '%J': this.get("ident"), '%H': this.get("hostname")};
+    },
     isOp: function () {
         var user_prefixes = _kiwi.gateway.get('user_prefixes'),
             modes = this.get('modes'),

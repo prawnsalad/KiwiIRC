@@ -502,3 +502,12 @@ function parseISO8601(str) {
         return _date;
     }
 }
+
+// Simplyfy the translation syntax
+function translateText(string_id, params) {
+    return _kiwi.global.i18n.translate(string_id).fetch(params);
+}
+// Simplyfy the text styling syntax
+function styleText(string_id, params) {
+    return _kiwi.global.text_theme.styleText(string_id, params);
+}
