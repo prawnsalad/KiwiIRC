@@ -257,6 +257,10 @@ msgid "client_models_network_channel_inviteonly"
 msgstr "is invite only."
 
 #: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "is already on this channel"
+
+#: 
 msgid "client_models_network_channel_limitreached"
 msgstr "is full."
 

@@ -14,7 +14,7 @@ _kiwi.view.TextTheme = _kiwi.view.Panel.extend({
 			}
 		}
 
-		text = style.replace(/%([TJHNC])/g, function(match, key) {
+		text = style.replace(/%([TJHNCR])/g, function(match, key) {
 			key = '%' + key;
 
 			if (typeof params[key.toUpperCase()] !== 'undefined')

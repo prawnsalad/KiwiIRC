@@ -257,6 +257,10 @@ msgid "client_models_network_channel_inviteonly"
 msgstr "est sur invitation uniquement."
 
 #: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "est déjà sur le salon"
+
+#: 
 msgid "client_models_network_channel_limitreached"
 msgstr "est rempli."
 

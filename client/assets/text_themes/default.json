@@ -10,7 +10,8 @@
   "client_models_network_selfmode": "== %N %T",
   "client_models_network_banned": "== %T",
   "client_models_network_channel_badkey": "== %T",
-  "client_models_network_channel_inviteonly": "== %C %T",
+  "client_models_network_channel_inviteonly": "== %T",
+  "client_models_network_channel_alreadyin": "== %T",
   "client_models_network_channel_limitreached": "== %C %T",
   "client_models_network_nickname_alreadyinuse": "== %T",
   "client_models_network_channel_invalid_name": "== %C %T",
@@ -22,5 +23,16 @@
   "client_models_network_server": "%T",
   "client_models_network_idle": "%T",
   "client_models_network_nickname_notfound": "%T",
-  "client_models_network_nickname_changed": "%N %T"
+  "client_models_network_nickname_changed": "%N %T",
+  "chanop_privs_needed": "== %T",
+  "no_such_nick": "== %N: %T",
+  "unknown_command": "%T",
+  "motd": "%T",
+  "privmsg": "%T",
+  "ctcp": "CTCP: %T",
+  "notice": "NOTICE: %T",
+  "action": "* %T",
+  "whois_ident": "%N [%N!%J@%H] * %T",
+  "whois": "%T",
+  "who": "%N [%N!%J@%H] * %R"
 }
