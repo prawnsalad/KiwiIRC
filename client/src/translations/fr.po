@@ -108,6 +108,10 @@ msgstr "Chargement..."
 msgid "client_models_applet_notfound"
 msgstr "Introuvable."
 
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "a été invité à rejoindre %s"
+
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
 msgstr "Vous avez été déconnecté. Tentative de reconnexion en cours."

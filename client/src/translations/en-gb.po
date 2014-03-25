@@ -149,6 +149,10 @@ msgid "client_models_application_applet_notfound"
 msgstr "Applet \"%s\" does not exist"
 
 #: 
+msgid "client_models_application_has_been_invited"
+msgstr "has been invited to %s"
+
+#: 
 msgid "client_models_application_encoding_changed"
 msgstr "Encoding modified to %s"
 

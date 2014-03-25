@@ -735,7 +735,7 @@
         } else if (event.away_reason) {
             panel.addMsg(event.nick, styleText('client_models_network_away', {'%N': event.nick, '%T': translateText('client_models_network_away', [event.away_reason])}), 'whois');
         } else {
-            panel.addMsg(event.nick, client_models_network_server('client_models_network_idle', {'%N': event.nick, '%T': translateText('client_models_network_idle', [idle_time])}), 'whois');
+            panel.addMsg(event.nick, styleText('client_models_network_idle', {'%N': event.nick, '%T': translateText('client_models_network_idle', [idle_time])}), 'whois');
         }
     }
 

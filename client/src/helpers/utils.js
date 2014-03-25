@@ -505,6 +505,8 @@ function parseISO8601(str) {
 
 // Simplyfy the translation syntax
 function translateText(string_id, params) {
+    if (params === undefined) var params = '';
+    
     return _kiwi.global.i18n.translate(string_id).fetch(params);
 }
 // Simplyfy the text styling syntax
