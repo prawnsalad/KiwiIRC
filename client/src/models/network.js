@@ -604,7 +604,6 @@
 
 
     function onBanlist(event) {
-        console.log('banlist', event);
         var channel = this.panels.getByName(event.channel);
         if (!channel)
             return;
@@ -688,7 +687,6 @@
                     request_updated_banlist = true;
             }
 
-            console.log('event', event);
             channel.addMsg('', styleText('client_models_network_mode', {'%N': event.nick, '%T': translateText('client_models_network_mode', [friendlyModeString()]), '%C': event.target}), 'action mode', {time: event.time});
 
             // TODO: Be smart, remove the specific ban from the banlist rather than request a whole banlist

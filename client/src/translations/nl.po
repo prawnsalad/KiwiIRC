@@ -142,7 +142,7 @@ msgstr "Geef op welke nicknaam je niet langer wil negeren"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "%s is niet langer genegeert"
+msgstr "is niet langer genegeert"
 
 #: 
 msgid "client_models_application_applet_notfound"
@@ -178,15 +178,15 @@ msgstr "Fout bij verbinden met %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s is het kanaal binnen gekomen"
+msgstr "is het kanaal binnen gekomen"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s heeft de chat verlaten %s"
+msgstr "heeft de chat verlaten %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s is uit het kanaal gezet door %s %s"
+msgstr "is uit het kanaal gezet door %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Je bent uit het kanaal gezet door %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s heeft het kanaal verlaten %s"
+msgstr "heeft het kanaal verlaten %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s is geen geldige naam voor een kanaal"
+msgstr "is geen geldige naam voor een kanaal"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Verbinding met het IRC netwerk verbroken"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s heet nu %s"
+msgstr "heet nu %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Topic gezet door %s op %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s zet modus %s"
+msgstr "zet modus %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s zet modus %s"
+msgstr "zet modus %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Verkeerde kanaal sleutel voor %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s is alleen op uitnodiging."
+msgstr "is alleen op uitnodiging."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s is vol."
+msgstr "is vol."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

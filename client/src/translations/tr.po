@@ -134,7 +134,7 @@ msgstr "Hiç kimse engellenmiyor"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "%s engelleniyor"
+msgstr "engelleniyor"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
@@ -142,7 +142,7 @@ msgstr "Engelini kaldırmak istediğiniz rumuzu belirtin"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "%s rumuzunun engeli kaldırıldı"
+msgstr "rumuzunun engeli kaldırıldı"
 
 #: 
 msgid "client_models_application_applet_notfound"
@@ -178,15 +178,15 @@ msgstr "%s:%s (%s) adresine bağlanırken hata oluştu"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s kanala girdi"
+msgstr "kanala girdi"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s sunucudan ayrıldı %s"
+msgstr "sunucudan ayrıldı %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s kanaldan %s tarafından atıldı %s"
+msgstr "kanaldan %s tarafından atıldı %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Kanaldan %s tarafından atıldınız %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s kanaldan ayrıldı %s"
+msgstr "kanaldan ayrıldı %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s geçerli bir kanal adı değil"
+msgstr "geçerli bir kanal adı değil"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "IRC ağı ile bağlantınız kesildi"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s rumuzunu %s olarak değiştirdi"
+msgstr "rumuzunu %s olarak değiştirdi"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Başlık %s tarafından %s tarihinde ayarlandı"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s mod ayarladı: %s"
+msgstr "mod ayarladı: %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s mod ayarladı: %s"
+msgstr "mod ayarladı: %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -246,19 +246,19 @@ msgstr "Öyle bir rumuz yok"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "%s kanalından banlandınız. %s"
+msgstr "kanalından banlandınız. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "%s için yanlış kanal şifresi girdiniz"
+msgstr "için yanlış kanal şifresi girdiniz"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s kanalına sadece davet edilenler girebilir"
+msgstr "kanalına sadece davet edilenler girebilir"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s kanalı dolu."
+msgstr "kanalı dolu."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
@@ -278,7 +278,7 @@ msgstr "Kanala giriliyor..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "%s kanalının başlığı: %s"
+msgstr "kanalının başlığı: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"

@@ -178,15 +178,15 @@ msgstr "Errore durante la connessione a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s è entrato nel canale"
+msgstr "è entrato nel canale"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s è uscito da %s"
+msgstr "è uscito da %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s è stato espulso dal canale da %s: %s"
+msgstr "è stato espulso dal canale da %s: %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Sei stato espulso dal canale da %s: %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s ha abbandonato %s"
+msgstr "ha abbandonato %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s non è un nome di canale valido"
+msgstr "non è un nome di canale valido"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Disconnesso dalla rete IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s ha ora il nickname %s"
+msgstr "ha ora il nickname %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Argomento impostato da %s il %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s imposta il modo %s"
+msgstr "imposta il modo %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s imposta il modo %s"
+msgstr "imposta il modo %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Chiave canale non valida per %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s è solo su invito."
+msgstr "è solo su invito."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s è al completo."
+msgstr "è al completo."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

@@ -14,6 +14,7 @@ _kiwi.view.TextTheme = _kiwi.view.Panel.extend({
 			}
 		}
 
+		// Do the magic. Use the shorthand syntax to produce output.
 		text = style.replace(/%([TJHNCR])/g, function(match, key) {
 			key = '%' + key;
 
