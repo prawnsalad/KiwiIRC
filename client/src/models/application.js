@@ -127,7 +127,7 @@ _kiwi.model.Application = function () {
             this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
 
             this.resize_handle = new _kiwi.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
-            
+
             // Rejigg the UI sizes
             this.view.doLayout();
         };

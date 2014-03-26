@@ -88,21 +88,20 @@ _kiwi.view.Tabs = Backbone.View.extend({
         _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
-        var that = this;
+        var connection = _kiwi.app.connections.active_connection;
 
         panel.tab.remove();
-
-        var connection = _kiwi.app.connections.active_connection;
 
         // If closing the active panel, switch to the last-accessed panel
         if (this.panel_access[0] === _kiwi.app.panels().active.cid) {
             this.panel_access.shift();
 
-            _.forEach(connection.panels.models, function(model) {
-                if (model.cid === that.panel_access[0]) {
-                    model.view.show();
-                }
-            });
+            //Get the last-accessed panel model now that we removed the closed one
+            var model = connection.panels.getByCid(this.panel_access[0]);
+
+            if (model) {
+                model.view.show();
+            }
         }
 
         delete panel.tab;
@@ -111,6 +110,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
     },
 
     panelActive: function (panel, previously_active_panel) {
+        var panel_index = this.panel_access.indexOf(panel.cid);
+
         // Remove any existing tabs or part images
         _kiwi.app.view.$el.find('.panellist .part').remove();
         _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
@@ -122,7 +123,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
 
-        var panel_index = this.panel_access.indexOf(panel.cid);
         if (panel_index > -1) {
             this.panel_access.splice(panel_index, 1);
         }

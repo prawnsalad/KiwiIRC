@@ -18,7 +18,7 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
 
     networkRemoved: function(network) {
         network.panels.view.remove();
-        
+
         _kiwi.app.view.doLayout();
     }
 });
