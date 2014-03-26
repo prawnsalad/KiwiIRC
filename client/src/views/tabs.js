@@ -25,6 +25,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
                 $('span', this.model.server.tab).text(new_val);
             }, this);
         }
+
+        this.panel_access = new Array();
     },
 
     render: function () {
@@ -80,11 +82,32 @@ _kiwi.view.Tabs = Backbone.View.extend({
         panel.bind('change:title', this.updateTabTitle);
         panel.bind('change:name', this.updateTabTitle);
 
+        //Adding a panel
+        console.log("adding a panel");
+        this.panel_access.unshift(panel.cid);
+
         _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
+        var that = this;
+
         panel.tab.remove();
+
+        var connection = _kiwi.app.connections.active_connection;
+
+        // If closing the active panel, switch to the last-accessed panel
+        if (this.panel_access[0] === _kiwi.app.panels().active.cid) {
+            this.panel_access.shift();
+
+            _.forEach(connection.panels.models, function(model) {
+                if (model.cid === that.panel_access[0]) {
+                    model.view.show();
+                }
+            });
+        }
+
         delete panel.tab;
+
         _kiwi.app.view.doLayout();
     },
 
@@ -100,15 +123,18 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
 
-        var panel_index = _kiwi.app.panel_access.indexOf(panel.cid);
-
+        var panel_index = this.panel_access.indexOf(panel.cid);
+        // console.log("a panel is active");
+        // console.log(panel);
         if (panel_index > -1) {
-            _kiwi.app.panel_access.splice(panel_index, 1);
+            // console.log("The panel was already in the list, removing it.");
+            this.panel_access.splice(panel_index, 1);
         }
 
         //Make this panel the most recently accessed
-        _kiwi.app.panel_access.unshift(panel.cid);
-
+        // console.log("Readding its CID to make it first");
+        // console.log(panel.cid);
+        this.panel_access.unshift(panel.cid);
     },
 
     tabClick: function (e) {
