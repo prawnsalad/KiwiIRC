@@ -33,12 +33,14 @@
                 that = this,
                 i;
             
+            this.sorting_channels = false;
+            
             if (override_channels !== undefined) {
                 that.channels = override_channels;
                 tbody.remove();
                 this.sorting_channels = true;
             } else {
-                that.channels = this.sortChannels(this.channels, this.order);
+                this.channels = this.sortChannels(this.channels, this.order);
             }
 
             // Create the sort icon container and clean previous any previous ones
