@@ -311,6 +311,29 @@
     border-bottom-right-radius:0;
     border-top-right-radius:0;
 }
+#kiwi .applet_chanlist {
+    margin: 0.5em 1em;
+}
+#kiwi .applet_chanlist table {
+    border-collapse: collapse;
+    width: 100%;
+}
+#kiwi .applet_chanlist thead {
+    text-align: center;
+}
+#kiwi .applet_chanlist tbody td {
+    border: 1px solid #C4C4C4;
+    padding: 0.3em 1em;
+}
+#kiwi .applet_chanlist .chanlist_name, #kiwi .applet_chanlist .chanlist_num_users {
+    border-width: 0 1px 0 0;
+}
+#kiwi .applet_chanlist .chanlist_topic {
+    border-width: 0;
+}
+#kiwi .applet_chanlist tr:nth-child(even) {
+    background: none repeat scroll 0 0 #DBDBDB;
+}
 
 
 #kiwi .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
