@@ -9,7 +9,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
     },
 
     closePanel: function () {
-        console.log("Closing panel");
         if (this.view) {
             this.view.unbind();
             this.view.remove();
@@ -27,20 +26,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
 
         this.unbind();
         this.destroy();
-
-        // If closing the active panel, switch to the last-accessed panel
-        if (this === _kiwi.app.panels().active) {
-            _kiwi.app.panel_access.shift();
-
-            var modelsList = _kiwi.app.connections.active_connection.panels.models;
-            //Since it always has at least one tab, just go to the 0th element
-            for (var i=0; i < modelsList.length;i++) {
-                if (modelsList[i].cid === _kiwi.app.panel_access[0]) {
-                    console.log("Yap");
-                    modelsList[i].view.show();
-                }
-            }
-        }
     },
 
     // Alias to closePanel() for child objects to override
