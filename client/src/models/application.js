@@ -573,7 +573,7 @@
 
             fn_to_bind['command:save'] = function (ev) {
                 _kiwi.global.settings.save();
-                _kiwi.app.panels().active.addMsg('', styleText('save_settings', {'%T': translateText('client_models_application_settings_saved')}));
+                _kiwi.app.panels().active.addMsg('', styleText('client_models_application_settings_saved', {'%T': translateText('client_models_application_settings_saved')}));
             };
 
 
@@ -615,12 +615,12 @@
                 // No parameters passed so list them
                 if (!ev.params[0]) {
                     if (list.length > 0) {
-                        _kiwi.app.panels().active.addMsg(' ', styleText('ignore_list', {'%T': translateText('client_models_application_ignore_title')}));
+                        _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_title', {'%T': translateText('client_models_application_ignore_title')}));
                         $.each(list, function (idx, ignored_pattern) {
                             _kiwi.app.panels().active.addMsg(' ', styleText('ignored_pattern', {'%T': ignored_pattern}));
                         });
                     } else {
-                        _kiwi.app.panels().active.addMsg(' ', styleText('ignore_list', {'%T': translateText('client_models_application_ignore_none')}));
+                        _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_none', {'%T': translateText('client_models_application_ignore_none')}));
                     }
                     return;
                 }
@@ -628,7 +628,7 @@
                 // We have a parameter, so add it
                 list.push(ev.params[0]);
                 this.connections.active_connection.set('ignore_list', list);
-                _kiwi.app.panels().active.addMsg(' ', styleText('ignore_nick', {'%T': translateText('client_models_application_ignore_nick', [ev.params[0]])}));
+                _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_nick', {'%T': translateText('client_models_application_ignore_nick', [ev.params[0]])}));
             };
 
 
@@ -636,7 +636,7 @@
                 var list = this.connections.active_connection.get('ignore_list');
 
                 if (!ev.params[0]) {
-                    _kiwi.app.panels().active.addMsg(' ', styleText('stop_notice', {'%T': translateText('client_models_application_ignore_stop_notice')}));
+                    _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_stop_notice', {'%T': translateText('client_models_application_ignore_stop_notice')}));
                     return;
                 }
 
@@ -646,7 +646,7 @@
 
                 this.connections.active_connection.set('ignore_list', list);
 
-                _kiwi.app.panels().active.addMsg(' ', styleText('ignore_stopped', {'%T': translateText('client_models_application_ignore_stopped', [ev.params[0]])}));
+                _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_stopped', {'%T': translateText('client_models_application_ignore_stopped', [ev.params[0]])}));
             };
 
 

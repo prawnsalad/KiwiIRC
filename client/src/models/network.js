@@ -171,7 +171,7 @@
                 // If not a valid channel name, display a warning
                 if (!that.isChannelName(channel_name)) {
                     that.panels.server.addMsg('', styleText('client_models_network_channel_invalid_name', {'%T': translateText('client_models_network_channel_invalid_name', []), '%C': channel_name}));
-                    _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(channel_name), {timeout: 5000});
+                    _kiwi.app.message.text(channel_name + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(channel_name), {timeout: 5000});
                     return;
                 }
 
@@ -430,7 +430,7 @@
             member = panel.get('members').getByNick(event.nick);
             if (member) {
                 member.set('nick', event.newnick);
-                panel.addMsg('', styleText('client_models_network_nickname_changed', {'%M': member.getMemberMask(), '%T': translateText('client_models_network_nickname_changed', [event.newnick]), '%C': name}), 'action nick', {time: event.time});
+                panel.addMsg('', styleText('client_models_network_nickname_changed', {'%N': event.nick, '%T': translateText('client_models_network_nickname_changed', [event.newnick]), '%C': name}), 'action nick', {time: event.time});
             }
         });
     }
@@ -792,14 +792,14 @@
             break;
         case 'invite_only_channel':
             panel.addMsg(' ', styleText('client_models_network_channel_inviteonly', {'%N': event.nick, '%T': translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), '%C': event.channel}), 'status');
-            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch(event.channel));
+            _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
             break;
         case 'user_on_channel':
-            panel.addMsg(' ', styleText('client_models_network_channel_alreadyin', {'%N': event.nick, '%T': translateText('client_models_network_channel_alreadyin', [event.nick]), '%C': event.channel}));
+            panel.addMsg(' ', styleText('client_models_network_channel_alreadyin', {'%N': event.nick, '%T': translateText('client_models_network_channel_alreadyin'), '%C': event.channel}));
             break;
         case 'channel_is_full':
             panel.addMsg(' ', styleText('client_models_network_channel_limitreached', {'%N': event.nick, '%T': translateText('client_models_network_channel_limitreached', [event.channel]), '%C': event.channel}), 'status');
-            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
+            _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
             break;
         case 'chanop_privs_needed':
             panel.addMsg(' ', styleText('chanop_privs_needed', {'%T': event.reason, '%C': event.channel}), 'status');
