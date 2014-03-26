@@ -83,7 +83,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
         panel.bind('change:name', this.updateTabTitle);
 
         //Adding a panel
-        console.log("adding a panel");
         this.panel_access.unshift(panel.cid);
 
         _kiwi.app.view.doLayout();
@@ -124,16 +123,11 @@ _kiwi.view.Tabs = Backbone.View.extend({
         }
 
         var panel_index = this.panel_access.indexOf(panel.cid);
-        // console.log("a panel is active");
-        // console.log(panel);
         if (panel_index > -1) {
-            // console.log("The panel was already in the list, removing it.");
             this.panel_access.splice(panel_index, 1);
         }
 
         //Make this panel the most recently accessed
-        // console.log("Readding its CID to make it first");
-        // console.log(panel.cid);
         this.panel_access.unshift(panel.cid);
     },
 
