@@ -23,6 +23,7 @@
                 <div class="app_tools">
                     <ul class="main">
                         <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
+                        <li class="startup"><i class="icon-home" title="Home"></i></li>
                         <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
                     </ul>
                 </div>
@@ -42,7 +43,13 @@
                 <div class="panel_container container1"></div>
             </div>
 
-            <div class="memberlists disabled"></div>
+            <div class="right_bar disabled">
+                <div class="channel_tools">
+                    <i class="icon-info-sign channel_info" title="Channel Info"></i>
+                    <i class="icon-signout channel_part" title="Leave Channel"></i>
+                </div>
+                <div class="memberlists"></div>
+            </div>
 
             <div class="controlbox">
                 <div class="input">
@@ -309,6 +316,12 @@
                         </div>
                         <div class="checkbox">
                             <label>
+                                <input data-setting="use_24_hour_timestamps" type="checkbox">
+                                <%= timestamp_24 %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
                                 <input data-setting="mute_sounds" type="checkbox">
                                 <%= mute %>
                             </label>
@@ -392,7 +405,7 @@
     </script>
 
 
-<script src="<%base_path%>/assets/libs/jquery-1.10.2.min.js"></script>
+<script src="<%base_path%>/assets/libs/jquery-1.11.0.min.js"></script>
 <script>
 /* Script loader (https://github.com/ded/script.js) */
 (function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)

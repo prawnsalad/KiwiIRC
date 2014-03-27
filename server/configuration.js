@@ -1,6 +1,7 @@
 var fs      = require('fs'),
     events  = require('events'),
-    util    = require('util');
+    util    = require('util'),
+    path    = require('path');
 
 var config_filename = 'config.js',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/../'],
@@ -12,33 +13,57 @@ var Config = function () {
 };
 util.inherits(Config, events.EventEmitter);
 
-Config.prototype.loadConfig = function () {
+Config.prototype.loadConfig = function (manual_config_file) {
     var new_config,
         conf_filepath,
         i;
 
-    // Loop through the possible config paths and find a usable one
-    for (i = 0; i < config_dirs.length; i++) {
-        conf_filepath = config_dirs[i] + config_filename;
+    if ((manual_config_file) || (this.manual_config_file)) {
+        manual_config_file =  path.resolve(path.normalize(manual_config_file || this.manual_config_file));
+        if (fs.existsSync(manual_config_file)) {
+            try {
+                if (fs.lstatSync(manual_config_file).isFile() === true) {
+                    // Clear the loaded config cache
+                    delete require.cache[require.resolve(manual_config_file)];
 
-        try {
-            if (fs.lstatSync(conf_filepath).isFile() === true) {
-                // Clear the loaded config cache
-                delete require.cache[require.resolve(conf_filepath)];
+                    // Try load the new config file
+                    new_config = require(manual_config_file);
 
-                // Try load the new config file
-                new_config = require(conf_filepath);
-                break;
+                    // Save location of configuration file so that we can re-load it later
+                    this.manual_config_file = manual_config_file;
+                }
+            } catch (e) {
+                console.log('An error occured parsing the config file ' + manual_config_file + ': ' + e.message);
+                process.exit(1);
             }
-        } catch (e) {
-            switch (e.code) {
-            case 'ENOENT':      // No file/dir
-                break;
-            default:
-                console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
-                return false;
+        } else {
+            console.log('Could not find config file ' + manual_config_file);
+            process.exit(1);
+        }
+    } else {
+        // Loop through the possible config paths and find a usable one
+        for (i = 0; i < config_dirs.length; i++) {
+            conf_filepath = config_dirs[i] + config_filename;
+
+            try {
+                if (fs.lstatSync(conf_filepath).isFile() === true) {
+                    // Clear the loaded config cache
+                    delete require.cache[require.resolve(conf_filepath)];
+
+                    // Try load the new config file
+                    new_config = require(conf_filepath);
+                    break;
+                }
+            } catch (e) {
+                switch (e.code) {
+                case 'ENOENT':      // No file/dir
+                    break;
+                default:
+                    console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
+                    return false;
+                }
+                continue;
             }
-            continue;
         }
     }
 

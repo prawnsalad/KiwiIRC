@@ -3,51 +3,6 @@ _kiwi.model.Gateway = function () {
     // Set to a reference to this object within initialize()
     var that = null;
 
-    this.defaults = {
-        /**
-        *   The name of the network
-        *   @type    String
-        */
-        name: 'Server',
-
-        /**
-        *   The address (URL) of the network
-        *   @type    String
-        */
-        address: '',
-
-        /**
-        *   The current nickname
-        *   @type   String
-        */
-        nick: '',
-
-        /**
-        *   The channel prefix for this network
-        *   @type    String
-        */
-        channel_prefix: '#',
-
-        /**
-        *   The user prefixes for channel owner/admin/op/voice etc. on this network
-        *   @type   Array
-        */
-        user_prefixes: ['~', '&', '@', '+'],
-
-        /**
-        *   The URL to the Kiwi server
-        *   @type   String
-        */
-        kiwi_server: '//kiwi',
-
-        /**
-        *   List of nicks we are ignoring
-        *   @type Array
-        */
-        ignore_list: []
-    };
-
-
     this.initialize = function () {
         that = this;
 
@@ -151,6 +106,8 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
+        this.connect_callback = callback;
+
         // Keep note of the server we are connecting to
         this.set('kiwi_server', _kiwi.app.kiwi_server);
 
@@ -188,8 +145,6 @@ _kiwi.model.Gateway = function () {
             that.disconnect_requested = false;
 
             console.log("_kiwi.gateway.socket.on('open')");
-
-            callback && callback();
         });
 
         this.rpc.on('too_many_connections', function () {
@@ -300,6 +255,13 @@ _kiwi.model.Gateway = function () {
     this.parseKiwi = function (command, data) {
         this.trigger('kiwi:' + command, data);
         this.trigger('kiwi', data);
+
+        switch (command) {
+        case 'connected':
+            this.connect_callback && this.connect_callback();
+            delete this.connect_callback;
+            break;
+        }
     };
     /*
         Events:
@@ -637,23 +599,6 @@ _kiwi.model.Gateway = function () {
         };
 
         this.sendData(data, callback);
-    };
-
-    // Check a nick alongside our ignore list
-    this.isNickIgnored = function (nick) {
-        var idx, list = this.get('ignore_list');
-        var pattern, regex;
-
-        for (idx = 0; idx < list.length; idx++) {
-            pattern = list[idx].replace(/([.+^$[\]\\(){}|-])/g, "\\$1")
-                .replace('*', '.*')
-                .replace('?', '.');
-
-            regex = new RegExp(pattern, 'i');
-            if (regex.test(nick)) return true;
-        }
-
-        return false;
     };
 
 

@@ -49,7 +49,13 @@
             *   The user prefixes for channel owner/admin/op/voice etc. on this network
             *   @type   Array
             */
-            user_prefixes: ['~', '&', '@', '+']
+            user_prefixes: ['~', '&', '@', '+'],
+
+            /**
+            *   List of nicks we are ignoring
+            *   @type Array
+            */
+            ignore_list: []
         },
 
 
@@ -166,11 +172,10 @@
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
 
-                // If not a valid channel name, display a warning
-                if (!_kiwi.app.isChannelName(channel_name)) {
-                    that.panels.server.addMsg('', _kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(channel_name));
-                    _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(channel_name), {timeout: 5000});
-                    return;
+                // Add channel_prefix in front of the first channel if missing
+                if (that.get('channel_prefix').indexOf(channel_name[0]) === -1) {
+                    // Could be many prefixes but '#' is highly likely the required one
+                    channel_name = '#' + channel_name;
                 }
 
                 // Check if we have the panel already. If not, create it
@@ -202,6 +207,30 @@
 
                 that.gateway.join(panel.get('name'));
             });
+        },
+
+        isChannelName: function (channel_name) {
+            var channel_prefix = this.get('channel_prefix');
+
+            if (!channel_name || !channel_name.length) return false;
+            return (channel_prefix.indexOf(channel_name[0]) > -1);
+        },
+
+        // Check a nick alongside our ignore list
+        isNickIgnored: function (nick) {
+            var idx, list = this.get('ignore_list');
+            var pattern, regex;
+
+            for (idx = 0; idx < list.length; idx++) {
+                pattern = list[idx].replace(/([.+^$[\]\\(){}|-])/g, "\\$1")
+                    .replace('*', '.*')
+                    .replace('?', '.');
+
+                regex = new RegExp(pattern, 'i');
+                if (regex.test(nick)) return true;
+            }
+
+            return false;
         }
     });
 
@@ -366,7 +395,7 @@
             is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
-        if (_kiwi.gateway.isNickIgnored(event.nick)) {
+        if (this.isNickIgnored(event.nick)) {
             return;
         }
 
@@ -413,7 +442,7 @@
 
     function onCtcpRequest(event) {
         // An ignored user? don't do anything with it
-        if (_kiwi.gateway.isNickIgnored(event.nick)) {
+        if (this.isNickIgnored(event.nick)) {
             return;
         }
 
@@ -427,7 +456,7 @@
 
     function onCtcpResponse(event) {
         // An ignored user? don't do anything with it
-        if (_kiwi.gateway.isNickIgnored(event.nick)) {
+        if (this.isNickIgnored(event.nick)) {
             return;
         }
 
@@ -437,10 +466,10 @@
 
 
     function onNotice(event) {
-        var panel, channel_name;
+        var panel, active_panel, channel_name;
 
         // An ignored user? don't do anything with it
-        if (!event.from_server && event.nick && _kiwi.gateway.isNickIgnored(event.nick)) {
+        if (!event.from_server && event.nick && this.isNickIgnored(event.nick)) {
             return;
         }
 
@@ -467,9 +496,13 @@
 
         panel.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
 
-        // Show this notice to the active panel if it didn't have a set target
-        if (!event.from_server && panel === this.panels.server && _kiwi.app.panels().active !== this.panels.server)
-            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
+        // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
+        active_panel = _kiwi.app.panels().active;
+
+        if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
+            if (active_panel.isChannel() || active_panel.isQuery())
+                active_panel.addMsg('[' + (event.nick||'') + ']', event.msg, 'notice', {time: event.time});
+        }
     }
 
 
@@ -479,7 +512,7 @@
             is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
-        if (_kiwi.gateway.isNickIgnored(event.nick)) {
+        if (this.isNickIgnored(event.nick)) {
             return;
         }
 
@@ -781,7 +814,7 @@
 
             member = panel.get('members').getByNick(event.nick);
             if (member) {
-                member.set('away', !(!event.trailing));
+                member.set('away', !(!event.reason));
             }
         });
     }
@@ -864,9 +897,6 @@
         if (display_params[0] && display_params[0] == this.get('nick')) {
             display_params.shift();
         }
-
-        if (event.trailing)
-            display_params.push(event.trailing);
 
         this.panels.server.addMsg('', '[' + event.command + '] ' + display_params.join(', ', ''));
     }

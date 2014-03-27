@@ -64,13 +64,13 @@ msgstr "for large amounts of channels"
 msgid "client_applets_settings_notification_joinpart"
 msgstr "Join/part channel notifications"
 
-#:
-msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
-
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Timestamps"
+msgstr "Show timestamps"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
 
 #: 
 msgid "client_applets_settings_notification_sound"
@@ -324,6 +324,14 @@ msgstr "Cancel"
 msgid "client_views_panel_activity"
 msgstr "People are talking!"
 
+#:
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#:
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
+
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
 msgstr "Think of a nickname..."
@@ -557,4 +565,8 @@ msgstr "IRC operator"
 #: client/assets/src/views/member.js
 msgid "client_views_member_away"
 msgstr "Away"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
 

@@ -553,3 +553,7 @@ msgstr "Opérateur du chat"
 msgid "client_views_member_away"
 msgstr "Absent"
 
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
+

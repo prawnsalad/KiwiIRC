@@ -14,435 +14,437 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: zh-TW\n"
+"Language: es\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "頻道"
+msgstr "Nombre del canal"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "使用者"
+msgstr "Usuarios"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "主題"
+msgstr "Tema"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "頻道列表"
+msgstr "Lista de Canales"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "儲存"
+msgstr "Guardar"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "腳本錯誤 - %s"
+msgstr "Error de Script. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "您的腳本已經存檔並啟動"
+msgstr "El script se ha guardado y está activo"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "腳本編輯器"
+msgstr "Editor de Script"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "分頁"
+msgstr "Pestañas"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "列表 "
+msgstr "Lista"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "適合開啟大量頻道"
+msgstr "para una gran cantidad de canales"
 
 #: 
+#, fuzzy
 msgid "client_applets_settings_notification_joinpart"
-msgstr "使用者加入/退出時顯示訊息"
+msgstr "Une/Separa notificaciones de canal"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "顯示時間"
+msgstr "Marcas de tiempo"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "關閉提示音效"
+msgstr "Silenciar notificaciones sonoras"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "項訊息紀錄"
+msgstr "Mensajes en historia de desplazamiento"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "預設 IRC 程式"
+msgstr "Cliente IRC por defecto"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "將我的預設 IRC 程式設為 Kiwi"
+msgstr "Hacer Kiwi mi cliente por defecto"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Note：重新整理網頁後才會生效"
+msgstr "Nota: Los cambios solo tomarán efecto luego de refrescar la página"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Note：如果在 Chrome 和 Chromium 中沒有反應，請檢查 %s 的設定"
+msgstr "Nota: Usuarios de Chrome o Chromium quizás deban revisar sus ajustes en %s si nada sucede"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "設定"
+msgstr "Ajustes"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "未知的 Applet"
+msgstr "Applet desconocido"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "讀取中..."
+msgstr "Cargando..."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "找不到檔案"
+msgstr "No encontrado"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "您的連線已經中斷，正在重新連線中"
+msgstr "Has sido desconectado. Intentado reconexión"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "您的連線已經中斷，將在 %d 秒後重新連線"
+msgstr "Has sido desconectado. Intentando reconectarse nuevamente en %d segundos"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "您已經成功重新連線"
+msgstr "Está bien, estás conectado nuevamente"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "已儲存設定"
+msgstr "Los ajustes han sido guardados"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "忽略名單"
+msgstr "Sobrenombres ignorados"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "沒有忽略的暱稱"
+msgstr "No ignorando a nadie"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "忽略 %s"
+msgstr "Ignorando a %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "選擇停止忽略的暱稱"
+msgstr "Especifica qué sobrenombre deseas dejar de ignorar"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "停止忽略 %s"
+msgstr "Se dejó de ignorar a %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "不存在的 Applet「%s」"
+msgstr "Applet \"%s\" no existe"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "編碼已轉換為 %s"
+msgstr "Encoding modificado a %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "不正確的編碼 %s"
+msgstr "%s no es un encoding válido"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "未指定編碼"
+msgstr "Encoding no especificado"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Usage: /encoding [NEW-ENCODING]"
+msgstr "Uso: /encoding [NUEVO-ENCODING]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "新連線"
+msgstr "Nueva conexión"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "連線至 %s:%s..."
+msgstr "Conectándose a %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "連線至 %s:%s (%s) 發生錯誤"
+msgstr "Error al conectarse a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s 加入頻道"
+msgstr "%s se ha unido"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s 離線 %s"
+msgstr "%s ha salido %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s 被 %s %s 踢出去了"
+msgstr "%s ha sido expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "你被 %s %s 踢出去了"
+msgstr "Has sido expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s 離開頻道 %s"
+msgstr "%s ha abandonado %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s 不是正確的頻道名稱"
+msgstr "%s no es un nombre de canal válido"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "已離開 IRC 網路"
+msgstr "Desconectado de la red IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s 變成 %s 了"
+msgstr "%s es ahora %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "%s 設定了主題 (%s)"
+msgstr "Tema elegido por %s en %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s 已設定為 %s 模式"
+msgstr "%s elige modo %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s 已設定為 %s 模式"
+msgstr "%s elige modo %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "頻道：%s"
+msgstr "Canales: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "連線到伺服器：%s %s"
+msgstr "Conectado al server: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "於 %2$s 進入, 發呆了 %1$s"
+msgstr "Inactivo por %s, conectado desde %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "離開: %s"
+msgstr "Ausente: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "發呆了 %s"
+msgstr "Inactivo por %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "無此暱稱"
+msgstr "No existe tal sobrenombre"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "你被驅逐出了 %s， %s"
+msgstr "Tienes prohibido el acceso a %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "頻道 %s 的密鑰錯誤"
+msgstr "Clave de canal incorrecta para %s"
 
 #: 
+#, fuzzy
 msgid "client_models_network_channel_inviteonly"
-msgstr "進入 %s 需要邀請"
+msgstr "%s es solo con invitación."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s 已經滿了。"
+msgstr "%s está lleno."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "「%s」已經被使用了，請選擇新的暱稱"
+msgstr "El sobrenombre \"%s\" ya está en uso. Por favor selecciona uno nuevo"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "錯誤的密碼"
+msgstr "Password incorrecto"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "關閉視窗將會退出所有 KiwiIRC 聊天室，是否繼續？"
+msgstr "Esto cerrará todas las conversaciones de KiwiIRC. ¿Está seguro que desea cerrar esta ventana?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "加入頻道..."
+msgstr "Uniéndose al canal..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "%s 討論的主題：%s"
+msgstr "Tema para %s es: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "關閉媒體"
+msgstr "Cerrar elemento"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "不存在的媒體"
+msgstr "No encontrado"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "讀入 tweet"
+msgstr "Cargando tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "讀入圖片"
+msgstr "Cargando imágen"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "讀入 Reddit 討論串"
+msgstr "Cargando tema de Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "讀入 gist"
+msgstr "Cargando gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "新暱稱"
+msgstr "Nuevo sobrenombre"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "決定"
+msgstr "Cambiar"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "取消"
+msgstr "Cancelar"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "有人講話！"
+msgstr "¡La gente está hablando!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "想個名字..."
+msgstr "Piensa en un sobrenombre..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "暱稱"
+msgstr "Nick"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "我有密碼&nbsp;"
+msgstr "Tengo contraseña"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "密碼"
+msgstr "Password"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "頻道"
+msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "頻道密鑰"
+msgstr "Clave de canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "此頻道需要密鑰"
+msgstr "El canal requiere una clave"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "密鑰"
+msgstr "Clave"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "開始..."
+msgstr "Comenzar..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "伺服器與網路選項"
+msgstr "Servidor y red"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Server"
+msgstr "Servidor"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Port"
+msgstr "Puerto"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Powered by Kiwi IRC"
+msgstr "Potenciado por Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "選個暱稱！"
+msgstr "¡Selecciona un sobrenombre primero!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "已連線"
+msgstr "Conectado"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "連線中..."
+msgstr "Conectando..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "暱稱已被使用"
+msgstr "El sobrenombre ya está en uso"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "不可使用的暱稱"
+msgstr "Sobrenombre erróneo"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "密碼錯誤"
+msgstr "Contraseña incorrecta"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "連線發生錯誤"
+msgstr "Error al conectar"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "找不到伺服器"
+msgstr "Servidor no encontrado"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "連線被拒絕"
+msgstr "Conexión rechazada"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "擢升管理者"
+msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "拔除管理者"
+msgstr "De-Op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voice"
+msgstr "Voz"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-voice"
+msgstr "De-Voz"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "踢掉"
+msgstr "Expulsar"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "封鎖"
+msgstr "Prohibir"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "私訊"
+msgstr "Mensaje"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "查看"
+msgstr "Información"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Slap!"
+msgstr "¡Bofetear!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -450,83 +452,59 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "您將在五分鐘後重新連線並自動恢復頻道"
+msgstr "En 5 minutos serás reconectado y serás unido a tus canales. ¡Prepárate!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "重新連線中..."
+msgstr "Reconectándote de forma segura..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "於桌面顯示通知"
+msgstr "Notificaciones de escritorio"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "開啟訊息通知"
+msgstr "Habilitar notificaciones"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "顯示表情圖示"
+msgstr "Mostrar emoticons"
 
 #: 
 msgid "client_applet_about"
-msgstr "關於 Kiwi"
+msgstr "Acerca de Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Kiwi 計畫首頁"
+msgstr "Página del proyecto"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "連結本頻道"
+msgstr "Link a este canal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "分享本頻道"
+msgstr "Comparte este canal"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "我的網路"
+msgstr "Mis redes"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "我的最愛"
+msgstr "Redes favoritas"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "新增網路"
+msgstr "Agregar red"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "儲存網路"
+msgstr "Guardar red"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "刪除網路"
-
-#: client/assets/src/views/member.js
-msgid "client_views_member_years_old"
-msgstr "years old"
-
-#: client/assets/src/views/member.js
-msgid "client_views_member_gender_M"
-msgstr "Man"
-
-#: client/assets/src/views/member.js
-msgid "client_views_member_gender_F"
-msgstr "Woman"
-
-#: client/assets/src/views/member.js
-msgid "client_views_member_gender_U"
-msgstr "Unknown"
-
-#: client/assets/src/views/member.js
-msgid "client_views_member_ircop"
-msgstr "IRC operator"
-
-#: client/assets/src/views/member.js
-msgid "client_views_member_away"
-msgstr "Away"
+msgstr "Borrar red"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"

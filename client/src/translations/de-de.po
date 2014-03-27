@@ -462,7 +462,7 @@ msgstr "Desktop Benachrichtigungen"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Benachrichtigungen Aktivieren"
+msgstr "Benachrichtigungen aktivieren"
 
 #: 
 msgid "client_applets_settings_emoticons"
@@ -478,11 +478,11 @@ msgstr "Projekt Homepage"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link zu diesem Kanal"
+msgstr "Link zu diesem Raum"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Teile diesen Kanal"
+msgstr "Teile diesen Raum"
 
 #: 
 msgid "client_applet_fav_my_networks"
@@ -527,4 +527,8 @@ msgstr "IRC operator"
 #: client/assets/src/views/member.js
 msgid "client_views_member_away"
 msgstr "Away"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
 

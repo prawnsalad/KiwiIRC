@@ -58,7 +58,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',
             time_difference,
             sb = this.model.get('scrollback'),
-            prev_msg = sb[sb.length-2];
+            prev_msg = sb[sb.length-2],
+            network, hour, pm;
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
@@ -70,10 +71,12 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         msg.msg =  $('<div />').text(msg.msg).html();
 
         // Make the channels clickable
-        re = new RegExp('(?:^|\\s)([' + escapeRegex(_kiwi.gateway.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
-        msg.msg = msg.msg.replace(re, function (match) {
-            return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
-        });
+        if ((network = this.model.get('network'))) {
+            re = new RegExp('(?:^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
+            msg.msg = msg.msg.replace(re, function (match) {
+                return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
+            });
+        }
 
 
         // Parse any links found
@@ -139,7 +142,22 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Build up and add the line
         msg.msg_css_classes = msg_css_classes;
-        msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+        if (_kiwi.global.settings.get('use_24_hour_timestamps')) {
+            msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+        } else {
+            hour = msg.time.getHours();
+            pm = hour > 11;
+
+            hour = hour % 12;
+            if (hour === 0)
+                hour = 12;
+
+            if (pm) {
+                msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_pm').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+            } else {
+                msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_am').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+            }
+        }
         line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         this.$messages.append(_.template(line_msg, msg));
 
@@ -198,7 +216,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 'action mode'
             ];
 
-            if (count_all_activity || exclude_message_types.indexOf(msg.type) === -1) {
+            if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
                 $act.text((parseInt($act.text(), 10) || 0) + 1);
             }
 
@@ -209,7 +227,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             }
         }).apply(this);
 
-        this.scrollToBottom();
+        if(this.model.isActive()) this.scrollToBottom();
 
         // Make sure our DOM isn't getting too large (Acts as scrollback)
         this.msg_count++;
@@ -237,22 +255,19 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     nickClick: function (event) {
         var nick = $(event.currentTarget).text(),
             members = this.model.get('members'),
+            are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
             member, query, userbox, menubox;
 
         if (members) {
             member = members.getByNick(nick);
             if (member) {
                 userbox = new _kiwi.view.UserBox();
-                userbox.member = member;
-                userbox.channel = this.model;
-
-                // Hide the op related items if we're not an op
-                if (!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
-                    userbox.$el.children('.if_op').remove();
-                }
+                userbox.setTargets(member, this.model);
+                userbox.displayOpItems(are_we_an_op);
 
                 menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
+                menubox.showFooter(false);
                 menubox.show();
 
                 // Position the userbox + menubox
@@ -278,12 +293,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
 
     chanClick: function (event) {
-        if (event.target) {
-            _kiwi.gateway.join(null, $(event.target).data('channel'));
-        } else {
-            // IE...
-            _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
-        }
+        var target = (event.target) ? $(event.target).data('channel') : $(event.srcElement).data('channel');
+
+        _kiwi.app.connections.active_connection.gateway.join(target);
     },
 
 

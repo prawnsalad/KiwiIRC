@@ -49,6 +49,9 @@ var Client = function (websocket) {
     });
 
     this.disposed = false;
+
+    // Let the client know it's finished connecting
+    this.sendKiwiCommand('connected');
 };
 util.inherits(Client, events.EventEmitter);
 

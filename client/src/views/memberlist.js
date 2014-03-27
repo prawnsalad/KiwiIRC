@@ -1,8 +1,10 @@
 _kiwi.view.MemberList = Backbone.View.extend({
     tagName: "ul",
     events: {
-        "click .nick": "nickClick"
+        "click .nick": "nickClick",
+        "click .channel_info": "channelInfoClick"
     },
+
     initialize: function (options) {
         this.model.bind('all', this.render, this);
         $(this.el).appendTo('#kiwi .memberlists');
@@ -19,18 +21,16 @@ _kiwi.view.MemberList = Backbone.View.extend({
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member'),
-            userbox;
+            userbox,
+            are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
         userbox = new _kiwi.view.UserBox();
-        userbox.member = member;
-        userbox.channel = this.model.channel;
-
-        if (!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op')) {
-            userbox.$el.children('.if_op').remove();
-        }
+        userbox.setTargets(member, this.model.channel);
+        userbox.displayOpItems(are_we_an_op);
 
         var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);
+        menu.showFooter(false);
         menu.show();
 
         // Position the userbox + menubox
@@ -47,6 +47,11 @@ _kiwi.view.MemberList = Backbone.View.extend({
                 t = memberlist_bottom - menu.$el.outerHeight();
             }
 
+            // If the top of the userbox is going to be too high.. lower it
+            if (t < 0){
+                t = 0;
+            }
+
             // If the right of the userbox is going off screen.. bring it in
             if (m_right > memberlist_right){
                 l = memberlist_right - menu.$el.outerWidth();
@@ -59,6 +64,13 @@ _kiwi.view.MemberList = Backbone.View.extend({
             });
         }).call(this);
     },
+
+
+    channelInfoClick: function(event) {
+        new _kiwi.model.ChannelInfo({channel: this.model.channel});
+    },
+
+
     show: function () {
         $('#kiwi .memberlists').children().removeClass('active');
         $(this.el).addClass('active');

@@ -138,7 +138,7 @@ msgstr "Ignorando a s%"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Escribe que nick deseas dejar de ignorar"
+msgstr "Especifica qué nick deseas dejar de ignorar"
 
 #: 
 msgid "client_models_application_ignore_stopped"
@@ -182,7 +182,7 @@ msgstr "%s ha entrado"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s se ha ido"
+msgstr "%s se ha ido de %s"
 
 #: 
 msgid "client_models_channel_kicked"
@@ -250,7 +250,7 @@ msgstr "Estás baneado de %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Contraseña erronea para canal %s"
+msgstr "Clave erronea para canal %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
@@ -270,7 +270,7 @@ msgstr "Contraseña entregada incorrecta"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Ésto cerrará todas las conversaciones en KiwiIRC. ¿Estás seguro que quieres cerrar ésta ventana?"
+msgstr "Esto cerrará todas las conversaciones de KiwiIRC. ¿Está seguro que desea cerrar esta ventana?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -318,7 +318,7 @@ msgstr "Cancelar"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Hay gente conversando!"
+msgstr "¡Hay gente conversando!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
@@ -458,7 +458,7 @@ msgstr "Reconectando de forma segura..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Notificaciones por HTML5"
+msgstr "Notificaciones de escritorio"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
@@ -466,43 +466,47 @@ msgstr "Habilitar notificaciones"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Emoticonos"
+msgstr "Mostrar emoticonos"
 
 #: 
 msgid "client_applet_about"
-msgstr "About Kiwi"
+msgstr "Acerca de Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Project homepage"
+msgstr "Página del proyecto"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link to this channel"
+msgstr "Link a este canal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Share this channel"
+msgstr "Compartir este canal"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "My networks"
+msgstr "Mis redes"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favourite networks"
+msgstr "Redes favoritas"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Add network"
+msgstr "Agregar red"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Save network"
+msgstr "Guardar red"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Delete network"
+msgstr "Borrar red"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
 
 #: client/assets/src/views/member.js
 msgid "client_views_member_years_old"

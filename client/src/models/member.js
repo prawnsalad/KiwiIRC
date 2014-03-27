@@ -132,7 +132,7 @@ _kiwi.model.Member = Backbone.Model.extend({
             age = '',
             gender = 'U',
             temp_realname = [];
-        
+        console.log('ok');
         // Detect and set away status
         if (_kiwi.global.settings.get('rich_nicklist_track_away') && flags.indexOf('G') > -1) {
             is_away = true;
