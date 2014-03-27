@@ -33,8 +33,6 @@
                 that = this,
                 i;
             
-            this.sorting_channels = false;
-            
             this.channels = this.sortChannels(this.channels, this.order);
 
             // Create the sort icon container and clean previous any previous ones
@@ -176,9 +174,6 @@
 
         addChannel: function (channels) {
             var that = this;
-
-            // If we're sorting channels, dont rebuild the channel list
-            if(this.view.sorting_channels) return;
 
             if (!_.isArray(channels)) {
                 channels = [channels];
