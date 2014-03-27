@@ -351,12 +351,12 @@
 
 
     <script type="text/html" id="tmpl_channel_list">
-        <div>
-            <table style="margin:1em 2em;">
+        <div class="applet_chanlist">
+            <table>
                 <thead style="font-weight: bold;">
                     <tr>
-                        <td><%= channel_name %></td>
-                        <td><%= users %></td>
+                        <td><a class="channel_name_title"><%= channel_name %></a></td>
+                        <td><a class="users_title"><%= users %></a></td>
                         <td style="padding-left: 2em;"><%= topic %></td>
                     </tr>
                 </thead>
