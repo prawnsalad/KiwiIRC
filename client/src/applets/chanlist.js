@@ -27,19 +27,13 @@
             this.waiting = false;
         },
 
-        render: function (override_channels) {
+        render: function () {
             var table = $('table', this.$el),
                 tbody = table.children('tbody:first').detach(),
                 that = this,
                 i;
             
-            if (override_channels !== undefined) {
-                that.channels = override_channels;
-                tbody.remove();
-                this.sorting_channels = true;
-            } else {
-                that.channels = this.sortChannels(this.channels, this.order);
-            }
+            this.channels = this.sortChannels(this.channels, this.order);
 
             // Create the sort icon container and clean previous any previous ones
             if($('.applet_chanlist .users_title').find('span.chanlist_sort_users').length == 0) {
@@ -109,10 +103,9 @@
         },
         
         sortChannelsClick: function(order) {
-            var that = this,
-                channels = this.sortChannels(that.channels, order);
+            this.channels = this.sortChannels(this.channels, order);
 
-            this.render(channels);
+            this.render();
         },
         
         sortChannels: function (channels, order) {
@@ -181,9 +174,6 @@
 
         addChannel: function (channels) {
             var that = this;
-
-            // If we're sorting channels, dont rebuild the channel list
-            if(this.view.sorting_channels) return;
 
             if (!_.isArray(channels)) {
                 channels = [channels];
