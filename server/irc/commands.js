@@ -281,7 +281,7 @@ handlers = {
         this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' list_channel', {
             channel: command.params[1],
             num_users: parseInt(command.params[2], 10),
-            topic: command.params[command.params.length - 1]
+            topic: command.params[3] || ''
         });
     },
 
