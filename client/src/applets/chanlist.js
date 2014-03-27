@@ -7,8 +7,8 @@
             "click .users_title": "sortChannelsByUsersClick"
         },
 
-        
-        
+
+
         initialize: function (options) {
             var text = {
                 channel_name: _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch(),
@@ -22,7 +22,6 @@
             // Sort the table
             this.order = '';
 
-
             // Waiting to add the table back into the DOM?
             this.waiting = false;
         },
@@ -32,8 +31,6 @@
                 tbody = table.children('tbody:first').detach(),
                 that = this,
                 i;
-            
-            this.channels = this.sortChannels(this.channels, this.order);
 
             // Create the sort icon container and clean previous any previous ones
             if($('.applet_chanlist .users_title').find('span.chanlist_sort_users').length == 0) {
@@ -65,16 +62,14 @@
                     this.$('.channel_name_title span.chanlist_sort_names').addClass('icon-sort-down');
                     break;
             }
-            
-            tbody.children().each(function (idx, child) {
-                if (that.channels[idx].channel === $(child.querySelector('.chan')).data('channel')) {
-                    that.channels[idx].dom = tbody[0].removeChild(child);
-                }
-            });
 
+            this.channels = this.sortChannels(this.channels, this.order);
+
+            // Make sure all the channel DOM nodes are inserted in order
             for (i = 0; i < this.channels.length; i++) {
                 tbody[0].appendChild(this.channels[i].dom);
             }
+
             table[0].appendChild(tbody[0]);
         },
 
@@ -87,40 +82,35 @@
                 _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
             }
         },
-        
+
         sortChannelsByNameClick: function (event) {
             // Revert the sorting to switch between orders
             this.order = (this.order == 'name_asc') ? 'name_desc' : 'name_asc';
-            
-            this.sortChannelsClick(this.order);
+
+            this.sortChannelsClick();
         },
-        
+
         sortChannelsByUsersClick: function (event) {
             // Revert the sorting to switch between orders
             this.order = (this.order == 'user_desc' || this.order == '') ? 'user_asc' : 'user_desc';
-            
-            this.sortChannelsClick(this.order);
-        },
-        
-        sortChannelsClick: function(order) {
-            this.channels = this.sortChannels(this.channels, order);
 
+            this.sortChannelsClick();
+        },
+
+        sortChannelsClick: function() {
             this.render();
         },
-        
+
         sortChannels: function (channels, order) {
-            var counter = 0,
-                sort_channels = [],
+            var sort_channels = [],
                 new_channels = [];
-            
-            
+
+
             // First we create a light copy of the channels object to do the sorting
-            _.each(channels, function (chan) {
-                sort_channels.push({'counter': counter, 'num_users': chan.num_users, 'channel': chan.channel});
-                
-                counter += 1;
+            _.each(channels, function (chan, chan_idx) {
+                sort_channels.push({'chan_idx': chan_idx, 'num_users': chan.num_users, 'channel': chan.channel});
             });
-            
+
             // Second, we apply the sorting
             sort_channels.sort(function (a, b) {
                 switch (order) {
@@ -139,12 +129,12 @@
                 }
                 return 0;
             });
-            
+
             // Third, we re-shuffle the chanlist according to the sort order
             _.each(sort_channels, function (chan) {
-                new_channels.push(channels[chan.counter]);
+                new_channels.push(channels[chan.chan_idx]);
             });
-            
+
             return new_channels;
         }
     });
