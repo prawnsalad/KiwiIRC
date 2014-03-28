@@ -4,7 +4,9 @@ var util        = require('util'),
 
 var IrcChannel = function(irc_connection, name) {
     this.irc_connection = irc_connection;
-    this.name = name;
+
+    // Lowercase the channel name so we don't run into case-sensitive issues
+    this.name = name.toLowerCase();
 
     this.members = [];
     this.ban_list_buffer = [];
