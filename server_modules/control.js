@@ -23,7 +23,6 @@ function SocketClient (socket) {
     this.socket_closing = false;
 
     this.remoteAddress = this.socket.remoteAddress;
-    //console.log('Control connection from ' + this.socket.remoteAddress + ' opened');
     winston.info('Control connection from %s opened', this.socket.remoteAddress);
 
     this.bindEvents();
@@ -55,7 +54,6 @@ SocketClient.prototype.onClose = function() {
     this.unbindEvents();
     this.socket = null;
 
-    //console.log('Control connection from ' + this.remoteAddress + ' closed');
     winston.info('Control connection from %s closed', this.remoteAddress);
 };
 

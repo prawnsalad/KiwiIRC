@@ -46,7 +46,6 @@ var IdentdServer = module.exports = function(opts) {
 
     server.on('listening', function() {
         var addr = server.address();
-        //console.log('Ident Server listening on ' + server.address().address + ':' +  server.address().port);
         winston.info('Ident Server listening on %s:%s', addr.address, addr.port);
     });
 
@@ -62,7 +61,7 @@ var IdentdServer = module.exports = function(opts) {
 
     /**
      * Process a line of data for an Identd response
-     * 
+     *
      * @param {String} The line of data to process
      * @return {String} Data to send back to the Identd client
      */

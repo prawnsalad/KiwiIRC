@@ -756,7 +756,6 @@ function parseIrcLine(buffer_line) {
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
-        //console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
         winston.warn('Malformed IRC line: %s', line.replace(/^\r+|\r+$/, ''));
         return;
     }

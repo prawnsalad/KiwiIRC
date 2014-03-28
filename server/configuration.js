@@ -34,12 +34,10 @@ Config.prototype.loadConfig = function (manual_config_file) {
                     this.manual_config_file = manual_config_file;
                 }
             } catch (e) {
-                //console.log('An error occured parsing the config file ' + manual_config_file + ': ' + e.message);
                 winston.error('An error occured parsing the config file %s: %s', manual_config_file, e.message);
                 process.exit(1);
             }
         } else {
-            //console.log('Could not find config file ' + manual_config_file);
             winston.error('Could not find config file %s', manual_config_file);
             process.exit(1);
         }
@@ -62,7 +60,6 @@ Config.prototype.loadConfig = function (manual_config_file) {
                 case 'ENOENT':      // No file/dir
                     break;
                 default:
-                    //console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
                     winston.warn('An error occured parsing the config file %s%s: %s', config_dirs[i], config_filename, e.message);
                     return false;
                 }
@@ -90,7 +87,7 @@ Config.prototype.setEnvironment = function (new_environment) {
 // Get the current config. Optionally for a different environment than currently set
 Config.prototype.get = function (specific_environment) {
     specific_environment = specific_environment || environment;
-    
+
     return loaded_config[specific_environment] || {};
 };
 
