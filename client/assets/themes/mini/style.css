@@ -60,6 +60,7 @@
 #kiwi .toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
 
 #kiwi .toolbar .panellist li .activity { display:inline; margin-left:0.5em; font-style:italic; font-size:0.8em; }
+#kiwi .toolbar .panellist.applets li .activity { display: none; }
 #kiwi .toolbar .panellist li .activity:before { content:"("; }
 #kiwi .toolbar .panellist li .activity:after { content:")"; }
 
