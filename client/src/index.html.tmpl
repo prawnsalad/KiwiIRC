@@ -321,6 +321,7 @@
                     <h6>Language</h6>
                     <div class="control-group">
                         <select data-setting="locale">
+                            <option value=""></li>
                             <% _.forEach(languages, function(lang) { %>
                                 <option value="<%= lang.tag %>"><%= lang.language %></li>
                             <% }); %>
