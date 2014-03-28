@@ -1,7 +1,8 @@
 var fs      = require('fs'),
     events  = require('events'),
     util    = require('util'),
-    path    = require('path');
+    path    = require('path'),
+    winston = require('winston');
 
 var config_filename = 'config.js',
     config_dirs = ['/etc/kiwiirc/', __dirname + '/../'],
@@ -33,11 +34,13 @@ Config.prototype.loadConfig = function (manual_config_file) {
                     this.manual_config_file = manual_config_file;
                 }
             } catch (e) {
-                console.log('An error occured parsing the config file ' + manual_config_file + ': ' + e.message);
+                //console.log('An error occured parsing the config file ' + manual_config_file + ': ' + e.message);
+                winston.error('An error occured parsing the config file %s: %s', manual_config_file, e.message);
                 process.exit(1);
             }
         } else {
-            console.log('Could not find config file ' + manual_config_file);
+            //console.log('Could not find config file ' + manual_config_file);
+            winston.error('Could not find config file %s', manual_config_file);
             process.exit(1);
         }
     } else {
@@ -59,7 +62,8 @@ Config.prototype.loadConfig = function (manual_config_file) {
                 case 'ENOENT':      // No file/dir
                     break;
                 default:
-                    console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
+                    //console.log('An error occured parsing the config file ' + config_dirs[i] + config_filename + ': ' + e.message);
+                    winston.warn('An error occured parsing the config file %s%s: %s', config_dirs[i], config_filename, e.message);
                     return false;
                 }
                 continue;
