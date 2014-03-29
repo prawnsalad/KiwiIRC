@@ -13,6 +13,10 @@ var fs          = require('fs'),
 
 process.chdir(__dirname + '/../');
 
+// Get our own version from package.json
+global.build_version = require('../package.json').version;
+
+// Load the config, using -c argument if available
 (function (argv) {
     var conf_switch = argv.indexOf('-c');
     if (conf_switch !== -1) {

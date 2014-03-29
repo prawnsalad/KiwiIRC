@@ -247,13 +247,23 @@ _kiwi.model.Gateway = function () {
 
 
     this.parseKiwi = function (command, data) {
+        var client_info_data;
+
         this.trigger('kiwi:' + command, data);
         this.trigger('kiwi', data);
 
         switch (command) {
         case 'connected':
+            // Send some info on this client to the server
+            client_info_data = {
+                command: 'client_info',
+                build_version: _kiwi.global.build_version
+            };
+            this.rpc.call('kiwi', client_info_data);
+
             this.connect_callback && this.connect_callback();
             delete this.connect_callback;
+
             break;
         }
     };
