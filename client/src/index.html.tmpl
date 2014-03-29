@@ -490,6 +490,9 @@
 
         // Run after all dependancies have been loaded
         jobs.onFinish(function startApp() {
+            // Kiwi IRC version this is built from
+            kiwi.build_version = '<%build_version%>';
+
             // Start the app
             kiwi.start(opts, function() {
                 // Load any plugins
