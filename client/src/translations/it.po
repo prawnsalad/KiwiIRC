@@ -506,5 +506,9 @@ msgstr "Elimina rete"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Includi come attività messaggi di entrata/uscita"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Ignorare"
 

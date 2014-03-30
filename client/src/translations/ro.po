@@ -508,3 +508,7 @@ msgstr "Șterge rețeaua"
 msgid "client_applets_settings_notification_count_all_activity"
 msgstr "Include join/part messages as activity"
 
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Ignora"
+
