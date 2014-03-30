@@ -512,3 +512,15 @@ msgstr "Cho phép hiển thị các thông báo vào/ra kênh"
 msgid "client_views_userbox_ignore"
 msgstr "bỏ qua"
 
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
+
