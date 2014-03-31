@@ -173,6 +173,10 @@
                     that.panels.server.addMsg('', styleText('client_models_network_channel_invalid_name', {'%T': translateText('client_models_network_channel_invalid_name'), '%C': channel_name}));
                     _kiwi.app.message.text(channel_name + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(), {timeout: 5000});
                     return;
+                // Add channel_prefix in front of the first channel if missing
+                if (that.get('channel_prefix').indexOf(channel_name[0]) === -1) {
+                    // Could be many prefixes but '#' is highly likely the required one
+                    channel_name = '#' + channel_name;
                 }
 
                 // Check if we have the panel already. If not, create it
@@ -463,7 +467,7 @@
 
 
     function onNotice(event) {
-        var panel, channel_name;
+        var panel, active_panel, channel_name;
 
         // An ignored user? don't do anything with it
         if (!event.from_server && event.nick && this.isNickIgnored(event.nick)) {
@@ -493,9 +497,13 @@
 
         panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {'%T': event.msg}), 'notice', {time: event.time});
 
-        // Show this notice to the active panel if it didn't have a set target
-        if (!event.from_server && panel === this.panels.server && _kiwi.app.panels().active !== this.panels.server)
+        // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
+        active_panel = _kiwi.app.panels().active;
+
+        if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
+            if (active_panel.isChannel() || active_panel.isQuery())
             _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', styleText('notice', {'%T': event.msg}), 'notice', {time: event.time});
+        }
     }
 
 
@@ -760,7 +768,7 @@
 
             member = panel.get('members').getByNick(event.nick);
             if (member) {
-                member.set('away', !(!event.trailing));
+                member.set('away', !(!event.reason));
             }
         });
     }
@@ -843,9 +851,6 @@
         if (display_params[0] && display_params[0] == this.get('nick')) {
             display_params.shift();
         }
-
-        if (event.trailing)
-            display_params.push(event.trailing);
 
         this.panels.server.addMsg('', styleText('unknown_command', {'%T': '[' + event.command + '] ' + display_params.join(', ', '')}));
     }

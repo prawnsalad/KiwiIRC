@@ -506,5 +506,21 @@ msgstr "Slett nettverk"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Inluder personer som kommer inn og ut av kanalen som aktivitet"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Ignorer"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
 

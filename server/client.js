@@ -147,7 +147,17 @@ function kiwiCommand(command, callback) {
             } else {
                 return callback('Hostname, port and nickname must be specified');
             }
-        break;
+
+            break;
+
+        case 'client_info':
+            // keep hold of selected parts of the client_info
+            this.client_info = {
+                build_version: command.build_version.toString() || undefined
+            };
+
+            break;
+
         default:
             callback();
     }

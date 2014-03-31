@@ -3,6 +3,7 @@ var net             = require('net'),
     util            = require('util'),
     dns             = require('dns'),
     _               = require('lodash'),
+    winston         = require('winston'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcCommands     = require('./commands.js'),
@@ -738,21 +739,24 @@ var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([^\s!]+)|([^\s!]+)!([^\s@]+)@?([^\
 
 function parseIrcLine(buffer_line) {
     var msg,
-        i, j,
+        i,
         tags = [],
         tag,
-        line = '';
+        line = '',
+        msg_obj;
 
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
-    if (!line) return;
+    if (!line) {
+        return;
+    }
 
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
-        console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
+        winston.warn('Malformed IRC line: %s', line.replace(/^\r+|\r+$/, ''));
         return;
     }
 
@@ -760,23 +764,25 @@ function parseIrcLine(buffer_line) {
     if (msg[1]) {
         tags = msg[1].split(';');
 
-        for (j = 0; j < tags.length; j++) {
-            tag = tags[j].split('=');
-            tags[j] = {tag: tag[0], value: tag[1]};
+        for (i = 0; i < tags.length; i++) {
+            tag = tags[i].split('=');
+            tags[i] = {tag: tag[0], value: tag[1]};
         }
     }
 
-    msg = {
+    msg_obj = {
         tags:       tags,
         prefix:     msg[2],
         nick:       msg[3],
         ident:      msg[4],
         hostname:   msg[5] || '',
         command:    msg[6],
-        params:     msg[7] || '',
-        trailing:   (msg[8]) ? msg[8].trim() : ''
+        params:     msg[7] ? msg[7].split(/ +/) : []
     };
 
-    msg.params = msg.params.split(/ +/);
-    this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
+    if (msg[8]) {
+        msg_obj.params.push(msg[8].trim());
+    }
+
+    this.irc_commands.dispatch(msg_obj.command.toUpperCase(), msg_obj);
 }

@@ -57,7 +57,8 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         _kiwi.app.view.doLayout();
 
-        if(!this.model.applet) this.scrollToBottom(true);
+        if (!this.model.isApplet())
+            this.scrollToBottom(true);
     },
 
 

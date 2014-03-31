@@ -179,7 +179,7 @@ msgstr "Error al conectarse a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "se ha unido"
+msgstr "se ha ingresado"
 
 #: 
 msgid "client_models_channel_quit"
@@ -276,7 +276,7 @@ msgstr "Esto cerrará todas las conversaciones de KiwiIRC. ¿Está seguro que de
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Uniéndose al canal..."
+msgstr "Ingresando al canal..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -452,7 +452,7 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "En 5 minutos serás reconectado y serás unido a tus canales. ¡Prepárate!"
+msgstr "En 5 minutos serás reconectado y serás reingresado a tus canales. ¡Prepárate!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
@@ -508,5 +508,21 @@ msgstr "Borrar red"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Incluir mensajes de ingreso/salida como actividad"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "desatender"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
 

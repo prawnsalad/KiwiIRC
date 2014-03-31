@@ -1,5 +1,5 @@
 var engine       = require('engine.io'),
-    WebsocketRpc = require('./websocketrpc.js');
+    WebsocketRpc = require('./websocketrpc.js'),
     events       = require('events'),
     http         = require('http'),
     https        = require('https'),
@@ -10,6 +10,7 @@ var engine       = require('engine.io'),
     _            = require('lodash'),
     spdy         = require('spdy'),
     ipaddr       = require('ipaddr.js'),
+    winston      = require('winston'),
     Client       = require('./client.js').Client,
     HttpHandler  = require('./httphandler.js').HttpHandler,
     rehash       = require('./rehash.js');
@@ -134,7 +135,7 @@ function initialiseSocket(socket, callback) {
     if (request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
         if (!global.config.http_proxies || !rangeCheck(address, global.config.http_proxies)) {
-            console.log('Unlisted proxy:', address);
+            winston.info('Unlisted proxy: %s', address);
             callback(null, false);
             return;
         }

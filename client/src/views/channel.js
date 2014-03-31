@@ -59,7 +59,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             time_difference,
             sb = this.model.get('scrollback'),
             prev_msg = sb[sb.length-2],
-            network;
+            network, hour, pm;
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
@@ -142,7 +142,22 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Build up and add the line
         msg.msg_css_classes = msg_css_classes;
-        msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+        if (_kiwi.global.settings.get('use_24_hour_timestamps')) {
+            msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+        } else {
+            hour = msg.time.getHours();
+            pm = hour > 11;
+
+            hour = hour % 12;
+            if (hour === 0)
+                hour = 12;
+
+            if (pm) {
+                msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_pm').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+            } else {
+                msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_am').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+            }
+        }
         line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         this.$messages.append(_.template(line_msg, msg));
 
@@ -201,7 +216,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 'action mode'
             ];
 
-            if (count_all_activity || exclude_message_types.indexOf(msg.type) === -1) {
+            if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
                 $act.text((parseInt($act.text(), 10) || 0) + 1);
             }
 

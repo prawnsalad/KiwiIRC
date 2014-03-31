@@ -1,10 +1,26 @@
 var kiwi_app = './kiwi.js';
+var pidfile = '../kiwiirc.pid';
+var pidfile_arg;
+
+// Check if a pidfile has been set as an argument
+if (process.argv.indexOf('-p') > -1) {
+    pidfile_arg = process.argv[process.argv.indexOf('-p') + 1];
+
+    if (pidfile_arg) {
+        // Don't set the relative path if we have an absolute path given to us
+        if (['/', '\\', '.'].indexOf(pidfile_arg[0]) === -1) {
+            pidfile = '../' + pidfile_arg;
+        } else {
+            pidfile = pidfile_arg;
+        }
+    }
+}
 
 
 var daemon = require('daemonize2').setup({
     main: kiwi_app,
     name: 'kiwiirc',
-    pidfile: '../kiwiirc.pid'
+    pidfile: pidfile
 });
 
 switch (process.argv[2]) {
@@ -47,7 +63,7 @@ switch (process.argv[2]) {
     case 'build':
         require('../client/build.js');
         break;
-        
+
     default:
-        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-c <config file>]]');
+        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-c <config file>] [-p <pid file>]]');
 }

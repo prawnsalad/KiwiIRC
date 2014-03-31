@@ -1,6 +1,7 @@
 var fs          = require('fs'),
     _           = require('lodash'),
     util        = require('util'),
+    winston     = require('winston'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),
     modules     = require('./modules.js'),
@@ -12,6 +13,10 @@ var fs          = require('fs'),
 
 process.chdir(__dirname + '/../');
 
+// Get our own version from package.json
+global.build_version = require('../package.json').version;
+
+// Load the config, using -c argument if available
 (function (argv) {
     var conf_switch = argv.indexOf('-c');
     if (conf_switch !== -1) {
@@ -35,22 +40,32 @@ if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
             log_file_name = __dirname + '/../' + log_file_name;
         }
 
+        winston.add(winston.transports.File, {
+            filename: log_file_name,
+            json: false,
+            timestamp: function() {
+                var year, month, day, time_string,
+                    d = new Date();
 
+                year = String(d.getFullYear());
+                month = String(d.getMonth() + 1);
+                if (month.length === 1) {
+                    month = "0" + month;
+                }
 
-        console.log = function() {
-            var logfile = fs.openSync(log_file_name, 'a'),
-                out;
+                day = String(d.getDate());
+                if (day.length === 1) {
+                    day = "0" + day;
+                }
 
-            out = util.format.apply(util, arguments);
+                // Take the time from the existing toTimeString() format
+                time_string = (new Date()).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
 
-            // Make sure we out somthing to log and we have an open file
-            if (!out || !logfile) return;
+                return year + "-" + month + "-" + day + ' ' + time_string;
+            }
+        });
 
-            out += '\n';
-            fs.writeSync(logfile, out, null);
-
-            fs.closeSync(logfile);
-        };
+        winston.remove(winston.transports.Console);
     })();
 }
 
@@ -58,12 +73,12 @@ if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
 
 // Make sure we have a valid config file and at least 1 server
 if (!global.config || Object.keys(global.config).length === 0) {
-    console.log('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
+    winston.error('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
     process.exit(1);
 }
 
 if ((!global.config.servers) || (global.config.servers.length < 1)) {
-    console.log('No servers defined in config file');
+    winston.error('No servers defined in config file');
     process.exit(2);
 }
 
@@ -80,9 +95,9 @@ modules.registerPublisher(global.modules);
 if (global.config.module_dir) {
     (global.config.modules || []).forEach(function (module_name) {
         if (modules.load(module_name)) {
-            console.log('Module ' + module_name + ' loaded successfuly');
+            winston.info('Module %s loaded successfully', module_name);
         } else {
-            console.log('Module ' + module_name + ' failed to load');
+            winston.warn('Module %s failed to load', module_name);
         }
     });
 }
@@ -247,7 +262,7 @@ _.each(global.config.servers, function (server) {
         serv.listen(server.port, server.address, server);
 
         serv.on('listening', function() {
-            console.log('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            winston.info('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
         });
 
         serv.on('socket_connected', function(pipe) {
@@ -277,12 +292,12 @@ _.each(global.config.servers, function (server) {
         });
 
         wl.on('listening', function () {
-            console.log('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            winston.info('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
             webListenerRunning();
         });
 
         wl.on('error', function (err) {
-            console.log('Error listening on %s:%s: %s', server.address, server.port, err.code);
+            winston.info('Error listening on %s:%s: %s', server.address, server.port, err.code);
             // TODO: This should probably be refactored. ^JA
             webListenerRunning();
         });
@@ -321,23 +336,22 @@ function setProcessUid() {
 
 // Make sure Kiwi doesn't simply quit on an exception
 process.on('uncaughtException', function (e) {
-    console.log('[Uncaught exception] ' + e);
-    console.log(e.stack);
+    winston.error('[Uncaught exception] %s', e, {stack: e.stack});
 });
 
 
 process.on('SIGUSR1', function() {
     if (config.loadConfig()) {
-        console.log('New config file loaded');
+        winston.info('New config file loaded');
     } else {
-        console.log("No new config file was loaded");
+        winston.info('No new config file was loaded');
     }
 });
 
 
 process.on('SIGUSR2', function() {
-    console.log('Connected clients: ' + _.size(global.clients.clients).toString());
-    console.log('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
+    winston.info('Connected clients: %s', _.size(global.clients.clients));
+    winston.info('Num. remote hosts: %s', _.size(global.clients.addresses));
 });
 
 

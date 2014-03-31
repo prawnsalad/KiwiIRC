@@ -182,6 +182,7 @@ conf.client = {
         scrollback: 250,
         show_joins_parts: true,
         show_timestamps: false,
+        use_24_hour_timestamps: true,
         mute_sounds: false,
         show_emoticons: true,
         count_all_activity: true

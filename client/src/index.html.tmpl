@@ -23,6 +23,7 @@
                 <div class="app_tools">
                     <ul class="main">
                         <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
+                        <li class="startup"><i class="icon-home" title="Home"></i></li>
                         <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
                     </ul>
                 </div>
@@ -124,7 +125,7 @@
 
             <a class="close_menu query"><i class="icon-comment"></i><%= message %></a>
             <a class="close_menu info"><i class="icon-info-sign"></i><%= info %></a>
-            <a class="close_menu slap"><i class="icon-user-md"></i><%= slap %></a>
+            <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
         </div>
     </script>
 
@@ -293,6 +294,12 @@
                         </div>
                         <div class="checkbox">
                             <label>
+                                <input data-setting="use_24_hour_timestamps" type="checkbox">
+                                <%= timestamp_24 %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
                                 <input data-setting="mute_sounds" type="checkbox">
                                 <%= mute %>
                             </label>
@@ -314,6 +321,7 @@
                     <h6>Language</h6>
                     <div class="control-group">
                         <select data-setting="locale">
+                            <option value=""></li>
                             <% _.forEach(languages, function(lang) { %>
                                 <option value="<%= lang.tag %>"><%= lang.language %></li>
                             <% }); %>
@@ -344,12 +352,12 @@
 
 
     <script type="text/html" id="tmpl_channel_list">
-        <div>
-            <table style="margin:1em 2em;">
+        <div class="applet_chanlist">
+            <table>
                 <thead style="font-weight: bold;">
                     <tr>
-                        <td><%= channel_name %></td>
-                        <td><%= users %></td>
+                        <td><a class="channel_name_title"><%= channel_name %></a></td>
+                        <td><a class="users_title"><%= users %></a></td>
                         <td style="padding-left: 2em;"><%= topic %></td>
                     </tr>
                 </thead>
@@ -482,6 +490,9 @@
 
         // Run after all dependancies have been loaded
         jobs.onFinish(function startApp() {
+            // Kiwi IRC version this is built from
+            kiwi.build_version = '<%build_version%>';
+
             // Start the app
             kiwi.start(opts, function() {
                 // Load any plugins

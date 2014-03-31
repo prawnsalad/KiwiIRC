@@ -14,351 +14,351 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: cs\n"
+"Language: bs\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Jméno kanálu"
+msgstr "Kanal"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Uživatelé"
+msgstr "Korisnici"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Téma"
+msgstr "Tema"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Seznam kanálů"
+msgstr "Lista kanala"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Uložit"
+msgstr "Snimi"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Chyba skriptu. %s"
+msgstr "Greška u skripti. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Váš skript byl uložen a je nyní aktivní"
+msgstr "Vaša skripta je sada snimljena i aktivna"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Editor skriptů"
+msgstr "Uređivač skripte"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Karty"
+msgstr "Tabovi"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "Seznam"
+msgstr "Lista"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "pro velké množství kanálů"
+msgstr "za velike količine kanala"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Oznámení o vstoupení/odejítí"
+msgstr "Obavijesti pristupanja/napuštanja kanala"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Časové značky"
+msgstr "Vremenska oznaka"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Ztlumit zvukové oznámení"
+msgstr "Isključi zvučne obavijesti"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "zpráv v historii"
+msgstr "poruke u historiji"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Výchozí IRC klient"
+msgstr "Zadani IRC klijent"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Nastavit Kiwi jako můj výchozí IRC klient"
+msgstr "Podesi Kiwi kao moj zadani klijent"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Poznámka: Změny se projeví po obnovení stránky"
+msgstr "Napomenta: Izmjene će se prikazati tek kada osvježite stranicu"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Poznámka: Uživatelé Chrome nebo Chromia budou muset zkontrolovat nastavení na %s, pokud se nic nestane"
+msgstr "Napomena: Korisnici Chrome ili Chromium pretraživača moraju označiti njihove postavke na %s ukoliko nema promjena"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Nastavení"
+msgstr "Podešavanja"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Neznámý applet"
+msgstr "Nepoznat aplet"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Načítám..."
+msgstr "Učitavanje..."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Nenalezen"
+msgstr "Nema rezultata"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Byl jste odpojen. Pokouším se o znovupřipojení"
+msgstr "Diskonektovani ste. Pokušavamo Vas ponovo uključiti"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Byl jste odpojen. Pokouším se o znovupřipojení za %d sekund"
+msgstr "Diskonektovani ste. Pokušajte se ponovo uključiti za %d sekundi"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Vše je v pořádku, znovu jste připojen"
+msgstr "Sve je OK, uspješno ste opet konektovani"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Nastavení byla uložena"
+msgstr "Podešavanja su spremljena"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Ignorované přezdívky"
+msgstr "Ignorisani nadimci"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Nikoho neignorujete"
+msgstr "Ne ignorišete nikoga"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Ignoruji %s"
+msgstr "Ignorišete %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Zadejte nick, který chcete ignorovat"
+msgstr "Označite koji nadimak želite prestati ignorisati"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Přestávám ignorovat %s"
+msgstr "Više ne ignorišete %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" neexistuje"
+msgstr "Aplet \"%s\" ne postoji"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Kódování změněno na %s"
+msgstr "Kodiranje modificirano na %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s není platným kódováním"
+msgstr "%s nije ispravno kodiranje"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Kódování nebylo zadáno"
+msgstr "Kodiranje nije naznačeno"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Použití: /encoding [NEW-ENCODING]"
+msgstr "Upotreba: /encoding [NEW-ENCODING]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "Nové připojení"
+msgstr "Nova konekcija"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Připojuji k %s:%s..."
+msgstr "Konektujete se na %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Chyba připojení k %s:%s (%s)"
+msgstr "Greška pri spajanju na %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "přišel do místnosti"
+msgstr "%s je pristupio"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "se odpojil %s"
+msgstr "%s je napustio %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "byl vyhozen %s %s"
+msgstr "%s je izbačen od %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Byl jste vyhozen %s %s"
+msgstr "Izbacio Vas je %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "odešel %s"
+msgstr "%s je napustio kanal %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "není platným názvem kanálu"
+msgstr "%s nije ispravno ime kanala"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Odpojen od sítě IRC"
+msgstr "Diskonektovani ste sa IRC mreže"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "je nyní znám jako %s"
+msgstr "%s je promijenio nadimak u %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Téma nastavil %s v %s"
+msgstr "Temu je promijenio %s u %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "nastavuje mód %s"
+msgstr "%s je podesio/la mod %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "nastavil mód %s"
+msgstr "%s podešava mod %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Kanály: %s"
+msgstr "Kanali: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Připojen k serveru: %s %s"
+msgstr "Konektovani ste na server: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Neaktivní již %s, připojen %s"
+msgstr "Odmara već %s, pristupio/la %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "Pryč: %s"
+msgstr "Odsutan/a: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Neaktivní již %s"
+msgstr "Odmara već %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Takový nick neexistuje"
+msgstr "Takav nadimak ne postoji"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "V %s jste zabanován. %s"
+msgstr "Banovani ste sa %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Špatný klíč kanálu pro %s"
+msgstr "Pogrešan ključ kanala za %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "je pouze na pozvání."
+msgstr "%s je samo za pozvane."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "je plný."
+msgstr "%s je pun."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Přezdívka \"%s\" se již používá. Prosím, zvolte si jinou"
+msgstr "Nadimak \"%s\" se već koristi. Molimo izaberite novi nadimak"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Zadáno nesprávné heslo"
+msgstr "Pogrešna šifra"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Tímto ukončíte veškeré konverzace. Skutečně chcete zavřít toto okno?"
+msgstr "Sada ćete zatvoriti sve KiwiIRC razgovore. Da li ste sigurni da želite zatvoriti ovaj prozor?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Připojuji ke kanálu.."
+msgstr "Pristupanje kanalu.."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Téma pro %s je: %s"
+msgstr "Tema za %s je: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Zavřít média"
+msgstr "Zatvori medije"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Nenalezeno"
+msgstr "Nije pronađeno"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Načítám tweet"
+msgstr "Učitavanje twitta"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Načítám obrázek"
+msgstr "Učitavanje slike"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Načítám thread Redditu"
+msgstr "Učitavanje Reddit objave"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Načítám gist"
+msgstr "Učitavanje gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nová přezdívka"
+msgstr "Novi nadimak"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Změnit"
+msgstr "Promijeni"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Storno"
+msgstr "Zatvori"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Lidé mluví!"
+msgstr "Ljudi razgovaraju!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Vymyslete si přezdívku..."
+msgstr "Razmislite o nadimku..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Přezdívka"
+msgstr "Nadimak"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Mám heslo"
+msgstr "Imam šifru"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Heslo"
+msgstr "Šifra"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Kanál"
+msgstr "Kanal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Klíč ke kanálu"
+msgstr "Ključ kanala"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Kanál vyžaduje klíč"
+msgstr "Kanal zahtijeva ključ"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Klíč"
+msgstr "Ključ"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Spustit..."
+msgstr "Pristupi..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Server a síť"
+msgstr "Server i mreža"
 
 #: 
 msgid "client_views_serverselect_server"
@@ -370,79 +370,79 @@ msgstr "Port"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Powered by Kiwi IRC"
+msgstr "Pokreće Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Nejprve si zvolte přezdívku!"
+msgstr "Prvo izaberite nadimak!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Připojen"
+msgstr "Konektovani ste"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Připojuji.."
+msgstr "Konektujete se.."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Přezdívka už je obsazena"
+msgstr "Nadimak je već zauzet"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Špatná přezdívka"
+msgstr "Neispravan nadimak"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Špatné heslo"
+msgstr "Pogrešna šifra"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Problém s připojením"
+msgstr "Greška pri spajanju"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Server nenalezen"
+msgstr "Server nije pronađen"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Připojení bylo odmítnuto"
+msgstr "Konekcija je odbijena"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Op"
+msgstr "Dodijeli operatora"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "Odeber Op"
+msgstr "Oduzmi operatora"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voice"
+msgstr "Dodijeli pravo glasa"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "Odeber Voice"
+msgstr "Oduzmi pravo glasa"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Kick"
+msgstr "Izbaci"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Ban"
+msgstr "Banuj"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Zpráva"
+msgstr "Poruka"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Info"
+msgstr "Informacije"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Plesk!"
+msgstr "Ošamari!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -450,67 +450,67 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Za 5 minut budete znovu připojeni a přihlášeni ke kanálu. Připravte se!"
+msgstr "Za 5 minuta ćete biti ponovo konektovani i ponovo pristupiti Vašim kanalima. Pripremite se!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Znovu provádím bezpečné připojení.."
+msgstr "Ponovo Vas sigurnosno spajamo.."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Oznámení na ploše"
+msgstr "Desktop obavještenja"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Zapnout oznámení"
+msgstr "Omogući obavijesti"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Zobrazit smajlíky"
+msgstr "Prikaži smajliće"
 
 #: 
 msgid "client_applet_about"
-msgstr "O Kiwi"
+msgstr "O Kiwi-u"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Stránka projektu"
+msgstr "Naslovna stranica projekta"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Odkaz na tento kanál"
+msgstr "Poveži se na ovaj kanal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Sdílejte tento kanál"
+msgstr "Podijeli ovaj kanal"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "Mé sítě"
+msgstr "Moje mreže"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favourite networks"
+msgstr "Omiljene mreže"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Přidat síť"
+msgstr "Dodaj mrežu"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Uložit síť"
+msgstr "Snimi mrežu"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Smazat síť"
+msgstr "Obriši mrežu"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Zobrazovat zprávy "
+msgstr "Omogući pristupio/napustio poruke kao aktivnost"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "Ignorovat"
+msgstr "Ignorisati"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"

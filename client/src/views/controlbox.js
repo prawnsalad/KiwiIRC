@@ -29,6 +29,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         _kiwi.app.connections.on('active', function(panel, connection) {
             $('.nick', that.$el).text(connection.get('nick'));
         });
+
+        // Keep focus on the input box as we flick between panels
+        _kiwi.app.panels.bind('active', function (active_panel) {
+            if (active_panel.isChannel() || active_panel.isServer() || active_panel.isQuery()) {
+                that.$('.inp').focus();
+            }
+        });
     },
 
     showNickChange: function (ev) {
