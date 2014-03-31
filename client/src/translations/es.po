@@ -179,11 +179,7 @@ msgstr "Error al conectarse a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-<<<<<<< HEAD
-msgstr "%s se ha unido"
-=======
 msgstr "%s se ha ingresado"
->>>>>>> origin/development
 
 #: 
 msgid "client_models_channel_quit"
@@ -280,11 +276,7 @@ msgstr "Esto cerrará todas las conversaciones de KiwiIRC. ¿Está seguro que de
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-<<<<<<< HEAD
-msgstr "Uniéndose al canal..."
-=======
 msgstr "Ingresando al canal..."
->>>>>>> origin/development
 
 #: 
 msgid "client_views_channel_topic"
@@ -460,11 +452,7 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-<<<<<<< HEAD
-msgstr "En 5 minutos serás reconectado y serás unido a tus canales. ¡Prepárate!"
-=======
 msgstr "En 5 minutos serás reconectado y serás reingresado a tus canales. ¡Prepárate!"
->>>>>>> origin/development
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
