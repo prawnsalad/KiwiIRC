@@ -168,11 +168,6 @@
                 // Trim any whitespace off the name
                 channel_name = channel_name.trim();
 
-                // If not a valid channel name, display a warning
-                if (!that.isChannelName(channel_name)) {
-                    that.panels.server.addMsg('', styleText('client_models_network_channel_invalid_name', {'%T': translateText('client_models_network_channel_invalid_name'), '%C': channel_name}));
-                    _kiwi.app.message.text(channel_name + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_invalid_name').fetch(), {timeout: 5000});
-                    return;
                 // Add channel_prefix in front of the first channel if missing
                 if (that.get('channel_prefix').indexOf(channel_name[0]) === -1) {
                     // Could be many prefixes but '#' is highly likely the required one
@@ -190,6 +185,7 @@
 
                 that.gateway.join(channel_name, channel_key);
             });
+
 
             return panels;
         },

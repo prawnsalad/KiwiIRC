@@ -1,3 +1,19 @@
+/**
+ * TEXT THEMES SYNTAX
+ * 
+ * %N: nickname
+ * %C[digit]: color
+ * %C: channel
+ * %J: ident
+ * %H: host
+ * %R: realname
+ * %B: bold
+ * %I: italic
+ * %U: underline
+ * %O: cancel styles
+ * %T: translated text
+ **/
+
 _kiwi.view.TextTheme = _kiwi.view.Panel.extend({
 	initialize: function(text_theme) {
 		this.text_theme = text_theme;
