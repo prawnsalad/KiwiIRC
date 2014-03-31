@@ -515,13 +515,23 @@
             // Kiwi IRC version this is built from
             kiwi.build_version = '<%build_version%>';
 
-            // Start the app
-            kiwi.start(opts, function() {
-                // Load any plugins
+            // Start the app after loading plugins
+            kiwi.init(opts, function() {
                 if (opts.client_plugins && opts.client_plugins.length > 0) {
+
+                    // Wait until all plugins are loaded before starting the app
+                    kiwi.plugins.once('loaded', function() {
+                        kiwi.start();
+                    });
+
                     _.each(opts.client_plugins, function (plugin_url) {
                         kiwi.plugins.load(plugin_url);
                     });
+
+                } else {
+
+                    // No plugins were needed so start the app
+                    kiwi.start();
                 }
             });
         });
