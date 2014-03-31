@@ -1,3 +1,19 @@
+/**
+ * TEXT THEMES SYNTAX
+ * 
+ * %N: nickname
+ * %C[digit]: color
+ * %C: channel
+ * %J: ident
+ * %H: host
+ * %R: realname
+ * %B: bold
+ * %I: italic
+ * %U: underline
+ * %O: cancel styles
+ * %T: translated text
+ **/
+
 {
   "client_models_channel_join": "== %N %T",
   "client_models_channel_part": "== %N %T",

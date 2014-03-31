@@ -105,7 +105,7 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     start: function (opts, callback) {
-        var continueStart, locale;
+        var continueStart, locale, igniteTextTheme, text_theme;
         opts = opts || {};
 
         continueStart = function (locale, s, xhr) {
@@ -146,7 +146,7 @@ _kiwi.global = {
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueStart);
         }
 
-        text_theme = _kiwi.global.settings.get('text_theme');
+        text_theme = opts.text_theme;
         if (!text_theme) {
             $.getJSON(opts.base_path + '/assets/text_themes/default.json', igniteTextTheme);
         } else {
