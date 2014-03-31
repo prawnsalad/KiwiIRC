@@ -2,7 +2,8 @@ _kiwi.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick',
-        'click .slap': 'slapClick',
+        'change .ignore': 'ignoreChange',
+        'click .ignore': 'ignoreClick',
         'click .op': 'opClick',
         'click .deop': 'deopClick',
         'click .voice': 'voiceClick',
@@ -21,7 +22,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
             ban: _kiwi.global.i18n.translate('client_views_userbox_ban').fetch(),
             message: _kiwi.global.i18n.translate('client_views_userbox_query').fetch(),
             info: _kiwi.global.i18n.translate('client_views_userbox_whois').fetch(),
-            slap: _kiwi.global.i18n.translate('client_views_userbox_slap').fetch()
+            ignore: _kiwi.global.i18n.translate('client_views_userbox_ignore').fetch()
         };
         this.$el = $(_.template($('#tmpl_userbox').html().trim(), text));
     },
@@ -29,6 +30,9 @@ _kiwi.view.UserBox = Backbone.View.extend({
     setTargets: function (user, channel) {
         this.user = user;
         this.channel = channel;
+
+        var is_ignored = _kiwi.app.connections.active_connection.isNickIgnored(this.user.get('nick'));
+        this.$('.ignore input').attr('checked', is_ignored ? 'checked' : false);
     },
 
     displayOpItems: function(display_items) {
@@ -49,8 +53,17 @@ _kiwi.view.UserBox = Backbone.View.extend({
         _kiwi.app.controlbox.processInput('/whois ' + this.user.get('nick'));
     },
 
-    slapClick: function (event) {
-        _kiwi.app.controlbox.processInput('/slap ' + this.user.get('nick'));
+    ignoreClick: function (event) {
+        // Stop the menubox from closing since it will not update the checkbox otherwise
+        event.stopPropagation();
+    },
+
+    ignoreChange: function (event) {
+        if ($(event.currentTarget).find('input').is(':checked')) {
+            _kiwi.app.controlbox.processInput('/ignore ' + this.user.get('nick'));
+        } else {
+            _kiwi.app.controlbox.processInput('/unignore ' + this.user.get('nick'));
+        }
     },
 
     opClick: function (event) {

@@ -112,7 +112,6 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
                 location: $('input.location', this.$el).val()
             });
         }
-
         this.trigger('server_connect', values);
     },
 

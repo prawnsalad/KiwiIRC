@@ -658,7 +658,6 @@
     
     
     function onBanlist(event) {
-        console.log('banlist', event);
         var channel = this.panels.getByName(event.channel);
         if (!channel)
             return;

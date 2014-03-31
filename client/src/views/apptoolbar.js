@@ -5,6 +5,10 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
     },
 
     initialize: function () {
+        // Remove the new connection/startup link if the server has disabled server changing
+        if (_kiwi.app.server_settings.connection && !_kiwi.app.server_settings.connection.allow_change) {
+            this.$('.startup').css('display', 'none');
+        }
     },
 
     clickSettings: function (event) {

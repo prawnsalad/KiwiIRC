@@ -281,7 +281,7 @@ handlers = {
         this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' list_channel', {
             channel: command.params[1],
             num_users: parseInt(command.params[2], 10),
-            topic: command.params[command.params.length - 1]
+            topic: command.params[3] || ''
         });
     },
 
@@ -617,7 +617,7 @@ handlers = {
     },
 
     'PRIVMSG': function (command) {
-        var tmp, namespace, time, msg;
+        var tmp, namespace, time, msg, version_string, client_info;
 
         // Check if we have a server-time
         time = getServerTime.call(this, command);
@@ -643,7 +643,17 @@ handlers = {
                     time: time
                 });
             } else if (msg.substr(1, 7) === 'VERSION') {
-                this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION KiwiIRC' + String.fromCharCode(1));
+                client_info = this.irc_connection.state.client.client_info;
+                version_string = global.build_version;
+
+                // If the client build_version differs from the server, add this to the version_string
+                if (client_info && client_info.build_version !== global.build_version) {
+                    version_string += ', client build: ' + client_info.build_version;
+                }
+
+                version_string = 'KiwiIRC (' + version_string + ')';
+
+                this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION ' + version_string + String.fromCharCode(1));
             } else if (msg.substr(1, 6) === 'SOURCE') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'SOURCE http://www.kiwiirc.com/' + String.fromCharCode(1));
             } else if (msg.substr(1, 10) === 'CLIENTINFO') {

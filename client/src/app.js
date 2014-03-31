@@ -15,6 +15,7 @@ _kiwi.applets = {};
  * and data (think: plugins)
  */
 _kiwi.global = {
+    build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
     settings: undefined, // Instance of _kiwi.model.DataStore
     plugins: undefined,
     utils: undefined, // TODO: Re-usable methods

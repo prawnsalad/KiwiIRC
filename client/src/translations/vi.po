@@ -458,51 +458,71 @@ msgstr "Đang kết nối lại một cách an toàn..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Desktop notifications"
+msgstr "Thông báo trên desktop"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Enable notifications"
+msgstr "Cho phép hiện thông báo"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Show emoticons"
+msgstr "Hiện các mặt cười"
 
 #: 
 msgid "client_applet_about"
-msgstr "About Kiwi"
+msgstr "Giới thiệu về Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Project homepage"
+msgstr "Trang chủ dự án"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link to this channel"
+msgstr "Đường dẫn đến kênh này"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Share this channel"
+msgstr "Chia sẻ kênh này"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "My networks"
+msgstr "Các mạng của tôi"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favourite networks"
+msgstr "Các mạng được ưa thích"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Add network"
+msgstr "Thêm mạng"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Save network"
+msgstr "Lưu mạng"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Delete network"
+msgstr "Xóa mạng"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Cho phép hiển thị các thông báo vào/ra kênh"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "bỏ qua"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
 
 #: client/assets/src/views/member.js
 msgid "client_views_member_years_old"

@@ -26,11 +26,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
 
         this.unbind();
         this.destroy();
-
-        // If closing the active panel, switch to the server panel
-        if (this === _kiwi.app.panels().active) {
-            _kiwi.app.connections.active_connection.panels.server.view.show();
-        }
     },
 
     // Alias to closePanel() for child objects to override

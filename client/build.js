@@ -1,8 +1,9 @@
-var fs        = require('fs'),
-    uglifyJS  = require('uglify-js'),
-    _         = require('lodash'),
-    po2json   = require('po2json'),
-    config    = require('../server/configuration.js');
+var fs           = require('fs'),
+    uglifyJS     = require('uglify-js'),
+    _            = require('lodash'),
+    po2json      = require('po2json'),
+    config       = require('../server/configuration.js'),
+    package_json = require('../package.json');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -213,7 +214,8 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
  */
 
 var index_src = fs.readFileSync(__dirname + '/src/index.html.tmpl', FILE_ENCODING)
-    .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi');
+    .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi')
+    .replace(new RegExp('<%build_version%>', 'g'), package_json.version);
 
 fs.writeFile(__dirname + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {

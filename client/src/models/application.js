@@ -584,7 +584,6 @@
         } else {
             channel_name = _kiwi.app.panels().active.get('name');
         }
-
         this.connections.active_connection.gateway.topic(channel_name, ev.params.join(' '));
     }
 

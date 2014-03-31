@@ -1,6 +1,7 @@
 var util            = require('util'),
     events          = require('events'),
     _               = require('lodash'),
+    winston         = require('winston'),
     IrcConnection   = require('./connection.js').IrcConnection;
 
 var State = function (client, save_state) {
@@ -9,10 +10,10 @@ var State = function (client, save_state) {
     events.EventEmitter.call(this);
     this.client = client;
     this.save_state = save_state || false;
-    
+
     this.irc_connections = [];
     this.next_connection = 0;
-    
+
     this.client.on('dispose', function () {
         if (!that.save_state) {
             _.each(that.irc_connections, function (irc_connection, i, cons) {
@@ -22,7 +23,7 @@ var State = function (client, save_state) {
                     cons[i] = null;
                 }
             });
-            
+
             that.dispose();
         }
     });
@@ -65,7 +66,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
     });
 
     con.on('error', function IrcConnectionError(err) {
-        console.log('irc_connection error (' + hostname + '):', err);
+        winston.warn('irc_connection error (%s):', hostname, err);
         return callback(err.message);
     });
 
