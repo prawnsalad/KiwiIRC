@@ -49,7 +49,13 @@
             *   The user prefixes for channel owner/admin/op/voice etc. on this network
             *   @type   Array
             */
-            user_prefixes: ['~', '&', '@', '+'],
+            user_prefixes: [
+                {symbol: '~', mode: 'q'},
+                {symbol: '&', mode: 'a'},
+                {symbol: '@', mode: 'o'},
+                {symbol: '%', mode: 'h'},
+                {symbol: '+', mode: 'v'}
+            ],
 
             /**
             *   List of nicks we are ignoring
