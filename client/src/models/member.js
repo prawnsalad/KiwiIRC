@@ -1,8 +1,10 @@
 _kiwi.model.Member = Backbone.Model.extend({
     sortModes: function (modes) {
+        var that = this;
+
         return modes.sort(function (a, b) {
             var a_idx, b_idx, i;
-            var user_prefixes = _kiwi.gateway.get('user_prefixes');
+            var user_prefixes = that.get('user_prefixes');
 
             for (i = 0; i < user_prefixes.length; i++) {
                 if (user_prefixes[i].mode === a) {
@@ -65,7 +67,7 @@ _kiwi.model.Member = Backbone.Model.extend({
     },
     getPrefix: function (modes) {
         var prefix = '';
-        var user_prefixes = _kiwi.gateway.get('user_prefixes');
+        var user_prefixes = this.get('user_prefixes');
 
         if (typeof modes[0] !== 'undefined') {
             prefix = _.detect(user_prefixes, function (prefix) {
@@ -77,7 +79,7 @@ _kiwi.model.Member = Backbone.Model.extend({
     },
     stripPrefix: function (nick) {
         var tmp = nick, i, j, k, nick_char;
-        var user_prefixes = _kiwi.gateway.get('user_prefixes');
+        var user_prefixes = this.get('user_prefixes');
         i = 0;
 
         nick_character_loop:
@@ -106,7 +108,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         return display;
     },
     isOp: function () {
-        var user_prefixes = _kiwi.gateway.get('user_prefixes'),
+        var user_prefixes = this.get('user_prefixes'),
             modes = this.get('modes'),
             o, max_mode;
         if (modes.length > 0) {
