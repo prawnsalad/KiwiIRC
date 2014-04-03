@@ -126,6 +126,11 @@ _kiwi.model.Gateway = function () {
 
         this.socket.on('error', function (e) {
             console.log("_kiwi.gateway.socket.on('error')", {reason: e});
+            if (that.connect_callback) {
+                that.connect_callback(e);
+                delete that.connect_callback;
+            }
+
             that.trigger("connect_fail", {reason: e});
         });
 
@@ -180,6 +185,20 @@ _kiwi.model.Gateway = function () {
      */
     this.newConnection = function(connection_info, callback_fn) {
         var that = this;
+
+        // If not connected, connect first then re-call this function
+        if (!this.isConnected()) {
+            this.connect(function(err) {
+                if (err) {
+                    callback_fn(err);
+                    return;
+                }
+
+                that.newConnection(connection_info, callback_fn);
+            });
+
+            return;
+        }
 
         this.makeIrcConnection(connection_info, function(err, server_num) {
             var connection;
