@@ -740,7 +740,6 @@
         } else {
             channel_name = _kiwi.app.panels().active.get('name');
         }
-
         this.connections.active_connection.gateway.topic(channel_name, ev.params.join(' '));
     }
 
@@ -962,7 +961,10 @@
             host: server,
             port: port,
             ssl: ssl,
-            password: password
+            password: password,
+            age: age,
+            gender: gender,
+            location: location
         }, function(err, new_connection) {
             if (err)
                 _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_error').fetch(server, port.toString(), err.toString()));

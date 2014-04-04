@@ -176,5 +176,74 @@ _kiwi.model.Member = Backbone.Model.extend({
         } else {
             this.set({"is_op": false}, {silent: true});
         }
+    },
+    richUserlist: function(flags, realname) {
+        var genders, info, temp_gender, regex_list, my_regex, gender_string,
+            is_away = false,
+            is_ircop = false,
+            age = '',
+            gender = 'U',
+            temp_realname = [];
+        console.log('ok');
+        // Detect and set away status
+        if (_kiwi.global.settings.get('rich_nicklist_track_away') && flags.indexOf('G') > -1) {
+            is_away = true;
+        }
+        
+        // Detect and set ircop status
+        if (_kiwi.global.settings.get('rich_nicklist_track_ircop') && flags.indexOf('*') > -1) {
+            is_ircop = true;
+        }
+
+        if (_kiwi.global.settings.get('rich_nicklist_track_asl')) {
+            // Detect ASL
+            genders = _kiwi.global.settings.get('rich_nicklist_gender_regexes');
+            // If we didn't find the genders regexes, stop here
+            if (!genders) return;
+            
+            for(temp_gender in genders) {
+                regex_list = genders[temp_gender].join('|');
+    
+                // If gender info is in realname
+                if (realname.match(new RegExp(regex_list, 'i'))) {
+                    gender = temp_gender;
+                    
+                    // Fing the gender info to split realname into ASL
+                    for(my_regex in genders[temp_gender]) {
+                        // Test the different gender regexes
+                        if (realname.match(new RegExp(genders[temp_gender][my_regex], 'i'))) {
+                            // Clean the gender regex to split the realname around it
+                            gender_string = genders[temp_gender][my_regex].replace(/[\^\$]/g, '');
+                            temp_realname = realname.split(new RegExp(gender_string, 'i'));
+                            
+                            // Push the traling realname into info
+                            if(temp_realname.length > 1) {
+                                info = temp_realname[1];
+                            }
+                            // If we've got here we've found all we can so stop looping
+                            break;
+                        }
+                    }
+                }
+                // Set the age
+                if (temp_realname[0] && temp_realname[0].match(/[0-9]/)) {
+                    age = temp_realname[0];
+                }
+                
+                // If we've got an age or a gender at this stage, we've done the job
+                if (age !== '' || gender !== 'U') {
+                    break;
+                } else {
+                    info = realname;
+                }
+            }
+        }
+
+        // Set the remaining realname info (should be user's location or realname for users that haven't set ASL)
+        this.set({'is_away': is_away, 'is_ircop': is_ircop, 'age': age, 'gender': gender, 'info': info}, {silent: true});
+        
+        
+        // All rich nicklist info is set, time to render the nicklist
+        this.view.enrich();
     }
 });

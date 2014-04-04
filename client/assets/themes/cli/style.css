@@ -290,3 +290,33 @@
 #kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
 #kiwi .channel_info .channel-banlist thead { font-style: italic; }
 #kiwi .channel_info .remove-ban:hover { color: #900; }
+
+/* Rich userlist */
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.M a.nick {color: #0066FF;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.F a.nick {color: #FF00FF;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.U a.nick {color: #000000;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.M.ircop a.nick,
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.F.ircop a.nick,
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.U.ircop a.nick {color: #FF0000;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.M.away a.nick,
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.F.away a.nick,
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.U.away a.nick {color: #999;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist div.tooltip {
+    border: #666;
+    width: 200px;
+    display: none;
+    position: fixed;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #FFF;
+}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist div.tooltip div.tooltipNick {
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #999;
+    width: 100%;
+}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.M div.tooltip {background-color: #0066FF;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.F div.tooltip {background-color: #FF00FF;}
+#kiwi.theme_relaxed .memberlists ul li.rich_userlist.U div.tooltip {background-color: #000000;}
+/* End rich userlist */

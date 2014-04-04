@@ -66,7 +66,11 @@ msgstr "Join/part channel notifications"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Timestamps"
+msgstr "Show timestamps"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
 
 #: 
 msgid "client_applets_settings_notification_sound"
@@ -320,6 +324,14 @@ msgstr "Cancel"
 msgid "client_views_panel_activity"
 msgstr "People are talking!"
 
+#:
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#:
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
+
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
 msgstr "Think of a nickname..."
@@ -407,6 +419,32 @@ msgstr "Server not found"
 #: 
 msgid "client_views_serverselect_connection_refused"
 msgstr "Connection refused"
+
+#: 
+msgid "client_views_serverselect_age"
+msgstr "Age"
+
+#: 
+msgid "client_views_serverselect_gender"
+msgstr "Gender"
+
+#: 
+msgid "client_views_serverselect_gender_f"
+msgstr "Female"
+
+#: 
+msgid "client_views_serverselect_gender_m"
+msgstr "Male"
+
+#: 
+msgid "client_views_serverselect_gender_u"
+msgstr "Other"
+
+#: 
+msgid "client_views_serverselect_location"
+msgstr "Location"
+
+
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -503,6 +541,30 @@ msgstr "Save network"
 #: 
 msgid "client_applet_fav_delete"
 msgstr "Delete network"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_years_old"
+msgstr "years old"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_M"
+msgstr "Man"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_F"
+msgstr "Woman"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_U"
+msgstr "Unknown"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_ircop"
+msgstr "IRC operator"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_away"
+msgstr "Away"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"

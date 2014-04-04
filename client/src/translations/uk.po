@@ -504,6 +504,30 @@ msgstr "Зберегти мережу"
 msgid "client_applet_fav_delete"
 msgstr "Видалити мережу"
 
+#: client/assets/src/views/member.js
+msgid "client_views_member_years_old"
+msgstr "years old"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_M"
+msgstr "Man"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_F"
+msgstr "Woman"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_U"
+msgstr "Unknown"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_ircop"
+msgstr "IRC operator"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_away"
+msgstr "Away"
+
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
 msgstr "Include join/part messages as activity"

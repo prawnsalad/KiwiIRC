@@ -408,6 +408,31 @@ msgstr "Serveur introuvable."
 msgid "client_views_serverselect_connection_refused"
 msgstr "Connexion refusée."
 
+#: 
+msgid "client_views_serverselect_age"
+msgstr "Age"
+
+#: 
+msgid "client_views_serverselect_gender"
+msgstr "Sexe"
+
+#: 
+msgid "client_views_serverselect_gender_f"
+msgstr "Femme"
+
+#: 
+msgid "client_views_serverselect_gender_m"
+msgstr "Homme"
+
+#: 
+msgid "client_views_serverselect_gender_u"
+msgstr "Autre"
+
+#: 
+msgid "client_views_serverselect_location"
+msgstr "Ville"
+
+
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
 msgstr "Op"
@@ -504,9 +529,33 @@ msgstr "Sauvegarder le réseau"
 msgid "client_applet_fav_delete"
 msgstr "Supprimer le réseau"
 
+#: client/assets/src/views/member.js
+msgid "client_views_member_years_old"
+msgstr "ans"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_M"
+msgstr "Homme"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_F"
+msgstr "Femme"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_gender_U"
+msgstr "Inconnu"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_ircop"
+msgstr "Opérateur du chat"
+
+#: client/assets/src/views/member.js
+msgid "client_views_member_away"
+msgstr "Absent"
+
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Inclure les connexions/déconnexions dans l'activité"
 
 #: 
 msgid "client_views_userbox_ignore"
