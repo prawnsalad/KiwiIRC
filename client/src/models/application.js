@@ -709,7 +709,7 @@
         }
 
         var panel = _kiwi.app.panels().active;
-        panel.addMsg('', styleText('action', {'%T': _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' ')}), 'action');
+        panel.addMsg('', styleText('action', {'%N': _kiwi.app.connections.active_connection.get('nick'), '%T': ev.params.join(' ')}), 'action');
         this.connections.active_connection.gateway.action(panel.get('name'), ev.params.join(' '));
     }
 

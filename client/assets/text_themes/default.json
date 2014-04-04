@@ -41,7 +41,7 @@
   "privmsg": "%T",
   "ctcp": "CTCP: %T",
   "notice": "%T",
-  "action": "* %T",
+  "action": "* %N %T",
   "whois_ident": "%N [%N!%J@%H] * %T",
   "whois": "%T",
   "who": "%N [%N!%J@%H] * %R",
