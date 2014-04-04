@@ -111,6 +111,14 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
 
     // Options sent by the IRCd
     this.options = Object.create(null);
+    this.options.PREFIX = [
+        {symbol: '~', mode: 'q'},
+        {symbol: '&', mode: 'a'},
+        {symbol: '@', mode: 'o'},
+        {symbol: '%', mode: 'h'},
+        {symbol: '+', mode: 'v'}
+    ];
+
     this.cap = {requested: [], enabled: []};
 
     // Is SASL supported on the IRCd

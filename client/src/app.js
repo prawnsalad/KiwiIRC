@@ -166,6 +166,15 @@ _kiwi.global = {
     // Allow plugins to change the startup applet
     registerStartupApplet: function(startup_applet_name) {
         _kiwi.app.startup_applet_name = startup_applet_name;
+    },
+
+    /**
+     * Open a new IRC connection
+     * @param {Object} connection_details {nick, host, port, ssl, password, options}
+     * @param {Function} callback function(err, network){}
+     */
+    newIrcConnection: function(connection_details, callback) {
+        _kiwi.gateway.newConnection(connection_details, callback);
     }
 };
 

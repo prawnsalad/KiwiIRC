@@ -14,35 +14,11 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
 
     onMakeConnection: function(new_connection_event) {
-        var that = this,
-            transport_path = '',
-            auto_connect_details = new_connection_event;
-
-        this.view.networkConnecting();
-
-        // If not connected already, connect then send the IRC connect info
-        if (!_kiwi.gateway.isConnected()) {
-            _kiwi.gateway.connect(function() {
-                that.makeConnection(new_connection_event);
-            });
-
-        } else {
-            this.makeConnection(new_connection_event);
-        }
-
-
-    },
-
-
-    onKiwiServerNotFound: function() {
-        this.view.showError();
-    },
-
-
-    makeConnection: function(new_connection_event) {
         var that = this;
 
         this.connect_details = new_connection_event;
+
+        this.view.networkConnecting();
 
         _kiwi.gateway.newConnection({
             nick: new_connection_event.nick,

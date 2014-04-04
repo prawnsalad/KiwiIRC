@@ -49,7 +49,13 @@
             *   The user prefixes for channel owner/admin/op/voice etc. on this network
             *   @type   Array
             */
-            user_prefixes: ['~', '&', '@', '+'],
+            user_prefixes: [
+                {symbol: '~', mode: 'q'},
+                {symbol: '&', mode: 'a'},
+                {symbol: '@', mode: 'o'},
+                {symbol: '%', mode: 'h'},
+                {symbol: '+', mode: 'v'}
+            ],
 
             /**
             *   List of nicks we are ignoring
@@ -303,7 +309,12 @@
         members = c.get('members');
         if (!members) return;
 
-        user = new _kiwi.model.Member({nick: event.nick, ident: event.ident, hostname: event.hostname});
+        user = new _kiwi.model.Member({
+            nick: event.nick,
+            ident: event.ident,
+            hostname: event.hostname,
+            user_prefixes: this.get('user_prefixes')
+        });
         members.add(user, {kiwi: event});
     }
 
@@ -576,15 +587,19 @@
 
 
     function onUserlist(event) {
-        var channel;
-        channel = this.panels.getByName(event.channel);
+        var that = this,
+            channel = this.panels.getByName(event.channel);
 
         // If we didn't find a channel for this, may aswell leave
         if (!channel) return;
 
         channel.temp_userlist = channel.temp_userlist || [];
         _.each(event.users, function (item) {
-            var user = new _kiwi.model.Member({nick: item.nick, modes: item.modes});
+            var user = new _kiwi.model.Member({
+                nick: item.nick,
+                modes: item.modes,
+                user_prefixes: that.get('user_prefixes')
+            });
             channel.temp_userlist.push(user);
         });
     }
