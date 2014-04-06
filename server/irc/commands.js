@@ -792,7 +792,7 @@ handlers = {
     },
 
     ERR_CANNOTSENDTOCHAN: function (command) {
-        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' cannot_send_to_chan', {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' cannot_send_to_channel', {
             channel: command.params[1],
             reason: command.params[command.params.length - 1]
         });
