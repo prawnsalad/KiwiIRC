@@ -146,6 +146,10 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
     toggleBanList: function (event) {
         event.preventDefault();
         this.$el.find('.channel-banlist table').toggle();
+
+        if(!this.$el.find('.channel-banlist table').is(':visible'))
+            return;
+
         var channel = this.model.get('channel'),
             network = channel.get('network');
 
