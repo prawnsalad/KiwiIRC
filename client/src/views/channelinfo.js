@@ -2,7 +2,7 @@
 
 _kiwi.view.ChannelInfo = Backbone.View.extend({
     events: {
-        'click .show_banlist': 'updateBanlist',
+        'click .toggle_banlist': 'toggleBanList',
         'change .channel-mode': 'onModeChange',
         'click .remove-ban': 'onRemoveBanClick'
     },
@@ -120,6 +120,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
         banlist = channel.get('banlist');
         if (banlist && banlist.length) {
+            this.$el.find('.channel-banlist table').show();
             var $table = this.$el.find('.channel-banlist table tbody');
 
             this.$el.find('.banlist-status').text('');
@@ -137,23 +138,20 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
             });
 
             this.$el.find('.channel-banlist table').slideDown();
-
         } else {
             this.$el.find('.banlist-status').text('Banlist empty');
             this.$el.find('.channel-banlist table').hide();
         }
     },
 
-
-    updateBanlist: function (event) {
+    toggleBanList: function (event) {
         event.preventDefault();
-
+        this.$el.find('.channel-banlist table').toggle();
         var channel = this.model.get('channel'),
-            network = channel.get('network');
+        network = channel.get('network');
 
         network.gateway.raw('MODE ' + channel.get('name') + ' +b');
     },
-
 
     dispose: function () {
         this.model.get('channel').off('change:info_modes change:info_url change:banlist', this.updateInfo, this);
