@@ -147,7 +147,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         event.preventDefault();
         this.$el.find('.channel-banlist table').toggle();
         var channel = this.model.get('channel'),
-        network = channel.get('network');
+            network = channel.get('network');
 
         network.gateway.raw('MODE ' + channel.get('name') + ' +b');
     },
