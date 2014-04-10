@@ -74,7 +74,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if ((network = this.model.get('network'))) {
             re = new RegExp('(?:^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
             msg.msg = msg.msg.replace(re, function (match) {
-                return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
+                return '<a class="chan" data-channel="' + _.escape(match.trim()) + '">' + _.escape(match.trim()) + '</a>';
             });
         }
 
