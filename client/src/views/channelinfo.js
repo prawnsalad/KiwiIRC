@@ -120,7 +120,6 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
         banlist = channel.get('banlist');
         if (banlist && banlist.length) {
-            this.$el.find('.channel-banlist table').show();
             var $table = this.$el.find('.channel-banlist table tbody');
 
             this.$el.find('.banlist-status').text('');
