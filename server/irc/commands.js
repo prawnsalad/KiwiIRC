@@ -21,6 +21,7 @@ irc_numerics = {
     '301': 'RPL_AWAY',
     '307': 'RPL_WHOISREGNICK',
     '311': 'RPL_WHOISUSER',
+    '310': 'RPL_WHOIHELPOP',
     '312': 'RPL_WHOISSERVER',
     '313': 'RPL_WHOISOPERATOR',
     '314': 'RPL_WHOWASUSER',
@@ -38,6 +39,7 @@ irc_numerics = {
     '331': 'RPL_NOTOPIC',
     '332': 'RPL_TOPIC',
     '333': 'RPL_TOPICWHOTIME',
+    '335': 'RPL_WHOISBOT',
     '341': 'RPL_INVITING',
     '352': 'RPL_WHOREPLY',
     '353': 'RPL_NAMEREPLY',
@@ -180,6 +182,20 @@ handlers = {
             nick: command.params[1],
             ident: command.params[2],
             host: command.params[3],
+            msg: command.params[command.params.length - 1]
+        });
+    },
+
+    'RPL_WHOISHELPOP': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whoishelpop', {
+            nick: command.params[1],
+            msg: command.params[command.params.length - 1]
+        });
+    },
+
+    'RPL_WHOISBOT': function (command) {
+        this.irc_connection.emit('user ' + command.params[1] + ' whoisbot', {
+            nick: command.params[1],
             msg: command.params[command.params.length - 1]
         });
     },
