@@ -20,6 +20,8 @@ var IrcUser = function (irc_connection, nick) {
         whoishost:      onWhoisHost,
         whoissecure:    onWhoisSecure,
         whoisaccount:   onWhoisAccount,
+        whoisbot:       onWhoisBot,
+        whoishelpop:    onWhoisHelpOp,
         endofwhois:     onWhoisEnd,
         whowas:         onWhoWas,
         endofwhowas:    onWhoWasEnd,
@@ -164,6 +166,22 @@ function onWhoisAccount(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: 'Logged in as ' + event.account,
+        end: false
+    });
+}
+
+function onWhoisHelpOp(event) {
+    this.irc_connection.clientEvent('whois', {
+        nick: event.nick,
+        msg: event.msg,
+        end: false
+    });
+}
+
+function onWhoisBot(event) {
+    this.irc_connection.clientEvent('whois', {
+        nick: event.nick,
+        msg: event.msg,
         end: false
     });
 }
