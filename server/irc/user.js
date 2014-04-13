@@ -219,14 +219,21 @@ function onWhoWasEnd(event) {
 }
 
 function onNotice(event) {
-    this.irc_connection.clientEvent('notice', {
-        from_server: event.from_server,
-        nick: event.nick,
-        ident: event.ident,
-        hostname: event.hostname,
-        target: event.target,
-        msg: event.msg,
-        time: event.time
+	var that = this;
+    global.modules.emit('irc notice', {
+        connection: this.irc_connection,
+        irc_event: event
+    })
+	.done(function() {
+	    that.irc_connection.clientEvent('notice', {
+	        from_server: event.from_server,
+	        nick: event.nick,
+	        ident: event.ident,
+	        hostname: event.hostname,
+	        target: event.target,
+	        msg: event.msg,
+	        time: event.time
+	    });
     });
 }
 
