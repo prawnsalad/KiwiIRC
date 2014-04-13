@@ -14,8 +14,8 @@ module.on('irc message', function(event, data) {
 	console.log('[MESSAGE]', data.irc_event);
 });
 
-// The Client recieves a IRC NOTICE command
-module.on('irc notice', function(event, data) {
+// The Client recieves a IRC USER NOTICE command
+module.on('irc user notice', function(event, data) {
 	console.log('[NOTICE]', data.irc_event);
 });
 
