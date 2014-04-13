@@ -3,51 +3,6 @@ _kiwi.model.Gateway = function () {
     // Set to a reference to this object within initialize()
     var that = null;
 
-    this.defaults = {
-        /**
-        *   The name of the network
-        *   @type    String
-        */
-        name: 'Server',
-
-        /**
-        *   The address (URL) of the network
-        *   @type    String
-        */
-        address: '',
-
-        /**
-        *   The current nickname
-        *   @type   String
-        */
-        nick: '',
-
-        /**
-        *   The channel prefix for this network
-        *   @type    String
-        */
-        channel_prefix: '#',
-
-        /**
-        *   The user prefixes for channel owner/admin/op/voice etc. on this network
-        *   @type   Array
-        */
-        user_prefixes: ['~', '&', '@', '+'],
-
-        /**
-        *   The URL to the Kiwi server
-        *   @type   String
-        */
-        kiwi_server: '//kiwi',
-
-        /**
-        *   List of nicks we are ignoring
-        *   @type Array
-        */
-        ignore_list: []
-    };
-
-
     this.initialize = function () {
         that = this;
 
@@ -151,6 +106,11 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
     this.connect = function (callback) {
+        this.connect_callback = callback;
+
+        // Keep note of the server we are connecting to
+        this.set('kiwi_server', _kiwi.app.kiwi_server);
+
         this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
             path: _kiwi.app.get('base_path') + '/transport',
             reconnect_max_attempts: 5,
@@ -166,6 +126,11 @@ _kiwi.model.Gateway = function () {
 
         this.socket.on('error', function (e) {
             console.log("_kiwi.gateway.socket.on('error')", {reason: e});
+            if (that.connect_callback) {
+                that.connect_callback(e);
+                delete that.connect_callback;
+            }
+
             that.trigger("connect_fail", {reason: e});
         });
 
@@ -185,8 +150,6 @@ _kiwi.model.Gateway = function () {
             that.disconnect_requested = false;
 
             console.log("_kiwi.gateway.socket.on('open')");
-
-            callback && callback();
         });
 
         this.rpc.on('too_many_connections', function () {
@@ -248,6 +211,20 @@ _kiwi.model.Gateway = function () {
      */
     this.newConnection = function(connection_info, callback_fn) {
         var that = this;
+
+        // If not connected, connect first then re-call this function
+        if (!this.isConnected()) {
+            this.connect(function(err) {
+                if (err) {
+                    callback_fn(err);
+                    return;
+                }
+
+                that.newConnection(connection_info, callback_fn);
+            });
+
+            return;
+        }
 
         this.makeIrcConnection(connection_info, function(err, server_num) {
             var connection;
@@ -315,41 +292,62 @@ _kiwi.model.Gateway = function () {
 
 
     this.parseKiwi = function (command, data) {
+        var that = this,
+            client_info_data;
+
         this.trigger('kiwi:' + command, data);
         this.trigger('kiwi', data);
 
         switch (command) {
-            case 'connection_sync':
-                _.each(data, function(connection) {
-                    var new_connection,
-                        inf = {
-                            connection_id: connection.id,
-                            nick: connection.nick,
-                            address: connection.host,
-                            port: connection.port,
-                            ssl: connection.ssl
-                        };
+        case 'connection_sync':
+            _.each(data, function(connection) {
+                console.log(connection);
+                var new_connection,
+                    inf = {
+                        connection_id: connection.connection_id,
+                        nick: connection.nick,
+                        address: connection.host,
+                        port: connection.port,
+                        ssl: connection.ssl
+                    };
 
-                    new_connection = new _kiwi.model.Network(inf);
-                    new_connection.parseOptions(connection.options.options, connection.options.cap);
-
-                    _kiwi.app.connections.add(new_connection);
-
-                    _.each(connection.channels, function(channel_info, idx) {
-                        var channel = new_connection.panels.getByName(channel_info.name);
-
-                        if (!channel) {
-                            channel = new _kiwi.model.Channel({name: channel_info.name});
-                            new_connection.panels.add(channel);
-                        }
-                    });
+                new_connection = new _kiwi.model.Network(inf);
+                that.trigger('connection:' + connection.connection_id.toString(), {
+                    event_name: 'options',
+                    event_data: {options: connection.options.options, cap: connection.options.cap}
                 });
+                //new_connection.parseOptions(connection.options.options, connection.options.cap);
 
-                // Let the application know we have connected to an IRCd
-                if (data && data.length)
-                    this.trigger('onconnect');
+                _kiwi.app.connections.add(new_connection);
 
-                break;
+                _.each(connection.channels, function(channel_info, idx) {
+                    var channel = new_connection.panels.getByName(channel_info.name);
+
+                    if (!channel) {
+                        channel = new _kiwi.model.Channel({name: channel_info.name});
+                        new_connection.panels.add(channel);
+                    }
+                });
+            });
+
+            // Let the application know we have connected to an IRCd
+            if (data && data.length)
+                this.trigger('onconnect');
+
+            break;
+
+        case 'connected':
+            // Send some info on this client to the server
+            client_info_data = {
+                command: 'client_info',
+                build_version: _kiwi.global.build_version
+            };
+            this.rpc.call('kiwi', client_info_data);
+
+            this.connect_callback && this.connect_callback();
+            delete this.connect_callback;
+
+            break;
         }
     };
     /*
@@ -526,6 +524,20 @@ _kiwi.model.Gateway = function () {
     };
 
     /**
+    *   Retrieves channel information
+    */
+    this.channelInfo = function (connection_id, channel, callback) {
+        var data = {
+            method: 'channel_info',
+            args: {
+                channel: channel
+            }
+        };
+
+        this.sendData(connection_id, data, callback);
+    };
+
+    /**
     *   Leaves a channel
     *   @param  {String}    channel     The channel to part
     *   @param  {Function}  callback    A callback function
@@ -629,6 +641,21 @@ _kiwi.model.Gateway = function () {
     };
 
     /**
+    * Sets a mode for a target
+    */
+    this.mode = function (connection_id, target, mode_string, callback) {
+        data = {
+            method: 'raw',
+            args: {
+                data: 'MODE ' + target + ' ' + mode_string
+            }
+        };
+
+        this.sendData(connection_id, data, callback);
+    };
+
+
+    /**
      *  Sends ENCODING change request to server.
      *  @param  {String}     new_encoding  The new proposed encode
      *  @param  {Fucntion}   callback      A callback function
@@ -659,23 +686,6 @@ _kiwi.model.Gateway = function () {
         };
 
         this.sendData(data, callback);
-    };
-
-    // Check a nick alongside our ignore list
-    this.isNickIgnored = function (nick) {
-        var idx, list = this.get('ignore_list');
-        var pattern, regex;
-
-        for (idx = 0; idx < list.length; idx++) {
-            pattern = list[idx].replace(/([.+^$[\]\\(){}|-])/g, "\\$1")
-                .replace('*', '.*')
-                .replace('?', '.');
-
-            regex = new RegExp(pattern, 'i');
-            if (regex.test(nick)) return true;
-        }
-
-        return false;
     };
 
 

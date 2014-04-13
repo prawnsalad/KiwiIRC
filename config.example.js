@@ -75,6 +75,7 @@ conf.default_encoding = 'utf8';
 /*
 * Default GECOS (real name) for IRC connections
 * %n will be replaced with the users nick
+* %h will be replaced with the users hostname
 */
 //conf.default_gecos = 'Web IRC Client';
 
@@ -181,11 +182,21 @@ conf.client = {
         scrollback: 250,
         show_joins_parts: true,
         show_timestamps: false,
+        use_24_hour_timestamps: true,
         mute_sounds: false,
-        show_emoticons: true
+        show_emoticons: true,
+        count_all_activity: true
     },
     window_title: 'Kiwi IRC'
 };
+
+// List of themes available for the user to choose from
+conf.client_themes = [
+    'relaxed',
+    'mini',
+    'cli',
+    'basic'
+];
 
 
 // If set, the client may only connect to this 1 IRC server

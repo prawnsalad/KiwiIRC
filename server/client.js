@@ -50,6 +50,9 @@ var Client = function (websocket) {
     });
 
     this.disposed = false;
+
+    // Let the client know it's finished connecting
+    this.sendKiwiCommand('connected');
 };
 util.inherits(Client, events.EventEmitter);
 
@@ -79,7 +82,8 @@ Client.prototype.dispose = function () {
 };
 
 function handleClientMessage(msg, callback) {
-    var server;
+    var that = this,
+        server;
 
     // Make sure we have a server number specified
     if ((msg.server === null) || (typeof msg.server !== 'number')) {
@@ -103,7 +107,13 @@ function handleClientMessage(msg, callback) {
     }
 
     // Run the client command
-    this.client_commands.run(msg.data.method, msg.data.args, server, callback);
+    global.modules.emit('client command', {
+        command: msg.data,
+        server: server
+    })
+    .done(function() {
+        that.client_commands.run(msg.data.method, msg.data.args, server, callback);
+    });
 }
 
 
@@ -117,7 +127,7 @@ function kiwiCommand(command, callback) {
     }
 
     global.modules.emit('client command kiwi', {client: this, command: command, callback: callback})
-    .done(function ircAuthorizeCb() {
+    .done(function() {
         switch (command.command) {
             case 'connect':
                 if (command.hostname && command.port && command.nick) {
@@ -142,6 +152,14 @@ function kiwiCommand(command, callback) {
                 } else {
                     return callback('Hostname, port and nickname must be specified');
                 }
+
+                break;
+
+            case 'client_info':
+                // keep hold of selected parts of the client_info
+                that.client_info = {
+                    build_version: command.build_version.toString() || undefined
+                };
 
                 break;
 

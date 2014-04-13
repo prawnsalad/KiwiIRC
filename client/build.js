@@ -1,8 +1,9 @@
-var fs        = require('fs'),
-    uglifyJS  = require('uglify-js'),
-    _         = require('lodash'),
-    po2json   = require('po2json'),
-    config    = require('../server/configuration.js');
+var fs           = require('fs'),
+    uglifyJS     = require('uglify-js'),
+    _            = require('lodash'),
+    po2json      = require('po2json'),
+    config       = require('../server/configuration.js'),
+    package_json = require('../package.json');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -55,10 +56,7 @@ var source_files = [
     __dirname + '/src/models/applet.js',
     __dirname + '/src/models/pluginmanager.js',
     __dirname + '/src/models/datastore.js',
-
-    __dirname + '/src/applets/settings.js',
-    __dirname + '/src/applets/chanlist.js',
-    __dirname + '/src/applets/scripteditor.js',
+    __dirname + '/src/models/channelinfo.js',
 
     __dirname + '/src/helpers/utils.js',
 
@@ -80,7 +78,14 @@ var source_files = [
     __dirname + '/src/views/statusmessage.js',
     __dirname + '/src/views/tabs.js',
     __dirname + '/src/views/topicbar.js',
-    __dirname + '/src/views/userbox.js'
+    __dirname + '/src/views/userbox.js',
+    __dirname + '/src/views/channeltools.js',
+    __dirname + '/src/views/channelinfo.js',
+
+    __dirname + '/src/applets/settings.js',
+    __dirname + '/src/applets/chanlist.js',
+    __dirname + '/src/applets/scripteditor.js',
+    __dirname + '/src/applets/startup.js'
 ];
 
 
@@ -178,8 +183,9 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
             var locale = file.slice(0, -3);
 
             if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                po2json.parse(__dirname + '/src/translations/' + file, function (err, json) {
+                po2json.parseFile(__dirname + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
                     if (!err) {
+
                         fs.writeFile(__dirname + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
                             if (!err) {
                                 console.log('Built translation file %s.json', locale);
@@ -208,7 +214,8 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
  */
 
 var index_src = fs.readFileSync(__dirname + '/src/index.html.tmpl', FILE_ENCODING)
-    .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi');
+    .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '/kiwi')
+    .replace(new RegExp('<%build_version%>', 'g'), package_json.version);
 
 fs.writeFile(__dirname + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {

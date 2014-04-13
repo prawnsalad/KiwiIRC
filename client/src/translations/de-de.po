@@ -462,7 +462,7 @@ msgstr "Desktop Benachrichtigungen"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Benachrichtigungen Aktivieren"
+msgstr "Benachrichtigungen aktivieren"
 
 #: 
 msgid "client_applets_settings_emoticons"
@@ -478,11 +478,11 @@ msgstr "Projekt Homepage"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link zu diesem Kanal"
+msgstr "Link zu diesem Raum"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Teile diesen Kanal"
+msgstr "Teile diesen Raum"
 
 #: 
 msgid "client_applet_fav_my_networks"
@@ -503,4 +503,24 @@ msgstr "Netzwerk speichern"
 #: 
 msgid "client_applet_fav_delete"
 msgstr "Netzwerk löschen"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Include join/part messages as activity"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Ignorieren"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Use 24-hour timestamps"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
 

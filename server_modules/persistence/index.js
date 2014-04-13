@@ -3,6 +3,7 @@
  */
 
 var kiwiModules = require('../../server/modules'),
+    _ = require('lodash'),
     express = require('express'),
     express_app = express(),
     storage, storage_engine;

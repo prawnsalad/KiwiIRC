@@ -7,7 +7,8 @@
 var net                = require('net'),
     kiwiModules        = require('../server/modules'),
     ControlInterface   = require('../server/controlinterface.js'),
-    _                  = require('lodash');
+    _                  = require('lodash'),
+    winston            = require('winston');
 
 var control_module = new kiwiModules.Module('Control');
 
@@ -22,7 +23,7 @@ function SocketClient (socket) {
     this.socket_closing = false;
 
     this.remoteAddress = this.socket.remoteAddress;
-    console.log('Control connection from ' + this.socket.remoteAddress + ' opened');
+    winston.info('Control connection from %s opened', this.socket.remoteAddress);
 
     this.bindEvents();
 
@@ -53,7 +54,7 @@ SocketClient.prototype.onClose = function() {
     this.unbindEvents();
     this.socket = null;
 
-    console.log('Control connection from ' + this.remoteAddress + ' closed');
+    winston.info('Control connection from %s closed', this.remoteAddress);
 };
 
 

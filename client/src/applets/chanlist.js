@@ -3,6 +3,8 @@
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
+            "click .channel_name_title": "sortChannelsByNameClick",
+            "click .users_title": "sortChannelsByUsersClick"
         },
 
 
@@ -17,36 +19,57 @@
 
             this.channels = [];
 
-            // Sort the table by num. users?
-            this.ordered = true;
+            // Sort the table
+            this.order = '';
 
             // Waiting to add the table back into the DOM?
             this.waiting = false;
         },
 
-
         render: function () {
             var table = $('table', this.$el),
                 tbody = table.children('tbody:first').detach(),
                 that = this,
-                channels_length = this.channels.length,
                 i;
 
-            tbody.children().each(function (idx, child) {
-                if (that.channels[idx].channel === $(child.querySelector('.chan')).data('channel')) {
-                    that.channels[idx].dom = tbody[0].removeChild(child);
-                }
-            });
-
-            if (this.ordered) {
-                this.channels.sort(function (a, b) {
-                    return b.num_users - a.num_users;
-                });
+            // Create the sort icon container and clean previous any previous ones
+            if($('.applet_chanlist .users_title').find('span.chanlist_sort_users').length == 0) {
+                this.$('.users_title').append('<span class="chanlist_sort_users">&nbsp;&nbsp;</span>');
+            } else {
+                this.$('.users_title span.chanlist_sort_users').removeClass('icon-sort-up');
+                this.$('.users_title span.chanlist_sort_users').removeClass('icon-sort-down');
+            }
+            if ($('.applet_chanlist .channel_name_title').find('span.chanlist_sort_names').length == 0) {
+                this.$('.channel_name_title').append('<span class="chanlist_sort_names">&nbsp;&nbsp;</span>');
+            } else {
+                this.$('.channel_name_title span.chanlist_sort_names').removeClass('icon-sort-up');
+                this.$('.channel_name_title span.chanlist_sort_names').removeClass('icon-sort-down');
             }
 
-            for (i = 0; i < channels_length; i++) {
+            // Push the new sort icon
+            switch (this.order) {
+                case 'user_desc':
+                default:
+                    this.$('.users_title span.chanlist_sort_users').addClass('icon-sort-down');
+                    break;
+                case 'user_asc':
+                    this.$('.users_title span.chanlist_sort_users').addClass('icon-sort-up');
+                    break;
+                case 'name_asc':
+                    this.$('.channel_name_title span.chanlist_sort_names').addClass('icon-sort-up');
+                    break;
+                case 'name_desc':
+                    this.$('.channel_name_title span.chanlist_sort_names').addClass('icon-sort-down');
+                    break;
+            }
+
+            this.channels = this.sortChannels(this.channels, this.order);
+
+            // Make sure all the channel DOM nodes are inserted in order
+            for (i = 0; i < this.channels.length; i++) {
                 tbody[0].appendChild(this.channels[i].dom);
             }
+
             table[0].appendChild(tbody[0]);
         },
 
@@ -58,9 +81,63 @@
                 // IE...
                 _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
             }
+        },
+
+        sortChannelsByNameClick: function (event) {
+            // Revert the sorting to switch between orders
+            this.order = (this.order == 'name_asc') ? 'name_desc' : 'name_asc';
+
+            this.sortChannelsClick();
+        },
+
+        sortChannelsByUsersClick: function (event) {
+            // Revert the sorting to switch between orders
+            this.order = (this.order == 'user_desc' || this.order == '') ? 'user_asc' : 'user_desc';
+
+            this.sortChannelsClick();
+        },
+
+        sortChannelsClick: function() {
+            this.render();
+        },
+
+        sortChannels: function (channels, order) {
+            var sort_channels = [],
+                new_channels = [];
+
+
+            // First we create a light copy of the channels object to do the sorting
+            _.each(channels, function (chan, chan_idx) {
+                sort_channels.push({'chan_idx': chan_idx, 'num_users': chan.num_users, 'channel': chan.channel});
+            });
+
+            // Second, we apply the sorting
+            sort_channels.sort(function (a, b) {
+                switch (order) {
+                    case 'user_asc':
+                        return a.num_users - b.num_users;
+                    case 'user_desc':
+                        return b.num_users - a.num_users;
+                    case 'name_asc':
+                        if (a.channel.toLowerCase() > b.channel.toLowerCase()) return 1;
+                        if (a.channel.toLowerCase() < b.channel.toLowerCase()) return -1;
+                    case 'name_desc':
+                        if (a.channel.toLowerCase() < b.channel.toLowerCase()) return 1;
+                        if (a.channel.toLowerCase() > b.channel.toLowerCase()) return -1;
+                    default:
+                        return b.num_users - a.num_users;
+                }
+                return 0;
+            });
+
+            // Third, we re-shuffle the chanlist according to the sort order
+            _.each(sort_channels, function (chan) {
+                new_channels.push(channels[chan.chan_idx]);
+            });
+
+            return new_channels;
         }
     });
-
 
 
 
@@ -94,7 +171,7 @@
             _.each(channels, function (chan) {
                 var row;
                 row = document.createElement("tr");
-                row.innerHTML = '<td><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;">' + formatIRCMsg(_.escape(chan.topic)) + '</td>';
+                row.innerHTML = '<td class="chanlist_name"><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="chanlist_num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;" class="chanlist_topic">' + formatIRCMsg(_.escape(chan.topic)) + '</td>';
                 chan.dom = row;
                 that.view.channels.push(chan);
             });

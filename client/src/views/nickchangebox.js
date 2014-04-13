@@ -20,20 +20,20 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
         this.$el.css('bottom', _kiwi.app.controlbox.$el.outerHeight(true));
     },
-    
+
     close: function () {
         this.$el.remove();
-
+        this.trigger('close');
     },
 
     changeNick: function (event) {
-        var that = this;
-
         event.preventDefault();
 
-        _kiwi.app.connections.active_connection.gateway.changeNick(this.$el.find('input').val(), function (err, val) {
-            that.close();
+        var connection = _kiwi.app.connections.active_connection;
+        this.listenTo(connection, 'change:nick', function() {
+            this.close();
         });
-        return false;
+
+        connection.gateway.changeNick(this.$('input').val());
     }
 });

@@ -1,38 +1,24 @@
 _kiwi.model.NewConnection = Backbone.Collection.extend({
     initialize: function() {
-        this.view = new _kiwi.view.ServerSelect();
+        this.view = new _kiwi.view.ServerSelect({model: this});
 
         this.view.bind('server_connect', this.onMakeConnection, this);
 
     },
 
 
+    populateDefaultServerSettings: function() {
+        var defaults = _kiwi.global.defaultServerSettings();
+        this.view.populateFields(defaults);
+    },
+
+
     onMakeConnection: function(new_connection_event) {
-        var that = this,
-            transport_path = '',
-            auto_connect_details = new_connection_event;
-
-        this.view.networkConnecting();
-
-
-        _kiwi.gateway.set('kiwi_server', _kiwi.app.kiwi_server);
-        _kiwi.gateway.connect(function() {
-            that.makeConnection(new_connection_event);
-        });
-
-
-    },
-
-
-    onKiwiServerNotFound: function() {
-        this.view.showError();
-    },
-
-
-    makeConnection: function(new_connection_event) {
         var that = this;
 
         this.connect_details = new_connection_event;
+
+        this.view.networkConnecting();
 
         _kiwi.gateway.newConnection({
             nick: new_connection_event.nick,
@@ -58,12 +44,8 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
                 channel: this.connect_details.channel,
                 key: this.connect_details.channel_key
             };
-        }
 
-
-        // Show the server panel if this is our first network
-        if (network && network.get('connection_id') === 0) {
-            network.panels.server.view.show();
+            this.trigger('new_network', network);
         }
     }
 });

@@ -55,7 +55,7 @@ var listeners = {
             irc_connection.write('PRIVMSG ' + args.target + ' :' + block, cb);
         });
     },
-    
+
 
     CTCP: function (args, irc_connection, callback) {
         if ((args.target) && (args.type)) {
@@ -80,6 +80,13 @@ var listeners = {
             _.each(channels, function (chan, index) {
                 irc_connection.write('JOIN ' + chan + ' ' + (keys[index] || ''), callback);
             });
+        }
+    },
+
+
+    CHANNEL_INFO: function (args, irc_connection, callback) {
+        if (args.channel) {
+            irc_connection.write('MODE ' + args.channel, callback);
         }
     },
 

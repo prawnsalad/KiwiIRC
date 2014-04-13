@@ -26,11 +26,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
 
         this.unbind();
         this.destroy();
-
-        // If closing the active panel, switch to the server panel
-        if (this === _kiwi.app.panels().active) {
-            _kiwi.app.connections.active_connection.panels.server.view.show();
-        }
     },
 
     // Alias to closePanel() for child objects to override
@@ -39,27 +34,19 @@ _kiwi.model.Panel = Backbone.Model.extend({
     },
 
     isChannel: function () {
-        var channel_prefix = _kiwi.gateway.get('channel_prefix'),
-            this_name = this.get('name');
-
-        if (this.isApplet() || !this_name) return false;
-        return (channel_prefix.indexOf(this_name[0]) > -1);
+        return false;
     },
 
     isQuery: function () {
-        if (!this.isChannel() && !this.isApplet() && !this.isServer()) {
-            return true;
-        }
-
         return false;
     },
 
     isApplet: function () {
-        return this.applet ? true : false;
+        return false;
     },
 
     isServer: function () {
-        return this.server ? true : false;
+        return false;
     },
 
     isActive: function () {

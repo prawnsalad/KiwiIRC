@@ -3,6 +3,7 @@ var net             = require('net'),
     util            = require('util'),
     dns             = require('dns'),
     _               = require('lodash'),
+    winston         = require('winston'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcCommands     = require('./commands.js'),
@@ -10,6 +11,7 @@ var net             = require('net'),
     IrcUser         = require('./user.js'),
     EE              = require('../ee.js'),
     iconv           = require('iconv-lite'),
+    Proxy           = require('../proxy.js'),
     Socks;
 
 
@@ -101,11 +103,22 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         this.socks = false;
     }
 
+    // Kiwi proxy info may be set within a server module. {port: 7779, host: 'kiwi.proxy.com', ssl: false}
+    this.proxy = false;
+
     // Net. interface this connection should be made through
     this.outgoing_interface = false;
 
     // Options sent by the IRCd
     this.options = Object.create(null);
+    this.options.PREFIX = [
+        {symbol: '~', mode: 'q'},
+        {symbol: '&', mode: 'a'},
+        {symbol: '@', mode: 'o'},
+        {symbol: '%', mode: 'h'},
+        {symbol: '+', mode: 'v'}
+    ];
+
     this.cap = {requested: [], enabled: []};
 
     // Is SASL supported on the IRCd
@@ -151,9 +164,14 @@ IrcConnection.prototype.connect = function () {
     var socket_connect_event_name = 'connect';
 
     // The destination address
-    var dest_addr = this.socks ?
-        this.socks.host :
-        this.irc_host.hostname;
+    var dest_addr;
+    if (this.socks) {
+        dest_addr = this.socks.host;
+    } else if (this.proxy) {
+        dest_addr = this.proxy.host;
+    } else {
+        dest_addr = this.irc_host.hostname;
+    }
 
     // Make sure we don't already have an open connection
     this.disposeSocket();
@@ -197,16 +215,28 @@ IrcConnection.prototype.connect = function () {
         // Are we connecting through a SOCKS proxy?
         if (that.socks) {
             that.socket = Socks.connect({
-                host: host,
+                host: that.irc_host.host,
                 port: that.irc_host.port,
                 ssl: that.ssl,
                 rejectUnauthorized: global.config.reject_unauthorised_certificates
-            }, {host: that.socks.host,
+            }, {host: host,
                 port: that.socks.port,
                 user: that.socks.user,
                 pass: that.socks.pass,
                 localAddress: outgoing
             });
+
+        } else if (that.proxy) {
+            that.socket = new Proxy.ProxySocket(that.proxy.port, host, {
+                username: that.username,
+                interface: that.proxy.interface
+            }, {ssl: that.proxy.ssl});
+
+            if (that.ssl) {
+                that.socket.connectTls(that.irc_host.port, that.irc_host.hostname);
+            } else {
+                that.socket.connect(that.irc_host.port, that.irc_host.hostname);
+            }
 
         } else {
             // No socks connection, connect directly to the IRCd
@@ -574,6 +604,7 @@ var socketConnectHandler = function () {
 
         if (global.config.default_gecos) {
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
+            gecos = gecos.toString().replace('%h', that.user.hostname);
         }
 
         // Send any initial data for webirc/etc
@@ -712,25 +743,28 @@ function socketOnData(data) {
  * Deviates from the RFC a little to support the '/' character now used in some
  * IRCds
  */
-var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)|([a-z0-9\x5B-\x60\x7B-\x7D\.\-*]+)!([^\x00\r\n\ ]+?)@?([a-z0-9\.\-:\/_]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.+))?$/i;
+var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([^\s!]+)|([^\s!]+)!([^\s@]+)@?([^\s]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.*))?$/i;
 
 function parseIrcLine(buffer_line) {
     var msg,
-        i, j,
+        i,
         tags = [],
         tag,
-        line = '';
+        line = '',
+        msg_obj;
 
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
-    if (!line) return;
+    if (!line) {
+        return;
+    }
 
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
-        console.log("Malformed IRC line: " + line.replace(/^\r+|\r+$/, ''));
+        winston.warn('Malformed IRC line: %s', line.replace(/^\r+|\r+$/, ''));
         return;
     }
 
@@ -738,23 +772,25 @@ function parseIrcLine(buffer_line) {
     if (msg[1]) {
         tags = msg[1].split(';');
 
-        for (j = 0; j < tags.length; j++) {
-            tag = tags[j].split('=');
-            tags[j] = {tag: tag[0], value: tag[1]};
+        for (i = 0; i < tags.length; i++) {
+            tag = tags[i].split('=');
+            tags[i] = {tag: tag[0], value: tag[1]};
         }
     }
 
-    msg = {
+    msg_obj = {
         tags:       tags,
         prefix:     msg[2],
         nick:       msg[3],
         ident:      msg[4],
         hostname:   msg[5] || '',
         command:    msg[6],
-        params:     msg[7] || '',
-        trailing:   (msg[8]) ? msg[8].trim() : ''
+        params:     msg[7] ? msg[7].split(/ +/) : []
     };
 
-    msg.params = msg.params.split(/ +/);
-    this.irc_commands.dispatch(msg.command.toUpperCase(), msg);
+    if (msg[8]) {
+        msg_obj.params.push(msg[8].trim());
+    }
+
+    this.irc_commands.dispatch(msg_obj.command.toUpperCase(), msg_obj);
 }
