@@ -74,7 +74,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if ((network = this.model.get('network'))) {
             re = new RegExp('(?:^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
             msg.msg = msg.msg.replace(re, function (match) {
-                return '<a class="chan" data-channel="' + match.trim() + '">' + match + '</a>';
+                return '<a class="chan" data-channel="' + _.escape(match.trim()) + '">' + _.escape(match.trim()) + '</a>';
             });
         }
 
@@ -243,7 +243,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             topic = this.model.get("topic");
         }
 
-        this.model.addMsg('', '== ' + _kiwi.global.i18n.translate('client_views_channel_topic').fetch(this.model.get('name'), topic), 'topic');
+        this.model.addMsg('', styleText('client_views_channel_topic', {'%T': translateText('client_views_channel_topic', [this.model.get('name'), topic]), '%C': this.model.get('name')}), 'topic');
 
         // If this is the active channel then update the topic bar
         if (_kiwi.app.panels().active === this) {

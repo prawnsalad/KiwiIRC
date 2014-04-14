@@ -178,15 +178,15 @@ msgstr "Chyba připojení k %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s přišel do místnosti"
+msgstr "přišel do místnosti"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s se odpojil %s"
+msgstr "se odpojil %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s byl vyhozen %s %s"
+msgstr "byl vyhozen %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Byl jste vyhozen %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s odešel %s"
+msgstr "odešel %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s není platným názvem kanálu"
+msgstr "není platným názvem kanálu"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Odpojen od sítě IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s je nyní znám jako %s"
+msgstr "je nyní znám jako %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Téma nastavil %s v %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s nastavuje mód %s"
+msgstr "nastavuje mód %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s nastavil mód %s"
+msgstr "nastavil mód %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Špatný klíč kanálu pro %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s je pouze na pozvání."
+msgstr "je pouze na pozvání."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s je plný."
+msgstr "je plný."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

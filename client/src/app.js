@@ -110,8 +110,11 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var continueStart, locale;
+        var continueStart, locale, jobs, igniteTextTheme, text_theme;
         opts = opts || {};
+
+        jobs = new JobManager();
+        jobs.onFinish(callback);
 
         continueInit = function (locale, s, xhr) {
             if (locale) {
@@ -128,7 +131,13 @@ _kiwi.global = {
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
 
-            callback && callback();
+            jobs.finishJob('load_locale');
+        };
+
+        igniteTextTheme = function(text_theme, s, xhr) {
+            _kiwi.global.text_theme = new _kiwi.view.TextTheme(text_theme);
+
+            jobs.finishJob('load_text_theme');
         };
 
         // Set up the settings datastore
@@ -138,11 +147,20 @@ _kiwi.global = {
         // Set the window title
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
+        jobs.registerJob('load_locale');
         locale = _kiwi.global.settings.get('locale');
         if (!locale) {
             $.getJSON(opts.base_path + '/assets/locales/magic.json', continueInit);
         } else {
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueInit);
+        }
+
+        jobs.registerJob('load_text_theme');
+        text_theme = opts.text_theme;
+        if (!text_theme) {
+            $.getJSON(opts.base_path + '/assets/text_themes/default.json', igniteTextTheme);
+        } else {
+            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', igniteTextTheme);
         }
     },
 
@@ -162,7 +180,168 @@ _kiwi.global = {
      */
     newIrcConnection: function(connection_details, callback) {
         _kiwi.gateway.newConnection(connection_details, callback);
-    }
+    },
+
+
+    /**
+     * Taking settings from the server and URL, extract the default server/channel/nick settings
+     */
+    defaultServerSettings: function () {
+        var parts;
+        var defaults = {
+            nick: '',
+            server: '',
+            port: 6667,
+            ssl: false,
+            channel: '',
+            channel_key: ''
+        };
+        var uricheck;
+
+
+        /**
+         * Get any settings set by the server
+         * These settings may be changed in the server selection dialog or via URL parameters
+         */
+        if (_kiwi.app.server_settings.client) {
+            if (_kiwi.app.server_settings.client.nick)
+                defaults.nick = _kiwi.app.server_settings.client.nick;
+
+            if (_kiwi.app.server_settings.client.server)
+                defaults.server = _kiwi.app.server_settings.client.server;
+
+            if (_kiwi.app.server_settings.client.port)
+                defaults.port = _kiwi.app.server_settings.client.port;
+
+            if (_kiwi.app.server_settings.client.ssl)
+                defaults.ssl = _kiwi.app.server_settings.client.ssl;
+
+            if (_kiwi.app.server_settings.client.channel)
+                defaults.channel = _kiwi.app.server_settings.client.channel;
+
+            if (_kiwi.app.server_settings.client.channel_key)
+                defaults.channel_key = _kiwi.app.server_settings.client.channel_key;
+        }
+
+
+
+        /**
+         * Get any settings passed in the URL
+         * These settings may be changed in the server selection dialog
+         */
+
+        // Any query parameters first
+        if (getQueryVariable('nick'))
+            defaults.nick = getQueryVariable('nick');
+
+        if (window.location.hash)
+            defaults.channel = window.location.hash;
+
+
+        // Process the URL part by part, extracting as we go
+        parts = window.location.pathname.toString().replace(_kiwi.app.get('base_path'), '').split('/');
+
+        if (parts.length > 0) {
+            parts.shift();
+
+            if (parts.length > 0 && parts[0]) {
+                // Check to see if we're dealing with an irc: uri, or whether we need to extract the server/channel info from the HTTP URL path.
+                uricheck = parts[0].substr(0, 7).toLowerCase();
+                if ((uricheck === 'ircs%3a') || (uricheck.substr(0,6) === 'irc%3a')) {
+                    parts[0] = decodeURIComponent(parts[0]);
+                    // irc[s]://<host>[:<port>]/[<channel>[?<password>]]
+                    uricheck = /^irc(s)?:(?:\/\/?)?([^:\/]+)(?::([0-9]+))?(?:(?:\/)([^\?]*)(?:(?:\?)(.*))?)?$/.exec(parts[0]);
+                    /*
+                        uricheck[1] = ssl (optional)
+                        uricheck[2] = host
+                        uricheck[3] = port (optional)
+                        uricheck[4] = channel (optional)
+                        uricheck[5] = channel key (optional, channel must also be set)
+                    */
+                    if (uricheck) {
+                        if (typeof uricheck[1] !== 'undefined') {
+                            defaults.ssl = true;
+                            if (defaults.port === 6667) {
+                                defaults.port = 6697;
+                            }
+                        }
+                        defaults.server = uricheck[2];
+                        if (typeof uricheck[3] !== 'undefined') {
+                            defaults.port = uricheck[3];
+                        }
+                        if (typeof uricheck[4] !== 'undefined') {
+                            defaults.channel = '#' + uricheck[4];
+                            if (typeof uricheck[5] !== 'undefined') {
+                                defaults.channel_key = uricheck[5];
+                            }
+                        }
+                    }
+                    parts = [];
+                } else {
+                    // Extract the port+ssl if we find one
+                    if (parts[0].search(/:/) > 0) {
+                        defaults.port = parts[0].substring(parts[0].search(/:/) + 1);
+                        defaults.server = parts[0].substring(0, parts[0].search(/:/));
+                        if (defaults.port[0] === '+') {
+                            defaults.port = parseInt(defaults.port.substring(1), 10);
+                            defaults.ssl = true;
+                        } else {
+                            defaults.ssl = false;
+                        }
+
+                    } else {
+                        defaults.server = parts[0];
+                    }
+
+                    parts.shift();
+                }
+            }
+
+            if (parts.length > 0 && parts[0]) {
+                defaults.channel = '#' + parts[0];
+                parts.shift();
+            }
+        }
+
+        // If any settings have been given by the server.. override any auto detected settings
+        /**
+         * Get any server restrictions as set in the server config
+         * These settings can not be changed in the server selection dialog
+         */
+        if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
+            if (_kiwi.app.server_settings.connection.server) {
+                defaults.server = _kiwi.app.server_settings.connection.server;
+            }
+
+            if (_kiwi.app.server_settings.connection.port) {
+                defaults.port = _kiwi.app.server_settings.connection.port;
+            }
+
+            if (_kiwi.app.server_settings.connection.ssl) {
+                defaults.ssl = _kiwi.app.server_settings.connection.ssl;
+            }
+
+            if (_kiwi.app.server_settings.connection.channel) {
+                defaults.channel = _kiwi.app.server_settings.connection.channel;
+            }
+
+            if (_kiwi.app.server_settings.connection.channel_key) {
+                defaults.channel_key = _kiwi.app.server_settings.connection.channel_key;
+            }
+
+            if (_kiwi.app.server_settings.connection.nick) {
+                defaults.nick = _kiwi.app.server_settings.connection.nick;
+            }
+        }
+
+        // Set any random numbers if needed
+        defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
+
+        if (getQueryVariable('encoding'))
+            defaults.encoding = getQueryVariable('encoding');
+
+        return defaults;
+    },
 };
 
 

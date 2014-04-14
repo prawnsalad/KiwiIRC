@@ -161,164 +161,6 @@
         })(),
 
 
-        defaultServerSettings: function () {
-            var parts;
-            var defaults = {
-                nick: '',
-                server: '',
-                port: 6667,
-                ssl: false,
-                channel: '',
-                channel_key: ''
-            };
-            var uricheck;
-
-
-            /**
-             * Get any settings set by the server
-             * These settings may be changed in the server selection dialog or via URL parameters
-             */
-            if (this.server_settings.client) {
-                if (this.server_settings.client.nick)
-                    defaults.nick = this.server_settings.client.nick;
-
-                if (this.server_settings.client.server)
-                    defaults.server = this.server_settings.client.server;
-
-                if (this.server_settings.client.port)
-                    defaults.port = this.server_settings.client.port;
-
-                if (this.server_settings.client.ssl)
-                    defaults.ssl = this.server_settings.client.ssl;
-
-                if (this.server_settings.client.channel)
-                    defaults.channel = this.server_settings.client.channel;
-
-                if (this.server_settings.client.channel_key)
-                    defaults.channel_key = this.server_settings.client.channel_key;
-            }
-
-
-
-            /**
-             * Get any settings passed in the URL
-             * These settings may be changed in the server selection dialog
-             */
-
-            // Any query parameters first
-            if (getQueryVariable('nick'))
-                defaults.nick = getQueryVariable('nick');
-
-            if (window.location.hash)
-                defaults.channel = window.location.hash;
-
-
-            // Process the URL part by part, extracting as we go
-            parts = window.location.pathname.toString().replace(this.get('base_path'), '').split('/');
-
-            if (parts.length > 0) {
-                parts.shift();
-
-                if (parts.length > 0 && parts[0]) {
-                    // Check to see if we're dealing with an irc: uri, or whether we need to extract the server/channel info from the HTTP URL path.
-                    uricheck = parts[0].substr(0, 7).toLowerCase();
-                    if ((uricheck === 'ircs%3a') || (uricheck.substr(0,6) === 'irc%3a')) {
-                        parts[0] = decodeURIComponent(parts[0]);
-                        // irc[s]://<host>[:<port>]/[<channel>[?<password>]]
-                        uricheck = /^irc(s)?:(?:\/\/?)?([^:\/]+)(?::([0-9]+))?(?:(?:\/)([^\?]*)(?:(?:\?)(.*))?)?$/.exec(parts[0]);
-                        /*
-                            uricheck[1] = ssl (optional)
-                            uricheck[2] = host
-                            uricheck[3] = port (optional)
-                            uricheck[4] = channel (optional)
-                            uricheck[5] = channel key (optional, channel must also be set)
-                        */
-                        if (uricheck) {
-                            if (typeof uricheck[1] !== 'undefined') {
-                                defaults.ssl = true;
-                                if (defaults.port === 6667) {
-                                    defaults.port = 6697;
-                                }
-                            }
-                            defaults.server = uricheck[2];
-                            if (typeof uricheck[3] !== 'undefined') {
-                                defaults.port = uricheck[3];
-                            }
-                            if (typeof uricheck[4] !== 'undefined') {
-                                defaults.channel = '#' + uricheck[4];
-                                if (typeof uricheck[5] !== 'undefined') {
-                                    defaults.channel_key = uricheck[5];
-                                }
-                            }
-                        }
-                        parts = [];
-                    } else {
-                        // Extract the port+ssl if we find one
-                        if (parts[0].search(/:/) > 0) {
-                            defaults.port = parts[0].substring(parts[0].search(/:/) + 1);
-                            defaults.server = parts[0].substring(0, parts[0].search(/:/));
-                            if (defaults.port[0] === '+') {
-                                defaults.port = parseInt(defaults.port.substring(1), 10);
-                                defaults.ssl = true;
-                            } else {
-                                defaults.ssl = false;
-                            }
-
-                        } else {
-                            defaults.server = parts[0];
-                        }
-
-                        parts.shift();
-                    }
-                }
-
-                if (parts.length > 0 && parts[0]) {
-                    defaults.channel = '#' + parts[0];
-                    parts.shift();
-                }
-            }
-
-            // If any settings have been given by the server.. override any auto detected settings
-            /**
-             * Get any server restrictions as set in the server config
-             * These settings can not be changed in the server selection dialog
-             */
-            if (this.server_settings && this.server_settings.connection) {
-                if (this.server_settings.connection.server) {
-                    defaults.server = this.server_settings.connection.server;
-                }
-
-                if (this.server_settings.connection.port) {
-                    defaults.port = this.server_settings.connection.port;
-                }
-
-                if (this.server_settings.connection.ssl) {
-                    defaults.ssl = this.server_settings.connection.ssl;
-                }
-
-                if (this.server_settings.connection.channel) {
-                    defaults.channel = this.server_settings.connection.channel;
-                }
-
-                if (this.server_settings.connection.channel_key) {
-                    defaults.channel_key = this.server_settings.connection.channel_key;
-                }
-
-                if (this.server_settings.connection.nick) {
-                    defaults.nick = this.server_settings.connection.nick;
-                }
-            }
-
-            // Set any random numbers if needed
-            defaults.nick = defaults.nick.replace('?', Math.floor(Math.random() * 100000).toString());
-
-            if (getQueryVariable('encoding'))
-                defaults.encoding = getQueryVariable('encoding');
-
-            return defaults;
-        },
-
-
         bindGatewayCommands: function (gw) {
             var that = this;
 
@@ -349,13 +191,13 @@
 
                     // Mention the disconnection on every channel
                     _kiwi.app.connections.forEach(function(connection) {
-                        connection.panels.server.addMsg('', msg, 'action quit');
+                        connection.panels.server.addMsg('', styleText('quit', {'%T': msg}), 'action quit');
 
                         connection.panels.forEach(function(panel) {
                             if (!panel.isChannel())
                                 return;
 
-                            panel.addMsg('', msg, 'action quit');
+                            panel.addMsg('', styleText('quit', {'%T': msg}), 'action quit');
                         });
                     });
 
@@ -368,7 +210,7 @@
 
                     // Only need to mention the repeating re-connection messages on server panels
                     _kiwi.app.connections.forEach(function(connection) {
-                        connection.panels.server.addMsg('', msg, 'action quit');
+                        connection.panels.server.addMsg('', styleText('quit', {'%T': msg}), 'action quit');
                     });
                 });
 
@@ -384,13 +226,13 @@
 
                     // Mention the re-connection on every channel
                     _kiwi.app.connections.forEach(function(connection) {
-                        connection.panels.server.addMsg('', msg, 'action join');
+                        connection.panels.server.addMsg('', styleText('rejoin', {'%T': msg}), 'action join');
 
                         connection.panels.forEach(function(panel) {
                             if (!panel.isChannel())
                                 return;
 
-                            panel.addMsg('', msg, 'action join');
+                            panel.addMsg('', styleText('rejoin', {'%T': msg}), 'action join');
                         });
                     });
 
@@ -547,13 +389,13 @@
                 }
 
                 // Read the value to the user
-                _kiwi.app.panels().active.addMsg('', setting + ' = ' + _kiwi.global.settings.get(setting).toString());
+                _kiwi.app.panels().active.addMsg('', styleText('set_setting', {'%T': setting + ' = ' + _kiwi.global.settings.get(setting).toString()}));
             };
 
 
             fn_to_bind['command:save'] = function (ev) {
                 _kiwi.global.settings.save();
-                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_settings_saved').fetch());
+                _kiwi.app.panels().active.addMsg('', styleText('client_models_application_settings_saved', {'%T': translateText('client_models_application_settings_saved')}));
             };
 
 
@@ -563,7 +405,7 @@
                 // No parameters passed so list them
                 if (!ev.params[1]) {
                     $.each(controlbox.preprocessor.aliases, function (name, rule) {
-                        _kiwi.app.panels().server.addMsg(' ', name + '   =>   ' + rule);
+                        _kiwi.app.panels().server.addMsg(' ', styleText('list_aliases', {'%T': name + '   =>   ' + rule}));
                     });
                     return;
                 }
@@ -595,12 +437,12 @@
                 // No parameters passed so list them
                 if (!ev.params[0]) {
                     if (list.length > 0) {
-                        _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_title').fetch() + ':');
+                        _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_title', {'%T': translateText('client_models_application_ignore_title')}));
                         $.each(list, function (idx, ignored_pattern) {
-                            _kiwi.app.panels().active.addMsg(' ', ignored_pattern);
+                            _kiwi.app.panels().active.addMsg(' ', styleText('ignored_pattern', {'%T': ignored_pattern}));
                         });
                     } else {
-                        _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_none').fetch());
+                        _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_none', {'%T': translateText('client_models_application_ignore_none')}));
                     }
                     return;
                 }
@@ -608,7 +450,7 @@
                 // We have a parameter, so add it
                 list.push(ev.params[0]);
                 this.connections.active_connection.set('ignore_list', list);
-                _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_nick').fetch(ev.params[0]));
+                _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_nick', {'%T': translateText('client_models_application_ignore_nick', [ev.params[0]])}));
             };
 
 
@@ -616,7 +458,7 @@
                 var list = this.connections.active_connection.get('ignore_list');
 
                 if (!ev.params[0]) {
-                    _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stop_notice').fetch());
+                    _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_stop_notice', {'%T': translateText('client_models_application_ignore_stop_notice')}));
                     return;
                 }
 
@@ -626,7 +468,7 @@
 
                 this.connections.active_connection.set('ignore_list', list);
 
-                _kiwi.app.panels().active.addMsg(' ', _kiwi.global.i18n.translate('client_models_application_ignore_stopped').fetch(ev.params[0]));
+                _kiwi.app.panels().active.addMsg(' ', styleText('client_models_application_ignore_stopped', {'%T': translateText('client_models_application_ignore_stopped', [ev.params[0]])}));
             };
 
 
@@ -686,7 +528,7 @@
 
         if (message) {
             this.connections.active_connection.gateway.msg(panel.get('name'), message);
-            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), styleText('query', {'%T': message}));
         }
 
     }
@@ -699,7 +541,7 @@
         ev.params.shift();
         message = formatToIrcMsg(ev.params.join(' '));
 
-        panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), message);
+        panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), styleText('msg', {'%T': message}));
         this.connections.active_connection.gateway.msg(destination, message);
     }
 
@@ -709,7 +551,7 @@
         }
 
         var panel = _kiwi.app.panels().active;
-        panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
+        panel.addMsg('', styleText('action', {'%N': _kiwi.app.connections.active_connection.get('nick'), '%T': ev.params.join(' ')}), 'action');
         this.connections.active_connection.gateway.action(panel.get('name'), ev.params.join(' '));
     }
 
@@ -824,7 +666,7 @@
             if (_kiwi.applets[ev.params[0]]) {
                 panel.load(new _kiwi.applets[ev.params[0]]());
             } else {
-                _kiwi.app.panels().server.addMsg('', _kiwi.global.i18n.translate('client_models_application_applet_notfound').fetch(ev.params[0]));
+                _kiwi.app.panels().server.addMsg('', styleText('client_models_application_applet_notfound', {'%T': translateText('client_models_application_applet_notfound', [ev.params[0]])}));
                 return;
             }
         }
@@ -851,7 +693,7 @@
 
         _kiwi.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
 
-        _kiwi.app.panels().active.addMsg('', '== ' + nick + ' has been invited to ' + channel, 'action');
+        _kiwi.app.panels().active.addMsg('', styleText('client_models_application_has_been_invited', {'%N': nick, '%T': translateText('client_models_application_has_been_invited', [channel])}), 'action');
     }
 
 
@@ -886,14 +728,14 @@
         if (ev.params[0]) {
             _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
                 if (success) {
-                    _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_changed').fetch(ev.params[0]));
+                    _kiwi.app.panels().active.addMsg('', styleText('client_models_application_encoding_changed', {'%T': translateText('client_models_application_encoding_changed', [ev.params[0]])}));
                 } else {
-                    _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_invalid').fetch(ev.params[0]));
+                    _kiwi.app.panels().active.addMsg('', styleText('client_models_application_encoding_invalid', {'%T': translateText('client_models_application_encoding_invalid', [ev.params[0]])}));
                 }
             });
         } else {
-            _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_notspecified').fetch());
-            _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_encoding_usage').fetch());
+            _kiwi.app.panels().active.addMsg('', styleText('client_models_application_encoding_notspecified', {'%T': translateText('client_models_application_encoding_notspecified')}));
+            _kiwi.app.panels().active.addMsg('', styleText('client_models_application_encoding_usage', {'%T': translateText('client_models_application_encoding_usage')}));
         }
     }
 
@@ -955,7 +797,7 @@
         // Use the same nick as we currently have
         nick = _kiwi.app.connections.active_connection.get('nick');
 
-        _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_connecting').fetch(server, port.toString()));
+        _kiwi.app.panels().active.addMsg('', styleText('client_models_application_connection_connecting', {'%T': translateText('client_models_application_connection_connecting', [server, port.toString()])}));
 
         _kiwi.gateway.newConnection({
             nick: nick,
@@ -965,7 +807,7 @@
             password: password
         }, function(err, new_connection) {
             if (err)
-                _kiwi.app.panels().active.addMsg('', _kiwi.global.i18n.translate('client_models_application_connection_error').fetch(server, port.toString(), err.toString()));
+                _kiwi.app.panels().active.addMsg('', styleText('client_models_application_connection_error', {'%T': translateText('client_models_application_connection_error', [server, port.toString(), err.toString()])}));
         });
     }
 

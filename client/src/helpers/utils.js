@@ -502,3 +502,49 @@ function parseISO8601(str) {
         return _date;
     }
 }
+
+// Simplyfy the translation syntax
+function translateText(string_id, params) {
+    params = params || '';
+
+    return _kiwi.global.i18n.translate(string_id).fetch(params);
+}
+
+/**
+ * Simplyfy the text styling syntax
+ *
+ * Syntax:
+ *   %N: nickname
+ *   %C: channel
+ *   %J: ident
+ *   %H: host
+ *   %R: realname
+ *   %C[digit]: color
+ *   %B: bold
+ *   %I: italic
+ *   %U: underline
+ *   %O: cancel styles
+ *   %T: translated text
+ **/
+function styleText(string_id, params) {
+    var style, text;
+
+    style = formatToIrcMsg(_kiwi.global.text_theme.options[string_id]);
+
+    // Bring member info back to first level of params
+    if (params['%M']) {
+        _.each(params['%M'], function(val, key) {
+            params[key] = val;
+        });
+    }
+
+    // Do the magic. Use the shorthand syntax to produce output.
+    text = style.replace(/%([TJHNCR])/g, function(match, key) {
+        key = '%' + key;
+
+        if (typeof params[key.toUpperCase()] !== 'undefined')
+            return params[key.toUpperCase()];
+    });
+
+    return text;
+}

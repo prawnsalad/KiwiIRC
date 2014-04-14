@@ -8,7 +8,7 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
 
     populateDefaultServerSettings: function() {
-        var defaults = _kiwi.app.defaultServerSettings();
+        var defaults = _kiwi.global.defaultServerSettings();
         this.view.populateFields(defaults);
     },
 
