@@ -110,7 +110,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
     },
 
     panelActive: function (panel, previously_active_panel) {
-        var panel_index = this.panel_access.indexOf(panel.cid);
+        var panel_index = _.indexOf(this.panel_access, panel.cid);
 
         // Remove any existing tabs or part images
         _kiwi.app.view.$el.find('.panellist .part').remove();
