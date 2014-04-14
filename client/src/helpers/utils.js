@@ -529,7 +529,7 @@ function translateText(string_id, params) {
 function styleText(string_id, params) {
     var style, text;
 
-    style = formatToIrcMsg(_kiwi.global.text_theme.options[string_id]);
+    style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
 
     // Bring member info back to first level of params
     if (params['%M']) {

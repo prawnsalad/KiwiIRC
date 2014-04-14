@@ -28,6 +28,7 @@
             this.server_settings = options.server_settings || {};
             this.translations = options.translations || {};
             this.themes = options.themes || [];
+            this.text_theme = options.text_theme || [];
 
             // Best guess at where the kiwi server is if not already specified
             this.kiwi_server = options.kiwi_server || this.detectKiwiServer();

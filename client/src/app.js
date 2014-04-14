@@ -110,19 +110,11 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var continueStart, locale, jobs, igniteTextTheme, text_theme;
+        var jobs, locale, localeLoaded, textThemeLoaded, text_theme;
         opts = opts || {};
 
         jobs = new JobManager();
-        jobs.onFinish(callback);
-
-        continueInit = function (locale, s, xhr) {
-            if (locale) {
-                _kiwi.global.i18n = new Jed(locale);
-            } else {
-                _kiwi.global.i18n = new Jed();
-            }
-
+        jobs.onFinish(function(locale, s, xhr) {
             _kiwi.app = new _kiwi.model.Application(opts);
 
             // Start the client up
@@ -131,13 +123,23 @@ _kiwi.global = {
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
 
-            jobs.finishJob('load_locale');
-        };
+            callback();
+        });
 
-        igniteTextTheme = function(text_theme, s, xhr) {
-            _kiwi.global.text_theme = new _kiwi.view.TextTheme(text_theme);
+        textThemeLoaded = function(text_theme, s, xhr) {
+            opts.text_theme = text_theme;
 
             jobs.finishJob('load_text_theme');
+        };
+
+        localeLoaded = function(locale, s, xhr) {
+            if (locale) {
+                _kiwi.global.i18n = new Jed(locale);
+            } else {
+                _kiwi.global.i18n = new Jed();
+            }
+
+            jobs.finishJob('load_locale');
         };
 
         // Set up the settings datastore
@@ -150,17 +152,17 @@ _kiwi.global = {
         jobs.registerJob('load_locale');
         locale = _kiwi.global.settings.get('locale');
         if (!locale) {
-            $.getJSON(opts.base_path + '/assets/locales/magic.json', continueInit);
+            $.getJSON(opts.base_path + '/assets/locales/magic.json', localeLoaded);
         } else {
-            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueInit);
+            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', localeLoaded);
         }
 
         jobs.registerJob('load_text_theme');
         text_theme = opts.text_theme;
         if (!text_theme) {
-            $.getJSON(opts.base_path + '/assets/text_themes/default.json', igniteTextTheme);
+            $.getJSON(opts.base_path + '/assets/text_themes/default.json', textThemeLoaded);
         } else {
-            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', igniteTextTheme);
+            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', textThemeLoaded);
         }
     },
 
