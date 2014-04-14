@@ -110,8 +110,11 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var continueStart, locale, igniteTextTheme, text_theme;
+        var continueStart, locale, jobs, igniteTextTheme, text_theme;
         opts = opts || {};
+
+        jobs = new JobManager();
+        jobs.onFinish(callback);
 
         continueInit = function (locale, s, xhr) {
             if (locale) {
@@ -119,7 +122,7 @@ _kiwi.global = {
             } else {
                 _kiwi.global.i18n = new Jed();
             }
-            
+
             _kiwi.app = new _kiwi.model.Application(opts);
 
             // Start the client up
@@ -128,14 +131,14 @@ _kiwi.global = {
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
 
-            callback && callback();
+            jobs.finishJob('load_locale');
         };
-        
+
         igniteTextTheme = function(text_theme, s, xhr) {
             _kiwi.global.text_theme = new _kiwi.view.TextTheme(text_theme);
-            
-            callback && callback();
-        }
+
+            jobs.finishJob('load_text_theme');
+        };
 
         // Set up the settings datastore
         _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
@@ -144,6 +147,7 @@ _kiwi.global = {
         // Set the window title
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
+        jobs.registerJob('load_locale');
         locale = _kiwi.global.settings.get('locale');
         if (!locale) {
             $.getJSON(opts.base_path + '/assets/locales/magic.json', continueInit);
@@ -151,6 +155,7 @@ _kiwi.global = {
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueInit);
         }
 
+        jobs.registerJob('load_text_theme');
         text_theme = opts.text_theme;
         if (!text_theme) {
             $.getJSON(opts.base_path + '/assets/text_themes/default.json', igniteTextTheme);
