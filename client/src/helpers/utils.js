@@ -539,9 +539,7 @@ function styleText(string_id, params) {
     }
 
     // Do the magic. Use the shorthand syntax to produce output.
-    text = style.replace(/%([TJHNCR])/g, function(match, key) {
-        key = '%' + key;
-
+    text = style.replace(/(%[A-Z])/g, function(match, key) {
         if (typeof params[key.toUpperCase()] !== 'undefined')
             return params[key.toUpperCase()];
     });
