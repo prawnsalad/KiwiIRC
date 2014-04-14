@@ -179,15 +179,15 @@ msgstr "Error al conectarse a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s se ha ingresado"
+msgstr "se ha ingresado"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s ha salido %s"
+msgstr "ha salido %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s ha sido expulsado por %s %s"
+msgstr "ha sido expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -195,11 +195,11 @@ msgstr "Has sido expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s ha abandonado %s"
+msgstr "ha abandonado %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s no es un nombre de canal válido"
+msgstr "no es un nombre de canal válido"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -207,7 +207,7 @@ msgstr "Desconectado de la red IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s es ahora %s"
+msgstr "es ahora %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -215,11 +215,11 @@ msgstr "Tema elegido por %s en %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s elige modo %s"
+msgstr "elige modo %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s elige modo %s"
+msgstr "elige modo %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -256,11 +256,11 @@ msgstr "Clave de canal incorrecta para %s"
 #: 
 #, fuzzy
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s es solo con invitación."
+msgstr "es solo con invitación."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s está lleno."
+msgstr "está lleno."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

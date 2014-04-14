@@ -178,15 +178,15 @@ msgstr "Błąd podczas łączenia do %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s dołączył"
+msgstr "dołączył"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s wyszedł %s"
+msgstr "wyszedł %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s został wykopany przez %s %s"
+msgstr "został wykopany przez %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Zostałeś wykopany przez %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s wyszedł %s"
+msgstr "wyszedł %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s nie jest poprawną nazwą kanału"
+msgstr "nie jest poprawną nazwą kanału"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Odłączono od sieci IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s jest znany jako %s"
+msgstr "jest znany jako %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Temat ustawiony przez %s w dniu %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s ustawia tryb %s"
+msgstr "ustawia tryb %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s ustawił tryb %s"
+msgstr "ustawił tryb %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Zły klucz kanału dla %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s dostępny tylko za zaproszeniem."
+msgstr "dostępny tylko za zaproszeniem."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s jest pełny."
+msgstr "jest pełny."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

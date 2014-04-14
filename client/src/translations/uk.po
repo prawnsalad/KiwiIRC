@@ -178,15 +178,15 @@ msgstr "Помилка з’єднання до %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s увійшов на канал"
+msgstr "увійшов на канал"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s від’єднався %s"
+msgstr "від’єднався %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s був викинутий %s %s"
+msgstr "був викинутий %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Ви були викинуті %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s вийшов з канала %s"
+msgstr "вийшов з канала %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s не коректна назва канала"
+msgstr "не коректна назва канала"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Від’єднаний від IRC-мережі"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s змінив нікнейм на %s"
+msgstr "змінив нікнейм на %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Тему змінив %s у %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s встановив мод %s"
+msgstr "встановив мод %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s встановили моди %s"
+msgstr "встановили моди %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Не вірний ключ для %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s тільки по запрошенню"
+msgstr "тільки по запрошенню"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s повний"
+msgstr "повний"
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

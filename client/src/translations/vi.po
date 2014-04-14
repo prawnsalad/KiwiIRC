@@ -178,15 +178,15 @@ msgstr "Không thể kết nối tới %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s đã tham gia kênh này"
+msgstr "đã tham gia kênh này"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s đã rời khỏi %s"
+msgstr "đã rời khỏi %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s đã bị kick bởi %s %s"
+msgstr "đã bị kick bởi %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Bạn đã bị kick bởi %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s đã rời khỏi %s"
+msgstr "đã rời khỏi %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s không phải là tên kênh hợp lệ"
+msgstr "không phải là tên kênh hợp lệ"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Đã thoát khỏi mạng IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s đã đổi nickname thành %s"
+msgstr "đã đổi nickname thành %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Chủ đề được đặt bởi %s vào %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s đã đặt chế độ %s"
+msgstr "đã đặt chế độ %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s đã đặt chế độ %s"
+msgstr "đã đặt chế độ %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Khóa truy cập kênh %s không đúng"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s chỉ dành cho người được mời vào"
+msgstr "chỉ dành cho người được mời vào"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s đã đầy."
+msgstr "đã đầy."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

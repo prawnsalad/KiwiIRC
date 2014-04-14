@@ -178,6 +178,7 @@ conf.client = {
     nick:    'kiwi_?',
     settings: {
         theme: 'relaxed',
+        text_theme: 'default',
         channel_list_style: 'tabs',
         scrollback: 250,
         show_joins_parts: true,
