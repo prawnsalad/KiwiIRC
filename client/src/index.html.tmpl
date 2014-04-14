@@ -424,6 +424,61 @@
         }
     }
 
+    /**
+     * Get alerted when a group of jobs have been completed.
+     * Eg. .registerJob('job1'); .registerJob('job2');
+     *     .onFinish(function(){ alert('Jobs finished!'); });
+     *     .finishJob('job1');
+     *     .finishJob('job2');
+     */
+    function JobManager() {
+        var completed_jobs = {  };
+
+        // Functions to call once all jobs have completed
+        var completed_callbacks = [];
+
+
+        function callCompletedFunctions(fn) {
+            $.each(completed_callbacks, function(idx, fn) {
+                fn();
+            });
+
+            completed_callbacks = [];
+        };
+
+
+        this.finishJob = function(job_name) {
+            if (typeof completed_jobs[job_name] === 'undefined') {
+                return;
+            }
+
+            completed_jobs[job_name] = true;
+
+            // Check if all our jobs have completed
+            var all_jobs_completed = true;
+            $.each(completed_jobs, function(idx, completed) {
+                if (!completed) {
+                    all_jobs_completed = false;
+                    return false;
+                }
+            });
+
+            if (all_jobs_completed) {
+                callCompletedFunctions();
+            }
+        };
+
+
+        this.onFinish = function(fn) {
+            completed_callbacks.push(fn);
+        };
+
+
+        this.registerJob = function(job_name) {
+            completed_jobs[job_name] = false;
+        };
+    }
+
     (function () {
         var base_path = '<%base_path%>', // Entry path for the kiwi application
             scripts = [],
@@ -439,53 +494,7 @@
          * Job bootup manager
          * Once all jobs have completed, call any registered completed functions
          */
-        var jobs = new (function BootManager() {
-            var completed_jobs = {  };
-
-            // Functions to call once all jobs have completed
-            var completed_callbacks = [];
-
-
-            function callCompletedFunctions(fn) {
-                $.each(completed_callbacks, function(idx, fn) {
-                    fn();
-                });
-
-                completed_callbacks = [];
-            };
-
-
-            this.finishJob = function(job_name) {
-                if (typeof completed_jobs[job_name] === 'undefined') {
-                    return;
-                }
-
-                completed_jobs[job_name] = true;
-
-                // Check if all our jobs have completed
-                var all_jobs_completed = true;
-                $.each(completed_jobs, function(idx, completed) {
-                    if (!completed) {
-                        all_jobs_completed = false;
-                        return false;
-                    }
-                });
-
-                if (all_jobs_completed) {
-                    callCompletedFunctions();
-                }
-            };
-
-
-            this.onFinish = function(fn) {
-                completed_callbacks.push(fn);
-            };
-
-
-            this.registerJob = function(job_name) {
-                completed_jobs[job_name] = false;
-            };
-        })();
+        var jobs = new JobManager();
 
 
         // Run after all dependancies have been loaded

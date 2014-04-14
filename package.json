@@ -1,6 +1,6 @@
 {
   "name": "kiwiirc",
-  "version": "0.8.3-dev",
+  "version": "0.8.4-dev",
   "description": "A hand-crafted webirc client",
   "homepage": "https://www.kiwiirc.com/",
   "preferGlobal": "true",
@@ -27,5 +27,8 @@
     "spdy": "1.19.1",
     "po2json": "0.2.3",
     "winston": "~0.7.2"
+  },
+  "engines": {
+    "node": ">=0.10"
   }
 }
