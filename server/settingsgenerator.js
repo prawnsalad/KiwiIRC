@@ -215,7 +215,8 @@ function addScripts(vars, debug) {
             'src/models/server.js',     // Depends on models/channel.js
             'src/models/pluginmanager.js',
             'src/models/datastore.js',
-            'src/helpers/utils.js'
+            'src/helpers/utils.js',
+            'src/helpers/formatdate.js'
         ],
 
         // Some views extend these, so make sure they're loaded beforehand

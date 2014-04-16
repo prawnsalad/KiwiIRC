@@ -58,8 +58,6 @@ var source_files = [
     __dirname + '/src/models/datastore.js',
     __dirname + '/src/models/channelinfo.js',
 
-    __dirname + '/src/helpers/utils.js',
-
     __dirname + '/src/views/panel.js',
     __dirname + '/src/views/channel.js',
     __dirname + '/src/views/applet.js',
@@ -87,6 +85,15 @@ var source_files = [
     __dirname + '/src/applets/scripteditor.js',
     __dirname + '/src/applets/startup.js'
 ];
+
+
+var helpers_path = __dirname + '/src/helpers/';
+var helpers_sources = fs.readdirSync(helpers_path)
+    .map(function(file){
+        return helpers_path + file;
+    });
+
+source_files = source_files.concat(helpers_sources);
 
 
 /**
