@@ -163,13 +163,23 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         },
 
 
+        custom: function() {
+            var type = this.constructor.types[this.$el.data('index')];
+
+            if (!type)
+                return;
+
+            return $(type.buildHtml(this.$el.data('url')));
+        }
+
+
     }
     }, {
 
     /**
      * Add a media message type to append HTML after a matching URL
-     * match() should return true if it wants to handle this URL
-     * buildHtml() should return the HTML string to append after the URL in the message
+     * match() should return a truthy value if it wants to handle this URL
+     * buildHtml() should return the HTML string to be used within the drop down
      */
     addType: function(match, buildHtml) {
         if (typeof match !== 'function' || typeof buildHtml !== 'function')
@@ -184,11 +194,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     buildHtml: function (url) {
         var html = '', matches;
 
-        _.each(this.types || [], function(type) {
+        _.each(this.types || [], function(type, type_idx) {
             if (!type.match(url))
                 return;
 
-            html += type.buildHtml(url);
+            // Add which media type should handle this media message. Will be read when it's clicked on
+            html += '<span class="media" title="Open" data-type="custom" data-index="'+type_idx+'" data-url="' + _.escape(url) + '"><a class="open"><i class="icon-chevron-right"></i></a></span>';
         });
 
         // Is it an image?
