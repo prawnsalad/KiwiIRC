@@ -241,7 +241,7 @@
 
     function onDisconnect(event) {
         $.each(this.panels.models, function (index, panel) {
-            panel.addMsg('', styleText('client_models_network_disconnected', {'%T': translateText('client_models_network_disconnected', [])}), 'action quit');
+            panel.addMsg('', styleText('network_disconnected', {'%T': translateText('client_models_network_disconnected', [])}), 'action quit');
         });
     }
 
@@ -441,7 +441,7 @@
             member = panel.get('members').getByNick(event.nick);
             if (member) {
                 member.set('nick', event.newnick);
-                panel.addMsg('', styleText('client_models_network_nickname_changed', {'%N': event.nick, '%T': translateText('client_models_network_nickname_changed', [event.newnick]), '%C': name}), 'action nick', {time: event.time});
+                panel.addMsg('', styleText('nick_changed', {'%N': event.nick, '%T': translateText('client_models_network_nickname_changed', [event.newnick]), '%C': name}), 'action nick', {time: event.time});
             }
         });
     }
@@ -568,7 +568,7 @@
         if (!c) return;
 
         when = formatDate(new Date(event.when * 1000));
-        c.addMsg('', styleText('client_models_network_topic', {'%T': translateText('client_models_network_topic', [event.nick, when]), '%C': event.channel}), 'topic');
+        c.addMsg('', styleText('channel_topic_setby', {'%T': translateText('client_models_network_topic', [event.nick, when]), '%C': event.channel}), 'topic');
     }
 
 
@@ -706,7 +706,7 @@
                     request_updated_banlist = true;
             }
 
-            channel.addMsg('', styleText('client_models_network_mode', {'%N': event.nick, '%T': translateText('client_models_network_mode', [friendlyModeString()]), '%C': event.target}), 'action mode', {time: event.time});
+            channel.addMsg('', styleText('mode', {'%N': event.nick, '%T': translateText('client_models_network_mode', [friendlyModeString()]), '%C': event.target}), 'action mode', {time: event.time});
 
             // TODO: Be smart, remove the specific ban from the banlist rather than request a whole banlist
             if (request_updated_banlist)
@@ -715,7 +715,7 @@
         } else {
             // This is probably a mode being set on us.
             if (event.target.toLowerCase() === this.get("nick").toLowerCase()) {
-                this.panels.server.addMsg('', styleText('client_models_network_selfmode', {'%N': event.nick, '%T': translateText('client_models_network_mode', [friendlyModeString()]), '%C': event.target}), 'action mode');
+                this.panels.server.addMsg('', styleText('selfmode', {'%N': event.nick, '%T': translateText('client_models_network_mode', [friendlyModeString()]), '%C': event.target}), 'action mode');
             } else {
                console.log('MODE command recieved for unknown target %s: ', event.target, event);
             }
@@ -740,9 +740,9 @@
             panel.addMsg(event.nick, styleText('whois_ident', {'%N': event.nick, '%J': event.ident, '%H': event.host, '%T': event.msg}), 'whois');
 
         } else if (event.chans) {
-            panel.addMsg(event.nick, styleText('client_models_network_channels', {'%N': event.nick, '%T': translateText('client_models_network_channels', [event.chans])}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_channels', {'%N': event.nick, '%T': translateText('client_models_network_channels', [event.chans])}), 'whois');
         } else if (event.irc_server) {
-            panel.addMsg(event.nick, styleText('client_models_network_server', {'%N': event.nick, '%T': translateText('client_models_network_server', [event.irc_server, event.server_info])}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_server', {'%N': event.nick, '%T': translateText('client_models_network_server', [event.irc_server, event.server_info])}), 'whois');
         } else if (event.msg) {
             panel.addMsg(event.nick, styleText('whois', {'%T': event.msg}), 'whois');
         } else if (event.logon) {
@@ -750,11 +750,11 @@
             logon_date.setTime(event.logon * 1000);
             logon_date = formatDate(logon_date);
 
-            panel.addMsg(event.nick, styleText('client_models_network_idle_and_signon', {'%N': event.nick, '%T': translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_idle_and_signon', {'%N': event.nick, '%T': translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
         } else if (event.away_reason) {
-            panel.addMsg(event.nick, styleText('client_models_network_away', {'%N': event.nick, '%T': translateText('client_models_network_away', [event.away_reason])}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_away', {'%N': event.nick, '%T': translateText('client_models_network_away', [event.away_reason])}), 'whois');
         } else {
-            panel.addMsg(event.nick, styleText('client_models_network_idle', {'%N': event.nick, '%T': translateText('client_models_network_idle', [idle_time])}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_idle', {'%N': event.nick, '%T': translateText('client_models_network_idle', [idle_time])}), 'whois');
         }
     }
 
@@ -768,7 +768,7 @@
         if (event.host) {
             panel.addMsg(event.nick, styleText('who', {'%N': event.nick, '%J': event.ident, '%H': event.host, '%R': event.real_name, '%T': event.msg}), 'whois');
         } else {
-            panel.addMsg(event.nick, styleText('client_models_network_nickname_notfound', {'%N': event.nick, '%T': translateText('client_models_network_nickname_notfound', [])}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_notfound', {'%N': event.nick, '%T': translateText('client_models_network_nickname_notfound', [])}), 'whois');
         }
     }
 
@@ -802,22 +802,22 @@
 
         switch (event.error) {
         case 'banned_from_channel':
-            panel.addMsg(' ', styleText('client_models_network_banned', {'%N': event.nick, '%T': translateText('client_models_network_banned', [event.channel, event.reason]), '%C': event.channel}), 'status');
+            panel.addMsg(' ', styleText('channel_banned', {'%N': event.nick, '%T': translateText('client_models_network_banned', [event.channel, event.reason]), '%C': event.channel}), 'status');
             _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
             break;
         case 'bad_channel_key':
-            panel.addMsg(' ', styleText('client_models_network_channel_badkey', {'%N': event.nick, '%T': translateText('client_models_network_channel_badkey', [event.channel]), '%C': event.channel}), 'status');
+            panel.addMsg(' ', styleText('channel_badkey', {'%N': event.nick, '%T': translateText('client_models_network_channel_badkey', [event.channel]), '%C': event.channel}), 'status');
             _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
             break;
         case 'invite_only_channel':
-            panel.addMsg(' ', styleText('client_models_network_channel_inviteonly', {'%N': event.nick, '%T': translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), '%C': event.channel}), 'status');
+            panel.addMsg(' ', styleText('channel_inviteonly', {'%N': event.nick, '%T': translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), '%C': event.channel}), 'status');
             _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
             break;
         case 'user_on_channel':
-            panel.addMsg(' ', styleText('client_models_network_channel_alreadyin', {'%N': event.nick, '%T': translateText('client_models_network_channel_alreadyin'), '%C': event.channel}));
+            panel.addMsg(' ', styleText('channel_alreadyin', {'%N': event.nick, '%T': translateText('client_models_network_channel_alreadyin'), '%C': event.channel}));
             break;
         case 'channel_is_full':
-            panel.addMsg(' ', styleText('client_models_network_channel_limitreached', {'%N': event.nick, '%T': translateText('client_models_network_channel_limitreached', [event.channel]), '%C': event.channel}), 'status');
+            panel.addMsg(' ', styleText('channel_limitreached', {'%N': event.nick, '%T': translateText('client_models_network_channel_limitreached', [event.channel]), '%C': event.channel}), 'status');
             _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
             break;
         case 'chanop_privs_needed':
@@ -833,7 +833,7 @@
             }
             break;
         case 'nickname_in_use':
-            this.panels.server.addMsg(' ', styleText('client_models_network_nickname_alreadyinuse', {'%N': event.nick, '%T': translateText('client_models_network_nickname_alreadyinuse', [event.nick]), '%C': event.channel}), 'status');
+            this.panels.server.addMsg(' ', styleText('nickname_alreadyinuse', {'%N': event.nick, '%T': translateText('client_models_network_nickname_alreadyinuse', [event.nick]), '%C': event.channel}), 'status');
             if (this.panels.server !== this.panels.active) {
                 _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
             }
@@ -846,7 +846,7 @@
             break;
 
         case 'password_mismatch':
-            this.panels.server.addMsg(' ', styleText('client_models_network_badpassword', {'%N': event.nick, '%T': translateText('client_models_network_badpassword', []), '%C': event.channel}), 'status');
+            this.panels.server.addMsg(' ', styleText('channel_badpassword', {'%N': event.nick, '%T': translateText('client_models_network_badpassword', []), '%C': event.channel}), 'status');
             break;
         default:
             // We don't know what data contains, so don't do anything with it.
