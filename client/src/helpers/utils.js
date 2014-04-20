@@ -531,11 +531,11 @@ function styleText(string_id, params) {
 
     style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
 
-    // Bring member info back to first level of params
+    // Expand a member mask into its individual parts (nick, ident, hostname)
     if (params['%M']) {
-        _.each(params['%M'], function(val, key) {
-            params[key] = val;
-        });
+        params['%N'] = params['%M'].nick;
+        params['%J'] = params['%M'].ident;
+        params['%H'] = params['%M'].hostname;
     }
 
     // Do the magic. Use the shorthand syntax to produce output.
