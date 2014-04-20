@@ -134,6 +134,7 @@ _kiwi.model.Member = Backbone.Model.extend({
     },
 
 
+
     /**
      * Format this nick into readable format (eg. nick [ident@hostname])
      */
@@ -148,6 +149,9 @@ _kiwi.model.Member = Backbone.Model.extend({
 
         return display;
     },
+
+
+    // Helper to quickly get user mask details
     getMaskParts: function () {
         return {
             nick: this.get('nick') || '',
@@ -155,6 +159,8 @@ _kiwi.model.Member = Backbone.Model.extend({
             hostname: this.get('hostname') || ''
         };
     },
+
+
     /**
      * With the modes set on the user, make note if we have some sort of op status
      */
