@@ -1,5 +1,5 @@
 {
-  "channel_join": "%C14→ %nick [%ident@%host] %text",
+  "channel_join": "%C14→ %nick %text",
   "channel_part": "%C14← %nick %text",
   "channel_quit": "%C14← %nick %text",
   "channel_kicked": "%C4×%O %nick %text",
