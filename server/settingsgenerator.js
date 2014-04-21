@@ -244,7 +244,8 @@ function addScripts(vars, debug) {
             'src/views/topicbar.js',
             'src/views/userbox.js',
             'src/views/channeltools.js',
-            'src/views/channelinfo.js'
+            'src/views/channelinfo.js',
+            'src/views/rightbar.js'
         ],
         [
             'src/applets/settings.js',
