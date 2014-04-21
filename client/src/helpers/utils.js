@@ -514,35 +514,37 @@ function translateText(string_id, params) {
  * Simplyfy the text styling syntax
  *
  * Syntax:
- *   %N: nickname
- *   %C: channel
- *   %J: ident
- *   %H: host
- *   %R: realname
+ *   %nick:     nickname
+ *   %channel:  channel
+ *   %ident:    ident
+ *   %host:     host
+ *   %realname: realname
+ *   %text:     translated text
  *   %C[digit]: color
- *   %B: bold
- *   %I: italic
- *   %U: underline
- *   %O: cancel styles
- *   %T: translated text
+ *   %B:        bold
+ *   %I:        italic
+ *   %U:        underline
+ *   %O:        cancel styles
  **/
 function styleText(string_id, params) {
     var style, text;
 
-    style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
+    //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
+    style = _kiwi.app.text_theme[string_id];
 
-    // Bring member info back to first level of params
-    if (params['%M']) {
-        _.each(params['%M'], function(val, key) {
-            params[key] = val;
-        });
+    // Expand a member mask into its individual parts (nick, ident, hostname)
+    if (params.member) {
+        params.nick = params.member.nick;
+        params.ident = params.member.ident;
+        params.host = params.member.hostname;
     }
 
-    // Do the magic. Use the shorthand syntax to produce output.
-    text = style.replace(/(%[A-Z])/g, function(match, key) {
-        if (typeof params[key.toUpperCase()] !== 'undefined')
-            return params[key.toUpperCase()];
+    // Do the magic. Use the %shorthand syntax to produce output.
+    text = style.replace(/%([A-Z]{2,})/ig, function(match, key) {
+        if (typeof params[key] !== 'undefined')
+            return params[key];
     });
 
+    text = formatToIrcMsg(text);
     return text;
 }
