@@ -24,8 +24,8 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
 
     clickHideRightBar: function (event) {
         event.preventDefault();
-        $(".right_bar").toggle();
-        $(".memberlists_resize_handle").toggle();
+
+        _kiwi.app.view.$('.right_bar').toggleClass('disabled');
         _kiwi.app.view.doLayout();
     }
 });
