@@ -987,7 +987,7 @@ handlers = {
     },
     
     RPL_HOSTCLOACKING: function (command) {
-            genericNotice.call(this, command, command.params[1] + ' ' + command.params[command.params.length - 1]);
+        genericNotice.call(this, command, command.params[1] + ' ' + command.params[command.params.length - 1]);
     },    
 };
 
