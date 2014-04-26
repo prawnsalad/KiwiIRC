@@ -243,7 +243,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             topic = this.model.get("topic");
         }
 
-        this.model.addMsg('', '== ' + _kiwi.global.i18n.translate('client_views_channel_topic').fetch(this.model.get('name'), topic), 'topic');
+        this.model.addMsg('', _kiwi.global.i18n.translate('client_views_channel_topic').fetch(this.model.get('name'), topic), 'topic');
 
         // If this is the active channel then update the topic bar
         if (_kiwi.app.panels().active === this) {

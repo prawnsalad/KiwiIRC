@@ -84,13 +84,19 @@
 #kiwi .messages .msg.action .nick { }
 #kiwi .messages .msg.action .text { color:#009900; border-left:none; font-style:italic; }
 #kiwi .messages .msg.action.join { color:#009900; }
+#kiwi .messages .msg.action.join .text:before { content:"== ";}
 #kiwi .messages .msg.action.part .text { color:#900; }
+#kiwi .messages .msg.action.part .text:before { content:"== ";}
 #kiwi .messages .msg.action.quit .text { color:#900; }
+#kiwi .messages .msg.action.quit .text:before { content:"==";}
 #kiwi .messages .msg.action.kick .text { color:#900; }
+#kiwi .messages .msg.action.kick .text:before { content:"== ";}
+
 #kiwi .messages .msg.status .nick { }
 #kiwi .messages .msg.status .text { color:#990000; border-left:none; font-weight:bold; }
 #kiwi .messages .msg.topic .nick { display:none; }
 #kiwi .messages .msg.topic .text { color:#009900; font-style: italic; border-left:none; }
+#kiwi .messages .msg.topic .text:before { content:"== ";}
 #kiwi .messages .msg.motd { border:none; }
 /*#kiwi .messages .msg.motd .nick { display:none; }*/
 #kiwi .messages .msg.motd .text { color:#666; }
