@@ -103,13 +103,26 @@
 #kiwi .messages .msg.action .nick,
 #kiwi .messages .msg.static .nick,
 #kiwi .messages .msg.topic .nick { display:none; }
+#kiwi .messages .msg.action .text:before { content:"== ";}
+
+#kiwi .messages .msg.action.mode .text:before { content:"== ";}
+#kiwi .messages .msg.action.nick .text:before { content:"== ";}
 
 #kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
+#kiwi .messages .msg.action .text:before { content:"== ";}
 #kiwi .messages .msg.action.join { color:#009900; }
+#kiwi .messages .msg.action.join .text:before { content:"== ";}
 #kiwi .messages .msg.action.part .text { color:#900; }
+#kiwi .messages .msg.action.part .text:before { content:"== ";}
 #kiwi .messages .msg.action.quit .text { color:#900; }
-#kiwi .messages .msg.action.kick .text { color:#900; }
+#kiwi .messages .msg.action.quit .text:before { content:"==";}
 
+#kiwi .messages .msg.action.kick .text { color:#900; }
+#kiwi .messages .msg.action.kick .text:before { content:"== ";}
+
+#kiwi .messages .msg.status .text:before { content:"== ";}
+
+#kiwi .messages .msg.topic .text:before { content:"== ";}
 #kiwi .messages .msg.motd { border:none; }
 /*#kiwi .messages .msg.motd .nick { display:none; }*/
 #kiwi .messages .msg.motd .text { color:#666; }

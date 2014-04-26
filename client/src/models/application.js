@@ -693,7 +693,7 @@
 
         _kiwi.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
 
-        _kiwi.app.panels().active.addMsg('', '== ' + nick + ' has been invited to ' + channel, 'action');
+        _kiwi.app.panels().active.addMsg('', nick + ' has been invited to ' + channel, 'action');
     }
 
 
