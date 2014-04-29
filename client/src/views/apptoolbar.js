@@ -1,7 +1,8 @@
 _kiwi.view.AppToolbar = Backbone.View.extend({
     events: {
         'click .settings': 'clickSettings',
-        'click .startup': 'clickStartup'
+        'click .startup': 'clickStartup' ,
+        'click .hiderightbar': 'clickHideRightBar'
     },
 
     initialize: function () {
@@ -20,4 +21,11 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
         event.preventDefault();
         _kiwi.app.startup_applet.view.show();
     },
+
+    clickHideRightBar: function (event) {
+        event.preventDefault();
+        $(".right_bar").toggle();
+        $(".memberlists_resize_handle").toggle();
+        _kiwi.app.view.doLayout();
+    }
 });
