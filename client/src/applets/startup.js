@@ -19,12 +19,17 @@
 
             if ($info.html()) {
                 connection_dialog.view.infoBoxSet($info);
-                connection_dialog.view.infoBoxShow();
+            } else {
+                $info = null;
             }
 
             this.listenTo(connection_dialog, 'connected', this.newConnectionConnected);
 
             _.defer(function(){
+                if ($info) {
+                    connection_dialog.view.infoBoxShow();
+                }
+
                 connection_dialog.view.$el.find('.nick').select();
             });
         },
