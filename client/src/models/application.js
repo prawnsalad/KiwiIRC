@@ -112,6 +112,7 @@
 
             _kiwi.global.components.Applet = _kiwi.model.Applet;
             _kiwi.global.components.Panel =_kiwi.model.Panel;
+            _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
         },
 
 
