@@ -30,7 +30,10 @@
                     connection_dialog.view.infoBoxShow();
                 }
 
-                connection_dialog.view.$el.find('.nick').select();
+                // Only set focus if we're not within an iframe. (firefox auto scrolls to the embedded client on page load - bad)
+                if (window == window.top) {
+                    connection_dialog.view.$el.find('.nick').select();
+                }
             });
         },
 
