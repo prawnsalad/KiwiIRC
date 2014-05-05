@@ -63,8 +63,12 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
-            is_highlight = true;
-            msg_css_classes += ' highlight';
+            // do not highlight own actions
+            var usersNick = _kiwi.app.connections.active_connection.get('nick');
+            if  (msg.type !== 'action' || usersNick.localeCompare(msg.msg.substring(2, usersNick.length + 2)) !== 0 ) {
+                is_highlight = true;
+                msg_css_classes += ' highlight';
+            }
         }
 
         // Escape any HTML that may be in here
