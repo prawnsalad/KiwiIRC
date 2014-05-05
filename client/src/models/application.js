@@ -553,7 +553,11 @@
         }
 
         var panel = _kiwi.app.panels().active;
-        panel.addMsg('', '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '), 'action');
+        panel.addMsg(
+            _kiwi.app.connections.active_connection.get('nick'), 
+            '* ' + _kiwi.app.connections.active_connection.get('nick') + ' ' + ev.params.join(' '),
+            'action'
+        );
         this.connections.active_connection.gateway.action(panel.get('name'), ev.params.join(' '));
     }
 
