@@ -62,9 +62,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             network, hour, pm;
 
         // Nick highlight detecting
-        if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
-            is_highlight = true;
-            msg_css_classes += ' highlight';
+        var nick = _kiwi.app.connections.active_connection.get('nick');
+        if ((new RegExp('(^|\\W)(' + escapeRegex(nick) + ')(\\W|$)', 'i')).test(msg.msg)) {
+            // Do not highlight the user's own input
+            if (msg.nick.localeCompare(nick) !== 0) {
+                is_highlight = true;
+                msg_css_classes += ' highlight';
+            }
         }
 
         // Escape any HTML that may be in here
