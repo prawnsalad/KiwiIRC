@@ -2,7 +2,8 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
     model: _kiwi.model.Member,
     comparator: function (a, b) {
         var i, a_modes, b_modes, a_idx, b_idx, a_nick, b_nick;
-        var user_prefixes = _kiwi.gateway.get('user_prefixes');
+        var user_prefixes = this.channel.get('network').get('user_prefixes');
+
         a_modes = a.get("modes");
         b_modes = b.get("modes");
         // Try to sort by modes first

@@ -42,36 +42,39 @@ StorageMemory.prototype.setUserState = function(username, password, state, callb
     user.password = password;
     user.last_used = new Date();
     user.state_id = state.hash;
-    user.events = [];
+    user.events = {};
 
     this.state_map[state.hash] = username;
     callback();
 };
 
 
-StorageMemory.prototype.putStateEvent = function(state_id, event, callback) {
+StorageMemory.prototype.putStateEvent = function(state_id, target, event, callback) {
     if (!this.state_map[state_id])
         return callback();
 
     var username = this.state_map[state_id],
         user = this.user_states[username];
 
-    user.events.push(event);
+    target = target.toLowerCase();
 
+    user.events[target] = user.events[target] || [];
+    user.events[target].push(event);
+console.log('added event for', target, event);
     // Trim the events down to the latest 50 only
-    if (user.events.length > 50)
-        user.events.shift();
+    if (user.events[target].length > 50)
+        user.events[target].shift();
 
     return callback ? callback() : null;
 };
 
 
-StorageMemory.prototype.getStateEvents = function(state_id, callback) {
+StorageMemory.prototype.getStateEvents = function(state_id, target, callback) {
     if (!this.state_map[state_id])
         return callback(false);
 
     var username = this.state_map[state_id],
         user = this.user_states[username];
-
-    return callback(user.events);
+console.log('events for', target.toLowerCase(), user.events[target.toLowerCase()]);
+    return callback(user.events[target.toLowerCase()] || []);
 };

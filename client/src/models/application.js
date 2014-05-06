@@ -133,6 +133,13 @@
         },
 
 
+        syncSessionEvents: function(target) {
+            _kiwi.gateway.syncSessionEvents(target, function(err, data) {
+                console.log('syncSessionEvents()', err, data);
+            });
+        },
+
+
         saveSession: function(username, password) {
             _kiwi.gateway.saveSession(username, password, function(err, data) {
                 console.log('saveSession()', err, data);

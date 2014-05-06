@@ -30,10 +30,19 @@ function handleEvents(state) {
     var state_id = state.hash;
 
     state.on('irc_event', function(args) {
+        // Default target is *, the server window
+        var target = '*';
+
         // Only store certain event types (types the user will be visually interested in)
         var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode', 'join', 'part', 'kick', 'quit'];
         if (allowed_events.indexOf(args.event[0]) === -1)
             return;
+
+        if (args.event[1].target) {
+            target = args.event[1].target;
+        } else if(args.event[1].channel) {
+            target = args.event[1].channel;
+        }
 
         // If channel joining/parting does not involve us, don't store it.
         var special_events = ['join', 'part', 'kick', 'quit'];
@@ -45,7 +54,7 @@ function handleEvents(state) {
             }
         }
 
-        storage.putStateEvent(state_id, args.event);
+        storage.putStateEvent(state_id, target, args.event);
     });
 }
 
@@ -141,6 +150,7 @@ module.on('client command kiwi', function(event, event_data) {
                         chan.refreshTopic();
                     });
 
+/*
                     // Send any persisted events we have
                     storage.getStateEvents(state.hash, function(events) {
                         if (!events)
@@ -150,9 +160,23 @@ module.on('client command kiwi', function(event, event_data) {
                             event_data.client.sendIrcCommand(event[0], event[1]);
                         });
                     });
+*/
                 });
             });
 
+
+            break;
+
+
+        case 'session_events':
+            event.preventDefault();
+
+            var target = event_data.command.target;
+            storage.getStateEvents(event_data.client.state.hash, target, function(events) {
+                _.each(events, function(event, idx) {
+                    event_data.client.sendIrcCommand(event[0], event[1]);
+                });
+            });
 
             break;
     }

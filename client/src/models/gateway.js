@@ -206,6 +206,14 @@ _kiwi.model.Gateway = function () {
     };
 
 
+    this.syncSessionEvents = function(target, callback) {
+        _kiwi.gateway.rpc.call('kiwi', {
+            command: 'session_events',
+            target: target,
+        }, callback);
+    };
+
+
     /**
      * Return a new network object with the new connection details
      */
@@ -324,7 +332,7 @@ _kiwi.model.Gateway = function () {
                     var channel = new_connection.panels.getByName(channel_info.name);
 
                     if (!channel) {
-                        channel = new _kiwi.model.Channel({name: channel_info.name});
+                        channel = new _kiwi.model.Channel({name: channel_info.name, network: new_connection});
                         new_connection.panels.add(channel);
                     }
                 });
