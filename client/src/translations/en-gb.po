@@ -66,7 +66,7 @@ msgstr "Join/part channel notifications"
 
 #: 
 msgid "client_applets_settings_short_joinpart"
-msgstr "Show mask and reason in Join/part channel notifications"
+msgstr "Hide mask and reason in Join/part channel notifications"
 
 #: 
 msgid "client_applets_settings_timestamp"
