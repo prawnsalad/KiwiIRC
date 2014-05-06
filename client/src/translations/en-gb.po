@@ -65,6 +65,10 @@ msgid "client_applets_settings_notification_joinpart"
 msgstr "Join/part channel notifications"
 
 #: 
+msgid "client_applets_settings_short_joinpart"
+msgstr "Hide mask and reason in Join/part channel notifications"
+
+#: 
 msgid "client_applets_settings_timestamp"
 msgstr "Timestamps"
 
@@ -185,6 +189,10 @@ msgid "client_models_channel_quit"
 msgstr "%s has quit %s"
 
 #: 
+msgid "client_models_channel_quit_short"
+msgstr "%s has quit"
+
+#: 
 msgid "client_models_channel_kicked"
 msgstr "%s was kicked by %s %s"
 
@@ -195,6 +203,10 @@ msgstr "You have been kicked by %s %s"
 #: 
 msgid "client_models_channel_part"
 msgstr "%s has left %s"
+
+#: 
+msgid "client_models_channel_part_short"
+msgstr "%s has left"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
