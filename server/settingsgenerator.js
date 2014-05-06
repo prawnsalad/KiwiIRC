@@ -215,7 +215,8 @@ function addScripts(vars, debug) {
             'src/models/server.js',     // Depends on models/channel.js
             'src/models/pluginmanager.js',
             'src/models/datastore.js',
-            'src/helpers/utils.js'
+            'src/helpers/utils.js',
+            'src/helpers/formatdate.js'
         ],
 
         // Some views extend these, so make sure they're loaded beforehand
@@ -243,7 +244,8 @@ function addScripts(vars, debug) {
             'src/views/topicbar.js',
             'src/views/userbox.js',
             'src/views/channeltools.js',
-            'src/views/channelinfo.js'
+            'src/views/channelinfo.js',
+            'src/views/rightbar.js'
         ],
         [
             'src/applets/settings.js',

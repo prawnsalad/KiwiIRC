@@ -176,7 +176,7 @@ _kiwi.view.Application = Backbone.View.extend({
         }
 
         // Set the panels width depending on the memberlist visibility
-        if (el_right_bar.css('display') != 'none') {
+        if (!el_right_bar.hasClass('disabled')) {
             // Panels to the side of the memberlist
             el_panels.css('right', el_right_bar.outerWidth(true));
             // The resize handle sits overlapping the panels and memberlist

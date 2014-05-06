@@ -54,6 +54,7 @@ irc_numerics = {
     '376': 'RPL_ENDOFMOTD',
     '378': 'RPL_WHOISHOST',
     '379': 'RPL_WHOISMODES',
+    '396': 'RPL_HOSTCLOACKING',
     '401': 'ERR_NOSUCHNICK',
     '404': 'ERR_CANNOTSENDTOCHAN',
     '405': 'ERR_TOOMANYCHANNELS',
@@ -808,7 +809,7 @@ handlers = {
     },
 
     ERR_CANNOTSENDTOCHAN: function (command) {
-        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' cannot_send_to_chan', {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' cannot_send_to_channel', {
             channel: command.params[1],
             reason: command.params[command.params.length - 1]
         });
@@ -983,7 +984,11 @@ handlers = {
         var params = _.clone(command.params);
         params.shift();
         genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
-    }
+    },
+    
+    RPL_HOSTCLOACKING: function (command) {
+        genericNotice.call(this, command, command.params[1] + ' ' + command.params[command.params.length - 1]);
+    },    
 };
 
 
