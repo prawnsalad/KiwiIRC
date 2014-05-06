@@ -65,6 +65,10 @@ msgid "client_applets_settings_notification_joinpart"
 msgstr "Notifiche entrata/uscita dal canale"
 
 #: 
+msgid "client_applets_settings_short_joinpart"
+msgstr "Mostra mask e motivo nei messaggi di entrata/uscita."
+
+#: 
 msgid "client_applets_settings_timestamp"
 msgstr "Data/ora"
 
@@ -185,6 +189,10 @@ msgid "client_models_channel_quit"
 msgstr "%s è uscito da %s"
 
 #: 
+msgid "client_models_channel_quit_short"
+msgstr "%s ha chiuso la chat"
+
+#: 
 msgid "client_models_channel_kicked"
 msgstr "%s è stato espulso dal canale da %s: %s"
 
@@ -194,7 +202,11 @@ msgstr "Sei stato espulso dal canale da %s: %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s ha abbandonato %s"
+msgstr "%s ha abbandonato il canale %s"
+
+#: 
+msgid "client_models_channel_part_short"
+msgstr "%s ha abbandonato il canale"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"

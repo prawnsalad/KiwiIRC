@@ -13,6 +13,7 @@
                 list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
                 large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
                 join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
+                sjoin_part: _kiwi.global.i18n.translate('client_applets_settings_short_joinpart').fetch(),
                 count_all_activity: _kiwi.global.i18n.translate('client_applets_settings_notification_count_all_activity').fetch(),
                 timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
                 timestamp_24: _kiwi.global.i18n.translate('client_applets_settings_timestamp_24_hour').fetch(),
