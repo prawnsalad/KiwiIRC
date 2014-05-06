@@ -328,11 +328,13 @@ _kiwi.model.Gateway = function () {
                         new_connection.panels.add(channel);
                     }
                 });
-            });
 
-            // Let the application know we have connected to an IRCd
-            if (data && data.length)
-                this.trigger('onconnect');
+                // Let the application know we have connected to an IRCd
+                that.trigger('onconnect', {
+                    server: connection.connection_id,
+                    nick: connection.nick
+                });
+            });
 
             break;
 
