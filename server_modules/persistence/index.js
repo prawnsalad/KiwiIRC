@@ -29,23 +29,18 @@ var module = new kiwiModules.Module('persistence');
 function handleEvents(state) {
     var state_id = state.hash;
 
-    state.on('client_event', function(type, args) {
-        if (type !== 'irc')
-            return;
-
+    state.on('irc_event', function(args) {
         // Only store certain event types (types the user will be visually interested in)
         var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode', 'join', 'part', 'kick', 'quit'];
         if (allowed_events.indexOf(args.event[0]) === -1)
             return;
 
-
-        // TODO: Find a way to get the IrcConnection object this event relates to
         // If channel joining/parting does not involve us, don't store it.
         var special_events = ['join', 'part', 'kick', 'quit'];
         if (special_events.indexOf(args.event[0]) !== -1) {
-            if (args.event[0] == 'kick' && args[1].kicked !== THE_CONNECTION.nick) {
+            if (args.event[0] == 'kick' && args.event[1].kicked.toLowerCase() !== args.connection.nick.toLowerCase()) {
                 return;
-            } else if (args[1].nick !== THE_CONNECTION.nick) {
+            } else if (args.event[1].nick.toLowerCase() !== args.connection.nick.toLowerCase()) {
                 return;
             }
         }

@@ -309,6 +309,12 @@ IrcConnection.prototype.connect = function () {
  */
 IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
     data.server = this.con_num;
+
+    this.state.emit('irc_event', {
+        connection: this,
+        event: [event_name, data]
+    });
+
     this.state.sendIrcCommand(event_name, data, callback);
 };
 
