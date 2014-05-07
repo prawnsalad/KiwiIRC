@@ -158,12 +158,8 @@ _kiwi.global = {
         }
 
         jobs.registerJob('load_text_theme');
-        text_theme = opts.text_theme;
-        if (!text_theme) {
-            $.getJSON(opts.base_path + '/assets/text_themes/default.json', textThemeLoaded);
-        } else {
-            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', textThemeLoaded);
-        }
+        text_theme = opts.server_settings.client.settings.text_theme || 'default';
+        $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', textThemeLoaded);
     },
 
     start: function() {
