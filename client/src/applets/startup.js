@@ -19,13 +19,21 @@
 
             if ($info.html()) {
                 connection_dialog.view.infoBoxSet($info);
-                connection_dialog.view.infoBoxShow();
+            } else {
+                $info = null;
             }
 
             this.listenTo(connection_dialog, 'connected', this.newConnectionConnected);
 
             _.defer(function(){
-                connection_dialog.view.$el.find('.nick').select();
+                if ($info) {
+                    connection_dialog.view.infoBoxShow();
+                }
+
+                // Only set focus if we're not within an iframe. (firefox auto scrolls to the embedded client on page load - bad)
+                if (window == window.top) {
+                    connection_dialog.view.$el.find('.nick').select();
+                }
             });
         },
 

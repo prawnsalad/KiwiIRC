@@ -19,5 +19,5 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
     clickStartup: function (event) {
         event.preventDefault();
         _kiwi.app.startup_applet.view.show();
-    },
+    }
 });

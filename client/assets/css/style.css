@@ -39,7 +39,8 @@ html, body { height:100%; }
  */
 #kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; }
 #kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
-#kiwi .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow-y:auto; }
+#kiwi .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
+#kiwi .right-bar-content { overflow-y:auto; position:relative; height:100% ;}
 #kiwi .controlbox { position: absolute; bottom:0px; width:100%; display:none; }
 #kiwi .memberlists_resize_handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
@@ -84,7 +85,7 @@ html, body { height:100%; }
 #kiwi .channel_tools {
 }
 #kiwi .channel_tools i {
-    width: 49%;
+    width: 32%;
     display: inline-block;
     text-align: center;
     cursor: pointer;
@@ -127,12 +128,28 @@ html, body { height:100%; }
 #kiwi .messages .msg .media .media_content { white-space: normal; }
 
 
-/* A member/nick list per channel */
 #kiwi .right_bar { border-left: 1px solid #8A8A8A; }
-#kiwi .right_bar.disabled { display:none; }
-#kiwi .memberlists ul { display:none; }
+#kiwi .right_bar.disabled { width:0; }
+#kiwi .right_bar.disabled .channel_tools,
+#kiwi .right_bar.disabled .memberlists { display:none; }
+
+#kiwi .right-bar-toggle {
+    position: absolute;
+    top: 10px;
+    left: -2.3em;
+    width: 1.3em;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.3em;
+    background: #e3e3e3;
+    border: 1px solid;
+    border-radius: 50%;
+    cursor: pointer;
+}
 
 /* The active channels nicklist */
+#kiwi .memberlists ul { display:none; }
 #kiwi .memberlists ul.active { display:block; }
 #kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
 #kiwi .memberlists ul li a.nick { }

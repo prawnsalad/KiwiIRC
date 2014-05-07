@@ -80,6 +80,11 @@ function generateSettings(debug, callback) {
         vars.server_settings.client = config.get().client;
     }
 
+    // Client transport specified?
+    if (config.get().client_transports) {
+        vars.server_settings.transports = config.get().client_transports;
+    }
+
     // Any client plugins?
     if (config.get().client_plugins && config.get().client_plugins.length > 0) {
         vars.client_plugins = config.get().client_plugins;
@@ -215,7 +220,8 @@ function addScripts(vars, debug) {
             'src/models/server.js',     // Depends on models/channel.js
             'src/models/pluginmanager.js',
             'src/models/datastore.js',
-            'src/helpers/utils.js'
+            'src/helpers/utils.js',
+            'src/helpers/formatdate.js'
         ],
 
         // Some views extend these, so make sure they're loaded beforehand
@@ -244,6 +250,9 @@ function addScripts(vars, debug) {
             'src/views/userbox.js',
             'src/views/channeltools.js',
             'src/views/channelinfo.js',
+            'src/views/rightbar.js'
+        ],
+        [
             'src/applets/settings.js',
             'src/applets/chanlist.js',
             'src/applets/scripteditor.js',

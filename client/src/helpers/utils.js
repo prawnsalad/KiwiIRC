@@ -377,12 +377,6 @@ function formatIRCMsg (msg) {
     return out;
 }
 
-
-function formatDate (d) {
-    d = d || new Date();
-    return d.toLocaleDateString() + ', ' + d.getHours().toString() + ':' + d.getMinutes().toString() + ':' + d.getSeconds().toString();
-}
-
 function escapeRegex (str) {
     return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
 }

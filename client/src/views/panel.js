@@ -41,11 +41,10 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
-            $('#kiwi .right_bar').removeClass('disabled');
+            _kiwi.app.rightbar.show();
             members.view.show();
         } else {
-            // Memberlist not found for this panel, hide any active ones
-            $('#kiwi .right_bar').addClass('disabled').children().removeClass('active');
+            _kiwi.app.rightbar.hide();
         }
 
         // Remove any alerts and activity counters for this panel
