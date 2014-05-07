@@ -102,16 +102,18 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
         });
 };
 
-State.prototype.sendIrcCommand = function () {
-    var args = arguments;
+State.prototype.sendIrcCommand = function (irc_connection, event_name, data, callback) {
+    var args = [event_name, data, callback];
 
     this.emit('client_event', 'irc', {
-        client: this,
-        event: Array.prototype.slice.call(arguments)
+        connection: irc_connection,
+        event: [event_name, data]
     });
 
-    _.each(this.clients, function(client, idx) {
-        client.sendIrcCommand.apply(client, args);
+    _.each(this.clients, function(client) {
+        if (client.isSubscribed(irc_connection.con_num, data.target||data.channel)) {
+            client.sendIrcCommand.apply(client, args);
+        }
     });
 };
 
@@ -119,11 +121,10 @@ State.prototype.sendKiwiCommand = function () {
     var args = arguments;
 
     this.emit('client_event', 'kiwi', {
-        client: this,
         event: Array.prototype.slice.call(arguments)
     });
 
-    _.each(this.clients, function(client, idx) {
+    _.each(this.clients, function(client) {
         client.sendKiwicommand.apply(client, args);
     });
 };

@@ -28,6 +28,10 @@ var Client = function (websocket) {
     this.state = new State(false);
     this.state.addClient(this);
 
+    // Individual clients my subscribe to only selected targets ([connection_id, target_name]).
+    // null = all
+    this.subscribed_targets = null;
+
     this.buffer = {
         list: [],
         motd: ''
@@ -79,6 +83,70 @@ Client.prototype.dispose = function () {
     this.rpc.dispose();
     this.emit('dispose');
     this.removeAllListeners();
+};
+
+Client.prototype.isSubscribed = function(connection_id, target) {
+    var subscription_name;
+
+    if (this.subscribed_targets === null) {
+        return true;
+    }
+
+    if (connection_id === undefined || !target) {
+        return false;
+    }
+
+    subscription_name = connection_id.toString() + ',' + target.toLowerCase();
+
+    return this.subscribed_targets.indexOf(subscription_name) !== -1;
+};
+
+Client.prototype.subscribe = function(connection_id, target) {
+    var subscription_name;
+
+    // Subscribing to them all?
+    if (!connection_id) {
+        this.subscribed_targets = null;
+        return;
+    }
+
+    // Subscribing to a specific target?
+    else {
+        subscription_name = connection_id.toString() + ',' + target.toLowerCase();
+
+        if (!this.subscribed_targets) {
+            this.subscribed_targets = [];
+        }
+
+        if (this.subscribed_targets.indexOf(subscription_name) === -1) {
+            this.subscribed_targets.push(target);
+        }
+    }
+};
+
+Client.prototype.unsubscribe = function(connection_id, target) {
+    var subscription_name;
+
+    // Unsubscribing from them all?
+    if (!connection_id) {
+        this.subscribed_targets = [];
+        return;
+    }
+
+    // Unsubscribing to a specific target?
+    else {
+        subscription_name = connection_id.toString() + ',' + target.toLowerCase();
+
+        if (!this.subscribed_targets) {
+            return;
+        }
+
+        if (this.subscribed_targets.indexOf(subscription_name) !== -1) {
+            _.reject(this.subscribed_targets, function(target) {
+                return target === subscription_name;
+            });
+        }
+    }
 };
 
 function handleClientMessage(msg, callback) {

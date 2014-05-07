@@ -29,32 +29,36 @@ var module = new kiwiModules.Module('persistence');
 function handleEvents(state) {
     var state_id = state.hash;
 
-    state.on('irc_event', function(args) {
+    state.on('client_event', function(event_type, data) {
+        // Only interested in IRC events being sent to the client
+        if (event_type !== 'irc')
+            return;
+
         // Default target is *, the server window
         var target = '*';
 
         // Only store certain event types (types the user will be visually interested in)
         var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode', 'join', 'part', 'kick', 'quit'];
-        if (allowed_events.indexOf(args.event[0]) === -1)
+        if (allowed_events.indexOf(data.event[0]) === -1)
             return;
 
-        if (args.event[1].target) {
-            target = args.event[1].target;
-        } else if(args.event[1].channel) {
-            target = args.event[1].channel;
+        if (data.event[1].target) {
+            target = data.event[1].target;
+        } else if(data.event[1].channel) {
+            target = data.event[1].channel;
         }
 
         // If channel joining/parting does not involve us, don't store it.
         var special_events = ['join', 'part', 'kick', 'quit'];
-        if (special_events.indexOf(args.event[0]) !== -1) {
-            if (args.event[0] == 'kick' && args.event[1].kicked.toLowerCase() !== args.connection.nick.toLowerCase()) {
+        if (special_events.indexOf(data.event[0]) !== -1) {
+            if (data.event[0] == 'kick' && data.event[1].kicked.toLowerCase() !== data.connection.nick.toLowerCase()) {
                 return;
-            } else if (args.event[1].nick.toLowerCase() !== args.connection.nick.toLowerCase()) {
+            } else if (data.event[1].nick.toLowerCase() !== data.connection.nick.toLowerCase()) {
                 return;
             }
         }
 
-        storage.putStateEvent(state_id, target, args.event);
+        storage.putStateEvent(state_id, target, data.event);
     });
 }
 
@@ -109,6 +113,9 @@ module.on('client command kiwi', function(event, event_data) {
 
                 state.addClient(event_data.client);
                 event_data.client.state = state;
+
+                // Unsubscribe from any targets. The client will subscribe later
+                event_data.client.unsubscribe();
 
                 // First loop - compile a list of connection information
                 _.each(state.irc_connections, function(irc_connection) {
@@ -171,12 +178,38 @@ module.on('client command kiwi', function(event, event_data) {
         case 'session_events':
             event.preventDefault();
 
-            var target = event_data.command.target;
-            storage.getStateEvents(event_data.client.state.hash, target, function(events) {
-                _.each(events, function(event, idx) {
-                    event_data.client.sendIrcCommand(event[0], event[1]);
+            var connection_id = event_data.command.connection_id,
+                target = event_data.command.target,
+                state = event_data.client.state,
+                client = event_data.client;
+
+            var connection = _.find(state.irc_connections, {con_num: connection_id});
+
+            if (connection) {
+
+                _.each(connection.irc_channels, function(chan, chan_name) {
+                    // If a specific target is given, check if this channel is it before syncing
+                    if (target && chan_name.toLowerCase() !== target.toLowerCase()) {
+                        return;
+                    }
+
+                    // Only sync data if it's not already subscribed
+                    if (client.isSubscribed(connection_id, chan_name)) {
+                        return;
+                    }
+
+                    chan.refreshNickList();
+                    chan.refreshTopic();
+
+                    storage.getStateEvents(state.hash, chan_name, function(events) {
+                        _.each(events, function(event, idx) {
+                            event_data.client.sendIrcCommand(event[0], event[1]);
+                        });
+                    });
+
+                    event_data.client.subscribe(connection_id, chan_name);
                 });
-            });
+            }
 
             break;
     }

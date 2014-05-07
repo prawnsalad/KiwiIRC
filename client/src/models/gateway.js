@@ -207,9 +207,15 @@ _kiwi.model.Gateway = function () {
     };
 
 
-    this.syncSessionEvents = function(target, callback) {
+    this.syncSessionEvents = function(network_id, target, callback) {
+        if (target && !callback) {
+            callback = target;
+            target = undefined;
+        }
+
         _kiwi.gateway.rpc.call('kiwi', {
             command: 'session_events',
+            connection_id: network_id,
             target: target,
         }, callback);
     };

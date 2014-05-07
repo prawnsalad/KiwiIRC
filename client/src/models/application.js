@@ -133,8 +133,8 @@
         },
 
 
-        syncSessionEvents: function(target) {
-            _kiwi.gateway.syncSessionEvents(target, function(err, data) {
+        syncSessionEvents: function(network, target) {
+            _kiwi.gateway.syncSessionEvents(network.get('connection_id'), target, function(err, data) {
                 console.log('syncSessionEvents()', err, data);
             });
         },
