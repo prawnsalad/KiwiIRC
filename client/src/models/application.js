@@ -531,7 +531,7 @@
 
         if (message) {
             this.connections.active_connection.gateway.msg(panel.get('name'), message);
-            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), styleText('query', {text: message}));
+            panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
         }
 
     }
@@ -544,7 +544,7 @@
         ev.params.shift();
         message = formatToIrcMsg(ev.params.join(' '));
 
-        panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), styleText('msg', {text: message}));
+        panel.addMsg(_kiwi.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
         this.connections.active_connection.gateway.msg(destination, message);
     }
 
