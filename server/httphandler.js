@@ -93,6 +93,9 @@ var serveMagicLocale = function (request, response) {
     } else {
         negotiator = new Negotiator(request);
         found_locale = negotiator.language(cached_available_locales);
+
+        // If a locale couldn't be negotiated, use the default
+        found_locale = found_locale || default_locale_id;
     }
 
     // Send a locale to the browser
