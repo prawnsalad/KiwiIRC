@@ -42,16 +42,16 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.more_shown = false;
 
         this.model.bind('new_network', this.newNetwork, this);
-        _kiwi.gateway.bind('onconnect', this.networkConnected, this);
+        _kiwi.gateway.bind('connect', this.networkConnected, this);
         _kiwi.gateway.bind('connecting', this.networkConnecting, this);
-        _kiwi.gateway.bind('onirc_error', this.onIrcError, this);
+        _kiwi.gateway.bind('irc_error', this.onIrcError, this);
     },
 
     dispose: function() {
         this.model.off('new_network', this.newNetwork, this);
-        _kiwi.gateway.off('onconnect', this.networkConnected, this);
+        _kiwi.gateway.off('connect', this.networkConnected, this);
         _kiwi.gateway.off('connecting', this.networkConnecting, this);
-        _kiwi.gateway.off('onirc_error', this.onIrcError, this);
+        _kiwi.gateway.off('irc_error', this.onIrcError, this);
 
         this.remove();
     },

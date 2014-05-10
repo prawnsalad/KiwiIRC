@@ -167,7 +167,7 @@
         bindGatewayCommands: function (gw) {
             var that = this;
 
-            gw.on('onconnect', function (event) {
+            gw.on('connect', function (event) {
                 that.view.barsShow();
             });
 
@@ -218,7 +218,7 @@
                 });
 
 
-                gw.on('onconnect', function (event) {
+                gw.on('connect', function (event) {
                     that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
 

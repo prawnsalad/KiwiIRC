@@ -9,81 +9,8 @@ _kiwi.model.Gateway = function () {
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
 
-        this.applyEventHandlers();
-
         // Used to check if a disconnection was unplanned
         this.disconnect_requested = false;
-    };
-
-
-    this.applyEventHandlers = function () {
-        /*
-        kiwi.gateway.on('message:#channel', my_function);
-        kiwi.gateway.on('message:somenick', my_function);
-
-        kiwi.gateway.on('notice:#channel', my_function);
-        kiwi.gateway.on('action:somenick', my_function);
-
-        kiwi.gateway.on('join:#channel', my_function);
-        kiwi.gateway.on('part:#channel', my_function);
-        kiwi.gateway.on('quit', my_function);
-        */
-        var that = this;
-
-        // Some easier handler events
-        this.on('onmsg', function (event) {
-            var source,
-                connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.target.toLowerCase() == connection.get('nick').toLowerCase());
-
-            source = is_pm ? event.nick : event.target;
-
-            that.trigger('message:' + source, event);
-            that.trigger('message', event);
-
-            if (is_pm) {
-                that.trigger('pm:' + source, event);
-                that.trigger('pm', event);
-            }
-        }, this);
-
-
-        this.on('onnotice', function (event) {
-            // The notice towards a channel or a query window?
-            var source = event.target || event.nick;
-
-            this.trigger('notice:' + source, event);
-            this.trigger('notice', event);
-        }, this);
-
-
-        this.on('onaction', function (event) {
-            var source,
-                connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.target.toLowerCase() == connection.get('nick').toLowerCase());
-
-            source = is_pm ? event.nick : event.target;
-
-            that.trigger('action:' + source, event);
-
-            if (is_pm) {
-                that.trigger('action:' + source, event);
-                that.trigger('action', event);
-            }
-        }, this);
-
-
-        this.on('ontopic', function (event) {
-            that.trigger('topic:' + event.channel, event);
-            that.trigger('topic', event);
-        });
-
-
-        this.on('onjoin', function (event) {
-            that.trigger('join:' + event.channel, event);
-            that.trigger('join', event);
-        });
-
     };
 
 
@@ -347,6 +274,7 @@ _kiwi.model.Gateway = function () {
         }
 
 
+        // Trigger the connection specific events (used by Network objects)
         if (typeof data.server !== 'undefined') {
             that.trigger('connection:' + data.server.toString(), {
                 event_name: command,
@@ -354,8 +282,8 @@ _kiwi.model.Gateway = function () {
             });
         }
 
-        // Trigger the global events (Mainly legacy now)
-        that.trigger('on' + command, data);
+        // Trigger the global events
+        that.trigger(command, data);
     };
 
     /**
