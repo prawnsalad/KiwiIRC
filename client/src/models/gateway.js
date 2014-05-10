@@ -277,15 +277,22 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    params      Additional paramaters
     *   @param  {Function}  callback    A callback function
     */
-    this.ctcp = function (connection_id, request, type, target, params, callback) {
+    this.ctcp = function (connection_id, is_request, type, target, params, callback) {
         var args = {
-            request: request,
+            is_request: is_request,
             type: type,
             target: target,
             params: params
         };
 
         this.rpcCall('irc.ctcp', connection_id, args, callback);
+    };
+
+    this.ctcpRequest = function (connection_id, type, target, params, callback) {
+        this.ctcp(connection_id, true, type, target, params, callback);
+    };
+    this.ctcpResponse = function (connection_id, type, target, params, callback) {
+        this.ctcp(connection_id, false, type, target, params, callback);
     };
 
     /**

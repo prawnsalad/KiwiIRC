@@ -122,7 +122,7 @@ var listeners = {
 
     ctcp: function (irc_connection, callback, args) {
         if ((args.target) && (args.type)) {
-            if (args.request) {
+            if (args.is_request) {
                 irc_connection.write('PRIVMSG ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1), callback);
             } else {
                 irc_connection.write('NOTICE ' + args.target + ' :' + String.fromCharCode(1) + args.type.toUpperCase() + ' ' + args.params + String.fromCharCode(1), callback);
