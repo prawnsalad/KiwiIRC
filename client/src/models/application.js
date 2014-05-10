@@ -478,14 +478,6 @@
             _.each(fn_to_bind, function(fn, event_name) {
                 controlbox.on(event_name, _.bind(fn, that));
             });
-        },
-
-
-        isChannelName: function (channel_name) {
-            var channel_prefix = _kiwi.gateway.get('channel_prefix');
-
-            if (!channel_name || !channel_name.length) return false;
-            return (channel_prefix.indexOf(channel_name[0]) > -1);
         }
     });
 
@@ -579,7 +571,7 @@
 
         if (ev.params.length === 0) return;
 
-        if (this.isChannelName(ev.params[0])) {
+        if (this.connections.active_connection.isChannelName(ev.params[0])) {
             channel_name = ev.params[0];
             ev.params.shift();
         } else {
