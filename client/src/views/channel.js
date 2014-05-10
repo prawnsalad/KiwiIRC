@@ -59,7 +59,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             time_difference,
             sb = this.model.get('scrollback'),
             prev_msg = sb[sb.length-2],
-            network, hour, pm;
+            network, hour, pm, extra_space = '';
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
@@ -74,7 +74,10 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if ((network = this.model.get('network'))) {
             re = new RegExp('(?:^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
             msg.msg = msg.msg.replace(re, function (match) {
-                return '<a class="chan" data-channel="' + _.escape(match.trim()) + '">' + _.escape(match.trim()) + '</a>';
+                if(match.match(/^\s+/g)) {
+                    extra_space = ' ';
+                }
+                return extra_space + '<a class="chan" data-channel="' + _.escape(match.trim()) + '">' + _.escape(match.trim()) + '</a>';
             });
         }
 
