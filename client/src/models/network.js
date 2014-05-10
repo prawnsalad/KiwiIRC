@@ -400,7 +400,7 @@
 
     function onMsg(event) {
         var panel,
-            is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
+            is_pm = (event.target.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
         if (this.isNickIgnored(event.nick)) {
@@ -418,7 +418,7 @@
         } else {
             // If a panel isn't found for this channel, reroute to the
             // server panel
-            panel = this.panels.getByName(event.channel);
+            panel = this.panels.getByName(event.target);
             if (!panel) {
                 panel = this.panels.server;
             }
@@ -517,7 +517,7 @@
 
     function onAction(event) {
         var panel,
-            is_pm = (event.channel.toLowerCase() == this.get('nick').toLowerCase());
+            is_pm = (event.target.toLowerCase() == this.get('nick').toLowerCase());
 
         // An ignored user? don't do anything with it
         if (this.isNickIgnored(event.nick)) {
@@ -535,7 +535,7 @@
         } else {
             // If a panel isn't found for this channel, reroute to the
             // server panel
-            panel = this.panels.getByName(event.channel);
+            panel = this.panels.getByName(event.target);
             if (!panel) {
                 panel = this.panels.server;
             }

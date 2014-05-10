@@ -525,7 +525,7 @@ handlers = {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,
-                channel: command.params[0],
+                target: command.params[0],
                 msg: msg.substring(1, msg.length - 1),
                 time: time
             });
@@ -619,7 +619,7 @@ handlers = {
                     nick: command.nick,
                     ident: command.ident,
                     hostname: command.hostname,
-                    channel: command.params[0],
+                    target: command.params[0],
                     msg: msg.substring(8, msg.length - 1),
                     time: time
                 });
@@ -643,8 +643,11 @@ handlers = {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));
 
             } else {
-                namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase()) ? 'user' : 'channel';
-                this.irc_connection.emit(namespace + ' ' + command.nick + ' ctcp_request', {
+                namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase()) ?
+                    'user ' + command.nick :
+                    'channel ' + command.params[0];
+
+                this.irc_connection.emit(namespace + ' ctcp_request', {
                     nick: command.nick,
                     ident: command.ident,
                     hostname: command.hostname,
@@ -661,7 +664,7 @@ handlers = {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,
-                channel: command.params[0],
+                target: command.params[0],
                 msg: msg,
                 time: time
             });

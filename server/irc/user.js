@@ -243,7 +243,7 @@ function onCtcpResponse(event) {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        channel: event.channel,
+        target: event.target,
         msg: event.msg,
         time: event.time
     });
@@ -261,7 +261,7 @@ function onPrivmsg(event) {
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
-            channel: event.channel,
+            target: event.target,
             msg: event.msg,
             time: event.time
         });
@@ -280,7 +280,7 @@ function onAction(event) {
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
-            channel: event.channel,
+            target: event.target,
             msg: event.msg,
             time: event.time
         });

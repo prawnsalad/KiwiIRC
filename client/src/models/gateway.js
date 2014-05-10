@@ -34,9 +34,9 @@ _kiwi.model.Gateway = function () {
         this.on('onmsg', function (event) {
             var source,
                 connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.channel.toLowerCase() == connection.get('nick').toLowerCase());
+                is_pm = (event.target.toLowerCase() == connection.get('nick').toLowerCase());
 
-            source = is_pm ? event.nick : event.channel;
+            source = is_pm ? event.nick : event.target;
 
             that.trigger('message:' + source, event);
             that.trigger('message', event);
@@ -60,9 +60,9 @@ _kiwi.model.Gateway = function () {
         this.on('onaction', function (event) {
             var source,
                 connection = _kiwi.app.connections.getByConnectionId(event.server),
-                is_pm = (event.channel.toLowerCase() == connection.get('nick').toLowerCase());
+                is_pm = (event.target.toLowerCase() == connection.get('nick').toLowerCase());
 
-            source = is_pm ? event.nick : event.channel;
+            source = is_pm ? event.nick : event.target;
 
             that.trigger('action:' + source, event);
 
