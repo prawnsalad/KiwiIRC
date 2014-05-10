@@ -18,12 +18,7 @@ _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
     settings: undefined, // Instance of _kiwi.model.DataStore
     plugins: undefined,
-    utils: undefined, // TODO: Re-usable methods
-    user: undefined, // TODO: Limited user methods
-    server: undefined, // TODO: Limited server methods
-
-    // TODO: think of a better term for this as it will also refer to queries
-    channels: undefined, // TODO: Limited access to panels list
+    utils: {}, // TODO: Re-usable methods
 
     addMediaMessageType: function(match, buildHtml) {
         _kiwi.view.MediaMessage.addType(match, buildHtml);
