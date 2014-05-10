@@ -275,8 +275,8 @@ _kiwi.model.Gateway = function () {
 
 
         // Trigger the connection specific events (used by Network objects)
-        if (typeof data.server !== 'undefined') {
-            that.trigger('connection:' + data.server.toString(), {
+        if (typeof data.connection_id !== 'undefined') {
+            that.trigger('connection:' + data.connection_id.toString(), {
                 event_name: command,
                 event_data: data
             });

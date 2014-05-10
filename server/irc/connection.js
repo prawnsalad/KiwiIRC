@@ -308,7 +308,7 @@ IrcConnection.prototype.connect = function () {
  * Send an event to the client
  */
 IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
-    data.server = this.con_num;
+    data.connection_id = this.con_num;
     this.state.sendIrcCommand(event_name, data, callback);
 };
 
