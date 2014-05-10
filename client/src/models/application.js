@@ -635,7 +635,7 @@
         type = ev.params[0];
         ev.params.shift();
 
-        this.connections.active_connection.gateway.ctcp(true, type, target, ev.params.join(' '));
+        this.connections.active_connection.gateway.ctcpRequest(type, target, ev.params.join(' '));
     }
 
     function settingsCommand (ev) {
