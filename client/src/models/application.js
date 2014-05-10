@@ -792,7 +792,7 @@
         // Use the same nick as we currently have
         nick = _kiwi.app.connections.active_connection.get('nick');
 
-        _kiwi.app.panels().active.addMsg('', styleText('client_models_application_connection_connecting', {text: translateText('client_models_application_connection_connecting', [server, port.toString()])}));
+        _kiwi.app.panels().active.addMsg('', styleText('server_connecting', {text: translateText('client_models_application_connection_connecting', [server, port.toString()])}));
 
         _kiwi.gateway.newConnection({
             nick: nick,
@@ -802,7 +802,7 @@
             password: password
         }, function(err, new_connection) {
             if (err)
-                _kiwi.app.panels().active.addMsg('', styleText('client_models_application_connection_error', {text: translateText('client_models_application_connection_error', [server, port.toString(), err.toString()])}));
+                _kiwi.app.panels().active.addMsg('', styleText('server_connecting_error', {text: translateText('client_models_application_connection_error', [server, port.toString(), err.toString()])}));
         });
     }
 
