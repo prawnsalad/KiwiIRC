@@ -174,7 +174,7 @@ _kiwi.model.Gateway = function () {
         if (connection_info.options.encoding)
             server_info.encoding = connection_info.options.encoding;
 
-        this.rpc.call('kiwi.connect', server_info, function (err, server_num) {
+        this.rpc.call('kiwi.connect_irc', server_info, function (err, server_num) {
             if (!err) {
                 callback_fn && callback_fn(err, server_num);
 

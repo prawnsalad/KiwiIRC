@@ -83,7 +83,7 @@ Client.prototype.dispose = function () {
 Client.prototype.attachKiwiCommands = function() {
     var that = this;
 
-    this.rpc.on('kiwi.connect', function(callback, command) {
+    this.rpc.on('kiwi.connect_irc', function(callback, command) {
         if (command.hostname && command.port && command.nick) {
             var options = {};
 
