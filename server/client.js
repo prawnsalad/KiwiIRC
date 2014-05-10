@@ -85,14 +85,14 @@ function handleClientMessage(msg, callback) {
         server;
 
     // Make sure we have a server number specified
-    if ((msg.server === null) || (typeof msg.server !== 'number')) {
+    if ((msg.connection_id === null) || (typeof msg.connection_id !== 'number')) {
         return (typeof callback === 'function') ? callback('server not specified') : undefined;
-    } else if (!this.state.irc_connections[msg.server]) {
+    } else if (!this.state.irc_connections[msg.connection_id]) {
         return (typeof callback === 'function') ? callback('not connected to server') : undefined;
     }
 
     // The server this command is directed to
-    server = this.state.irc_connections[msg.server];
+    server = this.state.irc_connections[msg.connection_id];
 
     if (typeof callback !== 'function') {
         callback = null;

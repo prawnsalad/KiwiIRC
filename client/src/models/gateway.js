@@ -297,7 +297,7 @@ _kiwi.model.Gateway = function () {
             connection_id = _kiwi.app.connections.active_connection.get('connection_id');
 
         var data_buffer = {
-            server: connection_id,
+            connection_id: connection_id,
             data: JSON.stringify(data)
         };
         this.rpc.call('irc', data_buffer, callback);
