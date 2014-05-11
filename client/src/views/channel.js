@@ -59,7 +59,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             time_difference,
             sb = this.model.get('scrollback'),
             prev_msg = sb[sb.length-2],
-            network, hour, pm, extra_space = '';
+            network, hour, pm;
 
         // Nick highlight detecting
         if ((new RegExp('(^|\\W)(' + escapeRegex(_kiwi.app.connections.active_connection.get('nick')) + ')(\\W|$)', 'i')).test(msg.msg)) {
@@ -72,12 +72,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Make the channels clickable
         if ((network = this.model.get('network'))) {
-            re = new RegExp('(?:^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
-            msg.msg = msg.msg.replace(re, function (match) {
-                if(match.match(/^\s+/g)) {
-                    extra_space = ' ';
-                }
-                return extra_space + '<a class="chan" data-channel="' + _.escape(match.trim()) + '">' + _.escape(match.trim()) + '</a>';
+            re = new RegExp('(^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
+            msg.msg = msg.msg.replace(re, function (m1, m2) {
+                return m2 + '<a class="chan" data-channel="' + _.escape(m1.trim()) + '">' + _.escape(m1.trim()) + '</a>';
             });
         }
 
