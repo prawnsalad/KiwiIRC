@@ -77,7 +77,7 @@
             //this.panels.network = this;
 
             // Automatically create a server tab
-            var server_panel = new _kiwi.model.Server({name: 'Server'});
+            var server_panel = new _kiwi.model.Server({name: 'Server', network: this});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
         },
@@ -411,7 +411,7 @@
             // If a panel isn't found for this PM, create one
             panel = this.panels.getByName(event.nick);
             if (!panel) {
-                panel = new _kiwi.model.Query({name: event.nick});
+                panel = new _kiwi.model.Query({name: event.nick, network: this});
                 this.panels.add(panel);
             }
 
