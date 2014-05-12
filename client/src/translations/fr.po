@@ -108,6 +108,10 @@ msgstr "Chargement..."
 msgid "client_models_applet_notfound"
 msgstr "Introuvable."
 
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "a été invité à rejoindre %s"
+
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
 msgstr "Vous avez été déconnecté. Tentative de reconnexion en cours."
@@ -178,15 +182,15 @@ msgstr "Erreur de connexion à %s:%s (%s)."
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s a rejoint"
+msgstr "a rejoint"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s a quitté %s"
+msgstr "a quitté %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s a été expulsé par %s : %s"
+msgstr "a été expulsé par %s : %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +198,11 @@ msgstr "Vous avez été expulsé par %s : %s."
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s est parti du canal %s"
+msgstr "est parti du canal %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s n'est pas un nom de canal valide."
+msgstr "n'est pas un nom de canal valide."
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +210,7 @@ msgstr "Déconnecté du réseau IRC."
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s est désormais connu comme %s"
+msgstr "est désormais connu comme %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +218,11 @@ msgstr "Sujet défini par %s le %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s a modifié les modes : %s"
+msgstr "a modifié les modes : %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s a modifié les modes : %s"
+msgstr "a modifié les modes : %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +258,15 @@ msgstr "Mauvaise clef pour le canal %s."
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s est sur invitation uniquement."
+msgstr "est sur invitation uniquement."
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "est déjà sur le salon"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s est rempli."
+msgstr "est rempli."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

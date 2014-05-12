@@ -79,9 +79,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Make the channels clickable
         if ((network = this.model.get('network'))) {
-            re = new RegExp('(?:^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
-            msg.msg = msg.msg.replace(re, function (match) {
-                return '<a class="chan" data-channel="' + _.escape(match.trim()) + '">' + _.escape(match.trim()) + '</a>';
+            re = new RegExp('(^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
+            msg.msg = msg.msg.replace(re, function (m1, m2) {
+                return m2 + '<a class="chan" data-channel="' + _.escape(m1.trim()) + '">' + _.escape(m1.trim()) + '</a>';
             });
         }
 
@@ -250,7 +250,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             topic = this.model.get("topic");
         }
 
-        this.model.addMsg('', '== ' + _kiwi.global.i18n.translate('client_views_channel_topic').fetch(this.model.get('name'), topic), 'topic');
+        this.model.addMsg('', styleText('channel_topic', {text: translateText('client_views_channel_topic', [this.model.get('name'), topic]), channel: this.model.get('name')}), 'topic');
 
         // If this is the active channel then update the topic bar
         if (_kiwi.app.panels().active === this) {

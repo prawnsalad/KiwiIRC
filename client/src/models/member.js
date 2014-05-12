@@ -134,6 +134,7 @@ _kiwi.model.Member = Backbone.Model.extend({
     },
 
 
+
     /**
      * Format this nick into readable format (eg. nick [ident@hostname])
      */
@@ -147,6 +148,16 @@ _kiwi.model.Member = Backbone.Model.extend({
         }
 
         return display;
+    },
+
+
+    // Helper to quickly get user mask details
+    getMaskParts: function () {
+        return {
+            nick: this.get('nick') || '',
+            ident: this.get('ident') || '',
+            hostname: this.get('hostname') || ''
+        };
     },
 
 

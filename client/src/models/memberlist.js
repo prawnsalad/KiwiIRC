@@ -6,6 +6,7 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
 
         a_modes = a.get("modes");
         b_modes = b.get("modes");
+
         // Try to sort by modes first
         if (a_modes.length > 0) {
             // a has modes, but b doesn't so a should appear first

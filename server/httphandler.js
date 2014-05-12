@@ -1,6 +1,7 @@
 var url         = require('url'),
     fs          = require('fs'),
     node_static = require('node-static'),
+    Negotiator  = require('negotiator'),
     _           = require('lodash'),
     config      = require('./configuration.js'),
     SettingsGenerator = require('./settingsgenerator.js');
@@ -62,69 +63,48 @@ HttpHandler.prototype.serve = function (request, response) {
 };
 
 
+// Cached list of available translations
+var cached_available_locales = [];
+
+// Get a list of the available translations we have
+fs.readdir('client/assets/locales', function (err, files) {
+    files.forEach(function (file) {
+        if (file.substr(-5) === '.json') {
+            cached_available_locales.push(file.slice(0, -5));
+        }
+    });
+});
+
+
+
 /**
  * Handle the /assets/locales/magic.json request
  * Find the closest translation we have for the language
  * set in the browser.
  **/
 var serveMagicLocale = function (request, response) {
-    var that = this,
-        default_locale_id = 'en-gb';
+    var default_locale_id = 'en-gb',
+        found_locale, negotiator;
 
     if (!request.headers['accept-language']) {
         // No accept-language specified in the request so send the default
-        return serveLocale.call(this, request, response, default_locale_id);
+        found_locale = default_locale_id;
+
+    } else {
+        negotiator = new Negotiator(request);
+        found_locale = negotiator.language(cached_available_locales);
+
+        // If a locale couldn't be negotiated, use the default
+        found_locale = found_locale || default_locale_id;
     }
 
-    fs.readdir('client/assets/locales', function (err, files) {
-        var available = [],
-            i = 0,
-            langs = request.headers['accept-language'].split(','), // Example: en-gb,en;q=0.5
-            found_locale = default_locale_id;
-
-        // Get a list of the available translations we have
-        files.forEach(function (file) {
-            if (file.substr(-5) === '.json') {
-                available.push(file.slice(0, -5));
-            }
-        });
-
-        // Sanitise the browsers accepted languages and the qualities
-        for (i = 0; i < langs.length; i++) {
-            langs[i]= langs[i].split(';q=');
-            langs[i][0] = langs[i][0].toLowerCase();
-            langs[i][1] = (typeof langs[i][1] === 'string') ? parseFloat(langs[i][1]) : 1.0;
-        }
-
-        // Sort the accepted languages by quality
-        langs.sort(function (a, b) {
-            return b[1] - a[1];
-        });
-
-        // Serve the first language we have a translation for
-        for (i = 0; i < langs.length; i++) {
-            if (langs[i][0] === '*') {
-                break;
-            } else if (_.contains(available, langs[i][0])) {
-                found_locale = langs[i][0];
-                break;
-            }
-        }
-
-        return serveLocale.call(that, request, response, found_locale);
-    });
-};
-
-
-/**
- * Send a locale to the browser
- */
-var serveLocale = function (request, response, locale_id) {
-    this.file_server.serveFile('/assets/locales/' + locale_id + '.json', 200, {
+    // Send a locale to the browser
+    this.file_server.serveFile('/assets/locales/' + found_locale + '.json', 200, {
         Vary: 'Accept-Language',
-        'Content-Language': locale_id
+        'Content-Language': found_locale
     }, request, response);
 };
+
 
 
 /**

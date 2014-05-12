@@ -33,7 +33,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         var that = this;
 
         this.$el.empty();
-        
+
         if (this.is_network) {
             // Add the server tab first
             this.model.server.tab
@@ -77,7 +77,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         if (this.is_network)
             panel.tab.data('connection_id', this.model.network.get('connection_id'));
 
-        panel.tab.appendTo(this.$el);
+        this.sortTabs();
 
         panel.bind('change:title', this.updateTabTitle);
         panel.bind('change:name', this.updateTabTitle);
@@ -156,5 +156,34 @@ _kiwi.view.Tabs = Backbone.View.extend({
         } else {
             panel.close();
         }
+    },
+
+    sortTabs: function() {
+        var that = this,
+            panels = [];
+
+        this.model.forEach(function (panel) {
+            // Ignore the server tab, so all others get added after it
+            if (that.is_network && panel == that.model.server)
+                return;
+
+            panels.push([panel.get('title') || panel.get('name'), panel]);
+        });
+
+        // Sort by the panel name..
+        panels.sort(function(a, b) {
+            if (a[0].toLowerCase() > b[0].toLowerCase()) {
+                return 1;
+            } else if (a[0].toLowerCase() < b[0].toLowerCase()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        // And add them all back in order.
+        _.each(panels, function(panel) {
+            panel[1].tab.appendTo(that.$el);
+        });
     }
 });

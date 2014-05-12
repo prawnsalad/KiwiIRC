@@ -525,7 +525,7 @@ handlers = {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,
-                channel: command.params[0],
+                target: command.params[0],
                 msg: msg.substring(1, msg.length - 1),
                 time: time
             });
@@ -611,25 +611,29 @@ handlers = {
         if ((msg.charAt(0) === String.fromCharCode(1)) && (msg.charAt(msg.length - 1) === String.fromCharCode(1))) {
             //CTCP request
             if (msg.substr(1, 6) === 'ACTION') {
-                this.irc_connection.clientEvent('action', {
+                namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase()) ?
+                    'user ' + command.nick :
+                    'channel ' + command.params[0];
+
+                this.irc_connection.emit(namespace + ' action', {
                     nick: command.nick,
                     ident: command.ident,
                     hostname: command.hostname,
-                    channel: command.params[0],
+                    target: command.params[0],
                     msg: msg.substring(8, msg.length - 1),
                     time: time
                 });
-            } else if (msg.substr(1, 4) === 'KIWI') {
-                tmp = msg.substring(6, msg.length - 1);
-                namespace = tmp.split(' ', 1)[0];
-                this.irc_connection.clientEvent('kiwi', {
-                    namespace: namespace,
-                    data: tmp.substr(namespace.length + 1),
-                    time: time
-                });
+
             } else if (msg.substr(1, 7) === 'VERSION') {
-                client_info = this.irc_connection.state.client.client_info;
-                version_string = global.build_version;
+                // Todo: Get a list of all connect client versions?
+                if (this.irc_connection.state.clients[0]) {
+                    client_info = this.irc_connection.state.clients[0].client_info;
+                    version_string = global.build_version;
+                } else {
+                    // No client connected, so just keep to the server version
+                    client_info = {build_version: global.build_version};
+                    version_string = global.build_version;
+                }
 
                 // If the client build_version differs from the server, add this to the version_string
                 if (client_info && client_info.build_version !== global.build_version) {
@@ -637,15 +641,20 @@ handlers = {
                 }
 
                 version_string = 'KiwiIRC (' + version_string + ')';
-
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION ' + version_string + String.fromCharCode(1));
+
             } else if (msg.substr(1, 6) === 'SOURCE') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'SOURCE http://www.kiwiirc.com/' + String.fromCharCode(1));
+
             } else if (msg.substr(1, 10) === 'CLIENTINFO') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));
+
             } else {
-                namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase()) ? 'user' : 'channel';
-                this.irc_connection.emit(namespace + ' ' + command.nick + ' ctcp_request', {
+                namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase()) ?
+                    'user ' + command.nick :
+                    'channel ' + command.params[0];
+
+                this.irc_connection.emit(namespace + ' ctcp_request', {
                     nick: command.nick,
                     ident: command.ident,
                     hostname: command.hostname,
@@ -662,7 +671,7 @@ handlers = {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,
-                channel: command.params[0],
+                target: command.params[0],
                 msg: msg,
                 time: time
             });
@@ -985,10 +994,10 @@ handlers = {
         params.shift();
         genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
     },
-    
+
     RPL_HOSTCLOACKING: function (command) {
         genericNotice.call(this, command, command.params[1] + ' ' + command.params[command.params.length - 1]);
-    },    
+    },
 };
 
 
@@ -999,7 +1008,7 @@ function genericNotice (command, msg, is_error) {
     if (typeof is_error !== 'boolean')
         is_error = true;
 
-    this.irc_connection.clientEvent('notice', {
+    this.irc_connection.emit('user ' + command.prefix + ' notice', {
         from_server: true,
         nick: command.prefix,
         ident: '',

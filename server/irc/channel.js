@@ -18,6 +18,7 @@ var IrcChannel = function(irc_connection, name) {
         kick:           onKick,
         quit:           onQuit,
         privmsg:        onMsg,
+        action:         onAction,
         notice:         onNotice,
         ctcp_request:   onCtcpRequest,
         ctcp_response:  onCtcpResponse,
@@ -150,7 +151,28 @@ function onMsg(event) {
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
-            channel: that.name,
+            target: that.name,
+            msg: event.msg,
+            time: event.time
+        });
+    });
+}
+
+
+function onAction(event) {
+    var that = this;
+
+    global.modules.emit('irc action', {
+        channel: this,
+        connection: this.irc_connection,
+        irc_event: event
+    })
+    .done(function() {
+        that.irc_connection.clientEvent('action', {
+            nick: event.nick,
+            ident: event.ident,
+            hostname: event.hostname,
+            target: event.target,
             msg: event.msg,
             time: event.time
         });

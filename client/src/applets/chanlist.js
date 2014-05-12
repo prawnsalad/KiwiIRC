@@ -147,8 +147,8 @@
             this.view = new View();
 
             this.network = _kiwi.global.components.Network();
-            this.network.on('onlist_channel', this.onListChannel, this);
-            this.network.on('onlist_start', this.onListStart, this);
+            this.network.on('list_channel', this.onListChannel, this);
+            this.network.on('list_start', this.onListStart, this);
         },
 
 
