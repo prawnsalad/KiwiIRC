@@ -127,7 +127,7 @@ irc_numerics = {
     '442': 'ERR_NOTONCHANNEL',
     '443': 'ERR_USERONCHANNEL',
     '451': 'ERR_NOTREGISTERED',
-    '461': 'ERR_NOTENOUGHPARAMS',//
+    '461': 'ERR_NOTENOUGHPARAMS',
     '464': 'ERR_PASSWDMISMATCH',
     '470': 'ERR_LINKCHANNEL',
     '471': 'ERR_CHANNELISFULL',
@@ -143,7 +143,7 @@ irc_numerics = {
     '904': 'ERR_SASLNOTAUTHORISED',
     '906': 'ERR_SASLABORTED',
     '907': 'ERR_SASLALREADYAUTHED',
-    'WALLOPS': 'RPL_WALLOPS'//
+    'WALLOPS': 'RPL_WALLOPS'
 };
 
 
@@ -1437,8 +1437,8 @@ function genericNotice (command, msg, is_error) {
         is_error = true;
 
     this.irc_connection.emit('user ' + command.prefix + ' notice', {
-        from_server: false,
-        nick: 'Info',
+        from_server: true,
+        nick: command.prefix,
         ident: '',
         hostname: '',
         target: command.params[0],
