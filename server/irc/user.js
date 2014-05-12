@@ -22,6 +22,7 @@ var IrcUser = function (irc_connection, nick) {
         whoisaccount:   onWhoisAccount,
         whoishelpop:    onWhoisHelpOp,
         whoisbot:       onWhoisBot,
+        whoisswhois:    onWhoisSwhois,
         endofwhois:     onWhoisEnd,
         whowas:         onWhoWas,
         endofwhowas:    onWhoWasEnd,
@@ -180,6 +181,14 @@ function onWhoisHelpOp(event) {
 }
 
 function onWhoisBot(event) {
+    this.irc_connection.clientEvent('whois', {
+        nick: event.nick,
+        msg: event.msg,
+        end: false
+    });
+}
+
+function onWhoisSwhois(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         msg: event.msg,
