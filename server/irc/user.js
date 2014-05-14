@@ -29,6 +29,7 @@ var IrcUser = function (irc_connection, nick) {
         notice:         onNotice,
         ctcp_response:  onCtcpResponse,
         privmsg:        onPrivmsg,
+        action:         onAction,
         ctcp_request:   onCtcpRequest,
         mode:           onMode
     };
@@ -242,7 +243,7 @@ function onCtcpResponse(event) {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        channel: event.channel,
+        target: event.target,
         msg: event.msg,
         time: event.time
     });
@@ -260,7 +261,26 @@ function onPrivmsg(event) {
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
-            channel: event.channel,
+            target: event.target,
+            msg: event.msg,
+            time: event.time
+        });
+    });
+}
+
+function onAction(event) {
+    var that = this;
+
+    global.modules.emit('irc action', {
+        connection: this.irc_connection,
+        irc_event: event
+    })
+    .done(function() {
+        that.irc_connection.clientEvent('action', {
+            nick: event.nick,
+            ident: event.ident,
+            hostname: event.hostname,
+            target: event.target,
             msg: event.msg,
             time: event.time
         });

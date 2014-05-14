@@ -18,12 +18,7 @@ _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
     settings: undefined, // Instance of _kiwi.model.DataStore
     plugins: undefined,
-    utils: undefined, // TODO: Re-usable methods
-    user: undefined, // TODO: Limited user methods
-    server: undefined, // TODO: Limited server methods
-
-    // TODO: think of a better term for this as it will also refer to queries
-    channels: undefined, // TODO: Limited access to panels list
+    utils: {}, // TODO: Re-usable methods
 
     addMediaMessageType: function(match, buildHtml) {
         _kiwi.view.MediaMessage.addType(match, buildHtml);
@@ -70,6 +65,7 @@ _kiwi.global = {
             var funcs = {
                 kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
+                ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
                 notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
                 channelInfo: 'channelInfo', mode: 'mode'
             };
@@ -110,16 +106,11 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var continueStart, locale;
+        var jobs, locale, localeLoaded, textThemeLoaded, text_theme;
         opts = opts || {};
 
-        continueInit = function (locale, s, xhr) {
-            if (locale) {
-                _kiwi.global.i18n = new Jed(locale);
-            } else {
-                _kiwi.global.i18n = new Jed();
-            }
-
+        jobs = new JobManager();
+        jobs.onFinish(function(locale, s, xhr) {
             _kiwi.app = new _kiwi.model.Application(opts);
 
             // Start the client up
@@ -128,7 +119,23 @@ _kiwi.global = {
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
 
-            callback && callback();
+            callback();
+        });
+
+        textThemeLoaded = function(text_theme, s, xhr) {
+            opts.text_theme = text_theme;
+
+            jobs.finishJob('load_text_theme');
+        };
+
+        localeLoaded = function(locale, s, xhr) {
+            if (locale) {
+                _kiwi.global.i18n = new Jed(locale);
+            } else {
+                _kiwi.global.i18n = new Jed();
+            }
+
+            jobs.finishJob('load_locale');
         };
 
         // Set up the settings datastore
@@ -138,12 +145,17 @@ _kiwi.global = {
         // Set the window title
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
+        jobs.registerJob('load_locale');
         locale = _kiwi.global.settings.get('locale');
         if (!locale) {
-            $.getJSON(opts.base_path + '/assets/locales/magic.json', continueInit);
+            $.getJSON(opts.base_path + '/assets/locales/magic.json', localeLoaded);
         } else {
-            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueInit);
+            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', localeLoaded);
         }
+
+        jobs.registerJob('load_text_theme');
+        text_theme = opts.server_settings.client.settings.text_theme || 'default';
+        $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', textThemeLoaded);
     },
 
     start: function() {

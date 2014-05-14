@@ -26,6 +26,7 @@
     "iconv-lite": "0.2.11",
     "spdy": "1.19.1",
     "po2json": "0.2.3",
+    "negotiator": "0.4.3",
     "winston": "~0.7.2"
   },
   "engines": {

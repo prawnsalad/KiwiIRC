@@ -142,7 +142,7 @@ msgstr "ציין עבור איזה כינוי תרצה להפסיק להתעלם
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "%s הוסר מרשימת ההתעלמות"
+msgstr "הוסר מרשימת ההתעלמות"
 
 #: 
 msgid "client_models_application_applet_notfound"
@@ -178,15 +178,15 @@ msgstr "שגיאת התחברות אל %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s הצטרף"
+msgstr "הצטרף"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s יצא %s"
+msgstr "יצא %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s נזרק מהערוץ על ידי %s %s"
+msgstr "נזרק מהערוץ על ידי %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "נזרקת מהערוץ על ידי %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s עזב %s"
+msgstr "עזב %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s אינו שם ערוץ תקין"
+msgstr "אינו שם ערוץ תקין"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "נותקת מהשרת"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s נקרא כעת %s"
+msgstr "נקרא כעת %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "הכותרת עודכנה על ידי %s בשעה %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s הגדיר מצב %s"
+msgstr "הגדיר מצב %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s הגדיר מצב %s"
+msgstr "הגדיר מצב %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -258,7 +258,7 @@ msgstr "ערוץ %s מוגדר למוזמנים בלבד"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s מלא"
+msgstr "מלא"
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

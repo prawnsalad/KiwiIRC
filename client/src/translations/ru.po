@@ -178,15 +178,15 @@ msgstr "Ошибка подключения к %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s вошел на канал"
+msgstr "вошел на канал"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s отключился %s"
+msgstr "отключился %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s был кикнул %s %s"
+msgstr "был кикнул %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Вы были кикнуты %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s вышел с канала %s"
+msgstr "вышел с канала %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s не корректное название канала"
+msgstr "не корректное название канала"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Отключен от IRC-сети"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s сменил ник на %s"
+msgstr "сменил ник на %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Топик установил %s в %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s установил мод %s"
+msgstr "установил мод %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s установлены моды %s"
+msgstr "установлены моды %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Не верный ключ для %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s только по приглашениям"
+msgstr "только по приглашениям"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s полный"
+msgstr "полный"
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"

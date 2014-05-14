@@ -178,27 +178,27 @@ msgstr "Eroare de conectare la %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s a intrat"
+msgstr "a intrat"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s a ieșit din chat %s"
+msgstr "a ieșit din chat %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s a fost dat afară de %s %s"
+msgstr "a fost dat afară de %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "%s te-a dat afară %s"
+msgstr "te-a dat afară %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s a ieșit din %s"
+msgstr "a ieșit din %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s nu este un nume valid de canal"
+msgstr "nu este un nume valid de canal"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Conexiunea cu rețeaua IRC a fost terminată"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s se numește acum %s"
+msgstr "se numește acum %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Topic stabilit de %s la %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s setează modul %s"
+msgstr "setează modul %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s setează modul %s"
+msgstr "setează modul %s"
 
 #: 
 msgid "client_models_network_channels"

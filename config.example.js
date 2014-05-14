@@ -55,6 +55,10 @@ conf.identd = {
 // Where the client files are
 conf.public_http = "client/";
 
+// Transports available to the client.
+// Behind an Apache reverse proxy? Uncomment the below - Apache does not support websockets!
+//conf.client_transports = ['polling'];
+
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
@@ -178,6 +182,7 @@ conf.client = {
     nick:    'kiwi_?',
     settings: {
         theme: 'relaxed',
+        text_theme: 'default',
         channel_list_style: 'tabs',
         scrollback: 250,
         show_joins_parts: true,

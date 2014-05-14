@@ -149,6 +149,10 @@ msgid "client_models_application_applet_notfound"
 msgstr "Applet \"%s\" does not exist"
 
 #: 
+msgid "client_models_application_has_been_invited"
+msgstr "has been invited to %s"
+
+#: 
 msgid "client_models_application_encoding_changed"
 msgstr "Encoding modified to %s"
 
@@ -178,15 +182,15 @@ msgstr "Error connecting to %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s has joined"
+msgstr "has joined"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s has quit %s"
+msgstr "has quit %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s was kicked by %s %s"
+msgstr "was kicked by %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +198,11 @@ msgstr "You have been kicked by %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s has left %s"
+msgstr "has left %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s is not a valid channel name"
+msgstr "is not a valid channel name"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +210,7 @@ msgstr "Disconnected from the IRC network"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s is now known as %s"
+msgstr "is now known as %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +218,11 @@ msgstr "Topic set by %s at %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s sets mode %s"
+msgstr "sets mode %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s set mode %s"
+msgstr "set mode %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +258,15 @@ msgstr "Bad channel key for %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s is invite only."
+msgstr "is invite only."
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "is already on this channel"
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s is full."
+msgstr "is full."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
