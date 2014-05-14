@@ -1417,12 +1417,12 @@ handlers = {
     },
 
     RPL_WALLOPS: function (command) {
-        this.irc_connection.emit('user ' + this.irc_connection.event.split(' ')[1] + ' notice', {
+        this.irc_connection.emit('user ' + this.irc_connection.nick + ' notice', {
             from_server: false,
-            nick: 'WALLOPS:&nbsp;' + command.nick,
+            nick: 'WALLOPS: ' + command.nick,
             ident: command.ident,
             hostname: command.hostname,
-            target: this.irc_connection.event.split(' ')[1],
+            target: this.irc_connection.nick,
             msg: command.params[command.params.length - 1]
         });
     },
