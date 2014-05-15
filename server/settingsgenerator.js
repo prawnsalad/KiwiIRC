@@ -221,7 +221,8 @@ function addScripts(vars, debug) {
             'src/models/pluginmanager.js',
             'src/models/datastore.js',
             'src/helpers/utils.js',
-            'src/helpers/formatdate.js'
+            'src/helpers/formatdate.js',
+            'src/helpers/plugininterface.js'
         ],
 
         // Some views extend these, so make sure they're loaded beforehand
