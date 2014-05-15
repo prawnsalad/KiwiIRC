@@ -295,6 +295,7 @@ _kiwi.model.Gateway = function () {
         this.ctcp(connection_id, false, type, target, params, callback);
     };
 
+
     /**
     *   @param  {String}    target      The target of the message (e.g. a channel or nick)
     *   @param  {String}    msg         The message to send
@@ -439,6 +440,22 @@ _kiwi.model.Gateway = function () {
         };
 
         this.rpcCall('irc.encoding', connection_id, args, callback);
+    };
+
+    /**
+    *   Sends a Wallops message
+    *   @param  {String}    target      The target of the message
+    *   @param  {String}    msg         The message to send
+    *   @param  {Function}  callback    A callback function
+    */
+    this.wallops = function (connection_id, target, msg, callback) {
+        console.log(target);
+        var args = {
+            target: target,
+            msg: msg
+        };
+
+        this.rpcCall('irc.wallops', connection_id, args, callback);
     };
 
 

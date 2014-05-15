@@ -32,7 +32,8 @@ var IrcUser = function (irc_connection, nick) {
         privmsg:        onPrivmsg,
         action:         onAction,
         ctcp_request:   onCtcpRequest,
-        mode:           onMode
+        mode:           onMode,
+        wallops:        onWallops
     };
     EventBinder.bindIrcEvents('user ' + this.nick, this.irc_events, this, irc_connection);
 };
@@ -313,6 +314,17 @@ function onMode(event) {
         target: event.target,
         nick: event.nick,
         modes: event.modes,
+        time: event.time
+    });
+}
+
+function onWallops(event) {
+    this.irc_connection.clientEvent('wallops', {
+        nick: event.nick,
+        ident: event.ident,
+        hostname: event.hostname,
+        target: event.target,
+        msg: event.msg,
         time: event.time
     });
 }

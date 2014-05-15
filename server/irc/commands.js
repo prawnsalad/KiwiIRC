@@ -1417,9 +1417,9 @@ handlers = {
     },
 
     RPL_WALLOPS: function (command) {
-        this.irc_connection.emit('user ' + this.irc_connection.nick + ' notice', {
+        this.irc_connection.emit('user ' + this.irc_connection.nick + ' wallops', {
             from_server: false,
-            nick: 'WALLOPS: ' + command.nick,
+            nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
             target: this.irc_connection.nick,

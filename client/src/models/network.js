@@ -148,6 +148,7 @@
             this.gateway.on('irc_error', onIrcError, this);
             this.gateway.on('unknown_command', onUnknownCommand, this);
             this.gateway.on('channel_info', onChannelInfo, this);
+            this.gateway.on('wallops', onWallops, this);
         },
 
 
@@ -868,6 +869,24 @@
 
         this.panels.server.addMsg('', styleText('unknown_command', {text: '[' + event.command + '] ' + display_params.join(', ', '')}));
     }
+
+
+    function onWallops(event) {
+        var panel, active_panel;
+
+        panel = this.panels.server;
+
+        panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+
+        // Show wallops to the active panel if it's channel or query window
+        active_panel = _kiwi.app.panels().active;
+
+        if (active_panel !== panel) {
+            if (active_panel.isChannel() || active_panel.isQuery())
+            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+        }
+    }
+
 }
 
 )();
