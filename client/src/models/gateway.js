@@ -449,7 +449,6 @@ _kiwi.model.Gateway = function () {
     *   @param  {Function}  callback    A callback function
     */
     this.wallops = function (connection_id, target, msg, callback) {
-        console.log(target);
         var args = {
             target: target,
             msg: msg
