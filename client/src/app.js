@@ -17,7 +17,8 @@ _kiwi.applets = {};
 _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
     settings: undefined, // Instance of _kiwi.model.DataStore
-    plugins: undefined,
+    plugins: undefined, // Instance of _kiwi.model.PluginManager
+    events: undefined, // Instance of PluginInterface
     utils: {}, // TODO: Re-usable methods
 
     addMediaMessageType: function(match, buildHtml) {
@@ -115,6 +116,9 @@ _kiwi.global = {
 
             // Start the client up
             _kiwi.app.initializeInterfaces();
+
+            // Event emitter to let plugins interface with parts of kiwi
+            _kiwi.global.events  = new PluginInterface();
 
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
