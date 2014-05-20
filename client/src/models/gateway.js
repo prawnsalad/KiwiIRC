@@ -428,7 +428,6 @@ _kiwi.model.Gateway = function () {
         this.rpcCall('irc.raw', connection_id, args, callback);
     };
 
-
     /**
      *  Sends ENCODING change request to server.
      *  @param  {String}     new_encoding  The new proposed encode
@@ -441,22 +440,7 @@ _kiwi.model.Gateway = function () {
 
         this.rpcCall('irc.encoding', connection_id, args, callback);
     };
-
-    /**
-    *   Sends a Wallops message
-    *   @param  {String}    target      The target of the message
-    *   @param  {String}    msg         The message to send
-    *   @param  {Function}  callback    A callback function
-    */
-    this.wallops = function (connection_id, target, msg, callback) {
-        var args = {
-            target: target,
-            msg: msg
-        };
-
-        this.rpcCall('irc.wallops', connection_id, args, callback);
-    };
-
+    
 
     return new (Backbone.Model.extend(this))(arguments);
 };

@@ -323,7 +323,6 @@ function onWallops(event) {
         nick: event.nick,
         ident: event.ident,
         hostname: event.hostname,
-        target: event.target,
         msg: event.msg,
         time: event.time
     });

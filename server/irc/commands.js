@@ -1422,7 +1422,6 @@ handlers = {
             nick: command.nick,
             ident: command.ident,
             hostname: command.hostname,
-            target: this.irc_connection.nick,
             msg: command.params[command.params.length - 1]
         });
     },
