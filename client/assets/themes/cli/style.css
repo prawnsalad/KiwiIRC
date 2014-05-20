@@ -126,6 +126,19 @@
     transition: color 0.3s;
     color: #88C56A;
 }
+#kiwi .membercount {
+    border-bottom: 1px solid #8A8A8A;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    padding: 0 0 5%;
+    text-align: center;
+}
+#kiwi .membercount span {
+    display: none;
+}
+#kiwi .membercount span.active {
+    display: block;
+}
 
 #kiwi .messages .msg > div { color:#6d6d6d; font-family: Inconsolata, Consolas, 'courier new', monospace; }
 #kiwi .messages .msg { border: none; padding: 2px 5px; }
