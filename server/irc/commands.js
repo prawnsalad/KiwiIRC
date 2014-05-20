@@ -131,11 +131,16 @@ irc_numerics = {
     '464': 'ERR_PASSWDMISMATCH',
     '470': 'ERR_LINKCHANNEL',
     '471': 'ERR_CHANNELISFULL',
+    '472': 'ERR_UNKNOWNMODE',
     '473': 'ERR_INVITEONLYCHAN',
     '474': 'ERR_BANNEDFROMCHAN',
     '475': 'ERR_BADCHANNELKEY',
     '481': 'ERR_NOPRIVILEGES',
     '482': 'ERR_CHANOPRIVSNEEDED',
+    '483': 'ERR_CANTKILLSERVER',
+    '484': 'ERR_ISCHANSERVICE',
+    '485': 'ERR_ISREALSERVICE',
+    '491': 'ERR_NOOPERHOST',
     '670': 'RPL_STARTTLS',
     '671': 'RPL_WHOISSECURE',
     '900': 'RPL_SASLAUTHENTICATED',
@@ -143,6 +148,7 @@ irc_numerics = {
     '904': 'ERR_SASLNOTAUTHORISED',
     '906': 'ERR_SASLABORTED',
     '907': 'ERR_SASLALREADYAUTHED',
+    '972': 'ERR_CANNOTDOCOMMAND',
     'WALLOPS': 'RPL_WALLOPS'
 };
 
@@ -1424,6 +1430,41 @@ handlers = {
             hostname: command.hostname,
             msg: command.params[command.params.length - 1]
         });
+    },
+
+    ERR_NOOPERHOST: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    ERR_UNKNOWNMODE: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    ERR_CANTKILLSERVER: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    ERR_ISCHANSERVICE: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    ERR_ISREALSERVICE: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+    ERR_CANNOTDOCOMMAND: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
     },
 };
 

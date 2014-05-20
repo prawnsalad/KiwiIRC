@@ -872,19 +872,11 @@
 
 
     function onWallops(event) {
-        var panel, active_panel;
-
-        panel = this.panels.server;
-
-        panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
-
-        // Show wallops to the active panel if it's channel or query window
-        active_panel = _kiwi.app.panels().active;
-
-        if (active_panel !== panel) {
-            if (active_panel.isChannel() || active_panel.isQuery())
+        // Send to server panel
+        this.panels.server.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+        // Send to active panel
+        if (_kiwi.app.panels().active !== this.panels.server) 
             _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
-        }
     }
 
 }
