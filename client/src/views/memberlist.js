@@ -12,10 +12,20 @@ _kiwi.view.MemberList = Backbone.View.extend({
     render: function () {
         var $this = this.$el;
         $this.empty();
+        
         this.model.forEach(function (member) {
             member.view.$el.data('member', member);
             $this.append(member.view.$el);
         });
+        
+        // User count
+        if(this.model.channel.cid === _kiwi.app.panels().active.cid) {
+            var members_count = this.model.length + ' ' + translateText('client_applets_chanlist_users');
+
+            $('#kiwi .membercount > span.' + this.model.channel.cid).text(members_count);
+            $('#kiwi .membercount > span.' + this.model.channel.cid).addClass('active');
+        }
+
         return this;
     },
     nickClick: function (event) {
@@ -74,5 +84,18 @@ _kiwi.view.MemberList = Backbone.View.extend({
     show: function () {
         $('#kiwi .memberlists').children().removeClass('active');
         $(this.el).addClass('active');
+
+        // User count
+        var members_count = this.model.length + ' ' + translateText('client_applets_chanlist_users');
+        var members_count_code = '<span class="' + this.model.channel.cid + '">';
+
+        $('#kiwi .membercount').children().removeClass('active');
+        // If the span for this panel doesn't exist, create it
+        if($('#kiwi .membercount > span.' + this.model.channel.cid).length == 0){
+            $(members_count_code).appendTo('#kiwi .membercount');
+        }
+
+        $('#kiwi .membercount > span.' + this.model.channel.cid).text(members_count);
+        $('#kiwi .membercount > span.' + this.model.channel.cid).addClass('active');
     }
 });

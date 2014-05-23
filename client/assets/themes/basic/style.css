@@ -87,6 +87,18 @@
     transition: color 0.3s;
     color: #88C56A;
 }
+#kiwi .membercount {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    padding: 0 0 5%;
+    text-align: center;
+}
+#kiwi .membercount span {
+    display: none;
+}
+#kiwi .membercount span.active {
+    display: block;
+}
 
 #kiwi .messages {  }
 #kiwi .messages.active { }
