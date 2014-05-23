@@ -218,7 +218,8 @@
                 });
 
 
-                gw.on('connect', function (event) {
+                // After the socket has connected, kiwi handshakes and then triggers a kiwi:connected event
+                gw.on('kiwi:connected', function (event) {
                     that.view.$el.addClass('connected');
                     if (gw_stat !== 1) return;
 
@@ -229,6 +230,8 @@
 
                     // Mention the re-connection on every channel
                     _kiwi.app.connections.forEach(function(connection) {
+                        connection.reconnect();
+
                         connection.panels.server.addMsg('', styleText('rejoin', {text: msg}), 'action join');
 
                         connection.panels.forEach(function(panel) {

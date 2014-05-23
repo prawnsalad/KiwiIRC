@@ -148,6 +148,7 @@
             this.gateway.on('irc_error', onIrcError, this);
             this.gateway.on('unknown_command', onUnknownCommand, this);
             this.gateway.on('channel_info', onChannelInfo, this);
+            this.gateway.on('wallops', onWallops, this);
         },
 
 
@@ -824,9 +825,9 @@
             panel.addMsg(' ', styleText('chanop_privs_needed', {text: event.reason, channel: event.channel}), 'status');
             _kiwi.app.message.text(event.reason + ' (' + event.channel + ')');
             break;
-	case 'cannot_send_to_channel':
+        case 'cannot_send_to_channel':
             panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Cannot send message to channel, you are not voiced').fetch(event.channel, event.reason), 'status');
-	    break;
+            break;
         case 'no_such_nick':
             tmp = this.panels.getByName(event.nick);
             if (tmp) {
@@ -868,6 +869,19 @@
 
         this.panels.server.addMsg('', styleText('unknown_command', {text: '[' + event.command + '] ' + display_params.join(', ', '')}));
     }
+
+
+    function onWallops(event) {
+        var active_panel = _kiwi.app.panels().active;
+
+        // Send to server panel
+        this.panels.server.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+
+        // Send to active panel if its a channel/query *and* it's related to this network
+        if (active_panel !== this.panels.server && (active_panel.isChannel() || active_panel.isQuery()) && active_panel.get('network') === this)
+            active_panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+    }
+
 }
 
 )();
