@@ -295,6 +295,7 @@ _kiwi.model.Gateway = function () {
         this.ctcp(connection_id, false, type, target, params, callback);
     };
 
+
     /**
     *   @param  {String}    target      The target of the message (e.g. a channel or nick)
     *   @param  {String}    msg         The message to send
@@ -427,7 +428,6 @@ _kiwi.model.Gateway = function () {
         this.rpcCall('irc.raw', connection_id, args, callback);
     };
 
-
     /**
      *  Sends ENCODING change request to server.
      *  @param  {String}     new_encoding  The new proposed encode
@@ -440,7 +440,7 @@ _kiwi.model.Gateway = function () {
 
         this.rpcCall('irc.encoding', connection_id, args, callback);
     };
-
+    
 
     return new (Backbone.Model.extend(this))(arguments);
 };
