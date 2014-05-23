@@ -68,7 +68,7 @@ _kiwi.global = {
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
                 ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
                 notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
-                channelInfo: 'channelInfo', mode: 'mode', wallops: 'wallops'
+                channelInfo: 'channelInfo', mode: 'mode'
             };
 
             // Proxy each gateway method
