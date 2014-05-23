@@ -195,9 +195,6 @@ _kiwi.model.Gateway = function () {
     this.parseKiwi = function (command, data) {
         var args;
 
-        this.trigger('kiwi:' + command, data);
-        this.trigger('kiwi', data);
-
         switch (command) {
         case 'connected':
             // Send some info on this client to the server
@@ -211,6 +208,9 @@ _kiwi.model.Gateway = function () {
 
             break;
         }
+
+        this.trigger('kiwi:' + command, data);
+        this.trigger('kiwi', data);
     };
 
     /**
