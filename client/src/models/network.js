@@ -872,11 +872,14 @@
 
 
     function onWallops(event) {
+        var active_panel = _kiwi.app.panels().active;
+
         // Send to server panel
         this.panels.server.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
-        // Send to active panel
-        if (_kiwi.app.panels().active !== this.panels.server) 
-            _kiwi.app.panels().active.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+
+        // Send to active panel if its a channel/query *and* it's related to this network
+        if (active_panel !== this.panels.server && (active_panel.isChannel() || active_panel.isQuery()) && active_panel.get('network') === this)
+            active_panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
     }
 
 }
