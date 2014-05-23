@@ -427,7 +427,6 @@ _kiwi.model.Gateway = function () {
         this.rpcCall('irc.raw', connection_id, args, callback);
     };
 
-
     /**
      *  Sends ENCODING change request to server.
      *  @param  {String}     new_encoding  The new proposed encode
