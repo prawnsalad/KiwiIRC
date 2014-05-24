@@ -47,13 +47,13 @@ html, body { height:100%; }
 }
 
 
-#kiwi .toolbar .tabs { margin-right: 200px; }
+#kiwi .toolbar .tabs { margin-right: 200px; overflow: hidden; }
 #kiwi .toolbar .panellist {
     overflow: hidden;
     display:block;
 }
 #kiwi .toolbar .panellist li {
-    float: left; list-style: inline;
+    float: left; list-style: none;
     display:inline; position:relative;
     padding:5px; margin:3px;
     cursor: pointer;
