@@ -116,9 +116,6 @@
 #kiwi .messages .msg .nick { width:11em; float:left; font-size:12px; font-family:Arial; text-align:right; padding: 5px; overflow:hidden; }
 #kiwi .messages .msg .text { display:block; margin-left:12em; border-left: 1px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:5px; }
 
-#kiwi.narrow .messages .msg .nick { width: auto; }
-#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
-
 #kiwi .messages .msg.action .nick { }
 #kiwi .messages .msg.action .text { color:#009900; border-left:none; font-style:italic; }
 #kiwi .messages .msg.action.join { color:#009900; }
@@ -146,10 +143,12 @@
 #kiwi .messages .msg.highlight { transition: background 0.3s; background:#D9D9D9; }
 #kiwi .messages .msg.repeated_nick .nick { visibility:hidden; }
 
-/* Narrow styling (window width < 400px) */
-#kiwi.narrow .messages .msg .nick { width: auto; }
-#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
-#kiwi.narrow .messages .msg.action .text { margin-left: 1em; }
+/* Narrow styling (window width < 420px) */
+#kiwi.narrow .messages .msg .time { display:none; }
+#kiwi.narrow .messages .msg .nick { display:block; float:none; text-align:left; padding-bottom:0;}
+#kiwi.narrow .messages .msg .text { display:block; white-space:pre-wrap; word-wrap:break-word; padding-top:0; margin:0;}
+#kiwi.narrow .messages .msg.action .text { }
+#kiwi.narrow .messages .msg.repeated_nick .nick { display:none; }
 
 
 #kiwi .messages .msg .media { margin-left:0.5em; }
