@@ -188,7 +188,9 @@
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
 }
-#kiwi.narrow .right_bar { display:none; }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
+
 #kiwi .memberlists ul { list-style: none; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
