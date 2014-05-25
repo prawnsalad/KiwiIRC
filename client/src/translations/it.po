@@ -278,7 +278,7 @@ msgstr "Il nickname “%s” è già in uso. Selezionare un altro nickname."
 
 #: 
 msgid "client_models_network_target_umodeg"
-msgstr "%s ha impostato il modo +g (Caller ID)."
+msgstr "ha impostato il modo +g (Caller ID)."
 
 #: 
 msgid "client_models_network_target_g_notify"
@@ -286,7 +286,7 @@ msgstr "%s ha ricevuto notifica del tuo messaggio, attendi di essere autorizzato
 
 #: 
 msgid "client_models_network_umode_g_msg"
-msgstr "%1$s ti ha inviato un messaggio privato, usermode +g attivo digita /accept +%1$s per accettare il messaggio"
+msgstr "ti ha inviato un messaggio privato, usermode +g attivo digita /accept +%s per accettare il messaggio"
 
 #: 
 msgid "client_models_network_badpassword"

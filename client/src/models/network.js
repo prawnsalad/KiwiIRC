@@ -803,7 +803,7 @@
   
         panel = _kiwi.app.panels().active;
         
-        panel.addMsg(' ', '== ' +  _kiwi.global.i18n.translate('client_models_network_umode_g_msg').fetch(event.nick), 'action');
+        panel.addMsg(event.nick, styleText('umode_g_msg', {nick: event.nick, text: translateText('client_models_network_umode_g_msg', [event.nick])}), 'action');
     }
 
 
@@ -863,10 +863,12 @@
 
             break;
         case 'targ_umodeg':
-            this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_target_umodeg').fetch( event.nick), 'status'); 
+            //this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_target_umodeg').fetch( event.nick), 'status'); 
+            this.panels.server.addMsg(event.nick, styleText('target_umodeg', {nick: event.nick, text: translateText('client_models_network_target_umodeg', [])}), 'status');
             break;
         case 'targ_notify':
-            this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_target_g_notify').fetch( event.nick), 'status');
+            //this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_target_g_notify').fetch( event.nick), 'status');
+            this.panels.server.addMsg(event.nick, styleText('target_g_notify', {nick: event.nick, text: translateText('client_models_network_target_g_notify', [event.nick])}), 'status');
             
             if (this.panels.server !== this.panels.active) {
                 _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_target_g_notify').fetch(event.nick));
