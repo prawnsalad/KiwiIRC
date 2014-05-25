@@ -15,6 +15,7 @@ irc_numerics = {
     '008': 'RPL_SNOMASK',
     '015': 'RPL_MAP',
     '017': 'RPL_MAPEND',
+    '042': 'RPL_YOURID',
     '200': 'RPL_TRACELINK',
     '201': 'RPL_TRACECONNECTING',
     '202': 'RPL_TRACEHANDSHAKE',
@@ -123,6 +124,7 @@ irc_numerics = {
     '423': 'ERR_NOADMININFO',
     '432': 'ERR_ERRONEUSNICKNAME',
     '433': 'ERR_NICKNAMEINUSE',
+    '439': 'ERR_TARGETTOFAST',
     '441': 'ERR_USERNOTINCHANNEL',
     '442': 'ERR_NOTONCHANNEL',
     '443': 'ERR_USERONCHANNEL',
@@ -143,11 +145,15 @@ irc_numerics = {
     '491': 'ERR_NOOPERHOST',
     '670': 'RPL_STARTTLS',
     '671': 'RPL_WHOISSECURE',
+    '716': 'RPL_TARGUMODEG',
+    '717': 'RPL_TARGNOTIFY',
+    '718': 'RPL_UMODEGMSG',
     '900': 'RPL_SASLAUTHENTICATED',
     '903': 'RPL_SASLLOGGEDIN',
     '904': 'ERR_SASLNOTAUTHORISED',
     '906': 'ERR_SASLABORTED',
     '907': 'ERR_SASLALREADYAUTHED',
+    '931': 'RPL_ANTISPAMBOT',
     '972': 'ERR_CANNOTDOCOMMAND',
     'WALLOPS': 'RPL_WALLOPS'
 };
@@ -353,6 +359,24 @@ handlers = {
             nick: command.params[1]
         });
     },
+
+    'RPL_TARGUMODEG': function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' targumodeg', {
+            nick: command.params[1]
+        });
+    },
+    
+    'RPL_TARGNOTIFY': function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' targnotify', {
+            nick: command.params[1]
+        });
+    },
+    
+    'RPL_UMODEGMSG': function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' umodegmsg', {
+            nick: command.params[1]
+        });
+    }, 
 
     'RPL_LISTSTART': function (command) {
         this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' list_start', {});
@@ -977,6 +1001,24 @@ handlers = {
         params.shift();
         genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
     },
+    
+    RPL_MYINFO: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_ANTISPAMBOT: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_YOURID: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
 
     RPL_LINKS: function (command) {
         var params = _.clone(command.params);
@@ -997,6 +1039,12 @@ handlers = {
     },
 
     ERR_NOMOTD: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        genericNotice.call(this, command, command.params[command.params.length - 1]);
+    },
+
+    ERR_TARGETTOFAST: function (command) {
         var params = _.clone(command.params);
         params.shift();
         genericNotice.call(this, command, command.params[command.params.length - 1]);
