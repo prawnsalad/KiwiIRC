@@ -1,5 +1,5 @@
 _kiwi.view.MemberList = Backbone.View.extend({
-    tagName: "ul",
+    tagName: "div",
     events: {
         "click .nick": "nickClick",
         "click .channel_info": "channelInfoClick"
@@ -7,17 +7,36 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
     initialize: function (options) {
         this.model.bind('all', this.render, this);
-        $(this.el).appendTo('#kiwi .memberlists');
+        this.$el.appendTo('#kiwi .memberlists');
+
+        // Holds meta data. User counts, etc
+        this.$meta = $('<div class="meta"></div>').appendTo(this.$el);
+
+        // The list for holding the nicks
+        this.$list = $('<ul></ul>').appendTo(this.$el);
     },
     render: function () {
-        var $this = this.$el;
-        $this.empty();
+        var that = this;
+
+        this.$list.empty();
         this.model.forEach(function (member) {
             member.view.$el.data('member', member);
-            $this.append(member.view.$el);
+            that.$list.append(member.view.$el);
         });
+
+        // User count
+        if(this.model.channel.isActive()) {
+            this.renderMeta();
+        }
+
         return this;
     },
+
+    renderMeta: function() {
+        var members_count = this.model.length + ' ' + translateText('client_applets_chanlist_users');
+        this.$meta.text(members_count);
+    },
+
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member'),
@@ -74,5 +93,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
     show: function () {
         $('#kiwi .memberlists').children().removeClass('active');
         $(this.el).addClass('active');
+
+        this.renderMeta();
     }
 });
