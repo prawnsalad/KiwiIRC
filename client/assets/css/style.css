@@ -149,8 +149,8 @@ html, body { height:100%; }
 }
 
 /* The active channels nicklist */
-#kiwi .memberlists ul { display:none; }
-#kiwi .memberlists ul.active { display:block; }
+#kiwi .memberlists > div { display:none; }
+#kiwi .memberlists > div.active { display:block; }
 #kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
 #kiwi .memberlists ul li a.nick { }
 
