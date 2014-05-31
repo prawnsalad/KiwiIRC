@@ -20,6 +20,9 @@ _kiwi.global = {
     plugins: undefined, // Instance of _kiwi.model.PluginManager
     events: undefined, // Instance of PluginInterface
     utils: {}, // TODO: Re-usable methods
+    rpc: function() {
+        _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
+    },
 
     addMediaMessageType: function(match, buildHtml) {
         _kiwi.view.MediaMessage.addType(match, buildHtml);
@@ -119,9 +122,6 @@ _kiwi.global = {
 
             // Event emitter to let plugins interface with parts of kiwi
             _kiwi.global.events  = new PluginInterface();
-
-            // Let plugins interface with the RPC calls
-            _kiwi.globals.rpcCall = _kiwi.gateway.rpcCall;
 
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
