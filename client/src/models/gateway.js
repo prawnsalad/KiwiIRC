@@ -232,6 +232,13 @@ _kiwi.model.Gateway = function () {
                     event_data: data
                 });
             }
+
+            if (command == 'channel' && data.type) {
+                that.trigger('connection:' + data.connection_id.toString(), {
+                    event_name: 'channel:' + data.type,
+                    event_data: data
+                });
+            }
         }
 
         // Trigger the global events

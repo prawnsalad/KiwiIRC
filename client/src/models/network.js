@@ -125,10 +125,10 @@
 
             this.gateway.on('options', onOptions, this);
             this.gateway.on('motd', onMotd, this);
-            this.gateway.on('join', onJoin, this);
-            this.gateway.on('part', onPart, this);
-            this.gateway.on('quit', onQuit, this);
-            this.gateway.on('kick', onKick, this);
+            this.gateway.on('channel:join', onJoin, this);
+            this.gateway.on('channel:part', onPart, this);
+            this.gateway.on('channel:quit', onQuit, this);
+            this.gateway.on('channe:kick', onKick, this);
             this.gateway.on('message', onMessage, this);
             this.gateway.on('nick', onNick, this);
             this.gateway.on('ctcp_request', onCtcpRequest, this);
