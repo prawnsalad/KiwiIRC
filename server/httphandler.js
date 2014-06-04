@@ -34,7 +34,6 @@ HttpHandler.prototype.serve = function (request, response) {
     });
 
     // Any requests for /base_path/* to load the index file
-    console.log(request.url, base_path);
     if (request.url.toLowerCase().indexOf(base_path.toLowerCase()) === 0) {
         request.url = '/index.html';
     }
