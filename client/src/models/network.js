@@ -706,7 +706,7 @@
 
         panel = _kiwi.app.panels().active;
         if (event.ident) {
-            panel.addMsg(event.nick, styleText('whois_ident', {nick: event.nick, ident: event.ident, host: event.host, text: event.msg}), 'whois');
+            panel.addMsg(event.nick, styleText('whois_ident', {nick: event.nick, ident: event.ident, host: event.hostname, text: event.msg}), 'whois');
 
         } else if (event.chans) {
             panel.addMsg(event.nick, styleText('whois_channels', {nick: event.nick, text: translateText('client_models_network_channels', [event.chans])}), 'whois');
@@ -734,8 +734,8 @@
             return;
 
         panel = _kiwi.app.panels().active;
-        if (event.host) {
-            panel.addMsg(event.nick, styleText('who', {nick: event.nick, ident: event.ident, host: event.host, realname: event.real_name, text: event.msg}), 'whois');
+        if (event.hostname) {
+            panel.addMsg(event.nick, styleText('who', {nick: event.nick, ident: event.ident, host: event.hostname, realname: event.real_name, text: event.msg}), 'whois');
         } else {
             panel.addMsg(event.nick, styleText('whois_notfound', {nick: event.nick, text: translateText('client_models_network_nickname_notfound', [])}), 'whois');
         }
