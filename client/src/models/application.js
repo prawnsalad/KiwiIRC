@@ -16,7 +16,7 @@
             }
 
             // The base url to the kiwi server
-            this.set('base_path', options.base_path ? options.base_path : '/kiwi');
+            this.set('base_path', options.base_path ? options.base_path : '');
 
             // Path for the settings.json file
             this.set('settings_path', options.settings_path ?
