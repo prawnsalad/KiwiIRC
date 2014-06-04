@@ -17,7 +17,7 @@
   "dependencies": {
     "node-static": "0.7.3",
     "uglify-js": "2.4.12",
-    "engine.io": "0.7.9",
+    "engine.io": "1.2",
     "lodash": "2.4.1",
     "daemonize2": "0.4.2",
     "eventemitter2": "0.4.13",
