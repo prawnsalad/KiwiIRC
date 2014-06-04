@@ -85,7 +85,7 @@ function onWhoisUser(event) {
     this.irc_connection.clientEvent('whois', {
         nick: event.nick,
         ident: event.ident,
-        host: event.host,
+        hostname: event.host,
         msg: event.msg,
         end: false
     });
@@ -209,7 +209,7 @@ function onWhoWas(event) {
     this.irc_connection.clientEvent('whowas', {
         nick: event.nick,
         ident: event.user,
-        host: event.host,
+        hostname: event.host,
         real_name: event.real_name,
         end: false
     });
