@@ -50,10 +50,11 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);
         menu.showFooter(false);
-        menu.show();
 
-        // Position the userbox + menubox
-        (function() {
+        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox})
+        .done(_.bind(function() {
+            menu.show();
+
             var t = event.pageY,
                 m_bottom = t + menu.$el.outerHeight(),  // Where the bottom of menu will be
                 memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight(),
@@ -81,7 +82,15 @@ _kiwi.view.MemberList = Backbone.View.extend({
                 left: l,
                 top: t
             });
-        }).call(this);
+
+        }, this))
+        .prevented(_.bind(function() {
+            userbox = null;
+
+            menu.dispose();
+            menu = null;
+        }, this));
+
     },
 
 

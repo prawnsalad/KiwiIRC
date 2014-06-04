@@ -236,7 +236,8 @@ function onNotice(event) {
        irc_event: event
     })
     .done(function() {
-        that.irc_connection.clientEvent('notice', {
+        that.irc_connection.clientEvent('message', {
+            type: 'notice',
             from_server: event.from_server,
             nick: event.nick,
             ident: event.ident,
@@ -267,7 +268,8 @@ function onPrivmsg(event) {
         irc_event: event
     })
     .done(function() {
-        that.irc_connection.clientEvent('msg', {
+        that.irc_connection.clientEvent('message', {
+            type: 'message',
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
@@ -286,7 +288,8 @@ function onAction(event) {
         irc_event: event
     })
     .done(function() {
-        that.irc_connection.clientEvent('action', {
+        that.irc_connection.clientEvent('message', {
+            type: 'action',
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,

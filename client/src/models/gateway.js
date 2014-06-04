@@ -224,6 +224,21 @@ _kiwi.model.Gateway = function () {
                 event_name: command,
                 event_data: data
             });
+
+            // Some events trigger a more in-depth event name
+            if (command == 'message' && data.type) {
+                that.trigger('connection:' + data.connection_id.toString(), {
+                    event_name: 'message:' + data.type,
+                    event_data: data
+                });
+            }
+
+            if (command == 'channel' && data.type) {
+                that.trigger('connection:' + data.connection_id.toString(), {
+                    event_name: 'channel:' + data.type,
+                    event_data: data
+                });
+            }
         }
 
         // Trigger the global events
