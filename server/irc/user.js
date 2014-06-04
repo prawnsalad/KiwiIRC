@@ -1,5 +1,4 @@
-var util    = require('util'),
-    EventBinder  = require('./eventbinder.js');
+var EventBinder  = require('./eventbinder.js');
 
 var IrcUser = function (irc_connection, nick) {
     this.irc_connection = irc_connection;
