@@ -19,7 +19,7 @@
 
         filepicker.makeDropPane($("#kiwi .panels")[0], { onSuccess: uploaded });
 
-        var $icon = $("<a class=\"upload\" title=\"Send File\"><i class=\"icon-upload-alt\"></i></a>");
+        var $icon = $("<a class=\"upload\" title=\"Send File\"><i class=\"fa fa-upload\"></i></a>");
         $icon.click(function () { filepicker.pickMultiple(uploaded); });
 
         control.addPluginIcon($icon);

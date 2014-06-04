@@ -28,7 +28,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     open: function () {
         // Create the content div if we haven't already
         if (!this.$content) {
-            this.$content = $('<div class="media_content"><a class="media_close"><i class="icon-chevron-up"></i> ' + _kiwi.global.i18n.translate('client_views_mediamessage_close').fetch() + '</a><br /><div class="content"></div></div>');
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="fa fa-chevron-up"></i> ' + _kiwi.global.i18n.translate('client_views_mediamessage_close').fetch() + '</a><br /><div class="content"></div></div>');
             this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || _kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch() + ' :(');
         }
 
@@ -102,7 +102,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
                 // Build the template string up
                 var tmpl = '<div>' + thumb + '<b><%- title %></b><br />Posted by <%- author %>. &nbsp;&nbsp; ';
-                tmpl += '<i class="icon-arrow-up"></i> <%- ups %> &nbsp;&nbsp; <i class="icon-arrow-down"></i> <%- downs %><br />';
+                tmpl += '<i class="fa fa-arrow-up"></i> <%- ups %> &nbsp;&nbsp; <i class="fa fa-arrow-down"></i> <%- downs %><br />';
                 tmpl += '<%- num_comments %> comments made. <a href="http://www.reddit.com<%- permalink %>">View post</a></div>';
 
                 that.$content.find('.content').html(_.template(tmpl, post));
@@ -199,42 +199,42 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 return;
 
             // Add which media type should handle this media message. Will be read when it's clicked on
-            html += '<span class="media" title="Open" data-type="custom" data-index="'+type_idx+'" data-url="' + _.escape(url) + '"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media" title="Open" data-type="custom" data-index="'+type_idx+'" data-url="' + _.escape(url) + '"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         });
 
         // Is it an image?
         if (url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is this an imgur link not picked up by the images regex?
         matches = (/imgur\.com\/[^/]*(?!=\.[^!.]+($|\?))/ig).exec(url);
         if (matches && !url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media imgur" data-type="imgur" data-url="' + url + '" title="Open Image"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media imgur" data-type="imgur" data-url="' + url + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is it a tweet?
         matches = (/https?:\/\/twitter.com\/([a-zA-Z0-9_]+)\/status\/([0-9]+)/ig).exec(url);
         if (matches) {
-            html += '<span class="media twitter" data-type="twitter" data-url="' + url + '" data-tweetid="' + matches[2] + '" title="Show tweet information"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media twitter" data-type="twitter" data-url="' + url + '" data-tweetid="' + matches[2] + '" title="Show tweet information"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is reddit?
         matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(url);
         if (matches) {
-            html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media reddit" data-type="reddit" data-url="' + url + '" title="Reddit thread"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is youtube?
         matches = (/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gi).exec(url);
         if (matches) {
-            html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" data-ytid="' + matches[1] + '" title="YouTube Video"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media youtube" data-type="youtube" data-url="' + url + '" data-ytid="' + matches[1] + '" title="YouTube Video"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is a github gist?
         matches = (/https?:\/\/gist\.github\.com\/(?:[a-z0-9-]*\/)?([a-z0-9]+)(\#(.+))?$/i).exec(url);
         if (matches) {
-            html += '<span class="media gist" data-type="gist" data-url="' + url + '" data-gist_id="' + matches[1] + '" title="GitHub Gist"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media gist" data-type="gist" data-url="' + url + '" data-gist_id="' + matches[1] + '" title="GitHub Gist"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is this a spotify link?
@@ -243,7 +243,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             // Make it a Spotify URI! (spotify:<type>:<id>)
             var method = matches[1],
                 uri = "spotify:" + matches[1] + ":" + matches[2];
-            html += '<span class="media spotify" data-type="spotify" data-uri="' + uri + '" data-method="' + method + '" title="Spotify ' + method + '"><a class="open"><i class="icon-chevron-right"></i></a></span>';
+            html += '<span class="media spotify" data-type="spotify" data-uri="' + uri + '" data-method="' + method + '" title="Spotify ' + method + '"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         return html;

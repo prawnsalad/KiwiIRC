@@ -4,7 +4,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         'click .show_more': 'showMore',
         'change .have_pass input': 'showPass',
         'change .have_key input': 'showKey',
-        'click .icon-key': 'channelKeyIconClick',
+        'click .fa-key': 'channelKeyIconClick',
         'click .show_server': 'showServer'
     },
 
@@ -123,17 +123,17 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         if (!this.more_shown) {
             $('.more', this.$el).slideDown('fast');
             $('.show_more', this.$el)
-                .children('.icon-caret-down')
-                .removeClass('icon-caret-down')
-                .addClass('icon-caret-up');
+                .children('.fa-caret-down')
+                .removeClass('fa-caret-down')
+                .addClass('fa-caret-up');
             $('input.server', this.$el).select();
             this.more_shown = true;
         } else {
             $('.more', this.$el).slideUp('fast');
             $('.show_more', this.$el)
-                .children('.icon-caret-up')
-                .removeClass('icon-caret-up')
-                .addClass('icon-caret-down');
+                .children('.fs-caret-up')
+                .removeClass('fa-caret-up')
+                .addClass('fa-caret-down');
             $('input.nick', this.$el).select();
             this.more_shown = false;
         }
@@ -262,7 +262,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.model.trigger('connecting');
         this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_connection_trying').fetch(), 'ok');
 
-        this.$('.status').append('<a class="show_server"><i class="icon-info-sign"></i></a>');
+        this.$('.status').append('<a class="show_server"><i class="fa fa-info-circle"></i></a>');
     },
 
     showServer: function() {
