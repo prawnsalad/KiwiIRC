@@ -75,6 +75,11 @@ var WebListener = module.exports = function (web_config) {
     this.ws = new engine.Server();
 
     hs.on('upgrade', function(req, socket, head){
+        // engine.io can sometimes "loose" the clients remote address. Keep note of it
+        req.meta = {
+            remote_address: req.connection.remoteAddress
+        };
+
         that.ws.handleUpgrade(req, socket, head);
     });
 
