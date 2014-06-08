@@ -86,7 +86,7 @@ msgstr "Podesi Kiwi kao moj zadani klijent"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Napomenta: Izmjene će se prikazati tek kada osvježite stranicu"
+msgstr "Napomena: Izmjene će se prikazati tek kada osvježite stranicu"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
@@ -178,15 +178,15 @@ msgstr "Greška pri spajanju na %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s je pristupio"
+msgstr "je pristupio"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s je napustio %s"
+msgstr "je napustio %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s je izbačen od %s %s"
+msgstr "je izbačen od %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Izbacio Vas je %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s je napustio kanal %s"
+msgstr "je napustio kanal %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s nije ispravno ime kanala"
+msgstr "nije ispravno ime kanala"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Diskonektovani ste sa IRC mreže"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s je promijenio nadimak u %s"
+msgstr "je promijenio nadimak u %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,7 +214,7 @@ msgstr "Temu je promijenio %s u %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s je podesio/la mod %s"
+msgstr "je podesio/la mod %s"
 
 #: 
 msgid "client_models_network_mode"
@@ -254,11 +254,11 @@ msgstr "Pogrešan ključ kanala za %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s je samo za pozvane."
+msgstr "je samo za pozvane."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s je pun."
+msgstr "je pun."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
@@ -514,16 +514,23 @@ msgstr "Ignorisati"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Upotrijebi 24-satne vremenske oznake"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "% prijepodne"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "% poslijepodne"
 
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "has been invited to %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "is already on this channel"
 
 #: Date format
 msgid "client_date_format"
@@ -680,3 +687,24 @@ msgstr "Saturday"
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
 msgstr "Sunday"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Moderated Chat"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Invite Only"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Only operators can change the topic"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Block messages from outside this channel"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Toggle Banlist"
+
