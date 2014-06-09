@@ -12,9 +12,16 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         var that = this,
             network,
             channel = this.model.get('channel'),
-            text = {
-                channel_name: channel.get('name')
-            };
+            text;
+
+        text = {
+            moderated_chat: translateText('client_views_channelinfo_moderated'),
+            invite_only: translateText('client_views_channelinfo_inviteonly'),
+            ops_change_topic: translateText('client_views_channelinfo_opschangechannel'),
+            external_messages: translateText('client_views_channelinfo_externalmessages'),
+            toggle_banlist: translateText('client_views_channelinfo_togglebanlist'),
+            channel_name: channel.get('name')
+        };
 
         this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
 

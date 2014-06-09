@@ -142,7 +142,7 @@ msgstr "Gib den Nicknamen ein, den du nicht mehr ignorieren möchtest"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "wird nicht mehr ignoriert"
+msgstr "%s wird nicht mehr ignoriert"
 
 #: 
 msgid "client_models_application_applet_notfound"
@@ -506,7 +506,7 @@ msgstr "Netzwerk löschen"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Betreten/Verlassen-Nachrichten als Aktivitäten anzeigen"
 
 #: 
 msgid "client_views_userbox_ignore"
@@ -514,7 +514,7 @@ msgstr "Ignorieren"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Zeitanzeige im 24-Stunden Format"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -524,6 +524,13 @@ msgstr "%s AM"
 msgid "client_views_panel_timestamp_pm"
 msgstr "%s PM"
 
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "has been invited to %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "is already on this channel"
 
 #: Date format
 msgid "client_date_format"
@@ -680,3 +687,24 @@ msgstr "Saturday"
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
 msgstr "Sunday"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Moderated Chat"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Invite Only"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Only operators can change the topic"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Block messages from outside this channel"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Toggle Banlist"
+

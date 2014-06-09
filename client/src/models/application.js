@@ -554,13 +554,16 @@
     }
 
     function partCommand (ev) {
-        var that = this;
-
+        var that = this,
+            chans,
+            msg;
         if (ev.params.length === 0) {
             this.connections.active_connection.gateway.part(_kiwi.app.panels().active.get('name'));
         } else {
-            _.each(ev.params, function (channel) {
-                that.connections.active_connection.gateway.part(channel);
+            chans = ev.params[0].split(',');
+            msg = ev.params[1];
+            _.each(chans, function (channel) {
+                that.connections.active_connection.gateway.part(channel, msg);
             });
         }
     }

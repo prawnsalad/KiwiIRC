@@ -158,7 +158,7 @@ var listeners = {
     part: function (irc_connection, callback, args) {
         if (args.channel) {
             _.each(args.channel.split(","), function (chan) {
-                irc_connection.write('PART ' + chan, callback);
+                irc_connection.write('PART ' + chan + (args.message ? ' :' + args.message : ''), callback);
             });
         }
     },

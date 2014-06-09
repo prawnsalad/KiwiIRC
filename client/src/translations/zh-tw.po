@@ -210,7 +210,7 @@ msgstr "變成 %s 了"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "設定了主題 (%s)"
+msgstr "%s 設定了主題 (%s)"
 
 #: 
 msgid "client_models_network_selfmode"
@@ -278,7 +278,7 @@ msgstr "加入頻道..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "討論的主題：%s"
+msgstr "%s 討論的主題：%s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
@@ -524,6 +524,13 @@ msgstr "%s AM"
 msgid "client_views_panel_timestamp_pm"
 msgstr "%s PM"
 
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "has been invited to %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "is already on this channel"
 
 #: Date format
 msgid "client_date_format"
@@ -680,3 +687,24 @@ msgstr "Saturday"
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
 msgstr "Sunday"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Moderated Chat"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Invite Only"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Only operators can change the topic"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Block messages from outside this channel"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Toggle Banlist"
+
