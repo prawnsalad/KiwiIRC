@@ -24,52 +24,46 @@
     border-radius: 3px;
 }
 #kiwi .toolbar {
-    background-color:#1B1B1B; font-size:0.9em;
+    background-color:#121314; font-size:0.9em;
     box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);
     z-index: 1;
 }
 #kiwi .controlbox {
-    background-color:#1B1B1B;
+    background-color:#121314;
     box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);
 }
 #kiwi .memberlists_resize_handle {
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
+
+#kiwi .toolbar .connections { list-style: none; }
+#kiwi .toolbar .panellist {
+    background: #2b2b2b;
+    color: #a5a5a5;
+    margin: 5px 0 0 5px;
+    float: left;
+}
+#kiwi .toolbar .panellist.applets { }
 #kiwi .toolbar .panellist li {
     line-height: 1.4em;
     vertical-align: middle;
 
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    -khtml-border-radius:5px;
-    border-radius:5px;
-    behavior: url(border-radius.htc);
-
-    background-image: -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0.38, rgb(238,238,238)),
-        color-stop(0.68, rgb(209,209,209))
-    );
-    background-image: -moz-linear-gradient(
-        center top,
-        rgb(238,238,238) 38%,
-        rgb(209,209,209) 68%
-    );
-
-    border: 1px solid #333;
-    background-color: #eee;
+    display: list-item;
+    float: left;
+    border: none;
+    background: none;
+    padding: 8px;
+    margin: 0;
 }
 
 #kiwi .toolbar .panellist .alert_highlight { /*background: #990000;*/ }
 #kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
+#kiwi .toolbar .panellist .active { padding-top: 6px; padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
 #kiwi .toolbar .panellist li .part:before { content:"\f00d"; }
 
-#kiwi .toolbar .panellist li.server span { padding-left: 5px; }
+#kiwi .toolbar .panellist li.server span { padding-left: 5px; font-weight: bold; font-family: Arial,Helvetica,sans-serif; }
 #kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
 #kiwi .toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
 
@@ -122,9 +116,6 @@
 #kiwi .messages .msg .nick { width:11em; float:left; font-size:12px; font-family:Arial; text-align:right; padding: 5px; overflow:hidden; }
 #kiwi .messages .msg .text { display:block; margin-left:12em; border-left: 1px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:5px; }
 
-#kiwi.narrow .messages .msg .nick { width: auto; }
-#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
-
 #kiwi .messages .msg.action .nick { }
 #kiwi .messages .msg.action .text { color:#009900; border-left:none; font-style:italic; }
 #kiwi .messages .msg.action.join { color:#009900; }
@@ -152,10 +143,12 @@
 #kiwi .messages .msg.highlight { transition: background 0.3s; background:#D9D9D9; }
 #kiwi .messages .msg.repeated_nick .nick { visibility:hidden; }
 
-/* Narrow styling (window width < 400px) */
-#kiwi.narrow .messages .msg .nick { width: auto; }
-#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
-#kiwi.narrow .messages .msg.action .text { margin-left: 1em; }
+/* Narrow styling (window width < 420px) */
+#kiwi.narrow .messages .msg .time { display:none; }
+#kiwi.narrow .messages .msg .nick { display:block; float:none; text-align:left; padding-bottom:0;}
+#kiwi.narrow .messages .msg .text { display:block; white-space:pre-wrap; word-wrap:break-word; padding-top:0; margin:0;}
+#kiwi.narrow .messages .msg.action .text { }
+#kiwi.narrow .messages .msg.repeated_nick .nick { display:none; }
 
 
 #kiwi .messages .msg .media { margin-left:0.5em; }
@@ -194,7 +187,17 @@
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
 }
-#kiwi.narrow .right_bar { display:none; }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
+
+#kiwi .memberlists .meta {
+    border-bottom: 1px solid #8A8A8A;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    padding: 0 0 5%;
+    text-align: center;
+}
+
 #kiwi .memberlists ul { list-style: none; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
@@ -274,14 +277,14 @@
 
 #kiwi .controlbox .nickchange {
     padding:10px; left: 0px;
-    background: #1B1B1B; color:#eeeeee;
+    background: #121314; color:#eeeeee;
 }
 #kiwi .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; width: 165px; }
 #kiwi .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
 
 
 
-#kiwi .toolbar .topic { background-color:#1B1B1B; padding-bottom:2px; }
+#kiwi .toolbar .topic { background-color:#121314; padding-bottom:2px; }
 #kiwi .toolbar .topic div {
     padding: 0.2em 1em;
     text-align: center;
@@ -300,7 +303,7 @@
     background-color:#FFF;
     z-index: 1;
     height:auto; bottom:auto;
-    border-bottom: 2px solid #1B1B1B;
+    border-bottom: 2px solid #121314;
 }
 
 
@@ -364,14 +367,17 @@
 #kiwi.chanlist_treeview .toolbar { position:static; }
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#121314; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { position:absolute; right:5px; }
+#kiwi.chanlist_treeview .toolbar .panellist li {
+    padding: 4px 8px;
+}
+#kiwi.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
 #kiwi.chanlist_treeview .tabs ul li.active {
     margin-right:0;
     border-right-width:0;
-    border-bottom-right-radius:0;
-    border-top-right-radius:0;
 }
 #kiwi .applet_chanlist {
     margin: 0.5em 1em;

@@ -11,9 +11,6 @@
 
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css" />
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.min.css" />
-<!--[if IE 7]>
-<link rel="stylesheet" type="text/css" href="/kiwi/assets/css/font-awesome-ie7.css" />
-<![endif]-->
 </head>
 <body>
 
@@ -22,8 +19,8 @@
             <div class="toolbar">
                 <div class="app_tools">
                     <ul class="main">
-                        <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
-                        <li class="startup"><i class="icon-home" title="Home"></i></li>
+                        <li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
+                        <li class="startup"><i class="fa fa-home" title="Home"></i></li>
                         <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
                     </ul>
                 </div>
@@ -47,9 +44,9 @@
                 <div class="right-bar-toggle"><i class=""></i></div>
                 <div class="right-bar-content">
                     <div class="channel_tools">
-                        <i class="icon-info-sign channel_info" title="Channel Info"></i>
-                        <i class="icon-signout channel_part" title="Leave Channel"></i>
-                        <i class="icon-double-angle-right right-bar-toggle-inner" title="Hide"></i>
+                        <i class="fa fa-info-circle channel_info" title="Channel Info"></i>
+                        <i class="fa fa-sign-out channel_part" title="Leave Channel"></i>
+                        <i class="fa fa-angle-double-right right-bar-toggle-inner" title="Hide"></i>
                     </div>
                     <div class="memberlists"></div>
                 </div>
@@ -120,15 +117,15 @@
 
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="close_menu if_op op"><i class="icon-star"></i><%= op %></a>
-            <a class="close_menu if_op deop"><i class="icon-star-empty"></i><%= de_op %></a>
-            <a class="close_menu if_op voice"><i class="icon-volume-up"></i><%= voice %></a>
-            <a class="close_menu if_op devoice"><i class="icon-volume-off"></i><%= de_voice %></a>
-            <a class="close_menu if_op kick"><i class="icon-remove"></i><%= kick %></a>
-            <a class="close_menu if_op ban"><i class="icon-ban-circle"></i><%= ban %></a>
+            <a class="close_menu if_op op"><i class="fa fa-star"></i><%= op %></a>
+            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
+            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
+            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
+            <a class="close_menu if_op kick"><i class="fa fa-times"></i><%= kick %></a>
+            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><%= ban %></a>
 
-            <a class="close_menu query"><i class="icon-comment"></i><%= message %></a>
-            <a class="close_menu info"><i class="icon-info-sign"></i><%= info %></a>
+            <a class="close_menu query"><i class="fa fa-comment"></i><%= message %></a>
+            <a class="close_menu info"><i class="fa fa-info-circle"></i><%= info %></a>
             <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
         </div>
     </script>
@@ -183,7 +180,7 @@
                                 <td>
                                     <div style="position:relative;">
                                         <input type="text" class="channel" id="server_select_channel">
-                                        <i class="icon-key" title="<%= channel_key %>"></i>
+                                        <i class="fa fa-key" title="<%= channel_key %>"></i>
                                     </div>
                                 </td>
                             </tr>
@@ -205,7 +202,7 @@
                             </tr>
                         </table>
 
-                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="icon-caret-down"></i></a>
+                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
                     </div>
 
 
@@ -381,7 +378,7 @@
                 #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
             <div class="script_editor" style="height:100%; position:relative;">
-                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="icon-save"></i></button><span class="status"></span></div>
+                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
                 <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
             </div>
         </div>

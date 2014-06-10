@@ -20,25 +20,21 @@ module.exports.HttpHandler = HttpHandler;
 
 HttpHandler.prototype.serve = function (request, response) {
     // The incoming requests base path (ie. /kiwiclient)
-    var base_path = global.config.http_base_path || '/kiwi',
-        base_path_regex;
+    var base_path = global.config.http_base_path || '',
+        whitelisted_folders = ['assets', 'src'];
 
-    // Trim of any trailing slashes
+    // Trim off any trailing slashes
     if (base_path.substr(base_path.length - 1) === '/') {
         base_path = base_path.substr(0, base_path.length - 1);
     }
 
-    // Build the regex to match the base_path
-    base_path_regex = base_path.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    // Map any whitelisted folders to the local directories
+    whitelisted_folders.forEach(function(folder) {
+        request.url = request.url.replace(base_path + '/' + folder + '/', '/' + folder + '/');
+    });
 
-    // Any asset request to head into the asset dir
-    request.url = request.url.replace(base_path + '/assets/', '/assets/');
-
-    // Any src request to head into the src dir
-    request.url = request.url.replace(base_path + '/src/', '/src/');
-
-    // Any requests for /client to load the index file
-    if (request.url.match(new RegExp('^' + base_path_regex + '([/$]|$)', 'i'))) {
+    // Any requests for /base_path/* to load the index file
+    if (request.url.toLowerCase().indexOf(base_path.toLowerCase()) === 0) {
         request.url = '/index.html';
     }
 

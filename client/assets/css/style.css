@@ -47,13 +47,13 @@ html, body { height:100%; }
 }
 
 
-#kiwi .toolbar .tabs { margin-right: 200px; }
+#kiwi .toolbar .tabs { margin-right: 200px; overflow: hidden; }
 #kiwi .toolbar .panellist {
     overflow: hidden;
     display:block;
 }
 #kiwi .toolbar .panellist li {
-    float: left; list-style: inline;
+    float: left; list-style: none;
     display:inline; position:relative;
     padding:5px; margin:3px;
     cursor: pointer;
@@ -149,8 +149,8 @@ html, body { height:100%; }
 }
 
 /* The active channels nicklist */
-#kiwi .memberlists ul { display:none; }
-#kiwi .memberlists ul.active { display:block; }
+#kiwi .memberlists > div { display:none; }
+#kiwi .memberlists > div.active { display:block; }
 #kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
 #kiwi .memberlists ul li a.nick { }
 
@@ -256,7 +256,7 @@ html, body { height:100%; }
 
 /* Channel key icon */
 #kiwi .server_select .basic tr.channel td { position: relative; }
-#kiwi .server_select .basic tr.channel .icon-key {
+#kiwi .server_select .basic tr.channel .fa-key {
     position: absolute;
     top: 0.4em;
     right: 0.6em;
@@ -485,14 +485,14 @@ html, body { height:100%; }
 }
 #kiwi .ui_menu .ui_menu_content { padding: 5px 10px 5px 10px; border-top:1px solid #e9e9e9; overflow:hidden; position:relative; }
 #kiwi .ui_menu .ui_menu_content > a { display: block; }
-#kiwi .ui_menu .ui_menu_content > a[class^="icon-"]:before,
-#kiwi .ui_menu .ui_menu_content > a[class*=" icon-"]:before { margin-right: 5px; color:#666; }
+#kiwi .ui_menu .ui_menu_content > a[class^="fa-"]:before,
+#kiwi .ui_menu .ui_menu_content > a[class*=" fa-"]:before { margin-right: 5px; color:#666; }
 #kiwi .ui_menu .ui_menu_foot {
     padding: 5px; border-top:1px solid #e9e9e9; background:#ddd; overflow:hidden;
 }
 #kiwi .ui_menu .ui_menu_foot .close { }
 
-#kiwi .applet .applet_chanlist .icon-sort-down:before, #kiwi .applet .applet_chanlist .icon-sort-up:before {
+#kiwi .applet .applet_chanlist .fa-sort-asc:before, #kiwi .applet .applet_chanlist .fa-sort-desc:before {
     padding-left: 1em;
 }
 #kiwi .applet .applet_chanlist td {

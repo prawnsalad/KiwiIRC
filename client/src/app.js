@@ -17,8 +17,12 @@ _kiwi.applets = {};
 _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
     settings: undefined, // Instance of _kiwi.model.DataStore
-    plugins: undefined,
+    plugins: undefined, // Instance of _kiwi.model.PluginManager
+    events: undefined, // Instance of PluginInterface
     utils: {}, // TODO: Re-usable methods
+    rpc: function() {
+        _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
+    },
 
     addMediaMessageType: function(match, buildHtml) {
         _kiwi.view.MediaMessage.addType(match, buildHtml);
@@ -27,8 +31,29 @@ _kiwi.global = {
     // Event managers for plugins
     components: {
         EventComponent: function(event_source, proxy_event_name) {
+            /*
+             * proxyEvent() listens for events then re-triggers them on its own
+             * event emitter. Why? So we can .off() on this emitter without
+             * effecting the source of events. Handy for plugins that we don't
+             * trust meddling with the core events.
+             *
+             * If listening for 'all' events the arguments are as follows:
+             *     1. Name of the triggered event
+             *     2. The event data
+             * For all other events, we only have one argument:
+             *     1. The event data
+             *
+             * When this is used via `new kiwi.components.Network()`, this listens
+             * for 'all' events so the first argument is the event name which is
+             * the connection ID. We don't want to re-trigger this event name so
+             * we need to juggle the arguments to find the real event name we want
+             * to emit.
+             */
             function proxyEvent(event_name, event_data) {
-                if (proxy_event_name !== 'all') {
+                if (proxy_event_name == 'all') {
+                    event_name = event_data.event_name;
+                    event_data = event_data.event_data;
+                } else {
                     event_data = event_name.event_data;
                     event_name = event_name.event_name;
                 }
@@ -115,6 +140,9 @@ _kiwi.global = {
 
             // Start the client up
             _kiwi.app.initializeInterfaces();
+
+            // Event emitter to let plugins interface with parts of kiwi
+            _kiwi.global.events  = new PluginInterface();
 
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new _kiwi.model.PluginManager();

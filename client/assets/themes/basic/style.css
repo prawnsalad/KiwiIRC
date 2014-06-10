@@ -169,6 +169,13 @@
     background-color: #DADADA;
     border-left: 1px dashed #8A8A8A;
 }
+
+#kiwi .memberlists .meta {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 #kiwi .memberlists ul { list-style: none; margin-left:2px; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding:0 2px; }

@@ -169,10 +169,14 @@ _kiwi.view.Application = Backbone.View.extend({
         }
 
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
-        if (el_kiwi.outerWidth() < 400) {
+        if (el_kiwi.outerWidth() < 420) {
             el_kiwi.addClass('narrow');
+            if (this.model.rightbar && this.model.rightbar.keep_hidden !== true)
+                this.model.rightbar.toggle(true);
         } else {
             el_kiwi.removeClass('narrow');
+            if (this.model.rightbar && this.model.rightbar.keep_hidden !== false)
+                this.model.rightbar.toggle(false);
         }
 
         // Set the panels width depending on the memberlist visibility
