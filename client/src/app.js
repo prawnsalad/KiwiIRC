@@ -24,6 +24,29 @@ _kiwi.global = {
         _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
     },
 
+    session: {
+        save: function(username, password, callback) {
+            _kiwi.gateway.saveSession(username, password, function(err, data) {
+                console.log('saveSession()', err, data);
+                callback && callback(err, data);
+            });
+        },
+
+        resume: function(username, password, callback) {
+            _kiwi.gateway.resumeSession(username, password, function(err, data) {
+                console.log('resumeSession()', err, data);
+                callback && callback(err, data);
+            });
+        },
+
+        syncEvents: function(network_id, target, callback) {
+            _kiwi.gateway.syncSessionEvents(network_id, target, function(err, data) {
+                console.log('syncSessionEvents()', err, data);
+                callback && callback(err, data);
+            });
+        }
+    },
+
     addMediaMessageType: function(match, buildHtml) {
         _kiwi.view.MediaMessage.addType(match, buildHtml);
     },

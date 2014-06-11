@@ -39,24 +39,29 @@ function handleEvents(state) {
         var target = '*';
 
         // Only store certain event types (types the user will be visually interested in)
-        var allowed_events = ['msg', 'notice', 'topic', 'action', 'mode', 'join', 'part', 'kick', 'quit'];
+        var allowed_events = ['message', 'topic', 'mode', 'channel', 'quit'];
         if (allowed_events.indexOf(data.event[0]) === -1)
             return;
 
-        if (data.event[1].target) {
+        if (data.event[1].target == data.connection.nick) {
+            target = data.event[1].nick;
+        } else if (data.event[1].target) {
             target = data.event[1].target;
         } else if(data.event[1].channel) {
             target = data.event[1].channel;
         }
 
-        // If channel joining/parting does not involve us, don't store it.
-        var special_events = ['join', 'part', 'kick', 'quit'];
-        if (special_events.indexOf(data.event[0]) !== -1) {
-            if (data.event[0] == 'kick' && data.event[1].kicked.toLowerCase() !== data.connection.nick.toLowerCase()) {
-                return;
-            } else if (data.event[1].nick.toLowerCase() !== data.connection.nick.toLowerCase()) {
-                return;
-            }
+        // If channel joining/parting/kicks does not involve us, don't store it.
+        if (
+            data.event[0] == 'channel' && data.event[1].type == 'kick' &&
+            data.event[1].kicked.toLowerCase() !== data.connection.nick.toLowerCase()
+        ) {
+            return;
+        } else if (
+            (data.event[0] == 'channel' || data.event[0] == 'quit') &&
+            data.event[1].nick.toLowerCase() !== data.connection.nick.toLowerCase()
+        ) {
+            return;
         }
 
         storage.putStateEvent(state_id, target, data.event);
@@ -156,17 +161,14 @@ rpc_commands.sessionResume = function(callback, event_data) {
 
             // Get a fresh MOTD sent to the client
             irc_connection.write('MOTD');
-
-            _.each(irc_connection.irc_channels, function(chan, chan_name) {
-                chan.refreshNickList();
-                chan.refreshTopic();
-            });
         });
     });
+
+    callback(null, connections);
 };
 
 
-rpc_commands.sessionEvents = function(event, event_data) {
+rpc_commands.sessionEvents = function(callback, event_data) {
     var connection_id = event_data.connection_id,
         target = event_data.target,
         state = this.state,
@@ -174,31 +176,51 @@ rpc_commands.sessionEvents = function(event, event_data) {
 
     var connection = _.find(state.irc_connections, {con_num: connection_id});
 
-    if (connection) {
+    if (!connection) {
+        console.log('connection not found', connection_id);
+        return callback('connection_not_found');
+    }
+console.log('connection found', connection_id);
 
-        _.each(connection.irc_channels, function(chan, chan_name) {
+    var channels = Object.keys(connection.irc_channels);
+    _.map(channels, function(chan_name) {
+        return chan_name.toLowerCase();
+    });
+
+    _.each(connection.irc_channels, function(channel, channel_name) {
+        console.log('Sync channel is match:', target, channel_name);
+        // If we're looking for a specific target and this isn't it, ignore it
+        if (target && target.toLowerCase() !== channel_name.toLowerCase())
+            return;
+
+        channel.refreshNickList();
+        channel.refreshTopic();
+    });
+
+    // Get all targets that have events to be read
+    storage.getTargets(state.hash, function(targets) {
+console.log('targets:', targets);
+        _.each(targets, function(target_name) {
+            console.log(target, target_name);
             // If a specific target is given, check if this channel is it before syncing
-            if (target && chan_name.toLowerCase() !== target.toLowerCase()) {
+            if (target && target_name.toLowerCase() !== target.toLowerCase()) {
                 return;
             }
 
             // Only sync data if it's not already subscribed
-            if (client.isSubscribed(connection_id, chan_name)) {
+            if (target && client.isSubscribed(connection_id, target_name)) {
                 return;
             }
 
-            chan.refreshNickList();
-            chan.refreshTopic();
-
-            storage.getStateEvents(state.hash, chan_name, function(events) {
+            storage.getStateEvents(state.hash, target_name, function(events) {
                 _.each(events, function(event, idx) {
                     client.sendIrcCommand(event[0], event[1]);
                 });
             });
 
-            client.subscribe(connection_id, chan_name);
+            client.subscribe(connection_id, target_name);
         });
-    }
+    });
 };
 
 

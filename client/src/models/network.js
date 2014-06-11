@@ -272,7 +272,7 @@
     function onOptions(event) {
         var that = this;
 
-        $.each(event.options, function (name, value) {
+        _.each(event.options, function (value, name) {
             switch (name) {
             case 'CHANTYPES':
                 that.set('channel_prefix', value.join(''));

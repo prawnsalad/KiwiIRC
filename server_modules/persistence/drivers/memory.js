@@ -75,6 +75,19 @@ StorageMemory.prototype.getStateEvents = function(state_id, target, callback) {
 
     var username = this.state_map[state_id],
         user = this.user_states[username];
-console.log('events for', target.toLowerCase(), user.events[target.toLowerCase()]);
+
     return callback(user.events[target.toLowerCase()] || []);
+};
+
+
+StorageMemory.prototype.getTargets = function(state_id, callback) {
+    if (!this.state_map[state_id])
+        return callback(false);
+
+    var username = this.state_map[state_id],
+        user = this.user_states[username];
+console.log(username, user);
+
+    var targets = Object.keys(user.events);
+    return callback(targets || []);
 };

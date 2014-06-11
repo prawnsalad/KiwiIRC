@@ -1,0 +1,84 @@
+<script type="text/html" id="tmpl_myplugin">
+        <div class="my_plugin">
+        	<div class="status"></div>
+            <form>
+                    <label>Username <input type="text" name="username" /> </label> <br />
+                    <label>Password <input type="password" name="password" /> </label>  <br />
+                    <button type="submit">Login</button>
+            </form>
+
+            <button class="activate_bnc">Activate Bouncer Mode</button> <br /> <br />
+            <button class="skip">Connect to new network</button>
+        </div>
+</script>
+
+<script>
+
+	var myPluginView = Backbone.View.extend({
+		events: {
+			'submit form': 'formSubmit',
+			'click .skip': 'skipClick',
+			'click .activate_bnc': 'activateBnc'
+		},
+
+		initialize: function() {},
+
+		render: function() {
+			this.$el.html($('#tmpl_myplugin').html());
+		},
+
+		formSubmit: function(event) {
+			var that = this;
+
+			event.preventDefault();
+
+			var username = this.$('[name=username]').val();
+			var password = this.$('[name=password]').val();
+
+			kiwi.session.resume(username, password, function(err, connections) {
+				if (err) {
+					that.$('.status').text('Error: ' + err);
+					return;
+				}
+
+				_.each(connections, function(connection) {
+					console.log('syncing for', connection.connection_id);
+					kiwi.session.syncEvents(connection.connection_id);
+				});
+			});
+		},
+
+		skipClick: function(event) {
+			var applet = kiwi.components.Applet.loadOnce('kiwi_startup');
+			applet.view.show();
+		},
+
+		activateBnc: function() {
+			var that = this;
+			var username = this.$('[name=username]').val();
+			var password = this.$('[name=password]').val();
+
+			if (!username || !password) {
+				that.$('.status').text('A username/password must be given');
+				return;
+			}
+
+			kiwi.session.save(username, password, function(err, data) {
+				that.$('.status').text(data);
+			});
+		}
+	});
+
+
+	var myPluginApplet = Backbone.Model.extend({
+		initialize: function() {
+			this.view = new myPluginView({model: this});
+			this.view.render();
+		}
+	});
+
+	kiwi.components.Applet.register('my_plugin', myPluginApplet);
+	kiwi.registerStartupApplet('my_plugin');
+
+
+</script>

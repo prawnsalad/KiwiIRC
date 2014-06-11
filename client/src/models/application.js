@@ -126,28 +126,6 @@
         },
 
 
-        resumeSession: function(username, password) {
-            _kiwi.gateway.set('kiwi_server', this.kiwi_server);
-            _kiwi.gateway.resumeSession(username, password, function(err, data) {
-                console.log('resumeSession()', err, data);
-            });
-        },
-
-
-        syncSessionEvents: function(network, target) {
-            _kiwi.gateway.syncSessionEvents(network.get('connection_id'), target, function(err, data) {
-                console.log('syncSessionEvents()', err, data);
-            });
-        },
-
-
-        saveSession: function(username, password) {
-            _kiwi.gateway.saveSession(username, password, function(err, data) {
-                console.log('saveSession()', err, data);
-            });
-        },
-
-
         panels: (function() {
             var active_panel;
 
