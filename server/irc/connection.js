@@ -26,8 +26,6 @@ if (version_values[1] >= 10) {
 }
 
 var IrcConnection = function (hostname, port, ssl, nick, user, options, state, con_num) {
-    var that = this;
-
     EE.call(this,{
         wildcard: true,
         delimiter: ' '
@@ -298,7 +296,7 @@ IrcConnection.prototype.connect = function () {
                 delete global.clients.port_pairs[that.identd_port_pair];
             }
 
-            that.emit('close');
+            that.emit('close', had_error);
 
             // Close the whole socket down
             that.disposeSocket();
@@ -354,7 +352,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 
     // Disabled write buffer? Send everything we have
     if (!this.write_buffer_lines_second) {
-        this.write_buffer.forEach(function(buffer, idx) {
+        this.write_buffer.forEach(function(buffer) {
             this.socket.write(buffer);
             this.write_buffer = null;
         });
@@ -388,7 +386,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 /**
  * Close the connection to the IRCd after forcing one last line
  */
-IrcConnection.prototype.end = function (data, callback) {
+IrcConnection.prototype.end = function (data) {
     if (!this.socket) {
         return;
     }
@@ -539,8 +537,6 @@ function onUserPrivmsg(event) {
 
 
 function onUserNick(event) {
-    var user;
-
     // Only deal with messages targetted to us
     if (event.nick !== this.nick) {
         return;
@@ -662,7 +658,7 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.username = this.user.address.split('.').map(function ipSplitMapCb(i, idx){
+        this.username = this.user.address.split('.').map(function ipSplitMapCb(i){
             var hex = parseInt(i, 10).toString(16);
 
             // Pad out the hex value if it's a single char
@@ -687,7 +683,6 @@ function socketOnData(data) {
         line_start = 0,
         lines = [],
         i,
-        line = '',
         max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
                                 // May need tweaking when IRCv3 message tags are more widespread
 
