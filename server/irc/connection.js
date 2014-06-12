@@ -460,7 +460,7 @@ IrcConnection.prototype.setEncoding = function (encoding) {
         //This test is done to check if this encoding also supports
         //the ASCII charset required by the IRC protocols
         //(Avoid the use of base64 or incompatible encodings)
-        if (encoded_test == "TEST") {
+        if (encoded_test === "TEST") {
             this.encoding = encoding;
             return true;
         }
@@ -580,7 +580,7 @@ function onUserKick(event){
 var rawSocketConnect = function(socket) {
     // Make note of the port numbers for any identd lookups
     // Nodejs < 0.9.6 has no socket.localPort so check this first
-    if (typeof socket.localPort != 'undefined') {
+    if (typeof socket.localPort !== 'undefined') {
         this.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
         global.clients.port_pairs[this.identd_port_pair] = this;
     }
