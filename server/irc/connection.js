@@ -20,14 +20,12 @@ var version_values = process.version.substr(1).split('.').map(function (item) {
     return parseInt(item, 10);
 });
 
-// If we have a suitable Nodejs version, bring int he socks functionality
+// If we have a suitable Nodejs version, bring in the SOCKS functionality
 if (version_values[1] >= 10) {
     Socks = require('socksjs');
 }
 
 var IrcConnection = function (hostname, port, ssl, nick, user, options, state, con_num) {
-    var that = this;
-
     EE.call(this,{
         wildcard: true,
         delimiter: ' '
@@ -204,8 +202,9 @@ IrcConnection.prototype.connect = function () {
             }
 
             // Make sure we have a valid interface address
-            if (typeof outgoing !== 'string')
+            if (typeof outgoing !== 'string') {
                 outgoing = '0.0.0.0';
+            }
 
         } else {
             // No config was found so use the default
@@ -272,8 +271,9 @@ IrcConnection.prototype.connect = function () {
                 false;
 
             // TLS sockets have already called this
-            if (!is_tls)
+            if (!is_tls) {
                 rawSocketConnect.call(that, this);
+            }
 
             that.connected = true;
 
@@ -296,7 +296,7 @@ IrcConnection.prototype.connect = function () {
                 delete global.clients.port_pairs[that.identd_port_pair];
             }
 
-            that.emit('close');
+            that.emit('close', had_error);
 
             // Close the whole socket down
             that.disposeSocket();
@@ -319,7 +319,7 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  */
 IrcConnection.prototype.write = function (data, force) {
     //ENCODE string to encoding of the server
-    encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
+    var encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
 
     if (force) {
         this.socket.write(encoded_buffer);
@@ -329,8 +329,9 @@ IrcConnection.prototype.write = function (data, force) {
     this.write_buffer.push(encoded_buffer);
 
     // Only flush if we're not writing already
-    if (!this.writing_buffer)
+    if (!this.writing_buffer) {
         this.flushWriteBuffer();
+    }
 };
 
 
@@ -351,7 +352,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 
     // Disabled write buffer? Send everything we have
     if (!this.write_buffer_lines_second) {
-        this.write_buffer.forEach(function(buffer, idx) {
+        this.write_buffer.forEach(function(buffer) {
             this.socket.write(buffer);
             this.write_buffer = null;
         });
@@ -385,12 +386,14 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 /**
  * Close the connection to the IRCd after forcing one last line
  */
-IrcConnection.prototype.end = function (data, callback) {
-    if (!this.socket)
+IrcConnection.prototype.end = function (data) {
+    if (!this.socket) {
         return;
+    }
 
-    if (data)
+    if (data) {
         this.write(data, true);
+    }
 
     this.socket.end();
 };
@@ -457,7 +460,7 @@ IrcConnection.prototype.setEncoding = function (encoding) {
         //This test is done to check if this encoding also supports
         //the ASCII charset required by the IRC protocols
         //(Avoid the use of base64 or incompatible encodings)
-        if (encoded_test == "TEST") {
+        if (encoded_test === "TEST") {
             this.encoding = encoding;
             return true;
         }
@@ -496,8 +499,9 @@ function onChannelJoin(event) {
     var chan;
 
     // Only deal with ourselves joining a channel
-    if (event.nick !== this.nick)
+    if (event.nick !== this.nick) {
         return;
+    }
 
     // We should only ever get a JOIN command for a channel
     // we're not already a member of.. but check we don't
@@ -520,8 +524,9 @@ function onUserPrivmsg(event) {
     var user;
 
     // Only deal with messages targetted to us
-    if (event.channel !== this.nick)
+    if (event.channel !== this.nick) {
         return;
+    }
 
     if (!this.irc_users[event.nick]) {
         user = new IrcUser(this, event.nick);
@@ -532,11 +537,10 @@ function onUserPrivmsg(event) {
 
 
 function onUserNick(event) {
-    var user;
-
     // Only deal with messages targetted to us
-    if (event.nick !== this.nick)
+    if (event.nick !== this.nick) {
         return;
+    }
 
     this.nick = event.newnick;
 }
@@ -544,8 +548,9 @@ function onUserNick(event) {
 
 function onUserParts(event) {
     // Only deal with ourselves leaving a channel
-    if (event.nick !== this.nick)
+    if (event.nick !== this.nick) {
         return;
+    }
 
     if (this.irc_channels[event.channel]) {
         this.irc_channels[event.channel].dispose();
@@ -555,8 +560,9 @@ function onUserParts(event) {
 
 function onUserKick(event){
     // Only deal with ourselves being kicked from a channel
-    if (event.kicked !== this.nick)
+    if (event.kicked !== this.nick) {
         return;
+    }
 
     if (this.irc_channels[event.channel]) {
         this.irc_channels[event.channel].dispose();
@@ -574,7 +580,7 @@ function onUserKick(event){
 var rawSocketConnect = function(socket) {
     // Make note of the port numbers for any identd lookups
     // Nodejs < 0.9.6 has no socket.localPort so check this first
-    if (typeof socket.localPort != 'undefined') {
+    if (typeof socket.localPort !== 'undefined') {
         this.identd_port_pair = socket.localPort.toString() + '_' + socket.remotePort.toString();
         global.clients.port_pairs[this.identd_port_pair] = this;
     }
@@ -616,8 +622,9 @@ var socketConnectHandler = function () {
 
         that.write('CAP LS');
 
-        if (that.password)
+        if (that.password) {
             that.write('PASS ' + that.password);
+        }
 
         that.write('NICK ' + that.nick);
         that.write('USER ' + that.username + ' 0 0 :' + gecos);
@@ -651,12 +658,13 @@ function findWebIrc(connect_data) {
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
         // Get a hex value of the clients IP
-        this.username = this.user.address.split('.').map(function ipSplitMapCb(i, idx){
+        this.username = this.user.address.split('.').map(function ipSplitMapCb(i){
             var hex = parseInt(i, 10).toString(16);
 
             // Pad out the hex value if it's a single char
-            if (hex.length === 1)
+            if (hex.length === 1) {
                 hex = '0' + hex;
+            }
 
             return hex;
         }).join('');
@@ -674,7 +682,7 @@ function socketOnData(data) {
     var data_pos,               // Current position within the data Buffer
         line_start = 0,
         lines = [],
-        line = '',
+        i,
         max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
                                 // May need tweaking when IRCv3 message tags are more widespread
 
@@ -731,8 +739,9 @@ function socketOnData(data) {
     }
 
     // Process our data line by line
-    for (i = 0; i < lines.length; i++)
+    for (i = 0; i < lines.length; i++) {
         parseIrcLine.call(this, lines[i]);
+    }
 
 }
 
