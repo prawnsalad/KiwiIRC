@@ -204,8 +204,9 @@ IrcConnection.prototype.connect = function () {
             }
 
             // Make sure we have a valid interface address
-            if (typeof outgoing !== 'string')
+            if (typeof outgoing !== 'string') {
                 outgoing = '0.0.0.0';
+            }
 
         } else {
             // No config was found so use the default
@@ -272,8 +273,9 @@ IrcConnection.prototype.connect = function () {
                 false;
 
             // TLS sockets have already called this
-            if (!is_tls)
+            if (!is_tls) {
                 rawSocketConnect.call(that, this);
+            }
 
             that.connected = true;
 
@@ -329,8 +331,9 @@ IrcConnection.prototype.write = function (data, force) {
     this.write_buffer.push(encoded_buffer);
 
     // Only flush if we're not writing already
-    if (!this.writing_buffer)
+    if (!this.writing_buffer) {
         this.flushWriteBuffer();
+    }
 };
 
 
@@ -386,11 +389,13 @@ IrcConnection.prototype.flushWriteBuffer = function () {
  * Close the connection to the IRCd after forcing one last line
  */
 IrcConnection.prototype.end = function (data, callback) {
-    if (!this.socket)
+    if (!this.socket) {
         return;
+    }
 
-    if (data)
+    if (data) {
         this.write(data, true);
+    }
 
     this.socket.end();
 };
@@ -496,8 +501,9 @@ function onChannelJoin(event) {
     var chan;
 
     // Only deal with ourselves joining a channel
-    if (event.nick !== this.nick)
+    if (event.nick !== this.nick) {
         return;
+    }
 
     // We should only ever get a JOIN command for a channel
     // we're not already a member of.. but check we don't
@@ -520,8 +526,9 @@ function onUserPrivmsg(event) {
     var user;
 
     // Only deal with messages targetted to us
-    if (event.channel !== this.nick)
+    if (event.channel !== this.nick) {
         return;
+    }
 
     if (!this.irc_users[event.nick]) {
         user = new IrcUser(this, event.nick);
@@ -535,8 +542,9 @@ function onUserNick(event) {
     var user;
 
     // Only deal with messages targetted to us
-    if (event.nick !== this.nick)
+    if (event.nick !== this.nick) {
         return;
+    }
 
     this.nick = event.newnick;
 }
@@ -544,8 +552,9 @@ function onUserNick(event) {
 
 function onUserParts(event) {
     // Only deal with ourselves leaving a channel
-    if (event.nick !== this.nick)
+    if (event.nick !== this.nick) {
         return;
+    }
 
     if (this.irc_channels[event.channel]) {
         this.irc_channels[event.channel].dispose();
@@ -555,8 +564,9 @@ function onUserParts(event) {
 
 function onUserKick(event){
     // Only deal with ourselves being kicked from a channel
-    if (event.kicked !== this.nick)
+    if (event.kicked !== this.nick) {
         return;
+    }
 
     if (this.irc_channels[event.channel]) {
         this.irc_channels[event.channel].dispose();
@@ -616,8 +626,9 @@ var socketConnectHandler = function () {
 
         that.write('CAP LS');
 
-        if (that.password)
+        if (that.password) {
             that.write('PASS ' + that.password);
+        }
 
         that.write('NICK ' + that.nick);
         that.write('USER ' + that.username + ' 0 0 :' + gecos);
@@ -655,8 +666,9 @@ function findWebIrc(connect_data) {
             var hex = parseInt(i, 10).toString(16);
 
             // Pad out the hex value if it's a single char
-            if (hex.length === 1)
+            if (hex.length === 1) {
                 hex = '0' + hex;
+            }
 
             return hex;
         }).join('');
@@ -732,8 +744,9 @@ function socketOnData(data) {
     }
 
     // Process our data line by line
-    for (i = 0; i < lines.length; i++)
+    for (i = 0; i < lines.length; i++) {
         parseIrcLine.call(this, lines[i]);
+    }
 
 }
 
