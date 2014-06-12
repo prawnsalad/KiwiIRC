@@ -319,7 +319,7 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  */
 IrcConnection.prototype.write = function (data, force) {
     //ENCODE string to encoding of the server
-    encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
+    var encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
 
     if (force) {
         this.socket.write(encoded_buffer);
@@ -674,6 +674,7 @@ function socketOnData(data) {
     var data_pos,               // Current position within the data Buffer
         line_start = 0,
         lines = [],
+        i,
         line = '',
         max_buffer_size = 1024; // 1024 bytes is the maximum length of two RFC1459 IRC messages.
                                 // May need tweaking when IRCv3 message tags are more widespread
