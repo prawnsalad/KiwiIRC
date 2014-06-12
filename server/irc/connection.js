@@ -460,7 +460,7 @@ IrcConnection.prototype.setEncoding = function (encoding) {
         //This test is done to check if this encoding also supports
         //the ASCII charset required by the IRC protocols
         //(Avoid the use of base64 or incompatible encodings)
-        if (encoded_test === "TEST") {
+        if (encoded_test == "TEST") { // jshint ignore:line
             this.encoding = encoding;
             return true;
         }
