@@ -88,6 +88,10 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             var nice = url,
                 extra_html = '';
 
+            if (url.match(/^javascript:/)) {
+                return url;
+            }
+
             // Add the http if no protoocol was found
             if (url.match(/^www\./)) {
                 url = 'http://' + url;
