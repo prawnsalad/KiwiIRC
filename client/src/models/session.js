@@ -1,4 +1,8 @@
 _kiwi.model.Session = Backbone.Model.extend({
+    defaults: {
+        synced: false
+    },
+
 	initialize: function() {
 	},
 
@@ -24,7 +28,7 @@ _kiwi.model.Session = Backbone.Model.extend({
             _kiwi.gateway.rpc.call('kiwi.session_resume', {
                 username: username,
                 password: password,
-            }, _.bind(that.resumeCallback, that));
+            }, _.bind(that._resumeCallback, that));
         };
 
         if (_kiwi.gateway.isConnected()) {
@@ -35,22 +39,9 @@ _kiwi.model.Session = Backbone.Model.extend({
 	},
 
 
-	syncEvents: function(network_id, target) {
-        if (target && !callback) {
-            callback = target;
-            target = undefined;
-        }
-
-        _kiwi.gateway.rpc.call('kiwi.session_events', {
-            connection_id: network_id,
-            target: target,
-        });
-	},
-
-
-	resumeCallback: function(err, data) {
+	_resumeCallback: function(err, data) {
 		if (err) {
-			this.trigger('resumed', err, data);
+			this.trigger('sync_error', err);
 			return;
 		}
 
@@ -89,6 +80,20 @@ _kiwi.model.Session = Backbone.Model.extend({
             });
         });
 
-		this.trigger('resumed', err, data);
-	}
+        this.set('synced', true);
+		this.trigger('synced', data);
+	},
+
+
+    syncEvents: function(network_id, target, callback) {
+        if (target && !callback) {
+            callback = target;
+            target = undefined;
+        }
+
+        _kiwi.gateway.rpc.call('kiwi.session_events', {
+            connection_id: network_id,
+            target: target,
+        }, callback);
+    },
 });
