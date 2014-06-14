@@ -518,7 +518,13 @@
     function onTopic(event) {
         var c;
         c = this.panels.getByName(event.channel);
-        if (!c) return;
+
+        // If we didn't find a channel for this for some odd reason, create it now
+        // (May happen when channel syncing with a persisted state)
+        if (!c) {
+            c = new _kiwi.model.Channel({name: event.channel});
+            this.panels.add(c);
+        }
 
         // Set the channels topic
         c.set('topic', event.topic);

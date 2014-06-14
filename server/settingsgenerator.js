@@ -200,6 +200,7 @@ function addScripts(vars, debug) {
             'src/models/gateway.js'
         ],
         [
+            'src/models/session.js',
             'src/models/newconnection.js',
             'src/models/panellist.js',
             'src/models/networkpanellist.js',

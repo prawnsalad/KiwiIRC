@@ -46,6 +46,7 @@ var source_files = [
     __dirname + '/src/models/network.js',
     __dirname + '/src/models/member.js',
     __dirname + '/src/models/memberlist.js',
+    __dirname + '/src/models/session.js',
     __dirname + '/src/models/newconnection.js',
     __dirname + '/src/models/panel.js',
     __dirname + '/src/models/panellist.js',

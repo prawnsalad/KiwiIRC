@@ -11,6 +11,8 @@ _kiwi.model.Gateway = function () {
 
         // Used to check if a disconnection was unplanned
         this.disconnect_requested = false;
+
+        this.session = new _kiwi.model.Session();
     };
 
 
@@ -108,42 +110,6 @@ _kiwi.model.Gateway = function () {
     };
 
 
-    this.resumeSession = function(username, password, callback) {
-        var fn = function() {
-            _kiwi.gateway.rpc.call('kiwi.session_resume', {
-                username: username,
-                password: password,
-            }, callback);
-        };
-
-        if (this.isConnected()) {
-            fn();
-        } else {
-            this.connect(fn);
-        }
-    };
-
-
-    this.saveSession = function(username, password, callback) {
-        _kiwi.gateway.rpc.call('kiwi.session_save', {
-            username: username,
-            password: password,
-        }, callback);
-    };
-
-
-    this.syncSessionEvents = function(network_id, target, callback) {
-        if (target && !callback) {
-            callback = target;
-            target = undefined;
-        }
-
-        _kiwi.gateway.rpc.call('kiwi.session_events', {
-            connection_id: network_id,
-            target: target,
-        }, callback);
-    };
-
 
     /**
      * Return a new network object with the new connection details
@@ -234,44 +200,6 @@ _kiwi.model.Gateway = function () {
             client_info_data, args;
 
         switch (command) {
-        case 'connection_sync':
-            _.each(data, function(connection) {
-                var new_connection,
-                    inf = {
-                        connection_id: connection.connection_id,
-                        nick: connection.nick,
-                        address: connection.host,
-                        port: connection.port,
-                        ssl: connection.ssl
-                    };
-
-                new_connection = new _kiwi.model.Network(inf);
-                that.trigger('connection:' + connection.connection_id.toString(), {
-                    event_name: 'options',
-                    event_data: {options: connection.options.options, cap: connection.options.cap}
-                });
-                //new_connection.parseOptions(connection.options.options, connection.options.cap);
-
-                _kiwi.app.connections.add(new_connection);
-
-                _.each(connection.channels, function(channel_info, idx) {
-                    var channel = new_connection.panels.getByName(channel_info.name);
-
-                    if (!channel) {
-                        channel = new _kiwi.model.Channel({name: channel_info.name, network: new_connection});
-                        new_connection.panels.add(channel);
-                    }
-                });
-
-                // Let the application know we have connected to an IRCd
-                that.trigger('connect', {
-                    server: connection.connection_id,
-                    nick: connection.nick
-                });
-            });
-
-            break;
-
         case 'connected':
             // Send some info on this client to the server
             args = {

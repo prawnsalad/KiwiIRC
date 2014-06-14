@@ -107,6 +107,7 @@
 
         initializeGlobals: function () {
             _kiwi.global.connections = this.connections;
+            _kiwi.global.session = _kiwi.gateway.session;
 
             _kiwi.global.panels = this.panels;
             _kiwi.global.panels.applets = this.applet_panels;

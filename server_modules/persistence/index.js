@@ -4,8 +4,6 @@
 
 var kiwiModules = require('../../server/modules'),
     _ = require('lodash'),
-    express = require('express'),
-    express_app = express(),
     storage, storage_engine;
 
 
@@ -152,7 +150,7 @@ rpc_commands.sessionResume = function(callback, event_data) {
         });
 
         // Send the connection information to the client
-        that.sendKiwiCommand('connection_sync', connections);
+        callback(null, connections);
 
         // Second loop - Now the client has the info, sync some data
         _.each(state.irc_connections, function(irc_connection) {
@@ -163,8 +161,6 @@ rpc_commands.sessionResume = function(callback, event_data) {
             irc_connection.write('MOTD');
         });
     });
-
-    callback(null, connections);
 };
 
 
@@ -222,20 +218,3 @@ console.log('targets:', targets);
         });
     });
 };
-
-
-/*
-module.on('http request', function (event, event_data) {
-    express_app(event_data.request, event_data.response, function(){
-        console.log(arguments);
-    });
-    //event.wait = true;
-});
-*/
-
-
-
-
-express_app.get('/something', function(req, res) {
-    res.send('Hello, this is something');
-});

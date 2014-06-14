@@ -20,31 +20,9 @@ _kiwi.global = {
     plugins: undefined, // Instance of _kiwi.model.PluginManager
     events: undefined, // Instance of PluginInterface
     utils: {}, // TODO: Re-usable methods
+    session: undefined, // Instance of _kiwi.model.Session
     rpc: function() {
         _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
-    },
-
-    session: {
-        save: function(username, password, callback) {
-            _kiwi.gateway.saveSession(username, password, function(err, data) {
-                console.log('saveSession()', err, data);
-                callback && callback(err, data);
-            });
-        },
-
-        resume: function(username, password, callback) {
-            _kiwi.gateway.resumeSession(username, password, function(err, data) {
-                console.log('resumeSession()', err, data);
-                callback && callback(err, data);
-            });
-        },
-
-        syncEvents: function(network_id, target, callback) {
-            _kiwi.gateway.syncSessionEvents(network_id, target, function(err, data) {
-                console.log('syncSessionEvents()', err, data);
-                callback && callback(err, data);
-            });
-        }
     },
 
     addMediaMessageType: function(match, buildHtml) {

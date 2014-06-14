@@ -21,7 +21,26 @@
 			'click .activate_bnc': 'activateBnc'
 		},
 
-		initialize: function() {},
+		initialize: function() {
+			var that = this;
+
+			this.listenTo(kiwi.session, 'save', function(err, data) {
+				that.$('.status').text(data);
+			});
+
+			// Event is called when the network object and channels have been created. Only thing left
+			// is to sync the channel events
+			this.listenTo(kiwi.session, 'resumed', function(err, connections) {
+				if (err) {
+					that.$('.status').text('Error: ' + err);
+					return;
+				}
+
+				_.each(connections, function(connection) {
+					kiwi.session.syncEvents(connection.connection_id);
+				});
+			});
+		},
 
 		render: function() {
 			this.$el.html($('#tmpl_myplugin').html());
@@ -35,17 +54,7 @@
 			var username = this.$('[name=username]').val();
 			var password = this.$('[name=password]').val();
 
-			kiwi.session.resume(username, password, function(err, connections) {
-				if (err) {
-					that.$('.status').text('Error: ' + err);
-					return;
-				}
-
-				_.each(connections, function(connection) {
-					console.log('syncing for', connection.connection_id);
-					kiwi.session.syncEvents(connection.connection_id);
-				});
-			});
+			kiwi.session.resume(username, password);
 		},
 
 		skipClick: function(event) {
@@ -63,9 +72,7 @@
 				return;
 			}
 
-			kiwi.session.save(username, password, function(err, data) {
-				that.$('.status').text(data);
-			});
+			kiwi.session.save(username, password);
 		}
 	});
 
