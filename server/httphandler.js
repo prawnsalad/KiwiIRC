@@ -4,6 +4,7 @@ var url         = require('url'),
     Negotiator  = require('negotiator'),
     _           = require('lodash'),
     config      = require('./configuration.js'),
+    winston     = require('winston'),
     SettingsGenerator = require('./settingsgenerator.js');
 
 
@@ -64,7 +65,15 @@ var cached_available_locales = [];
 
 // Get a list of the available translations we have
 fs.readdir('client/assets/locales', function (err, files) {
-    files.forEach(function (file) {
+    if (err) {
+        if (err.code === 'ENOENT') {
+            winston.error('No locale files could be found at ' + err.path);
+        } else {
+            winston.error('Error reading locales.', err);
+        }
+    }
+
+    (files || []).forEach(function (file) {
         if (file.substr(-5) === '.json') {
             cached_available_locales.push(file.slice(0, -5));
         }
