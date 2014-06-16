@@ -63,9 +63,9 @@ _kiwi.view.RightBar = Backbone.View.extend({
         }
 
         if (this.keep_hidden) {
-            $icon.removeClass('fa fa-angle-double-right').addClass('fa fa-user');
+            $icon.removeClass('fa fa-angle-double-right').addClass('fa fa-users');
         } else {
-            $icon.removeClass('fa fa-user').addClass('fa fa-angle-double-right');
+            $icon.removeClass('fa fa-users').addClass('fa fa-angle-double-right');
         }
     },
 
