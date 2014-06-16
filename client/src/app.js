@@ -84,6 +84,8 @@ _kiwi.global = {
 
             if (typeof connection_id !== 'undefined') {
                 connection_event = 'connection:' + connection_id.toString();
+            } else {
+                connection_event = 'connection';
             }
 
             var obj = new this.EventComponent(_kiwi.gateway, connection_event);

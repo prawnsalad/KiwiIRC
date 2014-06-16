@@ -242,7 +242,8 @@ _kiwi.model.Gateway = function () {
         }
 
         // Trigger the global events
-        that.trigger(command, data);
+        that.trigger('connection', {event_name: command, event_data: data});
+        that.trigger('connection:' + command, data);
     };
 
     this.rpcCall = function(method, connection_id) {

@@ -167,7 +167,8 @@
         bindGatewayCommands: function (gw) {
             var that = this;
 
-            gw.on('connect', function (event) {
+            // As soon as an IRC connection is made, show the full client UI
+            gw.on('connection:connect', function (event) {
                 that.view.barsShow();
             });
 
