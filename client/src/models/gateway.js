@@ -39,7 +39,7 @@ _kiwi.model.Gateway = function () {
         this.set('kiwi_server', _kiwi.app.kiwi_server);
 
         this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
-            transports: _kiwi.app.server_settings.transports || ['websocket', 'polling'],
+            transports: _kiwi.app.server_settings.transports || ['polling', 'websocket'],
             path: _kiwi.app.get('base_path') + '/transport',
             reconnect_max_attempts: 5,
             reconnect_delay: 2000
