@@ -253,6 +253,11 @@ function addScripts(vars, debug) {
             'src/views/channelinfo.js',
             'src/views/rightbar.js'
         ],
+
+        [
+            'src/misc/clientuicommands.js'
+        ],
+
         [
             'src/applets/settings.js',
             'src/applets/chanlist.js',

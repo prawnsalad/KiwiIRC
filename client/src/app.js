@@ -4,6 +4,7 @@
 */
 var _kiwi = {};
 
+_kiwi.misc = {};
 _kiwi.model = {};
 _kiwi.view = {};
 _kiwi.applets = {};
