@@ -137,11 +137,11 @@ html, body { height:100%; }
     position: absolute;
     top: 10px;
     left: -2.3em;
-    width: 1.3em;
+    width: 1.5em;
     font-size: 25px;
     font-weight: bold;
     text-align: center;
-    line-height: 1.3em;
+    line-height: 1.5em;
     background: #e3e3e3;
     border: 1px solid;
     border-radius: 50%;
