@@ -1,3 +1,9 @@
+/**
+ * Open proxy checking
+ *
+ * Look for common open proxy ports from the client
+ */
+
 var util = require('util'),
     kiwiModules = require('../server/modules');
 
