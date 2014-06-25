@@ -58,10 +58,23 @@ function checkForOpenProxies(host, callback) {
         }
     };
 
+    var portTimeout = function() {
+        ports_completed++;
+        this.removeAllListeners();
+        this.destroy();
+
+        if (!callback_called && ports_completed >= ports.length) {
+            callback_called = true;
+            callback(false);
+        }
+    };
+
     for (var idx=0; idx< ports.length; idx++) {
         net.connect({port: ports[idx], host: host})
             .on('connect', portConnected)
             .on('error', portFailed)
-            .on('close', portFailed);
+            .on('close', portFailed)
+            .on('timeout', portTimeout)
+            .setTimeout(5000);
     }
 }
