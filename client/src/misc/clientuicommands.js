@@ -144,7 +144,7 @@
 
         // No parameters passed so list them
         if (!ev.params[1]) {
-            $.each(controlbox.preprocessor.aliases, function (name, rule) {
+            $.each(this.controlbox.preprocessor.aliases, function (name, rule) {
                 that.app.panels().server.addMsg(' ', styleText('list_aliases', {text: name + '   =>   ' + rule}));
             });
             return;
@@ -154,7 +154,7 @@
         if (ev.params[0] === 'del' || ev.params[0] === 'delete') {
             name = ev.params[1];
             if (name[0] !== '/') name = '/' + name;
-            delete controlbox.preprocessor.aliases[name];
+            delete this.controlbox.preprocessor.aliases[name];
             return;
         }
 
@@ -167,7 +167,7 @@
         if (name[0] !== '/') name = '/' + name;
 
         // Now actually add the alias
-        controlbox.preprocessor.aliases[name] = rule;
+        this.controlbox.preprocessor.aliases[name] = rule;
     };
 
 
