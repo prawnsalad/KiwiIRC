@@ -217,7 +217,6 @@
     // A fallback action. Send a raw command to the server
     function unknownCommand (ev) {
         var raw_cmd = ev.command + ' ' + ev.params.join(' ');
-        console.log('RAW: ' + raw_cmd);
         this.app.connections.active_connection.gateway.raw(raw_cmd);
     }
 
