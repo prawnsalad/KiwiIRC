@@ -398,75 +398,78 @@
 
 
     function onMessage(event) {
-        var panel,
-            is_pm = ((event.target || '').toLowerCase() == this.get('nick').toLowerCase());
+        _kiwi.global.events.emit('message:new', {network: this, message: event})
+        .done(_.bind(function() {
+            var panel,
+                is_pm = ((event.target || '').toLowerCase() == this.get('nick').toLowerCase());
 
-        // An ignored user? don't do anything with it
-        if (this.isNickIgnored(event.nick)) {
-            return;
-        }
+            // An ignored user? don't do anything with it
+            if (this.isNickIgnored(event.nick)) {
+                return;
+            }
 
-        if (event.type == 'notice') {
-            if (event.from_server) {
-                panel = this.panels.server;
+            if (event.type == 'notice') {
+                if (event.from_server) {
+                    panel = this.panels.server;
 
-            } else {
-                panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
+                } else {
+                    panel = this.panels.getByName(event.target) || this.panels.getByName(event.nick);
 
-                // Forward ChanServ messages to its associated channel
-                if (event.nick && event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
-                    channel_name = /\[([^ \]]+)\]/gi.exec(event.msg);
-                    if (channel_name && channel_name[1]) {
-                        channel_name = channel_name[1];
+                    // Forward ChanServ messages to its associated channel
+                    if (event.nick && event.nick.toLowerCase() == 'chanserv' && event.msg.charAt(0) == '[') {
+                        channel_name = /\[([^ \]]+)\]/gi.exec(event.msg);
+                        if (channel_name && channel_name[1]) {
+                            channel_name = channel_name[1];
 
-                        panel = this.panels.getByName(channel_name);
+                            panel = this.panels.getByName(channel_name);
+                        }
                     }
+
                 }
 
+                if (!panel) {
+                    panel = this.panels.server;
+                }
+
+            } else if (is_pm) {
+                // If a panel isn't found for this PM, create one
+                panel = this.panels.getByName(event.nick);
+                if (!panel) {
+                    panel = new _kiwi.model.Query({name: event.nick, network: this});
+                    this.panels.add(panel);
+                }
+
+            } else {
+                // If a panel isn't found for this target, reroute to the
+                // server panel
+                panel = this.panels.getByName(event.target);
+                if (!panel) {
+                    panel = this.panels.server;
+                }
             }
 
-            if (!panel) {
-                panel = this.panels.server;
+            switch (event.type){
+            case 'message':
+                panel.addMsg(event.nick, styleText('privmsg', {text: event.msg}), 'privmsg', {time: event.time});
+                break;
+
+            case 'action':
+                panel.addMsg('', styleText('action', {nick: event.nick, text: event.msg}), 'action', {time: event.time});
+                break;
+
+            case 'notice':
+                panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
+
+                // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
+                active_panel = _kiwi.app.panels().active;
+
+                if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
+                    if (active_panel.get('network') === this && (active_panel.isChannel() || active_panel.isQuery()))
+                        active_panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
+                }
+                break;
             }
-
-        } else if (is_pm) {
-            // If a panel isn't found for this PM, create one
-            panel = this.panels.getByName(event.nick);
-            if (!panel) {
-                panel = new _kiwi.model.Query({name: event.nick, network: this});
-                this.panels.add(panel);
-            }
-
-        } else {
-            // If a panel isn't found for this target, reroute to the
-            // server panel
-            panel = this.panels.getByName(event.target);
-            if (!panel) {
-                panel = this.panels.server;
-            }
-        }
-
-        switch (event.type){
-        case 'message':
-            panel.addMsg(event.nick, styleText('privmsg', {text: event.msg}), 'privmsg', {time: event.time});
-            break;
-
-        case 'action':
-            panel.addMsg('', styleText('action', {nick: event.nick, text: event.msg}), 'action', {time: event.time});
-            break;
-
-        case 'notice':
-            panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
-
-            // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
-            active_panel = _kiwi.app.panels().active;
-
-            if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
-                if (active_panel.get('network') === this && (active_panel.isChannel() || active_panel.isQuery()))
-                    active_panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
-            }
-            break;
-        }
+        }, this));
     }
 
 
