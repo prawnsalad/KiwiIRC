@@ -356,11 +356,20 @@
         quit_options.time = event.time;
 
         $.each(this.panels.models, function (index, panel) {
-            if (!panel.isChannel()) return;
+            // Let any query panels know they quit
+            if (panel.isQuery() && panel.get('name').toLowerCase() === event.nick.toLowerCase()) {
+                panel.addMsg(' ', styleText('channel_quit', {
+                    nick: event.nick,
+                    text: translateText('client_models_channel_quit', [quit_options.message])
+                }), 'action quit', {time: quit_options.time});
+            }
 
-            member = panel.get('members').getByNick(event.nick);
-            if (member) {
-                panel.get('members').remove(member, {kiwi: quit_options});
+            // Remove the nick from any channels
+            if (panel.isChannel()) {
+                member = panel.get('members').getByNick(event.nick);
+                if (member) {
+                    panel.get('members').remove(member, {kiwi: quit_options});
+                }
             }
         });
     }
