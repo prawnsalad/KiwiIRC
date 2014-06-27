@@ -157,7 +157,10 @@
 
             // Keep track of the active panel. Channel/query/server or applet
             fn.bind('active', function (new_active_panel) {
+                var previous_panel = active_panel;
                 active_panel = new_active_panel;
+
+                _kiwi.global.events.emit('panel:active', {previous: previous_panel, active: active_panel});
             });
 
             return fn;

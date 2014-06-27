@@ -6,9 +6,13 @@ _kiwi.model.Panel = Backbone.Model.extend({
             "scrollback": [],
             "name": name
         }, {"silent": true});
+
+        _kiwi.global.events.emit('panel:created', {panel: this});
     },
 
     closePanel: function () {
+        _kiwi.global.events.emit('panel:close', {panel: this});
+
         if (this.view) {
             this.view.unbind();
             this.view.remove();
