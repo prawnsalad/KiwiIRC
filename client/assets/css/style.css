@@ -37,10 +37,10 @@ html, body { height:100%; }
 /**
  * Main layout blocks
  */
-#kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; }
+#kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; z-index:1; }
 #kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
 #kiwi .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
-#kiwi .right-bar-content { overflow-y:auto; position:relative; height:100% ;}
+#kiwi .right-bar-content { position:relative; height:100%; z-index:0; }
 #kiwi .controlbox { position: absolute; bottom:0px; width:100%; display:none; }
 #kiwi .memberlists_resize_handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
@@ -83,6 +83,11 @@ html, body { height:100%; }
 }
 
 #kiwi .channel_tools {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
 }
 #kiwi .channel_tools i {
     width: 32%;
@@ -149,6 +154,15 @@ html, body { height:100%; }
 }
 
 /* The active channels nicklist */
+#kiwi .memberlists {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+    overflow-y: auto;
+    padding-top: 50px;
+}
 #kiwi .memberlists > div { display:none; }
 #kiwi .memberlists > div.active { display:block; }
 #kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }

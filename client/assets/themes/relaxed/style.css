@@ -96,6 +96,7 @@
     border-bottom: 1px solid #8A8A8A;
     margin-bottom: 10px;
     padding: 0 5%;
+    background: #DADADA;
 }
 #kiwi .channel_tools i {
     width: 30%;
@@ -190,6 +191,7 @@
 #kiwi.narrow .right_bar { width:100%; }
 #kiwi.narrow .right_bar.disabled { width:0; }
 
+#kiwi .memberlists {}
 #kiwi .memberlists .meta {
     border-bottom: 1px solid #8A8A8A;
     font-size: 0.9em;
@@ -306,7 +308,7 @@
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
     background-color:#FFF;
-    z-index: 1;
+    z-index: 10;
     height:auto; bottom:auto;
     border-bottom: 2px solid #121314;
 }
