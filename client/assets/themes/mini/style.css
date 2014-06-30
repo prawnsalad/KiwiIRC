@@ -72,6 +72,21 @@
 }
 #kiwi .status_message.err { color:#D8000C; background:#FFBABA; }
 
+#kiwi .channel_tools {
+    border-bottom: 1px solid #8A8A8A;
+    margin-bottom: 10px;
+    padding: 0 5%;
+}
+#kiwi .channel_tools i {
+    width: 30%;
+    font-size: 1.6em;
+    line-height: 1.6em;
+}
+#kiwi .channel_tools i:hover {
+    transition: color 0.3s;
+    color: #88C56A;
+}
+
 #kiwi .messages { color: #333333; }
 #kiwi .messages.active { }
 #kiwi .messages a { text-decoration:none; }
@@ -144,12 +159,27 @@
 #kiwi .right_bar {
     background-color: #DADADA;
     border-left: 1px solid #8A8A8A;
-    display:none;
     width:0px;
 }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
+
+#kiwi .memberlists .meta {
+    border-bottom: 1px solid #8A8A8A;
+    font-size: 0.9em;
+    /*margin-bottom: 10px;*/
+    padding: 0 0 10px;
+    text-align: center;
+}
+
 #kiwi .memberlists ul { list-style: none; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.narrow .memberlists ul li {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+}
 #kiwi .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
