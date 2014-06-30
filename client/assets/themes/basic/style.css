@@ -176,6 +176,8 @@
     background-color: #DADADA;
     border-left: 1px dashed #8A8A8A;
 }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
 
 #kiwi .memberlists .meta {
     font-size: 0.9em;
@@ -260,6 +262,8 @@
 
 
 #kiwi .toolbar .app_tools { padding-left:10px; color:#D4D4D4; }
+#kiwi.narrow .toolbar .tabs { margin-right:0; }
+#kiwi.narrow .toolbar .app_tools { width:auto; }
 #kiwi .toolbar .app_tools ul li {
     font-size:26px;
     -webkit-transition: all .3s ease;
