@@ -208,6 +208,10 @@
     padding: 2px;
     overflow: hidden;
 }
+
+#kiwi.narrow .controlbox .input .nick { display:none; }
+#kiwi.narrow .controlbox .input .input_wrap { left:7px; }
+
 #kiwi .controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
 #kiwi .controlbox .input .nick a { text-decoration:none; color:black; }
 #kiwi .controlbox .input .input_wrap {
