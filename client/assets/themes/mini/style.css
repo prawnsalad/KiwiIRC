@@ -31,17 +31,24 @@
 #kiwi .memberlists_resize_handle {
     display:none; width:0;
 }
+
+#kiwi .toolbar .connections { list-style: none; }
+#kiwi .toolbar .panellist {
+    background: #2b2b2b;
+    color: #a5a5a5;
+    margin: 5px 0 0 5px;
+    float: left;
+}
 #kiwi .toolbar .panellist li {
     line-height: 1.4em;
     vertical-align: middle;
 
-    border-radius:5px;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    -khtml-border-radius:5px;
-
-    border: 1px solid #333;
-    background-color: #eee;
+    display: list-item;
+    float: left;
+    border: none;
+    background: none;
+    padding: 8px;
+    margin: 0;
 }
 
 #kiwi .toolbar .tabs { margin-right:0 !important; }
