@@ -188,6 +188,11 @@
 #kiwi .memberlists ul { list-style: none; margin-left:2px; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding:0 2px; }
+#kiwi.narrow .memberlists ul li {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+}
 #kiwi .memberlists ul li:hover {}
 #kiwi .memberlists ul li a.nick { display:block; color:black; }
 

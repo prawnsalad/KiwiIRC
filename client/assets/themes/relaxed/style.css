@@ -201,6 +201,11 @@
 #kiwi .memberlists ul { list-style: none; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.narrow .memberlists ul li {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+}
 #kiwi .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
