@@ -42,16 +42,16 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.more_shown = false;
 
         this.model.bind('new_network', this.newNetwork, this);
-        _kiwi.gateway.bind('connect', this.networkConnected, this);
-        _kiwi.gateway.bind('connecting', this.networkConnecting, this);
-        _kiwi.gateway.bind('irc_error', this.onIrcError, this);
+
+        this.gateway = _kiwi.global.components.Network();
+        this.gateway.on('connect', this.networkConnected, this);
+        this.gateway.on('connecting', this.networkConnecting, this);
+        this.gateway.on('irc_error', this.onIrcError, this);
     },
 
     dispose: function() {
         this.model.off('new_network', this.newNetwork, this);
-        _kiwi.gateway.off('connect', this.networkConnected, this);
-        _kiwi.gateway.off('connecting', this.networkConnecting, this);
-        _kiwi.gateway.off('irc_error', this.onIrcError, this);
+        this.gateway.off();
 
         this.remove();
     },
@@ -284,7 +284,11 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             this.$el.find('.nick').select();
             break;
         case 'erroneus_nickname':
-            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
+            if (data.reason) {
+                this.setStatus(data.reason);
+            } else {
+                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
+            }
             this.show('nick_change');
             this.$el.find('.nick').select();
             break;
