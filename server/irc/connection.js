@@ -56,6 +56,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
+    this.gecos = ''; // Users real-name. Uses default from config if empty
     this.password = options.password || '';
 
     // Set the passed encoding. or the default if none giving or it fails
@@ -606,11 +607,16 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
-        var gecos = '[www.kiwiirc.com] ' + that.nick;
+        var gecos = that.gecos;
 
-        if (global.config.default_gecos) {
+        if (!gecos && global.config.default_gecos) {
+            // We don't have a gecos yet, so use the default
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
-            gecos = gecos.toString().replace('%h', that.user.hostname);
+            gecos = gecos.replace('%h', that.user.hostname);
+
+        } else if (!gecos) {
+            // We don't have a gecos nor a default, so lets set somthing
+            gecos = '[www.kiwiirc.com] ' + that.nick;
         }
 
         // Send any initial data for webirc/etc
