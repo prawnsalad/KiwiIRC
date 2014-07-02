@@ -72,7 +72,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
     con.on('close', function IrcConnectionClose() {
         // TODO: Can we get a better reason for the disconnection? Was it planned?
-        that.sendIrcCommand('disconnect', {server: con.con_num, reason: 'disconnected'});
+        that.sendIrcCommand('disconnect', {connection_id: con.con_num, reason: 'disconnected'});
 
         that.irc_connections[con_num] = null;
         global.servers.removeConnection(this);
