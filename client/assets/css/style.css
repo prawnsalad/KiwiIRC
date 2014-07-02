@@ -149,8 +149,20 @@ html, body { height:100%; }
     line-height: 1.5em;
     background: #e3e3e3;
     border: 1px solid;
-    border-radius: 50%;
     cursor: pointer;
+
+    /*
+        Some mobile browsers only support long-hand border-radius, and using large
+        px values instead of 50% ensures the circle
+    */
+    -webkit-border-top-left-radius: 500px;
+    -webkit-border-top-right-radius: 500px;
+    -webkit-border-bottom-left-radius: 500px;
+    -webkit-border-bottom-right-radius: 500px;
+    border-top-left-radius: 500px;
+    border-top-right-radius: 500px;
+    border-bottom-left-radius: 500px;
+    border-bottom-right-radius: 500px;
 }
 
 /* The active channels nicklist */
