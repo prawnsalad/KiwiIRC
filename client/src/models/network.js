@@ -87,7 +87,7 @@
             var that = this,
                 server_info = {
                     nick:       this.get('nick'),
-                    host:   this.get('address'),
+                    host:       this.get('address'),
                     port:       this.get('port'),
                     ssl:        this.get('ssl'),
                     password:   this.get('password')
