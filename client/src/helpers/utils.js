@@ -528,9 +528,10 @@ function styleText(string_id, params) {
 
     // Expand a member mask into its individual parts (nick, ident, hostname)
     if (params.member) {
-        params.nick = params.member.nick;
-        params.ident = params.member.ident;
-        params.host = params.member.hostname;
+        params.nick = params.member.nick || '';
+        params.ident = params.member.ident || '';
+        params.host = params.member.hostname || '';
+        params.prefix = params.member.prefix || '';
     }
 
     // Do the magic. Use the %shorthand syntax to produce output.
