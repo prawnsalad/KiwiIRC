@@ -169,8 +169,12 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         _kiwi.global.events.emit('message:display', {panel: this.model, message: msg})
         .done(_.bind(function() {
+            // Format the nick to the config defined format
+            var display_obj = _.clone(msg);
+            display_obj.nick = styleText('message_nick', {nick: msg.nick, prefix: msg.nick_prefix || ''});
+
             line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
-            this.$messages.append(_.template(line_msg, msg));
+            this.$messages.append($(_.template(line_msg, display_obj)).data('message', msg));
 
             // Activity/alerts based on the type of new message
             if (msg.type.match(/^action /)) {
@@ -265,7 +269,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     // Click on a nickname
     nickClick: function (event) {
-        var nick = $(event.currentTarget).text(),
+        var nick = $(event.currentTarget).parent('.msg').data('message').nick,
             members = this.model.get('members'),
             are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
             member, query, userbox, menubox;
