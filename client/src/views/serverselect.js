@@ -46,6 +46,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.gateway = _kiwi.global.components.Network();
         this.gateway.on('connect', this.networkConnected, this);
         this.gateway.on('connecting', this.networkConnecting, this);
+        this.gateway.on('disconnect', this.networkDisconnected, this);
         this.gateway.on('irc_error', this.onIrcError, this);
     },
 
@@ -256,6 +257,11 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     networkConnected: function (event) {
         this.model.trigger('connected', _kiwi.app.connections.getByConnectionId(event.server));
         this.model.current_connecting_network = null;
+    },
+
+    networkDisconnected: function () {
+        this.model.current_connecting_network = null;
+        this.state = 'all';
     },
 
     networkConnecting: function (event) {

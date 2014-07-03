@@ -37,6 +37,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Socket state
     this.connected = false;
 
+    // If the connection closes and this is false, we reconnect
+    this.requested_disconnect = false;
+
     // IRCd write buffers (flood controll)
     this.write_buffer = [];
 
@@ -175,6 +178,8 @@ IrcConnection.prototype.connect = function () {
     // Make sure we don't already have an open connection
     this.disposeSocket();
 
+    this.requested_disconnect = false;
+
     // Get the IP family for the dest_addr (either socks or IRCd destination)
     getConnectionFamily(dest_addr, function getConnectionFamilyCb(err, family, host) {
         var outgoing;
@@ -290,17 +295,37 @@ IrcConnection.prototype.connect = function () {
         });
 
         that.socket.on('close', function socketCloseCb(had_error) {
+            // If that.connected is false, we never actually managed to connect
+            var was_connected = that.connected,
+                had_registered = that.server.registered,
+                should_reconnect = false;
+
             that.connected = false;
+            that.server.reset();
 
             // Remove this socket form the identd lookup
             if (that.identd_port_pair) {
                 delete global.clients.port_pairs[that.identd_port_pair];
             }
 
-            that.emit('close', had_error);
+            should_reconnect = (!that.requested_disconnect && was_connected && had_registered);
+
+            if (should_reconnect) {
+                that.emit('reconnecting');
+            } else {
+                that.emit('close', had_error);
+            }
 
             // Close the whole socket down
             that.disposeSocket();
+
+            // If this socket closing was not expected and we did actually connect and
+            // we did previously completely register on the network, then reconnect
+            if (should_reconnect) {
+                setTimeout(function() {
+                    that.connect();
+                }, 3000);
+            }
         });
     });
 };
@@ -391,6 +416,8 @@ IrcConnection.prototype.end = function (data) {
     if (!this.socket) {
         return;
     }
+
+    this.requested_disconnect = true;
 
     if (data) {
         this.write(data, true);

@@ -8,6 +8,8 @@ var IrcServer = function (irc_connection) {
     this.list_buffer = [];
     this.motd_buffer = '';
 
+    this.registered = false;
+
     this.irc_events = {
         connect:                onConnect,
         options:                onOptions,
@@ -49,8 +51,17 @@ IrcServer.prototype.dispose = function (){
 };
 
 
+IrcServer.prototype.reset = function() {
+    this.registered = false;
+    this.list_buffer = [];
+    this.motd_buffer = '';
+};
+
+
 
 function onConnect(event) {
+    this.registered = true;
+
     this.irc_connection.clientEvent('connect', {
         nick: event.nick
     });
