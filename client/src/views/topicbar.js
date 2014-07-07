@@ -1,4 +1,5 @@
-_kiwi.view.TopicBar = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     events: {
         'keydown div': 'process'
     },
@@ -21,7 +22,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
     process: function (ev) {
         var inp = $(ev.currentTarget),
             inp_val = inp.text();
-        
+
         // Only allow topic editing if this is a channel panel
         if (!_kiwi.app.panels().active.isChannel()) {
             return false;
@@ -40,4 +41,5 @@ _kiwi.view.TopicBar = Backbone.View.extend({
         // We only want a plain text version
         $('div', this.$el).html(formatIRCMsg(_.escape(new_topic)));
     }
+});
 });

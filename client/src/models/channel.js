@@ -1,18 +1,24 @@
-// TODO: Channel modes
-// TODO: Listen to gateway events for anythign related to this channel
-_kiwi.model.Channel = _kiwi.model.Panel.extend({
+define(function (require, exports, module) {
+
+var Panel = require('../models/panel');
+var MemberList = require('../models/memberlist');
+var Channel = require('../views/channel');
+
+console.log('exporting models/channel');
+
+module.exports = Panel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;
 
         this.set({
-            "members": new _kiwi.model.MemberList(),
+            "members": new MemberList(),
             "name": name,
             "scrollback": [],
             "topic": ""
         }, {"silent": true});
 
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
+        this.view = new Channel({"model": this, "name": name});
 
         members = this.get("members");
         members.channel = this;
@@ -121,4 +127,5 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
     isChannel: function() {
         return true;
     }
+});
 });

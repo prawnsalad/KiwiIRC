@@ -1,4 +1,5 @@
-_kiwi.view.MenuBox = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     events: {
         'click .ui_menu_foot .close, a.close_menu': 'dispose'
     },
@@ -127,4 +128,5 @@ _kiwi.view.MenuBox = Backbone.View.extend({
             $(document).on('click', that._close_proxy);
         }, 0);
     }
+});
 });

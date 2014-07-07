@@ -1,4 +1,11 @@
-(function() {
+define(function (require, exports, module) {
+
+    var MenuBox = require('../views/menubox');
+
+    var Query = require('../models/query');
+    var Applet = require('../models/applet');
+    var ChannelInfo = require('../models/channelinfo');
+    var NewConnection = require('../models/newconnection');
 
     function ClientUiCommands(app, controlbox) {
         this.app = app;
@@ -8,7 +15,7 @@
         this.bindCommand(fn_to_bind);
     }
 
-    _kiwi.misc.ClientUiCommands = ClientUiCommands;
+    module.exports = ClientUiCommands;
 
 
     // Add the default user command aliases
@@ -248,7 +255,7 @@
         // Check if we have the panel already. If not, create it
         panel = this.app.connections.active_connection.panels.getByName(destination);
         if (!panel) {
-            panel = new _kiwi.model.Query({name: destination});
+            panel = new Query({name: destination});
             this.app.connections.active_connection.panels.add(panel);
         }
 
@@ -407,13 +414,13 @@
 
 
     function settingsCommand (ev) {
-        var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
+        var settings = Applet.loadOnce('kiwi_settings');
         settings.view.show();
     }
 
 
     function scriptCommand (ev) {
-        var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
+        var editor = Applet.loadOnce('kiwi_script_editor');
         editor.view.show();
     }
 
@@ -421,7 +428,7 @@
     function appletCommand (ev) {
         if (!ev.params[0]) return;
 
-        var panel = new _kiwi.model.Applet();
+        var panel = new Applet();
 
         if (ev.params[1]) {
             // Url and name given
@@ -513,7 +520,7 @@
         if (!active_panel.isChannel())
             return;
 
-        new _kiwi.model.ChannelInfo({channel: this.app.panels().active});
+        new ChannelInfo({channel: this.app.panels().active});
     }
 
 
@@ -524,8 +531,8 @@
 
         // If no server address given, show the new connection dialog
         if (!ev.params[0]) {
-            tmp = new _kiwi.view.MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
-            tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
+            tmp = new MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
+            tmp.addItem('new_connection', new NewConnection().view.$el);
             tmp.show();
 
             // Center screen the dialog
@@ -584,4 +591,4 @@
         });
     }
 
-})();
+});

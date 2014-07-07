@@ -1,7 +1,18 @@
-// Holds anything kiwi client specific (ie. front, gateway, _kiwi.plugs..)
-/**
-*   @namespace
-*/
+define(function (require, exports, module) {
+
+var DataStore = require('./models/datastore');
+var PluginManager = require('./models/pluginmanager');
+var MediaMessage = require('./views/mediamessage');
+var Application = require('./models/application');
+
+var randomString = require('./helpers/utils').randomString;
+var secondsToTime = require('./helpers/utils').secondsToTime;
+var parseISO8601 = require('./helpers/utils').parseISO8601;
+var escapeRegex = require('./helpers/utils').escapeRegex;
+var formatIRCMsg = require('./helpers/utils').formatIRCMsg;
+var styleText = require('./helpers/utils').styleText;
+var hsl2rgb = require('./helpers/utils').hsl2rgb;
+
 var _kiwi = {};
 
 _kiwi.misc = {};
@@ -17,8 +28,8 @@ _kiwi.applets = {};
  */
 _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
-    settings: undefined, // Instance of _kiwi.model.DataStore
-    plugins: undefined, // Instance of _kiwi.model.PluginManager
+    settings: undefined, // Instance of DataStore
+    plugins: undefined, // Instance of PluginManager
     events: undefined, // Instance of PluginInterface
     utils: {}, // References to misc. re-usable helpers / functions
 
@@ -37,7 +48,7 @@ _kiwi.global = {
     },
 
     addMediaMessageType: function(match, buildHtml) {
-        _kiwi.view.MediaMessage.addType(match, buildHtml);
+        MediaMessage.addType(match, buildHtml);
     },
 
     // Event managers for plugins
@@ -152,7 +163,8 @@ _kiwi.global = {
 
         jobs = new JobManager();
         jobs.onFinish(function(locale, s, xhr) {
-            _kiwi.app = new _kiwi.model.Application(opts);
+            console.log('Application', Application);
+            _kiwi.app = new Application(opts);
 
             // Start the client up
             _kiwi.app.initializeInterfaces();
@@ -161,7 +173,7 @@ _kiwi.global = {
             _kiwi.global.events  = new PluginInterface();
 
             // Now everything has started up, load the plugin manager for third party plugins
-            _kiwi.global.plugins = new _kiwi.model.PluginManager();
+            _kiwi.global.plugins = new PluginManager();
 
             callback();
         });
@@ -183,7 +195,7 @@ _kiwi.global = {
         };
 
         // Set up the settings datastore
-        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
+        _kiwi.global.settings = DataStore.instance('kiwi.settings');
         _kiwi.global.settings.load();
 
         // Set the window title
@@ -383,11 +395,6 @@ _kiwi.global = {
 };
 
 
+module.exports = _kiwi;
 
-// If within a closure, expose the kiwi globals
-if (typeof global !== 'undefined') {
-    global.kiwi = _kiwi.global;
-} else {
-    // Not within a closure so set a var in the current scope
-    var kiwi = _kiwi.global;
-}
+});

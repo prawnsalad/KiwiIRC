@@ -1,4 +1,6 @@
-_kiwi.view.ResizeHandler = Backbone.View.extend({
+define(function (require, exports, module) {
+
+    module.exports = Backbone.View.extend({
     events: {
         'mousedown': 'startDrag',
         'mouseup': 'stopDrag'
@@ -26,4 +28,5 @@ _kiwi.view.ResizeHandler = Backbone.View.extend({
         $('#kiwi .right_bar').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
         _kiwi.app.view.doLayout();
     }
+});
 });

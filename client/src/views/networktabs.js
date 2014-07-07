@@ -1,5 +1,6 @@
+define(function (require, exports, module) {
 // Model for this = _kiwi.model.NetworkPanelList
-_kiwi.view.NetworkTabs = Backbone.View.extend({
+module.exports = Backbone.View.extend({
     tagName: 'ul',
     className: 'connections',
 
@@ -21,4 +22,5 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
 
         _kiwi.app.view.doLayout();
     }
+});
 });

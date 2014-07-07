@@ -1,4 +1,5 @@
-var formatDate = (function() {
+define(function (require, exports, module) {
+
     /*
     Modified version of date.format.js
     https://github.com/jacwright/date.format
@@ -119,8 +120,8 @@ var formatDate = (function() {
     /* End of date.format */
 
 
-    // Finally.. the actuall formatDate function
-    return function(working_date, format) {
+
+    module.exports = function(working_date, format) {
         if (!locale_init)
             initLocaleFormats();
 
@@ -131,4 +132,4 @@ var formatDate = (function() {
             return (esc === '' && replaceChars[chr]) ? replaceChars[chr].call(working_date) : chr;
         });
     };
-})();
+});

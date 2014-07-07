@@ -1,5 +1,10 @@
-_kiwi.model.MemberList = Backbone.Collection.extend({
-    model: _kiwi.model.Member,
+define(function (require, exports, module) {
+
+var Member = require('../models/member');
+var MemberList = require('../views/memberlist');
+
+module.exports = Backbone.Collection.extend({
+    model: Member,
     comparator: function (a, b) {
         var i, a_modes, b_modes, a_idx, b_idx, a_nick, b_nick;
         var user_prefixes = this.channel.get('network').get('user_prefixes');
@@ -48,7 +53,7 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
         }
     },
     initialize: function (options) {
-        this.view = new _kiwi.view.MemberList({"model": this});
+        this.view = new MemberList({"model": this});
     },
     getByNick: function (nick) {
         if (typeof nick !== 'string') return;
@@ -56,4 +61,5 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
             return nick.toLowerCase() === m.get('nick').toLowerCase();
         });
     }
+});
 });

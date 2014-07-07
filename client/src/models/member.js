@@ -1,4 +1,8 @@
-_kiwi.model.Member = Backbone.Model.extend({
+define(function (require, exports, module) {
+
+var Member = require('../views/member');
+
+module.exports = Backbone.Model.extend({
     initialize: function (attributes) {
         var nick, modes, prefix;
 
@@ -14,7 +18,7 @@ _kiwi.model.Member = Backbone.Model.extend({
 
         this.updateOpStatus();
 
-        this.view = new _kiwi.view.Member({"model": this});
+        this.view = new Member({"model": this});
     },
 
 
@@ -188,4 +192,5 @@ _kiwi.model.Member = Backbone.Model.extend({
             this.set({"is_op": false}, {silent: true});
         }
     }
+});
 });

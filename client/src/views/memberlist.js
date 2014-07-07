@@ -1,4 +1,10 @@
-_kiwi.view.MemberList = Backbone.View.extend({
+define(function (require, exports, module) {
+
+var UserBox = require('../views/userbox');
+var MenuBox = require('../views/menubox');
+var ChannelInfo = require('../models/channelinfo');
+
+module.exports = Backbone.View.extend({
     tagName: "div",
     events: {
         "click .nick": "nickClick",
@@ -43,11 +49,11 @@ _kiwi.view.MemberList = Backbone.View.extend({
             userbox,
             are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
-        userbox = new _kiwi.view.UserBox();
+        userbox = new UserBox();
         userbox.setTargets(member, this.model.channel);
         userbox.displayOpItems(are_we_an_op);
 
-        var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+        var menu = new MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);
         menu.showFooter(false);
 
@@ -95,7 +101,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
 
     channelInfoClick: function(event) {
-        new _kiwi.model.ChannelInfo({channel: this.model.channel});
+        new ChannelInfo({channel: this.model.channel});
     },
 
 
@@ -105,4 +111,5 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
         this.renderMeta();
     }
+});
 });

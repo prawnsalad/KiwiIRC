@@ -1,4 +1,5 @@
-_kiwi.view.MediaMessage = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     events: {
         'click .media_close': 'close'
     },
@@ -145,7 +146,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                      var spot = {
                          url: 'https://embed.spotify.com/?uri=' + uri,
                          width: 300,
-                         height: 80 
+                         height: 80
                      };
                      break;
                 case "artist":
@@ -248,4 +249,5 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         return html;
     }
+});
 });

@@ -1,4 +1,5 @@
-_kiwi.view.ServerSelect = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     events: {
         'submit form': 'submitForm',
         'click .show_more': 'showMore',
@@ -328,4 +329,5 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         $('button', this.$el).attr('disabled', null);
         this.show();
     }
+});
 });

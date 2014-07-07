@@ -1,10 +1,26 @@
-(function () {
+define(function (require, exports, module) {
 
-    _kiwi.model.Application = Backbone.Model.extend({
-        /** _kiwi.view.Application */
+    var Applet = require('../models/applet');
+    var DataStore = require('../models/datastore');
+    var Gateway = require('../models/gateway');
+    var NetworkPanelList = require('../models/networkpanellist');
+    var Panel = require('../models/panel');
+    var PanelList = require('../models/panellist');
+    var Application = require('../views/application');
+    var AppToolbar = require('../views/apptoolbar');
+    var ChannelTools = require('../views/channeltools');
+    var ControlBox = require('../views/controlbox');
+    var MenuBox = require('../views/menubox');
+    var ResizeHandler = require('../views/resizehandler');
+    var RightBar = require('../views/rightbar');
+    var StatusMessage = require('../views/statusmessage');
+    var TopicBar = require('../views/topicbar');
+
+    module.exports = Backbone.Model.extend({
+        /** Application */
         view: null,
 
-        /** _kiwi.view.StatusMessage */
+        /** StatusMessage */
         message: null,
 
         /* Address for the kiwi server */
@@ -45,7 +61,7 @@
 
         initializeInterfaces: function () {
             // Set the gateway up
-            _kiwi.gateway = new _kiwi.model.Gateway();
+            _kiwi.gateway = new Gateway();
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();
@@ -67,38 +83,38 @@
 
 
         showStartup: function() {
-            this.startup_applet = _kiwi.model.Applet.load(this.startup_applet_name, {no_tab: true});
+            this.startup_applet = Applet.load(this.startup_applet_name, {no_tab: true});
             this.startup_applet.tab = this.view.$('.console');
             this.startup_applet.view.show();
         },
 
 
         initializeClient: function () {
-            this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
+            this.view = new Application({model: this, el: this.get('container')});
 
             // Takes instances of model_network
-            this.connections = new _kiwi.model.NetworkPanelList();
+            this.connections = new NetworkPanelList();
 
             // Applets panel list
-            this.applet_panels = new _kiwi.model.PanelList();
+            this.applet_panels = new PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
             this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
             /**
              * Set the UI components up
              */
-            this.controlbox = new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]});
+            this.controlbox = new ControlBox({el: $('#kiwi .controlbox')[0]});
             this.client_ui_commands = new _kiwi.misc.ClientUiCommands(this, this.controlbox);
 
-            this.rightbar = new _kiwi.view.RightBar({el: this.view.$('.right_bar')[0]});
-            this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
+            this.rightbar = new RightBar({el: this.view.$('.right_bar')[0]});
+            this.topicbar = new TopicBar({el: this.view.$el.find('.topic')[0]});
 
-            new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
-            new _kiwi.view.ChannelTools({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
+            new AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
+            new ChannelTools({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
 
-            this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
+            this.message = new StatusMessage({el: this.view.$el.find('.status_message')[0]});
 
-            this.resize_handle = new _kiwi.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
+            this.resize_handle = new ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();
@@ -111,10 +127,10 @@
             _kiwi.global.panels = this.panels;
             _kiwi.global.panels.applets = this.applet_panels;
 
-            _kiwi.global.components.Applet = _kiwi.model.Applet;
-            _kiwi.global.components.Panel =_kiwi.model.Panel;
-            _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
-            _kiwi.global.components.DataStore = _kiwi.model.DataStore;
+            _kiwi.global.components.Applet = Applet;
+            _kiwi.global.components.Panel =Panel;
+            _kiwi.global.components.MenuBox = MenuBox;
+            _kiwi.global.components.DataStore = DataStore;
         },
 
 
@@ -301,4 +317,5 @@
 
     });
 
-})();
+
+});

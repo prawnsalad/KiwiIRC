@@ -1,4 +1,8 @@
-_kiwi.view.Application = Backbone.View.extend({
+define(function (require, exports, module) {
+
+var Favicon = require('../views/favicon');
+
+module.exports = Backbone.View.extend({
     initialize: function () {
         var that = this;
 
@@ -52,7 +56,7 @@ _kiwi.view.Application = Backbone.View.extend({
         });
 
 
-        this.favicon = new _kiwi.view.Favicon();
+        this.favicon = new Favicon();
         this.initSound();
     },
 
@@ -356,4 +360,5 @@ _kiwi.view.Application = Backbone.View.extend({
             (notification.cancel || notification.close).call(notification);
         }, 5000);
     }
+});
 });

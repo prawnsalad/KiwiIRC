@@ -1,4 +1,5 @@
-_kiwi.view.StatusMessage = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     initialize: function () {
         this.$el.hide();
 
@@ -39,4 +40,5 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         var that = this;
         this.tmr = setTimeout(function () { that.hide(); }, length);
     }
+});
 });

@@ -1,4 +1,8 @@
-_kiwi.view.UserBox = Backbone.View.extend({
+define(function (require, exports, module) {
+
+var Query = require('../models/query');
+
+module.exports = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick',
@@ -48,7 +52,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
             panel = _kiwi.app.connections.active_connection.panels.getByName(nick);
 
         if (!panel) {
-            panel = new _kiwi.model.Query({name: nick});
+            panel = new Query({name: nick});
             _kiwi.app.connections.active_connection.panels.add(panel);
         }
 
@@ -97,4 +101,5 @@ _kiwi.view.UserBox = Backbone.View.extend({
         // TODO: Set ban on host, not just on nick
         _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.user.get('nick') + '!*');
     }
+});
 });

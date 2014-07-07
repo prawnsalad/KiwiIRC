@@ -1,6 +1,14 @@
-(function () {
+define(function (require, exports, module) {
 
-    _kiwi.model.Network = Backbone.Model.extend({
+    var PanelList = require('../models/panellist');
+    var Server = require('../models/server');
+    var Channel = require('../models/channel');
+    var Member = require('../models/member');
+    var Query = require('../models/query');
+    var Applet = require('../models/applet');
+    var NickChangeBox = require('../views/nickchangebox');
+
+    module.exports = Backbone.Model.extend({
         defaults: {
             connection_id: 0,
             /**
@@ -73,11 +81,11 @@
             }
 
             // Create our panel list (tabs)
-            this.panels = new _kiwi.model.PanelList([], this);
+            this.panels = new PanelList([], this);
             //this.panels.network = this;
 
             // Automatically create a server tab
-            var server_panel = new _kiwi.model.Server({name: 'Server', network: this});
+            var server_panel = new Server({name: 'Server', network: this});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
         },
@@ -182,7 +190,7 @@
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
-                    channel = new _kiwi.model.Channel({name: channel_name, network: that});
+                    channel = new Channel({name: channel_name, network: that});
                     that.panels.add(channel);
                 }
 
@@ -303,14 +311,14 @@
         var c, members, user;
         c = this.panels.getByName(event.channel);
         if (!c) {
-            c = new _kiwi.model.Channel({name: event.channel, network: this});
+            c = new Channel({name: event.channel, network: this});
             this.panels.add(c);
         }
 
         members = c.get('members');
         if (!members) return;
 
-        user = new _kiwi.model.Member({
+        user = new Member({
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
@@ -446,7 +454,7 @@
                 // If a panel isn't found for this PM, create one
                 panel = this.panels.getByName(event.nick);
                 if (!panel) {
-                    panel = new _kiwi.model.Query({name: event.nick, network: this});
+                    panel = new Query({name: event.nick, network: this});
                     this.panels.add(panel);
                 }
 
@@ -578,7 +586,7 @@
 
         channel.temp_userlist = channel.temp_userlist || [];
         _.each(event.users, function (item) {
-            var user = new _kiwi.model.Member({
+            var user = new Member({
                 nick: item.nick,
                 modes: item.modes,
                 user_prefixes: that.get('user_prefixes')
@@ -770,7 +778,7 @@
 
 
     function onListStart(event) {
-        var chanlist = _kiwi.model.Applet.loadOnce('kiwi_chanlist');
+        var chanlist = Applet.loadOnce('kiwi_chanlist');
         chanlist.view.show();
     }
 
@@ -826,7 +834,7 @@
 
             // Only show the nickchange component if the controlbox is open
             if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
-                (new _kiwi.view.NickChangeBox()).render();
+                (new NickChangeBox()).render();
             }
 
             break;
@@ -864,6 +872,4 @@
             active_panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
     }
 
-}
-
-)();
+});

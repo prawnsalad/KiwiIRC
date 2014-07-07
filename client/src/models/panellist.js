@@ -1,5 +1,10 @@
-_kiwi.model.PanelList = Backbone.Collection.extend({
-    model: _kiwi.model.Panel,
+define(function (require, exports, module) {
+
+var Panel = require('../models/panel');
+var Tabs = require('../views/tabs');
+
+module.exports = Backbone.Collection.extend({
+    model: Panel,
 
     comparator: function (chan) {
         return chan.get('name');
@@ -12,7 +17,7 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
             this.network = network;
         }
 
-        this.view = new _kiwi.view.Tabs({model: this});
+        this.view = new Tabs({model: this});
 
         // Holds the active panel
         this.active = null;
@@ -46,4 +51,5 @@ _kiwi.model.PanelList = Backbone.Collection.extend({
             return name.toLowerCase() === c.get('name').toLowerCase();
         });
     }
+});
 });

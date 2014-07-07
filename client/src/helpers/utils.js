@@ -1,6 +1,5 @@
-/*jslint devel: true, browser: true, continue: true, sloppy: true, forin: true, plusplus: true, maxerr: 50, indent: 4, nomen: true, regexp: true*/
-/*globals $, front, gateway, Utilityview */
-
+define(function (require) {
+    var exports = {};
 
 
 /**
@@ -8,7 +7,7 @@
 *   @param      {Number}    string_length   The length of the random string
 *   @returns    {String}                    The random string
 */
-function randomString(string_length) {
+exports.randomString = function randomString(string_length) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
         randomstring = '',
         i,
@@ -18,7 +17,7 @@ function randomString(string_length) {
         randomstring += chars.substring(rnum, rnum + 1);
     }
     return randomstring;
-}
+};
 
 /**
 *   String.trim shim
@@ -52,7 +51,7 @@ if (typeof String.prototype.lpad === 'undefined') {
 *   @param      {Number}    secs    The number of seconds to converts
 *   @returns    {Object}            An object representing the hours/minutes/second conversion of secs
 */
-function secondsToTime(secs) {
+exports.secondsToTime = function secondsToTime(secs) {
     var hours, minutes, seconds, divisor_for_minutes, divisor_for_seconds, obj;
     hours = Math.floor(secs / (60 * 60));
 
@@ -68,11 +67,11 @@ function secondsToTime(secs) {
         "s": seconds
     };
     return obj;
-}
+};
 
 
 /* Command input Alias + re-writing */
-function InputPreProcessor () {
+exports.InputPreProcessor = function InputPreProcessor () {
     this.recursive_depth = 3;
 
     this.aliases = {};
@@ -168,13 +167,13 @@ function InputPreProcessor () {
         depth--;
         return words.join(' ');
     };
-}
+};
 
 
 /**
  * Convert HSL to RGB formatted colour
  */
-function hsl2rgb(h, s, l) {
+exports.hsl2rgb = function hsl2rgb(h, s, l) {
     var m1, m2, hue;
     var r, g, b
     s /=100;
@@ -211,13 +210,13 @@ function hsl2rgb(h, s, l) {
         b = HueToRgb(m1, m2, hue - 1/3);
     }
     return [r,g,b];
-}
+};
 
 
 /**
  * Formats a kiwi message to IRC format
  */
-function formatToIrcMsg(message) {
+exports.formatToIrcMsg = function formatToIrcMsg(message) {
     // Format any colour codes (eg. $c4)
     message = message.replace(/%C(\d)/ig, function(match, colour_number) {
         return String.fromCharCode(3) + colour_number.toString();
@@ -235,7 +234,7 @@ function formatToIrcMsg(message) {
     });
 
     return message;
-}
+};
 
 
 /**
@@ -243,7 +242,7 @@ function formatToIrcMsg(message) {
 *   @param      {String}    msg The message to format
 *   @returns    {String}        The HTML formatted message
 */
-function formatIRCMsg (msg) {
+exports.formatIRCMsg = function formatIRCMsg (msg) {
     "use strict";
     var out = '',
         currentTag = '',
@@ -375,13 +374,13 @@ function formatIRCMsg (msg) {
         out += currentTag + '</span>';
     }
     return out;
-}
+};
 
-function escapeRegex (str) {
+exports.escapeRegex = function escapeRegex (str) {
     return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
-}
+};
 
-function emoticonFromText(str) {
+exports.emoticonFromText = function emoticonFromText(str) {
     var words_in = str.split(' '),
         words_out = [],
         i,
@@ -467,10 +466,10 @@ function emoticonFromText(str) {
     }
 
     return words_out.join(' ');
-}
+};
 
 // Code based on http://anentropic.wordpress.com/2009/06/25/javascript-iso8601-parser-and-pretty-dates/#comment-154
-function parseISO8601(str) {
+exports.parseISO8601 = function parseISO8601(str) {
     if (Date.prototype.toISOString) {
         return new Date(str);
     } else {
@@ -495,14 +494,14 @@ function parseISO8601(str) {
 
         return _date;
     }
-}
+};
 
 // Simplyfy the translation syntax
-function translateText(string_id, params) {
+exports.translateText = function translateText(string_id, params) {
     params = params || '';
 
     return _kiwi.global.i18n.translate(string_id).fetch(params);
-}
+};
 
 /**
  * Simplyfy the text styling syntax
@@ -520,7 +519,7 @@ function translateText(string_id, params) {
  *   %U:        underline
  *   %O:        cancel styles
  **/
-function styleText(string_id, params) {
+exports.styleText = function styleText(string_id, params) {
     var style, text;
 
     //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
@@ -542,4 +541,8 @@ function styleText(string_id, params) {
 
     text = formatToIrcMsg(text);
     return text;
-}
+};
+
+
+return exports;
+});

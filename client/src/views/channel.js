@@ -1,4 +1,11 @@
-_kiwi.view.Channel = _kiwi.view.Panel.extend({
+define(function (require, exports, module) {
+
+var Panel = require('../views/Panel');
+var MediaMessage = require('../views/MediaMessage');
+var UserBox = require('../views/UserBox');
+var MenuBox = require('../views/MenuBox');
+
+module.exports = Panel.extend({
     events: function(){
         var parent_events = this.constructor.__super__.events;
 
@@ -103,7 +110,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             }
 
             // Get any media HTML if supported
-            extra_html = _kiwi.view.MediaMessage.buildHtml(url);
+            extra_html = MediaMessage.buildHtml(url);
 
             // Make the link clickable
             return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>' + extra_html;
@@ -277,11 +284,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (members) {
             member = members.getByNick(nick);
             if (member) {
-                userbox = new _kiwi.view.UserBox();
+                userbox = new UserBox();
                 userbox.setTargets(member, this.model);
                 userbox.displayOpItems(are_we_an_op);
 
-                menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+                menubox = new MenuBox(member.get('nick') || 'User');
                 menubox.addItem('userbox', userbox.$el);
                 menubox.showFooter(false);
                 menubox.show();
@@ -322,7 +329,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if ($media.data('media')) {
             media_message = $media.data('media');
         } else {
-            media_message = new _kiwi.view.MediaMessage({el: $media[0]});
+            media_message = new MediaMessage({el: $media[0]});
 
             // Cache this MediaMessage instance for when it's opened again
             $media.data('media', media_message);
@@ -366,4 +373,5 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         $('.'+nick_class).removeClass('global_nick_highlight');
     },
+});
 });

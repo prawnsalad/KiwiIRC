@@ -1,4 +1,5 @@
-_kiwi.view.AppToolbar = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     events: {
         'click .settings': 'clickSettings',
         'click .startup': 'clickStartup'
@@ -20,4 +21,5 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
         event.preventDefault();
         _kiwi.app.startup_applet.view.show();
     }
+});
 });

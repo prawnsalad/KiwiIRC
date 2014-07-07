@@ -1,6 +1,10 @@
-_kiwi.model.NewConnection = Backbone.Collection.extend({
+define(function (require, exports, module) {
+
+var ServerSelect = require('../views/serverselect');
+
+module.exports = Backbone.Collection.extend({
     initialize: function() {
-        this.view = new _kiwi.view.ServerSelect({model: this});
+        this.view = new ServerSelect({model: this});
 
         this.view.bind('server_connect', this.onMakeConnection, this);
 
@@ -48,4 +52,5 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
             this.trigger('new_network', network);
         }
     }
+});
 });

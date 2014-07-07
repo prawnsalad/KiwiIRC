@@ -1,8 +1,14 @@
-_kiwi.model.Applet = _kiwi.model.Panel.extend({
+define(function (require, exports, module) {
+
+var Panel = require('./panel');
+var Applet = require('./applet');
+var AppletView = require('../views/applet');
+
+module.exports = Panel.extend({
     initialize: function (attributes) {
         // Temporary name
         var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
-        this.view = new _kiwi.view.Applet({model: this, name: name});
+        this.view = new AppletView({model: this, name: name});
 
         this.set({
             "name": name
@@ -122,7 +128,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
             return;
 
         // Create the applet and load the content
-        applet = new _kiwi.model.Applet();
+        applet = new Applet();
         applet.load(new applet_obj({_applet_name: applet_name}));
 
         // Add it into the tab list if needed (default)
@@ -142,4 +148,6 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     register: function (applet_name, applet) {
         _kiwi.applets[applet_name] = applet;
     }
+});
+
 });

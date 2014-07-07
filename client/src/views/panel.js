@@ -1,4 +1,5 @@
-_kiwi.view.Panel = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     tagName: "div",
     className: "panel",
 
@@ -107,4 +108,5 @@ _kiwi.view.Panel = Backbone.View.extend({
             this.$container[0].scrollTop = this.$container[0].scrollHeight;
         }
     }
+});
 });

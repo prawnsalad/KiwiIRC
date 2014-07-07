@@ -1,5 +1,7 @@
+define(function (require, exports, module) {
+
 // Model for this = _kiwi.model.PanelList
-_kiwi.view.Tabs = Backbone.View.extend({
+module.exports = Backbone.View.extend({
     tagName: 'ul',
     className: 'panellist',
 
@@ -187,4 +189,5 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel[1].tab.appendTo(that.$el);
         });
     }
+});
 });

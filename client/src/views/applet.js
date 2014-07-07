@@ -1,6 +1,11 @@
-_kiwi.view.Applet = _kiwi.view.Panel.extend({
+define(function (require, exports, module) {
+
+var PanelView = require('../views/panel');
+
+module.exports = PanelView.extend({
     className: 'panel applet',
     initialize: function (options) {
         this.initializePanel(options);
     }
+});
 });

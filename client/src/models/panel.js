@@ -1,7 +1,11 @@
-_kiwi.model.Panel = Backbone.Model.extend({
+define(function (require, exports, module) {
+
+var Panel = require('../views/panel');
+
+module.exports = Backbone.Model.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "";
-        this.view = new _kiwi.view.Panel({"model": this, "name": name});
+        this.view = new Panel({"model": this, "name": name});
         this.set({
             "scrollback": [],
             "name": name
@@ -51,4 +55,5 @@ _kiwi.model.Panel = Backbone.Model.extend({
     isActive: function () {
         return (_kiwi.app.panels().active === this);
     }
+});
 });

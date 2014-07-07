@@ -1,4 +1,6 @@
-_kiwi.view.RightBar = Backbone.View.extend({
+define(function (require, exports, module) {
+
+    module.exports = Backbone.View.extend({
     events: {
         'click .right-bar-toggle': 'onClickToggle',
         'click .right-bar-toggle-inner': 'onClickToggle'
@@ -80,4 +82,5 @@ _kiwi.view.RightBar = Backbone.View.extend({
         // No longer ignoring the toggle() call from doLayout()
         delete this.ignore_layout;
     }
+});
 });

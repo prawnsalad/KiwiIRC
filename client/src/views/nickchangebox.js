@@ -1,4 +1,6 @@
-_kiwi.view.NickChangeBox = Backbone.View.extend({
+define(function (require, exports, module) {
+
+module.exports = Backbone.View.extend({
     events: {
         'submit': 'changeNick',
         'click .cancel': 'close'
@@ -36,4 +38,5 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
         connection.gateway.changeNick(this.$('input').val());
     }
+});
 });

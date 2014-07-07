@@ -1,4 +1,8 @@
-_kiwi.model.Gateway = function () {
+define(function (require, exports, module) {
+
+var Network = require('../models/network');
+
+module.exports = function () {
 
     // Set to a reference to this object within initialize()
     var that = null;
@@ -141,7 +145,7 @@ _kiwi.model.Gateway = function () {
                         ssl: connection_info.ssl,
                         password: connection_info.password
                     };
-                    connection = new _kiwi.model.Network(inf);
+                    connection = new Network(inf);
                     _kiwi.app.connections.add(connection);
                 }
 
@@ -468,3 +472,4 @@ _kiwi.model.Gateway = function () {
 
     return new (Backbone.Model.extend(this))(arguments);
 };
+});

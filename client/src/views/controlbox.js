@@ -1,4 +1,8 @@
-_kiwi.view.ControlBox = Backbone.View.extend({
+define(function (require, exports, module) {
+
+var NickChangeBox = require('../views/nickchangebox');
+
+module.exports = Backbone.View.extend({
     events: {
         'keydown .inp': 'process',
         'click .nick': 'showNickChange'
@@ -43,7 +47,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         if (this.nick_change)
             return;
 
-        this.nick_change = new _kiwi.view.NickChangeBox();
+        this.nick_change = new NickChangeBox();
         this.nick_change.render();
 
         this.listenTo(this.nick_change, 'close', function() {
@@ -283,4 +287,5 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         this.$el.find('.input_tools').append($tool);
         _kiwi.app.view.doLayout();
     }
+});
 });

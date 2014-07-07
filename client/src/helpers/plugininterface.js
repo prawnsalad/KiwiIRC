@@ -1,13 +1,14 @@
+define(function (require, exports, module) {
 /*
  * The same functionality as EventEmitter but with the inclusion of callbacks
  */
 
 
 
-function PluginInterface () {
+module.exports = function PluginInterface () {
     // Holder for all the bound listeners by this module
     this._listeners = {};
-}
+};
 
 
 
@@ -241,3 +242,6 @@ modules.emit('client:command', data).done(function () {
     console.log('Your command is: ' + data.command);
 });
 */
+
+
+});

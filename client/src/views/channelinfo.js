@@ -1,6 +1,11 @@
-// var f = new _kiwi.model.ChannelInfo({channel: _kiwi.app.panels().active});
+define(function (require, exports, module) {
 
-_kiwi.view.ChannelInfo = Backbone.View.extend({
+// var f = new ChannelInfo({channel: _kiwi.app.panels().active});
+
+var ChannelInfo = require('../models/channelinfo');
+var MenuBox = require('../views/menubox');
+
+module.exports = Backbone.View.extend({
     events: {
         'click .toggle_banlist': 'toggleBanList',
         'change .channel-mode': 'onModeChange',
@@ -26,7 +31,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
 
         // Create the menu box this view will sit inside
-        this.menu = new _kiwi.view.MenuBox(channel.get('name'));
+        this.menu = new MenuBox(channel.get('name'));
         this.menu.addItem('channel_info', this.$el);
         this.menu.$el.appendTo(channel.view.$container);
         this.menu.show();
@@ -168,4 +173,5 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
         this.$el.remove();
     }
+});
 });

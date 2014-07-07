@@ -1,9 +1,16 @@
-_kiwi.model.Query = _kiwi.model.Channel.extend({
+define(function (require, exports, module) {
+
+var Channel = require('./channel');
+var ChannelView = require('../views/channel');
+
+console.log(Channel, ChannelView);
+
+module.exports = Channel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;
 
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
+        this.view = new ChannelView({"model": this, "name": name});
         this.set({
             "name": name,
             "scrollback": []
@@ -17,4 +24,5 @@ _kiwi.model.Query = _kiwi.model.Channel.extend({
     isQuery: function () {
         return true;
     }
+});
 });

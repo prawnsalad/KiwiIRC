@@ -1,4 +1,5 @@
-_kiwi.view.Favicon = Backbone.View.extend({
+define(function (require, exports, module) {
+module.exports = Backbone.View.extend({
     initialize: function () {
         var that = this,
             $win = $(window);
@@ -71,7 +72,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
             canvas_width = canvas.width,
             canvas_height = canvas.height;
 
-        // Different letter spacing for MacOS 
+        // Different letter spacing for MacOS
         if (navigator.appVersion.indexOf("Mac") !== -1) {
             letter_spacing = -1.5;
         }
@@ -111,7 +112,7 @@ _kiwi.view.Favicon = Backbone.View.extend({
         var canvas = document.createElement('canvas');
             canvas.width = 16;
             canvas.height = 16;
-        
+
         this.canvas = canvas;
     },
 
@@ -131,4 +132,5 @@ _kiwi.view.Favicon = Backbone.View.extend({
 
         return context;
     }
+});
 });
