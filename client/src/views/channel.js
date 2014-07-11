@@ -53,134 +53,27 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     },
 
 
-    newMsg: function (msg) {
-        var re, line_msg,
-            nick_colour_hex, nick_hex, is_highlight, msg_css_classes = '',
-            time_difference,
-            sb = this.model.get('scrollback'),
-            prev_msg = sb[sb.length-2],
-            network, hour, pm;
+    newMsg: function(msg) {
 
-        // Nick highlight detecting
-        var nick = _kiwi.app.connections.active_connection.get('nick');
-        if ((new RegExp('(^|\\W)(' + escapeRegex(nick) + ')(\\W|$)', 'i')).test(msg.msg)) {
-            // Do not highlight the user's own input
-            if (msg.nick.localeCompare(nick) !== 0) {
-                is_highlight = true;
-                msg_css_classes += ' highlight';
-            }
-        }
-
-        // Escape any HTML that may be in here
-        msg.msg =  $('<div />').text(msg.msg).html();
-
-        // Make the channels clickable
-        if ((network = this.model.get('network'))) {
-            re = new RegExp('(^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
-            msg.msg = msg.msg.replace(re, function (m1, m2) {
-                return m2 + '<a class="chan" data-channel="' + _.escape(m1.trim()) + '">' + _.escape(m1.trim()) + '</a>';
-            });
-        }
-
-
-        // Parse any links found
-        msg.msg = msg.msg.replace(/(([A-Za-z][A-Za-z0-9\-]*\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
-            var nice = url,
-                extra_html = '';
-
-            if (url.match(/^javascript:/)) {
-                return url;
-            }
-
-            // Add the http if no protoocol was found
-            if (url.match(/^www\./)) {
-                url = 'http://' + url;
-            }
-
-            // Shorten the displayed URL if it's going to be too long
-            if (nice.length > 100) {
-                nice = nice.substr(0, 100) + '...';
-            }
-
-            // Get any media HTML if supported
-            extra_html = _kiwi.view.MediaMessage.buildHtml(url);
-
-            // Make the link clickable
-            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>' + extra_html;
-        });
-
-
-        // Convert IRC formatting into HTML formatting
-        msg.msg = formatIRCMsg(msg.msg);
-
-        // Replace text emoticons with images
-        if (_kiwi.global.settings.get('show_emoticons')) {
-            msg.msg = emoticonFromText(msg.msg);
-        }
-
-        // Add some colours to the nick (Method based on IRSSIs nickcolor.pl)
-        nick_colour_hex = (function (nick) {
-            var nick_int = 0, rgb;
-
-            _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
-            rgb = hsl2rgb(nick_int % 255, 70, 35);
-            rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
-
-            return '#' + rgb.toString(16);
-        })(msg.nick);
-
-        msg.nick_style = 'color:' + nick_colour_hex + ';';
-
-        // Generate a hex string from the nick to be used as a CSS class name
-        nick_hex = msg.nick_css_class = '';
-        if (msg.nick) {
-            _.map(msg.nick.split(''), function (char) {
-                nick_hex += char.charCodeAt(0).toString(16);
-            });
-            msg_css_classes += ' nick_' + nick_hex;
-        }
-
-        if (prev_msg) {
-            // Time difference between this message and the last (in minutes)
-            time_difference = (msg.time.getTime() - prev_msg.time.getTime())/1000/60;
-            if (prev_msg.nick === msg.nick && time_difference < 1) {
-                msg_css_classes += ' repeated_nick';
-            }
-        }
-
-        // Build up and add the line
-        msg.msg_css_classes = msg_css_classes;
-        if (_kiwi.global.settings.get('use_24_hour_timestamps')) {
-            msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
-        } else {
-            hour = msg.time.getHours();
-            pm = hour > 11;
-
-            hour = hour % 12;
-            if (hour === 0)
-                hour = 12;
-
-            if (pm) {
-                msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_pm').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
-            } else {
-                msg.time_string = _kiwi.global.i18n.translate('client_views_panel_timestamp_am').fetch(hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
-            }
-        }
+        // Parse the msg object into properties fit for displaying
+        msg = this.generateMessageDisplayObj(msg);
 
         _kiwi.global.events.emit('message:display', {panel: this.model, message: msg})
         .done(_.bind(function() {
+            var line_msg;
+
             // Format the nick to the config defined format
             var display_obj = _.clone(msg);
             display_obj.nick = styleText('message_nick', {nick: msg.nick, prefix: msg.nick_prefix || ''});
 
-            line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
+            line_msg = '<div class="msg <%= type %> <%= css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
             this.$messages.append($(_.template(line_msg, display_obj)).data('message', msg));
 
             // Activity/alerts based on the type of new message
             if (msg.type.match(/^action /)) {
                 this.alert('action');
 
-            } else if (is_highlight) {
+            } else if (msg.is_highlight) {
                 _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
                 _kiwi.app.view.favicon.newHighlight();
                 _kiwi.app.view.playSound('highlight');
@@ -199,7 +92,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
 
                 // Highlights have already been dealt with above
-                if (!is_highlight) {
+                if (!msg.is_highlight) {
                     _kiwi.app.view.favicon.newHighlight();
                 }
 
@@ -251,6 +144,173 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 this.msg_count--;
             }
         }, this));
+    },
+
+
+    // Make channels clickable
+    parseMessageChannels: function(word) {
+        var re,
+            parsed = false,
+            network = this.model.get('network');
+
+        if (!network) {
+            return;
+        }
+
+        re = new RegExp('(^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
+
+        if (!word.match(re)) {
+            return parsed;
+        }
+
+        parsed = word.replace(re, function (m1, m2) {
+            return m2 + '<a class="chan" data-channel="' + _.escape(m1.trim()) + '">' + _.escape(m1.trim()) + '</a>';
+        });
+
+        return parsed;
+    },
+
+
+    parseMessageUrls: function(word) {
+        var found_a_url = false,
+            parsed_url;
+
+        parsed_url = word.replace(/(([A-Za-z][A-Za-z0-9\-]*\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
+            var nice = url,
+                extra_html = '';
+
+            // Don't allow javascript execution
+            if (url.match(/^javascript:/)) {
+                return url;
+            }
+
+            found_a_url = true;
+
+            // Add the http if no protoocol was found
+            if (url.match(/^www\./)) {
+                url = 'http://' + url;
+            }
+
+            // Shorten the displayed URL if it's going to be too long
+            if (nice.length > 100) {
+                nice = nice.substr(0, 100) + '...';
+            }
+
+            // Get any media HTML if supported
+            extra_html = _kiwi.view.MediaMessage.buildHtml(url);
+
+            // Make the link clickable
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>' + extra_html;
+        });
+
+        return found_a_url ? parsed_url : false;
+    },
+
+
+    // Get a colour from a nick (Method based on IRSSIs nickcolor.pl)
+    getNickColour: function(nick) {
+        var nick_int = 0, rgb;
+
+        _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
+        rgb = hsl2rgb(nick_int % 255, 70, 35);
+        rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
+
+        return '#' + rgb.toString(16);
+    },
+
+
+    // Takes an IRC message object and parses it for displaying
+    generateMessageDisplayObj: function(msg) {
+        var nick_hex, time_difference,
+            message_words,
+            sb = this.model.get('scrollback'),
+            prev_msg = sb[sb.length-2],
+            hour, pm, am_pm_locale_key;
+
+        // Clone the msg object so we dont modify the original
+        msg = _.clone(msg);
+
+        // Defaults
+        msg.css_classes = '';
+        msg.nick_style = '';
+        msg.is_highlight = false;
+        msg.time_string = '';
+
+
+        // Nick highlight detecting
+        var nick = _kiwi.app.connections.active_connection.get('nick');
+        if ((new RegExp('(^|\\W)(' + escapeRegex(nick) + ')(\\W|$)', 'i')).test(msg.msg)) {
+            // Do not highlight the user's own input
+            if (msg.nick.localeCompare(nick) !== 0) {
+                msg.is_highlight = true;
+                msg.css_classes += ' highlight';
+            }
+        }
+
+        message_words = msg.msg.split(' ');
+        message_words = _.map(message_words, function(word) {
+            var parsed_word;
+
+            parsed_word = this.parseMessageUrls(word);
+            if (typeof parsed_word === 'string') return parsed_word;
+
+            parsed_word = this.parseMessageChannels(word);
+            if (typeof parsed_word === 'string') return parsed_word;
+
+            parsed_word = _.escape(word);
+
+            // Replace text emoticons with images
+            if (_kiwi.global.settings.get('show_emoticons')) {
+                parsed_word = emoticonFromText(parsed_word);
+            }
+
+            return parsed_word;
+        }, this);
+
+        msg.msg = message_words.join(' ');
+
+        // Convert IRC formatting into HTML formatting
+        msg.msg = formatIRCMsg(msg.msg);
+
+        // Add some colours to the nick
+        msg.nick_style = 'color:' + this.getNickColour(msg.nick) + ';';
+
+        // Generate a hex string from the nick to be used as a CSS class name
+        nick_hex = '';
+        if (msg.nick) {
+            _.map(msg.nick.split(''), function (char) {
+                nick_hex += char.charCodeAt(0).toString(16);
+            });
+            msg.css_classes += ' nick_' + nick_hex;
+        }
+
+        if (prev_msg) {
+            // Time difference between this message and the last (in minutes)
+            time_difference = (msg.time.getTime() - prev_msg.time.getTime())/1000/60;
+            if (prev_msg.nick === msg.nick && time_difference < 1) {
+                msg.css_classes += ' repeated_nick';
+            }
+        }
+
+        // Build up and add the line
+        if (_kiwi.global.settings.get('use_24_hour_timestamps')) {
+            msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+        } else {
+            hour = msg.time.getHours();
+            pm = hour > 11;
+
+            hour = hour % 12;
+            if (hour === 0)
+                hour = 12;
+
+            am_pm_locale_key = pm ?
+                'client_views_panel_timestamp_pm' :
+                'client_views_panel_timestamp_am';
+
+            msg.time_string = translateText(am_pm_locale_key, hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+        }
+
+        return msg;
     },
 
 
