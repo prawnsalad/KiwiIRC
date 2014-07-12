@@ -110,7 +110,10 @@
 
 #kiwi .messages .msg.action .nick,
 #kiwi .messages .msg.static .nick,
+#kiwi .messages .msg.topic { margin: 5px; background: #FFF5AB; border: 1px solid #F3C572; border-radius: 5px; }
+#kiwi .messages .msg.topic .time { display:none; }
 #kiwi .messages .msg.topic .nick { display:none; }
+#kiwi .messages .msg.topic .text { color:#009900; margin-left:0; font-style: italic; border:none; }
 
 #kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
 #kiwi .messages .msg.action.join { color:#009900; }
