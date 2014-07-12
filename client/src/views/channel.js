@@ -22,6 +22,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.$el.append(this.$messages);
 
         this.model.bind('change:topic', this.topic, this);
+        this.model.bind('change:topic_set_by', this.topicSetBy, this);
 
         if (this.model.get('members')) {
             this.model.get('members').bind('add', function (member) {
@@ -322,8 +323,15 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.model.addMsg('', styleText('channel_topic', {text: topic, channel: this.model.get('name')}), 'topic');
 
         // If this is the active channel then update the topic bar
-        if (_kiwi.app.panels().active === this) {
-            _kiwi.app.topicbar.setCurrentTopic(this.model.get("topic"));
+        if (_kiwi.app.panels().active === this.model) {
+            _kiwi.app.topicbar.setCurrentTopicFromChannel(this.model);
+        }
+    },
+
+    topicSetBy: function (topic) {
+        // If this is the active channel then update the topic bar
+        if (_kiwi.app.panels().active === this.model) {
+            _kiwi.app.topicbar.setCurrentTopicFromChannel(this.model);
         }
     },
 
@@ -425,5 +433,5 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (!nick_class) return;
 
         $('.'+nick_class).removeClass('global_nick_highlight');
-    },
+    }
 });

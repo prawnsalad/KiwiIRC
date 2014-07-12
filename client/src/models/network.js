@@ -550,8 +550,8 @@
         c = this.panels.getByName(event.channel);
         if (!c) return;
 
-        when = formatDate(new Date(event.when * 1000));
-        c.addMsg('', styleText('channel_topic_setby', {text: translateText('client_models_network_topic', [event.nick, when]), channel: event.channel}), 'topic');
+        when = new Date(event.when * 1000);
+        c.set('topic_set_by', {nick: event.nick, when: when});
     }
 
 
