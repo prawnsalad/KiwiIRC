@@ -8,6 +8,22 @@ module.exports = function AddCommandHandlers(command_controller) {
 
 
 var handlers = {
+    NICK: function (command) {
+        var time;
+
+        // Check if we have a server-time
+        time = command.getServerTime();
+
+        this.emit('user ' + command.nick + ' nick', {
+            nick: command.nick,
+            ident: command.ident,
+            hostname: command.hostname,
+            newnick: command.params[0],
+            time: time
+        });
+    },
+
+
     AWAY: function (command) {
         var time;
 
