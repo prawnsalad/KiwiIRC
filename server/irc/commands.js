@@ -334,20 +334,6 @@ IrcCommand.prototype.getServerTime = function() {
 
 
 
-
-
-
-
-function capContainsAny (caps) {
-    var intersection;
-    if (!caps instanceof Array) {
-        caps = [caps];
-    }
-    intersection = _.intersection(this.irc_connection.cap.enabled, caps);
-    return intersection.length > 0;
-}
-
-
 // Code based on http://anentropic.wordpress.com/2009/06/25/javascript-iso8601-parser-and-pretty-dates/#comment-154
 function parseISO8601(str) {
     if (Date.prototype.toISOString) {
