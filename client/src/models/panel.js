@@ -6,9 +6,13 @@ _kiwi.model.Panel = Backbone.Model.extend({
             "scrollback": [],
             "name": name
         }, {"silent": true});
+
+        _kiwi.global.events.emit('panel:created', {panel: this});
     },
 
-    closePanel: function () {
+    close: function () {
+        _kiwi.global.events.emit('panel:close', {panel: this});
+
         if (this.view) {
             this.view.unbind();
             this.view.remove();
@@ -26,11 +30,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
 
         this.unbind();
         this.destroy();
-    },
-
-    // Alias to closePanel() for child objects to override
-    close: function () {
-        return this.closePanel();
     },
 
     isChannel: function () {

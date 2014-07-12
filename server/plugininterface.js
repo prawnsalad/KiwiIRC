@@ -222,7 +222,7 @@ var modules = new PluginInterface();
 
 
 // A plugin
-modules.on('client:command', function (event, data) {
+modules.on('irc message', function (event, data) {
     //event.wait = true;
     setTimeout(event.callback, 2000);
 });
@@ -236,8 +236,7 @@ var data = {
     command: '/dothis'
 };
 
-
-modules.emit('client:command', data).done(function () {
+modules.emit('irc message', data).done(function () {
     console.log('Your command is: ' + data.command);
 });
 */

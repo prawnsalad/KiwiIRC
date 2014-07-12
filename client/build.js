@@ -80,6 +80,9 @@ var source_files = [
     __dirname + '/src/views/channeltools.js',
     __dirname + '/src/views/channelinfo.js',
     __dirname + '/src/views/rightbar.js',
+
+    __dirname + '/src/misc/clientuicommands.js',
+
     __dirname + '/src/applets/settings.js',
     __dirname + '/src/applets/chanlist.js',
     __dirname + '/src/applets/scripteditor.js',
@@ -219,11 +222,13 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
 /**
  * Build the index.html file
  */
+var build_time = new Date().getTime();
 
 var index_src = fs.readFileSync(__dirname + '/src/index.html.tmpl', FILE_ENCODING)
     .replace(new RegExp('<%base_path%>', 'g'), config.get().http_base_path || '')
-    .replace(new RegExp('<%build_version%>', 'g'), package_json.version);
-
+    .replace(new RegExp('<%build_version%>', 'g'), package_json.version)
+    .replace(new RegExp('<%build_time%>', 'g'), build_time);
+    
 fs.writeFile(__dirname + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {
         console.log('Built index.html');

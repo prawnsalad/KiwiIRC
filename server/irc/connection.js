@@ -37,6 +37,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Socket state
     this.connected = false;
 
+    // If the connection closes and this is false, we reconnect
+    this.requested_disconnect = false;
+
     // IRCd write buffers (flood controll)
     this.write_buffer = [];
 
@@ -56,6 +59,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
+    this.gecos = ''; // Users real-name. Uses default from config if empty
     this.password = options.password || '';
 
     // Set the passed encoding. or the default if none giving or it fails
@@ -70,7 +74,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.con_num = con_num;
 
     // IRC protocol handling
-    this.irc_commands = new IrcCommands(this);
+    this.irc_commands = new IrcCommands.Handler(this);
 
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);
@@ -173,6 +177,8 @@ IrcConnection.prototype.connect = function () {
 
     // Make sure we don't already have an open connection
     this.disposeSocket();
+
+    this.requested_disconnect = false;
 
     // Get the IP family for the dest_addr (either socks or IRCd destination)
     getConnectionFamily(dest_addr, function getConnectionFamilyCb(err, family, host) {
@@ -289,17 +295,37 @@ IrcConnection.prototype.connect = function () {
         });
 
         that.socket.on('close', function socketCloseCb(had_error) {
+            // If that.connected is false, we never actually managed to connect
+            var was_connected = that.connected,
+                had_registered = that.server.registered,
+                should_reconnect = false;
+
             that.connected = false;
+            that.server.reset();
 
             // Remove this socket form the identd lookup
             if (that.identd_port_pair) {
                 delete global.clients.port_pairs[that.identd_port_pair];
             }
 
-            that.emit('close', had_error);
+            should_reconnect = (!that.requested_disconnect && was_connected && had_registered);
+
+            if (should_reconnect) {
+                that.emit('reconnecting');
+            } else {
+                that.emit('close', had_error);
+            }
 
             // Close the whole socket down
             that.disposeSocket();
+
+            // If this socket closing was not expected and we did actually connect and
+            // we did previously completely register on the network, then reconnect
+            if (should_reconnect) {
+                setTimeout(function() {
+                    that.connect();
+                }, 3000);
+            }
         });
     });
 };
@@ -391,11 +417,29 @@ IrcConnection.prototype.end = function (data) {
         return;
     }
 
+    this.requested_disconnect = true;
+
     if (data) {
         this.write(data, true);
     }
 
     this.socket.end();
+};
+
+
+
+/**
+ * Check if any server capabilities are enabled
+ */
+IrcConnection.prototype.capContainsAny = function (caps) {
+    var enabled_caps;
+
+    if (!caps instanceof Array) {
+        caps = [caps];
+    }
+
+    enabled_caps = _.intersection(this.cap.enabled, caps);
+    return enabled_caps.length > 0;
 };
 
 
@@ -460,7 +504,7 @@ IrcConnection.prototype.setEncoding = function (encoding) {
         //This test is done to check if this encoding also supports
         //the ASCII charset required by the IRC protocols
         //(Avoid the use of base64 or incompatible encodings)
-        if (encoded_test === "TEST") {
+        if (encoded_test == "TEST") { // jshint ignore:line
             this.encoding = encoding;
             return true;
         }
@@ -606,11 +650,16 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
-        var gecos = '[www.kiwiirc.com] ' + that.nick;
+        var gecos = that.gecos;
 
-        if (global.config.default_gecos) {
+        if (!gecos && global.config.default_gecos) {
+            // We don't have a gecos yet, so use the default
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
-            gecos = gecos.toString().replace('%h', that.user.hostname);
+            gecos = gecos.replace('%h', that.user.hostname);
+
+        } else if (!gecos) {
+            // We don't have a gecos nor a default, so lets set somthing
+            gecos = '[www.kiwiirc.com] ' + that.nick;
         }
 
         // Send any initial data for webirc/etc
@@ -801,5 +850,5 @@ function parseIrcLine(buffer_line) {
         msg_obj.params.push(msg[8].trim());
     }
 
-    this.irc_commands.dispatch(msg_obj.command.toUpperCase(), msg_obj);
+    this.irc_commands.dispatch(new IrcCommands.Command(msg_obj.command.toUpperCase(), msg_obj));
 }

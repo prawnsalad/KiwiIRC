@@ -96,6 +96,7 @@
     border-bottom: 1px solid #8A8A8A;
     margin-bottom: 10px;
     padding: 0 5%;
+    background: #DADADA;
 }
 #kiwi .channel_tools i {
     width: 30%;
@@ -124,8 +125,10 @@
 #kiwi .messages .msg.action.kick .text { color:#900; }
 #kiwi .messages .msg.status .nick { }
 #kiwi .messages .msg.status .text { color:#990000; margin-left:9em; border-left:none; font-weight:bold; }
+#kiwi .messages .msg.topic { margin: 10px; background: #FFF5AB; border: 1px solid #F3C572; border-radius: 5px; }
+#kiwi .messages .msg.topic .time { display:none; }
 #kiwi .messages .msg.topic .nick { display:none; }
-#kiwi .messages .msg.topic .text { color:#009900; margin-left:9em; font-style: italic; border-left:none; }
+#kiwi .messages .msg.topic .text { color:#009900; margin-left:0; font-style: italic; border:none; }
 #kiwi .messages .msg.motd { border:none; }
 /*#kiwi .messages .msg.motd .nick { display:none; }*/
 #kiwi .messages .msg.motd .text { color:#666; font-family:monospace; }
@@ -190,6 +193,7 @@
 #kiwi.narrow .right_bar { width:100%; }
 #kiwi.narrow .right_bar.disabled { width:0; }
 
+#kiwi .memberlists {}
 #kiwi .memberlists .meta {
     border-bottom: 1px solid #8A8A8A;
     font-size: 0.9em;
@@ -201,6 +205,11 @@
 #kiwi .memberlists ul { list-style: none; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.narrow .memberlists ul li {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+}
 #kiwi .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
@@ -301,7 +310,7 @@
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
     background-color:#FFF;
-    z-index: 1;
+    z-index: 10;
     height:auto; bottom:auto;
     border-bottom: 2px solid #121314;
 }

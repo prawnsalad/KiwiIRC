@@ -51,7 +51,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
 
     addMsg: function (nick, msg, type, opts) {
-        var message_obj, bs, d,
+        var message_obj, bs, d, members, member,
             scrollback = (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250);
 
         opts = opts || {};
@@ -68,11 +68,16 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
             opts.style = '';
         }
 
-        // Run through the plugins
+        // Create a message object
         message_obj = {"msg": msg, "date": opts.date, "time": opts.time, "nick": nick, "chan": this.get("name"), "type": type, "style": opts.style};
-        //tmp = _kiwi.plugs.run('addmsg', message_obj);
-        if (!message_obj) {
-            return;
+
+        // If this user has one, get its prefix
+        members = this.get('members');
+        if (members) {
+            member = members.getByNick(message_obj.nick);
+            if (member) {
+                message_obj.nick_prefix = member.get('prefix');
+            }
         }
 
         // The CSS class (action, topic, notice, etc)

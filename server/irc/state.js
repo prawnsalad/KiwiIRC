@@ -70,9 +70,13 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
         return callback(err.message);
     });
 
+    con.on('reconnecting', function IrcConnectionReconnecting() {
+        that.sendIrcCommand('disconnect', {connection_id: con.con_num, reason: 'IRC server reconnecting'});
+    });
+
     con.on('close', function IrcConnectionClose() {
         // TODO: Can we get a better reason for the disconnection? Was it planned?
-        that.sendIrcCommand('disconnect', {server: con.con_num, reason: 'disconnected'});
+        that.sendIrcCommand('disconnect', {connection_id: con.con_num, reason: 'disconnected'});
 
         that.irc_connections[con_num] = null;
         global.servers.removeConnection(this);

@@ -4,6 +4,7 @@
 */
 var _kiwi = {};
 
+_kiwi.misc = {};
 _kiwi.model = {};
 _kiwi.view = {};
 _kiwi.applets = {};
@@ -19,7 +20,18 @@ _kiwi.global = {
     settings: undefined, // Instance of _kiwi.model.DataStore
     plugins: undefined, // Instance of _kiwi.model.PluginManager
     events: undefined, // Instance of PluginInterface
-    utils: {}, // TODO: Re-usable methods
+    utils: {}, // References to misc. re-usable helpers / functions
+
+    initUtils: function() {
+        this.utils.randomString = randomString;
+        this.utils.secondsToTime = secondsToTime;
+        this.utils.parseISO8601 = parseISO8601;
+        this.utils.escapeRegex = escapeRegex;
+        this.utils.formatIRCMsg = formatIRCMsg;
+        this.utils.styleText = styleText;
+        this.utils.hsl2rgb = hsl2rgb;
+    },
+
     rpc: function() {
         _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
     },
@@ -84,6 +96,8 @@ _kiwi.global = {
 
             if (typeof connection_id !== 'undefined') {
                 connection_event = 'connection:' + connection_id.toString();
+            } else {
+                connection_event = 'connection';
             }
 
             var obj = new this.EventComponent(_kiwi.gateway, connection_event);
@@ -133,6 +147,8 @@ _kiwi.global = {
     init: function (opts, callback) {
         var jobs, locale, localeLoaded, textThemeLoaded, text_theme;
         opts = opts || {};
+
+        this.initUtils();
 
         jobs = new JobManager();
         jobs.onFinish(function(locale, s, xhr) {
