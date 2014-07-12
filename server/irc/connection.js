@@ -74,7 +74,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.con_num = con_num;
 
     // IRC protocol handling
-    this.irc_commands = new IrcCommands(this);
+    this.irc_commands = new IrcCommands.Handler(this);
 
     // IrcServer object
     this.server = new IrcServer(this, hostname, port);
@@ -834,5 +834,5 @@ function parseIrcLine(buffer_line) {
         msg_obj.params.push(msg[8].trim());
     }
 
-    this.irc_commands.dispatch(msg_obj.command.toUpperCase(), msg_obj);
+    this.irc_commands.dispatch(new IrcCommands.Command(msg_obj.command.toUpperCase(), msg_obj));
 }
