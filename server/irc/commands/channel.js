@@ -10,7 +10,7 @@ module.exports = function AddCommandHandlers(command_controller) {
 var handlers = {
     RPL_CHANNELMODEIS: function (command) {
         var channel = command.params[1],
-            modes = parseModeList.call(this, command.params[2], command.params.slice(3));
+            modes = this.parseModeList.call(this, command.params[2], command.params.slice(3));
 
         this.emit('channel ' + channel + ' info', {
             channel: channel,
