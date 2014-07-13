@@ -150,8 +150,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
 
     // Let nicks be clickable + colourise within messages
-    parseMessageNicks: function(word) {
-        var members, member, colour;
+    parseMessageNicks: function(word, colourise) {
+        var members, member, colour = '';
 
         members = this.model.get('members');
         if (!members) {
@@ -163,10 +163,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return;
         }
 
-        // Use the nick from the member object so the colour matches the letter casing
-        colour = this.getNickColour(member.get('nick'));
+        if (colourise !== false) {
+            // Use the nick from the member object so the colour matches the letter casing
+            colour = this.getNickColour(member.get('nick'));
+            colour = 'color:' + colour;
+        }
 
-        return _.template('<span class="inline-nick" style="color:<%- colour %>;cursor:pointer;" data-nick="<%- nick %>"><%- nick %></span>', {
+        return _.template('<span class="inline-nick" style="<%- colour %>;cursor:pointer;" data-nick="<%- nick %>"><%- nick %></span>', {
             nick: word,
             colour: colour
         });
@@ -284,7 +287,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             parsed_word = this.parseMessageChannels(word);
             if (typeof parsed_word === 'string') return parsed_word;
 
-            parsed_word = this.parseMessageNicks(word);
+            parsed_word = this.parseMessageNicks(word, (msg.type === 'privmsg'));
             if (typeof parsed_word === 'string') return parsed_word;
 
             parsed_word = _.escape(word);
