@@ -7,6 +7,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         }
         return _.extend({}, parent_events, {
             'click .msg .nick' : 'nickClick',
+            'click .msg .inline-nick' : 'nickClick',
             "click .chan": "chanClick",
             'click .media .open': 'mediaClick',
             'mouseenter .msg .nick': 'msgEnter',
@@ -148,6 +149,31 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     },
 
 
+    // Let nicks be clickable + colourise within messages
+    parseMessageNicks: function(word) {
+        var members, member, colour;
+
+        members = this.model.get('members');
+        if (!members) {
+            return;
+        }
+
+        member = members.getByNick(word);
+        if (!member) {
+            return;
+        }
+
+        // Use the nick from the member object so the colour matches the letter casing
+        colour = this.getNickColour(member.get('nick'));
+
+        return _.template('<span class="inline-nick" style="color:<%- colour %>;cursor:pointer;" data-nick="<%- nick %>"><%- nick %></span>', {
+            nick: word,
+            colour: colour
+        });
+
+    },
+
+
     // Make channels clickable
     parseMessageChannels: function(word) {
         var re,
@@ -258,6 +284,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             parsed_word = this.parseMessageChannels(word);
             if (typeof parsed_word === 'string') return parsed_word;
 
+            parsed_word = this.parseMessageNicks(word);
+            if (typeof parsed_word === 'string') return parsed_word;
+
             parsed_word = _.escape(word);
 
             // Replace text emoticons with images
@@ -337,10 +366,19 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     // Click on a nickname
     nickClick: function (event) {
-        var nick = $(event.currentTarget).parent('.msg').data('message').nick,
+        var nick,
             members = this.model.get('members'),
             are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
             member, query, userbox, menubox;
+
+        event.stopPropagation();
+
+        // Check this current element for a nick before resorting to the main message
+        // (eg. inline nicks has the nick on its own element within the message)
+        nick = $(event.currentTarget).data('nick');
+        if (!nick) {
+            nick = $(event.currentTarget).parent('.msg').data('message').nick;
+        }
 
         if (members) {
             member = members.getByNick(nick);
