@@ -240,6 +240,12 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         var command, params,
             pre_processed;
 
+        // If sending a message when not in a channel or query window, automatically
+        // convert it into a command
+        if (command_raw[0] !== '/' && !_kiwi.app.panels().active.isChannel() && !_kiwi.app.panels().active.isQuery()) {
+            command_raw = '/' + command_raw;
+        }
+
         // The default command
         if (command_raw[0] !== '/' || command_raw.substr(0, 2) === '//') {
             // Remove any slash escaping at the start (ie. //)
