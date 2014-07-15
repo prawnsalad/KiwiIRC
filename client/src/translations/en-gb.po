@@ -16,6 +16,10 @@ msgstr ""
 "Project-Id-Version: Kiwi\n"
 "Language: en\n"
 
+#:
+msgid "client_views_controlbox_message"
+msgstr "Send message..."
+
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
 msgstr "Channel Name"

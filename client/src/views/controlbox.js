@@ -38,6 +38,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         });
     },
 
+    render: function() {
+        var send_message_text = translateText('client_views_controlbox_message');
+        this.$('.inp').attr('placeholder', send_message_text);
+
+        return this;
+    },
+
     showNickChange: function (ev) {
         // Nick box already open? Don't do it again
         if (this.nick_change)

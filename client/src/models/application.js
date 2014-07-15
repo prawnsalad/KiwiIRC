@@ -87,7 +87,7 @@
             /**
              * Set the UI components up
              */
-            this.controlbox = new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]});
+            this.controlbox = (new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]})).render();
             this.client_ui_commands = new _kiwi.misc.ClientUiCommands(this, this.controlbox);
 
             this.rightbar = new _kiwi.view.RightBar({el: this.view.$('.right_bar')[0]});
