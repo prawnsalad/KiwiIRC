@@ -303,6 +303,9 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             this.show('enter_password');
             this.$el.find('.password').select();
             break;
+        default:
+            this.showError(data.reason || '');
+            break;
         }
     },
 
