@@ -11,6 +11,7 @@ _kiwi.model.Panel = Backbone.Model.extend({
     },
 
     close: function () {
+        _kiwi.app.panels.trigger('close', this);
         _kiwi.global.events.emit('panel:close', {panel: this});
 
         if (this.view) {
