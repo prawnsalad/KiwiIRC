@@ -55,6 +55,10 @@ conf.identd = {
 // Where the client files are
 conf.public_http = "client/";
 
+// Transports available to the client.
+// Behind an Apache reverse proxy? Uncomment the below - Apache does not support websockets!
+//conf.client_transports = ['polling'];
+
 // Max connections per connection. 0 to disable
 conf.max_client_conns = 5;
 
@@ -75,6 +79,7 @@ conf.default_encoding = 'utf8';
 /*
 * Default GECOS (real name) for IRC connections
 * %n will be replaced with the users nick
+* %h will be replaced with the users hostname
 */
 //conf.default_gecos = 'Web IRC Client';
 
@@ -177,15 +182,26 @@ conf.client = {
     nick:    'kiwi_?',
     settings: {
         theme: 'relaxed',
+        text_theme: 'default',
         channel_list_style: 'tabs',
         scrollback: 250,
         show_joins_parts: true,
         show_timestamps: false,
+        use_24_hour_timestamps: true,
         mute_sounds: false,
-        show_emoticons: true
+        show_emoticons: true,
+        count_all_activity: true
     },
     window_title: 'Kiwi IRC'
 };
+
+// List of themes available for the user to choose from
+conf.client_themes = [
+    'relaxed',
+    'mini',
+    'cli',
+    'basic'
+];
 
 
 // If set, the client may only connect to this 1 IRC server
@@ -201,6 +217,6 @@ conf.client = {
 
 
 /*
- * Do not ammend the below lines unless you understand the changes!
+ * Do not amend the below lines unless you understand the changes!
  */
 module.exports.production = conf;

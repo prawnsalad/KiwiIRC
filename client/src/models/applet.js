@@ -1,9 +1,4 @@
 _kiwi.model.Applet = _kiwi.model.Panel.extend({
-    // Used to determine if this is an applet panel. Applet panel tabs are treated
-    // differently than others
-    applet: true,
-
-
     initialize: function (attributes) {
         // Temporary name
         var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
@@ -73,7 +68,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     close: function () {
         this.view.$el.remove();
         this.destroy();
-        
+
         this.view = undefined;
 
         // Call the applets dispose method if it has one
@@ -81,7 +76,12 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
             this.loaded_applet.dispose();
         }
 
-        this.closePanel();
+        // Call the inherited close()
+        this.constructor.__super__.close.apply(this, arguments);
+    },
+
+    isApplet: function () {
+        return true;
     }
 },
 
@@ -111,21 +111,31 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     },
 
 
-    load: function (applet_name) {
-        var applet;
+    load: function (applet_name, options) {
+        var applet, applet_obj;
 
-        // Find the applet within the registered applets
-        if (!_kiwi.applets[applet_name]) return;
+        options = options || {};
+
+        applet_obj = this.getApplet(applet_name);
+
+        if (!applet_obj)
+            return;
 
         // Create the applet and load the content
         applet = new _kiwi.model.Applet();
-        applet.load(new _kiwi.applets[applet_name]({_applet_name: applet_name}));
+        applet.load(new applet_obj({_applet_name: applet_name}));
 
-        // Add it into the tab list
-        _kiwi.app.applet_panels.add(applet);
+        // Add it into the tab list if needed (default)
+        if (!options.no_tab)
+            _kiwi.app.applet_panels.add(applet);
 
 
         return applet;
+    },
+
+
+    getApplet: function (applet_name) {
+        return _kiwi.applets[applet_name] || null;
     },
 
 

@@ -25,13 +25,15 @@ _kiwi.view.Tabs = Backbone.View.extend({
                 $('span', this.model.server.tab).text(new_val);
             }, this);
         }
+
+        this.panel_access = new Array();
     },
 
     render: function () {
         var that = this;
 
         this.$el.empty();
-        
+
         if (this.is_network) {
             // Add the server tab first
             this.model.server.tab
@@ -67,7 +69,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
-            panel.tab.addClass('icon-nonexistant');
+            panel.tab.addClass('fa');
+            panel.tab.addClass('fa-nonexistant');
         }
 
         panel.tab.data('panel', panel);
@@ -75,21 +78,41 @@ _kiwi.view.Tabs = Backbone.View.extend({
         if (this.is_network)
             panel.tab.data('connection_id', this.model.network.get('connection_id'));
 
-        panel.tab.appendTo(this.$el);
+        this.sortTabs();
 
         panel.bind('change:title', this.updateTabTitle);
         panel.bind('change:name', this.updateTabTitle);
 
+        //Adding a panel
+        this.panel_access.unshift(panel.cid);
+
         _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
+        var connection = _kiwi.app.connections.active_connection;
+
         panel.tab.remove();
+
+        // If closing the active panel, switch to the last-accessed panel
+        if (this.panel_access[0] === _kiwi.app.panels().active.cid) {
+            this.panel_access.shift();
+
+            //Get the last-accessed panel model now that we removed the closed one
+            var model = connection.panels.getByCid(this.panel_access[0]);
+
+            if (model) {
+                model.view.show();
+            }
+        }
+
         delete panel.tab;
 
         _kiwi.app.view.doLayout();
     },
 
     panelActive: function (panel, previously_active_panel) {
+        var panel_index = _.indexOf(this.panel_access, panel.cid);
+
         // Remove any existing tabs or part images
         _kiwi.app.view.$el.find('.panellist .part').remove();
         _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
@@ -98,8 +121,15 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         // Only show the part image on non-server tabs
         if (!panel.isServer()) {
-            panel.tab.append('<span class="part icon-nonexistant"></span>');
+            panel.tab.append('<span class="part fa fa-nonexistant"></span>');
         }
+
+        if (panel_index > -1) {
+            this.panel_access.splice(panel_index, 1);
+        }
+
+        //Make this panel the most recently accessed
+        this.panel_access.unshift(panel.cid);
     },
 
     tabClick: function (e) {
@@ -127,5 +157,34 @@ _kiwi.view.Tabs = Backbone.View.extend({
         } else {
             panel.close();
         }
+    },
+
+    sortTabs: function() {
+        var that = this,
+            panels = [];
+
+        this.model.forEach(function (panel) {
+            // Ignore the server tab, so all others get added after it
+            if (that.is_network && panel == that.model.server)
+                return;
+
+            panels.push([panel.get('title') || panel.get('name'), panel]);
+        });
+
+        // Sort by the panel name..
+        panels.sort(function(a, b) {
+            if (a[0].toLowerCase() > b[0].toLowerCase()) {
+                return 1;
+            } else if (a[0].toLowerCase() < b[0].toLowerCase()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        // And add them all back in order.
+        _.each(panels, function(panel) {
+            panel[1].tab.appendTo(that.$el);
+        });
     }
 });

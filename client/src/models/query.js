@@ -8,5 +8,13 @@ _kiwi.model.Query = _kiwi.model.Channel.extend({
             "name": name,
             "scrollback": []
         }, {"silent": true});
+    },
+
+    isChannel: function () {
+        return false;
+    },
+
+    isQuery: function () {
+        return true;
     }
 });

@@ -1,5 +1,5 @@
 var engine       = require('engine.io'),
-    WebsocketRpc = require('./websocketrpc.js');
+    WebsocketRpc = require('./websocketrpc.js'),
     events       = require('events'),
     http         = require('http'),
     https        = require('https'),
@@ -10,6 +10,7 @@ var engine       = require('engine.io'),
     _            = require('lodash'),
     spdy         = require('spdy'),
     ipaddr       = require('ipaddr.js'),
+    winston      = require('winston'),
     Client       = require('./client.js').Client,
     HttpHandler  = require('./httphandler.js').HttpHandler,
     rehash       = require('./rehash.js');
@@ -52,7 +53,7 @@ var WebListener = module.exports = function (web_config) {
             }
         }
 
-        hs = spdy.createServer(opts, handleHttpRequest);
+        hs = spdy.createServer(opts);
 
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
@@ -60,7 +61,7 @@ var WebListener = module.exports = function (web_config) {
     } else {
 
         // Start some plain-text server up
-        hs = http.createServer(handleHttpRequest);
+        hs = http.createServer();
 
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
@@ -71,9 +72,33 @@ var WebListener = module.exports = function (web_config) {
         that.emit('error', err);
     });
 
-    this.ws = engine.attach(hs, {
-        transports: ['websocket', 'polling', 'flashsocket'],
-        path: (global.config.http_base_path || '') + '/transport'
+    this.ws = new engine.Server();
+
+    hs.on('upgrade', function(req, socket, head){
+        // engine.io can sometimes "loose" the clients remote address. Keep note of it
+        req.meta = {
+            remote_address: req.connection.remoteAddress
+        };
+
+        that.ws.handleUpgrade(req, socket, head);
+    });
+
+    hs.on('request', function(req, res){
+        var transport_url = (global.config.http_base_path || '') + '/transport';
+
+        // engine.io can sometimes "loose" the clients remote address. Keep note of it
+        req.meta = {
+            remote_address: req.connection.remoteAddress
+        };
+
+        // If the request is for our transport, pass it onto engine.io
+        if (req.url.toLowerCase().indexOf(transport_url.toLowerCase()) === 0) {
+            that.ws.handleRequest(req, res);
+        } else {
+            http_handler.serve(req, res);
+        }
+
+
     });
 
     this.ws.on('connection', function(socket) {
@@ -101,10 +126,6 @@ util.inherits(WebListener, events.EventEmitter);
 
 
 
-function handleHttpRequest(request, response) {
-    http_handler.serve(request, response);
-}
-
 function rangeCheck(addr, range) {
     var i, ranges, parts;
     ranges = (!_.isArray(range)) ? [range] : range;
@@ -124,17 +145,18 @@ function rangeCheck(addr, range) {
  */
 function initialiseSocket(socket, callback) {
     var request = socket.request,
-        address = request.connection.remoteAddress;
+        address = request.meta.remote_address,
+        revdns;
 
     // Key/val data stored to the socket to be read later on
     // May also be synced to a redis DB to lookup clients
-    socket.meta = {};
+    socket.meta = socket.request.meta;
 
     // If a forwarded-for header is found, switch the source address
     if (request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
         if (!global.config.http_proxies || !rangeCheck(address, global.config.http_proxies)) {
-            console.log('Unlisted proxy:', address);
+            winston.info('Unlisted proxy: %s', address);
             callback(null, false);
             return;
         }
@@ -155,15 +177,32 @@ function initialiseSocket(socket, callback) {
 
     try {
         dns.reverse(address, function (err, domains) {
-            if (err || domains.length === 0) {
-                socket.meta.revdns = address;
-            } else {
-                socket.meta.revdns = _.first(domains) || address;
+            if (!err && domains.length > 0) {
+                revdns = _.first(domains);
             }
 
-            // All is well, authorise the connection
-            callback(null, true);
+            if (!revdns) {
+                // No reverse DNS found, use the IP
+                socket.meta.revdns = address;
+                callback(null, true);
+
+            } else {
+                // Make sure the reverse DNS matches the A record to use the hostname..
+                dns.lookup(revdns, function (err, ip_address, family) {
+                    if (!err && ip_address == address) {
+                        // A record matches PTR, perfectly valid hostname
+                        socket.meta.revdns = revdns;
+                    } else {
+                        // A record does not match the PTR, invalid hostname
+                        socket.meta.revdns = address;
+                    }
+
+                    // We have all the info we need, proceed with the connection
+                    callback(null, true);
+                });
+            }
         });
+
     } catch (err) {
         socket.meta.revdns = address;
         callback(null, true);

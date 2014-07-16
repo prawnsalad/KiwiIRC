@@ -7,7 +7,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
         _kiwi.app.panels.bind('active', function (active_panel) {
             // If it's a channel topic, update and make editable
             if (active_panel.isChannel()) {
-                this.setCurrentTopic(active_panel.get('topic') || '');
+                this.setCurrentTopicFromChannel(active_panel);
                 this.$el.find('div').attr('contentEditable', true);
 
             } else {
@@ -21,7 +21,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
     process: function (ev) {
         var inp = $(ev.currentTarget),
             inp_val = inp.text();
-        
+
         // Only allow topic editing if this is a channel panel
         if (!_kiwi.app.panels().active.isChannel()) {
             return false;
@@ -29,7 +29,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            _kiwi.gateway.topic(null, _kiwi.app.panels().active.get('name'), inp_val);
+            _kiwi.app.connections.active_connection.gateway.topic(_kiwi.app.panels().active.get('name'), inp_val);
             return false;
         }
     },
@@ -39,5 +39,19 @@ _kiwi.view.TopicBar = Backbone.View.extend({
 
         // We only want a plain text version
         $('div', this.$el).html(formatIRCMsg(_.escape(new_topic)));
+    },
+
+    setCurrentTopicFromChannel: function(channel) {
+        var set_by = channel.get('topic_set_by'),
+            set_by_text = '';
+
+        this.setCurrentTopic(channel.get("topic"));
+
+        if (set_by) {
+            set_by_text += translateText('client_models_network_topic', [set_by.nick, formatDate(set_by.when)]);
+            this.$el.attr('title', set_by_text);
+        } else {
+            this.$el.attr('title', '');
+        }
     }
 });

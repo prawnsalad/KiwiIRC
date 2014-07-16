@@ -29,10 +29,33 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         _kiwi.app.connections.on('active', function(panel, connection) {
             $('.nick', that.$el).text(connection.get('nick'));
         });
+
+        // Keep focus on the input box as we flick between panels
+        _kiwi.app.panels.bind('active', function (active_panel) {
+            if (active_panel.isChannel() || active_panel.isServer() || active_panel.isQuery()) {
+                that.$('.inp').focus();
+            }
+        });
+    },
+
+    render: function() {
+        var send_message_text = translateText('client_views_controlbox_message');
+        this.$('.inp').attr('placeholder', send_message_text);
+
+        return this;
     },
 
     showNickChange: function (ev) {
-        (new _kiwi.view.NickChangeBox()).render();
+        // Nick box already open? Don't do it again
+        if (this.nick_change)
+            return;
+
+        this.nick_change = new _kiwi.view.NickChangeBox();
+        this.nick_change.render();
+
+        this.listenTo(this.nick_change, 'close', function() {
+            delete this.nick_change;
+        });
     },
 
     process: function (ev) {
@@ -53,7 +76,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             this.tabcomplete.data = [];
             this.tabcomplete.prefix = '';
         }
-        
+
         switch (true) {
         case (ev.keyCode === 13):              // return
             inp_val = inp_val.trim();
@@ -128,10 +151,10 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             return false;
 
         case (ev.keyCode === 9     //Check if ONLY tab is pressed
-            && !ev.shiftKey        //(user could be using some browser 
+            && !ev.shiftKey        //(user could be using some browser
             && !ev.altKey          //keyboard shortcut)
-            && !ev.metaKey 
-            && !ev.ctrlKey):                     
+            && !ev.metaKey
+            && !ev.ctrlKey):
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
@@ -157,11 +180,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             if (inp_val[inp[0].selectionStart - 1] === ' ') {
                 return false;
             }
-            
+
             (function () {
                 var tokens,              // Words before the cursor position
                     val,                 // New value being built up
-                    p1,                  // Position in the value just before the nick 
+                    p1,                  // Position in the value just before the nick
                     newnick,             // New nick to be displayed (cycles through)
                     range,               // TextRange for setting new text cursor position
                     nick,                // Current nick in the value
@@ -223,7 +246,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     processInput: function (command_raw) {
         var command, params,
             pre_processed;
-        
+
+        // If sending a message when not in a channel or query window, automatically
+        // convert it into a command
+        if (command_raw[0] !== '/' && !_kiwi.app.panels().active.isChannel() && !_kiwi.app.panels().active.isQuery()) {
+            command_raw = '/' + command_raw;
+        }
+
         // The default command
         if (command_raw[0] !== '/' || command_raw.substr(0, 2) === '//') {
             // Remove any slash escaping at the start (ie. //)

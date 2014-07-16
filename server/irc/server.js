@@ -8,6 +8,8 @@ var IrcServer = function (irc_connection) {
     this.list_buffer = [];
     this.motd_buffer = '';
 
+    this.registered = false;
+
     this.irc_events = {
         connect:                onConnect,
         options:                onOptions,
@@ -49,8 +51,17 @@ IrcServer.prototype.dispose = function (){
 };
 
 
+IrcServer.prototype.reset = function() {
+    this.registered = false;
+    this.list_buffer = [];
+    this.motd_buffer = '';
+};
+
+
 
 function onConnect(event) {
+    this.registered = true;
+
     this.irc_connection.clientEvent('connect', {
         nick: event.nick
     });
@@ -152,7 +163,7 @@ function onNoSuchNick(event) {
 
 function onCannotSendToChan(event) {
     this.irc_connection.clientEvent('irc_error', {
-        error: 'cannot_send_to_chan',
+        error: 'cannot_send_to_channel',
         channel: event.channel,
         reason: event.reason
     });
@@ -251,7 +262,6 @@ function onUnknownCommand(event) {
     this.irc_connection.clientEvent('unknown_command', {
         error: 'unknown_command',
         command: event.command,
-        params: event.params,
-        trailing: event.trailing
+        params: event.params
     });
 }

@@ -34,13 +34,11 @@ var Client = function (websocket) {
 
     // Handler for any commands sent from the client
     this.client_commands = new ClientCommands(this);
+    this.client_commands.addRpcEvents(this, this.rpc);
 
-    this.rpc.on('irc', function (response, data) {
-        handleClientMessage.call(that, data, response);
-    });
-    this.rpc.on('kiwi', function (response, data) {
-        kiwiCommand.call(that, data, response);
-    });
+    // Handles the kiwi.* RPC functions
+    this.attachKiwiCommands();
+
     websocket.on('close', function () {
         websocketDisconnect.apply(that, arguments);
     });
@@ -49,6 +47,9 @@ var Client = function (websocket) {
     });
 
     this.disposed = false;
+
+    // Let the client know it's finished connecting
+    this.sendKiwiCommand('connected');
 };
 util.inherits(Client, events.EventEmitter);
 
@@ -77,71 +78,45 @@ Client.prototype.dispose = function () {
     this.removeAllListeners();
 };
 
-function handleClientMessage(msg, callback) {
-    var server;
-
-    // Make sure we have a server number specified
-    if ((msg.server === null) || (typeof msg.server !== 'number')) {
-        return (typeof callback === 'function') ? callback('server not specified') : undefined;
-    } else if (!this.state.irc_connections[msg.server]) {
-        return (typeof callback === 'function') ? callback('not connected to server') : undefined;
-    }
-
-    // The server this command is directed to
-    server = this.state.irc_connections[msg.server];
-
-    if (typeof callback !== 'function') {
-        callback = null;
-    }
-
-    try {
-        msg.data = JSON.parse(msg.data);
-    } catch (e) {
-        kiwi.log('[handleClientMessage] JSON parsing error ' + msg.data);
-        return;
-    }
-
-    // Run the client command
-    this.client_commands.run(msg.data.method, msg.data.args, server, callback);
-}
 
 
+Client.prototype.attachKiwiCommands = function() {
+    var that = this;
+
+    this.rpc.on('kiwi.connect_irc', function(callback, command) {
+        if (command.hostname && command.port && command.nick) {
+            var options = {};
+
+            // Get any optional parameters that may have been passed
+            if (command.encoding)
+                options.encoding = command.encoding;
+
+            options.password = global.config.restrict_server_password || command.password;
+
+            that.state.connect(
+                (global.config.restrict_server || command.hostname),
+                (global.config.restrict_server_port || command.port),
+                (typeof global.config.restrict_server_ssl !== 'undefined' ?
+                    global.config.restrict_server_ssl :
+                    command.ssl),
+                command.nick,
+                {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
+                options,
+                callback);
+        } else {
+            return callback('Hostname, port and nickname must be specified');
+        }
+    });
 
 
-function kiwiCommand(command, callback) {
-    if (typeof callback !== 'function') {
-        callback = function () {};
-    }
+    this.rpc.on('kiwi.client_info', function(callback, args) {
+        // keep hold of selected parts of the client_info
+        that.client_info = {
+            build_version: args.build_version.toString() || undefined
+        };
+    });
+};
 
-    switch (command.command) {
-        case 'connect':
-            if (command.hostname && command.port && command.nick) {
-                var options = {};
-
-                // Get any optional parameters that may have been passed
-                if (command.encoding)
-                    options.encoding = command.encoding;
-
-                options.password = global.config.restrict_server_password || command.password;
-
-                this.state.connect(
-                    (global.config.restrict_server || command.hostname),
-                    (global.config.restrict_server_port || command.port),
-                    (typeof global.config.restrict_server_ssl !== 'undefined' ?
-                        global.config.restrict_server_ssl :
-                        command.ssl),
-                    command.nick,
-                    {hostname: this.websocket.meta.revdns, address: this.websocket.meta.real_address},
-                    options,
-                    callback);
-            } else {
-                return callback('Hostname, port and nickname must be specified');
-            }
-        break;
-        default:
-            callback();
-    }
-}
 
 
 // Websocket has disconnected, so quit all the IRC connections

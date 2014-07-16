@@ -1,28 +1,35 @@
 {
   "name": "kiwiirc",
-  "version": "0.8.2-dev",
+  "version": "0.9.0-dev",
   "description": "A hand-crafted webirc client",
   "homepage": "https://www.kiwiirc.com/",
   "preferGlobal": "true",
-  "bin": { "kiwiirc": "./kiwi" },
-  "repository" : {
-        "type": "git",
-        "url": "https://github.com/prawnsalad/KiwiIRC.git"
-    },
+  "bin": {
+    "kiwiirc": "./kiwi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prawnsalad/KiwiIRC.git"
+  },
   "scripts": {
     "postinstall": "node client/build.js"
   },
   "dependencies": {
-    "node-static": "0.7.2",
-    "uglify-js": "2.4.1",
-    "engine.io": "0.7.9",
-    "lodash": "2.2.1",
+    "node-static": "0.7.3",
+    "uglify-js": "2.4.12",
+    "engine.io": "1.2",
+    "lodash": "2.4.1",
     "daemonize2": "0.4.2",
     "eventemitter2": "0.4.13",
-    "ipaddr.js": "0.1.1",
-    "socksjs": "0.4.3",
-    "iconv-lite" : "0.2.11",
-    "spdy": "1.14.11",
-    "po2json": "0.0.6"
+    "ipaddr.js": "0.1.2",
+    "socksjs": "0.4.4",
+    "iconv-lite": "0.2.11",
+    "spdy": "1.19.1",
+    "po2json": "0.2.3",
+    "negotiator": "0.4.3",
+    "winston": "~0.7.2"
+  },
+  "engines": {
+    "node": ">=0.10"
   }
 }

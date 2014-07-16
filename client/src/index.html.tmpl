@@ -9,12 +9,8 @@
 
 <link rel="shortcut icon" href="<%base_path%>/assets/img/favicon.ico">
 
-<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css" />
-<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/custom.css" />
+<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css?t=<%build_time%>" />
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.min.css" />
-<!--[if IE 7]>
-<link rel="stylesheet" type="text/css" href="/kiwi/assets/css/font-awesome-ie7.css" />
-<![endif]-->
 </head>
 <body>
 
@@ -23,7 +19,8 @@
             <div class="toolbar">
                 <div class="app_tools">
                     <ul class="main">
-                        <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
+                        <li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
+                        <li class="startup"><i class="fa fa-home" title="Home"></i></li>
                         <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
                     </ul>
                 </div>
@@ -43,7 +40,17 @@
                 <div class="panel_container container1"></div>
             </div>
 
-            <div class="memberlists disabled"></div>
+            <div class="right_bar disabled">
+                <div class="right-bar-toggle"><i class=""></i></div>
+                <div class="right-bar-content">
+                    <div class="channel_tools">
+                        <i class="fa fa-info-circle channel_info" title="Channel Info"></i>
+                        <i class="fa fa-sign-out channel_part" title="Leave Channel"></i>
+                        <i class="fa fa-angle-double-right right-bar-toggle-inner" title="Hide"></i>
+                    </div>
+                    <div class="memberlists"></div>
+                </div>
+            </div>
 
             <div class="controlbox">
                 <div class="input">
@@ -56,18 +63,70 @@
     </script>
 
 
+    <script type="text/html" id="tmpl_channel_info">
+        <div class="channel_info">
+            <b class="channel_url"><a href=""></a></b>
+
+            <form>
+                <div class="control-group channel_info_modes">
+                    <label>
+                        <input type="checkbox" name="channel_mute" class="channel-mode" data-mode="m" />
+                        Moderated chat
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_invite" class="channel-mode" data-mode="i" />
+                        Invite only
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_topic" class="channel-mode" data-mode="t" />
+                        Only operators can change the topic
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_external_messages" class="channel-mode" data-mode="n" />
+                        Block messages from outside this channel
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label>
+                        Password
+                        <input type="text" name="channel_key" class="channel-mode" data-mode="k" />
+                    </label>
+                </div>
+
+
+                <div class="control-group channel-banlist">
+                    <button class="toggle_banlist">Toggle banlist</button> <span class="banlist-status"></span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Ban Mask</td>
+                                <td>Added By</td>
+                                <td>Date Added</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </script>
+
+
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="close_menu if_op op"><i class="icon-star"></i><%= op %></a>
-            <a class="close_menu if_op deop"><i class="icon-star-empty"></i><%= de_op %></a>
-            <a class="close_menu if_op voice"><i class="icon-volume-up"></i><%= voice %></a>
-            <a class="close_menu if_op devoice"><i class="icon-volume-off"></i><%= de_voice %></a>
-            <a class="close_menu if_op kick"><i class="icon-remove"></i><%= kick %></a>
-            <a class="close_menu if_op ban"><i class="icon-ban-circle"></i><%= ban %></a>
+            <a class="close_menu if_op op"><i class="fa fa-star"></i><%= op %></a>
+            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
+            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
+            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
+            <a class="close_menu if_op kick"><i class="fa fa-times"></i><%= kick %></a>
+            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><%= ban %></a>
 
-            <a class="close_menu query"><i class="icon-comment"></i><%= message %></a>
-            <a class="close_menu info"><i class="icon-info-sign"></i><%= info %></a>
-            <a class="close_menu slap"><i class="icon-user-md"></i><%= slap %></a>
+            <a class="close_menu query"><i class="fa fa-comment"></i><%= message %></a>
+            <a class="close_menu info"><i class="fa fa-info-circle"></i><%= info %></a>
+            <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
         </div>
     </script>
 
@@ -121,7 +180,7 @@
                                 <td>
                                     <div style="position:relative;">
                                         <input type="text" class="channel" id="server_select_channel">
-                                        <i class="icon-key" title="<%= channel_key %>"></i>
+                                        <i class="fa fa-key" title="<%= channel_key %>"></i>
                                     </div>
                                 </td>
                             </tr>
@@ -143,7 +202,7 @@
                             </tr>
                         </table>
 
-                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="icon-caret-down"></i></a>
+                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
                     </div>
 
 
@@ -174,124 +233,132 @@
         </div>
     </script>
 
+    <script type="text/html" id="tmpl_theme_thumbnail">
+        <a class="thumbnail" data-setting="theme" data-value="<%= name.toLowerCase() %>" href="#">
+            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: <%= thumbnail_colour %>;"></div></div>
+            <div class="caption"><u><%= name %></u></div>
+        </a>
+    </script>
+
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
-            <section>
-                <h6>Theme</h6>
-                <div class="control-group">
-                    <div class="thumbnails">
-                        <a class="thumbnail" data-setting="theme" data-value="relaxed" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                            <div class="caption"><u>Relaxed</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="mini" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #fff;"></div></div>
-                            <div class="caption"><u>Mini</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="cli" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #222;"></div></div>
-                            <div class="caption"><u>CLI</u></div>
-                        </a>
-                        <a class="thumbnail" data-setting="theme" data-value="basic" href="#">
-                            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: #e7e7e7;"></div></div>
-                            <div class="caption"><u>Basic</u></div>
-                        </a>
+            <form>
+                <section>
+                    <h6>Theme</h6>
+                    <div class="control-group">
+                        <div class="thumbnails">
+                            <% _.forEach(theme_thumbnails, function(thumbnail) { %>
+                                <%= thumbnail %>
+                            <% }); %>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section>
-                <h6>Channels</h6>
-                <div class="control-group">
-                    <div class="radio">
+                <section>
+                    <h6>Channels</h6>
+                    <div class="control-group">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
+                                <%= tabs %>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
+                                <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h6>Chat window</h6>
+                    <div class="control-group">
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_joins_parts" type="checkbox">
+                                <%= join_part %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="count_all_activity" type="checkbox">
+                                <%= count_all_activity %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_timestamps" type="checkbox">
+                                <%= timestamps %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="use_24_hour_timestamps" type="checkbox">
+                                <%= timestamp_24 %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="mute_sounds" type="checkbox">
+                                <%= mute %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_emoticons" type="checkbox">
+                                <%= emoticons %>
+                            </label>
+                        </div>
                         <label>
-                            <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
-                            <%= tabs %>
+                            <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                            <span><%= scroll_history %></span>
                         </label>
                     </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
-                            <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
-                        </label>
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            <section>
-                <h6>Chat window</h6>
-                <div class="control-group">
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="show_joins_parts" type="checkbox">
-                            <%= join_part %>
-                        </label>
+                <section class="language">
+                    <h6>Language</h6>
+                    <div class="control-group">
+                        <select data-setting="locale">
+                            <option value=""></li>
+                            <% _.forEach(languages, function(lang) { %>
+                                <option value="<%= lang.tag %>"><%= lang.language %></li>
+                            <% }); %>
+                        </select>
+                        <br>
+                        <small><%= locale_restart_needed %></small>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="show_timestamps" type="checkbox">
-                            <%= timestamps %>
-                        </label>
+                </section>
+
+                <section class="protocol_handler">
+                    <h6><%= default_client %></h6>
+                    <div class="control-group">
+                        <button class="register_protocol"><%= make_default %></button>
+                        <br>
+                        <small><%= default_note %></small>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="mute_sounds" type="checkbox">
-                            <%= mute %>
-                        </label>
+                </section>
+
+                <section class="notification_enabler">
+                    <h6><%= html5_notifications %></h6>
+                    <div class="control-group">
+                        <button class="enable_notifications"><%= enable_notifications %></button>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-setting="show_emoticons" type="checkbox">
-                            <%= emoticons %>
-                        </label>
-                    </div>
-                    <label>
-                        <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
-                        <span><%= scroll_history %></span>
-                    </label>
-                </div>
-            </section>
-
-            <section class="language">
-                <h6>Language</h6>
-                <div class="control-group">
-                    <select data-setting="locale">
-                        <% _.forEach(languages, function(lang) { %>
-                            <option value="<%= lang.tag %>"><%= lang.language %></li>
-                        <% }); %>
-                    </select>
-                    <br>
-                    <small><%= locale_restart_needed %></small>
-                </div>
-            </section>
-
-            <section class="protocol_handler">
-                <h6><%= default_client %></h6>
-                <div class="control-group">
-                    <button class="register_protocol"><%= make_default %></button>
-                    <br>
-                    <small><%= default_note %></small>
-                </div>
-            </section>
-
-            <section class="notification_enabler">
-                <h6><%= html5_notifications %></h6>
-                <div class="control-group">
-                    <button class="enable_notifications"><%= enable_notifications %></button>
-                </div>
-            </section>
-
+                </section>
+            </form>
         </div>
     </script>
 
 
     <script type="text/html" id="tmpl_channel_list">
-        <div>
-            <table style="margin:1em 2em;">
+        <div class="applet_chanlist">
+            <table>
                 <thead style="font-weight: bold;">
                     <tr>
-                        <td><%= channel_name %></td>
-                        <td><%= users %></td>
+                        <td><a class="channel_name_title"><%= channel_name %></a></td>
+                        <td><a class="users_title"><%= users %></a></td>
                         <td style="padding-left: 2em;"><%= topic %></td>
                     </tr>
                 </thead>
@@ -311,14 +378,14 @@
                 #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
             <div class="script_editor" style="height:100%; position:relative;">
-                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="icon-save"></i></button><span class="status"></span></div>
+                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
                 <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
             </div>
         </div>
     </script>
 
 
-<script src="<%base_path%>/assets/libs/jquery-1.10.2.min.js"></script>
+<script src="<%base_path%>/assets/libs/jquery-1.11.0.min.js"></script>
 <script>
 /* Script loader (https://github.com/ded/script.js) */
 (function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)
@@ -351,11 +418,66 @@
         var query = window.location.search.substring(1);
         var vars = query.split('&');
         for (var i = 0; i < vars.length; i++) {
-            var pair = vars[i].split('=');
+            var pair = vars[i].replace(/\+/g, '%20').split('=');
             if (decodeURIComponent(pair[0]) == variable) {
                 return decodeURIComponent(pair[1]);
             }
         }
+    }
+
+    /**
+     * Get alerted when a group of jobs have been completed.
+     * Eg. .registerJob('job1'); .registerJob('job2');
+     *     .onFinish(function(){ alert('Jobs finished!'); });
+     *     .finishJob('job1');
+     *     .finishJob('job2');
+     */
+    function JobManager() {
+        var completed_jobs = {  };
+
+        // Functions to call once all jobs have completed
+        var completed_callbacks = [];
+
+
+        function callCompletedFunctions(fn) {
+            $.each(completed_callbacks, function(idx, fn) {
+                fn();
+            });
+
+            completed_callbacks = [];
+        };
+
+
+        this.finishJob = function(job_name) {
+            if (typeof completed_jobs[job_name] === 'undefined') {
+                return;
+            }
+
+            completed_jobs[job_name] = true;
+
+            // Check if all our jobs have completed
+            var all_jobs_completed = true;
+            $.each(completed_jobs, function(idx, completed) {
+                if (!completed) {
+                    all_jobs_completed = false;
+                    return false;
+                }
+            });
+
+            if (all_jobs_completed) {
+                callCompletedFunctions();
+            }
+        };
+
+
+        this.onFinish = function(fn) {
+            completed_callbacks.push(fn);
+        };
+
+
+        this.registerJob = function(job_name) {
+            completed_jobs[job_name] = false;
+        };
     }
 
     (function () {
@@ -373,64 +495,31 @@
          * Job bootup manager
          * Once all jobs have completed, call any registered completed functions
          */
-        var jobs = new (function BootManager() {
-            var completed_jobs = {  };
-
-            // Functions to call once all jobs have completed
-            var completed_callbacks = [];
-
-
-            function callCompletedFunctions(fn) {
-                $.each(completed_callbacks, function(idx, fn) {
-                    fn();
-                });
-
-                completed_callbacks = [];
-            };
-
-
-            this.finishJob = function(job_name) {
-                if (typeof completed_jobs[job_name] === 'undefined') {
-                    return;
-                }
-
-                completed_jobs[job_name] = true;
-
-                // Check if all our jobs have completed
-                var all_jobs_completed = true;
-                $.each(completed_jobs, function(idx, completed) {
-                    if (!completed) {
-                        all_jobs_completed = false;
-                        return false;
-                    }
-                });
-
-                if (all_jobs_completed) {
-                    callCompletedFunctions();
-                }
-            };
-
-
-            this.onFinish = function(fn) {
-                completed_callbacks.push(fn);
-            };
-
-
-            this.registerJob = function(job_name) {
-                completed_jobs[job_name] = false;
-            };
-        })();
+        var jobs = new JobManager();
 
 
         // Run after all dependancies have been loaded
         jobs.onFinish(function startApp() {
-            // Start the app
-            kiwi.start(opts, function() {
-                // Load any plugins
+            // Kiwi IRC version this is built from
+            kiwi.build_version = '<%build_version%>';
+
+            // Start the app after loading plugins
+            kiwi.init(opts, function() {
                 if (opts.client_plugins && opts.client_plugins.length > 0) {
+
+                    // Wait until all plugins are loaded before starting the app
+                    kiwi.plugins.once('loaded', function() {
+                        kiwi.start();
+                    });
+
                     _.each(opts.client_plugins, function (plugin_url) {
                         kiwi.plugins.load(plugin_url);
                     });
+
+                } else {
+
+                    // No plugins were needed so start the app
+                    kiwi.start();
                 }
             });
         });
@@ -465,14 +554,14 @@
 
         // If we're not interested in debug libs, start loading production files
         if (!getQueryVariable('debug')) {
-            scripts.push(['assets/libs/lodash.min.js']);
+            scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
             scripts.push([
-                'assets/libs/backbone.min.js',
-                'assets/libs/jed.js'
+                'assets/libs/backbone.min.js?t=<%build_time%>',
+                'assets/libs/jed.js?t=<%build_time%>'
             ]);
             scripts.push([
-                'assets/kiwi.min.js',
-                'assets/libs/engine.io.bundle.min.js'
+                'assets/kiwi.min.js?t=<%build_time%>',
+                'assets/libs/engine.io.bundle.min.js?t=<%build_time%>'
             ]);
 
             loadNextScript();
@@ -485,6 +574,7 @@
             opts.client_plugins = data.client_plugins;
             opts.translations = data.translations;
             opts.locale = data.locale;
+            opts.themes = data.themes;
 
             if (typeof data.kiwi_server !== 'undefined')
                 opts.kiwi_server = data.kiwi_server;
@@ -495,6 +585,19 @@
             if (getQueryVariable('debug')) {
                 scripts = scripts.concat(data.scripts);
                 loadNextScript();
+            }
+
+            // Load themes
+            if (opts.themes) {
+                $.each(opts.themes, function (theme_idx, theme) {
+                    var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase()),
+                        rel = (disabled?'alternate ':'') + 'stylesheet' /*+ (disabled?' prefetch':'')*/;
+
+                    var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
+                    link.disabled = disabled;
+
+                    $(link).appendTo($('head'));
+                });
             }
         });
 
