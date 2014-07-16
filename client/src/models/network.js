@@ -233,6 +233,22 @@
             }
 
             return false;
+        },
+
+        // Create a new query panel
+        createQuery: function (nick) {
+            var that = this,
+                panels = [];
+
+            // Check if we have the panel already. If not, create it
+            query = that.panels.getByName(nick);
+            if (!query) {
+                query = new _kiwi.model.Query({name: nick});
+                that.panels.add(query);
+            }
+            
+            // In all cases, show the demanded query
+            that.panels.getByName(nick).view.show();
         }
     });
 
