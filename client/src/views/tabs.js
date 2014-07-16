@@ -87,8 +87,9 @@ _kiwi.view.Tabs = Backbone.View.extend({
         var connection = _kiwi.app.connections.active_connection;
 
         panel.tab.remove();
-
         delete panel.tab;
+
+        _kiwi.app.panels.trigger('remove', this);
 
         _kiwi.app.view.doLayout();
     },
