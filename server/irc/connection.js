@@ -343,12 +343,12 @@ IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
  * @param data The line of data to be sent
  * @param force Write the data now, ignoring any write queue
  */
-IrcConnection.prototype.write = function (data, force) {
+IrcConnection.prototype.write = function (data, force, force_complete_fn) {
     //ENCODE string to encoding of the server
     var encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
 
     if (force) {
-        this.socket.write(encoded_buffer);
+        this.socket.write(encoded_buffer, force_complete_fn);
         return;
     }
 
@@ -413,6 +413,8 @@ IrcConnection.prototype.flushWriteBuffer = function () {
  * Close the connection to the IRCd after forcing one last line
  */
 IrcConnection.prototype.end = function (data) {
+    var that = this;
+
     if (!this.socket) {
         return;
     }
@@ -420,7 +422,12 @@ IrcConnection.prototype.end = function (data) {
     this.requested_disconnect = true;
 
     if (data) {
-        this.write(data, true);
+        // Once the last bit of data has been sent, then re-run this function to close the socket
+        this.write(data, true, function() {
+            that.end();
+        });
+
+        return;
     }
 
     this.socket.end();
