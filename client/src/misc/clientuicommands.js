@@ -75,6 +75,7 @@
         'command:kick':        kickCommand,
         'command:clear':       clearCommand,
         'command:ctcp':        ctcpCommand,
+        'command:quit':        quitCommand,
         'command:server':      serverCommand,
         'command:whois':       whoisCommand,
         'command:whowas':      whowasCommand,
@@ -514,6 +515,16 @@
             return;
 
         new _kiwi.model.ChannelInfo({channel: this.app.panels().active});
+    }
+
+
+    function quitCommand (ev) {
+        var network = this.app.connections.active_connection;
+
+        if (!network)
+            return;
+
+        network.gateway.quit(ev.params.join(' '));
     }
 
 
