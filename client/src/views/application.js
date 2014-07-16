@@ -383,13 +383,10 @@ _kiwi.view.Application = Backbone.View.extend({
                 panel_access.shift();
 
                 //Get the last-accessed panel model now that we removed the closed one
-                var model = kiwi.connections.active_connection.panels.getByCid(panel_access[0]);
+                var model = _.find(_kiwi.app.panels('applets').concat(_kiwi.app.panels('connections')), {cid: panel_access[0]});
 
                 if (model) {
                     model.view.show();
-                } else {
-                    // This is a workaround because PanelList does not contain applets
-                    kiwi.panels()[0].view.show();
                 }
             }
         });
