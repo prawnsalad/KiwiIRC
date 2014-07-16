@@ -102,6 +102,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
             if (model) {
                 model.view.show();
+            } else {
+                kiwi.panels()[0].view.show();
             }
         }
 
