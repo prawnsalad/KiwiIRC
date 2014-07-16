@@ -238,7 +238,7 @@
         // Create a new query panel
         createQuery: function (nick) {
             var that = this,
-                panels = [];
+                query;
 
             // Check if we have the panel already. If not, create it
             query = that.panels.getByName(nick);
@@ -248,7 +248,7 @@
             }
             
             // In all cases, show the demanded query
-            that.panels.getByName(nick).view.show();
+            query.view.show();
         }
     });
 
