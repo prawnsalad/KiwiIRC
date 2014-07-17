@@ -25,8 +25,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
                 $('span', this.model.server.tab).text(new_val);
             }, this);
         }
-
-        this.panel_access = new Array();
     },
 
     render: function () {
@@ -83,36 +81,20 @@ _kiwi.view.Tabs = Backbone.View.extend({
         panel.bind('change:title', this.updateTabTitle);
         panel.bind('change:name', this.updateTabTitle);
 
-        //Adding a panel
-        this.panel_access.unshift(panel.cid);
-
         _kiwi.app.view.doLayout();
     },
     panelRemoved: function (panel) {
         var connection = _kiwi.app.connections.active_connection;
 
         panel.tab.remove();
-
-        // If closing the active panel, switch to the last-accessed panel
-        if (this.panel_access[0] === _kiwi.app.panels().active.cid) {
-            this.panel_access.shift();
-
-            //Get the last-accessed panel model now that we removed the closed one
-            var model = connection.panels.getByCid(this.panel_access[0]);
-
-            if (model) {
-                model.view.show();
-            }
-        }
-
         delete panel.tab;
+
+        _kiwi.app.panels.trigger('remove', panel);
 
         _kiwi.app.view.doLayout();
     },
 
     panelActive: function (panel, previously_active_panel) {
-        var panel_index = _.indexOf(this.panel_access, panel.cid);
-
         // Remove any existing tabs or part images
         _kiwi.app.view.$el.find('.panellist .part').remove();
         _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
@@ -123,13 +105,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
         if (!panel.isServer()) {
             panel.tab.append('<span class="part fa fa-nonexistant"></span>');
         }
-
-        if (panel_index > -1) {
-            this.panel_access.splice(panel_index, 1);
-        }
-
-        //Make this panel the most recently accessed
-        this.panel_access.unshift(panel.cid);
     },
 
     tabClick: function (e) {
