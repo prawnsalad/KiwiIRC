@@ -54,6 +54,8 @@ _kiwi.view.Application = Backbone.View.extend({
 
         this.favicon = new _kiwi.view.Favicon();
         this.initSound();
+
+        this.monitorPanelFallback();
     },
 
 
@@ -355,5 +357,38 @@ _kiwi.view.Application = Backbone.View.extend({
         setTimeout(function() {
             (notification.cancel || notification.close).call(notification);
         }, 5000);
+    },
+
+    monitorPanelFallback: function() {
+        var panel_access = [];
+
+        this.model.panels.on('active', function() {
+            var panel = _kiwi.app.panels().active,
+                panel_index;
+
+            // If the panel is already open, remove it so we can put it back in first place
+            panel_index = _.indexOf(panel_access, panel.cid);
+
+            if (panel_index > -1) {
+                panel_access.splice(panel_index, 1);
+            }
+
+            //Make this panel the most recently accessed
+            panel_access.unshift(panel.cid);
+        });
+        
+        this.model.panels.on('remove', function(panel) {
+            // If closing the active panel, switch to the last-accessed panel
+            if (panel_access[0] === panel.cid) {
+                panel_access.shift();
+
+                //Get the last-accessed panel model now that we removed the closed one
+                var model = _.find(_kiwi.app.panels('applets').concat(_kiwi.app.panels('connections')), {cid: panel_access[0]});
+
+                if (model) {
+                    model.view.show();
+                }
+            }
+        });
     }
 });
