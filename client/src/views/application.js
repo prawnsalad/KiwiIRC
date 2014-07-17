@@ -376,20 +376,6 @@ _kiwi.view.Application = Backbone.View.extend({
             //Make this panel the most recently accessed
             panel_access.unshift(panel.cid);
         });
-
-        this.model.panels.on('close', function(panel) {
-            // If closing the active panel, switch to the last-accessed panel
-            if (panel_access[0] === panel.cid) {
-                panel_access.shift();
-
-                //Get the last-accessed panel model now that we removed the closed one
-                var model = _.find(_kiwi.app.panels('applets').concat(_kiwi.app.panels('connections')), {cid: panel_access[0]});
-
-                if (model) {
-                    model.view.show();
-                }
-            }
-        });
         
         this.model.panels.on('remove', function(panel) {
             // If closing the active panel, switch to the last-accessed panel
