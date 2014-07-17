@@ -89,7 +89,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         panel.tab.remove();
         delete panel.tab;
 
-        _kiwi.app.panels.trigger('remove', this);
+        _kiwi.app.panels.trigger('remove', panel);
 
         _kiwi.app.view.doLayout();
     },
