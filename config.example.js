@@ -190,7 +190,7 @@ conf.client = {
         use_24_hour_timestamps: true,
         mute_sounds: false,
         show_emoticons: true,
-        count_all_activity: true
+        count_all_activity: false
     },
     window_title: 'Kiwi IRC'
 };
