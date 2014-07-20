@@ -145,6 +145,12 @@ _kiwi.view.Application = Backbone.View.extend({
             return;
         }
 
+        // Fix application height on Safari ipad IOS 7 
+        if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) {
+            $(el_kiwi).height(window.innerHeight);
+            window.scrollTo(0, 0);
+        }
+
         var css_heights = {
             top: el_toolbar.outerHeight(true),
             bottom: el_controlbox.outerHeight(true)
