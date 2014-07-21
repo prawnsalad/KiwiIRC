@@ -147,8 +147,13 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Fix application height on Safari ipad IOS 7 
         if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) {
+            $('html, body').height(window.innerHeight);
             $(el_kiwi).height(window.innerHeight);
             window.scrollTo(0, 0);
+
+            $('input, textarea').bind('focusout', function(e) {
+                window.scrollTo(0, 0);
+            });            
         }
 
         var css_heights = {
