@@ -52,9 +52,6 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Max number of lines to write a second
     this.write_buffer_lines_second = 2;
 
-    // If registeration with the IRCd has completed
-    this.registered = false;
-
     // If we are in the CAP negotiation stage
     this.cap_negotiation = true;
 
@@ -300,7 +297,7 @@ IrcConnection.prototype.connect = function () {
         that.socket.on('close', function socketCloseCb(had_error) {
             // If that.connected is false, we never actually managed to connect
             var was_connected = that.connected,
-                had_registered = that.server.registered,
+                safely_registered = (new Date()) - that.server.registered > 10000, // Safely = registered + 10secs after.
                 should_reconnect = false;
 
             that.connected = false;
@@ -316,7 +313,7 @@ IrcConnection.prototype.connect = function () {
                 should_reconnect = true;
 
             // If this was an unplanned disconnect and we were originally connected OK, reconnect
-            } else if (!that.requested_disconnect  && was_connected && had_registered) {
+            } else if (!that.requested_disconnect  && was_connected && safely_registered) {
                 should_reconnect = true;
 
             } else {

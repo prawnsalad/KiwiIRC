@@ -8,6 +8,7 @@ var IrcServer = function (irc_connection) {
     this.list_buffer = [];
     this.motd_buffer = '';
 
+    // Date when registeration with the IRCd had completed
     this.registered = false;
 
     this.irc_events = {
@@ -60,7 +61,7 @@ IrcServer.prototype.reset = function() {
 
 
 function onConnect(event) {
-    this.registered = true;
+    this.registered = new Date();
 
     this.irc_connection.clientEvent('connect', {
         nick: event.nick
