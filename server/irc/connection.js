@@ -40,6 +40,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // If the connection closes and this is false, we reconnect
     this.requested_disconnect = false;
 
+    // Number of times we have tried to reconnect
+    this.reconnect_attempts = 0;
+
     // IRCd write buffers (flood controll)
     this.write_buffer = [];
 
@@ -308,12 +311,24 @@ IrcConnection.prototype.connect = function () {
                 delete global.clients.port_pairs[that.identd_port_pair];
             }
 
-            should_reconnect = (!that.requested_disconnect && was_connected && had_registered);
+            // If trying to reconnect, continue with it
+            if (that.reconnect_attempts && that.reconnect_attempts < 3) {
+                should_reconnect = true;
+
+            // If this was an unplanned disconnect and we were originally connected OK, reconnect
+            } else if (!that.requested_disconnect  && was_connected && had_registered) {
+                should_reconnect = true;
+
+            } else {
+                should_reconnect = false;
+            }
 
             if (should_reconnect) {
+                that.reconnect_attempts++;
                 that.emit('reconnecting');
             } else {
                 that.emit('close', had_error);
+                that.reconnect_attempts = 0;
             }
 
             // Close the whole socket down
@@ -324,7 +339,7 @@ IrcConnection.prototype.connect = function () {
             if (should_reconnect) {
                 setTimeout(function() {
                     that.connect();
-                }, 3000);
+                }, 4000);
             }
         });
     });
