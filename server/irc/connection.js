@@ -12,6 +12,7 @@ var net             = require('net'),
     EE              = require('../ee.js'),
     iconv           = require('iconv-lite'),
     Proxy           = require('../proxy.js'),
+    Stats           = require('../stats.js'),
     Socks;
 
 
@@ -31,6 +32,8 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         delimiter: ' '
     });
     this.setMaxListeners(0);
+
+    Stats.incr('irc.connection.created');
 
     options = options || {};
 
@@ -281,6 +284,7 @@ IrcConnection.prototype.connect = function () {
                 rawSocketConnect.call(that, this);
             }
 
+            Stats.incr('irc.connection.connected');
             that.connected = true;
 
             socketConnectHandler.call(that);
@@ -321,9 +325,11 @@ IrcConnection.prototype.connect = function () {
             }
 
             if (should_reconnect) {
+                Stats.incr('irc.connection.reconnect');
                 that.reconnect_attempts++;
                 that.emit('reconnecting');
             } else {
+                Stats.incr('irc.connection.closed');
                 that.emit('close', had_error);
                 that.reconnect_attempts = 0;
             }

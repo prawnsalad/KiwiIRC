@@ -1,6 +1,7 @@
 var util    = require('util'),
     EventBinder  = require('./eventbinder.js'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    Stats = require('../stats.js');
 
 var IrcServer = function (irc_connection) {
     this.irc_connection = irc_connection;
@@ -61,6 +62,7 @@ IrcServer.prototype.reset = function() {
 
 
 function onConnect(event) {
+    Stats.incr('irc.connection.registered');
     this.registered = new Date();
 
     this.irc_connection.clientEvent('connect', {

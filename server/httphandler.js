@@ -5,7 +5,8 @@ var url         = require('url'),
     _           = require('lodash'),
     config      = require('./configuration.js'),
     winston     = require('winston'),
-    SettingsGenerator = require('./settingsgenerator.js');
+    SettingsGenerator = require('./settingsgenerator.js'),
+    Stats       = require('./stats.js');
 
 
 
@@ -37,6 +38,10 @@ HttpHandler.prototype.serve = function (request, response) {
     // Any requests for /base_path/* to load the index file
     if (request.url.toLowerCase().indexOf(base_path.toLowerCase()) === 0) {
         request.url = '/index.html';
+    }
+
+    if (request.url === '/index.html') {
+        Stats.incr('http.homepage');
     }
 
     // If the 'magic' translation is requested, figure out the best language to use from

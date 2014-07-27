@@ -152,6 +152,7 @@ WebsocketRpc.prototype._onMessage = function(message_raw) {
             returnFn = this._noop;
         }
 
+        this.emit.apply(this, ['all', packet.method, returnFn].concat(packet.params));
         this.emit.apply(this, [packet.method, returnFn].concat(packet.params));
     }
 };
