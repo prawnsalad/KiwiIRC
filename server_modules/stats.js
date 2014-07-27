@@ -11,9 +11,11 @@ var kiwiModules = require('../server/modules'),
 
 var module = new kiwiModules.Module('stats_file');
 
+var stats_file = fs.createWriteStream('kiwi_stats.log', {'flags': 'a'});
+
 module.on('stat counter', function (event, event_data) {
     var stat_name = event_data.name,
-        stats_file, timestamp,
+        timestamp,
         ignored_events = [];
 
     // Some events may want to be ignored
@@ -24,7 +26,5 @@ module.on('stat counter', function (event, event_data) {
     }
 
     timestamp = Math.floor((new Date()).getTime() / 1000);
-
-    stats_file = fs.createWriteStream('kiwi_stats.log', {'flags': 'a'});
     stats_file.write(timestamp.toString() + ' ' + stat_name + '\n');
 });
