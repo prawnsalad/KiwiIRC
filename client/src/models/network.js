@@ -144,6 +144,7 @@
             this.gateway.on('away', onAway, this);
             this.gateway.on('list_start', onListStart, this);
             this.gateway.on('irc_error', onIrcError, this);
+            this.gateway.on('umodeg_msg', onUmodegMsg, this);
             this.gateway.on('unknown_command', onUnknownCommand, this);
             this.gateway.on('channel_info', onChannelInfo, this);
             this.gateway.on('wallops', onWallops, this);
@@ -792,6 +793,19 @@
 
 
 
+    function onUmodegMsg(event) {
+        var panel;
+
+        if (event.end)
+            return;
+  
+        panel = _kiwi.app.panels().active;
+        
+        panel.addMsg(event.nick, styleText('umode_g_msg', {nick: event.nick, text: translateText('client_models_network_umode_g_msg', [event.nick])}), 'action');
+    }
+
+
+
     function onIrcError(event) {
         var panel, tmp;
 
@@ -846,7 +860,19 @@
             }
 
             break;
-
+        case 'targ_umodeg':
+            //this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_target_umodeg').fetch( event.nick), 'status'); 
+            this.panels.server.addMsg(event.nick, styleText('target_umodeg', {nick: event.nick, text: translateText('client_models_network_target_umodeg', [])}), 'status');
+            break;
+        case 'targ_notify':
+            //this.panels.server.addMsg(' ', '== ' + _kiwi.global.i18n.translate('client_models_network_target_g_notify').fetch( event.nick), 'status');
+            this.panels.server.addMsg(event.nick, styleText('target_g_notify', {nick: event.nick, text: translateText('client_models_network_target_g_notify', [event.nick])}), 'status');
+            
+            if (this.panels.server !== this.panels.active) {
+                _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_target_g_notify').fetch(event.nick));
+            }
+            
+            break;
         case 'password_mismatch':
             this.panels.server.addMsg(' ', styleText('channel_badpassword', {nick: event.nick, text: translateText('client_models_network_badpassword', []), channel: event.channel}), 'status');
             break;

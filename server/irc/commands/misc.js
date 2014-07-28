@@ -55,6 +55,44 @@ var handlers = {
     },
 
 
+    RPL_TARGUMODEG: function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' targumodeg', {
+            nick: command.params[1]
+        });
+    },
+    
+    RPL_TARGNOTIFY: function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' targnotify', {
+            nick: command.params[1]
+        });
+    },
+    
+    RPL_UMODEGMSG: function (command) {
+        this.irc_connection.emit('server ' + this.irc_connection.irc_host.hostname + ' umodegmsg', {
+            nick: command.params[1]
+        });
+    },
+    
+
+    RPL_MYINFO: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_ANTISPAMBOT: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_YOURID: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+    
+        
     PING: function (command) {
         this.irc_connection.write('PONG ' + command.params[command.params.length - 1]);
     },
@@ -222,6 +260,12 @@ var handlers = {
     },
 
     ERR_NOMOTD: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, command.params[command.params.length - 1]);
+    },
+
+    ERR_TARGETTOFAST: function (command) {
         var params = _.clone(command.params);
         params.shift();
         this.emitGenericNotice(command, command.params[command.params.length - 1]);

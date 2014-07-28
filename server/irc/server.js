@@ -37,6 +37,9 @@ var IrcServer = function (irc_connection) {
         chanop_privs_needed:    onChanopPrivsNeeded,
         nickname_in_use:        onNicknameInUse,
         erroneus_nickname:      onErroneusNickname,
+        targumodeg:             onTargUmodeG,
+        targnotify:             onTargNotify,
+        umodegmsg:              onUmodegMsg,
         unknown_command:        onUnknownCommand
     };
     EventBinder.bindIrcEvents('server *', this.irc_events, this, this.irc_connection);
@@ -259,6 +262,26 @@ function onErroneusNickname(event) {
         nick: event.nick,
         reason: event.reason
     });
+}
+
+function onTargUmodeG(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'targ_umodeg',
+        nick: event.nick
+    });    
+}
+
+function onTargNotify(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'targ_notify',
+        nick: event.nick
+    });    
+}
+
+function onUmodegMsg(event) {
+    this.irc_connection.clientEvent('umodeg_msg', {
+        nick: event.nick
+    });    
 }
 
 function onUnknownCommand(event) {

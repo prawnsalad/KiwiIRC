@@ -269,6 +269,18 @@ msgid "client_models_network_nickname_alreadyinuse"
 msgstr "The nickname \"%s\" is already in use. Please select a new nickname"
 
 #: 
+msgid "client_models_network_target_umodeg"
+msgstr "is in +g mode (server-side ignore)."
+
+#: 
+msgid "client_models_network_target_g_notify"
+msgstr "%s has been notified of your message, wait for his autorization."
+
+#: 
+msgid "client_models_network_umode_g_msg"
+msgstr "is contacting you and you are +g, write /accept +%s to accept message"
+ 
+#: 
 msgid "client_models_network_badpassword"
 msgstr "Incorrect password given"
 

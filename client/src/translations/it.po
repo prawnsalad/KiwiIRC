@@ -65,6 +65,10 @@ msgid "client_applets_settings_notification_joinpart"
 msgstr "Notifiche entrata/uscita dal canale"
 
 #: 
+msgid "client_applets_settings_short_joinpart"
+msgstr "Mostra mask e motivo nei messaggi di entrata/uscita."
+
+#: 
 msgid "client_applets_settings_timestamp"
 msgstr "Data/ora"
 
@@ -178,7 +182,7 @@ msgstr "Errore durante la connessione a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "è entrato nel canale"
+msgstr "%s è entrato nel canale"
 
 #: 
 msgid "client_models_channel_quit"
@@ -186,11 +190,11 @@ msgstr "ha chiuso la chat %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "è stato espulso dal canale da %s: %s"
+msgstr "è stato espulso dal canale da %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Sei stato espulso dal canale da %s: %s"
+msgstr "Sei stato espulso dal canale da %s %s"
 
 #: 
 msgid "client_models_channel_part"
@@ -198,7 +202,7 @@ msgstr "ha abbandonato il canale %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "non è un nome di canale valido"
+msgstr "%s non è un nome di canale valido"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +210,7 @@ msgstr "Disconnesso dalla rete IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "ha ora il nickname %s"
+msgstr "ha cambiato nick in %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +218,11 @@ msgstr "Argomento impostato da %s il %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "imposta il modo %s"
+msgstr "%s imposta il modo %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "imposta il modo %s"
+msgstr "imposta il modo %s %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,15 +258,27 @@ msgstr "Chiave canale non valida per %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "è solo su invito."
+msgstr "%s è solo su invito."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "è al completo."
+msgstr "%s è al completo."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
 msgstr "Il nickname “%s” è già in uso. Scegli un altro nickname."
+
+#: 
+msgid "client_models_network_target_umodeg"
+msgstr "ha impostato il modo +g (Caller ID)."
+
+#: 
+msgid "client_models_network_target_g_notify"
+msgstr "%s ha ricevuto notifica del tuo messaggio, attendi di essere autorizzato"
+
+#: 
+msgid "client_models_network_umode_g_msg"
+msgstr "ti ha inviato un messaggio privato, usermode +g attivo digita /accept +%s per accettare il messaggio"
 
 #: 
 msgid "client_models_network_badpassword"
@@ -707,4 +723,3 @@ msgstr "Blocca i messaggi esterni al canale"
 #: 
 msgid "client_views_channelinfo_togglebanlist"
 msgstr "Mostra Banlist"
-
