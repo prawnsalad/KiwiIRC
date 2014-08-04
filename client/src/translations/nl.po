@@ -450,7 +450,7 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Hou je vast! Over 5 minuten wordt je opnieuw verbonden en je kanalen worden gejoined"
+msgstr "Let op! Over 5 minuten wordt je opnieuw verbonden en je kanalen worden gejoined"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
@@ -506,7 +506,7 @@ msgstr "Verwijder netwerk"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Zie join/part berichten als activiteit"
 
 #: 
 msgid "client_views_userbox_ignore"
@@ -514,7 +514,7 @@ msgstr "Negeren"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Gebruik 24-uurs tijdstempel"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -526,185 +526,189 @@ msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "has been invited to %s"
+msgstr "is uitgenodigd naar %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "is already on this channel"
+msgstr "is al in dit kanaal"
 
 #: Date format
 msgid "client_date_format"
-msgstr "m/d/Y"
+msgstr "d-m-Y"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Jan"
+msgstr "jan"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
-msgstr "Feb"
+msgstr "feb"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "Mar"
+msgstr "mar"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
-msgstr "Apr"
+msgstr "apr"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "May"
+msgstr "mei"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
-msgstr "Jun"
+msgstr "jun"
 
 #: client.libs.date_format.shortMonths.july
 msgid "client.libs.date_format.short_months.july"
-msgstr "Jul"
+msgstr "jul"
 
 #: client.libs.date_format.shortMonths.august
 msgid "client.libs.date_format.short_months.august"
-msgstr "Aug"
+msgstr "aug"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Sep"
+msgstr "sep"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
-msgstr "Oct"
+msgstr "okt"
 
 #: client.libs.date_format.shortMonths.november
 msgid "client.libs.date_format.short_months.november"
-msgstr "Nov"
+msgstr "nov"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Dec"
+msgstr "dec"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "January"
+msgstr "januari"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "February"
+msgstr "februari"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "March"
+msgstr "maart"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
-msgstr "April"
+msgstr "april"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "May"
+msgstr "mei"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "June"
+msgstr "juni"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "July"
+msgstr "juli"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "August"
+msgstr "augustus"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "September"
+msgstr "september"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
-msgstr "October"
+msgstr "oktober"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "November"
+msgstr "november"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "December"
+msgstr "december"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Mon"
+msgstr "Ma"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Tue"
+msgstr "Di"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Wed"
+msgstr "Wo"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Thu"
+msgstr "Do"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Fri"
+msgstr "Vri"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Sat"
+msgstr "Zat"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Sun"
+msgstr "Zon"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Monday"
+msgstr "Maandag"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Tueday"
+msgstr "Dinsdag"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Wednesday"
+msgstr "Woensdag"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Thursday"
+msgstr "Donderdag"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Friday"
+msgstr "Vrijdag"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Saturday"
+msgstr "Zaterdag"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Sunday"
+msgstr "Zondag"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Moderated Chat"
+msgstr "Gemodereerde chat"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Invite Only"
+msgstr "Alleen op uitnodiging"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Only operators can change the topic"
+msgstr "Alleen ops mogen het topic veranderen"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Block messages from outside this channel"
+msgstr "Blokkeer berichten van buiten dit kanaal"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Toggle Banlist"
+msgstr "Schakel banlijst"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Verstuur"
 
