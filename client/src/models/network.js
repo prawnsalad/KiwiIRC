@@ -101,6 +101,11 @@
                     that.gateway = _kiwi.global.components.Network(that.get('connection_id'));
                     that.bindGatewayEvents();
 
+                    // Reset each of the panels connection ID
+                    that.panels.forEach(function(panel) {
+                        panel.set('connection_id', connection_id);
+                    });
+
                     callback_fn && callback_fn(err);
 
                 } else {
@@ -246,7 +251,7 @@
                 query = new _kiwi.model.Query({name: nick});
                 that.panels.add(query);
             }
-            
+
             // In all cases, show the demanded query
             query.view.show();
         }

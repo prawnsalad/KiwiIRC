@@ -24,6 +24,12 @@ _kiwi.view.Tabs = Backbone.View.extend({
             this.model.network.on('change:name', function (network, new_val) {
                 $('span', this.model.server.tab).text(new_val);
             }, this);
+
+            this.model.network.on('change:connection_id', function (network, new_val) {
+                this.model.forEach(function(panel) {
+                    panel.tab.data('connection_id', new_val);
+                });
+            }, this);
         }
     },
 
