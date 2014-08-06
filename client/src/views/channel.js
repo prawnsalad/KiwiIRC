@@ -79,7 +79,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
                 _kiwi.app.view.favicon.newHighlight();
                 _kiwi.app.view.playSound('highlight');
-                _kiwi.app.view.showNotification(this.model.get('name'), msg.msg);
+                _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
                 this.alert('highlight');
 
             } else {
@@ -98,7 +98,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                     _kiwi.app.view.favicon.newHighlight();
                 }
 
-                _kiwi.app.view.showNotification(this.model.get('name'), msg.msg);
+                _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
                 _kiwi.app.view.playSound('highlight');
             }
 
@@ -300,6 +300,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return parsed_word;
         }, this);
 
+        msg.unparsed_msg = msg.msg;
         msg.msg = message_words.join(' ');
 
         // Convert IRC formatting into HTML formatting
