@@ -256,11 +256,11 @@
 
 
 
-#kiwi.chanlist_treeview .panels { left:200px; }
+#kiwi.chanlist_treeview .panels { left:160px; }
 #kiwi.chanlist_treeview .toolbar { position:static; }
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:200px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
 #kiwi.chanlist_treeview .tabs ul li.active { padding-left:1em; }
