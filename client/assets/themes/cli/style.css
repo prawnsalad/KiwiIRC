@@ -33,7 +33,7 @@
     padding-left:0.5em;
 }
 
-#kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #444444; border-top:1px solid #444444; }
+#kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #2B2B2B; border-top:1px solid #2B2B2B; }
 #kiwi .toolbar .topic div {
     width:100%; height: 1.5em;
     padding: 0.2em 1em;
@@ -47,7 +47,6 @@
     min-height:1.5em;
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
-    background-color:#111111;
     z-index: 1;
     height:auto; bottom:auto;
     border-bottom: 1px solid #444444;
@@ -120,6 +119,13 @@
 #kiwi .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
 #kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
 #kiwi .userbox .divider-horizontal { display:none; }
+
+#kiwi .status_message {
+    background: #363636;
+    border-bottom: 1px solid #444444;
+    padding: 0.9em;
+    text-align: center; font-size:1.1em;
+}
 
 #kiwi .channel_tools {
     border-bottom: 1px solid #8A8A8A;
