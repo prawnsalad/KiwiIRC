@@ -111,7 +111,7 @@ html, body { height:100%; }
 
 #kiwi .messages .msg {}
 #kiwi .messages .msg .time { display:inline; }
-#kiwi .messages .msg .nick { display:inline; }
+#kiwi .messages .msg .nick { display:inline; cursor: pointer; }
 #kiwi .messages .msg .text { display:inline; }
 
 #kiwi .messages .msg.action .nick { display:none; }
