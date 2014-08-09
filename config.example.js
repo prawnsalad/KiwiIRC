@@ -106,11 +106,14 @@ conf.modules = [];
 
 
 
-// WebIRC passwords enabled for this server
-conf.webirc_pass = {
-    //"irc.network.com":  "configured_webirc_password",
-    //"127.0.0.1":        "foobar"
-};
+// WebIRC password enabled for this server
+//conf.webirc_pass = "foobar";
+
+// Multiple WebIRC passwords may be used for multiple servers
+//conf.webirc_pass = {
+//    "irc.network.com":  "configured_webirc_password",
+//    "127.0.0.1":        "foobar"
+//};
 
 // Some IRCDs require the clients IP via the username/ident
 conf.ip_as_username = [

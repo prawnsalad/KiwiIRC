@@ -716,18 +716,25 @@ var socketConnectHandler = function () {
 function findWebIrc(connect_data) {
     var webirc_pass = global.config.webirc_pass,
         ip_as_username = global.config.ip_as_username,
-        tmp;
+        found_webirc_pass, tmp;
 
 
-    // Do we have a WEBIRC password for this?
-    if (webirc_pass && webirc_pass[this.irc_host.hostname]) {
+    // Do we have a single WEBIRC password?
+    if (typeof webirc_pass === 'string') {
+        found_webirc_pass = webirc_pass;
+
+    // Do we have a WEBIRC password for this hostname?
+    } else if (typeof webirc_pass === 'object' && webirc_pass[this.irc_host.hostname]) {
+        found_webirc_pass = webirc_pass[this.irc_host.hostname];
+    }
+
+    if (found_webirc_pass) {
         // Build the WEBIRC line to be sent before IRC registration
         tmp = 'WEBIRC ' + webirc_pass[this.irc_host.hostname] + ' KiwiIRC ';
         tmp += this.user.hostname + ' ' + this.user.address;
 
         connect_data.prepend_data = [tmp];
     }
-
 
     // Check if we need to pass the users IP as its username/ident
     if (ip_as_username && ip_as_username.indexOf(this.irc_host.hostname) > -1) {
