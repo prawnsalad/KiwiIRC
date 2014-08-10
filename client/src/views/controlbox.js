@@ -188,7 +188,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                     this.tabcomplete.prefix = nick;
                 }
 
-                this.tabcomplete.data = _.select(this.tabcomplete.data, function (n) {
+                this.tabcomplete.data = _.select(this.tabcomplete.data.reverse(), function (n) {
                     return (n.toLowerCase().indexOf(that.tabcomplete.prefix.toLowerCase()) === 0);
                 });
 
@@ -199,6 +199,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
                     // Include the current selected nick
                     newnick = this.tabcomplete.data.shift();
+
                     this.tabcomplete.data.push(newnick);
                     val += newnick;
 
@@ -305,12 +306,12 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         ac_data.push(_kiwi.app.panels().active.get('name'));
         
         //Append the channel tab completion list so it gets used first
-        ac_data.push.apply(ac_data, _kiwi.app.panels().active.get('tabcomplete'));
+        ac_data.push.apply(ac_data, _kiwi.app.panels().active.get('recent_nicks'));
 
 
-        ac_data = _.sortBy(ac_data, function(nick) {
+        /*ac_data = _.sortBy(ac_data, function(nick) {
             return nick;
-        });
+        });*/
         this.tabcomplete.data = ac_data;
     }
 });
