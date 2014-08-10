@@ -24,9 +24,6 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         this.model.bind('change:topic', this.topic, this);
         this.model.bind('change:topic_set_by', this.topicSetBy, this);
-        
-        //Create array for tab completion data to be stored in
-        this.tabcomplete = [];
 
         if (this.model.get('members')) {
             this.model.get('members').bind('add', function (member) {
@@ -45,6 +42,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         this.model.bind('msg', this.newMsg, this);
         this.msg_count = 0;
+        
+        this.model.set('recent_nicks',[]);
+        
     },
 
 
@@ -480,12 +480,27 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         $('.'+nick_class).removeClass('global_nick_highlight');
     },
+    
+    //Appends the specified nick to the tab completion list
     addTabCompletion: function(nick) {
-        var pos = tabComplete.indexOf(nick);
-        
-        if(pos > -1 && pos !== (this.tabcomplete.length-1)) {
-            this.tabcomplete.splice(pos, 1);
+        var tabcomplete = this.model.get('recent_nicks');
+        var pos = tabcomplete.indexOf(nick);
+
+        //Make sure it's not in there twice
+        if(pos > -1) {
+            //if it's the only thing in there create an empty array otherwise we end up with it in there twice due to splice
+            if(tabcomplete.length == 1) {
+                tabcomplete = [];
+            } else {
+                tabcomplete = tabcomplete.splice(pos, 1);
+            }
         }
-            this.tabcomplete.push(nick);
+            tabcomplete.push(nick);
+            
+            //If the list is getting too long then lose the oldest ones
+            if(tabcomplete.length > 10) {
+                tabcomplete = tabcomplete.slice(tabcomplete.length - 10);
+            }
+            this.model.set('recent_nicks',tabcomplete);
     }
 });
