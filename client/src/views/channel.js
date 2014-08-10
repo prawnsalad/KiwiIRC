@@ -24,6 +24,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         this.model.bind('change:topic', this.topic, this);
         this.model.bind('change:topic_set_by', this.topicSetBy, this);
+        
+        //Create array for tab completion data to be stored in
+        this.tabcomplete = [];
 
         if (this.model.get('members')) {
             this.model.get('members').bind('add', function (member) {
@@ -80,6 +83,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 _kiwi.app.view.favicon.newHighlight();
                 _kiwi.app.view.playSound('highlight');
                 _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
+                this.addTabCompletion(msg.nick);
                 this.alert('highlight');
 
             } else {
@@ -475,5 +479,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (!nick_class) return;
 
         $('.'+nick_class).removeClass('global_nick_highlight');
+    },
+    addTabCompletion: function(nick) {
+        var pos = tabComplete.indexOf(nick);
+        
+        if(pos > -1 && pos !== (this.tabcomplete.length-1)) {
+            this.tabcomplete.splice(pos, 1);
+        }
+            this.tabcomplete.push(nick);
     }
 });
