@@ -312,37 +312,39 @@ IrcConnection.prototype.connect = function () {
                 delete global.clients.port_pairs[that.identd_port_pair];
             }
 
-            // If trying to reconnect, continue with it
-            if (that.reconnect_attempts && that.reconnect_attempts < 3) {
-                should_reconnect = true;
-
-            // If this was an unplanned disconnect and we were originally connected OK, reconnect
-            } else if (!that.requested_disconnect  && was_connected && safely_registered) {
-                should_reconnect = true;
-
-            } else {
-                should_reconnect = false;
-            }
-
-            if (should_reconnect) {
-                Stats.incr('irc.connection.reconnect');
-                that.reconnect_attempts++;
-                that.emit('reconnecting');
-            } else {
-                Stats.incr('irc.connection.closed');
-                that.emit('close', had_error);
-                that.reconnect_attempts = 0;
-            }
-
             // Close the whole socket down
             that.disposeSocket();
 
-            // If this socket closing was not expected and we did actually connect and
-            // we did previously completely register on the network, then reconnect
-            if (should_reconnect) {
-                setTimeout(function() {
-                    that.connect();
-                }, 4000);
+            if (global.config.ircd_reconnect) {
+                // If trying to reconnect, continue with it
+                if (that.reconnect_attempts && that.reconnect_attempts < 3) {
+                    should_reconnect = true;
+
+                // If this was an unplanned disconnect and we were originally connected OK, reconnect
+                } else if (!that.requested_disconnect  && was_connected && safely_registered) {
+                    should_reconnect = true;
+
+                } else {
+                    should_reconnect = false;
+                }
+
+                if (should_reconnect) {
+                    Stats.incr('irc.connection.reconnect');
+                    that.reconnect_attempts++;
+                    that.emit('reconnecting');
+                } else {
+                    Stats.incr('irc.connection.closed');
+                    that.emit('close', had_error);
+                    that.reconnect_attempts = 0;
+                }
+
+                // If this socket closing was not expected and we did actually connect and
+                // we did previously completely register on the network, then reconnect
+                if (should_reconnect) {
+                    setTimeout(function() {
+                        that.connect();
+                    }, 4000);
+                }
             }
         });
     });

@@ -84,6 +84,13 @@ conf.default_encoding = 'utf8';
 //conf.default_gecos = 'Web IRC Client';
 
 
+/*
+* Auto reconnect if the IRC server disconnects a kiwi user
+* Hundreds of connected users getting disconnected then reconnecting at once may see
+* high CPU usage causing further dropouts. Set to false if under high usage.
+*/
+conf.ircd_reconnect = true;
+
 
 /*
  * Client side plugins
