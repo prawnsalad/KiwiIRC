@@ -158,7 +158,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             && !ev.ctrlKey):
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
-                //this.doTabComplete();
+                this.doTabComplete();
             }
 
             if (inp_val[inp[0].selectionStart - 1] === ' ') {
