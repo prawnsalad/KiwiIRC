@@ -109,7 +109,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
                 var $act = this.model.tab.find('.activity'),
                     count_all_activity = _kiwi.global.settings.get('count_all_activity'),
-                    exclude_message_types;
+                    exclude_message_types, new_count;
 
                 // Set the default config value
                 if (typeof count_all_activity === 'undefined') {
@@ -127,14 +127,23 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 ];
 
                 if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
-                    $act.text((parseInt($act.text(), 10) || 0) + 1);
+                    new_count = $act.data('unread_counter') || 0;
+                    new_count++;
+                    $act.data('unread_counter', new_count);
+
+                    if (new_count > 999) {
+                        $act.text('999+');
+                    } else {
+                        $act.text(new_count);
+                    }
+
+                    if (new_count === 0) {
+                        $act.addClass('zero');
+                    } else {
+                        $act.removeClass('zero');
+                    }
                 }
 
-                if ($act.text() === '0') {
-                    $act.addClass('zero');
-                } else {
-                    $act.removeClass('zero');
-                }
             }).apply(this);
 
             if(this.model.isActive()) this.scrollToBottom();
