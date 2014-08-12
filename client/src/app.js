@@ -63,8 +63,6 @@ _kiwi.global = {
              */
             function proxyEvent(event_name, event_data) {
                 if (proxy_event_name == 'all') {
-                    event_name = event_data.event_name;
-                    event_data = event_data.event_data;
                 } else {
                     event_data = event_name.event_data;
                     event_name = event_name.event_name;
@@ -75,7 +73,6 @@ _kiwi.global = {
 
             // The event we are to proxy
             proxy_event_name = proxy_event_name || 'all';
-
 
             _.extend(this, Backbone.Events);
             this._source = event_source;
