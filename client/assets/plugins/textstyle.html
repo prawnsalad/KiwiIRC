@@ -1,0 +1,166 @@
+<style>
+    #kiwi .style-grid {
+        position: absolute;
+        display: block;
+        z-index: 1000;
+
+        background: #121314;
+        padding: 2px;
+        width: 120px;
+
+        border-radius: 3px;
+    }
+
+    #kiwi .style-colours { overflow: hidden; }
+    #kiwi .style-colour {
+        width: 25%;
+        height: 27px;
+        display: block;
+        float: left;
+        cursor: pointer;
+    }
+
+    #kiwi .style-formats {
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    #kiwi .style-format {
+        width: 33%;
+        cursor: pointer;
+        display: block;
+        float: left;
+        text-align: center;
+    }
+    #kiwi .style-format-bold { font-weight: bold; }
+    #kiwi .style-format-italic { font-style: italic; }
+    #kiwi .style-format-underline { text-decoration: underline; }
+</style>
+
+<script type="text/html" id="tmpl_styles">
+<div class="style-grid">
+    <div class="style-colours">
+        <a class="style-colour" style="background:#FFFFFF;" data-colour="0"></a>
+        <a class="style-colour" style="background:#000000;" data-colour="1"></a>
+        <a class="style-colour" style="background:#000080;" data-colour="2"></a>
+        <a class="style-colour" style="background:#008000;" data-colour="3"></a>
+        <a class="style-colour" style="background:#FF0000;" data-colour="4"></a>
+        <a class="style-colour" style="background:#800040;" data-colour="5"></a>
+        <a class="style-colour" style="background:#800080;" data-colour="6"></a>
+        <a class="style-colour" style="background:#FF8040;" data-colour="7"></a>
+        <a class="style-colour" style="background:#FFFF00;" data-colour="8"></a>
+        <a class="style-colour" style="background:#80FF00;" data-colour="9"></a>
+        <a class="style-colour" style="background:#008080;" data-colour="10"></a>
+        <a class="style-colour" style="background:#00FFFF;" data-colour="11"></a>
+        <a class="style-colour" style="background:#0000FF;" data-colour="12"></a>
+        <a class="style-colour" style="background:#FF55FF;" data-colour="13"></a>
+        <a class="style-colour" style="background:#808080;" data-colour="14"></a>
+        <a class="style-colour" style="background:#C0C0C0;" data-colour="15"></a>
+    </div>
+
+    <div class="style-formats">
+        <a class="style-format style-format-bold">Aa</a>
+        <a class="style-format style-format-italic">Aa</a>
+        <a class="style-format style-format-underline">Aa</a>
+    </div>
+</div>
+
+</script>
+
+<script type="text/javascript">
+    (function() {
+        var $list = $($('#tmpl_styles').html());
+        var $icon = $('<a><i class="fa fa-font"></i></a>');
+        var $inp = $('#kiwi .controlbox .inp');
+
+        var control = kiwi.components.ControlInput();
+        control.addPluginIcon($icon);
+
+        var styles = {
+            colour: false,
+            bold: false,
+            italic: false,
+            underline: false
+        };
+
+
+        // When a message is typed in, add any styling we have enabled
+        kiwi.events.on('command', function(event, data) {
+            if (data.command !== 'msg') {
+                return;
+            }
+
+            var style_codes = '';
+
+            if (styles.colour !== false) {
+                style_codes += String.fromCharCode(3) + styles.colour.toString();
+            }
+
+            if (styles.bold) {
+                style_codes += '\x02';
+            }
+
+            if (styles.italic) {
+                style_codes += '\x1D';
+            }
+
+            if (styles.underline) {
+                style_codes += '\x1F';
+            }
+
+            // Add the styles to the emssage
+            if (data.params[1]) {
+                data.params[1] = style_codes + ' ' + data.params[1];
+            }
+        });
+
+
+        // Opening style changer...
+        $icon.on('click', function(event) {
+            event.stopPropagation();
+
+            $list.appendTo($('#kiwi'))
+                .show()
+                .css({
+                    bottom: ($('.controlbox').outerHeight()) + 'px',
+                    right: '10px'
+                });
+        });
+
+
+        // Closing style changer...
+        $(document).on('click', function() {
+            $list.hide();
+        });
+
+
+        // Changing colours...
+        $list.on('click', '.style-colour', function(event) {
+            event.stopPropagation();
+
+            var colour = $(this).data('colour');
+            styles.colour = colour;
+
+            $inp.css('color', $(this).css('background-color'));
+        });
+
+
+        // Changing styles...
+        $list.on('click', '.style-format-bold', function() {
+            event.stopPropagation();
+            styles.bold = !styles.bold;
+            $inp.css('font-weight', styles.bold ? 'bold' : '');
+        });
+        $list.on('click', '.style-format-italic', function() {
+            event.stopPropagation();
+            styles.italic = !styles.italic;
+            $inp.css('font-style', styles.italic ? 'italic' : '');
+        });
+        $list.on('click', '.style-format-underline', function() {
+            event.stopPropagation();
+            styles.underline = !styles.underline;
+            $inp.css('text-decoration', styles.underline ? 'underline' : '');
+        });
+
+    })();
+</script>
