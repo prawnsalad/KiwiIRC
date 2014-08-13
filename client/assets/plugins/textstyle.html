@@ -19,6 +19,13 @@
         float: left;
         cursor: pointer;
     }
+    #kiwi .style-color-selected {
+        -webkit-box-shadow: inset 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
+        -moz-box-shadow:    inset 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
+        box-shadow:         inset 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
+        z-index: 10;
+        position: relative;
+    }
 
     #kiwi .style-formats {
         margin: 10px 0;
@@ -35,15 +42,25 @@
     #kiwi .style-format-bold { font-weight: bold; }
     #kiwi .style-format-italic { font-style: italic; }
     #kiwi .style-format-underline { text-decoration: underline; }
+    #kiwi .style-reset {
+        color: #D6D6D6;
+        font-size: 20px;
+        text-align: right;
+        display: block;
+        cursor: pointer;
+        margin: 5px 6px 10px;
+    }
 </style>
 
 <script type="text/html" id="tmpl_styles">
 <div class="style-grid">
+    <i class="fa fa-undo style-reset"></i>
+
     <div class="style-colours">
-        <a class="style-colour" style="background:#FFFFFF;" data-colour="0"></a>
+        <a class="style-colour" style="background:#FFFFFF;border-radius: 3px 0 0 0;" data-colour="0"></a>
         <a class="style-colour" style="background:#000000;" data-colour="1"></a>
         <a class="style-colour" style="background:#000080;" data-colour="2"></a>
-        <a class="style-colour" style="background:#008000;" data-colour="3"></a>
+        <a class="style-colour" style="background:#008000;border-radius: 0 3px 0 0;" data-colour="3"></a>
         <a class="style-colour" style="background:#FF0000;" data-colour="4"></a>
         <a class="style-colour" style="background:#800040;" data-colour="5"></a>
         <a class="style-colour" style="background:#800080;" data-colour="6"></a>
@@ -78,9 +95,20 @@
 
         var styles = {
             colour: false,
+            css_colour: false,
             bold: false,
             italic: false,
             underline: false
+        };
+
+        var updateStyles = function() {
+            $inp.css('color', styles.css_colour ? styles.css_colour : '');
+            $inp.css('font-weight', styles.bold ? 'bold' : '');
+            $inp.css('font-style', styles.italic ? 'italic' : '');
+            $inp.css('text-decoration', styles.underline ? 'underline' : '');
+
+            $('#kiwi .style-colour').removeClass('style-color-selected');
+            $('#kiwi .style-colour[data-colour='+styles.colour+']').addClass('style-color-selected');
         };
 
 
@@ -134,14 +162,32 @@
         });
 
 
-        // Changing colours...
+        // Reset all styles...
+        $list.on('click', '.style-reset', function(event) {
+            event.stopPropagation();
+
+            styles.colour =  false;
+            styles.css_colour =  false;
+            styles.bold =  false;
+            styles.italic =  false;
+            styles.underline =  false;
+
+            updateStyles();
+        });
+
+
+        // Changing colour...
         $list.on('click', '.style-colour', function(event) {
             event.stopPropagation();
 
-            var colour = $(this).data('colour');
-            styles.colour = colour;
+            var colour = parseInt($(this).data('colour'), 10);
+            if (isNaN(colour)) {
+                return;
+            }
 
-            $inp.css('color', $(this).css('background-color'));
+            styles.css_colour = $(this).css('background-color');
+            styles.colour = colour;
+            updateStyles();
         });
 
 
@@ -149,17 +195,17 @@
         $list.on('click', '.style-format-bold', function() {
             event.stopPropagation();
             styles.bold = !styles.bold;
-            $inp.css('font-weight', styles.bold ? 'bold' : '');
+            updateStyles();
         });
         $list.on('click', '.style-format-italic', function() {
             event.stopPropagation();
             styles.italic = !styles.italic;
-            $inp.css('font-style', styles.italic ? 'italic' : '');
+            updateStyles();
         });
         $list.on('click', '.style-format-underline', function() {
             event.stopPropagation();
             styles.underline = !styles.underline;
-            $inp.css('text-decoration', styles.underline ? 'underline' : '');
+            updateStyles();
         });
 
     })();
