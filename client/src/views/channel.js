@@ -107,8 +107,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 // Only inrement the counters if we're not the active panel
                 if (this.model.isActive()) return;
 
-                var $act = this.model.tab.find('.activity'),
-                    count_all_activity = _kiwi.global.settings.get('count_all_activity'),
+                var count_all_activity = _kiwi.global.settings.get('count_all_activity'),
                     exclude_message_types, new_count;
 
                 // Set the default config value
@@ -127,21 +126,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 ];
 
                 if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
-                    new_count = $act.data('unread_counter') || 0;
+                    new_count = this.model.get('activity_counter') || 0;
                     new_count++;
-                    $act.data('unread_counter', new_count);
-
-                    if (new_count > 999) {
-                        $act.text('999+');
-                    } else {
-                        $act.text(new_count);
-                    }
-
-                    if (new_count === 0) {
-                        $act.addClass('zero');
-                    } else {
-                        $act.removeClass('zero');
-                    }
+                    this.model.set('activity_counter', new_count);
                 }
 
             }).apply(this);
