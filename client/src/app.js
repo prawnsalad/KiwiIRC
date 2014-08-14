@@ -135,13 +135,22 @@ _kiwi.global = {
             });
 
             // Add the networks getters/setters
-            obj.get = function() {
-                var network = getNetwork();
+            obj.get = function(name) {
+                var network, restricted_keys;
+
+                network = getNetwork();
                 if (!network) {
                     return;
                 }
 
-                return network.get.apply(network, arguments);
+                restricted_keys = [
+                    'password'
+                ];
+                if (restricted_keys.indexOf(name) > -1) {
+                    return undefined;
+                }
+
+                return network.get(name);
             };
 
             obj.set = function() {
