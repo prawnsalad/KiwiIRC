@@ -105,6 +105,8 @@
 
 
 #kiwi .right_bar { background:#252525; }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
 
 #kiwi .memberlists .meta {
     border-bottom: 1px solid #8A8A8A;
