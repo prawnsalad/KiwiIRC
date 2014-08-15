@@ -52,7 +52,7 @@
 			});
 
 			var network = kiwi.components.Network();
-			this.listenTo(network, 'connected', this.renderButtons);
+			this.listenTo(network, 'connect', this.renderButtons);
 		},
 
 		render: function() {
