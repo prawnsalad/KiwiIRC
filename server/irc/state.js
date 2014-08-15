@@ -37,18 +37,20 @@ State.prototype.addClient = function(client) {
 
         // If no more connected clients *and* we don't need to persist this state, shut. everything. down.
         if (that.clients.length == 0 && !that.save_state) {
-            _.each(that.irc_connections, function (irc_connection, i, cons) {
-                if (irc_connection) {
-                    irc_connection.end('QUIT :' + (global.config.quit_message || ''));
-                    global.servers.removeConnection(irc_connection);
-                    cons[i] = null;
-                }
-            });
-
             that.dispose();
         }
     });
 }
+
+State.prototype.closeAllConnections = function() {
+    _.each(this.irc_connections, function (irc_connection, i, cons) {
+        if (irc_connection) {
+            irc_connection.end('QUIT :' + (global.config.quit_message || ''));
+            global.servers.removeConnection(irc_connection);
+            cons[i] = null;
+        }
+    });
+};
 
 State.prototype.connect = function (hostname, port, ssl, nick, user, options, callback) {
     var that = this;
@@ -135,6 +137,8 @@ State.prototype.sendKiwiCommand = function () {
 
 State.prototype.dispose = function () {
     this.emit('dispose');
+
+    this.closeAllConnections();
     this.removeAllListeners();
 
     global.states.removeState(this);
