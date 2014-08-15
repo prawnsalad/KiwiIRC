@@ -49,7 +49,7 @@ function handleEvents(state) {
             target = data.event[1].channel;
         }
 
-        // If channel joining/parting/kicks does not involve us, don't store it.
+        // If channel joining/parting/kicks do not involve us, don't store it.
         if (
             data.event[0] == 'channel' && data.event[1].type == 'kick' &&
             data.event[1].kicked.toLowerCase() !== data.connection.nick.toLowerCase()
@@ -80,85 +80,105 @@ module.on('client created', function(event, event_data) {
  */
 rpc_commands.sessionSave = function(callback, event_data) {
     var that = this,
-        username, password;
+        auth = {};
 
-    username = event_data.username;
-    password = event_data.password;
+    auth.credentials = {
+        username: event_data.username,
+        password: event_data.password,
+    };
 
-    // If this user already has a state, kill and replace it
-    storage.getUserState(username, password, function(state) {
-        if (state) {
-            state.save_state = false;
-            state.dispose();
-            state = null;
+    global.modules.emit('auth attempt', auth)
+    .done(function() {
+        if (!auth.success) {
+            callback('invalid_auth');
+            return;
         }
 
-        storage.setUserState(username, password, that.state, function() {
-            that.state.save_state = true;
+        // If this user already has a state, kill and replace it
+        storage.getUserState(auth.user_id, function(state) {
+            if (state) {
+                state.save_state = false;
+                state.dispose();
+                state = null;
+            }
 
-            handleEvents(that.state);
-            callback(null, 'Sate will now persist');
+            storage.setUserState(auth.user_id, that.state, function() {
+                that.state.save_state = true;
+
+                handleEvents(that.state);
+                callback(null, 'Sate will now persist');
+            });
         });
     });
 };
 
 rpc_commands.sessionResume = function(callback, event_data) {
     var that = this,
-        username, password,
-        connections = [];
+        connections = [],
+        auth = {};
 
-    username = event_data.username;
-    password = event_data.password;
+    auth.credentials = {
+        username: event_data.username,
+        password: event_data.password,
+    };
 
-    storage.getUserState(username, password, function(state) {
-        if (!state) {
-            callback('does_not_exist');
+    global.modules.emit('auth attempt', auth)
+    .done(function() {
+        if (!auth.success) {
+            callback('invalid_auth');
             return;
         }
 
-        if (that.state)
-            that.state.dispose();
-
-        state.addClient(that);
-        that.state = state;
-
-        // Unsubscribe from any targets. The client will subscribe later
-        that.unsubscribe();
-
-        // First loop - compile a list of connection information
-        _.each(state.irc_connections, function(irc_connection) {
-            if (!irc_connection)
+        storage.getUserState(auth.user_id, function(state) {
+            if (!state) {
+                callback('does_not_exist');
                 return;
+            }
 
-            var connection = {
-                connection_id: irc_connection.con_num,
-                options: irc_connection.server.cache.options || {},
-                nick: irc_connection.nick,
-                address: irc_connection.irc_host.hostname,
-                port: irc_connection.irc_host.port,
-                ssl: irc_connection.ssl,
-                channels: []
-            };
+            if (that.state)
+                that.state.dispose();
 
-            _.each(irc_connection.irc_channels, function(chan, chan_name) {
-                connection.channels.push({
-                    name: chan_name
+            state.addClient(that);
+            that.state = state;
+
+            // Unsubscribe from any targets. The client will subscribe later
+            that.unsubscribe();
+
+            // First loop - compile a list of connection information
+            _.each(state.irc_connections, function(irc_connection) {
+                if (!irc_connection)
+                    return;
+
+                var connection = {
+                    connection_id: irc_connection.con_num,
+                    options: irc_connection.server.cache.options || {},
+                    nick: irc_connection.nick,
+                    address: irc_connection.irc_host.hostname,
+                    port: irc_connection.irc_host.port,
+                    ssl: irc_connection.ssl,
+                    channels: []
+                };
+
+                _.each(irc_connection.irc_channels, function(chan, chan_name) {
+                    connection.channels.push({
+                        name: chan_name
+                    });
                 });
+
+                connections.push(connection);
             });
 
-            connections.push(connection);
-        });
+            // Send the connection information to the client
+            callback(null, connections);
 
-        // Send the connection information to the client
-        callback(null, connections);
+            // Second loop - Now the client has the info, sync some data
+            _.each(state.irc_connections, function(irc_connection) {
+                if (!irc_connection)
+                    return;
 
-        // Second loop - Now the client has the info, sync some data
-        _.each(state.irc_connections, function(irc_connection) {
-            if (!irc_connection)
-                return;
-
-            // Get a fresh MOTD sent to the client
-            irc_connection.write('MOTD');
+                // Get a fresh MOTD sent to the client
+                irc_connection.write('MOTD');
+            });
         });
     });
 };

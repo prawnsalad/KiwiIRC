@@ -25,7 +25,11 @@
 			var that = this;
 
 			this.listenTo(kiwi.session, 'save', function(err, data) {
-				that.$('.status').text(data);
+				if (err) {
+					that.$('.status').text('Error: ' + err);
+				} else {
+					that.$('.status').text(data);
+				}
 			});
 
 			this.listenTo(kiwi.session, 'sync_error', function(err) {

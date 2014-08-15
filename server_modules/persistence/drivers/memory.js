@@ -1,5 +1,3 @@
-// TODO: Add password hashing (username:password:salt)
-
 
 var StorageMemory = module.exports = function StorageMemory() {
     this.user_states = {};
@@ -7,22 +5,19 @@ var StorageMemory = module.exports = function StorageMemory() {
 };
 
 
-StorageMemory.prototype.userExists = function(username, callback) {
-    callback(!!(this.user_states[username]));
+StorageMemory.prototype.userExists = function(user_id, callback) {
+    callback(!!(this.user_states[user_id]));
 };
 
 
-StorageMemory.prototype.getUserState = function(username, password, callback) {
+StorageMemory.prototype.getUserState = function(user_id, callback) {
     var user, state;
 
     // Check if this user exists
-    if (!this.user_states[username])
+    if (!this.user_states[user_id])
         return callback(false);
 
-    user = this.user_states[username];
-
-    if (user.password !== password)
-        return callback(false);
+    user = this.user_states[user_id];
 
     state = global.states.getState(user.state_id);
     if (!state)
@@ -34,17 +29,16 @@ StorageMemory.prototype.getUserState = function(username, password, callback) {
 };
 
 
-StorageMemory.prototype.setUserState = function(username, password, state, callback) {
-    this.user_states[username] = this.user_states[username] || {};
-    var user = this.user_states[username];
+StorageMemory.prototype.setUserState = function(user_id, state, callback) {
+    this.user_states[user_id] = this.user_states[user_id] || {};
+    var user = this.user_states[user_id];
 
-    user.username = username;
-    user.password = password;
+    user.user_id = user_id;
     user.last_used = new Date();
     user.state_id = state.hash;
     user.events = {};
 
-    this.state_map[state.hash] = username;
+    this.state_map[state.hash] = user_id;
     callback();
 };
 
@@ -53,8 +47,8 @@ StorageMemory.prototype.putStateEvent = function(state_id, target, event, callba
     if (!this.state_map[state_id])
         return callback();
 
-    var username = this.state_map[state_id],
-        user = this.user_states[username];
+    var user_id = this.state_map[state_id],
+        user = this.user_states[user_id];
 
     target = target.toLowerCase();
 
@@ -73,8 +67,8 @@ StorageMemory.prototype.getStateEvents = function(state_id, target, callback) {
     if (!this.state_map[state_id])
         return callback(false);
 
-    var username = this.state_map[state_id],
-        user = this.user_states[username];
+    var user_id = this.state_map[state_id],
+        user = this.user_states[user_id];
 
     return callback(user.events[target.toLowerCase()] || []);
 };
@@ -84,9 +78,9 @@ StorageMemory.prototype.getTargets = function(state_id, callback) {
     if (!this.state_map[state_id])
         return callback(false);
 
-    var username = this.state_map[state_id],
-        user = this.user_states[username];
-console.log(username, user);
+    var user_id = this.state_map[state_id],
+        user = this.user_states[user_id];
+console.log(user_id, user);
 
     var targets = Object.keys(user.events);
     return callback(targets || []);
