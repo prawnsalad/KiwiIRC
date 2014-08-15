@@ -52,7 +52,7 @@ _kiwi.model.Session = Backbone.Model.extend({
             var con = new Backbone.Model({
                 connection_id: connection.connection_id,
                 nick: connection.nick,
-                address: connection.host,
+                address: connection.address,
                 port: connection.port,
                 ssl: connection.ssl,
                 options: connection.options
@@ -139,15 +139,15 @@ _kiwi.model.Session = Backbone.Model.extend({
         new_connection = new _kiwi.model.Network({
             connection_id: connection.get('connection_id'),
             nick: connection.get('nick'),
-            address: connection.get('host'),
+            address: connection.get('address'),
             port: connection.get('port'),
-            ssl: connection.get('.ssl')
+            ssl: connection.get('ssl')
         });
 
         options = connection.get('options');
         _kiwi.gateway.trigger('connection:' + connection.get('connection_id').toString(), {
             event_name: 'options',
-            event_data: {options: options, cap: options.cap}
+            event_data: {options: options.options, cap: options.cap}
         });
 
         _kiwi.app.connections.add(new_connection);
