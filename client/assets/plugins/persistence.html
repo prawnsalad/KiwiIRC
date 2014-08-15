@@ -1,121 +1,203 @@
+<style>
+
+	#kiwi .persist-form {
+		display: block;
+		margin: 1em auto;
+		width: 300px;
+	}
+
+	#kiwi .persist-form label {
+		display: block;
+		font-size: 1.2em;
+		margin: 1em 0 5px 0;
+	}
+
+	#kiwi .persist-form button {
+		margin-top: 5px;
+	}
+
+	#kiwi .persist-form input {}
+
+	#kiwi .persist-actions {
+		width: 300px;
+		margin: 10px auto 0 auto;
+	}
+
+	#kiwi .persist-channel { cursor: pointer; }
+
+	#kiwi .persist-connections {
+		width: 300px;
+		margin: 0 auto;
+	}
+</style>
+
+
 <script type="text/html" id="tmpl_myplugin">
-        <div class="my_plugin">
+        <div class="persist">
         	<div class="status"></div>
-            <form>
-                    <label>Username <input type="text" name="username" /> </label> <br />
-                    <label>Password <input type="password" name="password" /> </label>  <br />
+            <form class="persist-form">
+                    <label>Username</label>
+                    <input type="text" name="username" />
+
+                    <br />
+
+                    <label>Password</label>
+                    <input type="password" name="password" />
+
+                    <br />
+
                     <button type="submit">Login</button>
             </form>
 
-            <button class="activate_bnc">Activate Bouncer Mode</button> <br /> <br />
-            <button class="skip">Connect to new network</button>
+            <div class="persist-actions">
+	            <button class="activate_bnc">Activate Bouncer Mode</button> <br /> <br />
+    	        <button class="skip">Connect to new network</button>
+    	    </div>
+
+    	    <div class="persist-connections"></div>
         </div>
 </script>
 
 <script>
 
-	var myPluginView = Backbone.View.extend({
-		events: {
-			'submit form': 'formSubmit',
-			'click .skip': 'skipClick',
-			'click .activate_bnc': 'activateBnc'
-		},
+	(function() {
+		var connectionView = Backbone.View.extend({
+			className: 'persist-connection',
 
-		initialize: function() {
-			var that = this;
+			events: {
+				'click .persist-channel': 'channelClick'
+			},
 
-			this.has_synced = false;
+			render: function() {
+				$('<b></b>')
+					.text(this.model.get('address') + ' (' + this.model.get('nick') + ')')
+					.appendTo(this.$el);
 
-			this.listenTo(kiwi.session, 'save', function(err, data) {
-				if (err) {
-					that.$('.status').text('Error: ' + err);
-				} else {
-					that.$('.status').text(data);
-					this.has_synced = true;
-					this.renderButtons();
-				}
-			});
+				var $chan_list = $('<ul>');
+				var channels = this.model.get('channels');
 
-			this.listenTo(kiwi.session, 'sync_error', function(err) {
-				that.$('.status').text('Error: ' + err);
-			});
-
-			// Event is called when the network object and channels have been created. Only thing left
-			// is to sync the channel events
-			this.listenTo(kiwi.session, 'synced', function(connections) {
-				_.each(connections, function(connection) {
-					kiwi.session.syncEvents(connection.connection_id);
+				channels.forEach(function(channel) {
+					$('<li class="persist-channel"></li>')
+						.text(channel.get('name'))
+						.data('channel', channel)
+						.appendTo($chan_list);
 				});
 
-				this.has_synced = true;
+				$chan_list.appendTo(this.$el);
+
+				return this;
+			},
+
+
+			channelClick: function(event) {
+				var channel = $(event.currentTarget).data('channel');
+				kiwi.session.syncEvents(this.model.get('connection_id'), channel.get('name'));
+			}
+		});
+
+
+		var myPluginView = Backbone.View.extend({
+			events: {
+				'submit form': 'formSubmit',
+				'click .skip': 'skipClick',
+				'click .activate_bnc': 'activateBnc'
+			},
+
+			initialize: function() {
+				var that = this;
+
+				this.listenTo(kiwi.session, 'save', function(err, data) {
+					if (err) {
+						that.$('.status').text('Error: ' + err);
+					} else {
+						that.$('.status').text(data);
+						this.renderButtons();
+					}
+				});
+
+				this.listenTo(kiwi.session, 'sync_error', function(err) {
+					that.$('.status').text('Error: ' + err);
+				});
+
+				// Event is called when the network object and channels have been created. Only thing left
+				// is to sync the channel events
+				this.listenTo(kiwi.session, 'change:synced', function() {
+					var connections = kiwi.session.available_connections;
+					connections.forEach(function(connection) {
+						var connection_view = new connectionView({model: connection});
+						this.$('.persist-connections').append(connection_view.render().$el);
+					});
+
+					this.renderButtons();
+				});
+
+				var network = kiwi.components.Network();
+				this.listenTo(network, 'connect', this.renderButtons);
+			},
+
+			render: function() {
+				this.$el.html($('#tmpl_myplugin').html());
 				this.renderButtons();
-			});
+			},
 
-			var network = kiwi.components.Network();
-			this.listenTo(network, 'connect', this.renderButtons);
-		},
+			renderButtons: function() {
+				if (kiwi.connections.length === 0) {
+					this.$('.activate_bnc').hide();
+				} else {
+					this.$('.activate_bnc').show();
+				}
 
-		render: function() {
-			this.$el.html($('#tmpl_myplugin').html());
-			this.renderButtons();
-		},
+				if (kiwi.session.get('synced')) {
+					this.$('form').hide();
+					this.$('.activate_bnc').hide();
+				} else {
+					this.$('form').show();
+				}
+			},
 
-		renderButtons: function() {
-			if (kiwi.connections.length === 0) {
-				this.$('.activate_bnc').hide();
-			} else {
-				this.$('.activate_bnc').show();
+			formSubmit: function(event) {
+				var that = this;
+
+				event.preventDefault();
+
+				var username = this.$('[name=username]').val();
+				var password = this.$('[name=password]').val();
+
+				kiwi.session.resume(username, password);
+			},
+
+			skipClick: function(event) {
+				var applet = kiwi.components.Applet.loadOnce('kiwi_startup');
+				applet.view.show();
+			},
+
+			activateBnc: function() {
+				var that = this;
+				var username = this.$('[name=username]').val();
+				var password = this.$('[name=password]').val();
+
+				if (!username || !password) {
+					that.$('.status').text('A username/password must be given');
+					return;
+				}
+
+				kiwi.session.save(username, password);
 			}
+		});
 
-			if (this.has_synced) {
-				this.$('form').hide();
-				this.$('.activate_bnc').hide();
-			} else {
-				this.$('form').show();
+
+		var myPluginApplet = Backbone.Model.extend({
+			initialize: function() {
+				console.log('plugin showing');
+				this.view = new myPluginView({model: this});
+				this.view.render();
 			}
-		},
+		});
 
-		formSubmit: function(event) {
-			var that = this;
+		kiwi.components.Applet.register('my_plugin', myPluginApplet);
+		kiwi.registerStartupApplet('my_plugin');
 
-			event.preventDefault();
-
-			var username = this.$('[name=username]').val();
-			var password = this.$('[name=password]').val();
-
-			kiwi.session.resume(username, password);
-		},
-
-		skipClick: function(event) {
-			var applet = kiwi.components.Applet.loadOnce('kiwi_startup');
-			applet.view.show();
-		},
-
-		activateBnc: function() {
-			var that = this;
-			var username = this.$('[name=username]').val();
-			var password = this.$('[name=password]').val();
-
-			if (!username || !password) {
-				that.$('.status').text('A username/password must be given');
-				return;
-			}
-
-			kiwi.session.save(username, password);
-		}
-	});
-
-
-	var myPluginApplet = Backbone.Model.extend({
-		initialize: function() {
-			console.log('plugin showing');
-			this.view = new myPluginView({model: this});
-			this.view.render();
-		}
-	});
-
-	kiwi.components.Applet.register('my_plugin', myPluginApplet);
-	kiwi.registerStartupApplet('my_plugin');
+	})();
 
 
 </script>
