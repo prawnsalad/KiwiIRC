@@ -178,11 +178,7 @@ rpc_commands.sessionEvents = function(callback, event_data) {
     }
 console.log('connection found', connection_id);
 
-    var channels = Object.keys(connection.irc_channels);
-    _.map(channels, function(chan_name) {
-        return chan_name.toLowerCase();
-    });
-
+    // Refresh topics/nicklists for each requested channel
     _.each(connection.irc_channels, function(channel, channel_name) {
         console.log('Sync channel is match:', target, channel_name);
         // If we're looking for a specific target and this isn't it, ignore it
@@ -196,6 +192,7 @@ console.log('connection found', connection_id);
     // Get all targets that have events to be read
     storage.getTargets(state.hash, function(targets) {
 console.log('targets:', targets);
+        // Send each targets events down to the client
         _.each(targets, function(target_name) {
             console.log(target, target_name);
             // If a specific target is given, check if this channel is it before syncing
@@ -214,6 +211,7 @@ console.log('targets:', targets);
                 });
             });
 
+            // Now subscribe for any future events to this target
             client.subscribe(connection_id, target_name);
         });
     });
