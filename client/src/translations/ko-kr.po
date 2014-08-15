@@ -14,359 +14,359 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: zh-TW\n"
+"Language: ko\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "頻道"
+msgstr "채널명"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "使用者"
+msgstr "접속자"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "主題"
+msgstr "토픽"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "頻道列表"
+msgstr "채널 목록"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "儲存"
+msgstr "저장"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "腳本錯誤 - %s"
+msgstr "스크립트 에러. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "您的腳本已經存檔並啟動"
+msgstr "스크립트가 저장되었습니다"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "腳本編輯器"
+msgstr "스크립트 편집기"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "分頁"
+msgstr "탭"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "列表 "
+msgstr "리스트"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "適合開啟大量頻道"
+msgstr "많은 수의 채널"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "使用者加入/退出時顯示訊息"
+msgstr "채널 참가 알림"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "顯示時間"
+msgstr "타임스탬프(시간)"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "關閉提示音效"
+msgstr "음소거"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "項訊息紀錄"
+msgstr "메시지를 표시합니다"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "預設 IRC 程式"
+msgstr "기본 IRC 클라이언트"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "將我的預設 IRC 程式設為 Kiwi"
+msgstr "Kiwi 를 기본 IRC 클라이언트로 설정"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Note：重新整理網頁後才會生效"
+msgstr "노트: 페이지를 새로고침한 후에 적용됩니다"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Note：如果在 Chrome 和 Chromium 中沒有反應，請檢查 %s 的設定"
+msgstr "노트: Chrome 또는 Chromium 브라우저에서 클릭해도 아무런 일이 발생하지 않는 경우 %s 에서 설정을 확인하세요"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "設定"
+msgstr "설정"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "未知的 Applet"
+msgstr "알 수 없는 애플릿"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "讀取中..."
+msgstr "불러오는 중.."
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "找不到檔案"
+msgstr "찾을 수 없음"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "您的連線已經中斷，正在重新連線中"
+msgstr "연결이 끊어졌습니다. 연결을 다시 시도합니다."
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "您的連線已經中斷，將在 %d 秒後重新連線"
+msgstr "연결이 끊어졌습니다. %d 초 뒤에 연결을 다시 시도합니다."
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "您已經成功重新連線"
+msgstr "다시 연결되었습니다."
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "已儲存設定"
+msgstr "설정이 저장되었습니다"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "忽略名單"
+msgstr "무시 목록"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "沒有忽略的暱稱"
+msgstr "더 이상 무시하지 않음"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "忽略 %s"
+msgstr "%s 무시 설정"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "選擇停止忽略的暱稱"
+msgstr "무시 해제할 닉네임"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "停止忽略 %s"
+msgstr "%s 무시 설정 해제"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "不存在的 Applet「%s」"
+msgstr "\"%s\" 애플릿을 찾을 수 없습니다"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "編碼已轉換為 %s"
+msgstr "인코딩이 변경되었습니다: %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "不正確的編碼 %s"
+msgstr "%s 는 올바른 인코딩이 아닙니다"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "未指定編碼"
+msgstr "인코딩이 정의되지 않았습니다"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Usage: /encoding [NEW-ENCODING]"
+msgstr "사용 방법: /encoding [인코딩]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "新連線"
+msgstr "새 연결"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "連線至 %s:%s..."
+msgstr "%s:%s 로 연결하고 있습니다..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "連線至 %s:%s (%s) 發生錯誤"
+msgstr "%s:%s 로 연결하는 도중 오류가 발생했습니다 (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "加入頻道"
+msgstr "(이)가 채널에 참여했습니다"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "離線 %s"
+msgstr "(이)가 채널에서 나갔습니다. %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "被 %s %s 踢出去了"
+msgstr "(이)가 %s 에 의해 채널에서 추방되었습니다 %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "你被 %s %s 踢出去了"
+msgstr "%s 에 의해 채널에서 추방되었습니다 %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "離開頻道 %s"
+msgstr "(이)가 채널에서 떠났습니다. %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "不是正確的頻道名稱"
+msgstr "올바른 채널 이름이 아닙니다: %s"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "已離開 IRC 網路"
+msgstr "IRC 네트워크로부터 연결이 끊어졌습니다"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "變成 %s 了"
+msgstr "is now known as %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "%s 設定了主題 (%s)"
+msgstr "Topic set by %s at %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "已設定為 %s 模式"
+msgstr "sets mode %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "已設定為 %s 模式"
+msgstr "set mode %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "頻道：%s"
+msgstr "채널: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "連線到伺服器：%s %s"
+msgstr "%s 서버에 연결되어 있습니다. %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "於 %2$s 進入, 發呆了 %1$s"
+msgstr "%s 동안 잠수, %s 에 참여"
 
 #: 
 msgid "client_models_network_away"
-msgstr "離開: %s"
+msgstr "Away: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "發呆了 %s"
+msgstr "%s 동안 잠수"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "無此暱稱"
+msgstr "닉네임을 찾을 수 없습니다"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "你被驅逐出了 %s， %s"
+msgstr "%s 에서 밴을 당했습니다. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "頻道 %s 的密鑰錯誤"
+msgstr "%s 는 올바른 채널 키가 아닙니다"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "進入 %s 需要邀請"
+msgstr "채널은 초대가 있어야 들어갈 수 있습니다."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "已經滿了。"
+msgstr "채널은 풀방입니다."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "「%s」已經被使用了，請選擇新的暱稱"
+msgstr "\"%s\" 닉네임은 이미 사용중입니다. 다른 닉네임을 선택해주세요"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "錯誤的密碼"
+msgstr "잘못된 패스워드입니다"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "關閉視窗將會退出所有 KiwiIRC 聊天室，是否繼續？"
+msgstr "이 작업은 모든 KiwiIRC 대화를 종료합니다. 계속해서 창을 닫으시겠습니까?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "加入頻道..."
+msgstr "채널에 참여하는 중.."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "%s 討論的主題：%s"
+msgstr "%s 채널의 토픽: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "關閉媒體"
+msgstr "미디어 닫기"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "不存在的媒體"
+msgstr "미디어를 찾을 수 없음"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "讀入 tweet"
+msgstr "트윗을 불러오는 중"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "讀入圖片"
+msgstr "이미지를 불러오는 중"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "讀入 Reddit 討論串"
+msgstr "Reddit 스레드를 불러오는 중"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "讀入 gist"
+msgstr "Gist 를 불러오는 중"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "新暱稱"
+msgstr "새 닉네임"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "決定"
+msgstr "변경"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "取消"
+msgstr "취소"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "有人講話！"
+msgstr "사람들이 대화하고 있어요!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "想個名字..."
+msgstr "닉네임을 잘 생각해 보세요..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "暱稱"
+msgstr "닉네임"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "我有密碼&nbsp;"
+msgstr "비밀번호 사용"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "密碼"
+msgstr "비밀번호"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "頻道"
+msgstr "채널"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "頻道密鑰"
+msgstr "채널 키"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "此頻道需要密鑰"
+msgstr "채널 키 필요"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "密鑰"
+msgstr "키"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "開始..."
+msgstr "시작..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "伺服器與網路選項"
+msgstr "연결할 서버 설정"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Server"
+msgstr "서버"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Port"
+msgstr "포트"
 
 #: 
 msgid "client_views_serverselect_poweredby"
@@ -374,71 +374,71 @@ msgstr "Powered by Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "選個暱稱！"
+msgstr "닉네임을 먼저 설정하세요."
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "已連線"
+msgstr "연결됨"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "連線中..."
+msgstr "연결중.."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "暱稱已被使用"
+msgstr "이미 사용중인 닉네임입니다"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "不可使用的暱稱"
+msgstr "사용할 수 없는(잘못된) 닉네임입니다"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "密碼錯誤"
+msgstr "잘못된 비밀번호입니다"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "連線發生錯誤"
+msgstr "연결 오류"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "找不到伺服器"
+msgstr "서버를 찾을 수 없습니다"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "連線被拒絕"
+msgstr "서버로부터 연결이 거부되었습니다"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "擢升管理者"
+msgstr "옵(Op)"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "拔除管理者"
+msgstr "디옵(De-op)"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voice"
+msgstr "보이스(Voice)"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-voice"
+msgstr "디보이스(De-voice)"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "踢掉"
+msgstr "강퇴(Kick)"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "封鎖"
+msgstr "밴(Ban)"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "私訊"
+msgstr "메시지"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "查看"
+msgstr "정보"
 
 #: 
 msgid "client_views_userbox_slap"
@@ -450,79 +450,79 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "您將在五分鐘後重新連線並自動恢復頻道"
+msgstr "5분 뒤에 서버에 다시 연결하고 채널에 다시 참여합니다."
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "重新連線中..."
+msgstr "다시 연결중입니다.."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "於桌面顯示通知"
+msgstr "데스크톱 알림"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "開啟訊息通知"
+msgstr "알림 설정"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "顯示表情圖示"
+msgstr "이모티콘 표시"
 
 #: 
 msgid "client_applet_about"
-msgstr "關於 Kiwi"
+msgstr "Kiwi 에 관하여.."
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Kiwi 計畫首頁"
+msgstr "프로젝트 홈페이지"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "連結本頻道"
+msgstr "이 채널로 이동"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "分享本頻道"
+msgstr "이 채널 공유"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "我的網路"
+msgstr "나의 네트워크"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "我的最愛"
+msgstr "즐겨찾는 네트워크"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "新增網路"
+msgstr "네트워크 추가"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "儲存網路"
+msgstr "네트워크 저장"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "刪除網路"
+msgstr "네트워크 삭제"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "채널 참여 메시지도 포함"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "忽略"
+msgstr "무시"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "24시간제로 표시"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "오전 %s 시"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "오후 %s 시"
 
 #: 
 msgid "client_models_application_has_been_invited"

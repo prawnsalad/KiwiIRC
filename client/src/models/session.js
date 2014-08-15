@@ -74,7 +74,7 @@ _kiwi.model.Session = Backbone.Model.extend({
             });
 
             // Let the application know we have connected to an IRCd
-            _kiwi.gateway.trigger('connect', {
+            _kiwi.gateway.trigger('connection:connect', {
                 server: connection.connection_id,
                 nick: connection.nick
             });

@@ -9,7 +9,7 @@
 
 <link rel="shortcut icon" href="<%base_path%>/assets/img/favicon.ico">
 
-<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css" />
+<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css?t=<%build_time%>" />
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.min.css" />
 </head>
 <body>
@@ -554,14 +554,14 @@
 
         // If we're not interested in debug libs, start loading production files
         if (!getQueryVariable('debug')) {
-            scripts.push(['assets/libs/lodash.min.js']);
+            scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
             scripts.push([
-                'assets/libs/backbone.min.js',
-                'assets/libs/jed.js'
+                'assets/libs/backbone.min.js?t=<%build_time%>',
+                'assets/libs/jed.js?t=<%build_time%>'
             ]);
             scripts.push([
-                'assets/kiwi.min.js',
-                'assets/libs/engine.io.bundle.min.js'
+                'assets/kiwi.min.js?t=<%build_time%>',
+                'assets/libs/engine.io.bundle.min.js?t=<%build_time%>'
             ]);
 
             loadNextScript();

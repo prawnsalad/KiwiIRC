@@ -76,7 +76,8 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
             this.loaded_applet.dispose();
         }
 
-        this.closePanel();
+        // Call the inherited close()
+        this.constructor.__super__.close.apply(this, arguments);
     },
 
     isApplet: function () {

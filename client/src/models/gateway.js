@@ -221,24 +221,27 @@ _kiwi.model.Gateway = function () {
     *   Parses the response from the server
     */
     this.parse = function (command, data) {
+        var network_trigger = '';
 
         // Trigger the connection specific events (used by Network objects)
         if (typeof data.connection_id !== 'undefined') {
-            that.trigger('connection:' + data.connection_id.toString(), {
+            network_trigger = 'connection:' + data.connection_id.toString();
+
+            that.trigger(network_trigger, {
                 event_name: command,
                 event_data: data
             });
 
             // Some events trigger a more in-depth event name
             if (command == 'message' && data.type) {
-                that.trigger('connection:' + data.connection_id.toString(), {
+                that.trigger('connection ' + network_trigger, {
                     event_name: 'message:' + data.type,
                     event_data: data
                 });
             }
 
             if (command == 'channel' && data.type) {
-                that.trigger('connection:' + data.connection_id.toString(), {
+                that.trigger('connection ' + network_trigger, {
                     event_name: 'channel:' + data.type,
                     event_data: data
                 });

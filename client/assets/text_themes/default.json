@@ -52,5 +52,6 @@
     "set_setting": "ⓘ %text",
     "list_aliases": "ⓘ %text",
     "ignored_pattern": "ⓘ %text",
-    "wallops": "[WALLOPS] %text"
+    "wallops": "[WALLOPS] %text",
+    "message_nick": "%prefix%nick"
 }

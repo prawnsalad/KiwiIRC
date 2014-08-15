@@ -65,6 +65,7 @@
         'command:action':      actionCommand,
         'command:join':        joinCommand,
         'command:part':        partCommand,
+        'command:cycle':        cycleCommand,
         'command:nick':        nickCommand,
         'command:query':       queryCommand,
         'command:invite':      inviteCommand,
@@ -74,6 +75,7 @@
         'command:kick':        kickCommand,
         'command:clear':       clearCommand,
         'command:ctcp':        ctcpCommand,
+        'command:quit':        quitCommand,
         'command:server':      serverCommand,
         'command:whois':       whoisCommand,
         'command:whowas':      whowasCommand,
@@ -143,7 +145,7 @@
 
         // No parameters passed so list them
         if (!ev.params[1]) {
-            $.each(controlbox.preprocessor.aliases, function (name, rule) {
+            $.each(this.controlbox.preprocessor.aliases, function (name, rule) {
                 that.app.panels().server.addMsg(' ', styleText('list_aliases', {text: name + '   =>   ' + rule}));
             });
             return;
@@ -153,7 +155,7 @@
         if (ev.params[0] === 'del' || ev.params[0] === 'delete') {
             name = ev.params[1];
             if (name[0] !== '/') name = '/' + name;
-            delete controlbox.preprocessor.aliases[name];
+            delete this.controlbox.preprocessor.aliases[name];
             return;
         }
 
@@ -166,7 +168,7 @@
         if (name[0] !== '/') name = '/' + name;
 
         // Now actually add the alias
-        controlbox.preprocessor.aliases[name] = rule;
+        this.controlbox.preprocessor.aliases[name] = rule;
     };
 
 
@@ -217,7 +219,6 @@
     // A fallback action. Send a raw command to the server
     function unknownCommand (ev) {
         var raw_cmd = ev.command + ' ' + ev.params.join(' ');
-        console.log('RAW: ' + raw_cmd);
         this.app.connections.active_connection.gateway.raw(raw_cmd);
     }
 
@@ -299,6 +300,27 @@
                 that.connections.active_connection.gateway.part(channel, msg);
             });
         }
+    }
+
+
+    function cycleCommand (ev) {
+        var that = this,
+            chan_name;
+
+        if (ev.params.length === 0) {
+            chan_name = this.app.panels().active.get('name');
+        } else {
+            chan_name = ev.params[0];
+        }
+
+        this.app.connections.active_connection.gateway.part(chan_name);
+
+        // Wait for a second to give the network time to register the part command
+        setTimeout(function() {
+            // Use createAndJoinChannels() here as it auto-creates panels instead of waiting for the network
+            that.app.connections.active_connection.createAndJoinChannels(chan_name);
+            that.app.connections.active_connection.panels.getByName(chan_name).show();
+        }, 1000);
     }
 
 
@@ -496,6 +518,16 @@
     }
 
 
+    function quitCommand (ev) {
+        var network = this.app.connections.active_connection;
+
+        if (!network)
+            return;
+
+        network.gateway.quit(ev.params.join(' '));
+    }
+
+
     function serverCommand (ev) {
         var that = this,
             server, port, ssl, password, nick,
@@ -555,10 +587,11 @@
             ssl: ssl,
             password: password
         }, function(err, new_connection) {
-            var translated_err_text = {text: translateText('client_models_application_connection_error', [server, port.toString(), err.toString()])};
+            var translated_err;
 
             if (err) {
-                that.app.panels().active.addMsg('', styleText('server_connecting_error', translated_err_text));
+                translated_err = translateText('client_models_application_connection_error', [server, port.toString(), err.toString()]);
+                that.app.panels().active.addMsg('', styleText('server_connecting_error', {text: translated_err}));
             }
         });
     }

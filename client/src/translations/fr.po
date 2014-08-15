@@ -708,3 +708,7 @@ msgstr "Bloquer les messages extérieurs au salon"
 msgid "client_views_channelinfo_togglebanlist"
 msgstr "Liste des bannis"
 
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Envoyer un message..."
+

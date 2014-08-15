@@ -37,10 +37,10 @@ html, body { height:100%; }
 /**
  * Main layout blocks
  */
-#kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; }
+#kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; z-index:1; }
 #kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
 #kiwi .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
-#kiwi .right-bar-content { overflow-y:auto; position:relative; height:100% ;}
+#kiwi .right-bar-content { position:relative; height:100%; z-index:0; }
 #kiwi .controlbox { position: absolute; bottom:0px; width:100%; display:none; }
 #kiwi .memberlists_resize_handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
@@ -77,12 +77,21 @@ html, body { height:100%; }
 #kiwi .toolbar .connections .panellist:after { content:""; }
 
 #kiwi .status_message {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
     background: #FFF;
     border-bottom: 1px solid;
     text-align: center;
 }
 
 #kiwi .channel_tools {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
 }
 #kiwi .channel_tools i {
     width: 32%;
@@ -102,7 +111,7 @@ html, body { height:100%; }
 
 #kiwi .messages .msg {}
 #kiwi .messages .msg .time { display:inline; }
-#kiwi .messages .msg .nick { display:inline; }
+#kiwi .messages .msg .nick { display:inline; cursor: pointer; }
 #kiwi .messages .msg .text { display:inline; }
 
 #kiwi .messages .msg.action .nick { display:none; }
@@ -144,11 +153,32 @@ html, body { height:100%; }
     line-height: 1.5em;
     background: #e3e3e3;
     border: 1px solid;
-    border-radius: 50%;
     cursor: pointer;
+
+    /*
+        Some mobile browsers only support long-hand border-radius, and using large
+        px values instead of 50% ensures the circle
+    */
+    -webkit-border-top-left-radius: 500px;
+    -webkit-border-top-right-radius: 500px;
+    -webkit-border-bottom-left-radius: 500px;
+    -webkit-border-bottom-right-radius: 500px;
+    border-top-left-radius: 500px;
+    border-top-right-radius: 500px;
+    border-bottom-left-radius: 500px;
+    border-bottom-right-radius: 500px;
 }
 
 /* The active channels nicklist */
+#kiwi .memberlists {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+    overflow-y: auto;
+    padding-top: 50px;
+}
 #kiwi .memberlists > div { display:none; }
 #kiwi .memberlists > div.active { display:block; }
 #kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
