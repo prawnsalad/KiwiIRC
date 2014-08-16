@@ -33,6 +33,18 @@
 	#kiwi .persist-connection {
 		margin-top: 1em;
 	}
+	#kiwi .persist-connection li {
+		margin-left: 1em;
+		margin-bottom: 5px;
+		list-style: none;
+	}
+	#kiwi .persist-connection li i {
+		display: none;
+		float: right;
+	}
+	#kiwi .persist-connection li.subscribed i {
+		display: inline;
+	}
 </style>
 
 
@@ -81,10 +93,11 @@
 				var channels = this.model.get('channels');
 
 				channels.forEach(function(channel) {
-					$('<li class="persist-channel"></li>')
-						.text(channel.get('name'))
-						.data('channel', channel)
-						.appendTo($chan_list);
+					var $el = $('<li class="persist-channel"><span></span><i class="fa fa-check"></i></li>')
+						.data('channel', channel);
+
+					$el.find('span').text(channel.get('name'));
+					$el.appendTo($chan_list);
 				});
 
 				$chan_list.appendTo(this.$el);
@@ -94,10 +107,22 @@
 
 
 			channelClick: function(event) {
-				var channel = $(event.currentTarget).data('channel');
-				kiwi.session.syncEvents(this.model.get('connection_id'), channel.get('name'));
+				var $this = $(event.currentTarget);
+				var channel = $this.data('channel');
+
+				if (!channel.get('subscribed')) {
+					kiwi.session.syncEvents(this.model.get('connection_id'), channel.get('name'));
+					$this.addClass('subscribed');
+					channel.set('subscribed', true);
+				} else {
+					kiwi.session.unsubscribeTarget(this.model.get('connection_id'), channel.get('name'));
+					$this.removeClass('subscribed');
+					channel.set('subscribed', false);
+				}
 			}
 		});
+
+
 
 
 		var myPluginView = Backbone.View.extend({

@@ -72,6 +72,7 @@ module.on('client created', function(event, event_data) {
     event_data.client.rpc.on('kiwi.session_save', _.bind(rpc_commands.sessionSave, event_data.client));
     event_data.client.rpc.on('kiwi.session_resume', _.bind(rpc_commands.sessionResume, event_data.client));
     event_data.client.rpc.on('kiwi.session_events', _.bind(rpc_commands.sessionEvents, event_data.client));
+    event_data.client.rpc.on('kiwi.session_unsubscribe', _.bind(rpc_commands.sessionUnsubscribe, event_data.client));
 });
 
 
@@ -240,4 +241,22 @@ console.log('targets:', targets);
             });
         });
     });
+};
+
+
+rpc_commands.sessionUnsubscribe = function(callback, event_data) {
+    var client = this,
+        state = this.state,
+        connection_id = event_data.connection_id,
+        target = event_data.target,
+        connection;
+
+    connection = _.find(state.irc_connections, {con_num: connection_id});
+    if (!connection) {
+        console.log('unsubscribing connection not found', connection_id);
+        return callback('connection_not_found');
+    }
+console.log('Unsubscribing', connection_id, target);
+    client.unsubscribe(connection_id, target);
+    return callback(null);
 };

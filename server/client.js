@@ -108,8 +108,9 @@ Client.prototype.isSubscribed = function(connection_id, target) {
     }
 
     // Check the specific target
-    target = (target || '').toLowerCase();
-    subscription_name = connection_id.toString() + ',' + target.toLowerCase();
+    target = (target === undefined) ? '' : target.toLowerCase();
+    subscription_name = connection_id.toString() + ',' + target;
+
     if (this.subscribed_targets.indexOf(subscription_name) > -1) {
         return true;
     }
@@ -134,8 +135,8 @@ Client.prototype.subscribe = function(connection_id, target) {
 
     // Subscribing to a specific target?
     else {
-        target = (target || '').toLowerCase();
-        subscription_name = connection_id.toString() + ',' + target.toLowerCase();
+        target = (target === undefined) ? '' : target.toLowerCase();
+        subscription_name = connection_id.toString() + ',' + target;
 
         if (!this.subscribed_targets) {
             this.subscribed_targets = [];
@@ -158,7 +159,7 @@ Client.prototype.unsubscribe = function(connection_id, target) {
 
     // Unsubscribing to a specific target?
     else {
-        target = (target || '').toLowerCase();
+        target = (target === undefined) ? '' : target.toLowerCase();
         subscription_name = connection_id.toString() + ',' + target;
 
         if (!this.subscribed_targets) {
@@ -166,7 +167,7 @@ Client.prototype.unsubscribe = function(connection_id, target) {
         }
 
         if (this.subscribed_targets.indexOf(subscription_name) !== -1) {
-            _.reject(this.subscribed_targets, function(target) {
+            this.subscribed_targets = _.reject(this.subscribed_targets, function(target) {
                 return target === subscription_name;
             });
         }

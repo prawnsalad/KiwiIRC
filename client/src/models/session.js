@@ -87,8 +87,8 @@ _kiwi.model.Session = Backbone.Model.extend({
 
         if (!connection.synced) {
             this._syncConnection(connection);
+            connection.synced = true;
         }
-        connection.synced = true;
 
         connection.get('channels').forEach(function(channel_info, idx) {
             var channel, synced_connection;
@@ -111,6 +111,36 @@ _kiwi.model.Session = Backbone.Model.extend({
             connection_id: network_id,
             target: target,
         }, callback);
+    },
+
+
+    unsubscribeTarget: function(network_id, target) {
+        var connection = this.available_connections.findWhere({connection_id: network_id});
+        if (!connection) {
+            return false;
+        }
+
+        // Not a synced connection? Nothing to do.
+        if (!connection.synced) {
+            return;
+        }
+
+        _kiwi.gateway.rpc.call('kiwi.session_unsubscribe', {
+            connection_id: network_id,
+            target: target,
+        }, function() {
+            var synced_connection = _kiwi.app.connections.getByConnectionId(network_id);
+            if (!synced_connection) {
+                return;
+            }
+
+            var panel = synced_connection.panels.getByName(target);
+            if (!panel) {
+                return;
+            }
+
+            panel.close();
+        });
     },
 
 
