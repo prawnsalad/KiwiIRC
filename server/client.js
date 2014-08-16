@@ -103,13 +103,24 @@ Client.prototype.isSubscribed = function(connection_id, target) {
         return true;
     }
 
-    if (connection_id === undefined || !target) {
+    if (connection_id === undefined) {
         return false;
     }
 
+    // Check the specific target
+    target = target || '';
     subscription_name = connection_id.toString() + ',' + target.toLowerCase();
+    if (this.subscribed_targets.indexOf(subscription_name) > -1) {
+        return true;
+    }
 
-    return this.subscribed_targets.indexOf(subscription_name) !== -1;
+    // Check a global subscription on the connection
+    subscription_name = connection_id.toString() + ',';
+    if (this.subscribed_targets.indexOf(subscription_name) > -1) {
+        return true;
+    }
+
+    return false;
 };
 
 Client.prototype.subscribe = function(connection_id, target) {
@@ -123,6 +134,7 @@ Client.prototype.subscribe = function(connection_id, target) {
 
     // Subscribing to a specific target?
     else {
+        target = target || '';
         subscription_name = connection_id.toString() + ',' + target.toLowerCase();
 
         if (!this.subscribed_targets) {
@@ -130,7 +142,7 @@ Client.prototype.subscribe = function(connection_id, target) {
         }
 
         if (this.subscribed_targets.indexOf(subscription_name) === -1) {
-            this.subscribed_targets.push(target);
+            this.subscribed_targets.push(subscription_name);
         }
     }
 };
@@ -164,6 +176,15 @@ Client.prototype.attachKiwiCommands = function() {
     var that = this;
 
     this.rpc.on('kiwi.connect_irc', function(callback, command) {
+        var fn_callback = function(err, con_num) {
+            // Make sure the client has subscribed to this new connection
+            if (typeof con_num !== 'undefined') {
+                that.subscribe(con_num);
+            }
+
+            callback(err, con_num);
+        };
+
         if (command.hostname && command.port && command.nick) {
             var options = {};
 
@@ -182,7 +203,7 @@ Client.prototype.attachKiwiCommands = function() {
                 command.nick,
                 {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
                 options,
-                callback);
+                fn_callback);
         } else {
             return callback('Hostname, port and nickname must be specified');
         }
