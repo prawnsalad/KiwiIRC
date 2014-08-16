@@ -127,7 +127,7 @@ Client.prototype.subscribe = function(connection_id, target) {
     var subscription_name;
 
     // Subscribing to them all?
-    if (!connection_id) {
+    if (connection_id === undefined) {
         this.subscribed_targets = null;
         return;
     }
@@ -151,7 +151,7 @@ Client.prototype.unsubscribe = function(connection_id, target) {
     var subscription_name;
 
     // Unsubscribing from them all?
-    if (!connection_id) {
+    if (connection_id === undefined) {
         this.subscribed_targets = [];
         return;
     }

@@ -188,7 +188,8 @@ rpc_commands.sessionEvents = function(callback, event_data) {
     var connection_id = event_data.connection_id,
         target = event_data.target,
         state = this.state,
-        client = this;
+        client = this,
+        target_just_subscribed = {};
 
     var connection = _.find(state.irc_connections, {con_num: connection_id});
 
@@ -198,8 +199,12 @@ rpc_commands.sessionEvents = function(callback, event_data) {
     }
 console.log('connection found', connection_id);
 
-    // Subscribe the client to events to this connection/target
-    client.subscribe(connection_id, target);
+    if (!client.isSubscribed(connection_id, target)) {
+        // Subscribe the client to events to this connection/target
+        client.subscribe(connection_id, target);
+
+        target_just_subscribed[target] = true;
+    }
 
     // Refresh topics/nicklists for each requested channel
     _.each(connection.irc_channels, function(channel, channel_name) {
@@ -224,7 +229,7 @@ console.log('targets:', targets);
             }
 
             // Only sync data if it's not already subscribed
-            if (target && client.isSubscribed(connection_id, target_name)) {
+            if (target && !target_just_subscribed[target]) {
                 return;
             }
 
