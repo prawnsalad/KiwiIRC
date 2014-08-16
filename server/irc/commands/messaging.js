@@ -70,7 +70,10 @@ var handlers = {
                 });
 
             } else if (msg.substr(1, 7) === 'VERSION') {
-                client_info = this.irc_connection.state.client.client_info;
+                // Get the version for the first connected client only
+                if (this.irc_connection.state.clients[0]) {
+                    client_info = this.irc_connection.state.clients[0].client_info;
+                }
                 version_string = global.build_version;
 
                 // If the client build_version differs from the server, add this to the version_string
