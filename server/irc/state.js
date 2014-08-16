@@ -117,8 +117,12 @@ State.prototype.sendIrcCommand = function (irc_connection, event_name, data, cal
     });
 
     _.each(this.clients, function(client) {
-        if (client.isSubscribed(irc_connection.con_num, data.target||data.channel)) {
+        var target = data.target||data.channel;
+
+        if (!target || client.isSubscribed(irc_connection.con_num, target)) {
             client.sendIrcCommand.apply(client, args);
+        } else {
+            console.log('NOT SUBSCRIBED', data.target||data.channel, event_name, data);
         }
     });
 };
