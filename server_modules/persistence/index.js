@@ -198,6 +198,9 @@ rpc_commands.sessionEvents = function(callback, event_data) {
     }
 console.log('connection found', connection_id);
 
+    // Subscribe the client to events to this connection/target
+    client.subscribe(connection_id, target);
+
     // Refresh topics/nicklists for each requested channel
     _.each(connection.irc_channels, function(channel, channel_name) {
         console.log('Sync channel is match:', target, channel_name);
@@ -230,9 +233,6 @@ console.log('targets:', targets);
                     client.sendIrcCommand(event[0], event[1]);
                 });
             });
-
-            // Now subscribe for any future events to this target
-            client.subscribe(connection_id, target_name);
         });
     });
 };
