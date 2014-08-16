@@ -127,19 +127,19 @@ _kiwi.model.Session = Backbone.Model.extend({
         connection.synced = true;
 
         connection.get('channels').forEach(function(channel_info, idx) {
-            var channel, connection;
+            var channel, synced_connection;
 
-            connection = _kiwi.app.connections.getByConnectionId(network_id);
+            synced_connection = _kiwi.app.connections.getByConnectionId(network_id);
 
             // Make sure we only create panels for specified targets. All targets if not specified
             if (target && target.toLowerCase() !== channel_info.get('name').toLowerCase()) {
                 return;
             }
 
-            channel = connection.panels.getByName(channel_info.get('name'));
+            channel = synced_connection.panels.getByName(channel_info.get('name'));
             if (!channel) {
-                channel = new _kiwi.model.Channel({name: channel_info.get('name'), network: connection});
-                connection.panels.add(channel);
+                channel = new _kiwi.model.Channel({name: channel_info.get('name'), network: synced_connection});
+                synced_connection.panels.add(channel);
             }
         });
 
@@ -168,16 +168,7 @@ _kiwi.model.Session = Backbone.Model.extend({
         });
 
         _kiwi.app.connections.add(new_connection);
-/*
-        _.each(connection.channels, function(channel_info, idx) {
-            var channel = new_connection.panels.getByName(channel_info.name);
 
-            if (!channel) {
-                channel = new _kiwi.model.Channel({name: channel_info.name, network: new_connection});
-                new_connection.panels.add(channel);
-            }
-        });
-*/
         // Let the application know we have connected to an IRCd
         _kiwi.gateway.trigger('connection:connect', {
             server: connection.get('connection_id'),
