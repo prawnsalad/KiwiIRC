@@ -126,6 +126,23 @@ _kiwi.model.Session = Backbone.Model.extend({
         }
         connection.synced = true;
 
+        connection.get('channels').forEach(function(channel_info, idx) {
+            var channel, connection;
+
+            connection = _kiwi.app.connections.getByConnectionId(network_id);
+
+            // Make sure we only create panels for specified targets. All targets if not specified
+            if (target && target.toLowerCase() !== channel_info.get('name').toLowerCase()) {
+                return;
+            }
+
+            channel = connection.panels.getByName(channel_info.get('name'));
+            if (!channel) {
+                channel = new _kiwi.model.Channel({name: channel_info.get('name'), network: connection});
+                connection.panels.add(channel);
+            }
+        });
+
         _kiwi.gateway.rpc.call('kiwi.session_events', {
             connection_id: network_id,
             target: target,
