@@ -71,42 +71,6 @@ _kiwi.model.Session = Backbone.Model.extend({
         this.set('synced', true);
         this.trigger('synced', data);
 
-/*
-        // For each connection, create the network object and channels
-        _.each(data, function(connection) {
-            var new_connection,
-                inf = {
-                    connection_id: connection.connection_id,
-                    nick: connection.nick,
-                    address: connection.host,
-                    port: connection.port,
-                    ssl: connection.ssl
-                };
-
-            new_connection = new _kiwi.model.Network(inf);
-            _kiwi.gateway.trigger('connection:' + connection.connection_id.toString(), {
-                event_name: 'options',
-                event_data: {options: connection.options.options, cap: connection.options.cap}
-            });
-
-            _kiwi.app.connections.add(new_connection);
-
-            _.each(connection.channels, function(channel_info, idx) {
-                var channel = new_connection.panels.getByName(channel_info.name);
-
-                if (!channel) {
-                    channel = new _kiwi.model.Channel({name: channel_info.name, network: new_connection});
-                    new_connection.panels.add(channel);
-                }
-            });
-
-            // Let the application know we have connected to an IRCd
-            _kiwi.gateway.trigger('connection:connect', {
-                server: connection.connection_id,
-                nick: connection.nick
-            });
-        });
-*/
 	},
 
 
