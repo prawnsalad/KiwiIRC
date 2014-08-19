@@ -11,7 +11,7 @@ var kiwiModules = require('../../server/modules'),
 if (global.config.persistence && global.config.persistence.storage) {
     storage_engine = global.config.persistence.storage;
 } else {
-    storage_engine = 'memory';
+    storage_engine = 'new_memory';
 }
 
 storage = require('./drivers/' + storage_engine);
@@ -35,6 +35,7 @@ function handleEvents(state) {
 
         // Default target is *, the server window
         var target = '*';
+        var connection_id = data.connection.con_num;
 
         // Only store certain event types (types the user will be visually interested in)
         var allowed_events = ['message', 'topic', 'mode', 'channel', 'quit'];
@@ -62,7 +63,22 @@ function handleEvents(state) {
             return;
         }
 
-        storage.putStateEvent(state_id, target, data.event);
+        storage.putEvent(state_id, connection_id, target, data.event);
+    });
+}
+
+
+// Populate a state with connection info from storage
+function populateState(state, user_id) {
+    state.closeAllConnections();
+
+    storage.getUserConnections(user_id, function(connections) {
+        _.each(connections, function(con) {
+            var user = {hostname:'127.0.0.1', address:'127.0.0.1'},
+                options = {connection_id: con.connection_id};
+
+            state.connect(con.host, con.port, con.ssl, con.nick, user, options, function(){});
+        });
     });
 }
 
@@ -96,14 +112,16 @@ rpc_commands.sessionSave = function(callback, event_data) {
         }
 
         // If this user already has a state, kill and replace it
-        storage.getUserState(auth.user_id, function(state) {
+        storage.getUserState(auth.user_id, function(state_id) {
+            var state = global.states.getState(state_id);
+
             if (state) {
                 state.save_state = false;
                 state.dispose();
                 state = null;
             }
 
-            storage.setUserState(auth.user_id, that.state, function() {
+            storage.setUserState(auth.user_id, that.state.hash, function() {
                 that.state.save_state = true;
 
                 handleEvents(that.state);
@@ -130,17 +148,22 @@ rpc_commands.sessionResume = function(callback, event_data) {
             return;
         }
 
-        storage.getUserState(auth.user_id, function(state) {
+        storage.getUserState(auth.user_id, function(state_id) {
+            var state = global.states.getState(state_id);
             if (!state) {
-                callback('does_not_exist');
-                return;
+                // State doesn't exist so add the connections on to this state
+                state = that.state;
+
+                populateState(that.state, auth.user_id);
+
+            } else {
+                if (that.state) {
+                    that.state.dispose();
+                    that.state = state;
+                }
+
+                state.addClient(that);
             }
-
-            if (that.state)
-                that.state.dispose();
-
-            state.addClient(that);
-            that.state = state;
 
             // Unsubscribe from any targets. The client will subscribe later
             that.unsubscribe();
@@ -219,7 +242,7 @@ console.log('connection found', connection_id);
     });
 
     // Get all targets that have events to be read
-    storage.getTargets(state.hash, function(targets) {
+    storage.getTargets(state.hash, connection_id, function(targets) {
 console.log('targets:', targets);
         // Send each targets events down to the client
         _.each(targets, function(target_name) {
@@ -234,7 +257,7 @@ console.log('targets:', targets);
                 return;
             }
 
-            storage.getStateEvents(state.hash, target_name, function(events) {
+            storage.getEvents(state.hash, connection_id, target_name, 0,0, function(events) {
                 _.each(events, function(event, idx) {
                     client.sendIrcCommand(event[0], event[1]);
                 });

@@ -106,6 +106,8 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
         .done(function () {
             con.connect();
         });
+
+    return con_num;
 };
 
 State.prototype.sendIrcCommand = function (irc_connection, event_name, data, callback) {
