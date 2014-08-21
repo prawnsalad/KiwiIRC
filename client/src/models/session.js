@@ -58,12 +58,12 @@ _kiwi.model.Session = Backbone.Model.extend({
                 options: connection.options
             });
 
-            var channels = new Backbone.Collection();
-            _.each(connection.channels, function(channel_info, idx) {
-                channels.add(new Backbone.Model({name: channel_info.name}));
+            var targets = new Backbone.Collection();
+            _.each(connection.targets, function(channel_info, idx) {
+                targets.add(new Backbone.Model({name: channel_info.name}));
             });
 
-            con.set('channels', channels);
+            con.set('targets', targets);
 
             that.available_connections.add(con);
         });
@@ -90,7 +90,7 @@ _kiwi.model.Session = Backbone.Model.extend({
             connection.synced = true;
         }
 
-        connection.get('channels').forEach(function(channel_info, idx) {
+        connection.get('targets').forEach(function(channel_info, idx) {
             var channel, synced_connection;
 
             synced_connection = _kiwi.app.connections.getByConnectionId(network_id);

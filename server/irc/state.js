@@ -111,7 +111,8 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 };
 
 State.prototype.sendIrcCommand = function (irc_connection, event_name, data, callback) {
-    var args = [event_name, data, callback];
+    var that = this,
+        args = [event_name, data, callback];
 
     this.emit('client_event', 'irc', {
         connection: irc_connection,
@@ -121,7 +122,7 @@ State.prototype.sendIrcCommand = function (irc_connection, event_name, data, cal
     _.each(this.clients, function(client) {
         var target = data.target||data.channel;
 
-        if (!target || client.isSubscribed(irc_connection.con_num, target)) {
+        if (!target || client.isSubscribed(irc_connection.con_num, that.targetFromEvent(args, irc_connection))) {
             client.sendIrcCommand.apply(client, args);
         } else {
             console.log('NOT SUBSCRIBED', data.target||data.channel, event_name, data);
@@ -139,6 +140,23 @@ State.prototype.sendKiwiCommand = function () {
     _.each(this.clients, function(client) {
         client.sendKiwicommand.apply(client, args);
     });
+};
+
+// From an IRC event being sent to the browser, extract the target/buffer name
+State.prototype.targetFromEvent = function(event, irc_connection) {
+    var target = '*';
+
+    if (event[1].target === irc_connection.nick) {
+        target = event[1].nick;
+
+    } else if (event[1].target) {
+        target = event[1].target;
+
+    } else if(event[1].channel) {
+        target = event[1].channel;
+    }
+
+    return target;
 };
 
 State.prototype.dispose = function () {

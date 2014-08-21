@@ -90,13 +90,14 @@
 					.appendTo(this.$el);
 
 				var $chan_list = $('<ul>');
-				var channels = this.model.get('channels');
+				var targets = this.model.get('targets');
+				console.log(this.model);
 
-				channels.forEach(function(channel) {
+				targets.forEach(function(target) {
 					var $el = $('<li class="persist-channel"><span></span><i class="fa fa-check"></i></li>')
-						.data('channel', channel);
+						.data('target', target);
 
-					$el.find('span').text(channel.get('name'));
+					$el.find('span').text(target.get('name'));
 					$el.appendTo($chan_list);
 				});
 
@@ -108,7 +109,7 @@
 
 			channelClick: function(event) {
 				var $this = $(event.currentTarget);
-				var channel = $this.data('channel');
+				var channel = $this.data('target');
 
 				if (!channel.get('subscribed')) {
 					kiwi.session.syncEvents(this.model.get('connection_id'), channel.get('name'));

@@ -1,4 +1,5 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+	Promise = require('es6-promise').Promise;
 
 
 var StorageMemory = module.exports = function StorageMemory() {
@@ -131,6 +132,7 @@ console.log('Adding event', target_name, event);
 
 StorageMemory.prototype.getTargets = function(state_id, connection_id, callback) {
 	if (!this.user_state[state_id]) {
+		console.log('getTargets() state doesnt exist');
 		return callback(false);
 	}
 
@@ -138,6 +140,7 @@ StorageMemory.prototype.getTargets = function(state_id, connection_id, callback)
 	var con = _.find(user.connections, {connection_id: connection_id});
 
 	if (!con) {
+		console.log('getTargets() connection doesnt exist', user.connections);
 		return callback(false);
 	}
 

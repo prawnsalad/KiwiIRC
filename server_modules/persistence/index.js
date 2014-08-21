@@ -4,6 +4,7 @@
 
 var kiwiModules = require('../../server/modules'),
     _ = require('lodash'),
+    Promise = require('es6-promise').Promise,
     storage, storage_engine;
 
 
@@ -34,21 +35,13 @@ function handleEvents(state) {
             return;
 
         // Default target is *, the server window
-        var target = '*';
+        var target = state.targetFromEvent(data.event, data.connection);
         var connection_id = data.connection.con_num;
 
         // Only store certain event types (types the user will be visually interested in)
         var allowed_events = ['message', 'topic', 'mode', 'channel', 'quit'];
         if (allowed_events.indexOf(data.event[0]) === -1)
             return;
-
-        if (data.event[1].target == data.connection.nick) {
-            target = data.event[1].nick;
-        } else if (data.event[1].target) {
-            target = data.event[1].target;
-        } else if(data.event[1].channel) {
-            target = data.event[1].channel;
-        }
 
         // If channel joining/parting/kicks do not involve us, don't store it.
         if (
@@ -131,9 +124,8 @@ rpc_commands.sessionSave = function(callback, event_data) {
     });
 };
 
-rpc_commands.sessionResume = function(callback, event_data) {
+rpc_commands.sessionResume = function(client_callback, event_data) {
     var that = this,
-        connections = [],
         auth = {};
 
     auth.credentials = {
@@ -144,12 +136,15 @@ rpc_commands.sessionResume = function(callback, event_data) {
     global.modules.emit('auth attempt', auth)
     .done(function() {
         if (!auth.success) {
-            callback('invalid_auth');
+            client_callback('invalid_auth');
             return;
         }
 
         storage.getUserState(auth.user_id, function(state_id) {
-            var state = global.states.getState(state_id);
+            var connections = [],
+                connections_map = {},
+                state = global.states.getState(state_id);
+
             if (!state) {
                 // State doesn't exist so add the connections on to this state
                 state = that.state;
@@ -169,39 +164,81 @@ rpc_commands.sessionResume = function(callback, event_data) {
             that.unsubscribe();
 
             // First loop - compile a list of connection information
-            _.each(state.irc_connections, function(irc_connection) {
-                if (!irc_connection)
-                    return;
+            var promise = new Promise(function(resolve, reject) {
+                _.each(state.irc_connections, function(irc_connection) {
+                    if (!irc_connection)
+                        return;
 
-                var connection = {
-                    connection_id: irc_connection.con_num,
-                    options: irc_connection.server.cache.options || {},
-                    nick: irc_connection.nick,
-                    address: irc_connection.irc_host.hostname,
-                    port: irc_connection.irc_host.port,
-                    ssl: irc_connection.ssl,
-                    channels: []
-                };
+                    var connection = {
+                        connection_id: irc_connection.con_num,
+                        options: irc_connection.server.cache.options || {},
+                        nick: irc_connection.nick,
+                        address: irc_connection.irc_host.hostname,
+                        port: irc_connection.irc_host.port,
+                        ssl: irc_connection.ssl,
+                        targets: []
+                    };
 
-                _.each(irc_connection.irc_channels, function(chan, chan_name) {
-                    connection.channels.push({
-                        name: chan_name
+                    _.each(irc_connection.irc_channels, function(chan, chan_name) {
+                        connection.targets.push({
+                            name: chan_name
+                        });
                     });
+
+                    connections_map[connection.connection_id] = connection;
+                    connections.push(connection);
                 });
 
-                connections.push(connection);
+                resolve(connections);
             });
 
-            // Send the connection information to the client
-            callback(null, connections);
+            // Second - get any targets held in storage (queries, etc)
+            promise.then(function(connections) {
+                return new Promise(function(resolve, reject) {
+                    var connections_processed = 0;
 
-            // Second loop - Now the client has the info, sync some data
-            _.each(state.irc_connections, function(irc_connection) {
-                if (!irc_connection)
-                    return;
+                    // Loop through each target and make sure it's in the targets array we're sending to the browser
+                    var addTargetsCallback = function(connection_id, targets) {
+                        _.each(targets, function(target_name) {
+                            var target = _.find(connections_map[connection_id].targets, {name: target_name});
+                            if (!target) {
+                                connections_map[connection_id].targets.push({name: target_name});
+                            }
+                        });
 
-                // Get a fresh MOTD sent to the client
-                irc_connection.write('MOTD');
+                        // If this is the last connection, proceed to the next promise step
+                        if (connections_processed === state.irc_connections.length-1) {
+                            resolve(connections);
+                        }
+
+                        connections_processed++;
+                    };
+
+                    // Loop through each connection and get its targets. Calls the above callback
+                    _.each(state.irc_connections, function(irc_connection) {
+                        if (!irc_connection)
+                            return;
+
+                        storage.getTargets(state.hash, irc_connection.con_num, function(targets) {
+                            addTargetsCallback(irc_connection.con_num, targets);
+                        });
+                    });
+                });
+            });
+
+            // Third - Send all the data to the client
+            promise.then(function(connections) {
+                // Send the connection information to the client
+                client_callback(null, connections);
+
+                // Second loop - Now the client has the info, sync some data
+                _.each(state.irc_connections, function(irc_connection) {
+                    if (!irc_connection)
+                        return;
+
+                    // Get a fresh MOTD sent to the client
+                    irc_connection.write('MOTD');
+                });
             });
         });
     });
