@@ -65,7 +65,7 @@ function handleEvents(state) {
 function populateState(state, user_id) {
     state.closeAllConnections();
 
-    storage.getUserConnections(user_id, function(connections) {
+    storage.getUserConnections(user_id).then(function(connections) {
         _.each(connections, function(con) {
             var user = {hostname:'127.0.0.1', address:'127.0.0.1'},
                 options = {connection_id: con.connection_id};
@@ -105,7 +105,7 @@ rpc_commands.sessionSave = function(callback, event_data) {
         }
 
         // If this user already has a state, kill and replace it
-        storage.getUserState(auth.user_id, function(state_id) {
+        storage.getUserState(auth.user_id).then(function(state_id) {
             var state = global.states.getState(state_id);
 
             if (state) {
@@ -114,7 +114,7 @@ rpc_commands.sessionSave = function(callback, event_data) {
                 state = null;
             }
 
-            storage.setUserState(auth.user_id, that.state.hash, function() {
+            storage.setUserState(auth.user_id, that.state.hash).then(function() {
                 that.state.save_state = true;
 
                 handleEvents(that.state);
@@ -140,7 +140,7 @@ rpc_commands.sessionResume = function(client_callback, event_data) {
             return;
         }
 
-        storage.getUserState(auth.user_id, function(state_id) {
+        storage.getUserState(auth.user_id).then(function(state_id) {
             var connections = [],
                 connections_map = {},
                 state = global.states.getState(state_id);
@@ -164,70 +164,68 @@ rpc_commands.sessionResume = function(client_callback, event_data) {
             that.unsubscribe();
 
             // First loop - compile a list of connection information
+            _.each(state.irc_connections, function(irc_connection) {
+                if (!irc_connection)
+                    return;
+
+                var connection = {
+                    connection_id: irc_connection.con_num,
+                    options: irc_connection.server.cache.options || {},
+                    nick: irc_connection.nick,
+                    address: irc_connection.irc_host.hostname,
+                    port: irc_connection.irc_host.port,
+                    ssl: irc_connection.ssl,
+                    targets: []
+                };
+
+                _.each(irc_connection.irc_channels, function(chan, chan_name) {
+                    connection.targets.push({
+                        name: chan_name
+                    });
+                });
+
+                connections_map[connection.connection_id] = connection;
+                connections.push(connection);
+            });
+
+
+            // Second - get any targets held in storage (queries, etc)
             var promise = new Promise(function(resolve, reject) {
+                var connections_processed = 0;
+
+                // Loop through each target and make sure it's in the targets array we're sending to the browser
+                var addTargetsCallback = function(connection_id, targets) {
+                    _.each(targets, function(target_name) {
+                        var target = _.find(connections_map[connection_id].targets, {name: target_name});
+                        console.log('Adding target', target_name, (!target));
+                        if (!target) {
+                            connections_map[connection_id].targets.push({name: target_name});
+                        }
+                    });
+
+                    // If this is the last connection, proceed to the next promise step
+                    if (connections_processed === state.irc_connections.length-1) {
+                        return resolve();
+                    }
+
+                    connections_processed++;
+                };
+
+                // Loop through each connection and get its targets. Calls the above callback
                 _.each(state.irc_connections, function(irc_connection) {
                     if (!irc_connection)
                         return;
 
-                    var connection = {
-                        connection_id: irc_connection.con_num,
-                        options: irc_connection.server.cache.options || {},
-                        nick: irc_connection.nick,
-                        address: irc_connection.irc_host.hostname,
-                        port: irc_connection.irc_host.port,
-                        ssl: irc_connection.ssl,
-                        targets: []
-                    };
-
-                    _.each(irc_connection.irc_channels, function(chan, chan_name) {
-                        connection.targets.push({
-                            name: chan_name
-                        });
-                    });
-
-                    connections_map[connection.connection_id] = connection;
-                    connections.push(connection);
-                });
-
-                resolve(connections);
-            });
-
-            // Second - get any targets held in storage (queries, etc)
-            promise.then(function(connections) {
-                return new Promise(function(resolve, reject) {
-                    var connections_processed = 0;
-
-                    // Loop through each target and make sure it's in the targets array we're sending to the browser
-                    var addTargetsCallback = function(connection_id, targets) {
-                        _.each(targets, function(target_name) {
-                            var target = _.find(connections_map[connection_id].targets, {name: target_name});
-                            if (!target) {
-                                connections_map[connection_id].targets.push({name: target_name});
-                            }
-                        });
-
-                        // If this is the last connection, proceed to the next promise step
-                        if (connections_processed === state.irc_connections.length-1) {
-                            resolve(connections);
-                        }
-
-                        connections_processed++;
-                    };
-
-                    // Loop through each connection and get its targets. Calls the above callback
-                    _.each(state.irc_connections, function(irc_connection) {
-                        if (!irc_connection)
-                            return;
-
-                        storage.getTargets(state.hash, irc_connection.con_num, function(targets) {
-                            addTargetsCallback(irc_connection.con_num, targets);
-                        });
+                    storage.getTargets(state.hash, irc_connection.con_num).then(function(targets) {
+                        console.log('targets', targets);
+                        addTargetsCallback(irc_connection.con_num, targets);
                     });
                 });
             });
 
             // Third - Send all the data to the client
-            promise.then(function(connections) {
+            promise.then(function() {
+console.log('step 3', connections);
                 // Send the connection information to the client
                 client_callback(null, connections);
 
@@ -279,7 +277,7 @@ console.log('connection found', connection_id);
     });
 
     // Get all targets that have events to be read
-    storage.getTargets(state.hash, connection_id, function(targets) {
+    storage.getTargets(state.hash, connection_id).then(function(targets) {
 console.log('targets:', targets);
         // Send each targets events down to the client
         _.each(targets, function(target_name) {
@@ -294,7 +292,7 @@ console.log('targets:', targets);
                 return;
             }
 
-            storage.getEvents(state.hash, connection_id, target_name, 0,0, function(events) {
+            storage.getEvents(state.hash, connection_id, target_name, 0,0).then(function(events) {
                 _.each(events, function(event, idx) {
                     client.sendIrcCommand(event[0], event[1]);
                 });
