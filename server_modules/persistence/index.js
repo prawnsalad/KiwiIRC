@@ -12,7 +12,7 @@ var kiwiModules = require('../../server/modules'),
 if (global.config.persistence && global.config.persistence.storage) {
     storage_engine = global.config.persistence.storage;
 } else {
-    storage_engine = 'new_memory';
+    storage_engine = 'memory';
 }
 
 storage = require('./drivers/' + storage_engine);

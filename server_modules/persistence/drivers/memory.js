@@ -1,87 +1,178 @@
+var _ = require('lodash'),
+    Promise = require('es6-promise').Promise;
+
 
 var StorageMemory = module.exports = function StorageMemory() {
-    this.user_states = {};
-    this.state_map = {};
+    this.user_state = {};  // {state_hash: user_id}
+    this.users = {};  // {user_id: {state_id:'', connections:[]}}
+};
+
+/*
+    users =  {
+        state_id: 'state_id',
+        connections: [
+            {connection_id, host, port, events:{target:[], target1:[]}},
+            {connection_id, host, port, events:{target:[], target1:[]}}
+        ]
+    }
+*/
+
+// Return a state_id or false if it does not exist
+StorageMemory.prototype.getUserState = function(user_id) {
+    var that = this;
+
+    return new Promise(function(resolve, reject) {
+        if (!that.users[user_id]) {
+            return resolve();
+        }
+
+        resolve(that.users[user_id].state_id);
+    });
+};
+
+StorageMemory.prototype.setUserState = function(user_id, state_id) {
+    var that = this;
+
+    return new Promise(function(resolve, reject) {
+        var existing_state_id;
+
+        if (that.users[user_id]) {
+            // Remove the existing state
+            existing_state_id = that.users[user_id].state_id;
+            delete that.user_state[that.users[user_id].state_id];
+
+            // Add the new state_id
+            that.users[user_id].state_id = state_id;
+            that.user_state[state_id] = user_id;
+
+        } else {
+            that.users[user_id] = {
+                state_id: state_id,
+                connections: []
+            };
+            that.user_state[state_id] = user_id;
+        }
+
+        resolve();
+    });
 };
 
 
-StorageMemory.prototype.userExists = function(user_id, callback) {
-    callback(!!(this.user_states[user_id]));
+// Return an array of objects, each with connection info
+//[
+//  {con_id:0, host:'irc.host.com', port:111, nick:'sum'},
+//  {con_id:1, host:'irc.host2.com', port:111, nick:'sum'}
+//]
+StorageMemory.prototype.getUserConnections = function(user_id) {
+    var that = this;
+
+    return new Promise(function(resolve, reject) {
+        if (!that.user_state[state_id]) {
+            return resolve(false);
+        }
+
+        var user = that.users[that.user_state[state_id]];
+
+        var cons = [];
+        user.connections.forEach(function(con) {
+            cons.push({
+                connection_id: con.id,
+                host: con.host,
+                port: con.port,
+                ssl: con.ssl,
+                nick: con.nick,
+                gecos: con.gecos
+            });
+        });
+
+        resolve(cons);
+    });
 };
 
 
-StorageMemory.prototype.getUserState = function(user_id, callback) {
-    var user, state;
+// Return array of client events. If length < 0, get previous events
+StorageMemory.prototype.getEvents = function(state_id, connection_id, target_name, from_time, length) {
+    var that = this;
 
-    // Check if this user exists
-    if (!this.user_states[user_id])
-        return callback(false);
+    return new Promise(function(resolve, reject) {
+        if (!that.user_state[state_id]) {
+            return resolve(false);
+        }
 
-    user = this.user_states[user_id];
+        var user = that.users[that.user_state[state_id]];
 
-    state = global.states.getState(user.state_id);
-    if (!state)
-        return callback(false);
+        var con = _.find(user.connections, {connection_id: connection_id});
+        if (!con) {
+            return resolve(false);
+        }
 
-    user.last_used = new Date();
+        var target = con.events[target_name];
+        if (!target) {
+            return resolve(false);
+        }
 
-    return callback(state);
+        var idx, events = [];
+        for(idx=0; idx<length, idx<target.length; idx++) {
+            events.unshift(target[target.length-1-idx]);
+        }
+
+        resolve(events);
+    });
 };
 
 
-StorageMemory.prototype.setUserState = function(user_id, state, callback) {
-    this.user_states[user_id] = this.user_states[user_id] || {};
-    var user = this.user_states[user_id];
+StorageMemory.prototype.putEvent = function(state_id, connection_id, target_name, event) {
+    var that = this;
 
-    user.user_id = user_id;
-    user.last_used = new Date();
-    user.state_id = state.hash;
-    user.events = {};
+    return new Promise(function(resolve, reject) {
+        if (!that.user_state[state_id]) {
+    console.log('putEvent() couldnt find state', state_id);
+            return resolve(false);
+        }
 
-    this.state_map[state.hash] = user_id;
-    callback();
+        var user = that.users[that.user_state[state_id]];
+
+        var con = _.find(user.connections, {connection_id: connection_id});
+        if (!con) {
+    console.log('putEvent() couldnt find connection. creating one', connection_id);
+            con = {connection_id: connection_id, events:{}};
+            user.connections.push(con);
+        }
+
+        var target = con.events[target_name];
+        if (!target) {
+            target = con.events[target_name] = [];
+        }
+    console.log('Adding event', target_name, event);
+        target.push(event);
+
+        if (target.length > 50) {
+            target.shift();
+        }
+
+        resolve();
+    });
 };
 
 
-StorageMemory.prototype.putStateEvent = function(state_id, target, event, callback) {
-    if (!this.state_map[state_id])
-        return callback();
+StorageMemory.prototype.getTargets = function(state_id, connection_id) {
+    var that = this;
 
-    var user_id = this.state_map[state_id],
-        user = this.user_states[user_id];
+    return new Promise(function(resolve, reject) {
+        if (!that.user_state[state_id]) {
+            console.log('getTargets() state doesnt exist');
+            return resolve(false);
+        }
 
-    target = target.toLowerCase();
+        var user = that.users[that.user_state[state_id]];
+        var con = _.find(user.connections, {connection_id: connection_id});
 
-    user.events[target] = user.events[target] || [];
-    user.events[target].push(event);
-console.log('added event for', target, event);
-    // Trim the events down to the latest 50 only
-    if (user.events[target].length > 50)
-        user.events[target].shift();
+        if (!con) {
+            console.log('getTargets() connection doesnt exist', user.connections);
+            return resolve(false);
+        }
 
-    return callback ? callback() : null;
-};
-
-
-StorageMemory.prototype.getStateEvents = function(state_id, target, callback) {
-    if (!this.state_map[state_id])
-        return callback(false);
-
-    var user_id = this.state_map[state_id],
-        user = this.user_states[user_id];
-
-    return callback(user.events[target.toLowerCase()] || []);
-};
-
-
-StorageMemory.prototype.getTargets = function(state_id, callback) {
-    if (!this.state_map[state_id])
-        return callback(false);
-
-    var user_id = this.state_map[state_id],
-        user = this.user_states[user_id];
-console.log(user_id, user);
-
-    var targets = Object.keys(user.events);
-    return callback(targets || []);
+        var targets = _.keys(con.events);
+        resolve(targets);
+    });
 };
