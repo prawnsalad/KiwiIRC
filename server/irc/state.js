@@ -84,7 +84,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
     // Call any modules before making the connection
     global.modules.emit('irc connecting', {state: this, connection: con})
-        .done(function () {
+        .then(function () {
             con.connect();
         });
 };
