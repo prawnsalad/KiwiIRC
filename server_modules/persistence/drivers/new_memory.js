@@ -98,7 +98,7 @@ StorageMemory.prototype.getEvents = function(state_id, connection_id, target_nam
 
 	var idx, events = [];
 	for(idx=0; idx<length, idx<target.length; idx++) {
-		events.push(target[target.length-1-idx]);
+		events.unshift(target[target.length-1-idx]);
 	}
 
 	callback(events);
@@ -127,6 +127,10 @@ console.log('putEvent() couldnt find connection', connection_id);
 	}
 console.log('Adding event', target_name, event);
 	target.push(event);
+
+	if (target.length > 50) {
+		target.shift();
+	}
 };
 
 
