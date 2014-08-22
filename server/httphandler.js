@@ -2,8 +2,6 @@ var url         = require('url'),
     fs          = require('fs'),
     node_static = require('node-static'),
     Negotiator  = require('negotiator'),
-    _           = require('lodash'),
-    config      = require('./configuration.js'),
     winston     = require('winston'),
     SettingsGenerator = require('./settingsgenerator.js'),
     Stats       = require('./stats.js');
@@ -92,7 +90,7 @@ fs.readdir('client/assets/locales', function (err, files) {
  * Find the closest translation we have for the language
  * set in the browser.
  **/
-var serveMagicLocale = function (request, response) {
+function serveMagicLocale(request, response) {
     var default_locale_id = 'en-gb',
         found_locale, negotiator;
 
@@ -113,27 +111,32 @@ var serveMagicLocale = function (request, response) {
         Vary: 'Accept-Language',
         'Content-Language': found_locale
     }, request, response);
-};
+}
 
 
 
 /**
  * Handle the settings.json request
  */
-var serveSettings = function(request, response) {
+function serveSettings(request, response) {
     var referrer_url,
-        debug = false,
-        settings;
+        debug = false;
 
     // Check the referrer for a debug option
-    if (request.headers['referer']) {
-        referrer_url = url.parse(request.headers['referer'], true);
+    if (request.headers.referer) {
+        referrer_url = url.parse(request.headers.referer, true);
         if (referrer_url.query && referrer_url.query.debug) {
             debug = true;
         }
     }
 
-    SettingsGenerator.get(debug, function(settings) {
+    SettingsGenerator.get(debug, function(err, settings) {
+        if (err) {
+            winston.error('Error generating settings', err);
+            response.writeHead(500, 'Internal Server Error');
+            return response.end();
+        }
+
         if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
             response.writeHead(304, 'Not Modified');
             return response.end();
@@ -145,4 +148,4 @@ var serveSettings = function(request, response) {
         });
         response.end(settings.settings);
     });
-};
+}
