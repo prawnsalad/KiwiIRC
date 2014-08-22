@@ -56,7 +56,11 @@ function handleEvents(state) {
             return;
         }
 
-        storage.putEvent(state_id, connection_id, target, data.event);
+        storage.putEvent(state_id, connection_id, target, data.event).then(function() {
+
+        }, function() {
+            console.log('PUTEVENT REJECTED', arguments);
+        });
     });
 }
 
@@ -115,10 +119,28 @@ rpc_commands.sessionSave = function(callback, event_data) {
             }
 
             storage.setUserState(auth.user_id, that.state.hash).then(function() {
-                that.state.save_state = true;
+                var connections = [];
 
-                handleEvents(that.state);
-                callback(null, 'Sate will now persist');
+                _.each(that.state.irc_connections, function(irc_connection) {
+                    if (!irc_connection)
+                        return;
+
+                    connections.push({
+                        connection_id: irc_connection.con_num,
+                        nick: irc_connection.nick,
+                        gecos: irc_connection.gecos,
+                        host: irc_connection.irc_host.hostname,
+                        port: irc_connection.irc_host.port,
+                        ssl: irc_connection.ssl
+                    });
+                });
+
+                storage.setUserConnections(that.state.hash, connections).then(function() {
+                    that.state.save_state = true;
+
+                    handleEvents(that.state);
+                    callback(null, 'Sate will now persist');
+                });
             });
         });
     });

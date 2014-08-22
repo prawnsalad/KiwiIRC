@@ -1,6 +1,6 @@
 var kiwiModules = require('../server/modules');
 
-var module = new kiwiModules.Module('auth_static');
+var module = new kiwiModules.Module('auth/static');
 
 module.on('auth attempt', function(event, event_data) {
 	console.log('Attempted auth', event_data);
