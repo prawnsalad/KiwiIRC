@@ -66,7 +66,11 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
         return callback('Too many connections to host', {host: hostname, limit: global.config.max_server_conns});
     }
 
-    con_num = this.next_connection++;
+    // con_num/connection_id may be given (restoring a state). If not, create a new one.
+    // Always increment the next ID so we don't overwrite any existing connection IDs
+    this.next_connection++;
+
+    con_num = options.connection_id || this.next_connection;
     con = new IrcConnection(
         hostname,
         port,
@@ -81,12 +85,12 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
     con.on('connected', function IrcConnectionConnection() {
         global.servers.addConnection(this);
-        return callback(null, con_num);
+        return callback && callback(null, con_num);
     });
 
     con.on('error', function IrcConnectionError(err) {
         winston.warn('irc_connection error (%s):', hostname, err);
-        return callback(err.message);
+        return callback && callback(err.message);
     });
 
     con.on('reconnecting', function IrcConnectionReconnecting() {

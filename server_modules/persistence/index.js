@@ -12,7 +12,7 @@ var kiwiModules = require('../../server/modules'),
 if (global.config.persistence && global.config.persistence.storage) {
     storage_engine = global.config.persistence.storage;
 } else {
-    storage_engine = 'memory';
+    storage_engine = 'mysql';
 }
 
 storage = require('./drivers/' + storage_engine);
@@ -22,7 +22,9 @@ storage = new storage();
 var module = new kiwiModules.Module('persistence');
 var rpc_commands = {};
 
-
+var promiseErr = function(err) {
+    console.log('[ERROR]', err);
+};
 /**
  * Store events for a state that are sent to the client for persistence
  */
@@ -65,7 +67,7 @@ function handleEvents(state) {
 }
 
 
-// Populate a state with connection info from storage
+// Populate a state with connection info from storage and connect
 function populateState(state, user_id) {
     state.closeAllConnections();
 
@@ -74,9 +76,14 @@ function populateState(state, user_id) {
             var user = {hostname:'127.0.0.1', address:'127.0.0.1'},
                 options = {connection_id: con.connection_id};
 
-            state.connect(con.host, con.port, con.ssl, con.nick, user, options, function(){});
+            var connection_id = state.connect(con.host, con.port, con.ssl, con.nick, user, options);
+            state.irc_connections[connection_id].on('server * connect', function() {
+                _.each(con.channels.split(','), function(channel_name) {
+                    state.irc_connections[connection_id].write('JOIN ' + channel_name);
+                });
+            });
         });
-    });
+    }, promiseErr);
 }
 
 
@@ -131,7 +138,8 @@ rpc_commands.sessionSave = function(callback, event_data) {
                         gecos: irc_connection.gecos,
                         host: irc_connection.irc_host.hostname,
                         port: irc_connection.irc_host.port,
-                        ssl: irc_connection.ssl
+                        ssl: irc_connection.ssl,
+                        channels: _.keys(irc_connection.irc_channels).join(',')
                     });
                 });
 
@@ -142,7 +150,7 @@ rpc_commands.sessionSave = function(callback, event_data) {
                     callback(null, 'Sate will now persist');
                 });
             });
-        });
+        }, function(err) {console.log('[ERROR internal]', err);});
     });
 };
 
@@ -217,7 +225,8 @@ rpc_commands.sessionResume = function(client_callback, event_data) {
 
                 // Loop through each target and make sure it's in the targets array we're sending to the browser
                 var addTargetsCallback = function(connection_id, targets) {
-                    _.each(targets, function(target_name) {
+                    _.each(targets, function(target_obj) {
+                        var target_name = target_obj.name;
                         var target = _.find(connections_map[connection_id].targets, {name: target_name});
                         console.log('Adding target', target_name, (!target));
                         if (!target) {
@@ -259,8 +268,8 @@ console.log('step 3', connections);
                     // Get a fresh MOTD sent to the client
                     irc_connection.write('MOTD');
                 });
-            });
-        });
+            }, promiseErr);
+        }, promiseErr);
     });
 };
 
@@ -302,8 +311,10 @@ console.log('connection found', connection_id);
     storage.getTargets(state.hash, connection_id).then(function(targets) {
 console.log('targets:', targets);
         // Send each targets events down to the client
-        _.each(targets, function(target_name) {
-            console.log(target, target_name);
+        _.each(targets, function(target_obj) {
+            console.log(target, target_obj);
+            var target_name = target_obj.name;
+
             // If a specific target is given, check if this channel is it before syncing
             if (target && target_name.toLowerCase() !== target.toLowerCase()) {
                 return;

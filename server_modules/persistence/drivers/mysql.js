@@ -126,7 +126,8 @@ StorageMemory.prototype.getUserConnections = function(user_id) {
                     port: con.port,
                     ssl: con.ssl,
                     nick: con.nick,
-                    gecos: con.gecos
+                    gecos: con.gecos,
+                    channels: con.channels
                 });
             });
 
@@ -137,12 +138,13 @@ StorageMemory.prototype.getUserConnections = function(user_id) {
 
 
 StorageMemory.prototype.setUserConnections = function(state_id, connections) {
+    console.log('creating setUserConnections() promise');
     return new Promise(function(resolve, reject) {
         var sql = 'INSERT INTO connections ';
-        sql += '(`state_id`, `id`, `host`, `port`, `ssl`, `nick`, `gecos`) VALUES ? ';
+        sql += '(`state_id`, `id`, `host`, `port`, `ssl`, `nick`, `gecos`, `channels`) VALUES ? ';
         sql += 'ON DUPLICATE KEY UPDATE ';
         sql += '`host`=VALUES(`host`), `port`=VALUES(`port`), `ssl`=VALUES(`ssl`), ';
-        sql += '`nick`=VALUES(`nick`), `gecos`=VALUES(`gecos`) ';
+        sql += '`nick`=VALUES(`nick`), `gecos`=VALUES(`gecos`), `channels`=VALUES(`channels`) ';
 
         var insert = [];
 console.log('setting user connections', connections);
@@ -154,15 +156,15 @@ console.log('setting user connections', connections);
                 con.port,
                 con.ssl,
                 con.nick,
-                con.gecos
+                con.gecos,
+                con.channels
             ]);
         });
 
-        var q = db.query(sql, [insert], function(err, result) {
+        db.query(sql, [insert], function(err, result) {
             console.log('inserted', err, result);
             resolve();
         });
-        console.log(q.sql);
     });
 };
 
@@ -208,6 +210,11 @@ StorageMemory.prototype.putEvent = function(state_id, connection_id, target_name
 };
 
 
+// Return an array of objects of each target. `alerts` is optional
+//[
+//  {name:'#channel', alerts:4},
+//  {name:'somenick', alerts:2}
+//]
 StorageMemory.prototype.getTargets = function(state_id, connection_id) {
     var that = this;
 
@@ -216,10 +223,20 @@ StorageMemory.prototype.getTargets = function(state_id, connection_id) {
         db.query(sql, [state_id, connection_id], function(err, result) {
             var targets = [];
             result.forEach(function(row) {
-                targets.push(row.target);
+                targets.push({name: row.target});
             });
 
             resolve(targets);
+        });
+    });
+};
+
+
+StorageMemory.prototype.setChannels = function(state_id, connection_id, channel_names) {
+    return new Promise(function(resolve, reject) {
+        var sql = 'UPDATE connections SET channels = ? WHERE state_id = ? AND id = ?';
+        db.query(sql, [channel_names, state_id, connection_id], function(err, result) {
+            resolve();
         });
     });
 };
