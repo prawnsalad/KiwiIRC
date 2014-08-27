@@ -13,7 +13,8 @@ var engine       = require('engine.io'),
     winston      = require('winston'),
     Client       = require('./client.js').Client,
     HttpHandler  = require('./httphandler.js').HttpHandler,
-    rehash       = require('./rehash.js');
+    rehash       = require('./rehash.js'),
+    Stats        = require('./stats.js');
 
 
 
@@ -86,6 +87,8 @@ var WebListener = module.exports = function (web_config) {
     hs.on('request', function(req, res){
         var transport_url = (global.config.http_base_path || '') + '/transport';
 
+        Stats.incr('http.request');
+
         // engine.io can sometimes "loose" the clients remote address. Keep note of it
         req.meta = {
             remote_address: req.connection.remoteAddress
@@ -102,6 +105,8 @@ var WebListener = module.exports = function (web_config) {
     });
 
     this.ws.on('connection', function(socket) {
+        Stats.incr('http.websocket');
+
         initialiseSocket(socket, function(err, authorised) {
             var client;
 

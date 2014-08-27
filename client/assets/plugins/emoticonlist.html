@@ -1,0 +1,78 @@
+<style>
+    #kiwi .emoticon-list {
+        position: absolute;
+        display: block;
+        z-index: 1000;
+
+        background: #121314;
+        padding: 5px;
+        width: 460px;
+    }
+
+    #kiwi .emoticon-list .emoticon {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+</style>
+
+<script type="text/html" id="tmpl_emoticonlistt">
+<div class="emoticon-list">
+    <div data-text=":)" class="emoticon smile"></div>
+    <div data-text=":(" class="emoticon sad"></div>
+    <div data-text=":3" class="emoticon lion"></div>
+    <div data-text=";3" class="emoticon winky_lion"></div>
+    <div data-text=":s" class="emoticon confused"></div>
+    <div data-text=";(" class="emoticon cry"></div>
+    <div data-text=";)" class="emoticon wink"></div>
+    <div data-text=";D" class="emoticon wink_happy"></div>
+    <div data-text=":p" class="emoticon tongue"></div>
+    <div data-text="xP" class="emoticon cringe_tongue"></div>
+    <div data-text=":o" class="emoticon shocked"></div>
+    <div data-text=":D" class="emoticon happy"></div>
+    <div data-text="^.^" class="emoticon eyebrows"></div>
+    <div data-text="<3" class="emoticon heart"></div>
+    <div data-text=">_<" class="emoticon doh"></div>
+    <div data-text="xD" class="emoticon big_grin"></div>
+    <div data-text="o.0" class="emoticon wide_eye_right"></div>
+    <div data-text="0.o" class="emoticon wide_eye_left"></div>
+    <div data-text=":/" class="emoticon unsure"></div>
+</div>
+</script>
+
+<script type="text/javascript">
+    (function() {
+        var $list = $($('#tmpl_emoticonlistt').html());
+        var $icon = $('<a><div class="emoticon smile"></div></a>');
+
+        $icon.on('click', function(event) {
+            event.stopPropagation();
+
+            var $this = $(this);
+
+            $list.appendTo($('#kiwi'))
+                .show()
+                .css({
+                    bottom: ($('.controlbox').outerHeight()) + 'px',
+                    right: 0
+                });
+        });
+
+        $list.on('click', '.emoticon', function(event) {
+            event.stopPropagation();
+
+            var text = $(this).data('text');
+            var $inp = $('.controlbox .inp');
+            $inp.val($inp.val() + text + ' ');
+        });
+
+        $(document).on('click', function() {
+            $list.hide();
+        });
+
+        var control = kiwi.components.ControlInput();
+        control.addPluginIcon($icon);
+    })();
+</script>

@@ -73,7 +73,7 @@
 
 #kiwi .status_message {
     background: #FEEFB3; color: #9F6000;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #d7bb71;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }

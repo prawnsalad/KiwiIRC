@@ -63,8 +63,6 @@ _kiwi.global = {
              */
             function proxyEvent(event_name, event_data) {
                 if (proxy_event_name == 'all') {
-                    event_name = event_data.event_name;
-                    event_data = event_data.event_data;
                 } else {
                     event_data = event_name.event_data;
                     event_name = event_name.event_name;
@@ -75,7 +73,6 @@ _kiwi.global = {
 
             // The event we are to proxy
             proxy_event_name = proxy_event_name || 'all';
-
 
             _.extend(this, Backbone.Events);
             this._source = event_source;
@@ -94,22 +91,36 @@ _kiwi.global = {
         Network: function(connection_id) {
             var connection_event;
 
+            // If no connection id given, use all connections
             if (typeof connection_id !== 'undefined') {
                 connection_event = 'connection:' + connection_id.toString();
             } else {
                 connection_event = 'connection';
             }
 
+            // Helper to get the network object
+            var getNetwork = function() {
+                var network = typeof connection_id === 'undefined' ?
+                    _kiwi.app.connections.active_connection :
+                    _kiwi.app.connections.getByConnectionId(connection_id);
+
+                return network ?
+                    network :
+                    undefined;
+            };
+
+            // Create the return object (events proxy from the gateway)
             var obj = new this.EventComponent(_kiwi.gateway, connection_event);
+
+            // Proxy several gateway functions onto the return object
             var funcs = {
                 kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
                 ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
                 notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
-                channelInfo: 'channelInfo', mode: 'mode'
+                channelInfo: 'channelInfo', mode: 'mode', quit: 'quit'
             };
 
-            // Proxy each gateway method
             _.each(funcs, function(gateway_fn, func_name) {
                 obj[func_name] = function() {
                     var fn_name = gateway_fn;
@@ -122,6 +133,34 @@ _kiwi.global = {
                     return _kiwi.gateway[fn_name].apply(_kiwi.gateway, args);
                 };
             });
+
+            // Add the networks getters/setters
+            obj.get = function(name) {
+                var network, restricted_keys;
+
+                network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                restricted_keys = [
+                    'password'
+                ];
+                if (restricted_keys.indexOf(name) > -1) {
+                    return undefined;
+                }
+
+                return network.get(name);
+            };
+
+            obj.set = function() {
+                var network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.set.apply(network, arguments);
+            };
 
             return obj;
         },

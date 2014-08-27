@@ -708,3 +708,7 @@ msgstr "Block messages from outside this channel"
 msgid "client_views_channelinfo_togglebanlist"
 msgstr "Toggle Banlist"
 
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Send message..."
+

@@ -5,15 +5,25 @@ var util             = require('util'),
     State            = require('./irc/state.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     ClientCommands   = require('./clientcommands.js'),
-    WebsocketRpc     = require('./websocketrpc.js');
+    WebsocketRpc     = require('./websocketrpc.js'),
+    Stats            = require('./stats.js');
 
 
 var Client = function (websocket) {
     var that = this;
 
+    Stats.incr('client.created');
+
     events.EventEmitter.call(this);
     this.websocket = websocket;
+
     this.rpc = new WebsocketRpc(this.websocket);
+    this.rpc.on('all', function(func_name, return_fn) {
+        if (typeof func_name === 'string' && typeof return_fn === 'function') {
+            Stats.incr('client.command');
+            Stats.incr('client.command.' + func_name);
+        }
+    });
 
     // Clients address
     this.real_address = this.websocket.meta.real_address;
@@ -72,6 +82,8 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 };
 
 Client.prototype.dispose = function () {
+    Stats.incr('client.disposed');
+
     this.disposed = true;
     this.rpc.dispose();
     this.emit('dispose');

@@ -184,37 +184,16 @@
                 // 0 = non-reconnecting state. 1 = reconnecting state.
                 var gw_stat = 0;
 
-                // If the current or upcoming disconnect was planned
-                var unplanned_disconnect = false;
-
                 gw.on('disconnect', function (event) {
-                    unplanned_disconnect = !gw.disconnect_requested;
-
-                    if (unplanned_disconnect) {
-                        var msg = _kiwi.global.i18n.translate('client_models_application_reconnecting').fetch() + '...';
-                        that.message.text(msg, {timeout: 10000});
-                    }
-
                     that.view.$el.removeClass('connected');
 
-                    // Mention the disconnection on every channel
-                    _kiwi.app.connections.forEach(function(connection) {
-                        connection.panels.server.addMsg('', styleText('quit', {text: msg}), 'action quit');
-
-                        connection.panels.forEach(function(panel) {
-                            if (!panel.isChannel())
-                                return;
-
-                            panel.addMsg('', styleText('quit', {text: msg}), 'action quit');
-                        });
-                    });
-
+                    // Reconnection phase will start to kick in
                     gw_stat = 1;
                 });
 
 
                 gw.on('reconnecting', function (event) {
-                    var msg = _kiwi.global.i18n.translate('client_models_application_reconnect_in_x_seconds').fetch(event.delay/1000) + '...';
+                    var msg = translateText('client_models_application_reconnect_in_x_seconds', [event.delay/1000]) + '...';
 
                     // Only need to mention the repeating re-connection messages on server panels
                     _kiwi.app.connections.forEach(function(connection) {
@@ -225,29 +204,34 @@
 
                 // After the socket has connected, kiwi handshakes and then triggers a kiwi:connected event
                 gw.on('kiwi:connected', function (event) {
-                    that.view.$el.addClass('connected');
-                    if (gw_stat !== 1) return;
+                    var msg;
 
-                    if (unplanned_disconnect) {
-                        var msg = _kiwi.global.i18n.translate('client_models_application_reconnect_successfully').fetch() + ':)';
+                    that.view.$el.addClass('connected');
+
+                    // If we were reconnecting, show some messages we have connected back OK
+                    if (gw_stat === 1) {
+
+                        // No longer in the reconnection state
+                        gw_stat = 0;
+
+                        msg = translateText('client_models_application_reconnect_successfully') + ' :)';
                         that.message.text(msg, {timeout: 5000});
+
+                        // Mention the re-connection on every channel
+                        _kiwi.app.connections.forEach(function(connection) {
+                            connection.reconnect();
+
+                            connection.panels.server.addMsg('', styleText('rejoin', {text: msg}), 'action join');
+
+                            connection.panels.forEach(function(panel) {
+                                if (!panel.isChannel())
+                                    return;
+
+                                panel.addMsg('', styleText('rejoin', {text: msg}), 'action join');
+                            });
+                        });
                     }
 
-                    // Mention the re-connection on every channel
-                    _kiwi.app.connections.forEach(function(connection) {
-                        connection.reconnect();
-
-                        connection.panels.server.addMsg('', styleText('rejoin', {text: msg}), 'action join');
-
-                        connection.panels.forEach(function(panel) {
-                            if (!panel.isChannel())
-                                return;
-
-                            panel.addMsg('', styleText('rejoin', {text: msg}), 'action join');
-                        });
-                    });
-
-                    gw_stat = 0;
                 });
             })();
 
@@ -276,6 +260,7 @@
                 if (data.force) {
                     // Get an interval between 5 and 6 minutes so everyone doesn't reconnect it all at once
                     var jump_server_interval = Math.random() * (360 - 300) + 300;
+                    jump_server_interval = 1;
 
                     // Tell the user we are going to disconnect, wait 5 minutes then do the actual reconnect
                     var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();

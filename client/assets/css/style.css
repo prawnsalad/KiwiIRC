@@ -77,6 +77,10 @@ html, body { height:100%; }
 #kiwi .toolbar .connections .panellist:after { content:""; }
 
 #kiwi .status_message {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
     background: #FFF;
     border-bottom: 1px solid;
     text-align: center;
@@ -107,7 +111,7 @@ html, body { height:100%; }
 
 #kiwi .messages .msg {}
 #kiwi .messages .msg .time { display:inline; }
-#kiwi .messages .msg .nick { display:inline; }
+#kiwi .messages .msg .nick { display:inline; cursor: pointer; }
 #kiwi .messages .msg .text { display:inline; }
 
 #kiwi .messages .msg.action .nick { display:none; }

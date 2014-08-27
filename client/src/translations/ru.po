@@ -22,7 +22,7 @@ msgstr "Имя канала"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Пользователи"
+msgstr "участников"
 
 #: 
 msgid "client_applets_chanlist_topic"
@@ -66,7 +66,7 @@ msgstr "Уведомления входов/выходов на канал"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "временные метки"
+msgstr "Показывать время"
 
 #: 
 msgid "client_applets_settings_notification_sound"
@@ -186,7 +186,7 @@ msgstr "отключился %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "был кикнул %s %s"
+msgstr "был кикнут %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -198,7 +198,7 @@ msgstr "вышел с канала %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "не корректное название канала"
+msgstr "некорректное название канала"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -218,7 +218,7 @@ msgstr "установил мод %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "установлены моды %s"
+msgstr "установил мод %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -391,11 +391,11 @@ msgstr "Ник уже используется"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Не корректный ние"
+msgstr "Некорректный ник"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Не верный пароль"
+msgstr "Неверный пароль"
 
 #: 
 msgid "client_views_serverselect_connection_error"
@@ -407,7 +407,7 @@ msgstr "Сервер не найден"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "В соединении оказано"
+msgstr "В соединении отказано"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -435,11 +435,11 @@ msgstr "Бан"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Сообщение"
+msgstr "Приват"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Информация"
+msgstr "Инфо"
 
 #: 
 msgid "client_views_userbox_slap"
@@ -459,63 +459,63 @@ msgstr "Безопасное переподключение вас.."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Desktop notifications"
+msgstr "Всплывающие уведомления"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Enable notifications"
+msgstr "Включить уведомления"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Show emoticons"
+msgstr "Отображать смайлы"
 
 #: 
 msgid "client_applet_about"
-msgstr "About Kiwi"
+msgstr "Информация о Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Project homepage"
+msgstr "Домашняя страница проекта"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link to this channel"
+msgstr "Ссылка на этот канал"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Share this channel"
+msgstr "Поделиться этим каналом"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "My networks"
+msgstr "Мои сети"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favourite networks"
+msgstr "Любимые сети"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Add network"
+msgstr "Добавить сеть"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Save network"
+msgstr "Сохранить сеть"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Delete network"
+msgstr "Удалить сеть"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "включить входы/выходы в уведомлениях"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "игнорировать"
+msgstr "игнор"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Использовать 24-часовой формат времени"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -527,185 +527,189 @@ msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "has been invited to %s"
+msgstr "был приглашен на %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "is already on this channel"
+msgstr "уже на этом канале"
 
 #: Date format
 msgid "client_date_format"
-msgstr "m/d/Y"
+msgstr "м/д/г"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Jan"
+msgstr "Янв"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
-msgstr "Feb"
+msgstr "Фев"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "Mar"
+msgstr "Мрт"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
-msgstr "Apr"
+msgstr "Апр"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "May"
+msgstr "Май"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
-msgstr "Jun"
+msgstr "Июн"
 
 #: client.libs.date_format.shortMonths.july
 msgid "client.libs.date_format.short_months.july"
-msgstr "Jul"
+msgstr "Июл"
 
 #: client.libs.date_format.shortMonths.august
 msgid "client.libs.date_format.short_months.august"
-msgstr "Aug"
+msgstr "Авг"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Sep"
+msgstr "Сен"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
-msgstr "Oct"
+msgstr "Окт"
 
 #: client.libs.date_format.shortMonths.november
 msgid "client.libs.date_format.short_months.november"
-msgstr "Nov"
+msgstr "Нбр"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Dec"
+msgstr "Дек"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "January"
+msgstr "Января"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "February"
+msgstr "Февраля"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "March"
+msgstr "Марта"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
-msgstr "April"
+msgstr "Апреля"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "May"
+msgstr "Мая"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "June"
+msgstr "Июня"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "July"
+msgstr "Июля"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "August"
+msgstr "Августа"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "September"
+msgstr "Сентября"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
-msgstr "October"
+msgstr "Октября"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "November"
+msgstr "Ноября"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "December"
+msgstr "Декабря"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Mon"
+msgstr "Пн"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Tue"
+msgstr "Вт"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Wed"
+msgstr "Ср"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Thu"
+msgstr "Чт"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Fri"
+msgstr "Пт"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Sat"
+msgstr "Сб"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Sun"
+msgstr "Вс"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Monday"
+msgstr "Понедельник"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Tueday"
+msgstr "Вторник"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Wednesday"
+msgstr "Среда"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Thursday"
+msgstr "Четверг"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Friday"
+msgstr "Пятница"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Saturday"
+msgstr "Суббота"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Sunday"
+msgstr "Воскресенье"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Moderated Chat"
+msgstr "Модерируемый"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Invite Only"
+msgstr "Только по приглашению"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Only operators can change the topic"
+msgstr "Топик меняют только опы"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Block messages from outside this channel"
+msgstr "Без внешних сообщений"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Toggle Banlist"
+msgstr "Список банов"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Отправить сообщение..."
 
