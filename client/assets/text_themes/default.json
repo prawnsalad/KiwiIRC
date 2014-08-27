@@ -53,5 +53,6 @@
     "list_aliases": "ⓘ %text",
     "ignored_pattern": "ⓘ %text",
     "wallops": "[WALLOPS] %text",
-    "message_nick": "%prefix%nick"
+    "message_nick": "%prefix%nick",
+    "general_error": "%text"
 }
