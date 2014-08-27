@@ -37,6 +37,10 @@ _kiwi.model.Panel = Backbone.Model.extend({
         return false;
     },
 
+    isLocked: function() {
+        return false;
+    },
+
     isQuery: function () {
         return false;
     },

@@ -65,7 +65,15 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     panelAdded: function (panel) {
         // Add a tab to the panel
-        panel.tab = $('<li><span>' + (panel.get('title') || panel.get('name')) + '</span><div class="activity"></div></li>');
+	var name = (panel.get('title') || panel.get('name'));
+	var name_css = name.replace("#", "").replace(/[^a-z0-9]/g, function(s) {
+          var c = s.charCodeAt(0);
+          if (c == 32) return '-';
+          if (c >= 65 && c <= 90) return '_' + s.toLowerCase();
+	  return "";
+        });
+        
+	panel.tab = $('<li class="channel-'+name_css+'"><span>' + name + '</span><div class="activity"></div></li>');
 
         if (panel.isServer()) {
             panel.tab.addClass('server');
@@ -117,9 +125,9 @@ _kiwi.view.Tabs = Backbone.View.extend({
         _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
 
         panel.tab.addClass('active');
-
+	
         // Only show the part image on non-server tabs
-        if (!panel.isServer()) {
+        if (!panel.isServer() && !panel.isLocked()) {
             panel.tab.append('<span class="part icon-nonexistant"></span>');
         }
 
