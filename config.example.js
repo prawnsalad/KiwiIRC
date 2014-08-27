@@ -187,7 +187,8 @@ conf.client = {
         show_emoticons: true,
         count_all_activity: true
     },
-    window_title: 'Kiwi IRC'
+    window_title: 'Kiwi IRC',
+    locked_channels: [] // Channel passed via URL hash (i.e. #mychannel) is automatically locked
 };
 
 // List of themes available for the user to choose from

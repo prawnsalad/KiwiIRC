@@ -114,5 +114,10 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
     isChannel: function() {
         return true;
+    },
+
+    isLocked: function() {
+	return _kiwi.global.defaultServerSettings().channel == this.get('name') || 
+	      (_kiwi.app.server_settings.client.locked_channels.indexOf(this.get('name')) >= 0);
     }
 });
