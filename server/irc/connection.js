@@ -315,7 +315,10 @@ IrcConnection.prototype.connect = function () {
             // Close the whole socket down
             that.disposeSocket();
 
-            if (global.config.ircd_reconnect) {
+            if (!global.config.ircd_reconnect) {
+                that.emit('close', had_error);
+
+            } else {
                 // If trying to reconnect, continue with it
                 if (that.reconnect_attempts && that.reconnect_attempts < 3) {
                     should_reconnect = true;
