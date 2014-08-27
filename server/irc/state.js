@@ -66,7 +66,14 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
     });
 
     con.on('error', function IrcConnectionError(err) {
-        winston.warn('irc_connection error (%s):', hostname, err);
+        var context = '';
+
+        // If we have any of the last lines stored, include them in the log for context
+        if (con.last_few_lines.length > 0) {
+            context = '\n' + con.last_few_lines.join('\n') + '\n';
+        }
+
+        winston.warn('irc_connection error (%s):' + context, hostname, err);
         return callback(err.message);
     });
 

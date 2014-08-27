@@ -46,6 +46,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Number of times we have tried to reconnect
     this.reconnect_attempts = 0;
 
+    // Last few lines from the IRCd for context when disconnected (server errors, etc)
+    this.last_few_lines = [];
+
     // IRCd write buffers (flood controll)
     this.write_buffer = [];
 
@@ -846,7 +849,8 @@ function parseIrcLine(buffer_line) {
         tags = [],
         tag,
         line = '',
-        msg_obj;
+        msg_obj,
+        hold_last_lines;
 
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
@@ -861,6 +865,18 @@ function parseIrcLine(buffer_line) {
         // The line was not parsed correctly, must be malformed
         winston.warn('Malformed IRC line: %s', line.replace(/^\r+|\r+$/, ''));
         return;
+    }
+
+    // If enabled, keep hold of the last X lines
+    if (global.config.hold_ircd_lines) {
+        this.last_few_lines.push(line.replace(/^\r+|\r+$/, ''));
+
+        // Trim the array down if it's getting to long. (max 3 by default)
+        hold_last_lines = parseInt(global.config.hold_ircd_lines, 10) || 3;
+
+        if (this.last_few_lines.length > hold_last_lines) {
+            this.last_few_lines = this.last_few_lines.slice(this.last_few_lines.length - hold_last_lines);
+        }
     }
 
     // Extract any tags (msg[1])
