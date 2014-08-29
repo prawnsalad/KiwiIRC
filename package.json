@@ -24,7 +24,7 @@
     "ipaddr.js": "0.1.3",
     "socksjs": "0.4.4",
     "iconv-lite": "0.4.4",
-    "spdy": "1.19.1",
+    "spdy": "1.28.1",
     "po2json": "0.2.3",
     "negotiator": "0.4.3",
     "winston": "~0.7.2"
