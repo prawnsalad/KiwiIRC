@@ -218,22 +218,7 @@ function hsl2rgb(h, s, l) {
  * Formats a kiwi message to IRC format
  */
 function formatToIrcMsg(message) {
-    // Format any colour codes (eg. $c4)
-    message = message.replace(/%C(\d)/ig, function(match, colour_number) {
-        return String.fromCharCode(3) + colour_number.toString();
-    });
-
-    var formatters = {
-        B: '\x02',    // Bold
-        I: '\x1D',    // Italics
-        U: '\x1F',    // Underline
-        O: '\x0F'     // Out / Clear formatting
-    };
-    message = message.replace(/%([BIUO])/ig, function(match, format_code) {
-        if (typeof formatters[format_code.toUpperCase()] !== 'undefined')
-            return formatters[format_code.toUpperCase()];
-    });
-
+    console.warn('formatToIrcMsg is deprecated');
     return message;
 }
 
@@ -523,7 +508,6 @@ function translateText(string_id, params) {
 function styleText(string_id, params) {
     var style, text;
 
-    //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
     style = _kiwi.app.text_theme[string_id];
 
     // Expand a member mask into its individual parts (nick, ident, hostname)
@@ -540,6 +524,5 @@ function styleText(string_id, params) {
             return params[key];
     });
 
-    text = formatToIrcMsg(text);
     return text;
 }
