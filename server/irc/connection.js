@@ -892,8 +892,8 @@ function parseIrcLine(buffer_line) {
     msg_obj = {
         tags:       tags,
         prefix:     msg[2],
-        nick:       msg[3],
-        ident:      msg[4],
+        nick:       msg[3] || msg[2],  // Nick will be in the prefix slot if a full user mask is not used
+        ident:      msg[4] || '',
         hostname:   msg[5] || '',
         command:    msg[6],
         params:     msg[7] ? msg[7].split(/ +/) : []
