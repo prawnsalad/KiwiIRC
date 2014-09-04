@@ -85,7 +85,14 @@ var WebListener = module.exports = function (web_config) {
     });
 
     hs.on('request', function(req, res){
-        var transport_url = (global.config.http_base_path || '') + '/transport';
+        var base_path = (global.config.http_base_path || ''),
+            transport_url;
+
+        // Trim off any trailing slashes
+        if (base_path.substr(base_path.length - 1) === '/') {
+            base_path = base_path.substr(0, base_path.length - 1);
+        }
+        transport_url = base_path + '/transport';
 
         Stats.incr('http.request');
 
