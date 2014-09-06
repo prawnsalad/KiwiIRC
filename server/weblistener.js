@@ -122,7 +122,7 @@ var WebListener = module.exports = function (web_config) {
                 return;
             }
 
-            client = new Client(socket);
+            client = new Client(socket, {server_config: web_config});
             client.on('dispose', function () {
                 that.emit('client_dispose', this);
             });

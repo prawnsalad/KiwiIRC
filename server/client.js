@@ -9,13 +9,16 @@ var util             = require('util'),
     Stats            = require('./stats.js');
 
 
-var Client = function (websocket) {
+var Client = function (websocket, opts) {
     var that = this;
 
     Stats.incr('client.created');
 
     events.EventEmitter.call(this);
     this.websocket = websocket;
+
+    // Keep a record of how this client connected
+    this.server_config = opts.server_config;
 
     this.rpc = new WebsocketRpc(this.websocket);
     this.rpc.on('all', function(func_name, return_fn) {
