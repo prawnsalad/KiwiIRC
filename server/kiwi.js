@@ -255,7 +255,7 @@ if (global.config.identd && global.config.identd.enabled) {
 
 
 // Start up a weblistener for each found in the config
-_.each(global.config.servers, function (server) {
+_.each(global.config.servers, function (server, serverindex) {
     if (server.type == 'proxy') {
         // Start up a kiwi proxy server
         var serv = new Proxy.ProxyServer();
@@ -284,6 +284,7 @@ _.each(global.config.servers, function (server) {
         var wl = new WebListener(server, global.config.transports);
 
         wl.on('connection', function (client) {
+            client.serverindex = serverindex;
             clients.add(client);
         });
 

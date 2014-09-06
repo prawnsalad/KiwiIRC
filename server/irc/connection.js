@@ -685,7 +685,12 @@ var socketConnectHandler = function () {
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
         var gecos = that.gecos;
 
-        if (!gecos && global.config.default_gecos) {
+        if (!gecos && global.config.servers[that.state.client.serverindex].default_gecos) {
+            // We don't have a gecos yet, so use the default
+            gecos = global.config.servers[that.state.client.serverindex].default_gecos.toString().replace('%n', that.nick);
+            gecos = gecos.replace('%h', that.user.hostname);
+        }
+        else if (!gecos && global.config.default_gecos) {
             // We don't have a gecos yet, so use the default
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
             gecos = gecos.replace('%h', that.user.hostname);
