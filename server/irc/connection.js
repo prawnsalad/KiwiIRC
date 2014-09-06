@@ -61,10 +61,17 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // If we are in the CAP negotiation stage
     this.cap_negotiation = true;
 
+    // username selection
+    var username_sel = nick;
+    if (global.config.servers[state.client.serverindex].default_username)
+        username_sel = global.config.servers[state.client.serverindex].default_username;
+    else if (global.config.default_username)
+        username_sel = global.config.default_username;
+
     // User information
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
-    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
+    this.username = username_sel.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.gecos = ''; // Users real-name. Uses default from config if empty
     this.password = options.password || '';
 
@@ -685,7 +692,12 @@ var socketConnectHandler = function () {
     global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
         var gecos = that.gecos;
 
-        if (!gecos && global.config.default_gecos) {
+        if (!gecos && global.config.servers[that.state.client.serverindex].default_gecos) {
+            // We don't have a gecos yet, so use the default
+            gecos = global.config.servers[that.state.client.serverindex].default_gecos.toString().replace('%n', that.nick);
+            gecos = gecos.replace('%h', that.user.hostname);
+        }
+        else if (!gecos && global.config.default_gecos) {
             // We don't have a gecos yet, so use the default
             gecos = global.config.default_gecos.toString().replace('%n', that.nick);
             gecos = gecos.replace('%h', that.user.hostname);
