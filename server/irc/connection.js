@@ -61,10 +61,17 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // If we are in the CAP negotiation stage
     this.cap_negotiation = true;
 
+    // username selection
+    var username_sel = nick;
+    if (global.config.servers[state.client.serverindex].default_username)
+        username_sel = global.config.servers[state.client.serverindex].default_username;
+    else if (global.config.default_username)
+        username_sel = global.config.default_username;
+
     // User information
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
-    this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
+    this.username = username_sel.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.gecos = ''; // Users real-name. Uses default from config if empty
     this.password = options.password || '';
 
