@@ -242,10 +242,7 @@ _kiwi.global = {
     },
 
     start: function() {
-        _kiwi.global.events.emit('loaded')
-        .done(function() {
-            _kiwi.app.showStartup();
-        });
+        _kiwi.app.showStartup();
     },
 
     // Allow plugins to change the startup applet

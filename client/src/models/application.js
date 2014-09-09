@@ -70,6 +70,8 @@
             this.startup_applet = _kiwi.model.Applet.load(this.startup_applet_name, {no_tab: true});
             this.startup_applet.tab = this.view.$('.console');
             this.startup_applet.view.show();
+
+            _kiwi.global.events.emit('loaded');
         },
 
 
