@@ -32,8 +32,8 @@ HttpHandler.prototype.serve = function (request, response) {
         base_path = base_path.substr(0, base_path.length - 1);
     }
 
-    // Normalise the URL to compare against the base_path
-    base_check = request.url;
+    // Normalise the URL + remove query strings to compare against the base_path
+    base_check = request.url.split('?')[0];
     if (base_check.substr(base_check.length - 1) !== '/') {
         base_check += '/';
     }
