@@ -1,30 +1,23 @@
-_kiwi.model.Gateway = function () {
+_kiwi.model.Gateway = Backbone.Model.extend({
 
-    // Set to a reference to this object within initialize()
-    var that = null;
-
-    this.initialize = function () {
-        that = this;
+    initialize: function () {
 
         // For ease of access. The socket.io object
         this.socket = this.get('socket');
 
         // Used to check if a disconnection was unplanned
         this.disconnect_requested = false;
-    };
+    },
 
 
 
-    this.reconnect = function (callback) {
-        var that = this,
-            transport_path;
-
+    reconnect: function (callback) {
         this.disconnect_requested = true;
         this.socket.close();
 
         this.socket = null;
         this.connect(callback);
-    };
+    },
 
 
 
@@ -32,7 +25,9 @@ _kiwi.model.Gateway = function () {
     *   Connects to the server
     *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
     */
-    this.connect = function (callback) {
+    connect: function (callback) {
+        var that = this;
+
         this.connect_callback = callback;
 
         // Keep note of the server we are connecting to
@@ -105,13 +100,13 @@ _kiwi.model.Gateway = function () {
         this.socket.on('reconnecting_failed', function () {
             console.log("_kiwi.gateway.socket.on('reconnect_failed')");
         });
-    };
+    },
 
 
     /**
      * Return a new network object with the new connection details
      */
-    this.newConnection = function(connection_info, callback_fn) {
+    newConnection: function(connection_info, callback_fn) {
         var that = this;
 
         // If not connected, connect first then re-call this function
@@ -153,13 +148,13 @@ _kiwi.model.Gateway = function () {
                 callback_fn && callback_fn(err);
             }
         });
-    };
+    },
 
 
     /**
      * Make a new IRC connection and return its connection ID
      */
-    this.makeIrcConnection = function(connection_info, callback_fn) {
+    makeIrcConnection: function(connection_info, callback_fn) {
         var server_info = {
             nick:       connection_info.nick,
             hostname:   connection_info.host,
@@ -182,17 +177,17 @@ _kiwi.model.Gateway = function () {
                 callback_fn && callback_fn(err);
             }
         });
-    };
+    },
 
 
-    this.isConnected = function () {
+    isConnected: function () {
         // TODO: Check this. Might want to use .readyState
         return this.socket;
-    };
+    },
 
 
 
-    this.parseKiwi = function (command, data) {
+    parseKiwi: function (command, data) {
         var args;
 
         switch (command) {
@@ -211,33 +206,33 @@ _kiwi.model.Gateway = function () {
 
         this.trigger('kiwi:' + command, data);
         this.trigger('kiwi', data);
-    };
+    },
 
     /**
     *   Parses the response from the server
     */
-    this.parse = function (command, data) {
+    parse: function (command, data) {
         var network_trigger = '';
 
         // Trigger the connection specific events (used by Network objects)
         if (typeof data.connection_id !== 'undefined') {
             network_trigger = 'connection:' + data.connection_id.toString();
 
-            that.trigger(network_trigger, {
+            this.trigger(network_trigger, {
                 event_name: command,
                 event_data: data
             });
 
             // Some events trigger a more in-depth event name
             if (command == 'message' && data.type) {
-                that.trigger('connection ' + network_trigger, {
+                this.trigger('connection ' + network_trigger, {
                     event_name: 'message:' + data.type,
                     event_data: data
                 });
             }
 
             if (command == 'channel' && data.type) {
-                that.trigger('connection ' + network_trigger, {
+                this.trigger('connection ' + network_trigger, {
                     event_name: 'channel:' + data.type,
                     event_data: data
                 });
@@ -245,18 +240,18 @@ _kiwi.model.Gateway = function () {
         }
 
         // Trigger the global events
-        that.trigger('connection', {event_name: command, event_data: data});
-        that.trigger('connection:' + command, data);
-    };
+        this.trigger('connection', {event_name: command, event_data: data});
+        this.trigger('connection:' + command, data);
+    },
 
-    this.rpcCall = function(method, connection_id) {
+    rpcCall: function(method, connection_id) {
         var args = Array.prototype.slice.call(arguments, 0);
 
         if (typeof args[1] === 'undefined' || args[1] === null)
             args[1] = _kiwi.app.connections.active_connection.get('connection_id');
 
         return this.rpc.call.apply(this.rpc, args);
-    };
+    },
 
     /**
     *   Sends a PRIVMSG message
@@ -264,14 +259,14 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.privmsg = function (connection_id, target, msg, callback) {
+    privmsg: function (connection_id, target, msg, callback) {
         var args = {
             target: target,
             msg: msg
         };
 
         this.rpcCall('irc.privmsg', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Sends a NOTICE message
@@ -279,14 +274,14 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.notice = function (connection_id, target, msg, callback) {
+    notice: function (connection_id, target, msg, callback) {
         var args = {
             target: target,
             msg: msg
         };
 
         this.rpcCall('irc.notice', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Sends a CTCP message
@@ -296,7 +291,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    params      Additional paramaters
     *   @param  {Function}  callback    A callback function
     */
-    this.ctcp = function (connection_id, is_request, type, target, params, callback) {
+    ctcp: function (connection_id, is_request, type, target, params, callback) {
         var args = {
             is_request: is_request,
             type: type,
@@ -305,23 +300,23 @@ _kiwi.model.Gateway = function () {
         };
 
         this.rpcCall('irc.ctcp', connection_id, args, callback);
-    };
+    },
 
-    this.ctcpRequest = function (connection_id, type, target, params, callback) {
+    ctcpRequest: function (connection_id, type, target, params, callback) {
         this.ctcp(connection_id, true, type, target, params, callback);
-    };
-    this.ctcpResponse = function (connection_id, type, target, params, callback) {
+    },
+    ctcpResponse: function (connection_id, type, target, params, callback) {
         this.ctcp(connection_id, false, type, target, params, callback);
-    };
+    },
 
     /**
     *   @param  {String}    target      The target of the message (e.g. a channel or nick)
     *   @param  {String}    msg         The message to send
     *   @param  {Function}  callback    A callback function
     */
-    this.action = function (connection_id, target, msg, callback) {
+    action: function (connection_id, target, msg, callback) {
         this.ctcp(connection_id, true, 'ACTION', target, msg, callback);
-    };
+    },
 
     /**
     *   Joins a channel
@@ -329,25 +324,25 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    key         The key to the channel
     *   @param  {Function}  callback    A callback function
     */
-    this.join = function (connection_id, channel, key, callback) {
+    join: function (connection_id, channel, key, callback) {
         var args = {
             channel: channel,
             key: key
         };
 
         this.rpcCall('irc.join', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Retrieves channel information
     */
-    this.channelInfo = function (connection_id, channel, callback) {
+    channelInfo: function (connection_id, channel, callback) {
         var args = {
             channel: channel
         };
 
         this.rpcCall('irc.channel_info', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Leaves a channel
@@ -355,7 +350,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    message     Optional part message
     *   @param  {Function}  callback    A callback function
     */
-    this.part = function (connection_id, channel, message, callback) {
+    part: function (connection_id, channel, message, callback) {
         "use strict";
 
         // The message param is optional, so juggle args if it is missing
@@ -369,7 +364,7 @@ _kiwi.model.Gateway = function () {
         };
 
         this.rpcCall('irc.part', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Queries or modifies a channell topic
@@ -377,14 +372,14 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    new_topic   The new topic to set
     *   @param  {Function}  callback    A callback function
     */
-    this.topic = function (connection_id, channel, new_topic, callback) {
+    topic: function (connection_id, channel, new_topic, callback) {
         var args = {
             channel: channel,
             topic: new_topic
         };
 
         this.rpcCall('irc.topic', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Kicks a user from a channel
@@ -393,7 +388,7 @@ _kiwi.model.Gateway = function () {
     *   @param  {String}    reason      The reason for kicking the user
     *   @param  {Function}  callback    A callback function
     */
-    this.kick = function (connection_id, channel, nick, reason, callback) {
+    kick: function (connection_id, channel, nick, reason, callback) {
         var args = {
             channel: channel,
             nick: nick,
@@ -401,14 +396,14 @@ _kiwi.model.Gateway = function () {
         };
 
         this.rpcCall('irc.kick', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Disconnects us from the server
     *   @param  {String}    msg         The quit message to send to the IRC server
     *   @param  {Function}   callback    A callback function
     */
-    this.quit = function (connection_id, msg, callback) {
+    quit: function (connection_id, msg, callback) {
         msg = msg || "";
 
         var args = {
@@ -416,58 +411,55 @@ _kiwi.model.Gateway = function () {
         };
 
         this.rpcCall('irc.quit', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Sends a string unmodified to the IRC server
     *   @param  {String}    data        The data to send to the IRC server
     *   @param  {Function}  callback    A callback function
     */
-    this.raw = function (connection_id, data, callback) {
+    raw: function (connection_id, data, callback) {
         var args = {
             data: data
         };
 
         this.rpcCall('irc.raw', connection_id, args, callback);
-    };
+    },
 
     /**
     *   Changes our nickname
     *   @param  {String}    new_nick    Our new nickname
     *   @param  {Function}  callback    A callback function
     */
-    this.changeNick = function (connection_id, new_nick, callback) {
+    changeNick: function (connection_id, new_nick, callback) {
         var args = {
             nick: new_nick
         };
 
         this.rpcCall('irc.nick', connection_id, args, callback);
-    };
+    },
 
     /**
     * Sets a mode for a target
     */
-    this.mode = function (connection_id, target, mode_string, callback) {
+    mode: function (connection_id, target, mode_string, callback) {
         var args = {
             data: 'MODE ' + target + ' ' + mode_string
         };
 
         this.rpcCall('irc.raw', connection_id, args, callback);
-    };
+    },
 
     /**
      *  Sends ENCODING change request to server.
      *  @param  {String}     new_encoding  The new proposed encode
      *  @param  {Fucntion}   callback      A callback function
      */
-    this.setEncoding = function (connection_id, new_encoding, callback) {
+    setEncoding: function (connection_id, new_encoding, callback) {
         var args = {
             encoding: new_encoding
         };
 
         this.rpcCall('irc.encoding', connection_id, args, callback);
-    };
-
-
-    return new (Backbone.Model.extend(this))(arguments);
-};
+    }
+});
