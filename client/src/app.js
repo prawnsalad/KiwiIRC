@@ -37,7 +37,15 @@ _kiwi.global = {
             throw 'RPC unavailable. Is Kiwi connected to the server yet?';
         }
 
-        _kiwi.gateway.rpc.apply(_kiwi.gateway.rpc, arguments);
+        return _kiwi.gateway.rpc.apply(_kiwi.gateway.rpc, arguments);
+    },
+
+    rpcNamespace: function(namespace) {
+        if (!_kiwi.gateway.rpc) {
+            throw 'RPC unavailable. Is Kiwi connected to the server yet?';
+        }
+
+        return _kiwi.gateway.rpc.namespace(namespace);
     },
 
     addMediaMessageType: function(match, buildHtml) {

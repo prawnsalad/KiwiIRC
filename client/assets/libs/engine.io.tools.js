@@ -124,6 +124,9 @@ var EngineioTools = {
             ret._mixinEmitter();
             ret._bindSocketListeners();
 
+            // Keep a reference to the main Rpc object so namespaces can find calling functions
+            ret._rpc = ret;
+
             return ret;
         }
 
@@ -132,6 +135,10 @@ var EngineioTools = {
             this._next_id = 0;
             this._rpc_callbacks = {};
             this._socket = eio_socket;
+
+            this._rpc = this;
+            this._namespace = '';
+            this._namespaces = [];
         }
 
 
@@ -153,21 +160,63 @@ var EngineioTools = {
                 delete this._onMessageProxy;
             }
 
+            // Clean up any namespaces
+            for (var idx in this._namespaces) {
+                this._namespaces[idx].dispose();
+            }
+
             this.removeAllListeners();
         };
 
+
+
+        WebsocketRpcCaller.prototype.namespace = function(namespace_name) {
+            var complete_namespace, namespace;
+
+            if (this._namespace) {
+                complete_namespace = this._namespace + '.' + namespace_name;
+            } else {
+                complete_namespace = namespace_name;
+            }
+
+            namespace = new this._rpc.Namespace(this._rpc, complete_namespace);
+            this._rpc._namespaces.push(namespace);
+
+            return namespace;
+        };
+
+
+
+        // Find all namespaces that either matches or starts with namespace_name
+        WebsocketRpcCaller.prototype._findRelevantNamespaces = function(namespace_name) {
+            var found_namespaces = [];
+
+            for(var idx in this._namespaces) {
+                if (this._namespaces[idx]._namespace === namespace_name) {
+                    found_namespaces.push(this._namespaces[idx]);
+                }
+
+                if (this._namespaces[idx]._namespace.indexOf(namespace_name + '.') === 0) {
+                    found_namespaces.push(this._namespaces[idx]);
+                }
+            }
+
+            return found_namespaces;
+        };
 
 
 
         /**
          * The engine.io socket already has an emitter mixin so steal it from there
          */
-        WebsocketRpcCaller.prototype._mixinEmitter = function() {
+        WebsocketRpcCaller.prototype._mixinEmitter = function(target_obj) {
             var funcs = ['on', 'once', 'off', 'removeListener', 'removeAllListeners', 'emit', 'listeners', 'hasListeners'];
+
+            target_obj = target_obj || this;
 
             for (var i=0; i<funcs.length; i++) {
                 if (typeof this._socket[funcs[i]] === 'function')
-                    this[funcs[i]] = this._socket[funcs[i]];
+                    target_obj[funcs[i]] = this._socket[funcs[i]];
             }
         };
 
@@ -242,7 +291,8 @@ var EngineioTools = {
             var self = this,
                 packet,
                 returnFn,
-                callback;
+                callback,
+                namespace, namespaces, idx;
 
             try {
                 packet = JSON.parse(message_raw);
@@ -271,7 +321,17 @@ var EngineioTools = {
                     returnFn = this._noop;
                 }
 
+                this.emit.apply(this, ['all', packet.method, returnFn].concat(packet.params));
                 this.emit.apply(this, [packet.method, returnFn].concat(packet.params));
+
+                if (packet.method.indexOf('.') > 0) {
+                    namespace = packet.method.substring(0, packet.method.lastIndexOf('.'));
+                    namespaces = this._findRelevantNamespaces(namespace);
+                    for(idx in namespaces){
+                        packet.method = packet.method.replace(namespaces[idx]._namespace + '.', '');
+                        namespaces[idx].emit.apply(namespaces[idx], [packet.method, returnFn].concat(packet.params));
+                    }
+                }
             }
         };
 
@@ -297,6 +357,31 @@ var EngineioTools = {
 
 
         WebsocketRpcCaller.prototype._noop = function() {};
+
+
+
+        WebsocketRpcCaller.prototype.Namespace = function(rpc, namespace) {
+            var ret = function WebsocketRpcNamespaceInstance() {
+                if (typeof arguments[0] === 'undefined') {
+                    return;
+                }
+
+                arguments[0] = ret._namespace + '.' + arguments[0];
+                return ret._rpc.apply(ret._rpc, arguments);
+            };
+
+            ret._rpc = rpc;
+            ret._namespace = namespace;
+
+            ret.dispose = function() {
+                ret.removeAllListeners();
+                ret._rpc = null;
+            };
+
+            rpc._mixinEmitter(ret);
+
+            return ret;
+        };
 
 
         return WebsocketRpc;
