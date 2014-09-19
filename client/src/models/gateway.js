@@ -40,6 +40,10 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             reconnect_delay: 2000
         });
 
+        // If we have an existing RPC object, clean it up before replacing it
+        if (this.rpc) {
+            rpc.dispose();
+        }
         this.rpc = new EngineioTools.Rpc(this.socket);
 
         this.socket.on('connect_failed', function (reason) {
