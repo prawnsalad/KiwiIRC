@@ -7,7 +7,7 @@ _kiwi.model.Server = _kiwi.model.Channel.extend({
             "name": name
         }, {"silent": true});
 
-        //this.addMsg(' ', '--> Kiwi IRC: Such an awesome IRC client', '', {style: 'color:#009900;'});
+        _kiwi.global.events.emit('panel:created', {panel: this});
     },
 
     isServer: function () {

@@ -8,6 +8,8 @@ _kiwi.model.Query = _kiwi.model.Channel.extend({
             "name": name,
             "scrollback": []
         }, {"silent": true});
+
+        _kiwi.global.events.emit('panel:created', {panel: this});
     },
 
     isChannel: function () {
