@@ -210,6 +210,11 @@
 
                     that.view.$el.addClass('connected');
 
+                    // Make the rpc globally available for plugins
+                    _kiwi.global.rpc = _kiwi.gateway.rpc;
+
+                    _kiwi.global.events.emit('connected');
+
                     // If we were reconnecting, show some messages we have connected back OK
                     if (gw_stat === 1) {
 
