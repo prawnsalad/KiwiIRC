@@ -76,12 +76,12 @@ module.exports.Client = Client;
 
 Client.prototype.sendIrcCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.rpc.call('irc', c, callback);
+    this.rpc('irc', c, callback);
 };
 
 Client.prototype.sendKiwiCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.rpc.call('kiwi', c, callback);
+    this.rpc('kiwi', c, callback);
 };
 
 Client.prototype.dispose = function () {

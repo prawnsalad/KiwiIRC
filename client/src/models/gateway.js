@@ -169,7 +169,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
         if (connection_info.options.encoding)
             server_info.encoding = connection_info.options.encoding;
 
-        this.rpc.call('kiwi.connect_irc', server_info, function (err, server_num) {
+        this.rpc('kiwi.connect_irc', server_info, function (err, server_num) {
             if (!err) {
                 callback_fn && callback_fn(err, server_num);
 
@@ -196,7 +196,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             args = {
                 build_version: _kiwi.global.build_version
             };
-            this.rpc.call('kiwi.client_info', args);
+            this.rpc('kiwi.client_info', args);
 
             this.connect_callback && this.connect_callback();
             delete this.connect_callback;
@@ -244,13 +244,18 @@ _kiwi.model.Gateway = Backbone.Model.extend({
         this.trigger('connection:' + command, data);
     },
 
+    /**
+    *   Make an RPC call with the connection_id as the first argument
+    *   @param  {String}    method          RPC method name
+    *   @param  {Number}    connection_id   Connection ID this call relates to
+    */
     rpcCall: function(method, connection_id) {
         var args = Array.prototype.slice.call(arguments, 0);
 
         if (typeof args[1] === 'undefined' || args[1] === null)
             args[1] = _kiwi.app.connections.active_connection.get('connection_id');
 
-        return this.rpc.call.apply(this.rpc, args);
+        return this.rpc.apply(this.rpc, args);
     },
 
     /**

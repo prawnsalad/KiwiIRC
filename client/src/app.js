@@ -33,7 +33,11 @@ _kiwi.global = {
     },
 
     rpc: function() {
-        _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
+        if (!_kiwi.gateway.rpc) {
+            throw 'RPC unavailable. Is Kiwi connected to the server yet?';
+        }
+
+        _kiwi.gateway.rpc.apply(_kiwi.gateway.rpc, arguments);
     },
 
     addMediaMessageType: function(match, buildHtml) {

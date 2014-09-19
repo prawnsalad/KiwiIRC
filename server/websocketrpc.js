@@ -4,19 +4,35 @@
     Some way to expire unused callbacks? TTL? expireCallback() function?
 */
 
+/**
+ * Wrapper around creating a new WebsocketRpcCaller
+ * This lets us use the WebsocketRpc object as a function
+ */
 function WebsocketRpc(eio_socket) {
-    var self = this;
+    var caller = new WebsocketRpcCaller(eio_socket);
+    var ret = function WebsocketRpcInstance() {
+        return ret.makeCall.apply(ret, arguments);
+    };
 
-    this._next_id = 0;
-    this._rpc_callbacks = {};
-    this._socket = eio_socket;
+    for(var prop in caller){
+        ret[prop] = caller[prop];
+    }
 
-    this._mixinEmitter();
-    this._bindSocketListeners();
+    ret._mixinEmitter();
+    ret._bindSocketListeners();
+
+    return ret;
 }
 
 
-WebsocketRpc.prototype._bindSocketListeners = function() {
+function WebsocketRpcCaller(eio_socket) {
+    this._next_id = 0;
+    this._rpc_callbacks = {};
+    this._socket = eio_socket;
+}
+
+
+WebsocketRpcCaller.prototype._bindSocketListeners = function() {
     var self = this;
 
     // Proxy the onMessage listener
@@ -28,7 +44,7 @@ WebsocketRpc.prototype._bindSocketListeners = function() {
 
 
 
-WebsocketRpc.prototype.dispose = function() {
+WebsocketRpcCaller.prototype.dispose = function() {
     if (this._onMessageProxy) {
         this._socket.removeListener('message', this._onMessageProxy);
         delete this._onMessageProxy;
@@ -43,7 +59,7 @@ WebsocketRpc.prototype.dispose = function() {
 /**
  * The engine.io socket already has an emitter mixin so steal it from there
  */
-WebsocketRpc.prototype._mixinEmitter = function() {
+WebsocketRpcCaller.prototype._mixinEmitter = function() {
     var funcs = ['on', 'once', 'off', 'removeListener', 'removeAllListeners', 'emit', 'listeners', 'hasListeners'];
 
     for (var i=0; i<funcs.length; i++) {
@@ -56,7 +72,7 @@ WebsocketRpc.prototype._mixinEmitter = function() {
 /**
  * Check if a packet is a valid RPC call
  */
-WebsocketRpc.prototype._isCall = function(packet) {
+WebsocketRpcCaller.prototype._isCall = function(packet) {
     return (typeof packet.method !== 'undefined' &&
             typeof packet.params !== 'undefined');
 };
@@ -65,7 +81,7 @@ WebsocketRpc.prototype._isCall = function(packet) {
 /**
  * Check if a packet is a valid RPC response
  */
-WebsocketRpc.prototype._isResponse = function(packet) {
+WebsocketRpcCaller.prototype._isResponse = function(packet) {
     return (typeof packet.id !== 'undefined' &&
             typeof packet.response !== 'undefined');
 };
@@ -77,9 +93,9 @@ WebsocketRpc.prototype._isResponse = function(packet) {
  * First argument must be the method name to call
  * If the last argument is a function, it is used as a callback
  * All other arguments are passed to the RPC method
- * Eg. Rpc.call('namespace.method_name', 1, 2, 3, callbackFn)
+ * Eg. Rpc.makeCall('namespace.method_name', 1, 2, 3, callbackFn)
  */
-WebsocketRpc.prototype.call = function(method) {
+WebsocketRpcCaller.prototype.makeCall = function(method) {
     var params, callback, packet;
 
     // Get a normal array of passed in arguments
@@ -110,7 +126,7 @@ WebsocketRpc.prototype.call = function(method) {
 /**
  * Encode the packet into JSON and send it over the websocket
  */
-WebsocketRpc.prototype.send = function(packet) {
+WebsocketRpcCaller.prototype.send = function(packet) {
     if (this._socket)
         this._socket.send(JSON.stringify(packet));
 };
@@ -119,7 +135,7 @@ WebsocketRpc.prototype.send = function(packet) {
 /**
  * Handler for the websocket `message` event
  */
-WebsocketRpc.prototype._onMessage = function(message_raw) {
+WebsocketRpcCaller.prototype._onMessage = function(message_raw) {
     var self = this,
         packet,
         returnFn,
@@ -161,7 +177,7 @@ WebsocketRpc.prototype._onMessage = function(message_raw) {
 /**
  * Returns a function used as a callback when responding to a call
  */
-WebsocketRpc.prototype._createReturnCallFn = function(packet_id) {
+WebsocketRpcCaller.prototype._createReturnCallFn = function(packet_id) {
     var self = this;
 
     return function returnCallFn() {
@@ -178,7 +194,7 @@ WebsocketRpc.prototype._createReturnCallFn = function(packet_id) {
 
 
 
-WebsocketRpc.prototype._noop = function() {};
+WebsocketRpcCaller.prototype._noop = function() {};
 
 
 
