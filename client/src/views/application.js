@@ -194,7 +194,7 @@ _kiwi.view.Application = Backbone.View.extend({
             $resize_handle.css('left', $panels.outerWidth(true));
         }
 
-        var input_wrap_width = parseInt($controlbox.find('.input_tools').outerWidth());
+        var input_wrap_width = parseInt($controlbox.find('.input_tools').outerWidth(), 10);
         $controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
     },
 
@@ -376,7 +376,7 @@ _kiwi.view.Application = Backbone.View.extend({
             //Make this panel the most recently accessed
             panel_access.unshift(panel.cid);
         });
-        
+
         this.model.panels.on('remove', function(panel) {
             // If closing the active panel, switch to the last-accessed panel
             if (panel_access[0] === panel.cid) {
