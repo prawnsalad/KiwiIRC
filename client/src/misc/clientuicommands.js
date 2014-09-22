@@ -15,12 +15,13 @@
     ClientUiCommands.prototype.addDefaultAliases = function() {
         $.extend(this.controlbox.preprocessor.aliases, {
             // General aliases
-            '/p':    '/part $1+',
-            '/me':   '/action $1+',
-            '/j':    '/join $1+',
-            '/q':    '/query $1+',
-            '/w':    '/whois $1+',
-            '/raw':  '/quote $1+',
+            '/p':        '/part $1+',
+            '/me':       '/action $1+',
+            '/j':        '/join $1+',
+            '/q':        '/query $1+',
+            '/w':        '/whois $1+',
+            '/raw':      '/quote $1+',
+            '/connect':  '/server $1+',
 
             // Op related aliases
             '/op':       '/quote mode $channel +o $1+',
