@@ -3,7 +3,7 @@ var EngineioTools = {
         var connected = false;
         var is_reconnecting = false;
 
-        var reconnect_delay = 2000;
+        var reconnect_delay = 4000;
         var reconnect_last_delay = 0;
         var reconnect_delay_exponential = true;
         var reconnect_max_attempts = 5;
@@ -49,7 +49,7 @@ var EngineioTools = {
         function onClose() {
             connected = false;
 
-            if (!planned_disconnect)
+            if (!planned_disconnect && !is_reconnecting)
                 reconnect();
         }
 
