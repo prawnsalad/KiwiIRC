@@ -76,6 +76,16 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             // Reset the disconnect_requested flag
             that.disconnect_requested = false;
 
+            // Each minute we need to trigger a heartbeat. Server expects 2min, but to be safe we do it every 1min
+            var heartbeat = function() {
+                if (!that.rpc) return;
+
+                that.rpc('kiwi.heartbeat');
+                that._heartbeat_tmr = setTimeout(heartbeat, 60000);
+            };
+
+            heartbeat();
+
             console.log("_kiwi.gateway.socket.on('open')");
         });
 
