@@ -82,7 +82,7 @@ msgid "client_applets_settings_default_client"
 msgstr "Cliente IRC por defecto"
 
 #: 
-msgid "client_applets_settings_default_client_enable"
+msgid "client_applets_settings_default_client_egnable"
 msgstr "Hacer Kiwi mi cliente por defecto"
 
 #: 
@@ -331,7 +331,7 @@ msgid "client_views_serverselect_nickname"
 msgstr "Nick"
 
 #: 
-msgid "client_views_serverselect_enable_password"
+msgid "client_views_serverselect_egnable_password"
 msgstr "Tengo contraseña"
 
 #: 
@@ -463,7 +463,7 @@ msgid "client_applets_settings_html5_notifications"
 msgstr "Notificaciones de escritorio"
 
 #: 
-msgid "client_applets_settings_enable_notifications"
+msgid "client_applets_settings_egnable_notifications"
 msgstr "Habilitar notificaciones"
 
 #: 

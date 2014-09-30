@@ -81,7 +81,7 @@ msgid "client_applets_settings_default_client"
 msgstr "Varsayılan IRC istemcisi"
 
 #: 
-msgid "client_applets_settings_default_client_enable"
+msgid "client_applets_settings_default_client_egnable"
 msgstr "Kiwi'yi varsayılan IRC istemcim yap"
 
 #: 
@@ -329,7 +329,7 @@ msgid "client_views_serverselect_nickname"
 msgstr "Rumuz"
 
 #: 
-msgid "client_views_serverselect_enable_password"
+msgid "client_views_serverselect_egnable_password"
 msgstr "Şifrem var"
 
 #: 
@@ -461,8 +461,8 @@ msgid "client_applets_settings_html5_notifications"
 msgstr "Desktop notifications"
 
 #: 
-msgid "client_applets_settings_enable_notifications"
-msgstr "Enable notifications"
+msgid "client_applets_settings_egnable_notifications"
+msgstr "Egnable notifications"
 
 #: 
 msgid "client_applets_settings_emoticons"

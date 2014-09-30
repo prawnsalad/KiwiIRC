@@ -13,7 +13,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             text = {
                 think_nick: _kiwi.global.i18n.translate('client_views_serverselect_form_title').fetch(),
                 nickname: _kiwi.global.i18n.translate('client_views_serverselect_nickname').fetch(),
-                have_password: _kiwi.global.i18n.translate('client_views_serverselect_enable_password').fetch(),
+                have_password: _kiwi.global.i18n.translate('client_views_serverselect_egnable_password').fetch(),
                 password: _kiwi.global.i18n.translate('client_views_serverselect_password').fetch(),
                 channel: _kiwi.global.i18n.translate('client_views_serverselect_channel').fetch(),
                 channel_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey').fetch(),

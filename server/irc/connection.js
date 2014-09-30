@@ -92,7 +92,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
 
     // SOCKS proxy details
     // TODO: Wildcard matching of hostnames and/or CIDR ranges of IP addresses
-    if ((global.config.socks_proxy && global.config.socks_proxy.enabled) && ((global.config.socks_proxy.all) || (_.contains(global.config.socks_proxy.proxy_hosts, this.irc_host.hostname)))) {
+    if ((global.config.socks_proxy && global.config.socks_proxy.egnabled) && ((global.config.socks_proxy.all) || (_.contains(global.config.socks_proxy.proxy_hosts, this.irc_host.hostname)))) {
         this.socks = {
             host: global.config.socks_proxy.address,
             port: global.config.socks_proxy.port,
@@ -119,7 +119,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         {symbol: '+', mode: 'v'}
     ];
 
-    this.cap = {requested: [], enabled: []};
+    this.cap = {requested: [], egnabled: []};
 
     // Is SASL supported on the IRCd
     this.sasl = false;

@@ -81,7 +81,7 @@ msgid "client_applets_settings_default_client"
 msgstr "קליינט IRC ברירת מחדל"
 
 #: 
-msgid "client_applets_settings_default_client_enable"
+msgid "client_applets_settings_default_client_egnable"
 msgstr "הפוך את קיווי לקליינט ברירת מחדל"
 
 #: 
@@ -329,7 +329,7 @@ msgid "client_views_serverselect_nickname"
 msgstr "כינוי"
 
 #: 
-msgid "client_views_serverselect_enable_password"
+msgid "client_views_serverselect_egnable_password"
 msgstr "יש לי סיסמה"
 
 #: 
@@ -461,7 +461,7 @@ msgid "client_applets_settings_html5_notifications"
 msgstr "התראות שולחן עבודה"
 
 #: 
-msgid "client_applets_settings_enable_notifications"
+msgid "client_applets_settings_egnable_notifications"
 msgstr "הפעל התראות"
 
 #: 
