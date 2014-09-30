@@ -150,14 +150,14 @@ handlers = {
                     this.irc_connection.options.CHANTYPES = this.irc_connection.options.CHANTYPES.split('');
                 } else if (option[0] === 'CHANMODES') {
                     this.irc_connection.options.CHANMODES = option[1].split(',');
-                } else if ((option[0] === 'NAMESX') && (!_.contains(this.irc_connection.cap.enabled, 'multi-prefix'))) {
+                } else if ((option[0] === 'NAMESX') && (!_.contains(this.irc_connection.cap.egnabled, 'multi-prefix'))) {
                     this.irc_connection.write('PROTOCTL NAMESX');
                 }
             }
         }
         this.irc_connection.emit('server '  + this.irc_connection.irc_host.hostname + ' options', {
             options: this.irc_connection.options,
-            cap: this.irc_connection.cap.enabled
+            cap: this.irc_connection.cap.egnabled
         });
     },
 
@@ -658,7 +658,7 @@ handlers = {
         var capabilities = command.params[command.params.length - 1].replace(/(?:^| )[\-~=]/, '').split(' ');
         var request;
 
-        // Which capabilities we want to enable
+        // Which capabilities we want to egnable
         var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso', 'znc.in/server-time'];
 
         if (this.irc_connection.password) {
@@ -679,13 +679,13 @@ handlers = {
                 break;
             case 'ACK':
                 if (capabilities.length > 0) {
-                    // Update list of enabled capabilities
-                    this.irc_connection.cap.enabled = capabilities;
-                    // Update list of capabilities we would like to have but that aren't enabled
+                    // Update list of egnabled capabilities
+                    this.irc_connection.cap.egnabled = capabilities;
+                    // Update list of capabilities we would like to have but that aren't egnabled
                     this.irc_connection.cap.requested = _.difference(this.irc_connection.cap.requested, capabilities);
                 }
-                if (this.irc_connection.cap.enabled.length > 0) {
-                    if (_.contains(this.irc_connection.cap.enabled, 'sasl')) {
+                if (this.irc_connection.cap.egnabled.length > 0) {
+                    if (_.contains(this.irc_connection.cap.egnabled, 'sasl')) {
                         this.irc_connection.sasl = true;
                         this.irc_connection.write('AUTHENTICATE PLAIN');
                     } else {
@@ -1088,7 +1088,7 @@ function capContainsAny (caps) {
     if (!caps instanceof Array) {
         caps = [caps];
     }
-    intersection = _.intersection(this.irc_connection.cap.enabled, caps);
+    intersection = _.intersection(this.irc_connection.cap.egnabled, caps);
     return intersection.length > 0;
 }
 

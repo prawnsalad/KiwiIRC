@@ -146,7 +146,7 @@ function initialiseSocket(socket, callback) {
 
     socket.meta.real_address = address;
 
-    // If enabled, don't go over the connection limit
+    // If egnabled, don't go over the connection limit
     if (global.config.max_client_conns && global.config.max_client_conns > 0) {
         if (global.clients.numOnAddress(address) + 1 > global.config.max_client_conns) {
             return callback(null, false);

@@ -84,7 +84,7 @@ computer or modifying a private copy.  Propagation includes copying,
 distribution (with or without modification), making available to the
 public, and in some countries other activities as well.
 
-  To "convey" a work means any kind of propagation that enables other
+  To "convey" a work means any kind of propagation that egnables other
 parties to make or receive copies.  Mere interaction with a user through
 a computer network, with no transfer of a copy, is not conveying.
 
@@ -111,7 +111,7 @@ is widely used among developers working in that language.
   The "System Libraries" of an executable work include anything, other
 than the work as a whole, that (a) is included in the normal form of
 packaging a Major Component, but which is not part of that Major
-Component, and (b) serves only to enable use of the work with that
+Component, and (b) serves only to egnable use of the work with that
 Major Component, or to implement a Standard Interface for which an
 implementation is available to the public in source code form.  A
 "Major Component", in this context, means a major essential component

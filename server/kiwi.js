@@ -226,7 +226,7 @@ config.on('loaded', function () {
 /*
  * Identd server
  */
-if (global.config.identd && global.config.identd.enabled) {
+if (global.config.identd && global.config.identd.egnabled) {
     var identd_resolve_user = function(port_here, port_there) {
         var key = port_here.toString() + '_' + port_there.toString();
 

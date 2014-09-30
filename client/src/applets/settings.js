@@ -4,7 +4,7 @@
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
             'click .register_protocol': 'registerProtocol',
-            'click .enable_notifications': 'enableNoticiations'
+            'click .egnable_notifications': 'egnableNoticiations'
         },
 
         initialize: function (options) {
@@ -21,11 +21,11 @@
                 scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
                 languages: _kiwi.app.translations,
                 default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
-                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
+                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_egnable').fetch(),
                 locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
                 default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
                 html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_html5_notifications').fetch(),
-                enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch(),
+                egnable_notifications: _kiwi.global.i18n.translate('client_applets_settings_egnable_notifications').fetch(),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
@@ -37,7 +37,7 @@
             }
 
             if (!window.webkitNotifications) {
-                this.$el.find('notification_enabler').remove();
+                this.$el.find('notification_egnabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
@@ -121,7 +121,7 @@
             navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
         },
 
-        enableNoticiations: function(event){
+        egnableNoticiations: function(event){
             window.webkitNotifications.requestPermission();
         }
 

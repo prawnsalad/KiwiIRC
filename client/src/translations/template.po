@@ -57,7 +57,7 @@ msgstr ""
 msgid "client_applets_settings_default_client"
 msgstr ""
 
-msgid "client_applets_settings_default_client_enable"
+msgid "client_applets_settings_default_client_egnable"
 msgstr ""
 
 msgid "client_applets_settings_locale_restart_needed"
@@ -273,7 +273,7 @@ msgstr ""
 msgid "client_views_serverselect_nickname"
 msgstr ""
 
-msgid "client_views_serverselect_enable_password"
+msgid "client_views_serverselect_egnable_password"
 msgstr ""
 
 msgid "client_views_serverselect_password"

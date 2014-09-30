@@ -83,7 +83,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
     },
 
     kickClick: function (event) {
-        // TODO: Enable the use of a custom kick message
+        // TODO: Egnable the use of a custom kick message
         _kiwi.app.controlbox.processInput('/kick ' + this.user.get('nick') + ' Bye!');
     },
 

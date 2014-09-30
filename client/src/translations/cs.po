@@ -81,7 +81,7 @@ msgid "client_applets_settings_default_client"
 msgstr "Výchozí IRC klient"
 
 #: 
-msgid "client_applets_settings_default_client_enable"
+msgid "client_applets_settings_default_client_egnable"
 msgstr "Nastavit Kiwi jako můj výchozí IRC klient"
 
 #: 
@@ -329,7 +329,7 @@ msgid "client_views_serverselect_nickname"
 msgstr "Přezdívka"
 
 #: 
-msgid "client_views_serverselect_enable_password"
+msgid "client_views_serverselect_egnable_password"
 msgstr "Mám heslo"
 
 #: 
@@ -461,7 +461,7 @@ msgid "client_applets_settings_html5_notifications"
 msgstr "Oznámení na ploše"
 
 #: 
-msgid "client_applets_settings_enable_notifications"
+msgid "client_applets_settings_egnable_notifications"
 msgstr "Zapnout oznámení"
 
 #: 

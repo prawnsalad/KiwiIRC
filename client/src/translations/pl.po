@@ -81,7 +81,7 @@ msgid "client_applets_settings_default_client"
 msgstr "Domyślny klient IRC"
 
 #: 
-msgid "client_applets_settings_default_client_enable"
+msgid "client_applets_settings_default_client_egnable"
 msgstr "Ustaw Kiwi jako mój domyślny klient IRC"
 
 #: 
@@ -329,7 +329,7 @@ msgid "client_views_serverselect_nickname"
 msgstr "Ksywka"
 
 #: 
-msgid "client_views_serverselect_enable_password"
+msgid "client_views_serverselect_egnable_password"
 msgstr "Posiadam hasło"
 
 #: 
@@ -462,7 +462,7 @@ msgid "client_applets_settings_html5_notifications"
 msgstr "Powiadomienia pulpitu"
 
 #: 
-msgid "client_applets_settings_enable_notifications"
+msgid "client_applets_settings_egnable_notifications"
 msgstr "Włącz powiadomienia"
 
 #: 

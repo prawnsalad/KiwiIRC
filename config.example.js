@@ -40,9 +40,9 @@ conf.outgoing_address = {
 };
 
 
-// Do we want to enable the built in Identd server?
+// Do we want to egnable the built in Identd server?
 conf.identd = {
-    enabled: false,
+    egnabled: false,
     port: 113,
     address: "0.0.0.0"
 };
@@ -102,7 +102,7 @@ conf.modules = [];
 
 
 
-// WebIRC passwords enabled for this server
+// WebIRC passwords egnabled for this server
 conf.webirc_pass = {
     //"irc.network.com":  "configured_webirc_password",
     //"127.0.0.1":        "foobar"
@@ -138,12 +138,12 @@ conf.http_base_path = "/kiwi";
 /*
  * SOCKS (version 5) proxy settings
  * This feature is only available on node 0.10.0 and above.
- * Do not enable it if you're running 0.8 or below or Bad Things will happen.
+ * Do not egnable it if you're running 0.8 or below or Bad Things will happen.
  */
 conf.socks_proxy = {};
 
-// Enable proxying outbound connections through a SOCKS proxy
-conf.socks_proxy.enabled = false;
+// Egnable proxying outbound connections through a SOCKS proxy
+conf.socks_proxy.egnabled = false;
 
 // Proxy *all* outbound connections through a SOCKS proxy
 conf.socks_proxy.all = false;
