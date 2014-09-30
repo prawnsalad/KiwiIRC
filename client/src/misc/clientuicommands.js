@@ -35,7 +35,8 @@
             '/unban':    '/quote mode $channel -b $1+',
 
             // Misc aliases
-            '/slap':     '/me slaps $1 around a bit with a large trout'
+            '/slap':     '/me slaps $1 around a bit with a large trout',
+            '/tick':     '/msg $channel ✔'
         });
     };
 
