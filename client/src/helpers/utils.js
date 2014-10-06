@@ -415,7 +415,7 @@ function emoticonFromText(str) {
             pushEmoticon(';)', 'wink');
             break;
         case ';D':
-            pushEmoticon(';D"', 'wink_happy');
+            pushEmoticon(';D', 'wink_happy');
             break;
         case ':P':
         case ':p':
