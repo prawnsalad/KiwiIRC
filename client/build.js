@@ -80,6 +80,7 @@ var source_files = [
     __dirname + '/src/views/channeltools.js',
     __dirname + '/src/views/channelinfo.js',
     __dirname + '/src/views/rightbar.js',
+    __dirname + '/src/views/notification.js',
 
     __dirname + '/src/misc/clientuicommands.js',
 

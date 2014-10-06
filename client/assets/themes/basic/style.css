@@ -377,3 +377,49 @@
 #kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
 #kiwi .channel_info .channel-banlist thead { font-style: italic; }
 #kiwi .channel_info .remove-ban:hover { color: #900; }
+
+
+#kiwi .notification {
+    /* .show class reveals this element */
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transition: max-height 1s;
+    -moz-transition: max-height 1s;
+    transition: max-height 1s;
+
+    display: block;
+
+    color: #DBDBDB;
+    text-shadow: 0 -1px black;
+    background: rgba(65, 65, 65, 0.95);
+    background-clip: padding-box;
+    border: 1px solid;
+    border-color: rgba(17, 17, 17, 0.6) rgba(17, 17, 17, 0.7) rgba(17, 17, 17, 0.9);
+    border-radius: 5px;
+
+    background-image: -webkit-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: -moz-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: -o-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: linear-gradient(to bottom, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    -webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+
+
+}
+#kiwi .notification.show { max-height: 500px; }
+#kiwi .notification .close {
+    font-size:16px;
+    border:1px solid #1b1b1b;
+    border-left, border-bottom: none;
+    border-radius: 0 8px 0 0;
+    line-height: 20px;
+    text-align: center;
+    color: #747474;
+    background-image: -webkit-linear-gradient(top, #383838, #111111);
+    background-image: -moz-linear-gradient(top, #383838, #111111);
+    background-image: -o-linear-gradient(top, #383838, #111111);
+    background-image: linear-gradient(to bottom, #383838, #111111);
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
+}
+#kiwi .notification .close:hover { color: #DBDBDB; }
