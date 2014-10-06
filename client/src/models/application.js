@@ -7,10 +7,9 @@
         /** _kiwi.view.StatusMessage */
         message: null,
 
-        /* Address for the kiwi server */
-        kiwi_server: null,
-
         initialize: function (options) {
+            this.app_options = options;
+
             if (options.container) {
                 this.set('container', options.container);
             }
@@ -30,9 +29,6 @@
             this.themes = options.themes || [];
             this.text_theme = options.text_theme || {};
 
-            // Best guess at where the kiwi server is if not already specified
-            this.kiwi_server = options.kiwi_server || this.detectKiwiServer();
-
             // The applet to initially load
             this.startup_applet_name = options.startup || 'kiwi_startup';
 
@@ -44,8 +40,11 @@
 
 
         initializeInterfaces: function () {
+            // Best guess at where the kiwi server is if not already specified
+            var kiwi_server = this.app_options.kiwi_server || this.detectKiwiServer();
+
             // Set the gateway up
-            _kiwi.gateway = new _kiwi.model.Gateway();
+            _kiwi.gateway = new _kiwi.model.Gateway({kiwi_server: kiwi_server});
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();
@@ -278,7 +277,7 @@
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
-                            _kiwi.app.kiwi_server = serv;
+                            _kiwi.gateway.set('kiwi_server', serv);
 
                             _kiwi.gateway.reconnect(function() {
                                 // Reconnect all the IRC connections

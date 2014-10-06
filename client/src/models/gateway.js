@@ -30,9 +30,6 @@ _kiwi.model.Gateway = Backbone.Model.extend({
 
         this.connect_callback = callback;
 
-        // Keep note of the server we are connecting to
-        this.set('kiwi_server', _kiwi.app.kiwi_server);
-
         this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
             transports: _kiwi.app.server_settings.transports || ['polling', 'websocket'],
             path: _kiwi.app.get('base_path') + '/transport',
