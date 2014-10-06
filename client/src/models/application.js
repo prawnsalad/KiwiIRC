@@ -116,6 +116,7 @@
             _kiwi.global.components.Panel =_kiwi.model.Panel;
             _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
             _kiwi.global.components.DataStore = _kiwi.model.DataStore;
+            _kiwi.global.components.Notification = _kiwi.view.Notification;
         },
 
 
