@@ -534,6 +534,8 @@
         // Reply to a TIME ctcp
         if (event.msg.toUpperCase() === 'TIME') {
             this.gateway.ctcpResponse(event.type, event.nick, (new Date()).toString());
+        } else if(event.type.toUpperCase() === 'PING') { // CTCP PING reply
+            this.gateway.ctcpResponse(event.type, event.nick, event.msg.substr(5));
         }
     }
 
