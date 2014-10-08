@@ -81,6 +81,7 @@
         'command:server':      serverCommand,
         'command:whois':       whoisCommand,
         'command:whowas':      whowasCommand,
+        'command:away':        awayCommand,
         'command:encoding':    encodingCommand,
         'command:channel':     channelCommand,
         'command:applet':      appletCommand,
@@ -489,6 +490,11 @@
 
         if (nick)
             this.app.connections.active_connection.gateway.raw('WHOWAS ' + nick);
+    }
+
+
+    function awayCommand (ev) {
+        this.app.connections.active_connection.gateway.raw('AWAY :' + ev.params.join(' '));
     }
 
 
