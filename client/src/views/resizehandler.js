@@ -22,7 +22,9 @@ _kiwi.view.ResizeHandler = Backbone.View.extend({
     onDrag: function (event) {
         if (!this.dragging) return;
 
-        this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2));
+        var offset = $('#kiwi').offset().left;
+
+        this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2) - offset);
         $('#kiwi .right_bar').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
         _kiwi.app.view.doLayout();
     }
