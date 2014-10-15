@@ -15,12 +15,13 @@
     ClientUiCommands.prototype.addDefaultAliases = function() {
         $.extend(this.controlbox.preprocessor.aliases, {
             // General aliases
-            '/p':    '/part $1+',
-            '/me':   '/action $1+',
-            '/j':    '/join $1+',
-            '/q':    '/query $1+',
-            '/w':    '/whois $1+',
-            '/raw':  '/quote $1+',
+            '/p':        '/part $1+',
+            '/me':       '/action $1+',
+            '/j':        '/join $1+',
+            '/q':        '/query $1+',
+            '/w':        '/whois $1+',
+            '/raw':      '/quote $1+',
+            '/connect':  '/server $1+',
 
             // Op related aliases
             '/op':       '/quote mode $channel +o $1+',
@@ -34,7 +35,8 @@
             '/unban':    '/quote mode $channel -b $1+',
 
             // Misc aliases
-            '/slap':     '/me slaps $1 around a bit with a large trout'
+            '/slap':     '/me slaps $1 around a bit with a large trout',
+            '/tick':     '/msg $channel ✔'
         });
     };
 
@@ -75,9 +77,11 @@
         'command:kick':        kickCommand,
         'command:clear':       clearCommand,
         'command:ctcp':        ctcpCommand,
+        'command:quit':        quitCommand,
         'command:server':      serverCommand,
         'command:whois':       whoisCommand,
         'command:whowas':      whowasCommand,
+        'command:away':        awayCommand,
         'command:encoding':    encodingCommand,
         'command:channel':     channelCommand,
         'command:applet':      appletCommand,
@@ -489,6 +493,11 @@
     }
 
 
+    function awayCommand (ev) {
+        this.app.connections.active_connection.gateway.raw('AWAY :' + ev.params.join(' '));
+    }
+
+
     function encodingCommand (ev) {
         var that = this;
 
@@ -514,6 +523,16 @@
             return;
 
         new _kiwi.model.ChannelInfo({channel: this.app.panels().active});
+    }
+
+
+    function quitCommand (ev) {
+        var network = this.app.connections.active_connection;
+
+        if (!network)
+            return;
+
+        network.gateway.quit(ev.params.join(' '));
     }
 
 
@@ -576,10 +595,11 @@
             ssl: ssl,
             password: password
         }, function(err, new_connection) {
-            var translated_err_text = {text: translateText('client_models_application_connection_error', [server, port.toString(), err.toString()])};
+            var translated_err;
 
             if (err) {
-                that.app.panels().active.addMsg('', styleText('server_connecting_error', translated_err_text));
+                translated_err = translateText('client_models_application_connection_error', [server, port.toString(), err.toString()]);
+                that.app.panels().active.addMsg('', styleText('server_connecting_error', {text: translated_err}));
             }
         });
     }

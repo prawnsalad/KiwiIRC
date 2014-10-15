@@ -5,7 +5,8 @@ var url         = require('url'),
     _           = require('lodash'),
     config      = require('./configuration.js'),
     winston     = require('winston'),
-    SettingsGenerator = require('./settingsgenerator.js');
+    SettingsGenerator = require('./settingsgenerator.js'),
+    Stats       = require('./stats.js');
 
 
 
@@ -21,22 +22,48 @@ module.exports.HttpHandler = HttpHandler;
 
 HttpHandler.prototype.serve = function (request, response) {
     // The incoming requests base path (ie. /kiwiclient)
-    var base_path = global.config.http_base_path || '',
-        whitelisted_folders = ['assets', 'src'];
+    var base_path, base_check,
+        whitelisted_folders = ['/assets', '/src'],
+        is_whitelisted_folder = false;
 
-    // Trim off any trailing slashes
+    // Trim off any trailing slashes from the base_path
+    base_path = global.config.http_base_path || '';
     if (base_path.substr(base_path.length - 1) === '/') {
         base_path = base_path.substr(0, base_path.length - 1);
     }
 
+    // Normalise the URL + remove query strings to compare against the base_path
+    base_check = request.url.split('?')[0];
+    if (base_check.substr(base_check.length - 1) !== '/') {
+        base_check += '/';
+    }
+
+    // Normalise the URL we use by removing the base path
+    if (base_check.indexOf(base_path + '/') === 0) {
+        request.url = request.url.replace(base_path, '');
+
+    } else if (base_check !== '/') {
+        // We don't handle requests outside of the base path and not /, so just 404
+        response.writeHead(404);
+        response.write('Not Found');
+        response.end();
+        return;
+    }
+
     // Map any whitelisted folders to the local directories
     whitelisted_folders.forEach(function(folder) {
-        request.url = request.url.replace(base_path + '/' + folder + '/', '/' + folder + '/');
+        if (request.url.indexOf(folder) === 0) {
+            is_whitelisted_folder = true;
+        }
     });
 
-    // Any requests for /base_path/* to load the index file
-    if (request.url.toLowerCase().indexOf(base_path.toLowerCase()) === 0) {
+    // Any requests not for whitelisted assets returns the index page
+    if (!is_whitelisted_folder) {
         request.url = '/index.html';
+    }
+
+    if (request.url === '/index.html') {
+        Stats.incr('http.homepage');
     }
 
     // If the 'magic' translation is requested, figure out the best language to use from

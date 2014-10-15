@@ -183,10 +183,7 @@ var listeners = {
 
 
     quit: function (irc_connection, callback, args) {
-        websocket.ircConnection.end('QUIT :' + args.message + '\r\n');
-        websocket.sentQUIT = true;
-        websocket.ircConnection.destroySoon();
-        websocket.disconnect();
+        irc_connection.end('QUIT :' + (args.message||''));
     },
 
 

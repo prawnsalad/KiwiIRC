@@ -5,15 +5,28 @@ var util             = require('util'),
     State            = require('./irc/state.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     ClientCommands   = require('./clientcommands.js'),
-    WebsocketRpc     = require('./websocketrpc.js');
+    WebsocketRpc     = require('./websocketrpc.js'),
+    Stats            = require('./stats.js');
 
 
-var Client = function (websocket) {
+var Client = function (websocket, opts) {
     var that = this;
+
+    Stats.incr('client.created');
 
     events.EventEmitter.call(this);
     this.websocket = websocket;
+
+    // Keep a record of how this client connected
+    this.server_config = opts.server_config;
+
     this.rpc = new WebsocketRpc(this.websocket);
+    this.rpc.on('all', function(func_name, return_fn) {
+        if (typeof func_name === 'string' && typeof return_fn === 'function') {
+            Stats.incr('client.command');
+            Stats.incr('client.command.' + func_name);
+        }
+    });
 
     // Clients address
     this.real_address = this.websocket.meta.real_address;
@@ -39,6 +52,11 @@ var Client = function (websocket) {
     // Handles the kiwi.* RPC functions
     this.attachKiwiCommands();
 
+    websocket.on('message', function() {
+        // A message from the client is a sure sign the client is still alive, so consider it a heartbeat
+        that.heartbeat();
+    });
+
     websocket.on('close', function () {
         websocketDisconnect.apply(that, arguments);
     });
@@ -63,19 +81,47 @@ module.exports.Client = Client;
 
 Client.prototype.sendIrcCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.rpc.call('irc', c, callback);
+    this.rpc('irc', c, callback);
 };
 
 Client.prototype.sendKiwiCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.rpc.call('kiwi', c, callback);
+    this.rpc('kiwi', c, callback);
 };
 
 Client.prototype.dispose = function () {
-    this.disposed = true;
+    Stats.incr('client.disposed');
+
+    if (this._heartbeat_tmr) {
+        clearTimeout(this._heartbeat_tmr);
+    }
+
     this.rpc.dispose();
+    this.websocket.removeAllListeners();
+
+    this.disposed = true;
     this.emit('dispose');
+
     this.removeAllListeners();
+};
+
+
+
+Client.prototype.heartbeat = function() {
+    if (this._heartbeat_tmr) {
+        clearTimeout(this._heartbeat_tmr);
+    }
+
+    // After 2 minutes of this heartbeat not being called again, assume the client has disconnected
+    console.log('resetting heartbeat');
+    this._heartbeat_tmr = setTimeout(_.bind(this._heartbeat_timeout, this), 120000);
+};
+
+
+Client.prototype._heartbeat_timeout = function() {
+    console.log('heartbeat stopped');
+    Stats.incr('client.timeout');
+    this.dispose();
 };
 
 
@@ -114,6 +160,12 @@ Client.prototype.attachKiwiCommands = function() {
         that.client_info = {
             build_version: args.build_version.toString() || undefined
         };
+    });
+
+
+    // Just to let us know the client is still there
+    this.rpc.on('kiwi.heartbeat', function(callback, args) {
+        that.heartbeat();
     });
 };
 

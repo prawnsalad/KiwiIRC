@@ -17,6 +17,9 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
     },
 
     networkRemoved: function(network) {
+        // Remove the containing list element
+        network.panels.view.$el.parent().remove();
+
         network.panels.view.remove();
 
         _kiwi.app.view.doLayout();

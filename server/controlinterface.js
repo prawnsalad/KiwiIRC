@@ -167,6 +167,34 @@ commands.module = function(args, raw) {
 
             break;
 
+        case 'load':
+            if (!args[1]) {
+                this.write('A module name must be specified');
+                return;
+            }
+
+            if (!kiwiModules.load(args[1])) {
+                this.write('Error loading module ' + (args[1] || ''));
+            }
+            this.write('Module ' + args[1] + ' loaded');
+
+            break;
+
+        case 'unload':
+            if (!args[1]) {
+                this.write('A module name must be specified');
+                return;
+            }
+
+            if (!kiwiModules.unload(args[1])) {
+                this.write('Module ' + (args[1] || '') + ' is not loaded');
+                return;
+            }
+
+            this.write('Module ' + args[1] + ' unloaded');
+
+            break;
+
         case 'list':
         case 'ls':
         default:

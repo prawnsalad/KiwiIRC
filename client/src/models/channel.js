@@ -47,6 +47,8 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
             }
         }, this);
+
+        _kiwi.global.events.emit('panel:created', {panel: this});
     },
 
 

@@ -415,7 +415,7 @@ function emoticonFromText(str) {
             pushEmoticon(';)', 'wink');
             break;
         case ';D':
-            pushEmoticon(';D"', 'wink_happy');
+            pushEmoticon(';D', 'wink_happy');
             break;
         case ':P':
         case ':p':
@@ -525,6 +525,7 @@ function styleText(string_id, params) {
 
     //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
     style = _kiwi.app.text_theme[string_id];
+    style = formatToIrcMsg(style);
 
     // Expand a member mask into its individual parts (nick, ident, hostname)
     if (params.member) {
@@ -540,6 +541,5 @@ function styleText(string_id, params) {
             return params[key];
     });
 
-    text = formatToIrcMsg(text);
     return text;
 }

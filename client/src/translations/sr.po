@@ -708,3 +708,7 @@ msgstr "Blokiraj poruke izvan ovog kanala"
 msgid "client_views_channelinfo_togglebanlist"
 msgstr "Isključi ban listu."
 
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Pošalji poruku..."
+

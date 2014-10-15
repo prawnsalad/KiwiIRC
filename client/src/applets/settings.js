@@ -111,12 +111,15 @@
         },
 
         selectTheme: function(event) {
+            event.preventDefault();
+
             $('[data-setting="theme"].active', this.$el).removeClass('active');
             $(event.currentTarget).addClass('active').trigger('change');
-            event.preventDefault();
         },
 
         registerProtocol: function (event) {
+            event.preventDefault();
+
             navigator.registerProtocolHandler('irc', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
             navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
         },

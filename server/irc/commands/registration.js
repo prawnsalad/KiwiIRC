@@ -10,7 +10,10 @@ module.exports = function AddCommandHandlers(command_controller) {
 var handlers = {
 	RPL_WELCOME: function (command) {
         var nick =  command.params[0];
-        this.irc_connection.registered = true;
+
+        // Get the server name so we know which messages are by the server in future
+        this.irc_connection.server_name = command.prefix;
+
         this.cap_negotiation = false;
         this.emit('server ' + this.irc_connection.irc_host.hostname + ' connect', {
             nick: nick

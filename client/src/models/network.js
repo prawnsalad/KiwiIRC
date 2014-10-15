@@ -101,6 +101,11 @@
                     that.gateway = _kiwi.global.components.Network(that.get('connection_id'));
                     that.bindGatewayEvents();
 
+                    // Reset each of the panels connection ID
+                    that.panels.forEach(function(panel) {
+                        panel.set('connection_id', connection_id);
+                    });
+
                     callback_fn && callback_fn(err);
 
                 } else {
@@ -246,7 +251,7 @@
                 query = new _kiwi.model.Query({name: nick});
                 that.panels.add(query);
             }
-            
+
             // In all cases, show the demanded query
             query.view.show();
         }
@@ -529,6 +534,8 @@
         // Reply to a TIME ctcp
         if (event.msg.toUpperCase() === 'TIME') {
             this.gateway.ctcpResponse(event.type, event.nick, (new Date()).toString());
+        } else if(event.type.toUpperCase() === 'PING') { // CTCP PING reply
+            this.gateway.ctcpResponse(event.type, event.nick, event.msg.substr(5));
         }
     }
 
@@ -850,6 +857,13 @@
         case 'password_mismatch':
             this.panels.server.addMsg(' ', styleText('channel_badpassword', {nick: event.nick, text: translateText('client_models_network_badpassword', []), channel: event.channel}), 'status');
             break;
+
+        case 'error':
+            if (event.reason) {
+                this.panels.server.addMsg(' ', styleText('general_error', {text: event.reason}), 'status');
+            }
+            break;
+
         default:
             // We don't know what data contains, so don't do anything with it.
             //_kiwi.front.tabviews.server.addMsg(null, ' ', '== ' + data, 'status');

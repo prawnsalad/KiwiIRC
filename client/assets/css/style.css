@@ -77,6 +77,10 @@ html, body { height:100%; }
 #kiwi .toolbar .connections .panellist:after { content:""; }
 
 #kiwi .status_message {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
     background: #FFF;
     border-bottom: 1px solid;
     text-align: center;
@@ -107,7 +111,7 @@ html, body { height:100%; }
 
 #kiwi .messages .msg {}
 #kiwi .messages .msg .time { display:inline; }
-#kiwi .messages .msg .nick { display:inline; }
+#kiwi .messages .msg .nick { display:inline; cursor: pointer; }
 #kiwi .messages .msg .text { display:inline; }
 
 #kiwi .messages .msg.action .nick { display:none; }
@@ -523,4 +527,29 @@ html, body { height:100%; }
 }
 #kiwi .applet .applet_chanlist td {
     min-width: 120px;
+}
+
+
+#kiwi .notification {
+    z-index: 1;
+    position:absolute;
+    top:3px; right:3px;
+    width: 300px;
+    max-width: 90%;
+
+    /* .show class reveals this element */
+    display: none;
+}
+#kiwi .notification.show { display: block; }
+#kiwi .notification-inner {
+    position:relative;
+    padding:0 10px 23px 10px;
+}
+#kiwi .notification .close {
+    position:absolute;
+    bottom: 10px;
+    left: 10px;
+    margin: -10px;
+    cursor:pointer;
+    width: 40px;
 }

@@ -34,8 +34,8 @@ var handlers = {
                 'channel';
 
             this.emit(namespace + ' ' + command.params[0] + ' notice', {
-                from_server: command.prefix ? true : false,
-                nick: command.nick || command.prefix || undefined,
+                from_server: command.prefix === this.irc_connection.server_name ? true : false,
+                nick: command.nick || undefined,
                 ident: command.ident,
                 hostname: command.hostname,
                 target: command.params[0],

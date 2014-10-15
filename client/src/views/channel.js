@@ -79,7 +79,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
                 _kiwi.app.view.favicon.newHighlight();
                 _kiwi.app.view.playSound('highlight');
-                _kiwi.app.view.showNotification(this.model.get('name'), msg.msg);
+                _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
                 this.alert('highlight');
 
             } else {
@@ -98,7 +98,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                     _kiwi.app.view.favicon.newHighlight();
                 }
 
-                _kiwi.app.view.showNotification(this.model.get('name'), msg.msg);
+                _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
                 _kiwi.app.view.playSound('highlight');
             }
 
@@ -107,9 +107,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 // Only inrement the counters if we're not the active panel
                 if (this.model.isActive()) return;
 
-                var $act = this.model.tab.find('.activity'),
-                    count_all_activity = _kiwi.global.settings.get('count_all_activity'),
-                    exclude_message_types;
+                var count_all_activity = _kiwi.global.settings.get('count_all_activity'),
+                    exclude_message_types, new_count;
 
                 // Set the default config value
                 if (typeof count_all_activity === 'undefined') {
@@ -127,14 +126,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 ];
 
                 if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
-                    $act.text((parseInt($act.text(), 10) || 0) + 1);
+                    new_count = this.model.get('activity_counter') || 0;
+                    new_count++;
+                    this.model.set('activity_counter', new_count);
                 }
 
-                if ($act.text() === '0') {
-                    $act.addClass('zero');
-                } else {
-                    $act.removeClass('zero');
-                }
             }).apply(this);
 
             if(this.model.isActive()) this.scrollToBottom();
@@ -300,6 +296,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return parsed_word;
         }, this);
 
+        msg.unparsed_msg = msg.msg;
         msg.msg = message_words.join(' ');
 
         // Convert IRC formatting into HTML formatting

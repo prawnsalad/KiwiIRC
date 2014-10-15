@@ -251,7 +251,8 @@ function addScripts(vars, debug) {
             'src/views/userbox.js',
             'src/views/channeltools.js',
             'src/views/channelinfo.js',
-            'src/views/rightbar.js'
+            'src/views/rightbar.js',
+            'src/views/notification.js'
         ],
 
         [

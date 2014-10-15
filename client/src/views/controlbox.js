@@ -244,7 +244,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
 
     processInput: function (command_raw) {
-        var command, params,
+        var that = this,
+            command, params, events_data,
             pre_processed;
 
         // If sending a message when not in a channel or query window, automatically
@@ -279,15 +280,21 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             params.unshift(_kiwi.app.panels().active.get('name'));
         }
 
-        // Trigger the command events
-        this.trigger('command', {command: command, params: params});
-        this.trigger('command:' + command, {command: command, params: params});
+        // Emit a plugin event for any modifications
+        events_data = {command: command, params: params};
 
-        // If we didn't have any listeners for this event, fire a special case
-        // TODO: This feels dirty. Should this really be done..?
-        if (!this._events['command:' + command]) {
-            this.trigger('unknown_command', {command: command, params: params});
-        }
+        _kiwi.global.events.emit('command', events_data)
+        .done(function() {
+            // Trigger the command events
+            that.trigger('command', {command: events_data.command, params: events_data.params});
+            that.trigger('command:' + events_data.command, {command: events_data.command, params: events_data.params});
+
+            // If we didn't have any listeners for this event, fire a special case
+            // TODO: This feels dirty. Should this really be done..?
+            if (!that._events['command:' + events_data.command]) {
+                that.trigger('unknown_command', {command: events_data.command, params: events_data.params});
+            }
+        });
     },
 
 
