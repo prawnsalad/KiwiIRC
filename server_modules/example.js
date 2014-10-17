@@ -6,22 +6,26 @@ var module = new kiwiModules.Module('Example Module');
 // A web client is connected
 module.on('client created', function(event, data) {
     console.log('[client connection]', data);
+    event.callback();
 });
 
 
 // The Client recieves a IRC PRIVMSG command
 module.on('irc message', function(event, data) {
 	console.log('[MESSAGE]', data.irc_event);
+    event.callback();
 });
 
 // The Client recieves a IRC USER NOTICE command
 module.on('irc user notice', function(event, data) {
 	console.log('[NOTICE]', data.irc_event);
+    event.callback();
 });
 
 // The client recieves an IRC JOIN command
 module.on('irc channel join', function(event, data) {
 	console.log('[JOIN]', data.irc_event);
+    event.callback();
 });
 
 
@@ -32,4 +36,5 @@ module.on('client command', function(event, data) {
 
 	console.log('[CLIENT COMMAND]', client_method);
 	console.log('    ', client_args);
+    event.callback();
 });

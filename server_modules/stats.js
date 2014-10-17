@@ -22,9 +22,11 @@ module.on('stat counter', function (event, event_data) {
     ignored_events.push('http.request');
 
     if (ignored_events.indexOf(stat_name) > -1) {
-        return;
+        return event.callback();
     }
 
     timestamp = Math.floor((new Date()).getTime() / 1000);
     stats_file.write(timestamp.toString() + ' ' + stat_name + '\n');
+
+    event.callback();
 });

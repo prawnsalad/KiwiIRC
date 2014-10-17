@@ -52,7 +52,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         menu.showFooter(false);
 
         _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox})
-        .done(_.bind(function() {
+        .then(_.bind(function() {
             menu.show();
 
             var t = event.pageY,
