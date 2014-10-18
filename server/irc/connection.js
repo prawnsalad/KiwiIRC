@@ -683,7 +683,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
+    global.modules.emit('irc authorize', connect_data).then(function ircAuthorizeCb() {
         var gecos = that.gecos;
 
         if (!gecos && global.config.default_gecos) {

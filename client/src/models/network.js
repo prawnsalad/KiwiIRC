@@ -431,7 +431,7 @@
 
     function onMessage(event) {
         _kiwi.global.events.emit('message:new', {network: this, message: event})
-        .done(_.bind(function() {
+        .then(_.bind(function() {
             var panel,
                 is_pm = ((event.target || '').toLowerCase() == this.get('nick').toLowerCase());
 

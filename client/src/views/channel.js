@@ -61,7 +61,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         msg = this.generateMessageDisplayObj(msg);
 
         _kiwi.global.events.emit('message:display', {panel: this.model, message: msg})
-        .done(_.bind(function() {
+        .then(_.bind(function() {
             var line_msg;
 
             // Format the nick to the config defined format
