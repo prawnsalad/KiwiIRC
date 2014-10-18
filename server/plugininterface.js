@@ -55,18 +55,21 @@ PluginInterface.prototype.off = PluginInterface.prototype.removeListener = funct
 
 PluginInterface.prototype.emit = function emit(type, data) {
     var that = this;
+
     return new Promise(function (emit_resolve, emit_reject) {
         var rejected = false,
-            rejected_reasons = [];
+            rejected_reasons = [],
+            listeners_promise;
 
         if (!that.listeners[type]) {
             return emit_resolve(data);
         }
 
-        (that.listeners[type].reduce(function (listener_promise, listener) {
+        // Add each listener as a promise .then()
+        listeners_promise = that.listeners[type].reduce(function (listener_promise, listener) {
             return listener_promise.then(function (data) {
                 return new Promise(function (resolve) {
-                    listener({
+                    var event_data = {
                         callback: function () {
                             resolve(data);
                         },
@@ -76,10 +79,15 @@ PluginInterface.prototype.emit = function emit(type, data) {
                                 rejected_reasons.push(reason);
                             }
                         }
-                    }, data);
+                    };
+
+                    listener(event_data, data);
                 });
             });
-        }, Promise.resolve(data))).then(function (data) {
+        }, Promise.resolve(data));
+
+        // After all the listeners have been called, resolve back with any modified data
+        listeners_promise.then(function (data) {
             if (rejected) {
                 emit_reject({data: data, reasons: rejected_reasons});
             } else {
