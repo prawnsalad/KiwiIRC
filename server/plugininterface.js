@@ -72,16 +72,23 @@ PluginInterface.prototype.emit = function emit(type, data) {
                     var event_data = {
                         callback: function () {
                             resolve(data);
+                            event_data.callback = null;
                         },
                         preventDefault: function (reason) {
                             rejected = true;
                             if (reason) {
                                 rejected_reasons.push(reason);
                             }
-                        }
+                        },
+                        wait: false
                     };
 
                     listener(event_data, data);
+
+                    // If the module has not specified that we should wait, callback now
+                    if (!event_data.wait && event_data.callback) {
+                        event_data.callback();
+                    }
                 });
             });
         }, Promise.resolve(data));
