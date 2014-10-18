@@ -40,7 +40,6 @@ module.exports = IrcChannel;
 
 IrcChannel.prototype.dispose = function (){
     EventBinder.unbindIrcEvents('channel ' + this.name, this.irc_events, this.irc_connection);
-    this.irc_connection = undefined;
 };
 
 
