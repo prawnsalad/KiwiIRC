@@ -181,8 +181,9 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var localePromise, themePromise,
+        var locale_promise, theme_promise,
             that = this;
+
         opts = opts || {};
 
         this.initUtils();
@@ -194,7 +195,7 @@ _kiwi.global = {
         // Set the window title
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
-        localePromise = new Promise(function (resolve) {
+        locale_promise = new Promise(function (resolve) {
             var locale = _kiwi.global.settings.get('locale') || 'magic';
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
                 if (locale) {
@@ -206,7 +207,7 @@ _kiwi.global = {
             });
         });
 
-        themePromise = new Promise(function (resolve) {
+        theme_promise = new Promise(function (resolve) {
             var text_theme = opts.server_settings.client.settings.text_theme || 'default';
             $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', function(text_theme) {
                 opts.text_theme = text_theme;
@@ -215,7 +216,7 @@ _kiwi.global = {
         });
 
 
-        Promise.all([localePromise, themePromise]).then(function () {
+        Promise.all([locale_promise, theme_promise]).then(function () {
             _kiwi.app = new _kiwi.model.Application(opts);
 
             // Start the client up
