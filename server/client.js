@@ -113,13 +113,11 @@ Client.prototype.heartbeat = function() {
     }
 
     // After 2 minutes of this heartbeat not being called again, assume the client has disconnected
-    console.log('resetting heartbeat');
     this._heartbeat_tmr = setTimeout(_.bind(this._heartbeat_timeout, this), 120000);
 };
 
 
 Client.prototype._heartbeat_timeout = function() {
-    console.log('heartbeat stopped');
     Stats.incr('client.timeout');
     this.dispose();
 };
