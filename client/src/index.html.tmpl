@@ -474,9 +474,12 @@
             window.onload = resolve;
         });
 
+        // Get a resolve function for the script loading promises
         script_promise = new Promise(function (resolve) {
             script_promise_resolve = resolve;
         });
+
+        // Chain each script loading promise
         script_promise = script_promise.then(function () {
             var idx;
             for (idx = 0; idx < scripts.length; idx++) {
@@ -488,6 +491,7 @@
             }
         });
 
+        // Debugging will get a list of debugging scripts from settings.json (below)
         if (!getQueryVariable('debug')) {
             scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
             scripts.push([
@@ -537,7 +541,16 @@
             });
         });
 
-        Promise.all([onload_promise, settings_promise]).then(function(){return script_promise}).then(function startApp() {
+        // prawnsalad: Why is the below script_promise in its own .then()?
+        // M2Ys4U: prawnsalad: either of the first two promises can resolve the
+        // third one, but the third one has a then() on it already, so the
+        // then() on the all() makes it wait for the then() on the script promise
+        // to resolve.
+        //
+        // Promises - simple.
+        Promise.all([onload_promise, settings_promise])
+        .then(function(){return script_promise})
+        .then(function startApp() {
             // Kiwi IRC version this is built from
             kiwi.build_version = '<%build_version%>';
 
