@@ -114,7 +114,14 @@ if (typeof module === 'object' && typeof module.exports !== 'undefined') {
 var p = new PluginInterface();
 p.on('test', function (event, data) {
     data.a += '!';
-    event.callback();
+});
+
+p.on('test', function (event, data) {
+    data.wait = true;
+    setTimeout(function() {
+        data.a += '!';
+        event.callback();
+    }, 1000);
 });
 
 p.emit('test', {a: 'hello world'}).then(function (data) {
