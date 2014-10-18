@@ -201,7 +201,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         var found_a_url = false,
             parsed_url;
 
-        parsed_url = word.replace(/(([A-Za-z][A-Za-z0-9\-]*\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w#!:.?$'()[\]*,;~+=&%@!\-\/]*)?/gi, function (url) {
+        parsed_url = word.replace(/^(([A-Za-z][A-Za-z0-9\-]*\:\/\/)|(www\.))([\w.\-]+)([a-zA-Z]{2,6})(:[0-9]+)?(\/[\w!:.?$'()[\]*,;~+=&%@!\-\/]*)?(#.*)?$/gi, function (url) {
             var nice = url,
                 extra_html = '';
 
@@ -226,7 +226,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             extra_html = _kiwi.view.MediaMessage.buildHtml(url);
 
             // Make the link clickable
-            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url + '">' + nice + '</a>' + extra_html;
+            return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url.replace(/"/g, '%22') + '">' + _.escape(nice) + '</a>' + extra_html;
         });
 
         return found_a_url ? parsed_url : false;
