@@ -457,7 +457,7 @@ IrcConnection.prototype.end = function (data) {
         return;
     }
 
-    this.socket.end();
+    this.socket.destroy();
 };
 
 
