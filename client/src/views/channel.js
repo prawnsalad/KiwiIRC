@@ -26,8 +26,18 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.model.bind('change:topic_set_by', this.topicSetBy, this);
 
         if (this.model.get('members')) {
+            // When we join the memberlist, we have officially joined the channel
             this.model.get('members').bind('add', function (member) {
                 if (member.get('nick') === this.model.collection.network.get('nick')) {
+                    this.$el.find('.initial_loader').slideUp(function () {
+                        $(this).remove();
+                    });
+                }
+            }, this);
+
+            // Memberlist reset with a new nicklist? Consider we have joined
+            this.model.get('members').bind('reset', function(members) {
+                if (members.getByNick(this.model.collection.network.get('nick'))) {
                     this.$el.find('.initial_loader').slideUp(function () {
                         $(this).remove();
                     });

@@ -331,6 +331,11 @@
         members = c.get('members');
         if (!members) return;
 
+        // Do we already have this member?
+        if (members.getByNick(event.nick)) {
+            return;
+        }
+
         user = new _kiwi.model.Member({
             nick: event.nick,
             ident: event.ident,
