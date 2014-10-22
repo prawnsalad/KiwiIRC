@@ -471,6 +471,12 @@
         }
 
         onload_promise = new Promise(function (resolve) {
+            // Document may already be loaded if we had to load the Promise shim seperately
+            if (document.readyState === 'complete') {
+                resolve();
+                return;
+            }
+
             window.onload = resolve;
         });
 
