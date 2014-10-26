@@ -134,68 +134,68 @@ _kiwi.view.Application = Backbone.View.extend({
 
 
     doLayout: function () {
-        var el_kiwi = this.$el;
-        var el_panels = this.elements.panels;
-        var el_right_bar = this.elements.right_bar;
-        var el_toolbar = this.elements.toolbar;
-        var el_controlbox = this.elements.controlbox;
-        var el_resize_handle = this.elements.resize_handle;
+        var $kiwi = this.$el;
+        var $panels = this.elements.panels;
+        var $right_bar = this.elements.right_bar;
+        var $toolbar = this.elements.toolbar;
+        var $controlbox = this.elements.controlbox;
+        var $resize_handle = this.elements.resize_handle;
 
-        if (!el_kiwi.is(':visible')) {
+        if (!$kiwi.is(':visible')) {
             return;
         }
 
         var css_heights = {
-            top: el_toolbar.outerHeight(true),
-            bottom: el_controlbox.outerHeight(true)
+            top: $toolbar.outerHeight(true),
+            bottom: $controlbox.outerHeight(true)
         };
 
 
         // If any elements are not visible, full size the panals instead
-        if (!el_toolbar.is(':visible')) {
+        if (!$toolbar.is(':visible')) {
             css_heights.top = 0;
         }
 
-        if (!el_controlbox.is(':visible')) {
+        if (!$controlbox.is(':visible')) {
             css_heights.bottom = 0;
         }
 
         // Apply the CSS sizes
-        el_panels.css(css_heights);
-        el_right_bar.css(css_heights);
-        el_resize_handle.css(css_heights);
+        $panels.css(css_heights);
+        $right_bar.css(css_heights);
+        $resize_handle.css(css_heights);
 
         // If we have channel tabs on the side, adjust the height
-        if (el_kiwi.hasClass('chanlist_treeview')) {
-            this.$el.find('.tabs', el_kiwi).css(css_heights);
+        if ($kiwi.hasClass('chanlist_treeview')) {
+            this.$el.find('.tabs', $kiwi).css(css_heights);
         }
 
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
-        if (el_kiwi.outerWidth() < 420) {
-            el_kiwi.addClass('narrow');
+        if ($kiwi.outerWidth() < 420) {
+            $kiwi.addClass('narrow');
             if (this.model.rightbar && this.model.rightbar.keep_hidden !== true)
                 this.model.rightbar.toggle(true);
         } else {
-            el_kiwi.removeClass('narrow');
+            $kiwi.removeClass('narrow');
             if (this.model.rightbar && this.model.rightbar.keep_hidden !== false)
                 this.model.rightbar.toggle(false);
         }
 
         // Set the panels width depending on the memberlist visibility
-        if (!el_right_bar.hasClass('disabled')) {
+        if (!$right_bar.hasClass('disabled')) {
             // Panels to the side of the memberlist
-            el_panels.css('right', el_right_bar.outerWidth(true));
+            $panels.css('right', $right_bar.outerWidth(true));
             // The resize handle sits overlapping the panels and memberlist
-            el_resize_handle.css('left', el_right_bar.position().left - (el_resize_handle.outerWidth(true) / 2));
+            $resize_handle.css('left', $right_bar.position().left - ($resize_handle.outerWidth(true) / 2));
         } else {
             // Memberlist is hidden so panels to the right edge
-            el_panels.css('right', 0);
+            $panels.css('right', 0);
             // And move the handle just out of sight to the right
-            el_resize_handle.css('left', el_panels.outerWidth(true));
+            $resize_handle.css('left', $panels.outerWidth(true));
         }
 
-        var input_wrap_width = parseInt($('#kiwi .controlbox .input_tools').outerWidth());
-        el_controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
+        var input_wrap_width = parseInt($controlbox.find('.input_tools').outerWidth(), 10);
+        $controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
     },
 
 
@@ -376,7 +376,7 @@ _kiwi.view.Application = Backbone.View.extend({
             //Make this panel the most recently accessed
             panel_access.unshift(panel.cid);
         });
-        
+
         this.model.panels.on('remove', function(panel) {
             // If closing the active panel, switch to the last-accessed panel
             if (panel_access[0] === panel.cid) {

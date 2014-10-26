@@ -47,6 +47,8 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
             }
         }, this);
+
+        _kiwi.global.events.emit('panel:created', {panel: this});
     },
 
 
@@ -97,7 +99,7 @@ _kiwi.model.Channel = _kiwi.model.Panel.extend({
 
             // Keep the scrolback limited
             if (bs.length > scrollback) {
-                bs.splice(scrollback);
+                bs = _.last(bs, scrollback);
             }
             this.set({"scrollback": bs}, {silent: true});
         }

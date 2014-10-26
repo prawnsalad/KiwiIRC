@@ -45,7 +45,7 @@ State.prototype.addClient = function(client) {
 State.prototype.closeAllConnections = function() {
     _.each(this.irc_connections, function (irc_connection, i, cons) {
         if (irc_connection) {
-            irc_connection.end('QUIT :' + (global.config.quit_message || ''));
+            irc_connection.end('QUIT :' + (irc_connection.quit_message || global.config.quit_message || ''));
             global.servers.removeConnection(irc_connection);
             cons[i] = null;
         }
@@ -89,8 +89,15 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
     });
 
     con.on('error', function IrcConnectionError(err) {
-        winston.warn('irc_connection error (%s):', hostname, err);
-        return callback && callback(err.message);
+        var context = '';
+
+        // If we have any of the last lines stored, include them in the log for context
+        if (con.last_few_lines.length > 0) {
+            context = '\n' + con.last_few_lines.join('\n') + '\n';
+        }
+
+        winston.warn('irc_connection error (%s):' + context, hostname, err);
+        return callback(err.message);
     });
 
     con.on('reconnecting', function IrcConnectionReconnecting() {
@@ -107,7 +114,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
     // Call any modules before making the connection
     global.modules.emit('irc connecting', {state: this, connection: con})
-        .done(function () {
+        .then(function () {
             con.connect();
         });
 

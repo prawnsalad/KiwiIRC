@@ -284,7 +284,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         events_data = {command: command, params: params};
 
         _kiwi.global.events.emit('command', events_data)
-        .done(function() {
+        .then(function() {
             // Trigger the command events
             that.trigger('command', {command: events_data.command, params: events_data.params});
             that.trigger('command:' + events_data.command, {command: events_data.command, params: events_data.params});

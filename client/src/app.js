@@ -21,6 +21,7 @@ _kiwi.global = {
     plugins: undefined, // Instance of _kiwi.model.PluginManager
     events: undefined, // Instance of PluginInterface
     session: undefined, // Instance of _kiwi.model.Session
+    rpc: undefined, // Instance of WebsocketRpc
     utils: {}, // References to misc. re-usable helpers / functions
 
     initUtils: function() {
@@ -31,10 +32,6 @@ _kiwi.global = {
         this.utils.formatIRCMsg = formatIRCMsg;
         this.utils.styleText = styleText;
         this.utils.hsl2rgb = hsl2rgb;
-    },
-
-    rpc: function() {
-        _kiwi.gateway.rpc.call.call(_kiwi.gateway.rpc, arguments);
     },
 
     addMediaMessageType: function(match, buildHtml) {
@@ -185,13 +182,42 @@ _kiwi.global = {
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var jobs, locale, localeLoaded, textThemeLoaded, text_theme;
+        var locale_promise, theme_promise,
+            that = this;
+
         opts = opts || {};
 
         this.initUtils();
 
-        jobs = new JobManager();
-        jobs.onFinish(function(locale, s, xhr) {
+        // Set up the settings datastore
+        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
+        _kiwi.global.settings.load();
+
+        // Set the window title
+        window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
+
+        locale_promise = new Promise(function (resolve) {
+            var locale = _kiwi.global.settings.get('locale') || 'magic';
+            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
+                if (locale) {
+                    that.i18n = new Jed(locale);
+                } else {
+                    that.i18n = new Jed();
+                }
+                resolve();
+            });
+        });
+
+        theme_promise = new Promise(function (resolve) {
+            var text_theme = opts.server_settings.client.settings.text_theme || 'default';
+            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', function(text_theme) {
+                opts.text_theme = text_theme;
+                resolve();
+            });
+        });
+
+
+        Promise.all([locale_promise, theme_promise]).then(function () {
             _kiwi.app = new _kiwi.model.Application(opts);
 
             // Start the client up
@@ -205,41 +231,6 @@ _kiwi.global = {
 
             callback();
         });
-
-        textThemeLoaded = function(text_theme, s, xhr) {
-            opts.text_theme = text_theme;
-
-            jobs.finishJob('load_text_theme');
-        };
-
-        localeLoaded = function(locale, s, xhr) {
-            if (locale) {
-                _kiwi.global.i18n = new Jed(locale);
-            } else {
-                _kiwi.global.i18n = new Jed();
-            }
-
-            jobs.finishJob('load_locale');
-        };
-
-        // Set up the settings datastore
-        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
-        _kiwi.global.settings.load();
-
-        // Set the window title
-        window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
-
-        jobs.registerJob('load_locale');
-        locale = _kiwi.global.settings.get('locale');
-        if (!locale) {
-            $.getJSON(opts.base_path + '/assets/locales/magic.json', localeLoaded);
-        } else {
-            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', localeLoaded);
-        }
-
-        jobs.registerJob('load_text_theme');
-        text_theme = opts.server_settings.client.settings.text_theme || 'default';
-        $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', textThemeLoaded);
     },
 
     start: function() {

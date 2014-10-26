@@ -15,12 +15,13 @@
     ClientUiCommands.prototype.addDefaultAliases = function() {
         $.extend(this.controlbox.preprocessor.aliases, {
             // General aliases
-            '/p':    '/part $1+',
-            '/me':   '/action $1+',
-            '/j':    '/join $1+',
-            '/q':    '/query $1+',
-            '/w':    '/whois $1+',
-            '/raw':  '/quote $1+',
+            '/p':        '/part $1+',
+            '/me':       '/action $1+',
+            '/j':        '/join $1+',
+            '/q':        '/query $1+',
+            '/w':        '/whois $1+',
+            '/raw':      '/quote $1+',
+            '/connect':  '/server $1+',
 
             // Op related aliases
             '/op':       '/quote mode $channel +o $1+',
@@ -34,7 +35,8 @@
             '/unban':    '/quote mode $channel -b $1+',
 
             // Misc aliases
-            '/slap':     '/me slaps $1 around a bit with a large trout'
+            '/slap':     '/me slaps $1 around a bit with a large trout',
+            '/tick':     '/msg $channel ✔'
         });
     };
 
@@ -79,6 +81,7 @@
         'command:server':      serverCommand,
         'command:whois':       whoisCommand,
         'command:whowas':      whowasCommand,
+        'command:away':        awayCommand,
         'command:encoding':    encodingCommand,
         'command:channel':     channelCommand,
         'command:applet':      appletCommand,
@@ -269,7 +272,7 @@
             panel = this.app.connections.active_connection.panels.getByName(destination) || this.app.panels().server;
 
         ev.params.shift();
-        message = formatToIrcMsg(ev.params.join(' '));
+        message = ev.params.join(' ');
 
         panel.addMsg(this.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
         this.app.connections.active_connection.gateway.msg(destination, message);
@@ -487,6 +490,11 @@
 
         if (nick)
             this.app.connections.active_connection.gateway.raw('WHOWAS ' + nick);
+    }
+
+
+    function awayCommand (ev) {
+        this.app.connections.active_connection.gateway.raw('AWAY :' + ev.params.join(' '));
     }
 
 

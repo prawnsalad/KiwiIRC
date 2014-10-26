@@ -7,10 +7,9 @@
         /** _kiwi.view.StatusMessage */
         message: null,
 
-        /* Address for the kiwi server */
-        kiwi_server: null,
-
         initialize: function (options) {
+            this.app_options = options;
+
             if (options.container) {
                 this.set('container', options.container);
             }
@@ -30,9 +29,6 @@
             this.themes = options.themes || [];
             this.text_theme = options.text_theme || {};
 
-            // Best guess at where the kiwi server is if not already specified
-            this.kiwi_server = options.kiwi_server || this.detectKiwiServer();
-
             // The applet to initially load
             this.startup_applet_name = options.startup || 'kiwi_startup';
 
@@ -44,8 +40,11 @@
 
 
         initializeInterfaces: function () {
+            // Best guess at where the kiwi server is if not already specified
+            var kiwi_server = this.app_options.kiwi_server || this.detectKiwiServer();
+
             // Set the gateway up
-            _kiwi.gateway = new _kiwi.model.Gateway();
+            _kiwi.gateway = new _kiwi.model.Gateway({kiwi_server: kiwi_server});
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();
@@ -70,6 +69,8 @@
             this.startup_applet = _kiwi.model.Applet.load(this.startup_applet_name, {no_tab: true});
             this.startup_applet.tab = this.view.$('.console');
             this.startup_applet.view.show();
+
+            _kiwi.global.events.emit('loaded');
         },
 
 
@@ -116,6 +117,7 @@
             _kiwi.global.components.Panel =_kiwi.model.Panel;
             _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
             _kiwi.global.components.DataStore = _kiwi.model.DataStore;
+            _kiwi.global.components.Notification = _kiwi.view.Notification;
         },
 
 
@@ -209,6 +211,11 @@
 
                     that.view.$el.addClass('connected');
 
+                    // Make the rpc globally available for plugins
+                    _kiwi.global.rpc = _kiwi.gateway.rpc;
+
+                    _kiwi.global.events.emit('connected');
+
                     // If we were reconnecting, show some messages we have connected back OK
                     if (gw_stat === 1) {
 
@@ -272,7 +279,7 @@
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
-                            _kiwi.app.kiwi_server = serv;
+                            _kiwi.gateway.set('kiwi_server', serv);
 
                             _kiwi.gateway.reconnect(function() {
                                 // Reconnect all the IRC connections

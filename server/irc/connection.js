@@ -46,6 +46,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Number of times we have tried to reconnect
     this.reconnect_attempts = 0;
 
+    // Last few lines from the IRCd for context when disconnected (server errors, etc)
+    this.last_few_lines = [];
+
     // IRCd write buffers (flood controll)
     this.write_buffer = [];
 
@@ -64,6 +67,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.gecos = ''; // Users real-name. Uses default from config if empty
     this.password = options.password || '';
+    this.quit_message = ''; // Uses default from config if empty
 
     // Set the passed encoding. or the default if none giving or it fails
     if (!options.encoding || !this.setEncoding(options.encoding)) {
@@ -315,7 +319,10 @@ IrcConnection.prototype.connect = function () {
             // Close the whole socket down
             that.disposeSocket();
 
-            if (global.config.ircd_reconnect) {
+            if (!global.config.ircd_reconnect) {
+                that.emit('close', had_error);
+
+            } else {
                 // If trying to reconnect, continue with it
                 if (that.reconnect_attempts && that.reconnect_attempts < 3) {
                     should_reconnect = true;
@@ -368,7 +375,7 @@ IrcConnection.prototype.write = function (data, force, force_complete_fn) {
     var encoded_buffer = iconv.encode(data + '\r\n', this.encoding);
 
     if (force) {
-        this.socket.write(encoded_buffer, force_complete_fn);
+        this.socket && this.socket.write(encoded_buffer, force_complete_fn);
         return;
     }
 
@@ -399,7 +406,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
     // Disabled write buffer? Send everything we have
     if (!this.write_buffer_lines_second) {
         this.write_buffer.forEach(function(buffer) {
-            this.socket.write(buffer);
+            this.socket && this.socket.write(buffer);
             this.write_buffer = null;
         });
 
@@ -415,7 +422,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
         return;
     }
 
-    this.socket.write(this.write_buffer[0]);
+    this.socket && this.socket.write(this.write_buffer[0]);
     this.write_buffer = this.write_buffer.slice(1);
 
     // Call this function again at some point if we still have data to write
@@ -450,7 +457,7 @@ IrcConnection.prototype.end = function (data) {
         return;
     }
 
-    this.socket.end();
+    this.socket.destroy();
 };
 
 
@@ -676,7 +683,7 @@ var socketConnectHandler = function () {
     // Let the webirc/etc detection modify any required parameters
     connect_data = findWebIrc.call(this, connect_data);
 
-    global.modules.emit('irc authorize', connect_data).done(function ircAuthorizeCb() {
+    global.modules.emit('irc authorize', connect_data).then(function ircAuthorizeCb() {
         var gecos = that.gecos;
 
         if (!gecos && global.config.default_gecos) {
@@ -843,7 +850,8 @@ function parseIrcLine(buffer_line) {
         tags = [],
         tag,
         line = '',
-        msg_obj;
+        msg_obj,
+        hold_last_lines;
 
     // Decode server encoding
     line = iconv.decode(buffer_line, this.encoding);
@@ -860,6 +868,18 @@ function parseIrcLine(buffer_line) {
         return;
     }
 
+    // If enabled, keep hold of the last X lines
+    if (global.config.hold_ircd_lines) {
+        this.last_few_lines.push(line.replace(/^\r+|\r+$/, ''));
+
+        // Trim the array down if it's getting to long. (max 3 by default)
+        hold_last_lines = parseInt(global.config.hold_ircd_lines, 10) || 3;
+
+        if (this.last_few_lines.length > hold_last_lines) {
+            this.last_few_lines = this.last_few_lines.slice(this.last_few_lines.length - hold_last_lines);
+        }
+    }
+
     // Extract any tags (msg[1])
     if (msg[1]) {
         tags = msg[1].split(';');
@@ -873,8 +893,8 @@ function parseIrcLine(buffer_line) {
     msg_obj = {
         tags:       tags,
         prefix:     msg[2],
-        nick:       msg[3],
-        ident:      msg[4],
+        nick:       msg[3] || msg[2],  // Nick will be in the prefix slot if a full user mask is not used
+        ident:      msg[4] || '',
         hostname:   msg[5] || '',
         command:    msg[6],
         params:     msg[7] ? msg[7].split(/ +/) : []
