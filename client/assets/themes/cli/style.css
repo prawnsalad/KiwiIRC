@@ -299,6 +299,25 @@
 #kiwi .applet_chanlist tr:nth-child(even) {
     background: none repeat scroll 0 0 #2B2929;
 }
+#kiwi .applet .applet_chanlist .fa-sort-asc:before, #kiwi .applet .applet_chanlist .fa-sort-desc:before {
+    padding-left: 1em;
+}
+#kiwi .applet_chanlist_search {
+    background: none repeat scroll 0 0 #DBDBDB;
+    border: 1px solid #C4C4C4;
+    border-radius: 5px;
+    margin: 15px;
+    padding: 0.5em;
+}
+#kiwi .applet_chanlist_search input, #kiwi .applet_chanlist_search button {
+    margin: 0.5em 1em 0.5em 0;
+}
+#kiwi .applet_chanlist_search label {
+    margin-left: 0.5em;
+}
+#kiwi .applet_chanlist_search select {
+    padding: 5px;
+}
 
 
 #kiwi .ui_menu {

@@ -353,6 +353,18 @@
 
 
     <script type="text/html" id="tmpl_channel_list">
+        <form id="chanlist_search_form" method="POST">
+            <div class="applet_chanlist_search">
+                <label for="chan_search_text"><%= search_channels %></label>
+                <input type="text" id="chan_search_text" />
+                <button id="chan_search" type="submit">
+                    <span class="fa fa-search" style='padding-right: 10px;'></span><%= search %>
+                </button>
+                <button id="refresh_chans" type="submit">
+                    <span class="fa fa-refresh" style='padding-right: 10px;'></span><%= refresh %>
+                </button>
+            </div>
+        </form>
         <div class="applet_chanlist">
             <table>
                 <thead style="font-weight: bold;">
