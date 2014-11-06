@@ -121,7 +121,13 @@
             var style_codes = '';
 
             if (styles.colour !== false) {
-                style_codes += String.fromCharCode(3) + styles.colour.toString();
+                var colour_code = styles.colour.toString();
+
+                if (styles.colour < 10) {
+                    colour_code = '0' + colour_code;
+                }
+
+                style_codes += String.fromCharCode(3) + colour_code;
             }
 
             if (styles.bold) {
