@@ -52,6 +52,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         this.model.bind('msg', this.newMsg, this);
         this.msg_count = 0;
+        
+        this.model.set('recent_nicks',[]);
+        
     },
 
 
@@ -90,6 +93,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 _kiwi.app.view.favicon.newHighlight();
                 _kiwi.app.view.playSound('highlight');
                 _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
+                this.addTabCompletion(msg.nick);
                 this.alert('highlight');
 
             } else {
@@ -481,5 +485,28 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (!nick_class) return;
 
         $('.'+nick_class).removeClass('global_nick_highlight');
+    },
+    
+    //Appends the specified nick to the tab completion list
+    addTabCompletion: function(nick) {
+        var tabcomplete = this.model.get('recent_nicks');
+        var pos = tabcomplete.indexOf(nick);
+
+        //Make sure it's not in there twice
+        if(pos > -1) {
+            //if it's the only thing in there create an empty array otherwise we end up with it in there twice due to splice
+            if(tabcomplete.length == 1) {
+                tabcomplete = [];
+            } else {
+                tabcomplete = tabcomplete.splice(pos, 1);
+            }
+        }
+            tabcomplete.push(nick);
+            
+            //If the list is getting too long then lose the oldest ones
+            if(tabcomplete.length > 10) {
+                tabcomplete = tabcomplete.slice(tabcomplete.length - 10);
+            }
+            this.model.set('recent_nicks',tabcomplete);
     }
 });

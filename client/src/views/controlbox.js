@@ -36,6 +36,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 that.$('.inp').focus();
             }
         });
+        
     },
 
     render: function() {
@@ -157,24 +158,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             && !ev.ctrlKey):
             this.tabcomplete.active = true;
             if (_.isEqual(this.tabcomplete.data, [])) {
-                // Get possible autocompletions
-                var ac_data = [],
-                    members = _kiwi.app.panels().active.get('members');
-
-                // If we have a members list, get the models. Otherwise empty array
-                members = members ? members.models : [];
-
-                $.each(members, function (i, member) {
-                    if (!member) return;
-                    ac_data.push(member.get('nick'));
-                });
-
-                ac_data.push(_kiwi.app.panels().active.get('name'));
-
-                ac_data = _.sortBy(ac_data, function (nick) {
-                    return nick;
-                });
-                this.tabcomplete.data = ac_data;
+                this.doTabComplete();
             }
 
             if (inp_val[inp[0].selectionStart - 1] === ' ') {
@@ -204,7 +188,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                     this.tabcomplete.prefix = nick;
                 }
 
-                this.tabcomplete.data = _.select(this.tabcomplete.data, function (n) {
+                this.tabcomplete.data = _.select(this.tabcomplete.data.reverse(), function (n) {
                     return (n.toLowerCase().indexOf(that.tabcomplete.prefix.toLowerCase()) === 0);
                 });
 
@@ -215,6 +199,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
                     // Include the current selected nick
                     newnick = this.tabcomplete.data.shift();
+
                     this.tabcomplete.data.push(newnick);
                     val += newnick;
 
@@ -302,5 +287,31 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         var $tool = $('<div class="tool"></div>').append($icon);
         this.$el.find('.input_tools').append($tool);
         _kiwi.app.view.doLayout();
+    },
+    
+    doTabComplete: function() {
+
+        var ac_data = [],
+                members = _kiwi.app.panels().active.get('members');
+
+        // If we have a members list, get the models. Otherwise empty array
+        members = members ? members.models : [];
+
+        $.each(members, function(i, member) {
+            if (!member)
+                return;
+            ac_data.push(member.get('nick'));
+        });
+        
+        ac_data.push(_kiwi.app.panels().active.get('name'));
+        
+        //Append the channel tab completion list so it gets used first
+        ac_data.push.apply(ac_data, _kiwi.app.panels().active.get('recent_nicks'));
+
+
+        /*ac_data = _.sortBy(ac_data, function(nick) {
+            return nick;
+        });*/
+        this.tabcomplete.data = ac_data;
     }
 });
