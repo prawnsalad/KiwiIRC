@@ -15,7 +15,7 @@ _kiwi.model.Session = Backbone.Model.extend({
 			that.trigger('save', err, data);
 		};
 
-        _kiwi.gateway.rpc.call('kiwi.session_save', {
+        _kiwi.gateway.rpc('kiwi.session_save', {
             username: username,
             password: password,
         }, fn);
@@ -26,7 +26,7 @@ _kiwi.model.Session = Backbone.Model.extend({
 		var that = this;
 
         var fn = function() {
-            _kiwi.gateway.rpc.call('kiwi.session_resume', {
+            _kiwi.gateway.rpc('kiwi.session_resume', {
                 username: username,
                 password: password,
             }, _.bind(that._resumeCallback, that));
@@ -107,7 +107,7 @@ _kiwi.model.Session = Backbone.Model.extend({
             }
         });
 
-        _kiwi.gateway.rpc.call('kiwi.session_events', {
+        _kiwi.gateway.rpc('kiwi.session_events', {
             connection_id: network_id,
             target: target,
         }, callback);
@@ -125,7 +125,7 @@ _kiwi.model.Session = Backbone.Model.extend({
             return;
         }
 
-        _kiwi.gateway.rpc.call('kiwi.session_unsubscribe', {
+        _kiwi.gateway.rpc('kiwi.session_unsubscribe', {
             connection_id: network_id,
             target: target,
         }, function() {
