@@ -108,8 +108,9 @@ rpc_commands.sessionSave = function(callback, event_data) {
         password: event_data.password,
     };
 
+    console.log('sessionSave()');
     global.modules.emit('auth attempt', auth)
-    .done(function() {
+    .then(function() {
         if (!auth.success) {
             callback('invalid_auth');
             return;
@@ -162,9 +163,9 @@ rpc_commands.sessionResume = function(client_callback, event_data) {
         username: event_data.username,
         password: event_data.password,
     };
-
+console.log('sessionResume()');
     global.modules.emit('auth attempt', auth)
-    .done(function() {
+    .then(function() {
         if (!auth.success) {
             client_callback('invalid_auth');
             return;
