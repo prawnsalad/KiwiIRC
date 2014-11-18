@@ -1,5 +1,6 @@
 var events = require('events'),
     util = require('util'),
+    path = require('path'),
     _ = require('lodash'),
     EventPublisher = require('./plugininterface.js');
 
@@ -39,7 +40,12 @@ var registered_modules = [];
 
 function loadModule (module_file) {
     var module,
-        full_module_filename = global.config.module_dir + module_file;
+        full_module_filename = path.join(global.config.module_dir, module_file);
+
+    // Make sure that the module is contained in the proper module directory
+    if (full_module_filename.lastIndexOf(global.config.module_dir, 0) !== 0) {
+        return false;
+    }
 
     // Get an instance of the module and remove it from the cache
     try {
