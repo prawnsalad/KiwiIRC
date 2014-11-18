@@ -84,7 +84,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
             });
 
         }, this))
-        .prevented(_.bind(function() {
+        .catch(_.bind(function() {
             userbox = null;
 
             menu.dispose();
