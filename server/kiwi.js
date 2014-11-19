@@ -211,6 +211,22 @@ global.servers = {
     }
 };
 
+global.listeners = {
+    listeners: [],
+
+    addListener: function (listener) {
+        this.listeners.push(listener);
+    },
+
+    removeListener: function (listener) {
+        this.listeners = _.without(this.listeners, listener);
+    },
+
+    numListeners: function () {
+        return this.listeners.length;
+    }
+}
+
 
 
 /**
@@ -263,6 +279,8 @@ _.each(global.config.servers, function (server) {
 
         serv.on('listening', function() {
             winston.info('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            global.listeners.addListener(serv);
+            webListenerRunning();
         });
 
         serv.on('socket_connected', function(pipe) {
@@ -293,12 +311,14 @@ _.each(global.config.servers, function (server) {
 
         wl.on('listening', function () {
             winston.info('Listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            global.listeners.addListener(wl);
             webListenerRunning();
         });
 
         wl.on('error', function (err) {
             winston.info('Error listening on %s:%s: %s', server.address, server.port, err.code);
             // TODO: This should probably be refactored. ^JA
+            global.listeners.removeListener(wl);
             webListenerRunning();
         });
     }
@@ -352,6 +372,37 @@ process.on('SIGUSR1', function() {
 process.on('SIGUSR2', function() {
     winston.info('Connected clients: %s', _.size(global.clients.clients));
     winston.info('Num. remote hosts: %s', _.size(global.clients.addresses));
+});
+
+process.on('SIGTERM', function() {
+    winston.info('SIGTERM received');
+    winston.info('Closing listeners');
+    _.each(global.listeners.listeners, function (listener) {
+        listener.close();
+        global.listeners.removeListener(listener);
+    });
+
+    winston.info('Sending QUIT message to all IRC servers')
+    _.each(global.servers.servers, function (server) {
+        _.each(server, function (connection) {
+            connection.end("QUIT :Kiwi server shutting down");
+            global.servers.removeConnection(connection);
+        });
+    });
+
+    winston.info('Notifying and disconnecting clients')
+    _.each(global.clients.clients, function (client) {
+        client.sendKiwiCommand('shutdown');
+        client.websocket.flush();
+        client.websocket.close();
+        client.dispose();
+        global.clients.remove(client);
+    });
+
+    setTimeout(function () {
+        winston.info('Shutting down');
+        process.exit();
+    }, 0);
 });
 
 
