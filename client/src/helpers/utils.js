@@ -381,6 +381,37 @@ function escapeRegex (str) {
     return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
 }
 
+/**
+*   Removes censored words from message
+*   @param      {String}    msg The message to format
+*   @returns    {String}        The HTML formatted message
+*/
+function formatCensorMsg(str) {
+    var words_in = str.split(' '),
+        words_out = [],
+        i,
+        pattern = /(w?h[oa0][oa0]r|anal|anus|a[$][$]|assfucker|assfucker|assfukka|asshole|assholes|asswhole|b!tch|b00bs|b17ch|b1tch|ballsack|bastard|beastial|beastiality|bestial|bestiality|bi+ch|biatch|bitch|bitchers|bitches|bitching|blowjob|blowjobs|boner|boob|boobs|booobs|boooobs|booooobs|booooooobs|breasts|bunnyfucker|butthole|buttplug|c0ck|c0cksucker|carpetmuncher|cawk|chink|cl1t|clit|clitoris|clits|cnut|cock|cock-sucker|cockface|cockhead|cockmunch|cockmuncher|cocks|cocksuck|cocksucked|cocksucker|cocksucking|cocksucks|cocksuka|cocksukka|cok|cokmuncher|coksucka|cum|cummer|cumming|cums|cumshot|cunilingus|cunillingus|cunnilingus|cunt|cuntlick|cuntlicker|cuntlicking|cunts|cyberfuc|cyberfuck|cyberfucked|cyberfucker|cyberfuckers|cyberfucking|dickhead|dildo|d\!ck|dildos|dogfucker|donkeyribber|doosh|duche|dyke|dike|ejaculate|ejaculated|ejaculates|ejaculating|ejaculatings|ejaculation|ejakulate|fuck|fucker|fag|fagging|faggitt|faggot|faggs|fagot|fagots|fags|fannyfucker|fcuk|fcuker|fcuking|feck|fecker|felching|fellate|fellatio|fingerfuck|fingerfucked|fingerfucker|fingerfuckers|fingerfucking|fingerfucks|fistfuck|fistfucked|fistfucker|fistfuckers|fistfucking|fistfuckings|fistfucks|fook|fooker|fuck|fucka|fucked|fucker|fuckers|fu[\(]k|fuckhead|fuckheads|fuckin|fucking|fuckings|fuckingshitmotherfucker|fuckme|fucks|fuckwhit|fuckwit|fudgepacker|fudgepacker|fuk|fuker|fukker|fukkin|fuks|fukwhit|fukwit|fux|fux0r|f_u_c_k|gangbang|gangbanged|gangbangs|gaylord|gaysex|goatse|hardcoresex|hoar|hoare|hoer|homo|hore|horniest|horny|hotsex|jack-off|jackoff|jerk-off|jerkoff|jism|jiz|jizm|jizz|kawk|kock|kondum|kondums|kum|kummer|kumming|kums|kunilingus|l3itch|labia|m45terbate|ma5terb8|ma5terbate|master-bate|masterb8|masterbat*|masterbat3|masterbate|masterbation|masterbations|masturbate|masturbating|mothafuck|mothafucka|mothafuckas|mothafuckaz|mothafucked|mothafucker|mothafuckers|mothafuckin|mothafucking|mothafuckings|mothafucks|motherfucker|motherfuck|motherfucked|motherfucker|motherfuckers|motherfuckin|motherfucking|motherfuckings|motherfuckka|motherfucks|muthafecker|muthafuckker|mutherfucker|n1gga|n1gger|nazi|nigg3r|nigg4h|nigga|niggah|niggas|niggaz|ni99a|nigger|niggers|negro|negr0|NIGA|nutsack|orgasim|orgasims|orgasm|orgasms|p0rn|pr0n|pecker|penis|p[.]enis|penisfucker|phonesex|phuck|phuk|phuked|phuking|phukked|phukking|phuks|phuq|pigfucker|pimpis|piss|pissed|pisser|pissers|pisses|pissflaps|pissin|pissing|pissoff|porn|porno|pornography|pornos|prick|pricks|pron|pube|pusse|pussi|pussies|pussy|pussys|pu55sy|rectum|retard|rimjaw|rimming|shit|schlong|scroat|scrote|scrotum|semen|sex|sh!t|sh1t|shag|shagger|shaggin|shagging|shemale|shit|shitdick|shite|shited|shitey|shitfuck|shitfull|shithead|shiting|shitings|shits|shitted|shitter|shitters|shitting|shittings|shitty|skank|slut|sluts|s_h_i_t|t1tt1e5|t1tties|testical|testicle|titfuck|tittie5|tittiefucker|titties|tittyfuck|tittywank|titwank|tw4t|twat|twathead|twatty|twunt|twunter|vagina|vag|vulva|w00se|wang|wank|wanker|whoar|whore|hentai|taint|nipple|tits|titties|twat|porn|cock|boob|lesbian|slut|brazzers|xhamster|masturbate|whore|pornstar|threesome|orgy|fuckin|fuck|bitch|bitches|anal|blow job|bj|testicles|nigga|niqqa|rape|raping|rapist|incest|rapes|virginity|sex|bitching|cawks|b[0o]{2,}bs|dic?k|as+h[o0]le?s|g[o0][o0]k|s[ck]ank|pec?k+er|pe+n[ui1]+s+|vagina|va[1jgi]+na|d[1i]ld[o0]|d[i1y]ke|f[4a@]g|wet\\W*back|r4p|gang\\W*bang|dick+|dDIL DOH|6h4y|FUKIN|FGTS|FUCK+|NYIGGA|facial|bukkake|slut|wants the [d]|wants the [v]|negr0|fkuc|pus+ay+h+|sl\*ts|vaj|nuk+a|but+hole|niglet|ass to mouth|Vajayjay|pen is|finger bang|C U Next Tuesday|buttholee|deepthroat|deek|Dick Juice|sodomiz|ejac|negro|gang bang|incest|faggat|analhoe|niggs|b00bs|eeshole|whore mouth|taint|poon|dick ass|homo|jizz|poussey)/gi,
+        pushCensor = function (cns) {
+            words_out.push(' <span style="color:#838383;" class="cmsg">'+cns+'</span> ');
+        };
+        
+    for (i = 0; i < words_in.length; i++) {
+        switch(words_in[i]) {
+            case '::place::':
+                pushCensor(' ');
+                break;
+            default:
+                if (pattern.test(words_in[i])) {
+                    pushCensor('****'); // what to show instead of the censored word
+                } else {
+                    words_out.push(words_in[i]);
+                }
+        }
+    }
+
+    return words_out.join(' ');
+}
+
 function emoticonFromText(str) {
     var words_in = str.split(' '),
         words_out = [],
