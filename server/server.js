@@ -61,7 +61,7 @@ switch (process.argv[2]) {
         break;
 
     case 'build':
-        require('../client/build.js');
+        require('./build.js');
         break;
 
     default:
