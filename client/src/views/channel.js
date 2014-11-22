@@ -312,6 +312,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         // Convert IRC formatting into HTML formatting
         msg.msg = formatIRCMsg(msg.msg);
 
+        // word censor
+        msg.msg = formatCensorMsg(msg.msg);
+
         // Add some colours to the nick
         msg.nick_style = 'color:' + this.getNickColour(msg.nick) + ';';
 
