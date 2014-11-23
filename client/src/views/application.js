@@ -48,6 +48,9 @@ _kiwi.view.Application = Backbone.View.extend({
             that.has_focus = true;
         });
         $(window).on('blur', function () {
+            if (_kiwi.global.connections.active && _kiwi.global.connections.active.view.updateLastSeenMarker) {
+                _kiwi.global.connections.active.view.updateLastSeenMarker();
+            }
             that.has_focus = false;
         });
 

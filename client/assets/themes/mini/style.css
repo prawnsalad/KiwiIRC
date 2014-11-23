@@ -105,6 +105,11 @@
 #kiwi .messages .msg.highlight { background:#D9D9D9; }
 
 
+#kiwi .messages .last_seen {
+    border-bottom-color: #B0CF82;
+}
+
+
 
 #kiwi.chanlist_treeview .panels { left:160px; }
 #kiwi.chanlist_treeview .toolbar { position:static; }

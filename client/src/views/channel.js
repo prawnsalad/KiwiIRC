@@ -161,6 +161,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         line_msg = '<div class="msg <%= type %> <%= msg_css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
         this.$messages.append(_.template(line_msg, msg));
 
+        this.updateLastSeenMarker();
+
         // Activity/alerts based on the type of new message
         if (msg.type.match(/^action /)) {
             this.alert('action');
@@ -234,6 +236,23 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (this.msg_count > (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250)) {
             $('.msg:first', this.$messages).remove();
             this.msg_count--;
+        }
+    },
+
+
+    updateLastSeenMarker: function() {
+        if (_kiwi.app.connections.active.view === this && _kiwi.app.view.has_focus) {
+            // Remove the previous last seen classes
+            var candidate = this.$(".last_seen");
+            if (candidate && candidate.length) {
+                candidate.removeClass("last_seen");
+            }
+
+            // Mark the last message the user saw
+            var last = this.$messages.children().last();
+            if (last) {
+                last.addClass("last_seen");
+            }
         }
     },
 
