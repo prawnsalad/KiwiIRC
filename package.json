@@ -12,9 +12,6 @@
     "type": "git",
     "url": "https://github.com/prawnsalad/KiwiIRC.git"
   },
-  "scripts": {
-    "postinstall": "node client/build.js"
-  },
   "dependencies": {
     "daemonize2": "0.4.2",
     "engine.io": "^1.4.0",
