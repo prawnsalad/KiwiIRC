@@ -2,8 +2,8 @@ var fs           = require('fs'),
     uglifyJS     = require('uglify-js'),
     _            = require('lodash'),
     po2json      = require('po2json'),
-    config       = require('./configuration.js'),
-    package_json = require('../package.json');
+    config       = require('../configuration.js'),
+    package_json = require('../../package.json');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -36,7 +36,7 @@ function concat(file_list, callback) {
 
 
 
-if (!require('./helpers/configloader.js')()) {
+if (!require('./configloader.js')()) {
     console.error('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
     process.exit(1);
 }
