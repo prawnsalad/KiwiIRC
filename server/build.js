@@ -36,21 +36,10 @@ function concat(file_list, callback) {
 
 
 
-// Load the config, using -c argument if available
-(function (argv) {
-    var conf_switch = argv.indexOf('-c');
-    if (conf_switch !== -1) {
-        if (argv[conf_switch + 1]) {
-            return config.loadConfig(argv[conf_switch + 1]);
-        }
-    }
-
-    config.loadConfig();
-
-})(process.argv);
-
-
-
+if (!require('./helpers/configloader.js')()) {
+    console.error('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
+    process.exit(1);
+}
 
 var source_files = [
     global.config.public_http + '/src/app.js',
