@@ -1,6 +1,5 @@
 var fs           = require('fs'),
     uglifyJS     = require('uglify-js'),
-    _            = require('lodash'),
     po2json      = require('po2json'),
     package_json = require('../../package.json');
 
