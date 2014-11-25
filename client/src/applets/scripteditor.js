@@ -39,10 +39,11 @@
                 // Build the user script up with some pre-defined components
                 script_content = 'var network = kiwi.components.Network();\n';
                 script_content += 'var input = kiwi.components.ControlInput();\n';
+                script_content += 'var events = kiwi.components.Events();\n';
                 script_content += this.editor.getValue() + '\n';
 
                 // Add a dispose method to the user script for cleaning up
-                script_content += 'this._dispose = function(){ network.off(); input.off(); if(this.dispose) this.dispose(); }';
+                script_content += 'this._dispose = function(){ network.off(); input.off(); events.dispose(); if(this.dispose) this.dispose(); }';
 
                 // Try to compile the user script
                 try {
