@@ -117,6 +117,9 @@
             _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
             _kiwi.global.components.DataStore = _kiwi.model.DataStore;
             _kiwi.global.components.Notification = _kiwi.view.Notification;
+            _kiwi.global.components.Events = function() {
+                return kiwi.events.createProxy();
+            };
         },
 
 
