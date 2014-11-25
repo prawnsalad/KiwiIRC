@@ -7,6 +7,10 @@
 function PluginInterface () {
     // Holder for all the bound listeners by this module
     this._listeners = {};
+
+    // Event proxies
+    this._parent = null;
+    this._children = [];
 }
 
 
@@ -55,10 +59,48 @@ PluginInterface.prototype.off = function (event_name, fn, scope) {
 
 
 
+PluginInterface.prototype.getListeners = function(event_name) {
+    return this._listeners[event_name] || [];
+};
+
+
+
+PluginInterface.prototype.createProxy = function() {
+    var proxy = new PluginInterface();
+    proxy._parent = this._parent || this;
+    proxy._parent._children.push(proxy);
+
+    return proxy;
+};
+
+
+
+PluginInterface.prototype.dispose = function() {
+    this.off();
+
+    if (this._parent) {
+        var idx = this._parent._children.indexOf(this);
+        if (idx > -1) {
+            this._parent._children.splice(idx, 1);
+        }
+    }
+};
+
+
+
 // Call all the listeners for a certain event, passing them some event data that may be changed
 PluginInterface.prototype.emit = function (event_name, event_data) {
-    var emitter = new this.EmitCall(event_name, event_data);
-    var listeners = this._listeners[event_name] || [];
+    var emitter = new this.EmitCall(event_name, event_data),
+        listeners = [],
+        child_idx;
+
+    // Get each childs event listeners in order of last created
+    for(child_idx=this._children.length-1; child_idx>=0; child_idx--) {
+        listeners = listeners.concat(this._children[child_idx].getListeners(event_name));
+    }
+
+    // Now include any listeners directly on this instance
+    listeners = listeners.concat(this.getListeners(event_name));
 
     // Once emitted, remove any 'once' bound listeners
     emitter.then(function () {
