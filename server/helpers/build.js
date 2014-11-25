@@ -2,7 +2,6 @@ var fs           = require('fs'),
     uglifyJS     = require('uglify-js'),
     _            = require('lodash'),
     po2json      = require('po2json'),
-    config       = require('../configuration.js'),
     package_json = require('../../package.json');
 
 var FILE_ENCODING = 'utf-8',
@@ -226,7 +225,7 @@ fs.readdir(global.config.public_http + '/src/translations', function (err, trans
  * Build the index.html file
  */
 var build_time = new Date().getTime();
-var base_path = config.get().http_base_path || '';
+var base_path = global.config.http_base_path || '';
 
 // Trim off any trailing slashes
 if (base_path.substr(base_path.length - 1) === '/') {
