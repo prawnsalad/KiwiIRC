@@ -106,11 +106,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
         _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
 
         panel.tab.addClass('active');
-
-        // Only show the part image on non-server tabs
-        if (!panel.isServer()) {
-            panel.tab.append('<span class="part fa fa-nonexistant"></span>');
-        }
+        
+        panel.tab.append('<span class="part fa fa-nonexistant"></span>');
     },
 
     tabClick: function (e) {
@@ -133,8 +130,13 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         // Only need to part if it's a channel
         // If the nicklist is empty, we haven't joined the channel as yet
+        // If we part a server, then we need to disconnect from server, close channel tabs,
+        // then close server tab
         if (panel.isChannel() && panel.get('members').models.length > 0) {
             this.model.network.gateway.part(panel.get('name'));
+        } else if(panel.isServer()) {
+            this.model.network.gateway.quit();
+            _kiwi.app.connections.remove(_kiwi.app.connections.active_connection);
         } else {
             panel.close();
         }
