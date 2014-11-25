@@ -901,7 +901,7 @@ function parseIrcLine(buffer_line) {
     };
 
     if (msg[8]) {
-        msg_obj.params.push(msg[8].trim());
+        msg_obj.params.push(msg[8].trimRight());
     }
 
     this.irc_commands.dispatch(new IrcCommands.Command(msg_obj.command.toUpperCase(), msg_obj));
