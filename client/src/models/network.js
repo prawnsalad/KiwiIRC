@@ -254,6 +254,8 @@
 
             // In all cases, show the demanded query
             query.view.show();
+
+            return query;
         }
     });
 
