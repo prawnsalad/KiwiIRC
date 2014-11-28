@@ -414,7 +414,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         menubox.addItem('userbox', userbox.$el);
         menubox.showFooter(false);
 
-        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox})
+        _kiwi.global.events.emit('usermenu:created', {menu: menubox, userbox: userbox})
         .then(_.bind(function() {
             menubox.show();
 
