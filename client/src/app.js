@@ -114,8 +114,9 @@ _kiwi.global = {
                 kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
                 ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
-                notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
-                channelInfo: 'channelInfo', mode: 'mode', quit: 'quit'
+                notice: 'notice', msg: 'privmsg', say: 'privmsg',
+                changeNick: 'changeNick', channelInfo: 'channelInfo',
+                mode: 'mode', quit: 'quit'
             };
 
             _.each(funcs, function(gateway_fn, func_name) {
