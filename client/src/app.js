@@ -131,6 +131,18 @@ _kiwi.global = {
                 };
             });
 
+            // Now for some network related functions...
+            obj.createQuery = function(nick) {
+                var network, restricted_keys;
+
+                network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.createQuery(nick);
+            };
+
             // Add the networks getters/setters
             obj.get = function(name) {
                 var network, restricted_keys;
