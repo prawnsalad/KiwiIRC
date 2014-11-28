@@ -41,7 +41,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member');
 
-        _kiwi.global.events.emit('nicklist:select', {target: $target, member: member})
+        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist'})
         .then(_.bind(this.openUserMenuForItem, this, $target));
     },
 

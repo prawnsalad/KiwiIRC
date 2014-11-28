@@ -376,51 +376,71 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     // Click on a nickname
     nickClick: function (event) {
-        var nick,
+        var $target = $(event.currentTarget),
+            nick,
             members = this.model.get('members'),
-            are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
-            member, query, userbox, menubox;
+            member;
 
         event.stopPropagation();
 
         // Check this current element for a nick before resorting to the main message
         // (eg. inline nicks has the nick on its own element within the message)
-        nick = $(event.currentTarget).data('nick');
+        nick = $target.data('nick');
         if (!nick) {
-            nick = $(event.currentTarget).parent('.msg').data('message').nick;
+            nick = $target.parent('.msg').data('message').nick;
         }
 
-        if (members) {
-            member = members.getByNick(nick);
-            if (member) {
-                userbox = new _kiwi.view.UserBox();
-                userbox.setTargets(member, this.model);
-                userbox.displayOpItems(are_we_an_op);
+        // Make sure this nick is still in the channel
+        member = members ? members.getByNick(nick) : null;
+        if (!member) {
+            return;
+        }
 
-                menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
-                menubox.addItem('userbox', userbox.$el);
-                menubox.showFooter(false);
-                menubox.show();
+        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'message'})
+        .then(_.bind(this.openUserMenuForNick, this, $target, member));
+    },
 
-                // Position the userbox + menubox
-                (function() {
-                    var t = event.pageY,
-                        m_bottom = t + menubox.$el.outerHeight(),  // Where the bottom of menu will be
-                        memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight();
 
-                    // If the bottom of the userbox is going to be too low.. raise it
-                    if (m_bottom > memberlist_bottom){
-                        t = memberlist_bottom - menubox.$el.outerHeight();
-                    }
+    openUserMenuForNick: function ($target, member) {
+        var members = this.model.get('members'),
+            are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
+            userbox, menubox;
 
-                    // Set the new positon
-                    menubox.$el.offset({
-                        left: event.clientX,
-                        top: t
-                    });
-                }).call(this);
+        userbox = new _kiwi.view.UserBox();
+        userbox.setTargets(member, this.model);
+        userbox.displayOpItems(are_we_an_op);
+
+        menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+        menubox.addItem('userbox', userbox.$el);
+        menubox.showFooter(false);
+
+        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox})
+        .then(_.bind(function() {
+            menubox.show();
+
+            // Position the userbox + menubox
+            var target_offset = $target.offset(),
+                t = target_offset.top,
+                m_bottom = t + menubox.$el.outerHeight(),  // Where the bottom of menu will be
+                memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight();
+
+            // If the bottom of the userbox is going to be too low.. raise it
+            if (m_bottom > memberlist_bottom){
+                t = memberlist_bottom - menubox.$el.outerHeight();
             }
-        }
+
+            // Set the new positon
+            menubox.$el.offset({
+                left: target_offset.left,
+                top: t
+            });
+        }, this))
+        .catch(_.bind(function() {
+            userbox = null;
+
+            menu.dispose();
+            menu = null;
+        }, this));
     },
 
 
