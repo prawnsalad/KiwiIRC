@@ -344,7 +344,11 @@
             hostname: event.hostname,
             user_prefixes: this.get('user_prefixes')
         });
-        members.add(user, {kiwi: event});
+
+        _kiwi.global.events.emit('channel:join', {channel: event.channel, user: user})
+        .then(function() {
+            members.add(user, {kiwi: event});
+        });
     }
 
 
@@ -372,7 +376,10 @@
         user = members.getByNick(event.nick);
         if (!user) return;
 
-        members.remove(user, {kiwi: part_options});
+        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'part', message: part_options.message})
+        .then(function() {
+            members.remove(user, {kiwi: part_options});
+        });
     }
 
 
@@ -398,7 +405,10 @@
             if (panel.isChannel()) {
                 member = panel.get('members').getByNick(event.nick);
                 if (member) {
-                    panel.get('members').remove(member, {kiwi: quit_options});
+                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: part_options.message})
+                    .then(function() {
+                        panel.get('members').remove(member, {kiwi: quit_options});
+                    });
                 }
             }
         });
@@ -427,11 +437,14 @@
         if (!user) return;
 
 
-        members.remove(user, {kiwi: part_options});
+        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'kick', message: part_options.message})
+        .then(function() {
+            members.remove(user, {kiwi: part_options});
 
-        if (part_options.current_user_kicked) {
-            members.reset([]);
-        }
+            if (part_options.current_user_kicked) {
+                members.reset([]);
+            }
+        });
     }
 
 
