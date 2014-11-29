@@ -60,7 +60,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         menu.addItem('userbox', userbox.$el);
         menu.showFooter(false);
 
-        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox})
+        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox, user: member})
         .then(_.bind(function() {
             menu.show();
 
