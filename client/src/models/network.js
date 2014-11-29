@@ -405,7 +405,7 @@
             if (panel.isChannel()) {
                 member = panel.get('members').getByNick(event.nick);
                 if (member) {
-                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: part_options.message, network: this.gateway})
+                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: quit_options.message, network: this.gateway})
                     .then(function() {
                         panel.get('members').remove(member, {kiwi: quit_options});
                     });
