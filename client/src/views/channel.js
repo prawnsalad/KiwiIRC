@@ -346,6 +346,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             am_pm_locale_key = pm ?
                 'client_views_panel_timestamp_pm' :
                 'client_views_panel_timestamp_am';
+        this.updateLastSeenMarker();
+
 
             msg.time_string = translateText(am_pm_locale_key, hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
         }
@@ -388,6 +390,23 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         nick = $target.data('nick');
         if (!nick) {
             nick = $target.parent('.msg').data('message').nick;
+        }
+    },
+
+
+    updateLastSeenMarker: function() {
+        if (_kiwi.app.connections.active.view === this && _kiwi.app.view.has_focus) {
+            // Remove the previous last seen classes
+            var candidate = this.$(".last_seen");
+            if (candidate && candidate.length) {
+                candidate.removeClass("last_seen");
+            }
+
+            // Mark the last message the user saw
+            var last = this.$messages.children().last();
+            if (last) {
+                last.addClass("last_seen");
+            }
         }
 
         // Make sure this nick is still in the channel

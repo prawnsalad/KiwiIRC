@@ -218,6 +218,11 @@
 }
 #kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
 
+#kiwi .messages .last_seen {
+    border-bottom-color: #090;
+    border-bottom-style: dashed;
+}
+
 
 
 /* The server select dialog */
