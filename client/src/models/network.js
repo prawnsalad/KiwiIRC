@@ -345,7 +345,7 @@
             user_prefixes: this.get('user_prefixes')
         });
 
-        _kiwi.global.events.emit('channel:join', {channel: event.channel, user: user})
+        _kiwi.global.events.emit('channel:join', {channel: event.channel, user: user, network: this.gateway})
         .then(function() {
             members.add(user, {kiwi: event});
         });
@@ -376,7 +376,7 @@
         user = members.getByNick(event.nick);
         if (!user) return;
 
-        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'part', message: part_options.message})
+        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'part', message: part_options.message, network: this.gateway})
         .then(function() {
             members.remove(user, {kiwi: part_options});
         });
@@ -405,7 +405,7 @@
             if (panel.isChannel()) {
                 member = panel.get('members').getByNick(event.nick);
                 if (member) {
-                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: part_options.message})
+                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: part_options.message, network: this.gateway})
                     .then(function() {
                         panel.get('members').remove(member, {kiwi: quit_options});
                     });
@@ -437,7 +437,7 @@
         if (!user) return;
 
 
-        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'kick', message: part_options.message})
+        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'kick', message: part_options.message, network: this.gateway})
         .then(function() {
             members.remove(user, {kiwi: part_options});
 
@@ -450,7 +450,7 @@
 
 
     function onMessage(event) {
-        _kiwi.global.events.emit('message:new', {network: this, message: event})
+        _kiwi.global.events.emit('message:new', {network: this.gateway, message: event})
         .then(_.bind(function() {
             var panel,
                 is_pm = ((event.target || '').toLowerCase() == this.get('nick').toLowerCase());
