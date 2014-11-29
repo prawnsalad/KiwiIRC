@@ -188,6 +188,9 @@ _kiwi.global = {
                 };
             });
 
+            // Give access to the control input textarea
+            obj.input = _kiwi.app.controlbox.$('.inp');
+
             return obj;
         }
     },
