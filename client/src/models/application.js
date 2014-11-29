@@ -109,7 +109,7 @@
         initializeGlobals: function () {
             _kiwi.global.connections = this.connections;
 
-            _kiwi.global.panels = this.panels;
+            _kiwi.global.panels = _.bind(this.panels, this);
             _kiwi.global.panels.applets = this.applet_panels;
 
             _kiwi.global.components.Applet = _kiwi.model.Applet;
