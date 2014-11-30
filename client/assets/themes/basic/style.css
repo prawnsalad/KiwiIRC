@@ -197,6 +197,9 @@
     border-bottom: 1px solid lightgray;
     text-align: center;
 }
+#kiwi.touch .memberlists ul li {
+    padding: 1em 0.5em;
+}
 #kiwi .memberlists ul li:hover {}
 #kiwi .memberlists ul li a.nick { display:block; color:black; }
 

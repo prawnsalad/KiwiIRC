@@ -190,6 +190,9 @@
     border-bottom: 1px solid lightgray;
     text-align: center;
 }
+#kiwi.touch .memberlists ul li {
+    padding: 1em 0.5em;
+}
 #kiwi .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
     -webkit-transition: 0.2s ease;
