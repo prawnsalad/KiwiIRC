@@ -157,7 +157,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     // Let nicks be clickable + colourise within messages
     parseMessageNicks: function(word, colourise) {
-        var members, member, colour = '';
+        var members, member, style = '';
 
         members = this.model.get('members');
         if (!members) {
@@ -170,14 +170,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         }
 
         if (colourise !== false) {
-            // Use the nick from the member object so the colour matches the letter casing
-            colour = this.getNickColour(member.get('nick'));
-            colour = 'color:' + colour;
+            // Use the nick from the member object so the style matches the letter casing
+            style = this.getNickStyles(member.get('nick')).asCssString();
         }
 
-        return _.template('<span class="inline-nick" style="<%- colour %>;cursor:pointer;" data-nick="<%- nick %>"><%- nick %></span>', {
+        return _.template('<span class="inline-nick" style="<%- style %>;cursor:pointer;" data-nick="<%- nick %>"><%- nick %></span>', {
             nick: word,
-            colour: colour
+            style: style
         });
 
     },
@@ -243,15 +242,24 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     },
 
 
-    // Get a colour from a nick (Method based on IRSSIs nickcolor.pl)
-    getNickColour: function(nick) {
-        var nick_int = 0, rgb;
+    // Sgnerate a css style for a nick
+    getNickStyles: function(nick) {
+        var ret, colour, nick_int = 0, rgb;
 
+        // Get a colour from a nick (Method based on IRSSIs nickcolor.pl)
         _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
         rgb = hsl2rgb(nick_int % 255, 70, 35);
         rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
+        colour = '#' + rgb.toString(16);
 
-        return '#' + rgb.toString(16);
+        ret = {color: colour};
+        ret.asCssString = function() {
+            return _.reduce(this, function(result, item, key){
+                return result + key + ':' + item + ';';
+            }, '');
+        };
+
+        return ret;
     },
 
 
@@ -312,8 +320,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         // Convert IRC formatting into HTML formatting
         msg.msg = formatIRCMsg(msg.msg);
 
-        // Add some colours to the nick
-        msg.nick_style = 'color:' + this.getNickColour(msg.nick) + ';';
+        // Add some style to the nick
+        msg.nick_style = this.getNickStyles(msg.nick).asCssString();
 
         // Generate a hex string from the nick to be used as a CSS class name
         nick_hex = '';
