@@ -136,7 +136,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
             this.model.network.gateway.part(panel.get('name'));
         } else if(panel.isServer()) {
             this.model.network.gateway.quit();
-            _kiwi.app.connections.remove(_kiwi.app.connections.active_connection);
+            _kiwi.app.connections.remove(this.model.network);
         } else {
             panel.close();
         }
