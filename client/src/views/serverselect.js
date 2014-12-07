@@ -140,18 +140,19 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         }
     },
 
-    populateFields: function (defaults) {
+    populateFields: function (defaults, previous) {
         var nick, server, port, channel, channel_key, ssl, password;
 
         defaults = defaults || {};
+        previous = previous || {};
 
-        nick = defaults.nick || '';
-        server = defaults.server || '';
-        port = defaults.port || 6667;
-        ssl = defaults.ssl || 0;
-        password = defaults.password || '';
-        channel = defaults.channel || '';
-        channel_key = defaults.channel_key || '';
+        nick = previous.nick || defaults.nick || '';
+        server = previous.server || defaults.server || '';
+        port = previous.port || defaults.port || 6667;
+        ssl = previous.ssl || defaults.ssl || 0;
+        password = previous.password || defaults.password || '';
+        channel = previous.channel || defaults.channel || '';
+        channel_key = previous.channel_key || defaults.channel_key || '';
 
         $('input.nick', this.$el).val(nick);
         $('input.server', this.$el).val(server);
@@ -167,6 +168,10 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         $('input.channel_key', this.$el).val(channel_key);
         if (!(!channel_key)) {
             $('tr.key', this.$el).show();
+        }
+
+        if (defaults.server && defaults.server != server) {
+            this.showMore();
         }
 
         // Temporary values

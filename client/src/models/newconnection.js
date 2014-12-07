@@ -9,7 +9,17 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
     populateDefaultServerSettings: function() {
         var defaults = _kiwi.global.defaultServerSettings();
-        this.view.populateFields(defaults);
+        var previous = {};
+        try {
+            var str = localStorage.getItem('login_cached_values');
+            if (str) {
+                previous = JSON.parse(str);
+            }
+        } catch (error) {
+        }
+
+
+        this.view.populateFields(defaults, previous);
     },
 
 
@@ -30,6 +40,18 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
         }, function(err, network) {
             that.onNewNetwork(err, network);
         });
+
+
+        localStorage.setItem('login_cached_values', JSON.stringify({
+            nick: new_connection_event.nick,
+            server: new_connection_event.server,
+            port: new_connection_event.port,
+            ssl: new_connection_event.ssl,
+            password: new_connection_event.password,
+            channel: new_connection_event.channel,
+            channel_key: new_connection_event.channel_key,
+            options: new_connection_event.options
+        }));
     },
 
 
