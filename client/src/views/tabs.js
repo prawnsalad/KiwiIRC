@@ -134,10 +134,16 @@ _kiwi.view.Tabs = Backbone.View.extend({
         if (panel.isChannel() && panel.get('members').models.length > 0) {
             this.model.network.gateway.part(panel.get('name'));
         } else if(panel.isServer()) {
-            this.model.network.gateway.quit("Leaving");
-            _kiwi.app.connections.remove(this.model.network);
-            if(_kiwi.app.connections.length < 1) {
-                window.location.reload(true);
+            if(_kiwi.app.connections.length < 2) {
+                var confirmed = confirm("Closing your final connection will redirect you back to the homepage. Is this OK?");
+                if(confirmed) {
+                    this.model.network.gateway.quit("Leaving");
+                    _kiwi.app.connections.remove(this.model.network);
+                    window.location.reload(true);
+                }
+            } else {
+                this.model.network.gateway.quit("Leaving");
+                _kiwi.app.connections.remove(this.model.network);
             }
         } else {
             panel.close();
