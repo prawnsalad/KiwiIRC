@@ -128,7 +128,6 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         if (!panel) return;
 
-        // Only need to part if it's a channel
         // If the nicklist is empty, we haven't joined the channel as yet
         // If we part a server, then we need to disconnect from server, close channel tabs,
         // then close server tab
