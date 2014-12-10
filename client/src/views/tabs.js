@@ -130,12 +130,15 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
         // If the nicklist is empty, we haven't joined the channel as yet
         // If we part a server, then we need to disconnect from server, close channel tabs,
-        // then close server tab
+        // close server tab, then bring client back to homepage
         if (panel.isChannel() && panel.get('members').models.length > 0) {
             this.model.network.gateway.part(panel.get('name'));
         } else if(panel.isServer()) {
             this.model.network.gateway.quit("Leaving");
             _kiwi.app.connections.remove(this.model.network);
+            if(_kiwi.app.connections.length < 1) {
+                window.location.reload(true);
+            }
         } else {
             panel.close();
         }
