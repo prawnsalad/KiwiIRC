@@ -139,7 +139,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
                 if(confirmed) {
                     this.model.network.gateway.quit("Leaving");
                     _kiwi.app.connections.remove(this.model.network);
-                    window.location.reload(true);
+                    _kiwi.app.startup_applet.view.show();
                 }
             } else {
                 this.model.network.gateway.quit("Leaving");
