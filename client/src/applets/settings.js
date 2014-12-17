@@ -4,7 +4,7 @@
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
             'click .register_protocol': 'registerProtocol',
-            'click .enable_notifications': 'enableNoticiations'
+            'click .enable_notifications': 'enableNotifications'
         },
 
         initialize: function (options) {
@@ -36,8 +36,9 @@
                 this.$el.find('.protocol_handler').remove();
             }
 
-            if (!window.webkitNotifications) {
-                this.$el.find('notification_enabler').remove();
+
+            if (_kiwi.global.utils.notifications.allowed() !== null) {
+                this.$el.find('.notification_enabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
@@ -124,14 +125,14 @@
             navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
         },
 
-        enableNoticiations: function(event){
+        enableNotifications: function(event){
             event.preventDefault();
-
-            if ('webkitNotifications' in window) {
-                window.webkitNotifications.requestPermission();
-            } else if ('Notification' in window) {
-                Notification.requestPermission();
-            }
+            var notifications = _kiwi.global.utils.notifications;
+            notifications.requestPermission().always(_.bind(function () {
+                if (notifications.allowed() !== null) {
+                    this.$('.notification_enabler').remove();
+                }
+            }, this));
         }
 
     });
