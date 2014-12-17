@@ -40,7 +40,7 @@
                 this.$('.protocol_handler').remove();
             }
 
-            if (!(window.Notification || window.webkitNotifications || window.mozNotification)) {
+            if (!(window.Notification || window.webkitNotifications || navigator.mozNotification)) {
                 this.$('notification_enabler').remove();
             }
 
