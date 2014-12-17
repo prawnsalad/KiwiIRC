@@ -4,7 +4,7 @@
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
             'click .register_protocol': 'registerProtocol',
-            'click .enable_notifications': 'enableNoticiations'
+            'click .enable_notifications': 'enableNotifications'
         },
 
         initialize: function (options) {
@@ -124,7 +124,7 @@
             navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
         },
 
-        enableNoticiations: function(event){
+        enableNotifications: function(event){
             event.preventDefault();
 
             if ('webkitNotifications' in window) {
