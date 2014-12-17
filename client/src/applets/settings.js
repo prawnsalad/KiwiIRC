@@ -8,24 +8,28 @@
         },
 
         initialize: function (options) {
+            function t(key, vars) {
+                var trans = _kiwi.global.i18n.translate(key);
+                return trans.fetch.apply(trans, Array.prototype.slice.call(arguments, 1));
+            }
             var text = {
-                tabs: _kiwi.global.i18n.translate('client_applets_settings_channelview_tabs').fetch(),
-                list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
-                large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
-                join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
-                count_all_activity: _kiwi.global.i18n.translate('client_applets_settings_notification_count_all_activity').fetch(),
-                timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
-                timestamp_24: _kiwi.global.i18n.translate('client_applets_settings_timestamp_24_hour').fetch(),
-                mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
-                emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
-                scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
-                languages: _kiwi.app.translations,
-                default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
-                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
-                locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
-                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
-                html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_html5_notifications').fetch(),
-                enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch(),
+                tabs                  : t('client_applets_settings_channelview_tabs'),
+                list                  : t('client_applets_settings_channelview_list'),
+                large_amounts_of_chans: t('client_applets_settings_channelview_list_notice'),
+                join_part             : t('client_applets_settings_notification_joinpart'),
+                count_all_activity    : t('client_applets_settings_notification_count_all_activity'),
+                timestamps            : t('client_applets_settings_timestamp'),
+                timestamp_24          : t('client_applets_settings_timestamp_24_hour'),
+                mute                  : t('client_applets_settings_notification_sound'),
+                emoticons             : t('client_applets_settings_emoticons'),
+                scroll_history        : t('client_applets_settings_history_length'),
+                languages             : _kiwi.app.translations,
+                default_client        : t('client_applets_settings_default_client'),
+                make_default          : t('client_applets_settings_default_client_enable'),
+                locale_restart_needed : t('client_applets_settings_locale_restart_needed'),
+                default_note          : t('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
+                html5_notifications   : t('client_applets_settings_html5_notifications'),
+                enable_notifications  : t('client_applets_settings_enable_notifications'),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
