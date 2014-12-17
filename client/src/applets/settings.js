@@ -37,7 +37,7 @@
             }
 
             if (!(window.Notification || window.webkitNotifications || navigator.mozNotification)) {
-                this.$('notification_enabler').remove();
+                this.$('.notification_enabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
