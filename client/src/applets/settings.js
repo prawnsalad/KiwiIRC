@@ -54,11 +54,9 @@
 
         loadSettings: function () {
 
-            var that = this;
+            _.each(_kiwi.global.settings.attributes, function(value, key) {
 
-            $.each(_kiwi.global.settings.attributes, function(key, value) {
-
-                var $el = that.$('[data-setting="' + key + '"]');
+                var $el = this.$('[data-setting="' + key + '"]');
 
                 // Only deal with settings we have a UI element for
                 if (!$el.length)
@@ -69,19 +67,19 @@
                         $el.prop('checked', value);
                         break;
                     case 'radio':
-                        $('[data-setting="' + key + '"][value="' + value + '"]', that.$el).prop('checked', true);
+                        this.$('[data-setting="' + key + '"][value="' + value + '"]').prop('checked', true);
                         break;
                     case 'text':
                         $el.val(value);
                         break;
                     case 'select-one':
-                        $('[value="' + value + '"]', that.$el).prop('selected', true);
+                        this.$('[value="' + value + '"]').prop('selected', true);
                         break;
                     default:
-                        $('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
+                        this.$('[data-setting="' + key + '"][data-value="' + value + '"]').addClass('active');
                         break;
                 }
-            });
+            }, this);
         },
 
         saveSettings: function (event) {
