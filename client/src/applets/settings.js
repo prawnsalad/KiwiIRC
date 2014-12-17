@@ -8,28 +8,24 @@
         },
 
         initialize: function (options) {
-            function t(key, vars) {
-                var trans = _kiwi.global.i18n.translate(key);
-                return trans.fetch.apply(trans, Array.prototype.slice.call(arguments, 1));
-            }
             var text = {
-                tabs                  : t('client_applets_settings_channelview_tabs'),
-                list                  : t('client_applets_settings_channelview_list'),
-                large_amounts_of_chans: t('client_applets_settings_channelview_list_notice'),
-                join_part             : t('client_applets_settings_notification_joinpart'),
-                count_all_activity    : t('client_applets_settings_notification_count_all_activity'),
-                timestamps            : t('client_applets_settings_timestamp'),
-                timestamp_24          : t('client_applets_settings_timestamp_24_hour'),
-                mute                  : t('client_applets_settings_notification_sound'),
-                emoticons             : t('client_applets_settings_emoticons'),
-                scroll_history        : t('client_applets_settings_history_length'),
+                tabs                  : translateText('client_applets_settings_channelview_tabs'),
+                list                  : translateText('client_applets_settings_channelview_list'),
+                large_amounts_of_chans: translateText('client_applets_settings_channelview_list_notice'),
+                join_part             : translateText('client_applets_settings_notification_joinpart'),
+                count_all_activity    : translateText('client_applets_settings_notification_count_all_activity'),
+                timestamps            : translateText('client_applets_settings_timestamp'),
+                timestamp_24          : translateText('client_applets_settings_timestamp_24_hour'),
+                mute                  : translateText('client_applets_settings_notification_sound'),
+                emoticons             : translateText('client_applets_settings_emoticons'),
+                scroll_history        : translateText('client_applets_settings_history_length'),
                 languages             : _kiwi.app.translations,
-                default_client        : t('client_applets_settings_default_client'),
-                make_default          : t('client_applets_settings_default_client_enable'),
-                locale_restart_needed : t('client_applets_settings_locale_restart_needed'),
-                default_note          : t('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
-                html5_notifications   : t('client_applets_settings_html5_notifications'),
-                enable_notifications  : t('client_applets_settings_enable_notifications'),
+                default_client        : translateText('client_applets_settings_default_client'),
+                make_default          : translateText('client_applets_settings_default_client_enable'),
+                locale_restart_needed : translateText('client_applets_settings_locale_restart_needed'),
+                default_note          : translateText('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
+                html5_notifications   : translateText('client_applets_settings_html5_notifications'),
+                enable_notifications  : translateText('client_applets_settings_enable_notifications'),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
@@ -140,7 +136,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', _kiwi.global.i18n.translate('client_applets_settings_title').fetch());
+            this.set('title', translateText('client_applets_settings_title'));
             this.view = new View();
         }
     });
