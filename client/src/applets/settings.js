@@ -37,11 +37,11 @@
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
 
             if (!navigator.registerProtocolHandler) {
-                this.$el.find('.protocol_handler').remove();
+                this.$('.protocol_handler').remove();
             }
 
-            if (!window.webkitNotifications) {
-                this.$el.find('notification_enabler').remove();
+            if (!(window.Notification || window.webkitNotifications || window.mozNotification)) {
+                this.$('notification_enabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
@@ -58,7 +58,7 @@
 
             $.each(_kiwi.global.settings.attributes, function(key, value) {
 
-                var $el = $('[data-setting="' + key + '"]', that.$el);
+                var $el = that.$('[data-setting="' + key + '"]');
 
                 // Only deal with settings we have a UI element for
                 if (!$el.length)
@@ -87,7 +87,7 @@
         saveSettings: function (event) {
             var value,
                 settings = _kiwi.global.settings,
-                $setting = $(event.currentTarget, this.$el);
+                $setting = this.$(event.currentTarget);
 
             switch (event.currentTarget.type) {
                 case 'checkbox':
@@ -117,7 +117,7 @@
         selectTheme: function(event) {
             event.preventDefault();
 
-            $('[data-setting="theme"].active', this.$el).removeClass('active');
+            this.$('[data-setting="theme"].active').removeClass('active');
             $(event.currentTarget).addClass('active').trigger('change');
         },
 
@@ -128,13 +128,12 @@
             navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
         },
 
-        enableNotifications: function(event){
+        enableNotifications: function(event) {
             event.preventDefault();
+            var Notify = window.Notification || window.webkitNotifications;
 
-            if ('webkitNotifications' in window) {
-                window.webkitNotifications.requestPermission();
-            } else if ('Notification' in window) {
-                Notification.requestPermission();
+            if (Notify) {
+                Notify.requestPermission();
             }
         }
 
