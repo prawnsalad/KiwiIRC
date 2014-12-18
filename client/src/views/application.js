@@ -345,30 +345,14 @@ _kiwi.view.Application = Backbone.View.extend({
 
     showNotification: function(title, message) {
         var icon = this.model.get('base_path') + '/assets/img/ico.png',
-            notification;
+            notifications = _kiwi.global.utils.notifications;
 
-        if (this.has_focus)
-            return;
-
-        // Different versions of Chrome/firefox have different implimentations
-        if ('Notification' in window && Notification.permission && Notification.permission === 'granted') {
-            notification = new Notification(title, {icon: icon, body: message});
-
-        } else if ('webkitNotifications' in window && webkitNotifications.checkPermission() === 0) {
-            notification = window.webkitNotifications.createNotification(icon, title, message);
-
-        } else if ('mozNotification' in navigator) {
-            notification = navigator.mozNotification.createNotification(title, message, icon);
+        if (!this.has_focus && notifications.allowed()) {
+            notifications
+                .create(title, { icon: icon, body: message })
+                .closeAfter(5000)
+                .on('click', _.bind(window.focus, window));
         }
-
-        if (!notification) {
-            // Couldn't find any notification support
-            return;
-        }
-
-        setTimeout(function() {
-            (notification.cancel || notification.close).call(notification);
-        }, 5000);
     },
 
     monitorPanelFallback: function() {

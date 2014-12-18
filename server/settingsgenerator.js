@@ -249,4 +249,12 @@ function addScripts(vars, debug) {
             'src/applets/startup.js'
         ]
     ]);
+
+    var helpers_path = global.config.public_http + 'src/helpers/';
+    var helpers_sources = fs.readdirSync(helpers_path)
+        .map(function(file){
+            return 'src/helpers/' + file;
+        });
+
+    vars.scripts = vars.scripts.concat(helpers_sources);
 }
