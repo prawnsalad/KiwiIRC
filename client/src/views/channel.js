@@ -268,6 +268,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         var nick_hex, time_difference,
             message_words,
             sb = this.model.get('scrollback'),
+            nick,
+            highlight,
             prev_msg = sb[sb.length-2],
             hour, pm, am_pm_locale_key;
 
@@ -280,18 +282,23 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         msg.is_highlight = false;
         msg.time_string = '';
 
+        // Nick + custom highlight detecting
+        nick = _kiwi.app.connections.active_connection.get('nick');
+        highlight = msg.nick.localeCompare(nick) !== 0
+            && _.chain((_kiwi.global.settings.get('custom_highlights') || '').split(/[\s,]+/))
+                .concat(nick)
+                .compact()
+                .some(function (word) {
+                    return (new RegExp('\\b' + escapeRegex(word) + '\\b', 'i')).test(msg.msg);
+                })
+                .value();
 
-        // Nick highlight detecting
-        var nick = _kiwi.app.connections.active_connection.get('nick');
-        if ((new RegExp('(^|\\W)(' + escapeRegex(nick) + ')(\\W|$)', 'i')).test(msg.msg)) {
-            // Do not highlight the user's own input
-            if (msg.nick.localeCompare(nick) !== 0) {
-                msg.is_highlight = true;
-                msg.css_classes += ' highlight';
-            }
+        if (highlight) {
+            msg.is_highlight = true;
+            msg.css_classes += ' highlight';
         }
 
-        message_words = msg.msg.split(' ');
+        message_words = msg.msg.split(/\s+/);
         message_words = _.map(message_words, function(word) {
             var parsed_word;
 
