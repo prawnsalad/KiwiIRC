@@ -164,7 +164,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         soundcloud: function () {
             var url = this.$el.data('url'),
-                $content = this.$content.find('.content');
+                $content = $('<div></div>').text(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
 
             $.getJSON('http://soundcloud.com/oembed', { url: url })
                 .then(function (data) {
@@ -172,10 +172,10 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                         $(data.html).attr('height', data.height - 100)
                     );
                 }, function () {
-                    $content.html(_kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch());
+                    $content.text(_kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch());
                 });
 
-            return _kiwi.global.i18n.translate('client_models_applet_loading').fetch();
+            return $content;
         },
 
         custom: function() {
