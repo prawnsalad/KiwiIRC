@@ -242,25 +242,29 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     },
 
 
-    // Sgnerate a css style for a nick
-    getNickStyles: function(nick) {
-        var ret, colour, nick_int = 0, rgb;
+    // Generate a css style for a nick
+    getNickStyles: (function () {
 
         // Get a colour from a nick (Method based on IRSSIs nickcolor.pl)
-        _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
-        rgb = hsl2rgb(nick_int % 255, 70, 35);
-        rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
-        colour = '#' + rgb.toString(16);
+        return function (nick) {
+            var nick_int = _.reduce(nick.split(''), sumCharCodes, 0),
+                rgb = hsl2rgb(nick_int % 256, 70, 35);
 
-        ret = {color: colour};
-        ret.asCssString = function() {
-            return _.reduce(this, function(result, item, key){
-                return result + key + ':' + item + ';';
-            }, '');
+            return {
+                color: '#' + ('000000' + (rgb[2] | (rgb[1] << 8) | (rgb[0] << 16)).toString(16)).substr(-6),
+                asCssString: asCssString
+            };
         };
-
-        return ret;
-    },
+        function toCssProperty(result, item, key) {
+            return result + (typeof item === 'string' || typeof item === 'number' ? key + ':' + item + ';' : '');
+        }
+        function asCssString() {
+            return _.reduce(this, toCssProperty, '');
+        }
+        function sumCharCodes(total, i) {
+            return total + i.charCodeAt(0);
+        }
+    }()),
 
 
     // Takes an IRC message object and parses it for displaying
