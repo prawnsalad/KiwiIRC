@@ -37,7 +37,7 @@
             }
 
 
-            if (_kiwi.global.utils.notifications.allowed() !== null) {
+            if (_kiwi.utils.notifications.allowed() !== null) {
                 this.$el.find('.notification_enabler').remove();
             }
 
@@ -127,7 +127,7 @@
 
         enableNotifications: function(event){
             event.preventDefault();
-            var notifications = _kiwi.global.utils.notifications;
+            var notifications = _kiwi.utils.notifications;
             notifications.requestPermission().always(_.bind(function () {
                 if (notifications.allowed() !== null) {
                     this.$('.notification_enabler').remove();

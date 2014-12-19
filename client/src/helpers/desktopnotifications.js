@@ -1,4 +1,4 @@
-_kiwi.global.utils.notifications = (function () {
+_kiwi.utils.notifications = (function () {
     if (!window.Notification) {
         return {
             allowed: _.constant(false),

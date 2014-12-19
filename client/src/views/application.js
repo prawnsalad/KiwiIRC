@@ -345,7 +345,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
     showNotification: function(title, message) {
         var icon = this.model.get('base_path') + '/assets/img/ico.png',
-            notifications = _kiwi.global.utils.notifications;
+            notifications = _kiwi.utils.notifications;
 
         if (!this.has_focus && notifications.allowed()) {
             notifications

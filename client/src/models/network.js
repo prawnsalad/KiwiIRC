@@ -774,7 +774,7 @@
         } else if (event.logon) {
             logon_date = new Date();
             logon_date.setTime(event.logon * 1000);
-            logon_date = formatDate(logon_date);
+            logon_date = _kiwi.utils.formatDate(logon_date);
 
             panel.addMsg(event.nick, styleText('whois_idle_and_signon', {nick: event.nick, text: translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
         } else if (event.away_reason) {

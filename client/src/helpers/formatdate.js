@@ -1,4 +1,4 @@
-var formatDate = (function() {
+_kiwi.utils.formatDate = (function() {
     /*
     Modified version of date.format.js
     https://github.com/jacwright/date.format
