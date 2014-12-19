@@ -9,23 +9,23 @@
 
         initialize: function (options) {
             var text = {
-                tabs: _kiwi.global.i18n.translate('client_applets_settings_channelview_tabs').fetch(),
-                list: _kiwi.global.i18n.translate('client_applets_settings_channelview_list').fetch(),
-                large_amounts_of_chans: _kiwi.global.i18n.translate('client_applets_settings_channelview_list_notice').fetch(),
-                join_part: _kiwi.global.i18n.translate('client_applets_settings_notification_joinpart').fetch(),
-                count_all_activity: _kiwi.global.i18n.translate('client_applets_settings_notification_count_all_activity').fetch(),
-                timestamps: _kiwi.global.i18n.translate('client_applets_settings_timestamp').fetch(),
-                timestamp_24: _kiwi.global.i18n.translate('client_applets_settings_timestamp_24_hour').fetch(),
-                mute: _kiwi.global.i18n.translate('client_applets_settings_notification_sound').fetch(),
-                emoticons: _kiwi.global.i18n.translate('client_applets_settings_emoticons').fetch(),
-                scroll_history: _kiwi.global.i18n.translate('client_applets_settings_history_length').fetch(),
-                languages: _kiwi.app.translations,
-                default_client: _kiwi.global.i18n.translate('client_applets_settings_default_client').fetch(),
-                make_default: _kiwi.global.i18n.translate('client_applets_settings_default_client_enable').fetch(),
-                locale_restart_needed: _kiwi.global.i18n.translate('client_applets_settings_locale_restart_needed').fetch(),
-                default_note: _kiwi.global.i18n.translate('client_applets_settings_default_client_notice').fetch('<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
-                html5_notifications: _kiwi.global.i18n.translate('client_applets_settings_html5_notifications').fetch(),
-                enable_notifications: _kiwi.global.i18n.translate('client_applets_settings_enable_notifications').fetch(),
+                tabs                  : translateText('client_applets_settings_channelview_tabs'),
+                list                  : translateText('client_applets_settings_channelview_list'),
+                large_amounts_of_chans: translateText('client_applets_settings_channelview_list_notice'),
+                join_part             : translateText('client_applets_settings_notification_joinpart'),
+                count_all_activity    : translateText('client_applets_settings_notification_count_all_activity'),
+                timestamps            : translateText('client_applets_settings_timestamp'),
+                timestamp_24          : translateText('client_applets_settings_timestamp_24_hour'),
+                mute                  : translateText('client_applets_settings_notification_sound'),
+                emoticons             : translateText('client_applets_settings_emoticons'),
+                scroll_history        : translateText('client_applets_settings_history_length'),
+                languages             : _kiwi.app.translations,
+                default_client        : translateText('client_applets_settings_default_client'),
+                make_default          : translateText('client_applets_settings_default_client_enable'),
+                locale_restart_needed : translateText('client_applets_settings_locale_restart_needed'),
+                default_note          : translateText('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
+                html5_notifications   : translateText('client_applets_settings_html5_notifications'),
+                enable_notifications  : translateText('client_applets_settings_enable_notifications'),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
@@ -33,12 +33,11 @@
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
 
             if (!navigator.registerProtocolHandler) {
-                this.$el.find('.protocol_handler').remove();
+                this.$('.protocol_handler').remove();
             }
 
-
             if (_kiwi.utils.notifications.allowed() !== null) {
-                this.$el.find('.notification_enabler').remove();
+                this.$('.notification_enabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
@@ -51,11 +50,9 @@
 
         loadSettings: function () {
 
-            var that = this;
+            _.each(_kiwi.global.settings.attributes, function(value, key) {
 
-            $.each(_kiwi.global.settings.attributes, function(key, value) {
-
-                var $el = $('[data-setting="' + key + '"]', that.$el);
+                var $el = this.$('[data-setting="' + key + '"]');
 
                 // Only deal with settings we have a UI element for
                 if (!$el.length)
@@ -66,25 +63,25 @@
                         $el.prop('checked', value);
                         break;
                     case 'radio':
-                        $('[data-setting="' + key + '"][value="' + value + '"]', that.$el).prop('checked', true);
+                        this.$('[data-setting="' + key + '"][value="' + value + '"]').prop('checked', true);
                         break;
                     case 'text':
                         $el.val(value);
                         break;
                     case 'select-one':
-                        $('[value="' + value + '"]', that.$el).prop('selected', true);
+                        this.$('[value="' + value + '"]').prop('selected', true);
                         break;
                     default:
-                        $('[data-setting="' + key + '"][data-value="' + value + '"]', that.$el).addClass('active');
+                        this.$('[data-setting="' + key + '"][data-value="' + value + '"]').addClass('active');
                         break;
                 }
-            });
+            }, this);
         },
 
         saveSettings: function (event) {
             var value,
                 settings = _kiwi.global.settings,
-                $setting = $(event.currentTarget, this.$el);
+                $setting = $(event.currentTarget);
 
             switch (event.currentTarget.type) {
                 case 'checkbox':
@@ -114,7 +111,7 @@
         selectTheme: function(event) {
             event.preventDefault();
 
-            $('[data-setting="theme"].active', this.$el).removeClass('active');
+            this.$('[data-setting="theme"].active').removeClass('active');
             $(event.currentTarget).addClass('active').trigger('change');
         },
 
@@ -128,6 +125,7 @@
         enableNotifications: function(event){
             event.preventDefault();
             var notifications = _kiwi.utils.notifications;
+
             notifications.requestPermission().always(_.bind(function () {
                 if (notifications.allowed() !== null) {
                     this.$('.notification_enabler').remove();
@@ -140,7 +138,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', _kiwi.global.i18n.translate('client_applets_settings_title').fetch());
+            this.set('title', translateText('client_applets_settings_title'));
             this.view = new View();
         }
     });
