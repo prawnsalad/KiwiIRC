@@ -106,7 +106,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
         _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
 
         panel.tab.addClass('active');
-        
+
         panel.tab.append('<span class="part fa fa-nonexistant"></span>');
     },
 
@@ -133,18 +133,14 @@ _kiwi.view.Tabs = Backbone.View.extend({
         // close server tab, then bring client back to homepage
         if (panel.isChannel() && panel.get('members').models.length > 0) {
             this.model.network.gateway.part(panel.get('name'));
+
         } else if(panel.isServer()) {
-            if(_kiwi.app.connections.length < 2) {
-                var confirmed = confirm("Closing your final connection will redirect you back to the homepage. Is this OK?");
-                if(confirmed) {
-                    this.model.network.gateway.quit("Leaving");
-                    _kiwi.app.connections.remove(this.model.network);
-                    _kiwi.app.startup_applet.view.show();
-                }
-            } else {
+            if (!this.model.network.get('connected') || confirm(translateText('disconnect_from_server'))) {
                 this.model.network.gateway.quit("Leaving");
                 _kiwi.app.connections.remove(this.model.network);
+                _kiwi.app.startup_applet.view.show();
             }
+
         } else {
             panel.close();
         }
