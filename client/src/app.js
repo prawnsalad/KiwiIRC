@@ -250,6 +250,9 @@ _kiwi.global = {
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
 
             callback();
+
+        }).then(null, function(err) {
+            console.error(err.stack);
         });
     },
 
