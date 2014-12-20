@@ -262,6 +262,8 @@
 
 
     function onDisconnect(event) {
+        this.set('connected', false);
+
         $.each(this.panels.models, function (index, panel) {
             if (!panel.isApplet()) {
                 panel.addMsg('', styleText('network_disconnected', {text: translateText('client_models_network_disconnected', [])}), 'action quit');
@@ -276,6 +278,8 @@
 
         // Update our nick with what the network gave us
         this.set('nick', event.nick);
+
+        this.set('connected', true);
 
         // If this is a re-connection then we may have some channels to re-join
         this.rejoinAllChannels();

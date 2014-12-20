@@ -80,6 +80,13 @@
             // Takes instances of model_network
             this.connections = new _kiwi.model.NetworkPanelList();
 
+            // If all connections are removed at some point, hide the bars
+            this.connections.on('remove', _.bind(function() {
+                if (this.connections.length === 0) {
+                    this.view.barsHide();
+                }
+            }, this));
+
             // Applets panel list
             this.applet_panels = new _kiwi.model.PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
