@@ -4,7 +4,9 @@
         events: {
             "click .chan": "chanClick",
             "click .channel_name_title": "sortChannelsByNameClick",
-            "click .users_title": "sortChannelsByUsersClick"
+            "click .users_title": "sortChannelsByUsersClick",
+            "click #chan_search": "searchChansClick",
+            "click #refresh_chans": "refreshChansClick"
         },
 
 
@@ -13,7 +15,10 @@
             var text = {
                 channel_name: _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch(),
                 users: _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch(),
-                topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
+                topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch(),
+                search_channels: _kiwi.global.i18n.translate('client_applets_chanlist_search_channels').fetch(),
+                search: _kiwi.global.i18n.translate('client_applets_chanlist_search').fetch(),
+                refresh: _kiwi.global.i18n.translate('client_applets_chanlist_refresh').fetch(),
             };
             this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
 
@@ -136,6 +141,73 @@
             });
 
             return new_channels;
+        },
+
+        searchChansClick: function (event) {
+            event.preventDefault();
+
+            var table = $('table', this.$el),
+                tbody,
+                that = this;
+
+            this.text_search = $('#chanlist_search_form input#chan_search_text')[0].value;
+
+            var new_chans = this.searchChans(that.channels);
+
+            // Make sure all the user DOM nodes are inserted in order
+            $('.applet_chanlist table tbody:first').remove();
+            $('.applet_chanlist table').append('<tbody style="vertical-align: top;"></tbody>');
+            tbody = table.children('tbody:first').detach();
+
+            for (i = 0; i < new_chans.length; i++) {
+                tbody[0].appendChild(new_chans[i].dom);
+            }
+            
+            // If there is no users, print an info message
+            if(new_chans.length == 0) {
+                var row = document.createElement("tr");
+                row.innerHTML = '<td colspan="3">' + 
+                                _kiwi.global.i18n.translate('client_applets_chanlist_noresults').fetch() + 
+                                '</td>';
+                tbody[0].appendChild(row);
+            }
+
+            table[0].appendChild(tbody[0]);
+        },
+
+        searchChans: function(channels) {
+            var new_chans = [],
+                text_search = new RegExp(this.text_search, 'gi');
+
+            // Filter the channels
+            _.each(channels, function (channel) {
+                var match = false;
+
+                // Split this in two to minimize the workload
+                if(text_search.test(channel.channel)) {
+                    match = true;
+                } else if (text_search.test(channel.topic)) { // This searches in the topic
+                    match = true;
+                }
+
+                if(match) new_chans.push(channel);
+            });
+            
+            return new_chans;
+        },
+
+        refreshChansClick: function(event) {
+            event.preventDefault();
+
+            $('#chanlist_search_form input#chan_search_text')[0].value = '';
+            
+            // Reset the chanlist
+            $('.applet_chanlist table tbody:first').remove();
+            $('.applet_chanlist table').append('<tbody style="vertical-align: top;"></tbody>');
+            this.channels = [];
+
+            // Start the list over again
+            kiwi.components.Network().raw('LIST');
         }
     });
 
