@@ -254,12 +254,16 @@
 
             // In all cases, show the demanded query
             query.view.show();
+
+            return query;
         }
     });
 
 
 
     function onDisconnect(event) {
+        this.set('connected', false);
+
         $.each(this.panels.models, function (index, panel) {
             if (!panel.isApplet()) {
                 panel.addMsg('', styleText('network_disconnected', {text: translateText('client_models_network_disconnected', [])}), 'action quit');
@@ -274,6 +278,8 @@
 
         // Update our nick with what the network gave us
         this.set('nick', event.nick);
+
+        this.set('connected', true);
 
         // If this is a re-connection then we may have some channels to re-join
         this.rejoinAllChannels();
@@ -342,7 +348,11 @@
             hostname: event.hostname,
             user_prefixes: this.get('user_prefixes')
         });
-        members.add(user, {kiwi: event});
+
+        _kiwi.global.events.emit('channel:join', {channel: event.channel, user: user, network: this.gateway})
+        .then(function() {
+            members.add(user, {kiwi: event});
+        });
     }
 
 
@@ -370,7 +380,10 @@
         user = members.getByNick(event.nick);
         if (!user) return;
 
-        members.remove(user, {kiwi: part_options});
+        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'part', message: part_options.message, network: this.gateway})
+        .then(function() {
+            members.remove(user, {kiwi: part_options});
+        });
     }
 
 
@@ -396,7 +409,10 @@
             if (panel.isChannel()) {
                 member = panel.get('members').getByNick(event.nick);
                 if (member) {
-                    panel.get('members').remove(member, {kiwi: quit_options});
+                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: quit_options.message, network: this.gateway})
+                    .then(function() {
+                        panel.get('members').remove(member, {kiwi: quit_options});
+                    });
                 }
             }
         });
@@ -425,17 +441,20 @@
         if (!user) return;
 
 
-        members.remove(user, {kiwi: part_options});
+        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'kick', message: part_options.message, network: this.gateway})
+        .then(function() {
+            members.remove(user, {kiwi: part_options});
 
-        if (part_options.current_user_kicked) {
-            members.reset([]);
-        }
+            if (part_options.current_user_kicked) {
+                members.reset([]);
+            }
+        });
     }
 
 
 
     function onMessage(event) {
-        _kiwi.global.events.emit('message:new', {network: this, message: event})
+        _kiwi.global.events.emit('message:new', {network: this.gateway, message: event})
         .then(_.bind(function() {
             var panel,
                 is_pm = ((event.target || '').toLowerCase() == this.get('nick').toLowerCase());
@@ -759,7 +778,7 @@
         } else if (event.logon) {
             logon_date = new Date();
             logon_date.setTime(event.logon * 1000);
-            logon_date = formatDate(logon_date);
+            logon_date = _kiwi.utils.formatDate(logon_date);
 
             panel.addMsg(event.nick, styleText('whois_idle_and_signon', {nick: event.nick, text: translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
         } else if (event.away_reason) {

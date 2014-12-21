@@ -145,7 +145,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                      var spot = {
                          url: 'https://embed.spotify.com/?uri=' + uri,
                          width: 300,
-                         height: 80 
+                         height: 80
                      };
                      break;
                 case "artist":
@@ -162,6 +162,21 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             return $(html);
         },
 
+        soundcloud: function () {
+            var url = this.$el.data('url'),
+                $content = $('<div></div>').text(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
+
+            $.getJSON('http://soundcloud.com/oembed', { url: url })
+                .then(function (data) {
+                    $content.empty().append(
+                        $(data.html).attr('height', data.height - 100)
+                    );
+                }, function () {
+                    $content.text(_kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch());
+                });
+
+            return $content;
+        },
 
         custom: function() {
             var type = this.constructor.types[this.$el.data('index')];
@@ -171,7 +186,6 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
             return $(type.buildHtml(this.$el.data('url')));
         }
-
 
     }
     }, {
@@ -244,6 +258,11 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             var method = matches[1],
                 uri = "spotify:" + matches[1] + ":" + matches[2];
             html += '<span class="media spotify" data-type="spotify" data-uri="' + uri + '" data-method="' + method + '" title="Spotify ' + method + '"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
+        }
+
+        matches = (/(?:m\.)?(soundcloud\.com(?:\/.+))/i).exec(url);
+        if (matches) {
+            html += '<span class="media soundcloud" data-type="soundcloud" data-url="http://' + matches[1] + '" title="SoundCloud player"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         return html;

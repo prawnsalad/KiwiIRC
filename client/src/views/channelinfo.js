@@ -137,7 +137,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
                 $('<td></td>').text(ban.banned).appendTo($tr);
                 $('<td></td>').text(ban.banned_by.split(/[!@]/)[0]).appendTo($tr);
-                $('<td></td>').text(formatDate(new Date(parseInt(ban.banned_at, 10) * 1000))).appendTo($tr);
+                $('<td></td>').text(_kiwi.utils.formatDate(new Date(parseInt(ban.banned_at, 10) * 1000))).appendTo($tr);
                 $('<td><i class="fa fa-rtimes remove-ban"></i></td>').appendTo($tr);
 
                 $table.append($tr);

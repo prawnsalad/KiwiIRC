@@ -44,11 +44,23 @@ _kiwi.view.Application = Backbone.View.extend({
         // Keep tabs on the browser having focus
         this.has_focus = true;
 
-        $(window).on('focus', function () {
+        $(window).on('focus', function windowOnFocus() {
             that.has_focus = true;
         });
-        $(window).on('blur', function () {
+
+        $(window).on('blur', function windowOnBlur() {
+            var active_panel = that.model.panels().active;
+            if (active_panel && active_panel.view.updateLastSeenMarker) {
+                active_panel.view.updateLastSeenMarker();
+            }
+
             that.has_focus = false;
+        });
+
+        // If we get a touchstart event, make note of it so we know we're using a touchscreen
+        $(window).on('touchstart', function windowOnTouchstart() {
+            that.$el.addClass('touch');
+            $(window).off('touchstart', windowOnTouchstart);
         });
 
 
@@ -333,30 +345,14 @@ _kiwi.view.Application = Backbone.View.extend({
 
     showNotification: function(title, message) {
         var icon = this.model.get('base_path') + '/assets/img/ico.png',
-            notification;
+            notifications = _kiwi.utils.notifications;
 
-        if (this.has_focus)
-            return;
-
-        // Different versions of Chrome/firefox have different implimentations
-        if ('Notification' in window && Notification.permission && Notification.permission === 'granted') {
-            notification = new Notification(title, {icon: icon, body: message});
-
-        } else if ('webkitNotifications' in window && webkitNotifications.checkPermission() === 0) {
-            notification = window.webkitNotifications.createNotification(icon, title, message);
-
-        } else if ('mozNotification' in navigator) {
-            notification = navigator.mozNotification.createNotification(title, message, icon);
+        if (!this.has_focus && notifications.allowed()) {
+            notifications
+                .create(title, { icon: icon, body: message })
+                .closeAfter(5000)
+                .on('click', _.bind(window.focus, window));
         }
-
-        if (!notification) {
-            // Couldn't find any notification support
-            return;
-        }
-
-        setTimeout(function() {
-            (notification.cancel || notification.close).call(notification);
-        }, 5000);
     },
 
     monitorPanelFallback: function() {

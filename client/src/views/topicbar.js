@@ -48,7 +48,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
         this.setCurrentTopic(channel.get("topic"));
 
         if (set_by) {
-            set_by_text += translateText('client_models_network_topic', [set_by.nick, formatDate(set_by.when)]);
+            set_by_text += translateText('client_models_network_topic', [set_by.nick, _kiwi.utils.formatDate(set_by.when)]);
             this.$el.attr('title', set_by_text);
         } else {
             this.$el.attr('title', '');

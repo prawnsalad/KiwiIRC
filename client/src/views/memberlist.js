@@ -39,7 +39,16 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
-            member = $target.data('member'),
+            member = $target.data('member');
+
+        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist'})
+        .then(_.bind(this.openUserMenuForItem, this, $target));
+    },
+
+
+    // Open a user menu for the given userlist item (<li>)
+    openUserMenuForItem: function($target) {
+        var member = $target.data('member'),
             userbox,
             are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
@@ -51,14 +60,15 @@ _kiwi.view.MemberList = Backbone.View.extend({
         menu.addItem('userbox', userbox.$el);
         menu.showFooter(false);
 
-        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox})
+        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox, user: member})
         .then(_.bind(function() {
             menu.show();
 
-            var t = event.pageY,
+            var target_offset = $target.offset(),
+                t = target_offset.top,
                 m_bottom = t + menu.$el.outerHeight(),  // Where the bottom of menu will be
                 memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight(),
-                l = event.pageX,
+                l = target_offset.left,
                 m_right = l + menu.$el.outerWidth(),  // Where the left of menu will be
                 memberlist_right = this.$el.parent().offset().left + this.$el.parent().outerWidth();
 
@@ -84,13 +94,12 @@ _kiwi.view.MemberList = Backbone.View.extend({
             });
 
         }, this))
-        .prevented(_.bind(function() {
+        .catch(_.bind(function() {
             userbox = null;
 
             menu.dispose();
             menu = null;
         }, this));
-
     },
 
 

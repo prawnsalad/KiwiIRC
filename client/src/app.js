@@ -8,6 +8,7 @@ _kiwi.misc = {};
 _kiwi.model = {};
 _kiwi.view = {};
 _kiwi.applets = {};
+_kiwi.utils = {};
 
 
 /**
@@ -23,6 +24,7 @@ _kiwi.global = {
     rpc: undefined, // Instance of WebsocketRpc
     utils: {}, // References to misc. re-usable helpers / functions
 
+    // Make public some internal utils for plugins to make use of
     initUtils: function() {
         this.utils.randomString = randomString;
         this.utils.secondsToTime = secondsToTime;
@@ -31,6 +33,9 @@ _kiwi.global = {
         this.utils.formatIRCMsg = formatIRCMsg;
         this.utils.styleText = styleText;
         this.utils.hsl2rgb = hsl2rgb;
+
+        this.utils.notifications = _kiwi.utils.notifications;
+        this.utils.formatDate = _kiwi.utils.formatDate;
     },
 
     addMediaMessageType: function(match, buildHtml) {
@@ -114,8 +119,9 @@ _kiwi.global = {
                 kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
                 ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
-                notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
-                channelInfo: 'channelInfo', mode: 'mode', quit: 'quit'
+                notice: 'notice', msg: 'privmsg', say: 'privmsg',
+                changeNick: 'changeNick', channelInfo: 'channelInfo',
+                mode: 'mode', quit: 'quit'
             };
 
             _.each(funcs, function(gateway_fn, func_name) {
@@ -130,6 +136,18 @@ _kiwi.global = {
                     return _kiwi.gateway[fn_name].apply(_kiwi.gateway, args);
                 };
             });
+
+            // Now for some network related functions...
+            obj.createQuery = function(nick) {
+                var network, restricted_keys;
+
+                network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.createQuery(nick);
+            };
 
             // Add the networks getters/setters
             obj.get = function(name) {
@@ -174,6 +192,9 @@ _kiwi.global = {
                     return _kiwi.app.controlbox[fn_name].apply(_kiwi.app.controlbox, arguments);
                 };
             });
+
+            // Give access to the control input textarea
+            obj.input = _kiwi.app.controlbox.$('.inp');
 
             return obj;
         }
@@ -229,6 +250,9 @@ _kiwi.global = {
             _kiwi.global.plugins = new _kiwi.model.PluginManager();
 
             callback();
+
+        }).then(null, function(err) {
+            console.error(err.stack);
         });
     },
 

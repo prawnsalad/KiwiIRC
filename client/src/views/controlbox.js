@@ -172,7 +172,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 ac_data.push(_kiwi.app.panels().active.get('name'));
 
                 ac_data = _.sortBy(ac_data, function (nick) {
-                    return nick;
+                    return nick.toLowerCase();
                 });
                 this.tabcomplete.data = ac_data;
             }

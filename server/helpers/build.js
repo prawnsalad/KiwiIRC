@@ -1,9 +1,7 @@
 var fs           = require('fs'),
     uglifyJS     = require('uglify-js'),
-    _            = require('lodash'),
     po2json      = require('po2json'),
-    config       = require('../server/configuration.js'),
-    package_json = require('../package.json');
+    package_json = require('../../package.json');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -36,62 +34,64 @@ function concat(file_list, callback) {
 
 
 
-config.loadConfig();
-
+if (!require('./configloader.js')()) {
+    console.error('Couldn\'t find a valid config.js file (Did you copy the config.example.js file yet?)');
+    process.exit(1);
+}
 
 var source_files = [
-    __dirname + '/src/app.js',
-    __dirname + '/src/models/application.js',
-    __dirname + '/src/models/gateway.js',
-    __dirname + '/src/models/network.js',
-    __dirname + '/src/models/member.js',
-    __dirname + '/src/models/memberlist.js',
-    __dirname + '/src/models/newconnection.js',
-    __dirname + '/src/models/panel.js',
-    __dirname + '/src/models/panellist.js',
-    __dirname + '/src/models/networkpanellist.js',
-    __dirname + '/src/models/channel.js',
-    __dirname + '/src/models/query.js',
-    __dirname + '/src/models/server.js',
-    __dirname + '/src/models/applet.js',
-    __dirname + '/src/models/pluginmanager.js',
-    __dirname + '/src/models/datastore.js',
-    __dirname + '/src/models/channelinfo.js',
+    global.config.public_http + '/src/app.js',
+    global.config.public_http + '/src/models/application.js',
+    global.config.public_http + '/src/models/gateway.js',
+    global.config.public_http + '/src/models/network.js',
+    global.config.public_http + '/src/models/member.js',
+    global.config.public_http + '/src/models/memberlist.js',
+    global.config.public_http + '/src/models/newconnection.js',
+    global.config.public_http + '/src/models/panel.js',
+    global.config.public_http + '/src/models/panellist.js',
+    global.config.public_http + '/src/models/networkpanellist.js',
+    global.config.public_http + '/src/models/channel.js',
+    global.config.public_http + '/src/models/query.js',
+    global.config.public_http + '/src/models/server.js',
+    global.config.public_http + '/src/models/applet.js',
+    global.config.public_http + '/src/models/pluginmanager.js',
+    global.config.public_http + '/src/models/datastore.js',
+    global.config.public_http + '/src/models/channelinfo.js',
 
-    __dirname + '/src/views/panel.js',
-    __dirname + '/src/views/channel.js',
-    __dirname + '/src/views/applet.js',
-    __dirname + '/src/views/application.js',
-    __dirname + '/src/views/apptoolbar.js',
-    __dirname + '/src/views/controlbox.js',
-    __dirname + '/src/views/favicon.js',
-    __dirname + '/src/views/mediamessage.js',
-    __dirname + '/src/views/member.js',
-    __dirname + '/src/views/memberlist.js',
-    __dirname + '/src/views/menubox.js',
-    __dirname + '/src/views/networktabs.js',
-    __dirname + '/src/views/nickchangebox.js',
-    __dirname + '/src/views/resizehandler.js',
-    __dirname + '/src/views/serverselect.js',
-    __dirname + '/src/views/statusmessage.js',
-    __dirname + '/src/views/tabs.js',
-    __dirname + '/src/views/topicbar.js',
-    __dirname + '/src/views/userbox.js',
-    __dirname + '/src/views/channeltools.js',
-    __dirname + '/src/views/channelinfo.js',
-    __dirname + '/src/views/rightbar.js',
-    __dirname + '/src/views/notification.js',
+    global.config.public_http + '/src/views/panel.js',
+    global.config.public_http + '/src/views/channel.js',
+    global.config.public_http + '/src/views/applet.js',
+    global.config.public_http + '/src/views/application.js',
+    global.config.public_http + '/src/views/apptoolbar.js',
+    global.config.public_http + '/src/views/controlbox.js',
+    global.config.public_http + '/src/views/favicon.js',
+    global.config.public_http + '/src/views/mediamessage.js',
+    global.config.public_http + '/src/views/member.js',
+    global.config.public_http + '/src/views/memberlist.js',
+    global.config.public_http + '/src/views/menubox.js',
+    global.config.public_http + '/src/views/networktabs.js',
+    global.config.public_http + '/src/views/nickchangebox.js',
+    global.config.public_http + '/src/views/resizehandler.js',
+    global.config.public_http + '/src/views/serverselect.js',
+    global.config.public_http + '/src/views/statusmessage.js',
+    global.config.public_http + '/src/views/tabs.js',
+    global.config.public_http + '/src/views/topicbar.js',
+    global.config.public_http + '/src/views/userbox.js',
+    global.config.public_http + '/src/views/channeltools.js',
+    global.config.public_http + '/src/views/channelinfo.js',
+    global.config.public_http + '/src/views/rightbar.js',
+    global.config.public_http + '/src/views/notification.js',
 
-    __dirname + '/src/misc/clientuicommands.js',
+    global.config.public_http + '/src/misc/clientuicommands.js',
 
-    __dirname + '/src/applets/settings.js',
-    __dirname + '/src/applets/chanlist.js',
-    __dirname + '/src/applets/scripteditor.js',
-    __dirname + '/src/applets/startup.js'
+    global.config.public_http + '/src/applets/settings.js',
+    global.config.public_http + '/src/applets/chanlist.js',
+    global.config.public_http + '/src/applets/scripteditor.js',
+    global.config.public_http + '/src/applets/startup.js'
 ];
 
 
-var helpers_path = __dirname + '/src/helpers/';
+var helpers_path = global.config.public_http + '/src/helpers/';
 var helpers_sources = fs.readdirSync(helpers_path)
     .map(function(file){
         return helpers_path + file;
@@ -107,7 +107,7 @@ concat(source_files, function (err, src) {
     if (!err) {
         src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
-        fs.writeFile(__dirname + '/assets/kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(global.config.public_http + '/assets/kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built kiwi.js');
             } else {
@@ -127,7 +127,7 @@ concat(source_files, function (err, src) {
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(__dirname + '/assets/kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(global.config.public_http + '/assets/kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built kiwi.min.js');
             } else {
@@ -147,9 +147,9 @@ concat(source_files, function (err, src) {
 /**
  * Build the engineio client + tools libs
  */
-concat([__dirname + '/assets/libs/engine.io.js', __dirname + '/assets/libs/engine.io.tools.js'], function (err, src) {
+concat([global.config.public_http + '/assets/libs/engine.io.js', global.config.public_http + '/assets/libs/engine.io.tools.js'], function (err, src) {
     if (!err) {
-        fs.writeFile(__dirname + '/assets/libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(global.config.public_http + '/assets/libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built engine.io.bundle.js');
             } else {
@@ -165,7 +165,7 @@ concat([__dirname + '/assets/libs/engine.io.js', __dirname + '/assets/libs/engin
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(__dirname + '/assets/libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(global.config.public_http + '/assets/libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built engine.io.bundle.min.js');
             } else {
@@ -185,19 +185,19 @@ concat([__dirname + '/assets/libs/engine.io.js', __dirname + '/assets/libs/engin
 /**
 *   Convert translations from .po to .json
 */
-if (!fs.existsSync(__dirname + '/assets/locales')) {
-    fs.mkdirSync(__dirname + '/assets/locales');
+if (!fs.existsSync(global.config.public_http + '/assets/locales')) {
+    fs.mkdirSync(global.config.public_http + '/assets/locales');
 }
-fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
+fs.readdir(global.config.public_http + '/src/translations', function (err, translation_files) {
     if (!err) {
         translation_files.forEach(function (file) {
             var locale = file.slice(0, -3);
 
             if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                po2json.parseFile(__dirname + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
+                po2json.parseFile(global.config.public_http + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
                     if (!err) {
 
-                        fs.writeFile(__dirname + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
+                        fs.writeFile(global.config.public_http + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
                             if (!err) {
                                 console.log('Built translation file %s.json', locale);
                             } else {
@@ -224,19 +224,19 @@ fs.readdir(__dirname + '/src/translations', function (err, translation_files) {
  * Build the index.html file
  */
 var build_time = new Date().getTime();
-var base_path = config.get().http_base_path || '';
+var base_path = global.config.http_base_path || '';
 
 // Trim off any trailing slashes
 if (base_path.substr(base_path.length - 1) === '/') {
     base_path = base_path.substr(0, base_path.length - 1);
 }
 
-var index_src = fs.readFileSync(__dirname + '/src/index.html.tmpl', FILE_ENCODING)
+var index_src = fs.readFileSync(global.config.public_http + '/src/index.html.tmpl', FILE_ENCODING)
     .replace(new RegExp('<%base_path%>', 'g'), base_path)
     .replace(new RegExp('<%build_version%>', 'g'), package_json.version)
     .replace(new RegExp('<%build_time%>', 'g'), build_time);
 
-fs.writeFile(__dirname + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
+fs.writeFile(global.config.public_http + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {
         console.log('Built index.html');
     } else {

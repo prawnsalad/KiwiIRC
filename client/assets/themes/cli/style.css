@@ -86,7 +86,7 @@
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
-#kiwi .toolbar .panellist li .part:before { content:"\f00d"; }
+#kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left:5px; }
 #kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
@@ -217,6 +217,11 @@
     float: left;
 }
 #kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
+
+#kiwi .messages .last_seen {
+    border-bottom-color: #090;
+    border-bottom-style: dashed;
+}
 
 
 

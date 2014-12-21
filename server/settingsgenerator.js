@@ -144,7 +144,7 @@ function addTranslations() {
             } catch (e) {
                 return reject(e);
             }
-            
+
             fs.readdir(__dirname + '/../client/src/translations/', function readTranslationFile(err, pofiles) {
                 var trans = [];
 
@@ -202,10 +202,7 @@ function addScripts(vars, debug) {
             'src/models/query.js',
             'src/models/server.js',     // Depends on models/channel.js
             'src/models/pluginmanager.js',
-            'src/models/datastore.js',
-            'src/helpers/utils.js',
-            'src/helpers/formatdate.js',
-            'src/helpers/plugininterface.js'
+            'src/models/datastore.js'
         ],
 
         // Some views extend these, so make sure they're loaded beforehand
@@ -249,4 +246,13 @@ function addScripts(vars, debug) {
             'src/applets/startup.js'
         ]
     ]);
+
+    // Load any helpers we may have
+    var helpers_path = global.config.public_http + 'src/helpers/';
+    var helpers_sources = fs.readdirSync(helpers_path)
+        .map(function(file){
+            return 'src/helpers/' + file;
+        });
+
+    vars.scripts = vars.scripts.concat(helpers_sources);
 }

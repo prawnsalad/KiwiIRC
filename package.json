@@ -7,12 +7,10 @@
   "bin": {
     "kiwiirc": "./kiwi"
   },
+  "man": "./man/kiwiirc.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/prawnsalad/KiwiIRC.git"
-  },
-  "scripts": {
-    "postinstall": "node client/build.js"
   },
   "dependencies": {
     "daemonize2": "0.4.2",

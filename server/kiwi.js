@@ -16,18 +16,8 @@ process.chdir(__dirname + '/../');
 // Get our own version from package.json
 global.build_version = require('../package.json').version;
 
-// Load the config, using -c argument if available
-(function (argv) {
-    var conf_switch = argv.indexOf('-c');
-    if (conf_switch !== -1) {
-        if (argv[conf_switch + 1]) {
-            return config.loadConfig(argv[conf_switch + 1]);
-        }
-    }
-
-    config.loadConfig();
-
-})(process.argv);
+// Load the configuration
+require('./helpers/configloader.js')();
 
 
 // If we're not running in the forground and we have a log file.. switch

@@ -80,6 +80,13 @@
             // Takes instances of model_network
             this.connections = new _kiwi.model.NetworkPanelList();
 
+            // If all connections are removed at some point, hide the bars
+            this.connections.on('remove', _.bind(function() {
+                if (this.connections.length === 0) {
+                    this.view.barsHide();
+                }
+            }, this));
+
             // Applets panel list
             this.applet_panels = new _kiwi.model.PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
@@ -117,6 +124,9 @@
             _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
             _kiwi.global.components.DataStore = _kiwi.model.DataStore;
             _kiwi.global.components.Notification = _kiwi.view.Notification;
+            _kiwi.global.components.Events = function() {
+                return kiwi.events.createProxy();
+            };
         },
 
 
@@ -133,24 +143,25 @@
             var active_panel;
 
             var fn = function(panel_type) {
-                var panels;
+                var app = _kiwi.app,
+                    panels;
 
                 // Default panel type
                 panel_type = panel_type || 'connections';
 
                 switch (panel_type) {
                 case 'connections':
-                    panels = this.connections.panels();
+                    panels = app.connections.panels();
                     break;
                 case 'applets':
-                    panels = this.applet_panels.models;
+                    panels = app.applet_panels.models;
                     break;
                 }
 
                 // Active panels / server
                 panels.active = active_panel;
-                panels.server = this.connections.active_connection ?
-                    this.connections.active_connection.panels.server :
+                panels.server = app.connections.active_connection ?
+                    app.connections.active_connection.panels.server :
                     null;
 
                 return panels;

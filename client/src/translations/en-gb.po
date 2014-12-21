@@ -727,3 +727,6 @@ msgstr "Refresh"
 #: 
 msgid "client_applets_chanlist_noresults"
 msgstr "No results found, please try again !"
+#:
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
