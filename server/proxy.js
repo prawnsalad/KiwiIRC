@@ -328,7 +328,7 @@ ProxySocket.prototype.connect = function(dest_port, dest_addr, connected_fn) {
 };
 
 
-ProxySocket.prototype.destroySocket = function() {
+ProxySocket.prototype.destroy = function() {
     if (!this.socket)
         return;
 
@@ -403,7 +403,7 @@ ProxySocket.prototype._onSocketData = function(data) {
         this.emit('connect');
 
     } else {
-        this.destroySocket();
+        this.destroy();
 
         error_code = error_codes[status] || error_codes[RESPONSE_ERROR];
         debug('[KiwiProxy] Error: ' + error_code);
