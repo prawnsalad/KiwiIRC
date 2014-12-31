@@ -166,7 +166,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             var url = this.$el.data('url'),
                 $content = $('<div></div>').text(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
 
-            $.getJSON('http://soundcloud.com/oembed', { url: url })
+            $.getJSON('https://soundcloud.com/oembed', { url: url })
                 .then(function (data) {
                     $content.empty().append(
                         $(data.html).attr('height', data.height - 100)
