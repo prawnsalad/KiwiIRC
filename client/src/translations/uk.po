@@ -712,3 +712,7 @@ msgstr "client_views_channelinfo_togglebanlist"
 msgid "client_views_controlbox_message"
 msgstr "client_views_controlbox_message"
 
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
+

@@ -1,3 +1,12 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+
 msgid ""
 msgstr ""
 "MIME-Version: 1.0\n"
@@ -702,4 +711,8 @@ msgstr "Вклучи/исклучи забрани"
 #: 
 msgid "client_views_controlbox_message"
 msgstr "Прати порака"
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 

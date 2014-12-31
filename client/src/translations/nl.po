@@ -712,3 +712,7 @@ msgstr "Schakel banlijst"
 msgid "client_views_controlbox_message"
 msgstr "Verstuur"
 
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
+

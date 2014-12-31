@@ -712,3 +712,7 @@ msgstr "Sakrij/Prikaži Banlistu"
 msgid "client_views_controlbox_message"
 msgstr "Pošalji poruku..."
 
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
+
