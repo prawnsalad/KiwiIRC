@@ -89,7 +89,7 @@ HttpHandler.prototype.serve = function (request, response) {
 var cached_available_locales = [];
 
 // Get a list of the available translations we have
-fs.readdir('client/assets/locales', function (err, files) {
+fs.readdir('../client/assets/locales', function (err, files) {
     if (err) {
         if (err.code === 'ENOENT') {
             winston.error('No locale files could be found at ' + err.path);
