@@ -60,35 +60,48 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
      * so it doesn't need to loop over every model for each nick lookup
      */
     initNickCache: function() {
-        var that = this;
+        var updateRegex = _.bind(function () {
+                this.nick_regex = new RegExp(
+                    '\\b(' + Object.keys(this.nick_cache).map(_kiwi.global.utils.escapeRegex).join('|') + ')\\b', 'i'
+                );
+            }, this);
+
+        function getNick (member) {
+            return member.get('nick').toLowerCase();
+        };
 
         this.nick_cache = Object.create(null);
+        this.nick_regex = null;
 
         this.on('reset', function() {
-            this.nick_cache = Object.create(null);
-
-            this.models.forEach(function(member) {
-                that.nick_cache[member.get('nick').toLowerCase()] = member;
-            });
+            this.nick_cache = _.reduce(this.models, function(memo, member) {
+                memo[getNick(member)] = member;
+                return memo;
+            }, Object.create(null));
+            updateRegex();
         });
 
         this.on('add', function(member) {
-            that.nick_cache[member.get('nick').toLowerCase()] = member;
+            this.nick_cache[getNick(member)] = member;
+            updateRegex();
         });
 
         this.on('remove', function(member) {
-            delete that.nick_cache[member.get('nick').toLowerCase()];
+            delete this.nick_cache[getNick(member)];
+            updateRegex();
         });
 
         this.on('change:nick', function(member) {
-            that.nick_cache[member.get('nick').toLowerCase()] = member;
-            delete that.nick_cache[member.previous('nick').toLowerCase()];
+            this.nick_cache[getNick(member)] = member;
+            delete this.nick_cache[member.previous('nick').toLowerCase()];
+            updateRegex();
         });
     },
 
-
     getByNick: function (nick) {
-        if (typeof nick !== 'string') return;
-        return this.nick_cache[nick.toLowerCase()];
+        var matches;
+        if (this.nick_regex && (matches = this.nick_regex.exec(nick))) {
+            return this.nick_cache[matches[1].toLowerCase()];
+        }
     }
 });
