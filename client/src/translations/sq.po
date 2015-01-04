@@ -1,0 +1,416 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: en\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Besnik Bleta <besnik@programeshqip.org>\n"
+"Language-Team: \n"
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Emër Kanali"
+
+msgid "client_applets_chanlist_users"
+msgstr "Përdorues"
+
+msgid "client_applets_chanlist_topic"
+msgstr "Temë"
+
+msgid "client_applets_chanlist_channellist"
+msgstr "Listë e Kanalit"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Ruaje"
+
+msgid "client_applets_scripteditor_error"
+msgstr "Gabim programthi. %s"
+
+msgid "client_applets_scripteditor_saved"
+msgstr "Programthi juaj u ruajt dhe tani është aktiv"
+
+msgid "client_applets_scripteditor_title"
+msgstr "Përpunues Programthesh"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "Skeda"
+
+msgid "client_applets_settings_channelview_list"
+msgstr "Listë"
+
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "për numër të madh kanalesh"
+
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Njoftime kanali për ardhje/largime"
+
+msgid "client_applets_settings_timestamp"
+msgstr "Vula kohore"
+
+msgid "client_applets_settings_notification_sound"
+msgstr "Pa tinguj njoftimesh"
+
+msgid "client_applets_settings_history_length"
+msgstr "mesazhe në historik veprimtarie kanali"
+
+msgid "client_applets_settings_default_client"
+msgstr "Klient IRC parazgjedhje"
+
+msgid "client_applets_settings_default_client_enable"
+msgstr "Bëje Kiwi-n klientin tim parazgjedhje për IRC-në"
+
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Shënim: Ndryshimet do të hyjnë në fuqi vetëm pasi të keni rifreskuar faqen"
+
+msgid "client_applets_settings_default_client_notice"
+msgstr "Shënim: Përdoruesve e shfletuesve Chrome ose Chromium mund t’u duhet të kontrollojnë rregullimet përmes %s, nëse nuk ndodh gjë"
+
+msgid "client_applets_settings_title"
+msgstr "Rregullime"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Aplet i Panjohur"
+
+msgid "client_models_applet_loading"
+msgstr "Po ngarkohet…"
+
+msgid "client_models_applet_notfound"
+msgstr "Nuk gjendet"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Jeni shkëputur. Po provohet rilidhja juaj"
+
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "Jeni shkëputur. Po provohet rilidhja juaj brenda %d sekondash"
+
+msgid "client_models_application_reconnect_successfully"
+msgstr "Në rregull, jeni sërish i lidhur"
+
+msgid "client_models_application_settings_saved"
+msgstr "Rregullimet u ruajtën"
+
+msgid "client_models_application_ignore_title"
+msgstr "Nofka të shpërfillura"
+
+msgid "client_models_application_ignore_none"
+msgstr "Nuk po shpërfillet ndokush"
+
+msgid "client_models_application_ignore_nick"
+msgstr "Po shpërfillet %s"
+
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Tregoni se për cilën nofkë dëshironi të ndalet shpërfillja"
+
+msgid "client_models_application_ignore_stopped"
+msgstr "U ndal shpërfillja për %s"
+
+msgid "client_models_application_applet_notfound"
+msgstr "Apleti \"%s\" nuk ekziston"
+
+msgid "client_models_application_encoding_changed"
+msgstr "Kodimi u kalua në %s"
+
+msgid "client_models_application_encoding_invalid"
+msgstr "%s nuk është kodim i vlefshëm"
+
+msgid "client_models_application_encoding_notspecified"
+msgstr "Nuk u dha kodim"
+
+msgid "client_models_application_encoding_usage"
+msgstr "Përdorimi: /encoding [KODIM-I-RI]"
+
+msgid "client_models_application_connection_create"
+msgstr "Lidhje e Re"
+
+msgid "client_models_application_connection_connecting"
+msgstr ""
+
+msgid "client_models_application_connection_error"
+msgstr "Gabim gjatë lidhjes me %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "%s erdhi"
+
+msgid "client_models_channel_quit"
+msgstr "%s doli nga %s"
+
+msgid "client_models_channel_kicked"
+msgstr "%s u përzu nga %s %s"
+
+msgid "client_models_channel_selfkick"
+msgstr "U përzutë nga %s %s"
+
+msgid "client_models_channel_part"
+msgstr "%s ka ikur prej %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "%s nuk është emër i vlefshëm kanali"
+
+msgid "client_models_network_disconnected"
+msgstr "U shkëput prej rrjetit IRC"
+
+msgid "client_models_network_nickname_changed"
+msgstr "%s tani njihet si %s"
+
+msgid "client_models_network_topic"
+msgstr "Tema u caktua nga %s më %s"
+
+msgid "client_models_network_selfmode"
+msgstr "%s e kalon mënyrën në %s"
+
+msgid "client_models_network_mode"
+msgstr "%s e kaloi mënyrën në %s"
+
+msgid "client_models_network_channels"
+msgstr "Kanale: %s"
+
+msgid "client_models_network_server"
+msgstr "I lidhur te shërbyesi: %s %s"
+
+msgid "client_models_network_idle_and_signon"
+msgstr "I plogësht për %s, ka nënshkruar më %s"
+
+msgid "client_models_network_away"
+msgstr "I larguar: %s"
+
+msgid "client_models_network_idle"
+msgstr "I plogësht për %s"
+
+msgid "client_models_network_nickname_notfound"
+msgstr "S’ka nik të tillë"
+
+msgid "client_models_network_banned"
+msgstr "U dëbuat prej %s. %s"
+
+msgid "client_models_network_channel_badkey"
+msgstr "Kyç i gabuar kanali për %s"
+
+msgid "client_models_network_channel_inviteonly"
+msgstr "%s është vetëm me ftesa."
+
+msgid "client_models_network_channel_limitreached"
+msgstr "%s është plot."
+
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "Nofka \"%s\" është tashmë në përdorim. Ju lutemi, përzgjidhni një nofkë të re"
+
+msgid "client_models_network_badpassword"
+msgstr "U dha fjalëkalim i pasaktë"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Kjo do të shkaktojë mbylljen e krejt bisedave në KiwiIRC. Jeni i sigurt se doni ta mbyllni këtë dritare?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Po hyhet në kanal…"
+
+msgid "client_views_channel_topic"
+msgstr "Tema për %s është: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Mbylle median"
+
+msgid "client_views_mediamessage_notfound"
+msgstr "Nuk u gjet"
+
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Po ngarkohet tweet-i"
+
+msgid "client_views_mediamessage_load_image"
+msgstr "Po ngarkohet figura"
+
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Po ngarkohet rrjedha Reddit"
+
+msgid "client_views_mediamessage_load_gist"
+msgstr "Po ngarkohet gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Nofkë e re"
+
+msgid "client_views_nickchangebox_change"
+msgstr "Ndërroje"
+
+msgid "client_views_nickchangebox_cancel"
+msgstr "Anuloje"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Flasin njerëzit!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Mendoni një nofkë…"
+
+msgid "client_views_serverselect_nickname"
+msgstr "Nofkë"
+
+msgid "client_views_serverselect_enable_password"
+msgstr "Kam fjalëkalim"
+
+msgid "client_views_serverselect_password"
+msgstr "Fjalëkalim"
+
+msgid "client_views_serverselect_channel"
+msgstr "Kanal"
+
+msgid "client_views_serverselect_channelkey"
+msgstr "Kyç Kanali"
+
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Kanal lyp kyç"
+
+msgid "client_views_serverselect_key"
+msgstr "Kyç"
+
+msgid "client_views_serverselect_connection_start"
+msgstr "Filloni..."
+
+msgid "client_views_serverselect_server_and_network"
+msgstr "Shërbyes dhe rrjet"
+
+msgid "client_views_serverselect_server"
+msgstr "Shërbyes"
+
+msgid "client_views_serverselect_port"
+msgstr "Portë"
+
+msgid "client_views_serverselect_poweredby"
+msgstr "Bazuar në Kiwi IRC"
+
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Përzgjidhni një nofkë së pari!"
+
+msgid "client_views_serverselect_connection_successfully"
+msgstr "U lidh"
+
+msgid "client_views_serverselect_connection_trying"
+msgstr "Po lidhet…"
+
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Nofkë e zënë"
+
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Nofkë e gabuar"
+
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Fjalëkalim i Pasaktë"
+
+msgid "client_views_serverselect_connection_error"
+msgstr "Gabim Gjatë Lidhjes"
+
+msgid "client_views_serverselect_server_notfound"
+msgstr "Nuk u gjet shërbyes"
+
+msgid "client_views_serverselect_connection_refused"
+msgstr "U mohua lidhja"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Op"
+
+msgid "client_views_userbox_deop"
+msgstr "De-op"
+
+msgid "client_views_userbox_voice"
+msgstr "Jepi Zë"
+
+msgid "client_views_userbox_devoice"
+msgstr "Hiqja Zërin"
+
+msgid "client_views_userbox_kick"
+msgstr "Përzëre"
+
+msgid "client_views_userbox_ban"
+msgstr "Dëboje"
+
+msgid "client_views_userbox_query"
+msgstr "Mesazh"
+
+msgid "client_views_userbox_whois"
+msgstr "Info"
+
+msgid "client_views_userbox_slap"
+msgstr "Slap!"
+
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+
+msgid "client_models_application_jumpserver_prepare"
+msgstr "Do të rilidheni brenda 5 minutash dhe rifuteni në kanalet tuaj. Bëhuni gati!"
+
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Po ju rilidhim në mënyrë të parrezik..."
+
+msgid "client_applets_settings_html5_notifications"
+msgstr "Njoftime në desktop"
+
+msgid "client_applets_settings_enable_notifications"
+msgstr "Aktivizoni njoftime"
+
+msgid "client_applets_settings_emoticons"
+msgstr "Shfaq emotikone"
+
+msgid "client_applet_about"
+msgstr "Mbi Kiwi-n"
+
+msgid "client_applet_about_homepage"
+msgstr "Faqja e Projektit"
+
+msgid "client_applet_about_link_channel"
+msgstr "Krijoni një lidhje për te ky kanal"
+
+msgid "client_applet_about_share_channel"
+msgstr "Ndajeni këtë kanal me të tjerët"
+
+msgid "client_applet_fav_my_networks"
+msgstr "Rrjetet e mi"
+
+msgid "client_applet_fav_networks"
+msgstr "Rrjete të parapëlqyer"
+
+msgid "client_applet_fav_add"
+msgstr "Shtoni rrjet"
+
+msgid "client_applet_fav_save"
+msgstr "Ruaje rrjetin"
+
+msgid "client_applet_fav_delete"
+msgstr "Fshije rrjetin"
+
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Mesazhet e ardhjes/largimit përfshiji si veprimtari"
+
+msgid "client_views_userbox_ignore"
+msgstr "Shpërfille"
+
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Përdor vula kohore 24-hour"
+
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
+
