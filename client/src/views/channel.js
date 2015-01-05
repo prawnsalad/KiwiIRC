@@ -244,11 +244,16 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     // Sgnerate a css style for a nick
     getNickStyles: function(nick) {
-        var ret, colour, nick_int = 0, rgb;
+        var ret, colour, nick_int = 0, rgb, isDark;
 
         // Get a colour from a nick (Method based on IRSSIs nickcolor.pl)
         _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
-        rgb = hsl2rgb(nick_int % 255, 70, 35);
+
+        isDark = (_.find(_kiwi.app.themes, function (theme) {
+            return theme.name.toLowerCase() === _kiwi.global.settings.get('theme').toLowerCase();
+        }) || {}).dark;
+
+        rgb = hsl2rgb(nick_int % 255, 70, isDark ? 60 : 35);
         rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
         colour = '#' + rgb.toString(16);
 

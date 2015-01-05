@@ -1,4 +1,5 @@
 {
 	"name": "CLI",
-	"thumbnail_colour": "#222"
+	"thumbnail_colour": "#222",
+	"dark": true
 }
