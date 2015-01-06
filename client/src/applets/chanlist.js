@@ -207,7 +207,7 @@
             this.channels = [];
 
             // Start the list over again
-            kiwi.components.Network().raw('LIST');
+            _kiwi.global.components.Network().raw('LIST');
         }
     });
 
