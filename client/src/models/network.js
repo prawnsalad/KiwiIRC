@@ -142,6 +142,10 @@
             this.gateway.on('topicsetby', onTopicSetBy, this);
             this.gateway.on('userlist', onUserlist, this);
             this.gateway.on('userlist_end', onUserlistEnd, this);
+            this.gateway.on('who_channel', onChannelWho, this);
+            this.gateway.on('who_channel_end', onChannelWhoEnd, this);
+            this.gateway.on('who_user', onUserWho, this);
+            this.gateway.on('who_user_end', onUserWhoEnd, this);
             this.gateway.on('banlist', onBanlist, this);
             this.gateway.on('mode', onMode, this);
             this.gateway.on('whois', onWhois, this);
@@ -493,7 +497,8 @@
                 if (!panel && _kiwi.global.settings.get('allow_queries')) {
                     panel = new _kiwi.model.Query({name: event.nick, network: this});
                     this.panels.add(panel);
-                } else { // We have not allowed new queries, don't process the message
+                } else if(!panel) {
+                    // We have not allowed new queries and we have not opened the panel ourselves, don't process the message
                     return;
                 }
 
@@ -654,6 +659,53 @@
 
 
 
+    function onChannelWho(event) {
+        var channel;
+        channel = this.panels.getByName(event.channel);
+        // If we didn't find a channel for this, may aswell leave
+        if (!channel) return;
+        
+        if(_kiwi.global.settings.get('rich_nicklist')) {
+            // Current channel member list
+            var members = channel.get('members');
+    
+            // Need to push user rich info into the members table
+            _.each(event.users, function(item) {
+                var user = members.getByNick(item.nick);
+    
+                // Use the rich userlist info
+                if(user) {
+                    user.richUserlist(item.flags, item.realname);
+                }
+            });
+        }
+    }
+
+
+
+    function onChannelWhoEnd(event) {
+        return;
+    }
+    
+
+    function onUserWho(event) {
+        var channel = this.panels.getByName(event.channel),
+            members, user;
+        
+        if(channel) {
+            members = channel.get('members');
+            user = members.getByNick(event.nick);
+        
+            user.richUserlist(event.flags, event.realname);
+        }
+    }
+
+
+    function onUserWhoEnd(event) {
+        return;
+    }
+    
+    
     function onBanlist(event) {
         var channel = this.panels.getByName(event.channel);
         if (!channel)
