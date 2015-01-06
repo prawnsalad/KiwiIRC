@@ -469,6 +469,10 @@ msgid "client_applets_settings_emoticons"
 msgstr "Show emoticons"
 
 #: 
+msgid "client_applets_settings_allow_queries"
+msgstr "Allow new queries"
+
+#: 
 msgid "client_applet_about"
 msgstr "About Kiwi"
 
