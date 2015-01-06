@@ -296,7 +296,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 .join('|')
                 .value();
 
-            if (msg.msg.search(new RegExp('\\b(' + regexpStr + ')\\b', 'i')) > -1) {
+            if (msg.msg.search(new RegExp('(\\b|\\W|^)(' + regexpStr + ')(\\b|\\W|$)', 'i')) > -1) {
                 msg.is_highlight = true;
                 msg.css_classes += ' highlight';
             }
