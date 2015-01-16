@@ -518,11 +518,11 @@ msgstr "Folosește formatul de 24 de ore"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "% AM"
+msgstr "%s AM"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "% PM"
+msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
