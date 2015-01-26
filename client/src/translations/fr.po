@@ -18,7 +18,7 @@ msgstr ""
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Canal"
+msgstr "Salon"
 
 #: 
 msgid "client_applets_chanlist_users"
@@ -30,7 +30,7 @@ msgstr "Sujet"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Liste des canaux"
+msgstr "Liste des salons"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
@@ -58,7 +58,7 @@ msgstr "Liste"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "pour un grand nombre de canaux"
+msgstr "pour un grand nombre de salons"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
@@ -126,7 +126,7 @@ msgstr "Paramètres sauvegardés."
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Pseudonymes ignorés"
+msgstr "Pseudos ignorés"
 
 #: 
 msgid "client_models_application_ignore_none"
@@ -138,7 +138,7 @@ msgstr "Ignorer %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Specifiez le pseudonyme que vous souhaitez arrêter d'ignorer"
+msgstr "Specifiez le pseudo que vous souhaitez arrêter d'ignorer"
 
 #: 
 msgid "client_models_application_ignore_stopped"
@@ -178,27 +178,27 @@ msgstr "Erreur de connexion à %s:%s (%s)."
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s a rejoint"
+msgstr "est entré"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s a quitté %s"
+msgstr "a quitté %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s a été expulsé par %s : %s"
+msgstr "a été expulsé par %s. Motif : %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Vous avez été expulsé par %s : %s."
+msgstr "Vous avez été expulsé par %s. Motif : %s."
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s est parti du canal %s"
+msgstr "est parti du salon %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s n'est pas un nom de canal valide."
+msgstr "n'est pas un nom de salon valide."
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Déconnecté du réseau IRC."
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s est désormais connu comme %s"
+msgstr "s'appelle désormais %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,15 +214,15 @@ msgstr "Sujet défini par %s le %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s a modifié les modes : %s"
+msgstr "a modifié les modes : %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s a modifié les modes : %s"
+msgstr "a modifié les modes : %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Canaux : %s"
+msgstr "Salons : %s"
 
 #: 
 msgid "client_models_network_server"
@@ -242,7 +242,7 @@ msgstr "Inactif depuis %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Pseudonyme introuvable"
+msgstr "Pseudo introuvable"
 
 #: 
 msgid "client_models_network_banned"
@@ -250,19 +250,19 @@ msgstr "Vous êtes banni de %s : %s."
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Mauvaise clef pour le canal %s."
+msgstr "Mauvaise clé pour le salon %s."
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s est sur invitation uniquement."
+msgstr "est sur invitation uniquement."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s est rempli."
+msgstr "est plein."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Le pseudonyme \"%s\" est déjà utilisé. Veuillez en choisir un autre."
+msgstr "Le pseudo \"%s\" est déjà utilisé. Veuillez en choisir un autre."
 
 #: 
 msgid "client_models_network_badpassword"
@@ -274,7 +274,7 @@ msgstr "Ceci fermera toutes les conversations KiwiIRC. Êtes vous sur de vouloir
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Connexion au canal..."
+msgstr "Connexion au salon..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -306,7 +306,7 @@ msgstr "Chargement du Gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nouveau pseudonyme"
+msgstr "Nouveau pseudo"
 
 #: 
 msgid "client_views_nickchangebox_change"
@@ -322,11 +322,11 @@ msgstr "Des gens parlent !"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Choisissez un pseudonyme..."
+msgstr "Choisissez un pseudo..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Pseudonyme"
+msgstr "Pseudo"
 
 #: 
 msgid "client_views_serverselect_enable_password"
@@ -338,19 +338,19 @@ msgstr "Mot de passe"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Canal"
+msgstr "Salon"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Clef du canal"
+msgstr "Clé du salon"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Le canal est protégé par une clef."
+msgstr "Le salon est protégé par une clé."
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Clef"
+msgstr "Clé"
 
 #: 
 msgid "client_views_serverselect_connection_start"
@@ -374,7 +374,7 @@ msgstr "Propulsé par Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Choisissez un pseudonyme en premier !"
+msgstr "Choisissez d'abord un pseudo !"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
@@ -386,11 +386,11 @@ msgstr "Connexion…"
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Pseudonyme déjà utilisé."
+msgstr "Pseudo déjà utilisé."
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Pseudonyme invalide."
+msgstr "Pseudo invalide."
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
@@ -418,11 +418,11 @@ msgstr "Dé-op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voix"
+msgstr "Donner la parole"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "Dé-voix"
+msgstr "Retirer la parole"
 
 #: 
 msgid "client_views_userbox_kick"
@@ -434,7 +434,7 @@ msgstr "Bannir"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Message"
+msgstr "Message privé"
 
 #: 
 msgid "client_views_userbox_whois"
@@ -450,7 +450,7 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Vous serez re-connecté dans 5 minutes et les canaux seront automatiquement rejoints."
+msgstr "Vous serez re-connecté dans 5 minutes et les salons seront automatiquement rejoints."
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
@@ -466,7 +466,7 @@ msgstr "Activer les notifications"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Afficher les émoticons"
+msgstr "Afficher les émoticônes"
 
 #: 
 msgid "client_applet_about"
@@ -478,11 +478,11 @@ msgstr "Page d'accueil du projet"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Lien vers ce canal"
+msgstr "Lien vers ce salon"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Partager ce canal"
+msgstr "Partager ce salon"
 
 #: 
 msgid "client_applet_fav_my_networks"
@@ -506,7 +506,7 @@ msgstr "Supprimer le réseau"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Compter les entrées/sorties dans l'activité"
 
 #: 
 msgid "client_views_userbox_ignore"
@@ -514,7 +514,7 @@ msgstr "Ignorer"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Utiliser l'horodatage 24h"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -523,4 +523,196 @@ msgstr "%s AM"
 #: 
 msgid "client_views_panel_timestamp_pm"
 msgstr "%s PM"
+
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "a été invité sur %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "est déjà sur le salon"
+
+#: Date format
+msgid "client_date_format"
+msgstr "d/m/Y"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "Jav"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "Fév"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "Mar"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "Avr"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "Mai"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "Juin"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "Juil"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "Août"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "Sept"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "Oct"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "Nov"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "Déc"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "Janvier"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "Février"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "Mars"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "Avril"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "Mai"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "Juin"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "Juillet"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "Août"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "Septembre"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "Octobre"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "Novembre"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "Décembre"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "Lun"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "Mar"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "Mer"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "Jeu"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "Ven"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "Sam"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "Dim"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "Lundi"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "Mardi"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "Mercredi"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "Jeudi"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "Vendredi"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "Samedi"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "Dimanche"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Salon modéré"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Sur invitation"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Seuls les modérateurs peuvent changer le sujet"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Bloquer les messages extérieurs au salon"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Liste des bannis"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Envoyer un message..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 

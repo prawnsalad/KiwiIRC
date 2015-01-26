@@ -2,9 +2,11 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
     model: _kiwi.model.Member,
     comparator: function (a, b) {
         var i, a_modes, b_modes, a_idx, b_idx, a_nick, b_nick;
-        var user_prefixes = _kiwi.gateway.get('user_prefixes');
+        var user_prefixes = this.channel.get('network').get('user_prefixes');
+
         a_modes = a.get("modes");
         b_modes = b.get("modes");
+
         // Try to sort by modes first
         if (a_modes.length > 0) {
             // a has modes, but b doesn't so a should appear first
@@ -45,13 +47,48 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
             return 0;
         }
     },
+
+
     initialize: function (options) {
         this.view = new _kiwi.view.MemberList({"model": this});
+        this.initNickCache();
     },
+
+
+    /*
+     * Keep a reference to each member by the nick. Speeds up .getByNick()
+     * so it doesn't need to loop over every model for each nick lookup
+     */
+    initNickCache: function() {
+        var that = this;
+
+        this.nick_cache = Object.create(null);
+
+        this.on('reset', function() {
+            this.nick_cache = Object.create(null);
+
+            this.models.forEach(function(member) {
+                that.nick_cache[member.get('nick').toLowerCase()] = member;
+            });
+        });
+
+        this.on('add', function(member) {
+            that.nick_cache[member.get('nick').toLowerCase()] = member;
+        });
+
+        this.on('remove', function(member) {
+            delete that.nick_cache[member.get('nick').toLowerCase()];
+        });
+
+        this.on('change:nick', function(member) {
+            that.nick_cache[member.get('nick').toLowerCase()] = member;
+            delete that.nick_cache[member.previous('nick').toLowerCase()];
+        });
+    },
+
+
     getByNick: function (nick) {
         if (typeof nick !== 'string') return;
-        return this.find(function (m) {
-            return nick.toLowerCase() === m.get('nick').toLowerCase();
-        });
+        return this.nick_cache[nick.toLowerCase()];
     }
 });

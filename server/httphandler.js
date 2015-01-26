@@ -1,16 +1,25 @@
 var url         = require('url'),
     fs          = require('fs'),
     node_static = require('node-static'),
-    _           = require('lodash'),
-    config      = require('./configuration.js'),
-    SettingsGenerator = require('./settingsgenerator.js');
+    Negotiator  = require('negotiator'),
+    winston     = require('winston'),
+    SettingsGenerator = require('./settingsgenerator.js'),
+    Stats       = require('./stats.js');
 
+
+
+// Cached list of available translations
+var cached_available_locales = null;
 
 
 
 var HttpHandler = function (config) {
     var public_http = config.public_http || 'client/';
     this.file_server = new node_static.Server(public_http);
+
+    if (!cached_available_locales) {
+        updateLocalesCache();
+    }
 };
 
 module.exports.HttpHandler = HttpHandler;
@@ -19,26 +28,48 @@ module.exports.HttpHandler = HttpHandler;
 
 HttpHandler.prototype.serve = function (request, response) {
     // The incoming requests base path (ie. /kiwiclient)
-    var base_path = global.config.http_base_path || '/kiwi',
-        base_path_regex;
+    var base_path, base_check,
+        whitelisted_folders = ['/assets', '/src'],
+        is_whitelisted_folder = false;
 
-    // Trim of any trailing slashes
+    // Trim off any trailing slashes from the base_path
+    base_path = global.config.http_base_path || '';
     if (base_path.substr(base_path.length - 1) === '/') {
         base_path = base_path.substr(0, base_path.length - 1);
     }
 
-    // Build the regex to match the base_path
-    base_path_regex = base_path.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    // Normalise the URL + remove query strings to compare against the base_path
+    base_check = request.url.split('?')[0];
+    if (base_check.substr(base_check.length - 1) !== '/') {
+        base_check += '/';
+    }
 
-    // Any asset request to head into the asset dir
-    request.url = request.url.replace(base_path + '/assets/', '/assets/');
+    // Normalise the URL we use by removing the base path
+    if (base_check.indexOf(base_path + '/') === 0) {
+        request.url = request.url.replace(base_path, '');
 
-    // Any src request to head into the src dir
-    request.url = request.url.replace(base_path + '/src/', '/src/');
+    } else if (base_check !== '/') {
+        // We don't handle requests outside of the base path and not /, so just 404
+        response.writeHead(404);
+        response.write('Not Found');
+        response.end();
+        return;
+    }
 
-    // Any requests for /client to load the index file
-    if (request.url.match(new RegExp('^' + base_path_regex + '([/$]|$)', 'i'))) {
+    // Map any whitelisted folders to the local directories
+    whitelisted_folders.forEach(function(folder) {
+        if (request.url.indexOf(folder) === 0) {
+            is_whitelisted_folder = true;
+        }
+    });
+
+    // Any requests not for whitelisted assets returns the index page
+    if (!is_whitelisted_folder) {
         request.url = '/index.html';
+    }
+
+    if (request.url === '/index.html') {
+        Stats.incr('http.homepage');
     }
 
     // If the 'magic' translation is requested, figure out the best language to use from
@@ -62,88 +93,85 @@ HttpHandler.prototype.serve = function (request, response) {
 };
 
 
+
+
+/**
+ * Cache the available locales we have so we don't read the same directory for each request
+ **/
+function updateLocalesCache() {
+    cached_available_locales = [];
+
+    fs.readdir(global.config.public_http + '/assets/locales', function (err, files) {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                winston.error('No locale files could be found at ' + err.path);
+            } else {
+                winston.error('Error reading locales.', err);
+            }
+        }
+
+        (files || []).forEach(function (file) {
+            if (file.substr(-5) === '.json') {
+                cached_available_locales.push(file.slice(0, -5));
+            }
+        });
+    });
+}
+
+
+
 /**
  * Handle the /assets/locales/magic.json request
  * Find the closest translation we have for the language
  * set in the browser.
  **/
-var serveMagicLocale = function (request, response) {
-    var that = this,
-        default_locale_id = 'en-gb';
+function serveMagicLocale(request, response) {
+    var default_locale_id = 'en-gb',
+        found_locale, negotiator;
 
     if (!request.headers['accept-language']) {
         // No accept-language specified in the request so send the default
-        return serveLocale.call(this, request, response, default_locale_id);
+        found_locale = default_locale_id;
+
+    } else {
+        negotiator = new Negotiator(request);
+        found_locale = negotiator.language(cached_available_locales);
+
+        // If a locale couldn't be negotiated, use the default
+        found_locale = found_locale || default_locale_id;
     }
 
-    fs.readdir('client/assets/locales', function (err, files) {
-        var available = [],
-            i = 0,
-            langs = request.headers['accept-language'].split(','), // Example: en-gb,en;q=0.5
-            found_locale = default_locale_id;
-
-        // Get a list of the available translations we have
-        files.forEach(function (file) {
-            if (file.substr(-5) === '.json') {
-                available.push(file.slice(0, -5));
-            }
-        });
-
-        // Sanitise the browsers accepted languages and the qualities
-        for (i = 0; i < langs.length; i++) {
-            langs[i]= langs[i].split(';q=');
-            langs[i][0] = langs[i][0].toLowerCase();
-            langs[i][1] = (typeof langs[i][1] === 'string') ? parseFloat(langs[i][1]) : 1.0;
-        }
-
-        // Sort the accepted languages by quality
-        langs.sort(function (a, b) {
-            return b[1] - a[1];
-        });
-
-        // Serve the first language we have a translation for
-        for (i = 0; i < langs.length; i++) {
-            if (langs[i][0] === '*') {
-                break;
-            } else if (_.contains(available, langs[i][0])) {
-                found_locale = langs[i][0];
-                break;
-            }
-        }
-
-        return serveLocale.call(that, request, response, found_locale);
-    });
-};
-
-
-/**
- * Send a locale to the browser
- */
-var serveLocale = function (request, response, locale_id) {
-    this.file_server.serveFile('/assets/locales/' + locale_id + '.json', 200, {
+    // Send a locale to the browser
+    this.file_server.serveFile('/assets/locales/' + found_locale + '.json', 200, {
         Vary: 'Accept-Language',
-        'Content-Language': locale_id
+        'Content-Language': found_locale
     }, request, response);
-};
+}
+
 
 
 /**
  * Handle the settings.json request
  */
-var serveSettings = function(request, response) {
+function serveSettings(request, response) {
     var referrer_url,
-        debug = false,
-        settings;
+        debug = false;
 
     // Check the referrer for a debug option
-    if (request.headers['referer']) {
-        referrer_url = url.parse(request.headers['referer'], true);
+    if (request.headers.referer) {
+        referrer_url = url.parse(request.headers.referer, true);
         if (referrer_url.query && referrer_url.query.debug) {
             debug = true;
         }
     }
 
-    SettingsGenerator.get(debug, function(settings) {
+    SettingsGenerator.get(debug, function(err, settings) {
+        if (err) {
+            winston.error('Error generating settings', err);
+            response.writeHead(500, 'Internal Server Error');
+            return response.end();
+        }
+
         if (request.headers['if-none-match'] && request.headers['if-none-match'] === settings.hash) {
             response.writeHead(304, 'Not Modified');
             return response.end();
@@ -155,4 +183,4 @@ var serveSettings = function(request, response) {
         });
         response.end(settings.settings);
     });
-};
+}

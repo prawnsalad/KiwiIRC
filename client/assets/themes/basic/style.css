@@ -31,17 +31,24 @@
 #kiwi .memberlists_resize_handle {
     /*display:none; width:0;*/
 }
+
+#kiwi .toolbar .connections { list-style: none; }
+#kiwi .toolbar .panellist {
+    background: #2b2b2b;
+    color: #a5a5a5;
+    margin: 5px 0 0 5px;
+    float: left;
+}
 #kiwi .toolbar .panellist li {
     line-height: 1.4em;
     vertical-align: middle;
 
-    border-radius:5px;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    -khtml-border-radius:5px;
-
-    border: 1px solid #333;
-    background-color: #eee;
+    display: list-item;
+    float: left;
+    border: none;
+    background: none;
+    padding: 8px;
+    margin: 0;
 }
 
 #kiwi .toolbar .tabs { margin-right:0 !important; }
@@ -68,7 +75,7 @@
 
 #kiwi .status_message {
     background: #FEEFB3; color: #9F6000;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #d7bb71;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }
@@ -77,9 +84,10 @@
 #kiwi .channel_tools {
     margin-bottom: 5px;
     padding: 0 5%;
+    background: #DADADA;
 }
 #kiwi .channel_tools i {
-    width: 47%;
+    width: 30%;
     font-size: 1.6em;
     line-height: 1.6em;
 }
@@ -102,7 +110,10 @@
 
 #kiwi .messages .msg.action .nick,
 #kiwi .messages .msg.static .nick,
+#kiwi .messages .msg.topic { margin: 5px; background: #FFF5AB; border: 1px solid #F3C572; border-radius: 5px; }
+#kiwi .messages .msg.topic .time { display:none; }
 #kiwi .messages .msg.topic .nick { display:none; }
+#kiwi .messages .msg.topic .text { color:#009900; margin-left:0; font-style: italic; border:none; }
 
 #kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
 #kiwi .messages .msg.action.join { color:#009900; }
@@ -164,14 +175,34 @@
 #kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
 
 
+#kiwi .messages .last_seen {
+    border-bottom: #b0cf82 solid 1px;
+}
 
 #kiwi .right_bar {
     background-color: #DADADA;
     border-left: 1px dashed #8A8A8A;
 }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
+
+#kiwi .memberlists .meta {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 #kiwi .memberlists ul { list-style: none; margin-left:2px; }
 #kiwi .memberlists ul.active { }
 #kiwi .memberlists ul li { padding:0 2px; }
+#kiwi.narrow .memberlists ul li {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+}
+#kiwi.touch .memberlists ul li {
+    padding: 1em 0.5em;
+}
 #kiwi .memberlists ul li:hover {}
 #kiwi .memberlists ul li a.nick { display:block; color:black; }
 
@@ -192,6 +223,10 @@
     padding: 2px;
     overflow: hidden;
 }
+
+#kiwi.narrow .controlbox .input .nick { display:none; }
+#kiwi.narrow .controlbox .input .input_wrap { left:7px; }
+
 #kiwi .controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
 #kiwi .controlbox .input .nick a { text-decoration:none; color:black; }
 #kiwi .controlbox .input .input_wrap {
@@ -246,6 +281,8 @@
 
 
 #kiwi .toolbar .app_tools { padding-left:10px; color:#D4D4D4; }
+#kiwi.narrow .toolbar .tabs { margin-right:0; }
+#kiwi.narrow .toolbar .app_tools { width:auto; }
 #kiwi .toolbar .app_tools ul li {
     font-size:26px;
     -webkit-transition: all .3s ease;
@@ -304,13 +341,16 @@
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
 #kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
 #kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
+#kiwi.chanlist_treeview .toolbar .panellist li {
+    padding: 4px 8px;
+}
+#kiwi.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
 #kiwi.chanlist_treeview .tabs ul li.active {
     margin-right:0;
     border-right-width:0;
-    border-bottom-right-radius:0;
-    border-top-right-radius:0;
 }
 #kiwi .applet_chanlist {
     margin: 0.5em 1em;
@@ -343,3 +383,49 @@
 #kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
 #kiwi .channel_info .channel-banlist thead { font-style: italic; }
 #kiwi .channel_info .remove-ban:hover { color: #900; }
+
+
+#kiwi .notification {
+    /* .show class reveals this element */
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transition: max-height 1s;
+    -moz-transition: max-height 1s;
+    transition: max-height 1s;
+
+    display: block;
+
+    color: #DBDBDB;
+    text-shadow: 0 -1px black;
+    background: rgba(65, 65, 65, 0.95);
+    background-clip: padding-box;
+    border: 1px solid;
+    border-color: rgba(17, 17, 17, 0.6) rgba(17, 17, 17, 0.7) rgba(17, 17, 17, 0.9);
+    border-radius: 5px;
+
+    background-image: -webkit-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: -moz-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: -o-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: linear-gradient(to bottom, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    -webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+
+
+}
+#kiwi .notification.show { max-height: 500px; }
+#kiwi .notification .close {
+    font-size:16px;
+    border:1px solid #1b1b1b;
+    border-left, border-bottom: none;
+    border-radius: 0 8px 0 0;
+    line-height: 20px;
+    text-align: center;
+    color: #747474;
+    background-image: -webkit-linear-gradient(top, #383838, #111111);
+    background-image: -moz-linear-gradient(top, #383838, #111111);
+    background-image: -o-linear-gradient(top, #383838, #111111);
+    background-image: linear-gradient(to bottom, #383838, #111111);
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
+}
+#kiwi .notification .close:hover { color: #DBDBDB; }

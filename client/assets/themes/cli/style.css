@@ -33,7 +33,7 @@
     padding-left:0.5em;
 }
 
-#kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #444444; border-top:1px solid #444444; }
+#kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #2B2B2B; border-top:1px solid #2B2B2B; }
 #kiwi .toolbar .topic div {
     width:100%; height: 1.5em;
     padding: 0.2em 1em;
@@ -42,12 +42,21 @@
     border:none; outline:none;
     overflow: hidden;
     white-space: nowrap;
+
+    background: #333333; /* Old browsers */
+    background: -moz-linear-gradient(top,  #333333 0%, #111111 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#333333), color-stop(100%,#111111)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #333333 0%,#111111 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #333333 0%,#111111 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #333333 0%,#111111 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #333333 0%,#111111 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#111111',GradientType=0 ); /* IE6-9 */
+
 }
 #kiwi .toolbar .topic:hover div {
     min-height:1.5em;
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
-    background-color:#111111;
     z-index: 1;
     height:auto; bottom:auto;
     border-bottom: 1px solid #444444;
@@ -77,7 +86,7 @@
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
 #kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
-#kiwi .toolbar .panellist li .part:before { content:"\f00d"; }
+#kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left:5px; }
 #kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
@@ -96,6 +105,17 @@
 
 
 #kiwi .right_bar { background:#252525; }
+#kiwi.narrow .right_bar { width:100%; }
+#kiwi.narrow .right_bar.disabled { width:0; }
+
+#kiwi .memberlists .meta {
+    border-bottom: 1px solid #8A8A8A;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    padding: 0 0 5%;
+    text-align: center;
+}
+
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
 #kiwi .memberlists ul li a.nick { color:#6d6d6d; }
 #kiwi .memberlists ul li:hover {
@@ -112,13 +132,20 @@
 #kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
 #kiwi .userbox .divider-horizontal { display:none; }
 
+#kiwi .status_message {
+    background: #363636;
+    border-bottom: 1px solid #444444;
+    padding: 0.9em;
+    text-align: center; font-size:1.1em;
+}
+
 #kiwi .channel_tools {
     border-bottom: 1px solid #8A8A8A;
     margin-bottom: 10px;
     padding: 0 5%;
 }
 #kiwi .channel_tools i {
-    width: 47%;
+    width: 30%;
     font-size: 1.6em;
     line-height: 1.6em;
 }
@@ -191,6 +218,11 @@
 }
 #kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
 
+#kiwi .messages .last_seen {
+    border-bottom-color: #090;
+    border-bottom-style: dashed;
+}
+
 
 
 /* The server select dialog */
@@ -241,11 +273,11 @@
 
 
 
-#kiwi.chanlist_treeview .panels { left:200px; }
+#kiwi.chanlist_treeview .panels { left:160px; }
 #kiwi.chanlist_treeview .toolbar { position:static; }
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:200px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
 #kiwi.chanlist_treeview .tabs ul li.active { padding-left:1em; }
@@ -290,3 +322,50 @@
 #kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
 #kiwi .channel_info .channel-banlist thead { font-style: italic; }
 #kiwi .channel_info .remove-ban:hover { color: #900; }
+
+
+
+#kiwi .notification {
+    /* .show class reveals this element */
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transition: max-height 1s;
+    -moz-transition: max-height 1s;
+    transition: max-height 1s;
+
+    display: block;
+
+    color: #DBDBDB;
+    text-shadow: 0 -1px black;
+    background: rgba(65, 65, 65, 0.95);
+    background-clip: padding-box;
+    border: 1px solid;
+    border-color: rgba(17, 17, 17, 0.6) rgba(17, 17, 17, 0.7) rgba(17, 17, 17, 0.9);
+    border-radius: 5px;
+
+    background-image: -webkit-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: -moz-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: -o-linear-gradient(top, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    background-image: linear-gradient(to bottom, rgba(242, 242, 242, 0.3), rgba(221, 221, 221, 0.01) 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+    -webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+
+
+}
+#kiwi .notification.show { max-height: 500px; }
+#kiwi .notification .close {
+    font-size:16px;
+    border:1px solid #1b1b1b;
+    border-left, border-bottom: none;
+    border-radius: 0 8px 0 0;
+    line-height: 20px;
+    text-align: center;
+    color: #747474;
+    background-image: -webkit-linear-gradient(top, #383838, #111111);
+    background-image: -moz-linear-gradient(top, #383838, #111111);
+    background-image: -o-linear-gradient(top, #383838, #111111);
+    background-image: linear-gradient(to bottom, #383838, #111111);
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
+}
+#kiwi .notification .close:hover { color: #DBDBDB; }

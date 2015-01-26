@@ -1,12 +1,16 @@
 var util    = require('util'),
     EventBinder  = require('./eventbinder.js'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    Stats = require('../stats.js');
 
 var IrcServer = function (irc_connection) {
     this.irc_connection = irc_connection;
 
     this.list_buffer = [];
     this.motd_buffer = '';
+
+    // Date when registeration with the IRCd had completed
+    this.registered = false;
 
     this.irc_events = {
         connect:                onConnect,
@@ -49,8 +53,18 @@ IrcServer.prototype.dispose = function (){
 };
 
 
+IrcServer.prototype.reset = function() {
+    this.registered = false;
+    this.list_buffer = [];
+    this.motd_buffer = '';
+};
+
+
 
 function onConnect(event) {
+    Stats.incr('irc.connection.registered');
+    this.registered = new Date();
+
     this.irc_connection.clientEvent('connect', {
         nick: event.nick
     });
@@ -152,7 +166,7 @@ function onNoSuchNick(event) {
 
 function onCannotSendToChan(event) {
     this.irc_connection.clientEvent('irc_error', {
-        error: 'cannot_send_to_chan',
+        error: 'cannot_send_to_channel',
         channel: event.channel,
         reason: event.reason
     });

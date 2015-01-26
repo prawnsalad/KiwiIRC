@@ -76,6 +76,27 @@ ControlInterface.prototype.addCommand = function(command, fn) {
 
 
 var commands = {};
+commands.help = function(args, raw) {
+    var help = 'Available commands:\n';
+    help += 'help\n';
+    help += '    This help menu\n';
+    help += 'exit\n';
+    help += '    Close and exit this Kiwi admin console\n';
+    help += 'reconfig\n';
+    help += '    Reload the config.js file\n';
+    help += 'stats\n';
+    help += '    Show connection statistics\n';
+    help += 'module list\n';
+    help += '    List the loaded server modules\n';
+    help += 'module reload module_name\n';
+    help += '    Reload the module_name module\n';
+    help += 'jumpserver [force] http://kiwi-server.com\n';
+    help += '    Tell all connected clients to reconnect to a different kiwi server. If \'force\' is given, they will be forced to reconnect in 5 minutes. \n';
+
+    this.write(help);
+};
+
+
 commands.stats = function(args, raw) {
     this.write('Connected clients: ' + _.size(global.clients.clients).toString());
     this.write('Num. remote hosts: ' + _.size(global.clients.addresses).toString());
@@ -143,6 +164,34 @@ commands.module = function(args, raw) {
                 this.write('Error loading module ' + (args[1] || ''));
             }
             this.write('Module ' + args[1] + ' reloaded');
+
+            break;
+
+        case 'load':
+            if (!args[1]) {
+                this.write('A module name must be specified');
+                return;
+            }
+
+            if (!kiwiModules.load(args[1])) {
+                this.write('Error loading module ' + (args[1] || ''));
+            }
+            this.write('Module ' + args[1] + ' loaded');
+
+            break;
+
+        case 'unload':
+            if (!args[1]) {
+                this.write('A module name must be specified');
+                return;
+            }
+
+            if (!kiwiModules.unload(args[1])) {
+                this.write('Module ' + (args[1] || '') + ' is not loaded');
+                return;
+            }
+
+            this.write('Module ' + args[1] + ' unloaded');
 
             break;
 

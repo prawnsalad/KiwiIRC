@@ -25,6 +25,22 @@ _kiwi.view.Panel = Backbone.View.extend({
         this.alert_level = 0;
 
         this.model.set({"view": this}, {"silent": true});
+
+        this.listenTo(this.model, 'change:activity_counter', function(model, new_count) {
+            var $act = this.model.tab.find('.activity');
+
+            if (new_count > 999) {
+                $act.text('999+');
+            } else {
+                $act.text(new_count);
+            }
+
+            if (new_count === 0) {
+                $act.addClass('zero');
+            } else {
+                $act.removeClass('zero');
+            }
+        });
     },
 
     render: function () {
@@ -41,16 +57,15 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
-            $('#kiwi .right_bar').removeClass('disabled');
+            _kiwi.app.rightbar.show();
             members.view.show();
         } else {
-            // Memberlist not found for this panel, hide any active ones
-            $('#kiwi .right_bar').addClass('disabled').children().removeClass('active');
+            _kiwi.app.rightbar.hide();
         }
 
         // Remove any alerts and activity counters for this panel
         this.alert('none');
-        this.model.tab.find('.activity').text('0').addClass('zero');
+        this.model.set('activity_counter', 0);
 
         _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels().active);
         this.model.trigger('active', this.model);

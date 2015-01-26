@@ -9,11 +9,8 @@
 
 <link rel="shortcut icon" href="<%base_path%>/assets/img/favicon.ico">
 
-<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css" />
+<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css?t=<%build_time%>" />
 <link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.min.css" />
-<!--[if IE 7]>
-<link rel="stylesheet" type="text/css" href="/kiwi/assets/css/font-awesome-ie7.css" />
-<![endif]-->
 </head>
 <body>
 
@@ -22,8 +19,8 @@
             <div class="toolbar">
                 <div class="app_tools">
                     <ul class="main">
-                        <li class="settings"><i class="icon-cogs" title="Settings"></i></li>
-                        <li class="startup"><i class="icon-home" title="Home"></i></li>
+                        <li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
+                        <li class="startup"><i class="fa fa-home" title="Home"></i></li>
                         <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
                     </ul>
                 </div>
@@ -44,11 +41,15 @@
             </div>
 
             <div class="right_bar disabled">
-                <div class="channel_tools">
-                    <i class="icon-info-sign channel_info" title="Channel Info"></i>
-                    <i class="icon-signout channel_part" title="Leave Channel"></i>
+                <div class="right-bar-toggle"><i class=""></i></div>
+                <div class="right-bar-content">
+                    <div class="channel_tools">
+                        <i class="fa fa-info-circle channel_info" title="Channel Info"></i>
+                        <i class="fa fa-sign-out channel_part" title="Leave Channel"></i>
+                        <i class="fa fa-angle-double-right right-bar-toggle-inner" title="Hide"></i>
+                    </div>
+                    <div class="memberlists"></div>
                 </div>
-                <div class="memberlists"></div>
             </div>
 
             <div class="controlbox">
@@ -95,11 +96,11 @@
 
 
                 <div class="control-group channel-banlist">
-                    <button class="show_banlist">Show banlist</button> <span class="banlist-status"></span>
+                    <button class="toggle_banlist">Toggle banlist</button> <span class="banlist-status"></span>
                     <table>
                         <thead>
                             <tr>
-                                <td>Bank Mask</td>
+                                <td>Ban Mask</td>
                                 <td>Added By</td>
                                 <td>Date Added</td>
                                 <td></td>
@@ -116,15 +117,15 @@
 
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="close_menu if_op op"><i class="icon-star"></i><%= op %></a>
-            <a class="close_menu if_op deop"><i class="icon-star-empty"></i><%= de_op %></a>
-            <a class="close_menu if_op voice"><i class="icon-volume-up"></i><%= voice %></a>
-            <a class="close_menu if_op devoice"><i class="icon-volume-off"></i><%= de_voice %></a>
-            <a class="close_menu if_op kick"><i class="icon-remove"></i><%= kick %></a>
-            <a class="close_menu if_op ban"><i class="icon-ban-circle"></i><%= ban %></a>
+            <a class="close_menu if_op op"><i class="fa fa-star"></i><%= op %></a>
+            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
+            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
+            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
+            <a class="close_menu if_op kick"><i class="fa fa-times"></i><%= kick %></a>
+            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><%= ban %></a>
 
-            <a class="close_menu query"><i class="icon-comment"></i><%= message %></a>
-            <a class="close_menu info"><i class="icon-info-sign"></i><%= info %></a>
+            <a class="close_menu query"><i class="fa fa-comment"></i><%= message %></a>
+            <a class="close_menu info"><i class="fa fa-info-circle"></i><%= info %></a>
             <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
         </div>
     </script>
@@ -179,7 +180,7 @@
                                 <td>
                                     <div style="position:relative;">
                                         <input type="text" class="channel" id="server_select_channel">
-                                        <i class="icon-key" title="<%= channel_key %>"></i>
+                                        <i class="fa fa-key" title="<%= channel_key %>"></i>
                                     </div>
                                 </td>
                             </tr>
@@ -201,7 +202,7 @@
                             </tr>
                         </table>
 
-                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="icon-caret-down"></i></a>
+                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
                     </div>
 
 
@@ -377,14 +378,23 @@
                 #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
             <div class="script_editor" style="height:100%; position:relative;">
-                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="icon-save"></i></button><span class="status"></span></div>
+                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
                 <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
             </div>
         </div>
     </script>
 
 
-<script src="<%base_path%>/assets/libs/jquery-1.11.0.min.js"></script>
+    <script type="text/html" id="tmpl_notifications">
+        <div class="notification-inner">
+            <i class="fa fa-times close"></i>
+            <h6></h6>
+            <div class="content"></div>
+        </div>
+    </script>
+
+
+<script src="<%base_path%>/assets/libs/jquery-1.11.1.min.js"></script>
 <script>
 /* Script loader (https://github.com/ded/script.js) */
 (function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)
@@ -411,7 +421,9 @@
                 console[method] = noop;
             }
         }
-    };
+    }
+
+    normalizeConsole();
 
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -424,72 +436,127 @@
         }
     }
 
-    (function () {
+    (function afterPromiseAvailable() {
         var base_path = '<%base_path%>', // Entry path for the kiwi application
             scripts = [],
             opts = {
                 container: $('body'),
                 base_path: base_path,
                 settings_path: base_path + '/assets/settings.json'
-            };
+            },
+            script_promise, script_promise_resolve,
+            onload_promise,
+            settings_promise;
 
-        normalizeConsole();
+        // If the browser doesn't natively support promises load up the polyfill and try again.
+        if (!window.Promise) {
+            $script(base_path + "/assets/libs/promise.min.js", afterPromiseAvailable);
+            return;
+        }
 
-        /**
-         * Job bootup manager
-         * Once all jobs have completed, call any registered completed functions
-         */
-        var jobs = new (function BootManager() {
-            var completed_jobs = {  };
-
-            // Functions to call once all jobs have completed
-            var completed_callbacks = [];
-
-
-            function callCompletedFunctions(fn) {
-                $.each(completed_callbacks, function(idx, fn) {
-                    fn();
-                });
-
-                completed_callbacks = [];
-            };
-
-
-            this.finishJob = function(job_name) {
-                if (typeof completed_jobs[job_name] === 'undefined') {
-                    return;
-                }
-
-                completed_jobs[job_name] = true;
-
-                // Check if all our jobs have completed
-                var all_jobs_completed = true;
-                $.each(completed_jobs, function(idx, completed) {
-                    if (!completed) {
-                        all_jobs_completed = false;
-                        return false;
+        function loadScripts(scripts) {
+            return new Promise(function (resolve, reject) {
+                var to_load, idx,
+                    base = base_path + '/';
+                if (typeof scripts === 'string') {
+                    to_load = base + scripts;
+                } else {
+                    to_load = [];
+                    for (idx in scripts) {
+                        to_load.push(base + scripts[idx]);
                     }
-                });
-
-                if (all_jobs_completed) {
-                    callCompletedFunctions();
                 }
-            };
+                $script(to_load, resolve, reject);
+            });
+        }
 
+        onload_promise = new Promise(function (resolve) {
+            // Document may already be loaded if we had to load the Promise shim seperately
+            if (document.readyState === 'complete') {
+                resolve();
+                return;
+            }
 
-            this.onFinish = function(fn) {
-                completed_callbacks.push(fn);
-            };
+            window.onload = resolve;
+        });
 
+        // Get a resolve function for the script loading promises
+        script_promise = new Promise(function (resolve) {
+            script_promise_resolve = resolve;
+        });
 
-            this.registerJob = function(job_name) {
-                completed_jobs[job_name] = false;
-            };
-        })();
+        // Chain each script loading promise
+        script_promise = script_promise.then(function () {
+            var idx;
+            for (idx = 0; idx < scripts.length; idx++) {
+                (function (idx) {
+                    script_promise = script_promise.then(function () {
+                        return loadScripts(scripts[idx]);
+                    });
+                })(idx);
+            }
+        });
 
+        // Debugging will get a list of debugging scripts from settings.json (below)
+        if (!getQueryVariable('debug')) {
+            scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
+            scripts.push([
+                'assets/libs/backbone.min.js?t=<%build_time%>',
+                'assets/libs/jed.js?t=<%build_time%>'
+            ]);
+            scripts.push([
+                'assets/kiwi.min.js?t=<%build_time%>',
+                'assets/libs/engine.io.bundle.min.js?t=<%build_time%>'
+            ]);
 
-        // Run after all dependancies have been loaded
-        jobs.onFinish(function startApp() {
+            script_promise_resolve();
+        }
+
+        settings_promise = new Promise(function (resolve) {
+            $.getJSON(opts.settings_path, function (data) {
+                opts.server_settings = data.server_settings;
+                opts.client_plugins = data.client_plugins;
+                opts.translations = data.translations;
+                opts.locale = data.locale;
+                opts.themes = data.themes;
+
+                if (typeof data.kiwi_server !== 'undefined') {
+                    opts.kiwi_server = data.kiwi_server;
+                }
+
+                resolve();
+
+                // If debugging, grab the debug scripts and load them
+                if (getQueryVariable('debug')) {
+                    scripts = scripts.concat(data.scripts);
+                    script_promise_resolve();
+                }
+
+                // Load themes
+                if (opts.themes) {
+                    $.each(opts.themes, function (theme_idx, theme) {
+                        var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase()),
+                            rel = (disabled?'alternate ':'') + 'stylesheet';
+
+                        var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
+                        link.disabled = disabled;
+
+                        $(link).appendTo($('head'));
+                    });
+                }
+            });
+        });
+
+        // prawnsalad: Why is the below script_promise in its own .then()?
+        // M2Ys4U: prawnsalad: either of the first two promises can resolve the
+        // third one, but the third one has a then() on it already, so the
+        // then() on the all() makes it wait for the then() on the script promise
+        // to resolve.
+        //
+        // Promises - simple.
+        Promise.all([onload_promise, settings_promise])
+        .then(function(){return script_promise})
+        .then(function startApp() {
             // Kiwi IRC version this is built from
             kiwi.build_version = '<%build_version%>';
 
@@ -513,88 +580,6 @@
                 }
             });
         });
-
-
-        // Load each script
-        jobs.registerJob('load_scripts');
-        var cur_script = 0;
-        function loadNextScript () {
-            var to_load,
-                base = base_path + '/';
-
-            // Start the kiwi app if all scripts have been loaded
-            if (cur_script === scripts.length) {
-                jobs.finishJob('load_scripts');
-                return;
-            }
-
-            if (typeof scripts[cur_script] === 'string') {
-                to_load = base + scripts[cur_script];
-            } else {
-                to_load = [];
-                for(var idx in scripts[cur_script]) {
-                    to_load.push(base + scripts[cur_script][idx]);
-                }
-            }
-
-            $script(to_load, loadNextScript);
-
-            cur_script++;
-        }
-
-        // If we're not interested in debug libs, start loading production files
-        if (!getQueryVariable('debug')) {
-            scripts.push(['assets/libs/lodash.min.js']);
-            scripts.push([
-                'assets/libs/backbone.min.js',
-                'assets/libs/jed.js'
-            ]);
-            scripts.push([
-                'assets/kiwi.min.js',
-                'assets/libs/engine.io.bundle.min.js'
-            ]);
-
-            loadNextScript();
-        }
-
-        // Load application settings
-        jobs.registerJob('load_settings');
-        $.getJSON(opts.settings_path, function (data) {
-            opts.server_settings = data.server_settings;
-            opts.client_plugins = data.client_plugins;
-            opts.translations = data.translations;
-            opts.locale = data.locale;
-            opts.themes = data.themes;
-
-            if (typeof data.kiwi_server !== 'undefined')
-                opts.kiwi_server = data.kiwi_server;
-
-            jobs.finishJob('load_settings');
-
-            // If debugging, grab the debug scripts and load them
-            if (getQueryVariable('debug')) {
-                scripts = scripts.concat(data.scripts);
-                loadNextScript();
-            }
-
-            // Load themes
-            if (opts.themes) {
-                $.each(opts.themes, function (theme_idx, theme) {
-                    var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase()),
-                        rel = (disabled?'alternate ':'') + 'stylesheet' /*+ (disabled?' prefetch':'')*/;
-
-                    var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
-                    link.disabled = disabled;
-
-                    $(link).appendTo($('head'));
-                });
-            }
-        });
-
-        jobs.registerJob('window_load');
-        window.onload = function() {
-            jobs.finishJob('window_load');
-        };
     })();
 </script>
 </body>

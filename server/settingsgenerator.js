@@ -1,5 +1,6 @@
 var fs          = require('fs'),
     crypto      = require('crypto'),
+    Promise     = require('es6-promise').Promise,
     config      = require('./configuration.js');
 
 
@@ -31,15 +32,16 @@ config.on('loaded', function () {
 function getSettings(debug, callback) {
     var settings = cached_settings[debug ? 'debug' : 'production'];
 
-    var returnSettings = function() {
-        callback(settings);
-    };
-
     // Generate the settings if we don't have them cached as yet
     if (settings.settings === '') {
-        generateSettings(debug, returnSettings);
+        generateSettings(debug).then(function (settings) {
+            cached_settings[debug ? 'debug' : 'production'] = settings;
+            callback(null, settings);
+        }, function (err) {
+            callback(err);
+        });
     } else {
-        returnSettings();
+        callback(null, settings);
     }
 }
 
@@ -48,7 +50,7 @@ function getSettings(debug, callback) {
  * Generate a settings object for the client.
  * Settings include available translations, default client config, etc
  */
-function generateSettings(debug, callback) {
+function generateSettings(debug) {
     var vars = {
             server_settings: {},
             client_plugins: [],
@@ -80,6 +82,11 @@ function generateSettings(debug, callback) {
         vars.server_settings.client = config.get().client;
     }
 
+    // Client transport specified?
+    if (config.get().client_transports) {
+        vars.server_settings.transports = config.get().client_transports;
+    }
+
     // Any client plugins?
     if (config.get().client_plugins && config.get().client_plugins.length > 0) {
         vars.client_plugins = config.get().client_plugins;
@@ -87,92 +94,73 @@ function generateSettings(debug, callback) {
 
     addScripts(vars, debug);
 
-    // Further jobs depend on callbacks, so tally up completed jobs before callback()
-    var total_jobs = 2,
-        completed_jobs = 0,
-        jobComplete = function() {
-            completed_jobs++;
-
-            if (completed_jobs < total_jobs)
-                return;
-
-            settings = cached_settings[debug?'debug':'production'];
-            settings.settings = JSON.stringify(vars);
-            settings.hash = crypto.createHash('md5').update(settings.settings).digest('hex');
-
-            callback();
-        };
-
-    addThemes(vars, jobComplete);
-    addTranslations(vars, jobComplete);
-
-}
-
-
-function addThemes(vars, callback) {
-    readThemeInfo(config.get().client_themes || ['relaxed'], function (err, themes) {
-        if (err) {
-            return callback(err);
-        }
-
+    return Promise.all([addThemes().then(function (themes) {
         vars.themes = themes;
-        return callback();
+    }), addTranslations().then(function (translations) {
+        vars.translations = translations;
+    })]).then(function () {
+        var settings = JSON.stringify(vars);
+        return ({
+            settings: settings,
+            hash: crypto.createHash('md5').update(settings).digest('hex')
+        });
     });
 }
 
 
-function readThemeInfo(themes, prev, callback) {
-    "use strict";
-    var theme = themes[0];
+function addThemes() {
+    return (config.get().client_themes || ['relaxed']).reduce(function (prom, theme) {
+        return prom.then(function (themes) {
+            return new Promise(function readThemeInfo(resolve, reject) {
+                fs.readFile(__dirname + '/../client/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
+                    var theme;
+                    if (err) {
+                        return reject(err);
+                    }
 
-    if (typeof prev === 'function') {
-        callback = prev;
-        prev = [];
-    }
+                    try {
+                        theme = JSON.parse(theme_json);
+                    } catch (e) {
+                        return reject(e);
+                    }
 
-    fs.readFile(__dirname + '/../client/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
-        if (err) {
-            return callback(err);
-        }
-
-        try {
-            theme_json = JSON.parse(theme_json);
-        } catch (e) {
-            return callback(e);
-        }
-
-        prev.push(theme_json);
-
-        if (themes.length > 1) {
-            return readThemeInfo(themes.slice(1), prev, callback);
-        }
-
-        callback(null, prev);
-    });
+                    themes.push(theme);
+                    resolve(themes);
+                });
+            });
+        });
+    }, Promise.resolve([]));
 }
 
-
-function addTranslations(vars, callback) {
-    // Get a list of available translations
-    fs.readFile(__dirname + '/../client/src/translations/translations.json', function (err, translations) {
-        if (err) {
-            return callback(err);
-        }
-
-        translations = JSON.parse(translations);
-        fs.readdir(__dirname + '/../client/src/translations/', function (err, pofiles) {
+function addTranslations() {
+    return new Promise(function (resolve, reject) {
+        fs.readFile(__dirname + '/../client/src/translations/translations.json', function readTranslations(err, translations) {
             if (err) {
-                return callback(err);
+                return reject(err);
             }
 
-            pofiles.forEach(function (file) {
-                var locale = file.slice(0, -3);
-                if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                    vars.translations.push({tag: locale, language: translations[locale]});
-                }
-            });
+            try {
+                translations = JSON.parse(translations);
+            } catch (e) {
+                return reject(e);
+            }
 
-            return callback();
+            fs.readdir(__dirname + '/../client/src/translations/', function readTranslationFile(err, pofiles) {
+                var trans = [];
+
+                if (err) {
+                    return reject(err);
+                }
+
+                pofiles.forEach(function (file) {
+                    var locale = file.slice(0, -3);
+                    if ((file.slice(-3) === '.po') && (locale !== 'template')) {
+                        trans.push({tag: locale, language: translations[locale]});
+                    }
+                });
+
+                resolve(trans);
+            });
         });
     });
 }
@@ -214,8 +202,7 @@ function addScripts(vars, debug) {
             'src/models/query.js',
             'src/models/server.js',     // Depends on models/channel.js
             'src/models/pluginmanager.js',
-            'src/models/datastore.js',
-            'src/helpers/utils.js'
+            'src/models/datastore.js'
         ],
 
         // Some views extend these, so make sure they're loaded beforehand
@@ -243,8 +230,15 @@ function addScripts(vars, debug) {
             'src/views/topicbar.js',
             'src/views/userbox.js',
             'src/views/channeltools.js',
-            'src/views/channelinfo.js'
+            'src/views/channelinfo.js',
+            'src/views/rightbar.js',
+            'src/views/notification.js'
         ],
+
+        [
+            'src/misc/clientuicommands.js'
+        ],
+
         [
             'src/applets/settings.js',
             'src/applets/chanlist.js',
@@ -252,4 +246,13 @@ function addScripts(vars, debug) {
             'src/applets/startup.js'
         ]
     ]);
+
+    // Load any helpers we may have
+    var helpers_path = global.config.public_http + 'src/helpers/';
+    var helpers_sources = fs.readdirSync(helpers_path)
+        .map(function(file){
+            return 'src/helpers/' + file;
+        });
+
+    vars.scripts = vars.scripts.concat(helpers_sources);
 }

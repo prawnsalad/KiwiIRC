@@ -44,9 +44,8 @@ _kiwi.view.UserBox = Backbone.View.extend({
     },
 
     queryClick: function (event) {
-        var panel = new _kiwi.model.Query({name: this.user.get('nick')});
-        _kiwi.app.connections.active_connection.panels.add(panel);
-        panel.view.show();
+        var nick = this.user.get('nick');
+        _kiwi.app.connections.active_connection.createQuery(nick);
     },
 
     infoClick: function (event) {

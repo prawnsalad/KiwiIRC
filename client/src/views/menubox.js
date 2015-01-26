@@ -37,7 +37,7 @@ _kiwi.view.MenuBox = Backbone.View.extend({
         });
 
         if (this._display_footer)
-            this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="icon-remove"></i></a></div>');
+            this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="fa fa-times"></i></a></div>');
 
     },
 
@@ -79,7 +79,7 @@ _kiwi.view.MenuBox = Backbone.View.extend({
 
 
     addItem: function(item_name, $item) {
-        if ($item.is('a')) $item.addClass('icon-chevron-right');
+        if ($item.is('a')) $item.addClass('fa fa-chevron-right');
         this._items[item_name] = $item;
     },
 

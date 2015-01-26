@@ -36,30 +36,30 @@
             if($('.applet_chanlist .users_title').find('span.chanlist_sort_users').length == 0) {
                 this.$('.users_title').append('<span class="chanlist_sort_users">&nbsp;&nbsp;</span>');
             } else {
-                this.$('.users_title span.chanlist_sort_users').removeClass('icon-sort-up');
-                this.$('.users_title span.chanlist_sort_users').removeClass('icon-sort-down');
+                this.$('.users_title span.chanlist_sort_users').removeClass('fa fa-sort-desc');
+                this.$('.users_title span.chanlist_sort_users').removeClass('fa fa-sort-asc');
             }
             if ($('.applet_chanlist .channel_name_title').find('span.chanlist_sort_names').length == 0) {
                 this.$('.channel_name_title').append('<span class="chanlist_sort_names">&nbsp;&nbsp;</span>');
             } else {
-                this.$('.channel_name_title span.chanlist_sort_names').removeClass('icon-sort-up');
-                this.$('.channel_name_title span.chanlist_sort_names').removeClass('icon-sort-down');
+                this.$('.channel_name_title span.chanlist_sort_names').removeClass('fa fa-sort-desc');
+                this.$('.channel_name_title span.chanlist_sort_names').removeClass('fa fa-sort-asc');
             }
 
             // Push the new sort icon
             switch (this.order) {
                 case 'user_desc':
                 default:
-                    this.$('.users_title span.chanlist_sort_users').addClass('icon-sort-down');
+                    this.$('.users_title span.chanlist_sort_users').addClass('fa fa-sort-asc');
                     break;
                 case 'user_asc':
-                    this.$('.users_title span.chanlist_sort_users').addClass('icon-sort-up');
+                    this.$('.users_title span.chanlist_sort_users').addClass('fa fa-sort-desc');
                     break;
                 case 'name_asc':
-                    this.$('.channel_name_title span.chanlist_sort_names').addClass('icon-sort-up');
+                    this.$('.channel_name_title span.chanlist_sort_names').addClass('fa fa-sort-desc');
                     break;
                 case 'name_desc':
-                    this.$('.channel_name_title span.chanlist_sort_names').addClass('icon-sort-down');
+                    this.$('.channel_name_title span.chanlist_sort_names').addClass('fa fa-sort-asc');
                     break;
             }
 
@@ -147,8 +147,8 @@
             this.view = new View();
 
             this.network = _kiwi.global.components.Network();
-            this.network.on('onlist_channel', this.onListChannel, this);
-            this.network.on('onlist_start', this.onListStart, this);
+            this.network.on('list_channel', this.onListChannel, this);
+            this.network.on('list_start', this.onListStart, this);
         },
 
 

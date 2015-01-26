@@ -4,9 +4,11 @@
 */
 var _kiwi = {};
 
+_kiwi.misc = {};
 _kiwi.model = {};
 _kiwi.view = {};
 _kiwi.applets = {};
+_kiwi.utils = {};
 
 
 /**
@@ -17,13 +19,24 @@ _kiwi.applets = {};
 _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
     settings: undefined, // Instance of _kiwi.model.DataStore
-    plugins: undefined,
-    utils: undefined, // TODO: Re-usable methods
-    user: undefined, // TODO: Limited user methods
-    server: undefined, // TODO: Limited server methods
+    plugins: undefined, // Instance of _kiwi.model.PluginManager
+    events: undefined, // Instance of PluginInterface
+    rpc: undefined, // Instance of WebsocketRpc
+    utils: {}, // References to misc. re-usable helpers / functions
 
-    // TODO: think of a better term for this as it will also refer to queries
-    channels: undefined, // TODO: Limited access to panels list
+    // Make public some internal utils for plugins to make use of
+    initUtils: function() {
+        this.utils.randomString = randomString;
+        this.utils.secondsToTime = secondsToTime;
+        this.utils.parseISO8601 = parseISO8601;
+        this.utils.escapeRegex = escapeRegex;
+        this.utils.formatIRCMsg = formatIRCMsg;
+        this.utils.styleText = styleText;
+        this.utils.hsl2rgb = hsl2rgb;
+
+        this.utils.notifications = _kiwi.utils.notifications;
+        this.utils.formatDate = _kiwi.utils.formatDate;
+    },
 
     addMediaMessageType: function(match, buildHtml) {
         _kiwi.view.MediaMessage.addType(match, buildHtml);
@@ -32,8 +45,27 @@ _kiwi.global = {
     // Event managers for plugins
     components: {
         EventComponent: function(event_source, proxy_event_name) {
+            /*
+             * proxyEvent() listens for events then re-triggers them on its own
+             * event emitter. Why? So we can .off() on this emitter without
+             * effecting the source of events. Handy for plugins that we don't
+             * trust meddling with the core events.
+             *
+             * If listening for 'all' events the arguments are as follows:
+             *     1. Name of the triggered event
+             *     2. The event data
+             * For all other events, we only have one argument:
+             *     1. The event data
+             *
+             * When this is used via `new kiwi.components.Network()`, this listens
+             * for 'all' events so the first argument is the event name which is
+             * the connection ID. We don't want to re-trigger this event name so
+             * we need to juggle the arguments to find the real event name we want
+             * to emit.
+             */
             function proxyEvent(event_name, event_data) {
-                if (proxy_event_name !== 'all') {
+                if (proxy_event_name == 'all') {
+                } else {
                     event_data = event_name.event_data;
                     event_name = event_name.event_name;
                 }
@@ -43,7 +75,6 @@ _kiwi.global = {
 
             // The event we are to proxy
             proxy_event_name = proxy_event_name || 'all';
-
 
             _.extend(this, Backbone.Events);
             this._source = event_source;
@@ -62,19 +93,37 @@ _kiwi.global = {
         Network: function(connection_id) {
             var connection_event;
 
+            // If no connection id given, use all connections
             if (typeof connection_id !== 'undefined') {
                 connection_event = 'connection:' + connection_id.toString();
+            } else {
+                connection_event = 'connection';
             }
 
+            // Helper to get the network object
+            var getNetwork = function() {
+                var network = typeof connection_id === 'undefined' ?
+                    _kiwi.app.connections.active_connection :
+                    _kiwi.app.connections.getByConnectionId(connection_id);
+
+                return network ?
+                    network :
+                    undefined;
+            };
+
+            // Create the return object (events proxy from the gateway)
             var obj = new this.EventComponent(_kiwi.gateway, connection_event);
+
+            // Proxy several gateway functions onto the return object
             var funcs = {
                 kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
-                notice: 'notice', msg: 'privmsg', changeNick: 'changeNick',
-                channelInfo: 'channelInfo', mode: 'mode'
+                ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
+                notice: 'notice', msg: 'privmsg', say: 'privmsg',
+                changeNick: 'changeNick', channelInfo: 'channelInfo',
+                mode: 'mode', quit: 'quit'
             };
 
-            // Proxy each gateway method
             _.each(funcs, function(gateway_fn, func_name) {
                 obj[func_name] = function() {
                     var fn_name = gateway_fn;
@@ -87,6 +136,46 @@ _kiwi.global = {
                     return _kiwi.gateway[fn_name].apply(_kiwi.gateway, args);
                 };
             });
+
+            // Now for some network related functions...
+            obj.createQuery = function(nick) {
+                var network, restricted_keys;
+
+                network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.createQuery(nick);
+            };
+
+            // Add the networks getters/setters
+            obj.get = function(name) {
+                var network, restricted_keys;
+
+                network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                restricted_keys = [
+                    'password'
+                ];
+                if (restricted_keys.indexOf(name) > -1) {
+                    return undefined;
+                }
+
+                return network.get(name);
+            };
+
+            obj.set = function() {
+                var network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.set.apply(network, arguments);
+            };
 
             return obj;
         },
@@ -104,32 +193,21 @@ _kiwi.global = {
                 };
             });
 
+            // Give access to the control input textarea
+            obj.input = _kiwi.app.controlbox.$('.inp');
+
             return obj;
         }
     },
 
     // Entry point to start the kiwi application
     init: function (opts, callback) {
-        var continueStart, locale;
+        var locale_promise, theme_promise,
+            that = this;
+
         opts = opts || {};
 
-        continueInit = function (locale, s, xhr) {
-            if (locale) {
-                _kiwi.global.i18n = new Jed(locale);
-            } else {
-                _kiwi.global.i18n = new Jed();
-            }
-
-            _kiwi.app = new _kiwi.model.Application(opts);
-
-            // Start the client up
-            _kiwi.app.initializeInterfaces();
-
-            // Now everything has started up, load the plugin manager for third party plugins
-            _kiwi.global.plugins = new _kiwi.model.PluginManager();
-
-            callback && callback();
-        };
+        this.initUtils();
 
         // Set up the settings datastore
         _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
@@ -138,12 +216,44 @@ _kiwi.global = {
         // Set the window title
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
-        locale = _kiwi.global.settings.get('locale');
-        if (!locale) {
-            $.getJSON(opts.base_path + '/assets/locales/magic.json', continueInit);
-        } else {
-            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', continueInit);
-        }
+        locale_promise = new Promise(function (resolve) {
+            var locale = _kiwi.global.settings.get('locale') || 'magic';
+            $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
+                if (locale) {
+                    that.i18n = new Jed(locale);
+                } else {
+                    that.i18n = new Jed();
+                }
+                resolve();
+            });
+        });
+
+        theme_promise = new Promise(function (resolve) {
+            var text_theme = opts.server_settings.client.settings.text_theme || 'default';
+            $.getJSON(opts.base_path + '/assets/text_themes/' + text_theme + '.json', function(text_theme) {
+                opts.text_theme = text_theme;
+                resolve();
+            });
+        });
+
+
+        Promise.all([locale_promise, theme_promise]).then(function () {
+            _kiwi.app = new _kiwi.model.Application(opts);
+
+            // Start the client up
+            _kiwi.app.initializeInterfaces();
+
+            // Event emitter to let plugins interface with parts of kiwi
+            _kiwi.global.events  = new PluginInterface();
+
+            // Now everything has started up, load the plugin manager for third party plugins
+            _kiwi.global.plugins = new _kiwi.model.PluginManager();
+
+            callback();
+
+        }).then(null, function(err) {
+            console.error(err.stack);
+        });
     },
 
     start: function() {

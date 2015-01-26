@@ -18,7 +18,7 @@ var State = function (client, save_state) {
         if (!that.save_state) {
             _.each(that.irc_connections, function (irc_connection, i, cons) {
                 if (irc_connection) {
-                    irc_connection.end('QUIT :' + (global.config.quit_message || ''));
+                    irc_connection.end('QUIT :' + (irc_connection.quit_message || global.config.quit_message || ''));
                     global.servers.removeConnection(irc_connection);
                     cons[i] = null;
                 }
@@ -66,21 +66,32 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
     });
 
     con.on('error', function IrcConnectionError(err) {
-        winston.warn('irc_connection error (%s):', hostname, err);
+        var context = '';
+
+        // If we have any of the last lines stored, include them in the log for context
+        if (con.last_few_lines.length > 0) {
+            context = '\n' + con.last_few_lines.join('\n') + '\n';
+        }
+
+        winston.warn('irc_connection error (%s):' + context, hostname, err);
         return callback(err.message);
+    });
+
+    con.on('reconnecting', function IrcConnectionReconnecting() {
+        that.sendIrcCommand('disconnect', {connection_id: con.con_num, reason: 'IRC server reconnecting'});
     });
 
     con.on('close', function IrcConnectionClose() {
         // TODO: Can we get a better reason for the disconnection? Was it planned?
-        that.sendIrcCommand('disconnect', {server: con.con_num, reason: 'disconnected'});
+        that.sendIrcCommand('disconnect', {connection_id: con.con_num, reason: 'disconnected'});
 
         that.irc_connections[con_num] = null;
         global.servers.removeConnection(this);
     });
 
     // Call any modules before making the connection
-    global.modules.emit('irc connecting', {connection: con})
-        .done(function () {
+    global.modules.emit('irc connecting', {state: this, connection: con})
+        .then(function () {
             con.connect();
         });
 };

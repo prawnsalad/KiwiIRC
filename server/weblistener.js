@@ -13,7 +13,8 @@ var engine       = require('engine.io'),
     winston      = require('winston'),
     Client       = require('./client.js').Client,
     HttpHandler  = require('./httphandler.js').HttpHandler,
-    rehash       = require('./rehash.js');
+    rehash       = require('./rehash.js'),
+    Stats        = require('./stats.js');
 
 
 
@@ -53,7 +54,7 @@ var WebListener = module.exports = function (web_config) {
             }
         }
 
-        hs = spdy.createServer(opts, handleHttpRequest);
+        hs = spdy.createServer(opts);
 
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
@@ -61,7 +62,7 @@ var WebListener = module.exports = function (web_config) {
     } else {
 
         // Start some plain-text server up
-        hs = http.createServer(handleHttpRequest);
+        hs = http.createServer();
 
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
@@ -72,11 +73,47 @@ var WebListener = module.exports = function (web_config) {
         that.emit('error', err);
     });
 
-    this.ws = engine.attach(hs, {
-        path: (global.config.http_base_path || '') + '/transport'
+    this.ws = new engine.Server();
+
+    hs.on('upgrade', function(req, socket, head){
+        // engine.io can sometimes "loose" the clients remote address. Keep note of it
+        req.meta = {
+            remote_address: req.connection.remoteAddress
+        };
+
+        that.ws.handleUpgrade(req, socket, head);
+    });
+
+    hs.on('request', function(req, res){
+        var base_path = (global.config.http_base_path || ''),
+            transport_url;
+
+        // Trim off any trailing slashes
+        if (base_path.substr(base_path.length - 1) === '/') {
+            base_path = base_path.substr(0, base_path.length - 1);
+        }
+        transport_url = base_path + '/transport';
+
+        Stats.incr('http.request');
+
+        // engine.io can sometimes "loose" the clients remote address. Keep note of it
+        req.meta = {
+            remote_address: req.connection.remoteAddress
+        };
+
+        // If the request is for our transport, pass it onto engine.io
+        if (req.url.toLowerCase().indexOf(transport_url.toLowerCase()) === 0) {
+            that.ws.handleRequest(req, res);
+        } else {
+            http_handler.serve(req, res);
+        }
+
+
     });
 
     this.ws.on('connection', function(socket) {
+        Stats.incr('http.websocket');
+
         initialiseSocket(socket, function(err, authorised) {
             var client;
 
@@ -85,7 +122,7 @@ var WebListener = module.exports = function (web_config) {
                 return;
             }
 
-            client = new Client(socket);
+            client = new Client(socket, {server_config: web_config});
             client.on('dispose', function () {
                 that.emit('client_dispose', this);
             });
@@ -100,10 +137,6 @@ var WebListener = module.exports = function (web_config) {
 util.inherits(WebListener, events.EventEmitter);
 
 
-
-function handleHttpRequest(request, response) {
-    http_handler.serve(request, response);
-}
 
 function rangeCheck(addr, range) {
     var i, ranges, parts;
@@ -124,12 +157,12 @@ function rangeCheck(addr, range) {
  */
 function initialiseSocket(socket, callback) {
     var request = socket.request,
-        address = request.connection.remoteAddress,
+        address = request.meta.remote_address,
         revdns;
 
     // Key/val data stored to the socket to be read later on
     // May also be synced to a redis DB to lookup clients
-    socket.meta = {};
+    socket.meta = socket.request.meta;
 
     // If a forwarded-for header is found, switch the source address
     if (request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {

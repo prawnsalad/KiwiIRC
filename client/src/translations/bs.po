@@ -86,7 +86,7 @@ msgstr "Podesi Kiwi kao moj zadani klijent"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Napomenta: Izmjene će se prikazati tek kada osvježite stranicu"
+msgstr "Napomena: Izmjene će se prikazati tek kada osvježite stranicu"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
@@ -178,15 +178,15 @@ msgstr "Greška pri spajanju na %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s je pristupio"
+msgstr "je pristupio"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s je napustio %s"
+msgstr "je napustio %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s je izbačen od %s %s"
+msgstr "je izbačen od %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Izbacio Vas je %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s je napustio kanal %s"
+msgstr "je napustio kanal %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s nije ispravno ime kanala"
+msgstr "nije ispravno ime kanala"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Diskonektovani ste sa IRC mreže"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s je promijenio nadimak u %s"
+msgstr "je promijenio nadimak u %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,7 +214,7 @@ msgstr "Temu je promijenio %s u %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s je podesio/la mod %s"
+msgstr "je podesio/la mod %s"
 
 #: 
 msgid "client_models_network_mode"
@@ -254,11 +254,11 @@ msgstr "Pogrešan ključ kanala za %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s je samo za pozvane."
+msgstr "je samo za pozvane."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s je pun."
+msgstr "je pun."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
@@ -514,13 +514,205 @@ msgstr "Ignorisati"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Upotrijebi 24-satne vremenske oznake"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "% prijepodne"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "% poslijepodne"
+
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "je pozvan na %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "je već na kanalu"
+
+#: Date format
+msgid "client_date_format"
+msgstr "m/d/G"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "Jan"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "Feb"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "Mar"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "Apr"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "Maj"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "Jun"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "Jul"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "Aug"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "Sep"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "Okt"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "Nov"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "Dec"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "Januar"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "Februar"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "Mart"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "April"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "Maj"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "Juni"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "Juli"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "August"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "Septembar"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "Oktobar"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "Novembar"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "Decembar"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "Pon"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "Uto"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "Sri"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "Čet"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "Pet"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "Sub"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "Ned"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "Ponedjeljak"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "Utorak"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "Srijeda"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "Četvrtak"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "Petak"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "Subota"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "Nedjelja"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Moderiran chat"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Samo s pozivom"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Samo operatori mogu mijenjati temu"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Blokiraj poruke van ovog kanala"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Sakrij/Prikaži Banlistu"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Pošalji poruku..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 

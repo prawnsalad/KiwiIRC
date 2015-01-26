@@ -1,5 +1,5 @@
 _kiwi.view.MemberList = Backbone.View.extend({
-    tagName: "ul",
+    tagName: "div",
     events: {
         "click .nick": "nickClick",
         "click .channel_info": "channelInfoClick"
@@ -7,20 +7,48 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
     initialize: function (options) {
         this.model.bind('all', this.render, this);
-        $(this.el).appendTo('#kiwi .memberlists');
+        this.$el.appendTo('#kiwi .memberlists');
+
+        // Holds meta data. User counts, etc
+        this.$meta = $('<div class="meta"></div>').appendTo(this.$el);
+
+        // The list for holding the nicks
+        this.$list = $('<ul></ul>').appendTo(this.$el);
     },
     render: function () {
-        var $this = this.$el;
-        $this.empty();
+        var that = this;
+
+        this.$list.empty();
         this.model.forEach(function (member) {
             member.view.$el.data('member', member);
-            $this.append(member.view.$el);
+            that.$list.append(member.view.$el);
         });
+
+        // User count
+        if(this.model.channel.isActive()) {
+            this.renderMeta();
+        }
+
         return this;
     },
+
+    renderMeta: function() {
+        var members_count = this.model.length + ' ' + translateText('client_applets_chanlist_users');
+        this.$meta.text(members_count);
+    },
+
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
-            member = $target.data('member'),
+            member = $target.data('member');
+
+        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist'})
+        .then(_.bind(this.openUserMenuForItem, this, $target));
+    },
+
+
+    // Open a user menu for the given userlist item (<li>)
+    openUserMenuForItem: function($target) {
+        var member = $target.data('member'),
             userbox,
             are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
@@ -31,14 +59,16 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);
         menu.showFooter(false);
-        menu.show();
 
-        // Position the userbox + menubox
-        (function() {
-            var t = event.pageY,
+        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox, user: member})
+        .then(_.bind(function() {
+            menu.show();
+
+            var target_offset = $target.offset(),
+                t = target_offset.top,
                 m_bottom = t + menu.$el.outerHeight(),  // Where the bottom of menu will be
                 memberlist_bottom = this.$el.parent().offset().top + this.$el.parent().outerHeight(),
-                l = event.pageX,
+                l = target_offset.left,
                 m_right = l + menu.$el.outerWidth(),  // Where the left of menu will be
                 memberlist_right = this.$el.parent().offset().left + this.$el.parent().outerWidth();
 
@@ -62,7 +92,14 @@ _kiwi.view.MemberList = Backbone.View.extend({
                 left: l,
                 top: t
             });
-        }).call(this);
+
+        }, this))
+        .catch(_.bind(function() {
+            userbox = null;
+
+            menu.dispose();
+            menu = null;
+        }, this));
     },
 
 
@@ -74,5 +111,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
     show: function () {
         $('#kiwi .memberlists').children().removeClass('active');
         $(this.el).addClass('active');
+
+        this.renderMeta();
     }
 });

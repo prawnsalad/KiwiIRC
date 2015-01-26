@@ -2,7 +2,7 @@
 
 _kiwi.view.ChannelInfo = Backbone.View.extend({
     events: {
-        'click .show_banlist': 'updateBanlist',
+        'click .toggle_banlist': 'toggleBanList',
         'change .channel-mode': 'onModeChange',
         'click .remove-ban': 'onRemoveBanClick'
     },
@@ -12,9 +12,16 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         var that = this,
             network,
             channel = this.model.get('channel'),
-            text = {
-                channel_name: channel.get('name')
-            };
+            text;
+
+        text = {
+            moderated_chat: translateText('client_views_channelinfo_moderated'),
+            invite_only: translateText('client_views_channelinfo_inviteonly'),
+            ops_change_topic: translateText('client_views_channelinfo_opschangechannel'),
+            external_messages: translateText('client_views_channelinfo_externalmessages'),
+            toggle_banlist: translateText('client_views_channelinfo_togglebanlist'),
+            channel_name: channel.get('name')
+        };
 
         this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
 
@@ -130,30 +137,31 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
                 $('<td></td>').text(ban.banned).appendTo($tr);
                 $('<td></td>').text(ban.banned_by.split(/[!@]/)[0]).appendTo($tr);
-                $('<td></td>').text(formatDate(new Date(parseInt(ban.banned_at, 10) * 1000))).appendTo($tr);
-                $('<td><i class="icon-remove remove-ban"></i></td>').appendTo($tr);
+                $('<td></td>').text(_kiwi.utils.formatDate(new Date(parseInt(ban.banned_at, 10) * 1000))).appendTo($tr);
+                $('<td><i class="fa fa-rtimes remove-ban"></i></td>').appendTo($tr);
 
                 $table.append($tr);
             });
 
             this.$el.find('.channel-banlist table').slideDown();
-
         } else {
             this.$el.find('.banlist-status').text('Banlist empty');
             this.$el.find('.channel-banlist table').hide();
         }
     },
 
-
-    updateBanlist: function (event) {
+    toggleBanList: function (event) {
         event.preventDefault();
+        this.$el.find('.channel-banlist table').toggle();
+
+        if(!this.$el.find('.channel-banlist table').is(':visible'))
+            return;
 
         var channel = this.model.get('channel'),
             network = channel.get('network');
 
         network.gateway.raw('MODE ' + channel.get('name') + ' +b');
     },
-
 
     dispose: function () {
         this.model.get('channel').off('change:info_modes change:info_url change:banlist', this.updateInfo, this);

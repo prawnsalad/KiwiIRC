@@ -219,7 +219,7 @@ function hsl2rgb(h, s, l) {
  */
 function formatToIrcMsg(message) {
     // Format any colour codes (eg. $c4)
-    message = message.replace(/%C(\d)/ig, function(match, colour_number) {
+    message = message.replace(/%C(\d)/g, function(match, colour_number) {
         return String.fromCharCode(3) + colour_number.toString();
     });
 
@@ -229,7 +229,7 @@ function formatToIrcMsg(message) {
         U: '\x1F',    // Underline
         O: '\x0F'     // Out / Clear formatting
     };
-    message = message.replace(/%([BIUO])/ig, function(match, format_code) {
+    message = message.replace(/%([BIUO])/g, function(match, format_code) {
         if (typeof formatters[format_code.toUpperCase()] !== 'undefined')
             return formatters[format_code.toUpperCase()];
     });
@@ -377,12 +377,6 @@ function formatIRCMsg (msg) {
     return out;
 }
 
-
-function formatDate (d) {
-    d = d || new Date();
-    return d.toLocaleDateString() + ', ' + d.getHours().toString() + ':' + d.getMinutes().toString() + ':' + d.getSeconds().toString();
-}
-
 function escapeRegex (str) {
     return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
 }
@@ -421,7 +415,7 @@ function emoticonFromText(str) {
             pushEmoticon(';)', 'wink');
             break;
         case ';D':
-            pushEmoticon(';D"', 'wink_happy');
+            pushEmoticon(';D', 'wink_happy');
             break;
         case ':P':
         case ':p':
@@ -501,4 +495,51 @@ function parseISO8601(str) {
 
         return _date;
     }
+}
+
+// Simplyfy the translation syntax
+function translateText(string_id, params) {
+    params = params || '';
+
+    return _kiwi.global.i18n.translate(string_id).fetch(params);
+}
+
+/**
+ * Simplyfy the text styling syntax
+ *
+ * Syntax:
+ *   %nick:     nickname
+ *   %channel:  channel
+ *   %ident:    ident
+ *   %host:     host
+ *   %realname: realname
+ *   %text:     translated text
+ *   %C[digit]: color
+ *   %B:        bold
+ *   %I:        italic
+ *   %U:        underline
+ *   %O:        cancel styles
+ **/
+function styleText(string_id, params) {
+    var style, text;
+
+    //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
+    style = _kiwi.app.text_theme[string_id];
+    style = formatToIrcMsg(style);
+
+    // Expand a member mask into its individual parts (nick, ident, hostname)
+    if (params.member) {
+        params.nick = params.member.nick || '';
+        params.ident = params.member.ident || '';
+        params.host = params.member.hostname || '';
+        params.prefix = params.member.prefix || '';
+    }
+
+    // Do the magic. Use the %shorthand syntax to produce output.
+    text = style.replace(/%([A-Z]{2,})/ig, function(match, key) {
+        if (typeof params[key] !== 'undefined')
+            return params[key];
+    });
+
+    return text;
 }

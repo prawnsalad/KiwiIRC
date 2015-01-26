@@ -4,7 +4,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         'click .show_more': 'showMore',
         'change .have_pass input': 'showPass',
         'change .have_key input': 'showKey',
-        'click .icon-key': 'channelKeyIconClick',
+        'click .fa-key': 'channelKeyIconClick',
         'click .show_server': 'showServer'
     },
 
@@ -42,16 +42,17 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.more_shown = false;
 
         this.model.bind('new_network', this.newNetwork, this);
-        _kiwi.gateway.bind('onconnect', this.networkConnected, this);
-        _kiwi.gateway.bind('connecting', this.networkConnecting, this);
-        _kiwi.gateway.bind('onirc_error', this.onIrcError, this);
+
+        this.gateway = _kiwi.global.components.Network();
+        this.gateway.on('connect', this.networkConnected, this);
+        this.gateway.on('connecting', this.networkConnecting, this);
+        this.gateway.on('disconnect', this.networkDisconnected, this);
+        this.gateway.on('irc_error', this.onIrcError, this);
     },
 
     dispose: function() {
         this.model.off('new_network', this.newNetwork, this);
-        _kiwi.gateway.off('onconnect', this.networkConnected, this);
-        _kiwi.gateway.off('connecting', this.networkConnecting, this);
-        _kiwi.gateway.off('onirc_error', this.onIrcError, this);
+        this.gateway.off();
 
         this.remove();
     },
@@ -123,17 +124,17 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         if (!this.more_shown) {
             $('.more', this.$el).slideDown('fast');
             $('.show_more', this.$el)
-                .children('.icon-caret-down')
-                .removeClass('icon-caret-down')
-                .addClass('icon-caret-up');
+                .children('.fa-caret-down')
+                .removeClass('fa-caret-down')
+                .addClass('fa-caret-up');
             $('input.server', this.$el).select();
             this.more_shown = true;
         } else {
             $('.more', this.$el).slideUp('fast');
             $('.show_more', this.$el)
-                .children('.icon-caret-up')
-                .removeClass('icon-caret-up')
-                .addClass('icon-caret-down');
+                .children('.fs-caret-up')
+                .removeClass('fa-caret-up')
+                .addClass('fa-caret-down');
             $('input.nick', this.$el).select();
             this.more_shown = false;
         }
@@ -258,11 +259,16 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.model.current_connecting_network = null;
     },
 
+    networkDisconnected: function () {
+        this.model.current_connecting_network = null;
+        this.state = 'all';
+    },
+
     networkConnecting: function (event) {
         this.model.trigger('connecting');
         this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_connection_trying').fetch(), 'ok');
 
-        this.$('.status').append('<a class="show_server"><i class="icon-info-sign"></i></a>');
+        this.$('.status').append('<a class="show_server"><i class="fa fa-info-circle"></i></a>');
     },
 
     showServer: function() {
@@ -284,7 +290,11 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             this.$el.find('.nick').select();
             break;
         case 'erroneus_nickname':
-            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
+            if (data.reason) {
+                this.setStatus(data.reason);
+            } else {
+                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
+            }
             this.show('nick_change');
             this.$el.find('.nick').select();
             break;
@@ -292,6 +302,9 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_password_incorrect').fetch());
             this.show('enter_password');
             this.$el.find('.password').select();
+            break;
+        default:
+            this.showError(data.reason || '');
             break;
         }
     },

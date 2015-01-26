@@ -22,7 +22,7 @@ msgstr "Nazwa kanału"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Użytkownicy"
+msgstr "Użytkowników"
 
 #: 
 msgid "client_applets_chanlist_topic"
@@ -178,15 +178,15 @@ msgstr "Błąd podczas łączenia do %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "%s dołączył"
+msgstr "dołączył"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "%s wyszedł %s"
+msgstr "wyszedł %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "%s został wykopany przez %s %s"
+msgstr "został wykopany przez %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,11 +194,11 @@ msgstr "Zostałeś wykopany przez %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "%s wyszedł %s"
+msgstr "wyszedł %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "%s nie jest poprawną nazwą kanału"
+msgstr "nie jest poprawną nazwą kanału"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Odłączono od sieci IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s jest znany jako %s"
+msgstr "jest znany jako %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -214,11 +214,11 @@ msgstr "Temat ustawiony przez %s w dniu %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "%s ustawia tryb %s"
+msgstr "ustawia tryb %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "%s ustawił tryb %s"
+msgstr "ustawił tryb %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -254,11 +254,11 @@ msgstr "Zły klucz kanału dla %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "%s dostępny tylko za zaproszeniem."
+msgstr "dostępny tylko za zaproszeniem."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s jest pełny."
+msgstr "jest pełny."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
@@ -507,15 +507,15 @@ msgstr "Skasuj sieć"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "Używaj wiadomości join/part jako aktywności"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "Ignorować"
+msgstr "Ignoruj"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Używaj 24 godzinnego zegara."
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -524,4 +524,196 @@ msgstr "%s AM"
 #: 
 msgid "client_views_panel_timestamp_pm"
 msgstr "%s PM"
+
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "został zaproszony do %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "już jest na tym kanale"
+
+#: Date format
+msgid "client_date_format"
+msgstr "m/d/Y"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "Sty"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "Lut"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "Mar"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "Kwi"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "Maj"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "Cze"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "Lip"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "Sie"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "Wrz"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "Paź"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "Lis"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "Gru"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "Styczeń"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "Luty"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "Marzec"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "Kwiecień"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "Maj"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "Czerwiec"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "Lipiec"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "Sierpień"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "Wrzesień"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "Październik"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "Listopad"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "Grudzień"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "Pon"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "Wt"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "Śr"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "Czw"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "Pią"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "Sob"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "Nie"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "Poniedziałek"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "Wtorek"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "Środa"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "Czwartek"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "Piątek"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "Sobota"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "Niedziela"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Czat moderowany"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Tylko z zaproszeniem"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Tylko operatorzy mogą zmieniać temat"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Blokuj wiadomości z poza tego kanału"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Przełącz Banlistę"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Wyślij wiadomość..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 

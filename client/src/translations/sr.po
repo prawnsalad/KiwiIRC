@@ -1,0 +1,718 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: sr\n"
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Ime Kanala"
+
+#: 
+msgid "client_applets_chanlist_users"
+msgstr "Korisnici"
+
+#: 
+msgid "client_applets_chanlist_topic"
+msgstr "Tema kanala"
+
+#: 
+msgid "client_applets_chanlist_channellist"
+msgstr "Lista kanala"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Sačuvaj"
+
+#: 
+msgid "client_applets_scripteditor_error"
+msgstr "Greška u programu. %s"
+
+#: 
+msgid "client_applets_scripteditor_saved"
+msgstr "Vaša skripta je sada sačuvana i aktivna."
+
+#: 
+msgid "client_applets_scripteditor_title"
+msgstr "Editor skripte"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "Tabovi"
+
+#: 
+msgid "client_applets_settings_channelview_list"
+msgstr "Lista"
+
+#: 
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "za veliki broj kanala"
+
+#: 
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Ulaz/Izlaz obaveštenja za kanal"
+
+#: 
+msgid "client_applets_settings_timestamp"
+msgstr "Vreme"
+
+#: 
+msgid "client_applets_settings_notification_sound"
+msgstr "Ugasi zvuk notifikacija"
+
+#: 
+msgid "client_applets_settings_history_length"
+msgstr "Poruke u istoriji"
+
+#: 
+msgid "client_applets_settings_default_client"
+msgstr "Podrazumevani IRC klijent"
+
+#: 
+msgid "client_applets_settings_default_client_enable"
+msgstr "Postavi Kiwi kao moj podrazumevani IRC klijent"
+
+#: 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Tip: Izmena će imati efekta kada osvežite stranicu"
+
+#: 
+msgid "client_applets_settings_default_client_notice"
+msgstr "Tip: Chrome ili Chromium korisnici možda moraju da provere njihova podešavanja preko %s ako se ništa ne dešava"
+
+#: 
+msgid "client_applets_settings_title"
+msgstr "Podešavanja"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Nepoznat aplet"
+
+#: 
+msgid "client_models_applet_loading"
+msgstr "Učitavam.."
+
+#: 
+msgid "client_models_applet_notfound"
+msgstr "Nije pronadjeno"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Diskonektovani ste. Pokušavam da se rekonektujem za vas"
+
+#: 
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "Diskonektovani ste. Pokušavam da se rekonektujem opet za: %d s"
+
+#: 
+msgid "client_models_application_reconnect_successfully"
+msgstr "Sve je u redu. Konektovani ste opet."
+
+#: 
+msgid "client_models_application_settings_saved"
+msgstr "Podešavanja su uspešno sačuvana"
+
+#: 
+msgid "client_models_application_ignore_title"
+msgstr "Ignorisani korisnici"
+
+#: 
+msgid "client_models_application_ignore_none"
+msgstr "Ne ignorišete više nikoga"
+
+#: 
+msgid "client_models_application_ignore_nick"
+msgstr "Ignorišem %s"
+
+#: 
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Precizirajte kojeg korisnika želite da prekinete ignorisati"
+
+#: 
+msgid "client_models_application_ignore_stopped"
+msgstr "Ne ignorišem ga za %s s"
+
+#: 
+msgid "client_models_application_applet_notfound"
+msgstr "Aplet \"%s\" ne postoji!"
+
+#: 
+msgid "client_models_application_encoding_changed"
+msgstr "Encoding promenjen u %s"
+
+#: 
+msgid "client_models_application_encoding_invalid"
+msgstr "%s nije dozvoljen encoding"
+
+#: 
+msgid "client_models_application_encoding_notspecified"
+msgstr "Encoding nije odredjen"
+
+#: 
+msgid "client_models_application_encoding_usage"
+msgstr "Koristite: /encoding [Novi-Encoding]"
+
+#: 
+msgid "client_models_application_connection_create"
+msgstr "Nova konekcija"
+
+#: 
+msgid "client_models_application_connection_connecting"
+msgstr "Konektujem se na %s:%s..."
+
+#: 
+msgid "client_models_application_connection_error"
+msgstr "Greška u konektovanju na %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "je ušao na kanal"
+
+#: 
+msgid "client_models_channel_quit"
+msgstr "je izašao sa servera %s"
+
+#: 
+msgid "client_models_channel_kicked"
+msgstr "je izbačen od strane %s %s"
+
+#: 
+msgid "client_models_channel_selfkick"
+msgstr "Izbačeni ste od strane %s %s"
+
+#: 
+msgid "client_models_channel_part"
+msgstr "je izašao sa kanala %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "nije dozvoljeno ime kanala"
+
+#: 
+msgid "client_models_network_disconnected"
+msgstr "Odjavljeni ste sa IRC mreže"
+
+#: 
+msgid "client_models_network_nickname_changed"
+msgstr "je sada poznat kao %s"
+
+#: 
+msgid "client_models_network_topic"
+msgstr "Temu kanala postavio %s u %s"
+
+#: 
+msgid "client_models_network_selfmode"
+msgstr "postavlja mod %s"
+
+#: 
+msgid "client_models_network_mode"
+msgstr "postavlja mod %s"
+
+#: 
+msgid "client_models_network_channels"
+msgstr "Kanali: %s"
+
+#: 
+msgid "client_models_network_server"
+msgstr "Konektovani na server: %s %s"
+
+#: 
+msgid "client_models_network_idle_and_signon"
+msgstr "Lenčari za %s, ulogovan je %s"
+
+#: 
+msgid "client_models_network_away"
+msgstr "Odsutan: %s"
+
+#: 
+msgid "client_models_network_idle"
+msgstr "Lenčari za %s"
+
+#: 
+msgid "client_models_network_nickname_notfound"
+msgstr "Nema takvog korisnika"
+
+#: 
+msgid "client_models_network_banned"
+msgstr "Banovani ste sa %s. %s"
+
+#: 
+msgid "client_models_network_channel_badkey"
+msgstr "Pogrešna lozinka za kanal %s"
+
+#: 
+msgid "client_models_network_channel_inviteonly"
+msgstr "je samo za pozvane korisnike."
+
+#: 
+msgid "client_models_network_channel_limitreached"
+msgstr "je pun."
+
+#: 
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "Koriničko ime \"%s\" se već koristi. Molimo vas izaberite drugo korisničko ime"
+
+#: 
+msgid "client_models_network_badpassword"
+msgstr "Pogrešna lozinka"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Ovo će zatvoriti sve KiwiIRC konverzacije. Da li ste sigurni da želite da zatvorite ovaj prozor?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Ulazim na kanal..."
+
+#: 
+msgid "client_views_channel_topic"
+msgstr "Tema za %s je: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Zatvori fajlove"
+
+#: 
+msgid "client_views_mediamessage_notfound"
+msgstr "Nije pronadjeno"
+
+#: 
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Učitavam tvit"
+
+#: 
+msgid "client_views_mediamessage_load_image"
+msgstr "Učitavam sliku"
+
+#: 
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Učitavam Reddit temu"
+
+#: 
+msgid "client_views_mediamessage_load_gist"
+msgstr "Učitavam gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Novi nadimak"
+
+#: 
+msgid "client_views_nickchangebox_change"
+msgstr "Promeni"
+
+#: 
+msgid "client_views_nickchangebox_cancel"
+msgstr "Odustani"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Ljudi pričaju!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Izaberite neki nadimak..."
+
+#: 
+msgid "client_views_serverselect_nickname"
+msgstr "Nadimak"
+
+#: 
+msgid "client_views_serverselect_enable_password"
+msgstr "Imam lozinku"
+
+#: 
+msgid "client_views_serverselect_password"
+msgstr "Lozinka"
+
+#: 
+msgid "client_views_serverselect_channel"
+msgstr "Kanal"
+
+#: 
+msgid "client_views_serverselect_channelkey"
+msgstr "Kanal ključ"
+
+#: 
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Kanal traži ključ"
+
+#: 
+msgid "client_views_serverselect_key"
+msgstr "Ključ"
+
+#: 
+msgid "client_views_serverselect_connection_start"
+msgstr "Start..."
+
+#: 
+msgid "client_views_serverselect_server_and_network"
+msgstr "Serveri i mreža"
+
+#: 
+msgid "client_views_serverselect_server"
+msgstr "Server"
+
+#: 
+msgid "client_views_serverselect_port"
+msgstr "Port"
+
+#: 
+msgid "client_views_serverselect_poweredby"
+msgstr "Powered by Kiwi IRC"
+
+#: 
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Izaberite nadimak prvo!"
+
+#: 
+msgid "client_views_serverselect_connection_successfully"
+msgstr "Konektovani ste"
+
+#: 
+msgid "client_views_serverselect_connection_trying"
+msgstr "Konektujem se.."
+
+#: 
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Ime je već uzeto"
+
+#: 
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Zabranjeno ime"
+
+#: 
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Pogrešna lozinka"
+
+#: 
+msgid "client_views_serverselect_connection_error"
+msgstr "Greška prilikom konektovanja"
+
+#: 
+msgid "client_views_serverselect_server_notfound"
+msgstr "Server nije pronadjen"
+
+#: 
+msgid "client_views_serverselect_connection_refused"
+msgstr "Konekcija odbijena"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Op"
+
+#: 
+msgid "client_views_userbox_deop"
+msgstr "Skini status OP"
+
+#: 
+msgid "client_views_userbox_voice"
+msgstr "Glas"
+
+#: 
+msgid "client_views_userbox_devoice"
+msgstr "Skini-Glas"
+
+#: 
+msgid "client_views_userbox_kick"
+msgstr "Kikuj"
+
+#: 
+msgid "client_views_userbox_ban"
+msgstr "Banuj"
+
+#: 
+msgid "client_views_userbox_query"
+msgstr "Poruka"
+
+#: 
+msgid "client_views_userbox_whois"
+msgstr "Informacije"
+
+#: 
+msgid "client_views_userbox_slap"
+msgstr "Udari!"
+
+#: 
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "za 5 minuta bićete opet konektovani na server. Pripremite se!"
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Opet se konektujemo sada..."
+
+#: 
+msgid "client_applets_settings_html5_notifications"
+msgstr "Desktop obaveštenja"
+
+#: 
+msgid "client_applets_settings_enable_notifications"
+msgstr "Uključi obaveštenja"
+
+#: 
+msgid "client_applets_settings_emoticons"
+msgstr "Pokaži smajliće"
+
+#: 
+msgid "client_applet_about"
+msgstr "O Kiwi-ju"
+
+#: 
+msgid "client_applet_about_homepage"
+msgstr "Stranica projekta"
+
+#: 
+msgid "client_applet_about_link_channel"
+msgstr "Link kanala"
+
+#: 
+msgid "client_applet_about_share_channel"
+msgstr "Podeli link"
+
+#: 
+msgid "client_applet_fav_my_networks"
+msgstr "Moje mreže"
+
+#: 
+msgid "client_applet_fav_networks"
+msgstr "Omiljene mreže"
+
+#: 
+msgid "client_applet_fav_add"
+msgstr "Dodaj mrežu"
+
+#: 
+msgid "client_applet_fav_save"
+msgstr "Sačuvaj mrežu"
+
+#: 
+msgid "client_applet_fav_delete"
+msgstr "Obriši mrežu"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Uključi i Ulaz/Izlaz poruke u aktivnost"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Ignoriši"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Koristi 24-sata vremenski format"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s pre-podne"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s posle-podne"
+
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "je pozvan u kanal %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "je već na ovom kanalu"
+
+#: Date format
+msgid "client_date_format"
+msgstr "m/d/Y"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "Januar"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "Februar"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "Mart"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "April"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "Maj"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "Jun"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "Jul"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "Avgust"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "Septembar"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "Oktobar"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "Novembar"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "Decembar"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "Januar"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "Februar"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "Mart"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "April"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "Maj"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "Jun"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "Jul"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "Avgust"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "Septembar"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "Oktobar"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "Novembar"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "Decembar"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "Ponedeljak"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "Utorak"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "Sreda"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "Četvrtak"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "Petak"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "Subota"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "Nedelja"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "Ponedeljak"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "Utorak"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "Sreda"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "Četvrtak"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "Petak"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "Subota"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "Nedelja"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Moderisana konverzacija"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Potreban poziv"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Samo operateri mogu da promene temu kanala."
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Blokiraj poruke izvan ovog kanala"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Isključi ban listu."
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Pošalji poruku..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
+
