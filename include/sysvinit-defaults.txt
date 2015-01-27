@@ -1,0 +1,11 @@
+# Path to KiwiIRC.
+#DIR=/usr/local/share/kiwiirc
+
+# Run KiwiIRC as username.
+#DAEMON_USER=irc
+
+# Run KiwiIRC with the following arguments.
+#DAEMON_USER=""
+
+# Path to pidfile.
+#PIDFILE=/var/run/kiwiirc.pid
