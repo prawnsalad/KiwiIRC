@@ -517,6 +517,10 @@ msgid "client_applets_settings_timestamp_24_hour"
 msgstr "Use 24-hour timestamps"
 
 #: 
+msgid "client_applets_settings_timestamp_seconds"
+msgstr "Show seconds on timestamps"
+
+#: 
 msgid "client_views_panel_timestamp_am"
 msgstr "%s AM"
 
