@@ -5,7 +5,7 @@
 #DAEMON_USER=irc
 
 # Run KiwiIRC with the following arguments.
-#DAEMON_USER=""
+#DAEMON_OPTS=""
 
 # Path to pidfile.
 #PIDFILE=/var/run/kiwiirc.pid
