@@ -1,6 +1,6 @@
 #kiwi {
     /*background: url(background-light.png) left top repeat-x #E3E3E3;*/
-    color: #555555;
+    color: #666666;
 }
 #kiwi,
 #kiwi input,
@@ -24,8 +24,9 @@
     border-radius: 3px;
 }
 #kiwi .toolbar {
-    background-color:#1B1B1B; font-size:0.9em;
-    box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);
+    background-color:#f6f6f6;
+    font-size:0.9em;
+    /*box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);*/
     z-index: 1;
 }
 #kiwi .controlbox {
@@ -40,18 +41,18 @@
 #kiwi .toolbar .panellist li {
     line-height: 1.4em;
     vertical-align: middle;
-    border: 1px solid #333;
-    background-color: #494949;
-    border-top: 2px solid #494949;
+    /*border: 1px solid #333;*/
+    background-color: #E5E5E5;
+    /*border-top: 2px solid #494949;*/
     font-family: FontAwesome;
-    color: #f7f7f7;
+    color: #616161;
 }
 
 #kiwi .toolbar .panellist .alert_highlight { /*background: #990000;*/ }
 #kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
+#kiwi .toolbar .panellist .active { padding-right:23px; background-color: #AFD3A5;}
 #kiwi .toolbar .panellist li .part:before { content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left: 5px; }
@@ -64,12 +65,15 @@
 #kiwi .toolbar .panellist li.active .activity { display:none; }
 #kiwi .toolbar .panellist li .activity.zero { visibility:hidden; }
 #kiwi .toolbar .panellist li .activity {
-    padding: 1px 3px; margin-left:1em;
+    padding: 1px 3px;
+    margin-left:1em;
     border-radius: 4px;
-    background: #3F9532; color:#000; /*color: #ff5300;*/
-    text-align: center; font-size: 10px;
+    background: #3F9532;
+    color:#000;
+    text-align: center;
+    font-size: 10px;
     display:inline-block;
-    width:2em;
+    width:2.5em;
 }
 #kiwi .toolbar .panellist li.alert_highlight .activity {
     color: #fff; background: #a60400;
@@ -84,7 +88,7 @@
 #kiwi .status_message.err { color:#D8000C; background:#FFBABA; }
 
 #kiwi .channel_tools {
-    border-bottom: 1px solid #8A8A8A;
+    border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
     padding: 0 5%;
 }
@@ -176,8 +180,8 @@
 
 
 #kiwi .right_bar {
-    background-color: #DADADA;
-    border-left: 1px solid #8A8A8A;
+    background-color: #f6f6f6;
+    border-left: 1px solid #ddd;
 }
 #kiwi.narrow .right_bar { display:none; }
 #kiwi .memberlists {
@@ -219,7 +223,7 @@
 #kiwi .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
 
 #kiwi .memberlists .meta {
-    border-bottom: 1px solid #8A8A8A;
+    border-bottom: 1px solid #ddd;
     font-size: 0.9em;
     margin-bottom: 10px;
     padding-bottom: 10px;
@@ -286,18 +290,19 @@
 
 
 
-#kiwi .toolbar .topic { background-color:#898989; padding-bottom:2px; }
+#kiwi .toolbar .topic { background-color:#ddd; padding-bottom:2px; border-top: 1px solid #ddd}
 #kiwi .toolbar .topic div {
     padding: 0.2em 1em;
     text-align: center;
     box-shadow: none;
     border-radius: 0;
-    background-color:#FFF;
+    background-color:#f7f7f7;
     overflow: hidden;
     outline: none;
     white-space: nowrap;
     margin-bottom: 1px;
     padding-top: 0.55em;
+    color: #7b7b7b;
 }
 #kiwi .toolbar .topic:hover div {
     min-height:1.5em;
@@ -310,7 +315,7 @@
 }
 
 
-#kiwi .toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
+#kiwi .toolbar .app_tools { width:200px; text-align: center;}
 #kiwi.narrow .toolbar .tabs { margin-right:0; }
 #kiwi.narrow .toolbar .app_tools { width:auto; }
 #kiwi .toolbar .app_tools ul li {
