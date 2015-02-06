@@ -175,6 +175,9 @@ function initialiseSocket(socket, callback) {
 
         // We're sent from a whitelisted proxy, replace the hosts
         address = request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for'];
+
+        // Some reverse proxies (IIS) may include the port, so lets remove that
+        address = (address || '').split(':')[0];
     }
 
     socket.meta.real_address = address;
