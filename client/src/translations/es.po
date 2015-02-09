@@ -232,15 +232,15 @@ msgstr "Conectado al servidor: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "AFK hace %s, conectado desde %s"
+msgstr "Inactivo hace %s, conectado desde %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "AFK: %s"
+msgstr "Inactivo: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "AFK hace: %s"
+msgstr "Inactivo hace: %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
