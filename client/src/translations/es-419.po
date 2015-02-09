@@ -416,7 +416,7 @@ msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-op"
+msgstr "Quitar op"
 
 #: 
 msgid "client_views_userbox_voice"
@@ -424,7 +424,7 @@ msgstr "Voz"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-voz"
+msgstr "Quitar voz"
 
 #: 
 msgid "client_views_userbox_kick"
