@@ -6,6 +6,8 @@
 # mailing list mentioned above and we will upload it to our translation manager -
 # http://poeditor.com/. An account will be set up for you to make any further changes
 # as the Kiwi project progresses.
+#
+# Bitch inex or pierrot if something is wrong.
 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: es\n"
+"Language: es-419\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
@@ -82,7 +84,7 @@ msgstr "Cliente IRC predeterminado"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Hacer Kiwi mi cliente IRC predeterminado"
+msgstr "Hacer KiwiIRC mi cliente IRC predeterminado"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
@@ -270,7 +272,7 @@ msgstr "Contraseña incorrecta"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Esto cerrará todas las conexiones. ¿Estas seguro de que quieres cerrar esta ventana?"
+msgstr "Esto cerrará todas las conexiones. ¿Estás seguro de que quieres cerrar KiwiIRC?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -370,7 +372,7 @@ msgstr "Puerto"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Funciona con Kiwi IRC"
+msgstr "Funciona con KiwiIRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
@@ -714,5 +716,5 @@ msgstr "Enviar mensaje..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "Esto te desconectará de la red de chat. ¿Estas seguro?"
+msgstr "Esto te desconectará de la red IRC. ¿Estás seguro?"
 
