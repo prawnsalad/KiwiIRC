@@ -14,11 +14,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: es-419\n"
+"Language: es\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Nombre de canal"
+msgstr "Nombre del canal"
 
 #: 
 msgid "client_applets_chanlist_users"
@@ -26,7 +26,7 @@ msgstr "Usuarios"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Tema de conversación"
+msgstr "Tema del canal"
 
 #: 
 msgid "client_applets_chanlist_channellist"
@@ -58,7 +58,7 @@ msgstr "Lista"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "para largas cantidades de canales"
+msgstr "para muchos canales"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
@@ -74,7 +74,7 @@ msgstr "Silenciar sonido de notificaciones"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "mensajes legibles por ventana"
+msgstr "Historial de mensajes por ventana"
 
 #: 
 msgid "client_applets_settings_default_client"
@@ -86,11 +86,11 @@ msgstr "Hacer Kiwi mi cliente IRC predeterminado"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Nota: Los cambios serán aplicados despues de actualizar la página"
+msgstr "Nota: Los cambios tendrán efecto después de actualizar la página"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Nota: Usuarios de Chrome o Chromium deberán revisar su configuración en %s si nada sucede"
+msgstr "Nota: Los usuarios de Chrome o Chromium quizás deban revisar sus configuraciones en %s si nada ocurre"
 
 #: 
 msgid "client_applets_settings_title"
@@ -110,19 +110,19 @@ msgstr "No encontrado"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Has sido desconectado. Intentando de reconectar"
+msgstr "Has sido desconectado. Intentando reconectar"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Has sido desconectado. Intentando de reconectar en %d segundos"
+msgstr "Has sido desconectado. Intentando reconectar en %d segundos"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Esta bien, ya estas conectado nuevamente"
+msgstr "Conexión reestablecida"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Las configuraciones han sido guardadas"
+msgstr "La configuración ha sido guardada"
 
 #: 
 msgid "client_models_application_ignore_title"
@@ -138,7 +138,7 @@ msgstr "Ignorando %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Especifica que nick quieres dejar de ignorar"
+msgstr "Especifica qué nick quieres dejar de ignorar"
 
 #: 
 msgid "client_models_application_ignore_stopped"
@@ -146,7 +146,7 @@ msgstr "Se ha dejado de ignorar a %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" no existe"
+msgstr "El Applet \"%s\" no existe"
 
 #: 
 msgid "client_models_application_encoding_changed"
@@ -194,7 +194,7 @@ msgstr "Has sido expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "ha dejado %s"
+msgstr "ha salido de %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
@@ -206,11 +206,11 @@ msgstr "Desconectado de la red"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "ahora se llama %s"
+msgstr "ha cambiado su nick a %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Tema de conversación puesto por %s a las %s"
+msgstr "Tema del canal puesto por %s a las %s"
 
 #: 
 msgid "client_models_network_selfmode"
@@ -262,7 +262,7 @@ msgstr "está lleno."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "El nick \"%s\" ya está siendo usado. Selecciona uno nuevo"
+msgstr "El nick \"%s\" ya está en uso. Elige otro distinto"
 
 #: 
 msgid "client_models_network_badpassword"
@@ -278,7 +278,7 @@ msgstr "Entrando al canal..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Tema de conversación de %s es: %s"
+msgstr "Tema del canal %s es: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
@@ -294,7 +294,7 @@ msgstr "Cargando Tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Cargando imágen"
+msgstr "Cargando imagen"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
@@ -354,7 +354,7 @@ msgstr "Llave"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Conectar..."
+msgstr "Conectando..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
@@ -374,7 +374,7 @@ msgstr "Funciona con Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Escribe un nick priimero!"
+msgstr "Debes elegir un nick primero"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
@@ -406,7 +406,7 @@ msgstr "Servidor no encontrado"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Conexión rechazada"
+msgstr "Conexión denegada"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -442,7 +442,7 @@ msgstr "Info"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Bofetear!"
+msgstr "¡Bofetear!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -450,7 +450,7 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "En 5 minutos serás reconectado y entrarás automaticamente a tus canales. ¡Preparate!"
+msgstr "En 5 minutos serás reconectado y entrarás automaticamente a tus canales. ¡Prepárate!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
@@ -470,7 +470,7 @@ msgstr "Mostrar emoticones"
 
 #: 
 msgid "client_applet_about"
-msgstr "Acerca de Kiwi"
+msgstr "Acerca de KiwiIRC"
 
 #: 
 msgid "client_applet_about_homepage"
@@ -478,7 +478,7 @@ msgstr "Página principal del proyecto"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link a este canal"
+msgstr "Enlace a este canal"
 
 #: 
 msgid "client_applet_about_share_channel"
@@ -698,7 +698,7 @@ msgstr "Sólo invitados"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Sólo operadores pueden cambiar el tema de conversación"
+msgstr "Sólo operadores pueden cambiar el tema del canal"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
