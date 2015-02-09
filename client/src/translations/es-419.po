@@ -132,7 +132,7 @@ msgstr "Nicks ignorados"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "No estas ignorando a nadie"
+msgstr "Tu lista de ignorados está vacía"
 
 #: 
 msgid "client_models_application_ignore_nick"
@@ -252,7 +252,7 @@ msgstr "Has sido baneado de %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Contraseña de canal incorrecta para %s"
+msgstr "Contraseña del canal incorrecta para %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
@@ -344,7 +344,7 @@ msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Contraseña de canal"
+msgstr "Contraseña del canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
