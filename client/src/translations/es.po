@@ -252,7 +252,7 @@ msgstr "Has sido baneado de %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Llave de canal incorrecta para %s"
+msgstr "Contraseña de canal incorrecta para %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
@@ -344,15 +344,15 @@ msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Llave de canal"
+msgstr "Contraseña de canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Canal requiere una llave"
+msgstr "Canal requiere una contraseña"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Llave"
+msgstr "Contraseña"
 
 #: 
 msgid "client_views_serverselect_connection_start"
