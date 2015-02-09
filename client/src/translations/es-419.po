@@ -412,7 +412,7 @@ msgstr "Conexión denegada"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Op"
+msgstr "Dar op"
 
 #: 
 msgid "client_views_userbox_deop"
@@ -420,7 +420,7 @@ msgstr "Quitar op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voz"
+msgstr "Dar voz"
 
 #: 
 msgid "client_views_userbox_devoice"
