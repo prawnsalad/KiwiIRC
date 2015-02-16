@@ -261,8 +261,11 @@ IrcConnection.prototype.connect = function () {
                     localAddress: outgoing
                 });
 
-                // We need the raw socket connect event
-                that.socket.socket.on('connect', function() { rawSocketConnect.call(that, this); });
+                // We need the raw socket connect event.
+                // node.js 0.12 no longer has a .socket property.
+                (that.socket.socket || that.socket).on('connect', function() {
+                    rawSocketConnect.call(that, this);
+                });
 
                 socket_connect_event_name = 'secureConnect';
 
