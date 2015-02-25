@@ -182,7 +182,7 @@ msgstr "hat den Raum betreten"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "hat %s verlassen"
+msgstr "hat den Raum verlassen %s"
 
 #: 
 msgid "client_models_channel_kicked"
