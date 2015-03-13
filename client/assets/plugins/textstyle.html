@@ -143,8 +143,8 @@
             }
 
             // Add the styles to the emssage
-            if (data.params[1]) {
-                data.params[1] = style_codes + data.params[1];
+            if (style_codes && data.params[1]) {
+                data.params[1] = style_codes + ' ' + data.params[1];
             }
         });
 

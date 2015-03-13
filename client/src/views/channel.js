@@ -242,36 +242,43 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     },
 
 
-    // Sgnerate a css style for a nick
-    getNickStyles: function(nick) {
-        var ret, colour, nick_int = 0, rgb, nick_lightness;
+    // Generate a css style for a nick
+    getNickStyles: (function () {
 
         // Get a colour from a nick (Method based on IRSSIs nickcolor.pl)
-        _.map(nick.split(''), function (i) { nick_int += i.charCodeAt(0); });
+        return function (nick) {
+            var nick_lightness, nick_int, rgb;
 
-        nick_lightness = (_.find(_kiwi.app.themes, function (theme) {
-            return theme.name.toLowerCase() === _kiwi.global.settings.get('theme').toLowerCase();
-        }) || {}).nick_lightness;
+            // Get the lightness option from the theme. Defaults to 35.
+            nick_lightness = (_.find(_kiwi.app.themes, function (theme) {
+                return theme.name.toLowerCase() === _kiwi.global.settings.get('theme').toLowerCase();
+            }) || {}).nick_lightness;
 
-        if (typeof nick_lightness !== 'number') {
-            nick_lightness = 35;
-        } else {
-            nick_lightness = Math.max(0, Math.min(100, nick_lightness));
-        }
+            if (typeof nick_lightness !== 'number') {
+                nick_lightness = 35;
+            } else {
+                nick_lightness = Math.max(0, Math.min(100, nick_lightness));
+            }
 
-        rgb = hsl2rgb(nick_int % 255, 70, nick_lightness);
-        rgb = rgb[2] | (rgb[1] << 8) | (rgb[0] << 16);
-        colour = '#' + rgb.toString(16);
+            nick_int = _.reduce(nick.split(''), sumCharCodes, 0);
+            rgb = hsl2rgb(nick_int % 256, 70, nick_lightness);
 
-        ret = {color: colour};
-        ret.asCssString = function() {
-            return _.reduce(this, function(result, item, key){
-                return result + key + ':' + item + ';';
-            }, '');
+            return {
+                color: '#' + ('000000' + (rgb[2] | (rgb[1] << 8) | (rgb[0] << 16)).toString(16)).substr(-6),
+                asCssString: asCssString
+            };
         };
 
-        return ret;
-    },
+        function toCssProperty(result, item, key) {
+            return result + (typeof item === 'string' || typeof item === 'number' ? key + ':' + item + ';' : '');
+        }
+        function asCssString() {
+            return _.reduce(this, toCssProperty, '');
+        }
+        function sumCharCodes(total, i) {
+            return total + i.charCodeAt(0);
+        }
+    }()),
 
 
     // Takes an IRC message object and parses it for displaying
@@ -279,6 +286,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         var nick_hex, time_difference,
             message_words,
             sb = this.model.get('scrollback'),
+            nick,
+            regexpStr,
             prev_msg = sb[sb.length-2],
             hour, pm, am_pm_locale_key;
 
@@ -291,12 +300,18 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         msg.is_highlight = false;
         msg.time_string = '';
 
+        // Nick + custom highlight detecting
+        nick = _kiwi.app.connections.active_connection.get('nick');
+        if (msg.nick.localeCompare(nick) !== 0) {
+            // Build a list of all highlights and escape them for regex
+            regexpStr = _.chain((_kiwi.global.settings.get('custom_highlights') || '').split(/[\s,]+/))
+                .compact()
+                .concat(nick)
+                .map(escapeRegex)
+                .join('|')
+                .value();
 
-        // Nick highlight detecting
-        var nick = _kiwi.app.connections.active_connection.get('nick');
-        if ((new RegExp('(^|\\W)(' + escapeRegex(nick) + ')(\\W|$)', 'i')).test(msg.msg)) {
-            // Do not highlight the user's own input
-            if (msg.nick.localeCompare(nick) !== 0) {
+            if (msg.msg.search(new RegExp('(\\b|\\W|^)(' + regexpStr + ')(\\b|\\W|$)', 'i')) > -1) {
                 msg.is_highlight = true;
                 msg.css_classes += ' highlight';
             }

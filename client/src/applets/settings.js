@@ -26,6 +26,7 @@
                 default_note          : translateText('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
                 html5_notifications   : translateText('client_applets_settings_html5_notifications'),
                 enable_notifications  : translateText('client_applets_settings_enable_notifications'),
+                custom_highlights     : translateText('client_applets_settings_custom_highlights'),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
