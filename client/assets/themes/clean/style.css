@@ -24,7 +24,7 @@
     border-radius: 3px;
 }
 #kiwi .toolbar {
-    background-color:#f6f6f6;
+    background-color:#383838;
     font-size:0.9em;
     /*box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);*/
     z-index: 1;
@@ -315,7 +315,7 @@
 }
 
 
-#kiwi .toolbar .app_tools { width:200px; text-align: center;}
+#kiwi .toolbar .app_tools { width:200px; text-align: center; color: #dddddd}
 #kiwi.narrow .toolbar .tabs { margin-right:0; }
 #kiwi.narrow .toolbar .app_tools { width:auto; }
 #kiwi .toolbar .app_tools ul li {
