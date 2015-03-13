@@ -107,7 +107,7 @@
 #kiwi .messages a { text-decoration:none; }
 
 #kiwi .messages .msg { border-bottom: 0px solid #f7f5f5; padding: 0px; font-family:arial; /*font-size:0.9em;*/ min-height: 20px; }
-#kiwi .messages .msg .time { float:left; margin-top: 3px; color:#999; padding:1px; display:none; font-size: 11px; padding-right: 1em; padding-left: 0.6em; width: 5em;}
+#kiwi .messages .msg .time { float:right; margin-top: 5px; color:#999; padding:1px; display:none; font-size: 11px; padding-left: 0.6em; width: 5em;}
 #kiwi .messages .msg .nick { float:left; font-size:12px; font-family:Arial; text-align:right; padding: 1px; overflow:hidden; font-weight: bold; width: 8em; white-space: nowrap; line-height: 20px;}
 #kiwi .messages .msg .text { min-height: 20px; display:block; margin-left:8em; border-left: 0px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:1px; padding-left: 10px; border-left: 1px solid #dedede; line-height: 20px;}
 
@@ -135,7 +135,7 @@
 }
 
 #kiwi.timestamps .messages .msg .time { display:block;}
-#kiwi.timestamps .messages .msg .text { margin-left: 13em;}
+#kiwi.timestamps .messages .msg .text { margin-left: 8em; margin-right: 5em;}
 
 #kiwi .messages .msg.global_nick_highlight,
 #kiwi .messages .msg.highlight { transition: background 0.3s; background:#A2DB99; }
