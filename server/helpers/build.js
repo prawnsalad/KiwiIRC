@@ -194,6 +194,14 @@ var pluginsTransPromise = new Promise(function(resolve, reject) {
     var pluginsTrans = {};
     var proccessedFiles = 0;
 
+    if (!fs.existsSync(global.config.public_http + '/assets/plugins/translations')) {
+        console.log('creating folder assets/plugins/translations');
+        fs.mkdirSync(global.config.public_http + '/assets/plugins/translations');
+    }
+
+    console.log('reading plugin translations');
+    console.log(global.config.public_http + 'assets/plugins/translations');
+
     fs.readdir(global.config.public_http + 'assets/plugins/translations', function (err, translation_files) {
         if (!err) {
             translation_files.forEach(function (file) {
@@ -222,44 +230,75 @@ var pluginsTransPromise = new Promise(function(resolve, reject) {
                     });
                 }
             });
+        }else{
+            console.log(err);
         }
+        resolve(pluginsTrans);
     });
 });
 
 fs.readdir(global.config.public_http + '/src/translations', function (err, translation_files) {
     if (!err) {
-        translation_files.forEach(function (file) {
-            var locale = file.slice(0, -3);
+        var tanslatedLanguages = {};
+        var proccessedFiles = 0;
 
-            if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                po2json.parseFile(global.config.public_http + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
-                    if (!err) {
+        var finalTransPromise = new Promise(function(resolve, reject) {
+            translation_files.forEach(function (file) {
+                var locale = file.slice(0, -3);
 
-                        (function(json, locale) {
-                            var toJSONFfile = function (pluginsTrans) {
-                                if(typeof pluginsTrans[locale] != 'undefined') {
-                                    for (msgid in pluginsTrans[locale]) {
-                                        json.locale_data[locale][msgid] = pluginsTrans[locale][msgid];
+                if ((file.slice(-3) === '.po') && (locale !== 'template')) {
+                    po2json.parseFile(global.config.public_http + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
+                        if (!err) {
+
+                            (function(json, locale) {
+                                var toJSONFfile = function (pluginsTrans) {
+                                    if(typeof pluginsTrans[locale] != 'undefined') {
+                                        for (msgid in pluginsTrans[locale]) {
+                                            json.locale_data[locale][msgid] = pluginsTrans[locale][msgid];
+                                        }
                                     }
-                                }
+                                    
+                                    tanslatedLanguages[locale] = json;
+                                    proccessedFiles++;
 
-                                fs.writeFile(global.config.public_http + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
-                                    if (!err) {
-                                        console.log('Built translation file %s.json', locale);
-                                    } else {
-                                        console.error('Error building translation file %s.json:', locale, err);
+                                    if(proccessedFiles == translation_files.length){
+                                        resolve(tanslatedLanguages);
                                     }
+                                };
+
+
+                                pluginsTransPromise.then(toJSONFfile, function () {
+                                    toJSONFfile({});
                                 });
-                            };
+                            })(json, locale);
+                        } else {
+                            console.error('Error building translation file %s.json: ', locale, err);
+                        }
+                    });
+                }else{
+                    proccessedFiles++;
+                }
+            });
+        });
 
-                            pluginsTransPromise.then(toJSONFfile, function () {
-                                toJSONFfile({});
-                            });
-                        })(json, locale);
-                    } else {
-                        console.error('Error building translation file %s.json: ', locale, err);
+        finalTransPromise.then(function(translations){
+            var defaultLanguage = translations['en-gb'].locale_data['en-gb'];
+
+            for(translation in translations){
+                (function(translations, translation){
+                    for(translationKey in defaultLanguage){
+                        if(typeof translations[translation].locale_data[translation][translationKey] == 'undefined'){
+                            translations[translation].locale_data[translation][translationKey] = defaultLanguage[translationKey];
+                        }
                     }
-                });
+                    fs.writeFile(global.config.public_http + '/assets/locales/' + translation + '.json', JSON.stringify(translations[translation]), function (err) {
+                        if (!err) {
+                            console.log('Built translation file %s.json', translation);
+                        } else {
+                            console.error('Error building translation file %s.json:', translation, err);
+                        }
+                    });
+                })(translations, translation);
             }
         });
     } else {
