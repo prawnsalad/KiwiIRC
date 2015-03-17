@@ -1,8 +1,9 @@
 var fs           = require('fs'),
     uglifyJS     = require('uglify-js'),
     po2json      = require('po2json'),
-    package_json = require('../../package.json');
-
+    package_json = require('../../package.json'),
+    Promise = require('es6-promise').Promise;
+    
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
 
@@ -188,6 +189,43 @@ concat([global.config.public_http + '/assets/libs/engine.io.js', global.config.p
 if (!fs.existsSync(global.config.public_http + '/assets/locales')) {
     fs.mkdirSync(global.config.public_http + '/assets/locales');
 }
+
+var pluginsTransPromise = new Promise(function(resolve, reject) {
+    var pluginsTrans = {};
+    var proccessedFiles = 0;
+
+    fs.readdir(global.config.public_http + 'assets/plugins/translations', function (err, translation_files) {
+        if (!err) {
+            translation_files.forEach(function (file) {
+                var parts = file.split('.'); // parts[0] = plugin name, parts[1] = language, parts[2] = .po
+                var locale = parts[1];
+
+                if (parts[2] === 'po'){
+                    if(typeof pluginsTrans[locale] == 'undefined'){
+                        pluginsTrans[locale] = {};
+                    }
+
+                    po2json.parseFile(global.config.public_http + 'assets/plugins/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
+                        if (!err) {
+                            for(msgid in json.locale_data[locale]){
+                                if(msgid != ''){
+                                    pluginsTrans[locale][msgid] = json.locale_data[locale][msgid];
+                                }
+                            }
+                        }
+
+                        proccessedFiles++;
+
+                        if(proccessedFiles == translation_files.length){
+                            resolve(pluginsTrans);
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
 fs.readdir(global.config.public_http + '/src/translations', function (err, translation_files) {
     if (!err) {
         translation_files.forEach(function (file) {
@@ -197,13 +235,27 @@ fs.readdir(global.config.public_http + '/src/translations', function (err, trans
                 po2json.parseFile(global.config.public_http + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
                     if (!err) {
 
-                        fs.writeFile(global.config.public_http + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
-                            if (!err) {
-                                console.log('Built translation file %s.json', locale);
-                            } else {
-                                console.error('Error building translation file %s.json:', locale, err);
-                            }
-                        });
+                        (function(json, locale) {
+                            var toJSONFfile = function (pluginsTrans) {
+                                if(typeof pluginsTrans[locale] != 'undefined') {
+                                    for (msgid in pluginsTrans[locale]) {
+                                        json.locale_data[locale][msgid] = pluginsTrans[locale][msgid];
+                                    }
+                                }
+
+                                fs.writeFile(global.config.public_http + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
+                                    if (!err) {
+                                        console.log('Built translation file %s.json', locale);
+                                    } else {
+                                        console.error('Error building translation file %s.json:', locale, err);
+                                    }
+                                });
+                            };
+
+                            pluginsTransPromise.then(toJSONFfile, function () {
+                                toJSONFfile({});
+                            });
+                        })(json, locale);
                     } else {
                         console.error('Error building translation file %s.json: ', locale, err);
                     }
