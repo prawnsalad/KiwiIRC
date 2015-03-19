@@ -148,6 +148,10 @@ conf.http_proxy_ip_header = "x-forwarded-for";
 // Base HTTP path to the KIWI IRC client (eg. /kiwi)
 conf.http_base_path = "/kiwi";
 
+//include customize headers
+conf.headers = {
+    // "Access-Control-Allow-Origin"   : "*",
+};
 
 /*
  * SOCKS (version 5) proxy settings
