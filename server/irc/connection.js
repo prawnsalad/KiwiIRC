@@ -145,6 +145,28 @@ module.exports.IrcConnection = IrcConnection;
 
 
 
+/**
+ * Create and keep track of all timers so they can be easily removed
+ */
+IrcConnection.prototype.setTimeout = function(fn, length) {
+    var tmr = setTimeout(fn, length);
+    this._timers = this._timers || [];
+    this._timers.push(tmr);
+    return tmr;
+};
+
+IrcConnection.prototype.clearTimers = function() {
+    if (!this._timers) {
+        return;
+    }
+
+    this._timers.forEach(function(tmr) {
+        clearTimeout(tmr);
+    });
+};
+
+
+
 IrcConnection.prototype.applyIrcEvents = function () {
     // Listen for events on the IRC connection
     this.irc_events = {
@@ -351,7 +373,7 @@ IrcConnection.prototype.connect = function () {
                 // If this socket closing was not expected and we did actually connect and
                 // we did previously completely register on the network, then reconnect
                 if (should_reconnect) {
-                    setTimeout(function() {
+                    that.setTimeout(function() {
                         that.connect();
                     }, 4000);
                 }
@@ -430,7 +452,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 
     // Call this function again at some point if we still have data to write
     if (this.write_buffer.length > 0) {
-        setTimeout(this.flushWriteBuffer.bind(this), 1000 / this.write_buffer_lines_second);
+        that.setTimeout(this.flushWriteBuffer.bind(this), 1000 / this.write_buffer_lines_second);
     } else {
         // No more buffers to write.. so we've finished
         this.writing_buffer = false;
@@ -512,6 +534,7 @@ IrcConnection.prototype.dispose = function () {
 
     EventBinder.unbindIrcEvents('', this.irc_events, this);
 
+    this.clearTimers();
     this.removeAllListeners();
 };
 
