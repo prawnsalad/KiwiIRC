@@ -450,7 +450,8 @@
             opts = {
                 container: $('body'),
                 base_path: base_path,
-                settings_path: base_path + '/assets/settings.json'
+                settings_path: base_path + '/assets/settings.json',
+                locale: getQueryVariable('locale')
             },
             script_promise, script_promise_resolve,
             onload_promise,
@@ -525,7 +526,6 @@
                 opts.server_settings = data.server_settings;
                 opts.client_plugins = data.client_plugins;
                 opts.translations = data.translations;
-                opts.locale = data.locale;
                 opts.themes = data.themes;
 
                 if (typeof data.kiwi_server !== 'undefined') {

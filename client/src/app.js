@@ -217,7 +217,8 @@ _kiwi.global = {
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
         locale_promise = new Promise(function (resolve) {
-            var locale = _kiwi.global.settings.get('locale') || 'magic';
+            // In order, find a locale from the users saved settings, the URL, default settings on the server, or auto detect
+            var locale = _kiwi.global.settings.get('locale') || opts.locale || opts.server_settings.client.settings.locale || 'magic';
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
                 if (locale) {
                     that.i18n = new Jed(locale);

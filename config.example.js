@@ -200,7 +200,8 @@ conf.client = {
         use_24_hour_timestamps: true,
         mute_sounds: false,
         show_emoticons: true,
-        count_all_activity: false
+        count_all_activity: false,
+        locale: null // null = use the browser locale settings
     },
     window_title: 'Kiwi IRC'
 };
