@@ -3,6 +3,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         'submit form': 'submitForm',
         'click .show_more': 'showMore',
         'change .have_pass input': 'showPass',
+        'change .server_have_pass input': 'showServerPass',
         'change .have_key input': 'showKey',
         'click .fa-key': 'channelKeyIconClick',
         'click .show_server': 'showServer'
@@ -22,6 +23,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
                 start: _kiwi.global.i18n.translate('client_views_serverselect_connection_start').fetch(),
                 server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
                 server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
+                server_password: _kiwi.global.i18n.translate('client_views_serverselect_server_password').fetch(),
                 port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
                 powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
             };
@@ -86,6 +88,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             server: $('input.server', this.$el).val(),
             port: $('input.port', this.$el).val(),
             ssl: $('input.ssl', this.$el).prop('checked'),
+            server_pass: $('input.server_password', this.$el).val(),
             password: $('input.password', this.$el).val(),
             channel: $('input.channel', this.$el).val(),
             channel_key: $('input.channel_key', this.$el).val(),
@@ -105,6 +108,14 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             this.$el.find('tr.pass').show().find('input').focus();
         } else {
             this.$el.find('tr.pass').hide().find('input').val('');
+        }
+    },
+
+    showServerPass: function (event) {
+        if (this.$el.find('tr.server_have_pass input').is(':checked')) {
+            this.$el.find('tr.server_pass').show().find('input').focus();
+        } else {
+            this.$el.find('tr.server_pass').hide().find('input').val('');
         }
     },
 
@@ -141,7 +152,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     populateFields: function (defaults) {
-        var nick, server, port, channel, channel_key, ssl, password;
+        var nick, server, port, channel, channel_key, ssl, server_password, password;
 
         defaults = defaults || {};
 
@@ -149,6 +160,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         server = defaults.server || '';
         port = defaults.port || 6667;
         ssl = defaults.ssl || 0;
+        server_pass = defaults.server_pass || '';
         password = defaults.password || '';
         channel = defaults.channel || '';
         channel_key = defaults.channel_key || '';
@@ -157,13 +169,17 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         $('input.server', this.$el).val(server);
         $('input.port', this.$el).val(port);
         $('input.ssl', this.$el).prop('checked', ssl);
-        $('input#server_select_show_pass', this.$el).prop('checked', !(!password));
+        $('input#server_select_show_server_pass', this.$el).prop('checked', !!server_pass);
+        $('input#server_select_show_pass', this.$el).prop('checked', !!password);
         $('input.password', this.$el).val(password);
-        if (!(!password)) {
+        if (!!server_pass) {
+            $('tr.server_pass', this.$el).show();
+        }
+        if (!!password) {
             $('tr.pass', this.$el).show();
         }
         $('input.channel', this.$el).val(channel);
-        $('input#server_select_show_channel_key', this.$el).prop('checked', !(!channel_key));
+        $('input#server_select_show_channel_key', this.$el).prop('checked', !!channel_key);
         $('input.channel_key', this.$el).val(channel_key);
         if (!(!channel_key)) {
             $('tr.key', this.$el).show();

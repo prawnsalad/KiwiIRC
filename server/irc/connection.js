@@ -66,6 +66,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     this.user = user;  // Contains users real hostname and address
     this.username = this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '');
     this.gecos = ''; // Users real-name. Uses default from config if empty
+    this.server_pass = options.server_pass || '';
     this.password = options.password || '';
     this.quit_message = ''; // Uses default from config if empty
 
@@ -731,8 +732,8 @@ var socketConnectHandler = function () {
 
         that.write('CAP LS');
 
-        if (that.password) {
-            that.write('PASS ' + that.password);
+        if (that.server_pass) {
+            that.write('PASS ' + that.server_pass);
         }
 
         that.write('NICK ' + that.nick);

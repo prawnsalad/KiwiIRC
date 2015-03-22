@@ -29,6 +29,12 @@
 
             /**
             *   The password to connect to this network
+            *   @type   String
+            */
+            server_pass: '',
+
+            /**
+            *   The password to authenticate to this network
             *   @type    String
             */
             password: '',
@@ -90,6 +96,7 @@
                     host:       this.get('address'),
                     port:       this.get('port'),
                     ssl:        this.get('ssl'),
+                    server_pass:this.get('server_pass'),
                     password:   this.get('password')
                 };
 
