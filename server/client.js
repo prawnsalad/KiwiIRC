@@ -66,6 +66,9 @@ var Client = function (websocket, opts) {
 
     this.disposed = false;
 
+    // Start the heartbeating process
+    this.heartbeat();
+
     // Let the client know it's finished connecting
     this.sendKiwiCommand('connected');
 };
@@ -119,7 +122,7 @@ Client.prototype.heartbeat = function() {
 
 Client.prototype._heartbeat_timeout = function() {
     Stats.incr('client.timeout');
-    this.dispose();
+    this.websocketDisconnect();
 };
 
 
