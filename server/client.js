@@ -122,7 +122,7 @@ Client.prototype.heartbeat = function() {
 
 Client.prototype._heartbeat_timeout = function() {
     Stats.incr('client.timeout');
-    this.websocketDisconnect();
+    websocketDisconnect.apply(this);
 };
 
 
