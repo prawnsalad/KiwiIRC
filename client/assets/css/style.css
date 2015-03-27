@@ -271,6 +271,7 @@ html, body { height:100%; }
 #kiwi .server_select { position:relative; width:320px; margin:0 auto; overflow:hidden; }
 #kiwi .server_select.initial { margin-top: 3em; }
 #kiwi .server_select .more { display: none; }
+#kiwi .server_select .more tr.server_pass { display:none; }
 #kiwi .server_select button {  }
 #kiwi .server_select input { }
 #kiwi .server_select label { }

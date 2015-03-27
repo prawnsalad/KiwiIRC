@@ -145,6 +145,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
                         address: connection_info.host,
                         port: connection_info.port,
                         ssl: connection_info.ssl,
+                        server_pass: connection_info.server_pass,
                         password: connection_info.password
                     };
                     connection = new _kiwi.model.Network(inf);
@@ -171,6 +172,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             hostname:   connection_info.host,
             port:       connection_info.port,
             ssl:        connection_info.ssl,
+            server_pass:connection_info.server_pass,
             password:   connection_info.password
         };
 

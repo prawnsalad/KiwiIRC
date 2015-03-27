@@ -337,6 +337,10 @@ msgid "client_views_serverselect_enable_password"
 msgstr "I have a password"
 
 #: 
+msgid "client_views_serverselect_server_password"
+msgstr "This server has a password"
+
+#: 
 msgid "client_views_serverselect_password"
 msgstr "Password"
 

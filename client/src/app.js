@@ -309,6 +309,9 @@ _kiwi.global = {
             if (_kiwi.app.server_settings.client.ssl)
                 defaults.ssl = _kiwi.app.server_settings.client.ssl;
 
+            if (_kiwi.app.server_settings.client.server_pass)
+                defaults.server_pass = _kiwi.app.server_settings.client.server_pass;
+
             if (_kiwi.app.server_settings.client.channel)
                 defaults.channel = _kiwi.app.server_settings.client.channel;
 
@@ -326,6 +329,9 @@ _kiwi.global = {
         // Any query parameters first
         if (getQueryVariable('nick'))
             defaults.nick = getQueryVariable('nick');
+
+        if (getQueryVariable('server_pass'))
+            defaults.server_pass = getQueryVariable('server_pass');
 
         if (window.location.hash)
             defaults.channel = window.location.hash;
@@ -412,6 +418,10 @@ _kiwi.global = {
 
             if (_kiwi.app.server_settings.connection.ssl) {
                 defaults.ssl = _kiwi.app.server_settings.connection.ssl;
+            }
+
+            if (_kiwi.app.server_settings.connection.server_pass) {
+                defaults.server_pass = _kiwi.app.server_settings.connection.server_pass;
             }
 
             if (_kiwi.app.server_settings.connection.channel) {

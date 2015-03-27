@@ -222,6 +222,17 @@
                                 <td><label for="server_select_ssl">SSL</label></td>
                                 <td><input type="checkbox" class="ssl" id="server_select_ssl"></td>
                             </tr>
+
+                            <tr class="server_have_pass">
+                                <td colspan="2">
+                                    <label for="server_select_show_server_pass"><%= server_password %></label> <input type="checkbox" id="server_select_show_server_pass" style="width:auto;" />
+                                </td>
+                            </tr>
+
+                            <tr class="server_pass">
+                                <td><label for="server_select_pass"><%= password %></label></td>
+                                <td><input type="password" class="server_password" id="server_select_pass"></td>
+                            </tr>
                         </table>
                     </div>
                 </form>
