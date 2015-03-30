@@ -1,6 +1,7 @@
 _kiwi.view.ControlBox = Backbone.View.extend({
     events: {
-        'keydown .inp': 'process',
+        'keydown .inp': 'inputKeyDown',
+        'keyup .inp': 'inputKeyUp',
         'click .nick': 'showNickChange'
     },
 
@@ -13,8 +14,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         this.preprocessor = new InputPreProcessor();
         this.preprocessor.recursive_depth = 5;
 
-        // Hold tab autocomplete data
-        this.tabcomplete = {active: false, data: [], prefix: ''};
+        this.autocomplete = window.autoc = new AutoComplete({el: this.$('.autocomplete')[0]});
+        this.bindAutocomplete();
 
         // Keep the nick view updated with nick changes
         _kiwi.app.connections.on('change:nick', function(connection) {
@@ -45,6 +46,93 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         return this;
     },
 
+    bindAutocomplete: function() {
+        this.listenTo(this.autocomplete, 'match', function(word, matched) {
+            // A final word is selected. Either by clicking or hitting enter
+            var trailing = '';
+            if (matched.type === 'nick' && this.autocomplete._token_idx === 0) {
+                trailing = ': ';
+            }
+            this.autoCompleteFillWord(word + trailing, true);
+            this.autocomplete.close();
+        });
+
+        this.listenTo(this.autocomplete, 'selected', function(word, matched) {
+            // Words are selected while scrolling through the available options
+            this.autoCompleteFillWord(word ? word : this.autocomplete.matching_against_word, false);
+        });
+
+        this.listenTo(this.autocomplete, 'cancel', function(reason) {
+            var $inp = this.$('.inp'),
+                inp = $inp[0],
+                inp_val = $inp.val(),
+                caret_pos = $inp.selectRange();
+
+            // If we hit space while typing a word, then take chars 0->caret_pos, remove rest of word, include rest of input value
+            if (reason === 'space') {
+                var trailing_start_pos = inp_val.indexOf(' ', caret_pos);
+                if (trailing_start_pos === -1 ) trailing_start_pos = inp_val.length;
+                $inp.val(inp_val.substr(0, caret_pos) + inp_val.substr(trailing_start_pos+1, inp_val.length));
+            } else {
+                $inp.val(this.autocomplete_before.value);
+            }
+
+            // Move the cursor position back to where it was
+            $inp.selectRange(caret_pos);
+
+            this.autocomplete.close();
+        });
+
+        this.listenTo(this.autocomplete, 'close', function() {
+            this.$('.inp').focus();
+        });
+
+        this.listenTo(this.autocomplete, 'action-message', function(nick) {
+            _kiwi.app.connections.active_connection.createQuery(nick);
+            this.autocomplete.close();
+            this.$('.inp').val('');
+        });
+
+        this.listenTo(this.autocomplete, 'action-more', function(nick) {
+            console.log('Not implimented: Show user box');
+        });
+    },
+
+    // Taking a matched word form the auto completion, fill it into the current
+    // selected word (where the cursor position is)
+    autoCompleteFillWord: function(word, place_cursor_after_word) {
+        var $inp = this.$('.inp'),
+            inp_val = $inp.val();
+
+        var word_start_pos = inp_val.lastIndexOf(' ', $inp[0].selectionStart-1);
+        word_start_pos = (word_start_pos === -1) ? 0 : word_start_pos + 1; // If no space found, start from 0. Otherwise, add 1 to include the space
+        var word_end_pos = inp_val.indexOf(' ', word_start_pos);
+        if (word_end_pos === -1) word_end_pos = inp_val.length;
+
+        var start_of_inp = inp_val.substr(0, word_start_pos); // Get text before current selected word
+        var rest_of_inp = inp_val.substr(word_end_pos); // Get text after current selected word
+        var new_val = start_of_inp + word + rest_of_inp; // Join strings before word, the new word, and after word
+
+        $inp.val(new_val);
+
+        // Set the cursor to the same posiiton of the current word as was previous
+        var new_position = word_start_pos + this.autocomplete.matching_against_word.length;
+        if (place_cursor_after_word) {
+            new_position = word_start_pos + word.length;
+        }
+
+        // Move the cursor position to the new position
+        if ($inp[0].setSelectionRange) {
+            $inp[0].setSelectionRange(new_position, new_position);
+        } else if ($inp[0].createTextRange) { // IE8 support
+            range = $inp[0].createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', new_position);
+            range.moveStart('character', new_position);
+            range.select();
+        }
+    },
+
     showNickChange: function (ev) {
         // Nick box already open? Don't do it again
         if (this.nick_change)
@@ -58,7 +146,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         });
     },
 
-    process: function (ev) {
+    inputKeyDown: function (ev) {
         var that = this,
             inp = $(ev.currentTarget),
             inp_val = inp.val(),
@@ -70,11 +158,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             meta = ev.altKey;
         }
 
-        // If not a tab key, reset the tabcomplete data
-        if (this.tabcomplete.active && ev.keyCode !== 9) {
-            this.tabcomplete.active = false;
-            this.tabcomplete.data = [];
-            this.tabcomplete.prefix = '';
+        if (this.autocomplete.open) {
+            // A return value of true = dont process any other keys
+            if (this.autocomplete.onKeyDown(ev)) {
+                return;
+            }
         }
 
         switch (true) {
@@ -155,90 +243,57 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             && !ev.altKey          //keyboard shortcut)
             && !ev.metaKey
             && !ev.ctrlKey):
-            this.tabcomplete.active = true;
-            if (_.isEqual(this.tabcomplete.data, [])) {
-                // Get possible autocompletions
-                var ac_data = [],
-                    members = _kiwi.app.panels().active.get('members');
 
-                // If we have a members list, get the models. Otherwise empty array
-                members = members ? members.models : [];
+            ev.preventDefault();
 
-                $.each(members, function (i, member) {
+            // Get possible autocompletions
+            var autocomplete_list = [],
+                members = _kiwi.app.panels().active.get('members');
+
+            if (members) {
+                members.forEach(function (member) {
                     if (!member) return;
-                    ac_data.push(member.get('nick'));
+                    autocomplete_list.push({match: [member.get('nick')], type: 'nick'});
                 });
-
-                ac_data.push(_kiwi.app.panels().active.get('name'));
-
-                ac_data = _.sortBy(ac_data, function (nick) {
-                    return nick.toLowerCase();
-                });
-                this.tabcomplete.data = ac_data;
             }
 
-            if (inp_val[inp[0].selectionStart - 1] === ' ') {
-                return false;
-            }
+            // Add this channels name into the auto complete list
+            autocomplete_list.push(_kiwi.app.panels().active.get('name'));
 
-            (function () {
-                var tokens,              // Words before the cursor position
-                    val,                 // New value being built up
-                    p1,                  // Position in the value just before the nick
-                    newnick,             // New nick to be displayed (cycles through)
-                    range,               // TextRange for setting new text cursor position
-                    nick,                // Current nick in the value
-                    trailing = ': ';     // Text to be inserted after a tabbed nick
+            // Sort what we have alphabetically
+            autocomplete_list = _.sortBy(autocomplete_list, function (entry) {
+                // Nicks have a .type property of 'nick'
+                return entry.type === 'nick' ?
+                    entry.match[0].toLowerCase() :
+                    entry.toLowerCase();
+            });
 
-                tokens = inp_val.substring(0, inp[0].selectionStart).split(' ');
-                if (tokens[tokens.length-1] == ':')
-                    tokens.pop();
+            this.showAutocomplete(autocomplete_list);
 
-                // Only add the trailing text if not at the beginning of the line
-                if (tokens.length > 1)
-                    trailing = '';
+            break;
 
-                nick  = tokens[tokens.length - 1];
+        case (ev.keyCode === 191 && inp_val === ''):    // Forward slash in an empty box
+            var command_list = [
+                {match: ['/join'], description: 'Join or start a channel'},
+                {match: ['/part', '/leave'], description: 'Leave the channel'},
+                {match: ['/me', '/action'], description: 'Do something physical'},
+                {match: ['/nick'], description: 'Change your nickname'},
+                {match: ['/topic'], description: 'Set the topic for the channel'},
+            ];
 
-                if (this.tabcomplete.prefix === '') {
-                    this.tabcomplete.prefix = nick;
-                }
+            this.showAutocomplete(command_list);
+            break;
+        }
+    },
 
-                this.tabcomplete.data = _.select(this.tabcomplete.data, function (n) {
-                    return (n.toLowerCase().indexOf(that.tabcomplete.prefix.toLowerCase()) === 0);
-                });
 
-                if (this.tabcomplete.data.length > 0) {
-                    // Get the current value before cursor position
-                    p1 = inp[0].selectionStart - (nick.length);
-                    val = inp_val.substr(0, p1);
+    inputKeyUp: function(event) {
+        var $inp = $(event.currentTarget),
+            inp_val = $inp.val().trim();
 
-                    // Include the current selected nick
-                    newnick = this.tabcomplete.data.shift();
-                    this.tabcomplete.data.push(newnick);
-                    val += newnick;
-
-                    if (inp_val.substr(inp[0].selectionStart, 2) !== trailing)
-                        val += trailing;
-
-                    // Now include the rest of the current value
-                    val += inp_val.substr(inp[0].selectionStart);
-
-                    inp.val(val);
-
-                    // Move the cursor position to the end of the nick
-                    if (inp[0].setSelectionRange) {
-                        inp[0].setSelectionRange(p1 + newnick.length + trailing.length, p1 + newnick.length + trailing.length);
-                    } else if (inp[0].createTextRange) { // not sure if this bit is actually needed....
-                        range = inp[0].createTextRange();
-                        range.collapse(true);
-                        range.moveEnd('character', p1 + newnick.length + trailing.length);
-                        range.moveStart('character', p1 + newnick.length + trailing.length);
-                        range.select();
-                    }
-                }
-            }).apply(this);
-            return false;
+        if (this.autocomplete.open) {
+            var tokens = inp_val.substring(0, $inp[0].selectionStart).split(' ');
+            this.autocomplete.update(tokens[tokens.length - 1]);
         }
     },
 
@@ -295,6 +350,19 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 that.trigger('unknown_command', {command: events_data.command, params: events_data.params});
             }
         });
+    },
+
+
+    showAutocomplete: function(list) {
+        var $inp = this.$('.inp');
+
+        this.autocomplete_before = {
+            value: $inp.val(),
+            caret_pos: $inp[0].selectionStart
+        };
+
+        this.autocomplete.setWords(list, $inp);
+        this.autocomplete.show();
     },
 
 

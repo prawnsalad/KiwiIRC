@@ -216,6 +216,7 @@ function addScripts(vars, debug) {
             'src/views/application.js',
             'src/views/apptoolbar.js',
             'src/views/controlbox.js',
+            'src/views/autocomplete.js',
             'src/views/favicon.js',
             'src/views/mediamessage.js',
             'src/views/member.js',

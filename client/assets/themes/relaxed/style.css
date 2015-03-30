@@ -247,6 +247,36 @@
 #kiwi .memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
 #kiwi .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
 
+#kiwi .autocomplete {
+    position: absolute;
+    box-sizing: border-box;
+    left: 9em;
+    right: 0;
+    bottom: 100%;
+    padding: 0.1em 0.1em 0 0.1em;
+    border: 1px solid #ccc;
+    background: #eee;
+    overflow-y: auto;
+    display: none;
+}
+#kiwi .autocomplete-item {
+    border: 1px solid #CCC;
+    border-bottom: none;
+    background: #fff;
+    padding: 5px 20px;
+    list-style: none;
+}
+#kiwi .autocomplete-item:hover,
+#kiwi .autocomplete-item.selected { background: #D1EACD; }
+#kiwi .autocomplete-item .word { font-weight: bold; display: block; }
+#kiwi .autocomplete-item .matches { }
+#kiwi .autocomplete-item .actions { float: right; font-size: 0.9em; margin-right: 2em; }
+#kiwi .autocomplete-item .actions a { margin-left: 1em; }
+#kiwi .autocomplete-item .description {
+    font-size: 0.9em;
+    margin-left: 2em;
+}
+
 #kiwi .controlbox .input {
     background:#fff; margin:3px;
     height:1.7em;
