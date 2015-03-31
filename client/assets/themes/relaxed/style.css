@@ -259,6 +259,9 @@
     overflow-y: auto;
     display: none;
 }
+#kiwi.narrow .autocomplete {
+    left: 0;
+}
 #kiwi .autocomplete-item {
     border: 1px solid #CCC;
     border-bottom: none;
