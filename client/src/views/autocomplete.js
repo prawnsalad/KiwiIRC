@@ -129,7 +129,7 @@ var AutoComplete = Backbone.View.extend({
             }
 
             return matched_word;
-        });
+        }, this);
 
         this.matching_against_word = word;
         this.render();
