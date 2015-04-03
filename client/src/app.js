@@ -413,18 +413,6 @@ _kiwi.global = {
             if (_kiwi.app.server_settings.connection.ssl) {
                 defaults.ssl = _kiwi.app.server_settings.connection.ssl;
             }
-
-            if (_kiwi.app.server_settings.connection.channel) {
-                defaults.channel = _kiwi.app.server_settings.connection.channel;
-            }
-
-            if (_kiwi.app.server_settings.connection.channel_key) {
-                defaults.channel_key = _kiwi.app.server_settings.connection.channel_key;
-            }
-
-            if (_kiwi.app.server_settings.connection.nick) {
-                defaults.nick = _kiwi.app.server_settings.connection.nick;
-            }
         }
 
         // Set any random numbers if needed

@@ -70,8 +70,6 @@ function generateSettings(debug) {
                 server: config.get().restrict_server,
                 port: config.get().restrict_server_port || 6667,
                 ssl: config.get().restrict_server_ssl,
-                channel: config.get().restrict_server_channel,
-                nick: config.get().restrict_server_nick,
                 allow_change: false
             }
         };

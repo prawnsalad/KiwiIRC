@@ -219,10 +219,7 @@ conf.client_themes = [
 //conf.restrict_server = "irc.kiwiirc.com";
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;
-//conf.restrict_server_channel = "#kiwiirc";
-//conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
-//conf.restrict_server_nick = "kiwi_";
 
 
 
