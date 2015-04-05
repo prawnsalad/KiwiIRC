@@ -44,6 +44,8 @@ _kiwi.view.RightBar = Backbone.View.extend({
 
         if (this.keep_hidden || this.hidden) {
             this.$el.addClass('disabled');
+            // Remove the right bar width if it has been set manually
+            $('#kiwi .right_bar').css('width', '');
         } else {
             this.$el.removeClass('disabled');
         }
