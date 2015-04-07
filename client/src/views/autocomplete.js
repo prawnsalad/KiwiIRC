@@ -12,6 +12,7 @@ var AutoComplete = Backbone.View.extend({
         this.reset();
         this.open = false;
         this._show_ui = true;
+        this.filter_list = false;
     },
 
     render: function() {
@@ -25,13 +26,15 @@ var AutoComplete = Backbone.View.extend({
 
 
     // Set the list of words to be searching through
-    setWords: function(word_list, $input) {
+    setWords: function(word_list, filter_list) {
         var new_list = [];
         var template_str_default = '<li class="autocomplete-item"><span class="word"><%= word %></span><span class="matches"><%= match_list %></span><span class="description"><%= description %></span></li>';
         var template_str_nicks = '<li class="autocomplete-item autocomplete-nick" data-nick="<%= word %>"><span class="word"><%= match_list %></span><span class="matches"><%= match_list %></span><span class="actions"><a class="action" data-event="message">Message</a><a class="action" data-event="more">More...</a></span></li>';
         var template = {};
 
         this.reset();
+
+        this.filter_list = !!filter_list;
 
         _.each(word_list, function(word) {
             var template_str, $el, $word;
@@ -283,11 +286,14 @@ var AutoComplete = Backbone.View.extend({
         else if (event.keyCode === 27) { // escape
             this.cancel();
         }
+        else if (event.keyCode === 32) { // space
+            this.cancel('typing');
+        }
         else if (event.keyCode === 16) { // shift
             // Shift is used to tab+shift
             dont_process_other_input_keys = true;
         }
-        else {
+        else if (!this.filter_list) {
             // If we have started typing again, cancel the autocomplete
             this.cancel('typing');
         }

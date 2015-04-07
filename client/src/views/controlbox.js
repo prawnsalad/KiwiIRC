@@ -1,6 +1,7 @@
 _kiwi.view.ControlBox = Backbone.View.extend({
     events: {
         'keydown .inp': 'inputKeyDown',
+        'keyup .inp': 'inputKeyUp',
         'blur .inp': 'inputBlur',
         'click .nick': 'showNickChange'
     },
@@ -63,7 +64,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             if (matched && matched.type === 'nick' && this.autocomplete_token_idx === 0) {
                 trailing = ': ';
             }
-            this.autoCompleteFillWord(word ? word + trailing : this.autocomplete.matching_against_word, true);
+
+            // Only display the match if we're not filtering through the UI
+            if (!this.autocomplete.filter_list) {
+                this.autoCompleteFillWord(word ? word + trailing : this.autocomplete.matching_against_word, true);
+            }
         });
 
 
@@ -159,6 +164,15 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         this.listenTo(this.nick_change, 'close', function() {
             delete this.nick_change;
         });
+    },
+
+    inputKeyUp: function (ev) {
+        // If we're filtering the auto complete list, update the UI with our updated word
+        if (this.autocomplete.open && this.autocomplete.filter_list) {
+            var $inp = $(ev.currentTarget);
+            var tokens = $inp.val().trim().substring(0, $inp[0].selectionStart).split(' ');
+            this.autocomplete.update(tokens[tokens.length - 1]);
+        }
     },
 
     inputKeyDown: function (ev) {
@@ -288,8 +302,6 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             break;
 
         case (ev.keyCode === 191 && inp_val === ''):    // Forward slash in an empty box
-            ev.preventDefault();
-
             var command_list = [
                 {match: ['/join'], description: 'Join or start a channel'},
                 {match: ['/part', '/leave'], description: 'Leave the channel'},
@@ -298,7 +310,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 {match: ['/topic'], description: 'Set the topic for the channel'},
             ];
 
-            this.showAutocomplete(command_list);
+            this.showAutocomplete(command_list, true);
             break;
         }
     },
@@ -364,7 +376,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     },
 
 
-    showAutocomplete: function(list) {
+    showAutocomplete: function(list, filter_list) {
         var $inp = this.$('.inp'),
             tokens = $inp.val().trim().substring(0, $inp[0].selectionStart).split(' ');
 
@@ -374,7 +386,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             caret_pos: $inp[0].selectionStart
         };
 
-        this.autocomplete.setWords(list, $inp);
+        this.autocomplete.setWords(list, filter_list);
         this.autocomplete.update(tokens[tokens.length - 1]);
         this.autocomplete.show();
     },
