@@ -269,7 +269,6 @@
     padding: 5px 20px;
     list-style: none;
 }
-#kiwi .autocomplete-item:hover,
 #kiwi .autocomplete-item.selected { background: #D1EACD; }
 #kiwi .autocomplete-item .word { font-weight: bold; display: block; }
 #kiwi .autocomplete-item .matches { }

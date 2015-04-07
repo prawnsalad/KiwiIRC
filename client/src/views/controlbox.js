@@ -1,7 +1,7 @@
 _kiwi.view.ControlBox = Backbone.View.extend({
     events: {
         'keydown .inp': 'inputKeyDown',
-        'keyup .inp': 'inputKeyUp',
+        'blur .inp': 'inputBlur',
         'click .nick': 'showNickChange'
     },
 
@@ -50,7 +50,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         this.listenTo(this.autocomplete, 'match', function(word, matched) {
             // A final word is selected. Either by clicking or hitting enter
             var trailing = '';
-            if (matched.type === 'nick' && this.autocomplete._token_idx === 0) {
+            if (matched.type === 'nick' && this.autocomplete_token_idx === 0) {
                 trailing = ': ';
             }
             this.autoCompleteFillWord(word + trailing, true);
@@ -59,9 +59,15 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         this.listenTo(this.autocomplete, 'selected', function(word, matched) {
             // Words are selected while scrolling through the available options
-            this.autoCompleteFillWord(word ? word : this.autocomplete.matching_against_word, false);
+            var trailing = '';
+            if (matched && matched.type === 'nick' && this.autocomplete_token_idx === 0) {
+                trailing = ': ';
+            }
+            this.autoCompleteFillWord(word ? word + trailing : this.autocomplete.matching_against_word, true);
         });
 
+
+        var focus_after_close = true;
         this.listenTo(this.autocomplete, 'cancel', function(reason) {
             var $inp = this.$('.inp'),
                 inp = $inp[0],
@@ -69,7 +75,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 caret_pos = $inp.selectRange();
 
             // If we hit space while typing a word, then take chars 0->caret_pos, remove rest of word, include rest of input value
-            if (reason === 'space') {
+            if (reason === 'typing' || reason === 'lost_focus') {
                 var trailing_start_pos = inp_val.indexOf(' ', caret_pos);
                 if (trailing_start_pos === -1 ) trailing_start_pos = inp_val.length;
                 $inp.val(inp_val.substr(0, caret_pos) + inp_val.substr(trailing_start_pos+1, inp_val.length));
@@ -80,11 +86,15 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             // Move the cursor position back to where it was
             $inp.selectRange(caret_pos);
 
+            focus_after_close = (reason === 'lost_focus') ?
+                false :
+                true;
+
             this.autocomplete.close();
         });
 
         this.listenTo(this.autocomplete, 'close', function() {
-            this.$('.inp').focus();
+            if (focus_after_close) this.$('.inp').focus();
         });
 
         this.listenTo(this.autocomplete, 'action-message', function(nick) {
@@ -102,9 +112,14 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     // selected word (where the cursor position is)
     autoCompleteFillWord: function(word, place_cursor_after_word) {
         var $inp = this.$('.inp'),
-            inp_val = $inp.val();
+            inp_val = $inp.val(),
+            caret_pos = $inp[0].selectionStart;
 
-        var word_start_pos = inp_val.lastIndexOf(' ', $inp[0].selectionStart-1);
+        // If we have the trailing ': ' after nicks, we need to check further back to find
+        // the start of the current word
+        var trailing_found = inp_val.substr(caret_pos-2, 2) === ': ';
+
+        var word_start_pos = inp_val.lastIndexOf(' ', caret_pos - (trailing_found ? 2 : 1));
         word_start_pos = (word_start_pos === -1) ? 0 : word_start_pos + 1; // If no space found, start from 0. Otherwise, add 1 to include the space
         var word_end_pos = inp_val.indexOf(' ', word_start_pos);
         if (word_end_pos === -1) word_end_pos = inp_val.length;
@@ -273,6 +288,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             break;
 
         case (ev.keyCode === 191 && inp_val === ''):    // Forward slash in an empty box
+            ev.preventDefault();
+
             var command_list = [
                 {match: ['/join'], description: 'Join or start a channel'},
                 {match: ['/part', '/leave'], description: 'Leave the channel'},
@@ -287,14 +304,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     },
 
 
-    inputKeyUp: function(event) {
-        var $inp = $(event.currentTarget),
-            inp_val = $inp.val().trim();
-
-        if (this.autocomplete.open) {
-            var tokens = inp_val.substring(0, $inp[0].selectionStart).split(' ');
-            this.autocomplete.update(tokens[tokens.length - 1]);
-        }
+    inputBlur: function(event) {
+        // TODO: Loosing focus should close the autocomplete UI
     },
 
 
@@ -354,14 +365,17 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
 
     showAutocomplete: function(list) {
-        var $inp = this.$('.inp');
+        var $inp = this.$('.inp'),
+            tokens = $inp.val().trim().substring(0, $inp[0].selectionStart).split(' ');
 
+        this.autocomplete_token_idx = tokens.length - 1;
         this.autocomplete_before = {
             value: $inp.val(),
             caret_pos: $inp[0].selectionStart
         };
 
         this.autocomplete.setWords(list, $inp);
+        this.autocomplete.update(tokens[tokens.length - 1]);
         this.autocomplete.show();
     },
 
