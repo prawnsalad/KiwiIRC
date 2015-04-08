@@ -15,7 +15,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         this.preprocessor = new InputPreProcessor();
         this.preprocessor.recursive_depth = 5;
 
-        this.autocomplete = window.autoc = new AutoComplete({el: this.$('.autocomplete')[0]});
+        this.autocomplete = new AutoComplete({el: this.$('.autocomplete')[0]});
         this.bindAutocomplete();
 
         // Keep the nick view updated with nick changes
