@@ -2,6 +2,7 @@ var AutoComplete = Backbone.View.extend({
     events: {
         'click .autocomplete-item': 'onItemClick',
         'mousemove .autocomplete-item': 'onItemMouseMove',
+        'mousedown' : 'onMouseDown',
         'click .autocomplete-item .action': 'onActionClick'
     },
 
@@ -150,6 +151,19 @@ var AutoComplete = Backbone.View.extend({
         this.list = [];
         this.matches = [];
         this.selected_idx = 0;
+    },
+
+
+    onMouseDown: function(event) {
+        // This stops the control input box from loosing focus when clicking here
+        event.preventDefault();
+
+        // IE doesn't prevent moving focus even with event.preventDefault()
+        // so we set a flag to know when we should ignore the blur event
+        this.cancel_blur = true;
+        _.defer(_.bind(function() {
+            delete this.cancel_blur;
+        }, this));
     },
 
 

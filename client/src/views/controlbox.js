@@ -329,7 +329,12 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
 
     inputBlur: function(event) {
-        // TODO: Loosing focus should close the autocomplete UI
+        if (this.autocomplete.cancel_blur) {
+            delete this.autocomplete.cancel_blur;
+            return;
+        }
+
+        this.autocomplete.cancel('lost_focus');
     },
 
 
