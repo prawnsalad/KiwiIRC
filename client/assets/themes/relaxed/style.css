@@ -270,8 +270,8 @@
     list-style: none;
 }
 #kiwi .autocomplete-item.selected { background: #D1EACD; }
-#kiwi .autocomplete-item .word { font-weight: bold; display: block; }
-#kiwi .autocomplete-item .matches { }
+#kiwi .autocomplete-item .word { font-weight: bold; }
+#kiwi .autocomplete-item .matches { font-size: 0.9em; margin-left: 2em; }
 #kiwi .autocomplete-item .actions { float: right; font-size: 0.9em; margin-right: 2em; }
 #kiwi .autocomplete-item .actions a { margin-left: 1em; }
 #kiwi .autocomplete-item .description {

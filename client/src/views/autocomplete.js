@@ -29,7 +29,7 @@ var AutoComplete = Backbone.View.extend({
     setWords: function(word_list, filter_list) {
         var new_list = [];
         var template_str_default = '<li class="autocomplete-item"><span class="word"><%= word %></span><span class="matches"><%= match_list %></span><span class="description"><%= description %></span></li>';
-        var template_str_nicks = '<li class="autocomplete-item autocomplete-nick" data-nick="<%= word %>"><span class="word"><%= match_list %></span><span class="matches"><%= match_list %></span><span class="actions"><a class="action" data-event="message">Message</a><a class="action" data-event="more">More...</a></span></li>';
+        var template_str_nicks = '<li class="autocomplete-item autocomplete-nick" data-nick="<%= word %>"><span class="word"><%= match_list %></span><span class="actions"><a class="action" data-event="message">Message</a><a class="action" data-event="more">More...</a></span></li>';
         var template = {};
 
         this.reset();
@@ -41,7 +41,8 @@ var AutoComplete = Backbone.View.extend({
 
             if (this._show_ui) {
                 if (typeof word === 'string') {
-                    template.match_list = template.word = word;
+                    template.match_list = '';
+                    template.word = word;
                     template.description = '';
                 } else {
                     template.match_list = template.word = word.match.join(', ');
