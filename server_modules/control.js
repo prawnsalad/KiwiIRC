@@ -5,12 +5,31 @@
  */
 
 var net                = require('net'),
-    kiwiModules        = require('../server/modules'),
-    ControlInterface   = require('../server/controlinterface.js'),
+    path               = require('path'),
     _                  = require('lodash'),
-    winston            = require('winston');
+    winston            = require('winston'),
+    ControlInterface;
 
-var control_module = new kiwiModules.Module('Control');
+function initModule(server_dir) {
+    var kiwiModules = require(path.join(server_dir, 'modules.js'));
+        control_module = new kiwiModules.Module('Control');
+
+    ControlInterface = require(path.join(server_dir, 'controlinterface.js')),
+
+    /**
+     * Start the control socket server to serve connections
+     */
+    var server = net.createServer(function (socket) {
+        new SocketClient(socket);
+    });
+    server.listen(8888);
+
+    control_module.on('dispose', function() {
+        server.close();
+    });
+}
+
+module.exports = initModule;
 
 
 /**
@@ -73,16 +92,3 @@ var socket_commands = {
         this.socket_closing = true;
     }
 };
-
-
-/**
- * Start the control socket server to serve connections
- */
-var server = net.createServer(function (socket) {
-    new SocketClient(socket);
-});
-server.listen(8888);
-
-control_module.on('dispose', function() {
-    server.close();
-});

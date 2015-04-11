@@ -56,7 +56,7 @@ function loadModule (module_file) {
         return false;
     }
 
-    return module;
+    return module(__dirname);
 }
 
 
