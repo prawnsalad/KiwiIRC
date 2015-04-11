@@ -4,27 +4,28 @@
  * Retreive stats for internal kiwi events. Handy for graphing
  */
 
-var kiwiModules = require('../server/modules'),
-    fs = require('fs');
+var fs = require('fs');
 
+function initModule(server_dir) {
+    var kiwiModules = require(path.join(server_dir, 'modules.js'));,
+        stats_module = new kiwiModules.Module('stats_file'),
+        stats_file = fs.createWriteStream('kiwi_stats.log', {'flags': 'a'});
 
+    stats_module.on('stat counter', function (event, event_data) {
+        var stat_name = event_data.name,
+            timestamp,
+            ignored_events = [];
 
-var module = new kiwiModules.Module('stats_file');
+        // Some events may want to be ignored
+        ignored_events.push('http.request');
 
-var stats_file = fs.createWriteStream('kiwi_stats.log', {'flags': 'a'});
+        if (ignored_events.indexOf(stat_name) > -1) {
+            return;
+        }
 
-module.on('stat counter', function (event, event_data) {
-    var stat_name = event_data.name,
-        timestamp,
-        ignored_events = [];
+        timestamp = Math.floor((new Date()).getTime() / 1000);
+        stats_file.write(timestamp.toString() + ' ' + stat_name + '\n');
+    });
+}
 
-    // Some events may want to be ignored
-    ignored_events.push('http.request');
-
-    if (ignored_events.indexOf(stat_name) > -1) {
-        return;
-    }
-
-    timestamp = Math.floor((new Date()).getTime() / 1000);
-    stats_file.write(timestamp.toString() + ' ' + stat_name + '\n');
-});
+module.exports = initModule;

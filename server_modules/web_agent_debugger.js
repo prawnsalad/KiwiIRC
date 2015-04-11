@@ -5,22 +5,25 @@
  * Requires npm module: webkit-devtools-agent
  */
 
+var path = require('path');
 
-var kiwiModules = require('../server/modules'),
-	agent = require('webkit-devtools-agent');
+function initModule(server_dir) {
+    var kiwiModules = require(path.join(server_dir, 'modules.js')),
+        agent = require('webkit-devtools-agent'),
+        debugger_module = new kiwiModules.Module('web_agent_debugger');
 
-
-var module = new kiwiModules.Module('web_agent_debugger');
-
-agent.start({
+    agent.start({
         port: 9999,
         bind_to: '0.0.0.0',
         ipc_port: 3333,
         verbose: true
     });
 
-console.log('Debugging can be accessed via http://c4milo.github.io/node-webkit-agent/26.0.1410.65/inspector.html?host=localhost:9999&page=0');
+    console.log('Debugging can be accessed via http://c4milo.github.io/node-webkit-agent/26.0.1410.65/inspector.html?host=localhost:9999&page=0');
 
-module.on('dispose', function() {
-	agent.stop();
-});
+    module.on('dispose', function() {
+        agent.stop();
+    });
+}
+
+module.exports = initModule;
