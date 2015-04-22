@@ -306,6 +306,10 @@
         ev.params.shift();
         message = ev.params.join(' ');
 
+        if ((typeof emojiUnicodeFromString === 'function')) {
+           message = emojiUnicodeFromString(message);
+        }
+
         panel.addMsg(this.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
         this.app.connections.active_connection.gateway.msg(destination, message);
     }
@@ -316,8 +320,14 @@
             return;
         }
 
-        var panel = this.app.panels().active;
-        panel.addMsg('', styleText('action', {nick: this.app.connections.active_connection.get('nick'), text: ev.params.join(' ')}), 'action');
+        var panel = this.app.panels().active,
+            message = ev.params.join(' ');
+
+        if ((typeof emojiUnicodeFromString === 'function')) {
+           message = emojiUnicodeFromString(message);
+        }
+
+        panel.addMsg('', styleText('action', {nick: this.app.connections.active_connection.get('nick'), text: message}), 'action');
         this.app.connections.active_connection.gateway.action(panel.get('name'), ev.params.join(' '));
     }
 
