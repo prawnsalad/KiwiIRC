@@ -332,9 +332,9 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
             parsed_word = _.escape(word);
 
-            // Replace text emoticons with images
-            if (_kiwi.global.settings.get('show_emoticons')) {
-                parsed_word = emoticonFromText(parsed_word);
+            // Replace text emojis with images
+            if (_kiwi.global.settings.get('show_emoticons') && (typeof emojiFromText === 'function')) {
+                parsed_word = emojiFromText(parsed_word);
             }
 
             return parsed_word;
