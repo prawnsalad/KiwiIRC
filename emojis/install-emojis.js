@@ -191,7 +191,7 @@ https.get(endpoint+'index.html',function (res) {
     }
 });
 function formatter (str, values) {
-         return str.replace(/{(?:\\?:)([^|}]+)(?:\|([^|}]+))?}/g,function(match, key, opt) {
+         return str.replace(/{{(?:\\?:)([^|}]+)(?:\|([^|]+))?}}/g,function(match, key, opt) {
                 return (values[key]?values[key]:(opt?opt:match));
          });
 }

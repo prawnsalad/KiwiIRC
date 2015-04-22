@@ -64,7 +64,7 @@ _.each(_.keys(unicodeEmojis),function (key) {
 });
 emojiUnicodeRegex = new RegExp(emojiUnicodeRegex.join('|'),'g');
 function emojiUnicodeFromString (str) {
-         return str.replace(/(^|\s):([a-z0-9_+-]+):(?=\s|$)/gi,function (full, w1, emoji) { 
+         return str.replace(emojiStringRegex,function (full, w1, emoji) { 
              emoji = emoji.toLowerCase();
              if (altEmojis.hasOwnProperty(emoji)) {
                 emoji = altEmojis[emoji];
