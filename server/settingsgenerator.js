@@ -72,6 +72,8 @@ function generateSettings(debug) {
                 ssl: config.get().restrict_server_ssl,
                 channel: config.get().restrict_server_channel,
                 nick: config.get().restrict_server_nick,
+                username: config.get().restrict_server_username,
+                realname: config.get().restrict_server_realname,
                 allow_change: false
             }
         };
