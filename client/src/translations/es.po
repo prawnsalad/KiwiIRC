@@ -373,6 +373,18 @@ msgid "client_views_serverselect_poweredby"
 msgstr "Potenciado por Kiwi IRC"
 
 #: 
+msgid "client_views_serverselect_username"
+msgstr "Nombre usaurio"
+
+#: 
+msgid "client_views_serverselect_realname"
+msgstr "Nombre real"
+
+#: 
+msgid "client_views_serverselect_advanced"
+msgstr "Avanzado"
+
+#: 
 msgid "client_views_serverselect_nickname_error_empty"
 msgstr "¡Selecciona un sobrenombre primero!"
 

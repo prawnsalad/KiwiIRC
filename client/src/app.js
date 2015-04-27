@@ -287,7 +287,9 @@ _kiwi.global = {
             port: 6667,
             ssl: false,
             channel: '',
-            channel_key: ''
+            channel_key: '',
+            username: '',
+            realname: ''
         };
         var uricheck;
 
@@ -314,6 +316,12 @@ _kiwi.global = {
 
             if (_kiwi.app.server_settings.client.channel_key)
                 defaults.channel_key = _kiwi.app.server_settings.client.channel_key;
+
+            if (_kiwi.app.server_settings.client.username)
+                defaults.username = _kiwi.app.server_settings.client.username;
+
+            if (_kiwi.app.server_settings.client.realname)
+                defaults.realname = _kiwi.app.server_settings.client.realname;
         }
 
 

@@ -270,7 +270,7 @@ html, body { height:100%; }
  */
 #kiwi .server_select { position:relative; width:320px; margin:0 auto; overflow:hidden; }
 #kiwi .server_select.initial { margin-top: 3em; }
-#kiwi .server_select .more { display: none; }
+#kiwi .server_select .more, .advanced { display: none; }
 #kiwi .server_select button {  }
 #kiwi .server_select input { }
 #kiwi .server_select label { }
@@ -283,6 +283,7 @@ html, body { height:100%; }
 #kiwi .server_select .basic tr.key { display:none; }
 #kiwi .server_select.single_server .basic { border:none; }
 #kiwi .server_select .status {  }
+#kiwi .server_select .show_advanced { font-size: 0.8em; }
 
 /* Channel key icon */
 #kiwi .server_select .basic tr.channel td { position: relative; }
