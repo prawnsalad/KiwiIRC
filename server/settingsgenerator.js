@@ -114,7 +114,7 @@ function addThemes() {
     return (config.get().client_themes || ['relaxed']).reduce(function (prom, theme) {
         return prom.then(function (themes) {
             return new Promise(function readThemeInfo(resolve, reject) {
-                fs.readFile(__dirname + '/../client/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
+                fs.readFile(global.config.public_http + '/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
                     var theme;
                     if (err) {
                         return reject(err);
@@ -136,7 +136,7 @@ function addThemes() {
 
 function addTranslations() {
     return new Promise(function (resolve, reject) {
-        fs.readFile(__dirname + '/../client/src/translations/translations.json', function readTranslations(err, translations) {
+        fs.readFile(global.config.public_http + '/src/translations/translations.json', function readTranslations(err, translations) {
             if (err) {
                 return reject(err);
             }
@@ -147,7 +147,7 @@ function addTranslations() {
                 return reject(e);
             }
 
-            fs.readdir(__dirname + '/../client/src/translations/', function readTranslationFile(err, pofiles) {
+            fs.readdir(global.config.public_http + '/src/translations/', function readTranslationFile(err, pofiles) {
                 var trans = [];
 
                 if (err) {
@@ -218,6 +218,7 @@ function addScripts(vars, debug) {
             'src/views/application.js',
             'src/views/apptoolbar.js',
             'src/views/controlbox.js',
+            'src/views/autocomplete.js',
             'src/views/favicon.js',
             'src/views/mediamessage.js',
             'src/views/member.js',
