@@ -45,28 +45,27 @@
 #kiwi .toolbar .panellist {
     /*background: #2b2b2b*/;
     color: #a5a5a5;
-    margin: 1px 0 0 5px;
+    /*margin: 1px 0 0 5px;*/
     float: left;
 }
 #kiwi .toolbar .panellist.applets { }
 #kiwi .toolbar .panellist li {
-    line-height: 1.4em;
     vertical-align: middle;
-
     display: list-item;
     float: left;
     border: none;
     background: none;
     padding: 8px;
-    background-color: #E5E5E5;
-    color: #616161;
+    color: #DADADA;
+    border-right: 1px solid #666;
+    margin: 0px;
 }
 
 #kiwi .toolbar .panellist .alert_highlight { /*background: #990000;*/ }
 #kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi .toolbar .panellist .active { padding-top: 6px; padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; background-color: #AFD3A5}
+#kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #CB0000; border-bottom:none; background-color: #F7F7F7; color: #333}
 #kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left: 5px; font-weight: bold; font-family: Arial,Helvetica,sans-serif; }
@@ -347,7 +346,7 @@
 
 
 
-#kiwi .toolbar .topic { background-color:#ddd; padding-bottom:2px; border-top: 1px solid #ddd}
+#kiwi .toolbar .topic { background-color:#ddd; padding-bottom:2px; /*border-top: 1px solid #ddd*/}
 #kiwi .toolbar .topic div {
     padding: 0.2em 1em;
     text-align: center;
@@ -358,7 +357,7 @@
     outline: none;
     white-space: nowrap;
     margin-bottom: 1px;
-    padding-top: 0.55em;
+    padding-top: 0.51em;
     color: #7b7b7b;
 }
 #kiwi .toolbar .topic:hover div {
