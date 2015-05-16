@@ -467,7 +467,7 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 IrcConnection.prototype.end = function (data) {
     var that = this;
 
-    if (!this.socket) {
+    if (!this.connected) {
         return;
     }
 
