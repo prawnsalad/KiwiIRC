@@ -89,12 +89,14 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                 $inp.val(this.autocomplete_before.value);
             }
 
-            // Move the cursor position back to where it was
-            $inp.selectRange(caret_pos);
-
             focus_after_close = (reason === 'lost_focus') ?
                 false :
                 true;
+
+            if (focus_after_close) {
+                // Move the cursor position back to where it was
+                $inp.selectRange(caret_pos);
+            }
 
             this.autocomplete.close();
         });
