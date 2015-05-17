@@ -329,6 +329,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
 
     inputBlur: function(event) {
+        // IE hack. Mouse down on auto complete UI sets cancel_blur so we don't loose
+        // focus here.
         if (this.autocomplete.cancel_blur) {
             delete this.autocomplete.cancel_blur;
             return;
