@@ -15,9 +15,8 @@ var bl_zones = {
 // The DNS zone we should use
 var current_bl = 'dronebl';
 
-function initModule(server_dir) {
-    var kiwiModules = require(path.join(server_dir, 'modules.js')),
-    dnsbl_module = new kiwiModules.Module('DNSBL');
+function initModule(KiwiModule) {
+    var dnsbl_module = new KiwiModule('DNSBL');
 
     dnsbl_module.on('irc connecting', function (event, event_data) {
         var client_addr = event_data.connection.state.client.websocket.meta.real_address;

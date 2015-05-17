@@ -10,10 +10,10 @@ var net                = require('net'),
     winston            = require('winston'),
     ControlInterface;
 
-function initModule(server_dir) {
-    var kiwiModules = require(path.join(server_dir, 'modules.js')),
-        control_module = new kiwiModules.Module('Control'),
-        ControlInterface = require(path.join(server_dir, 'controlinterface.js'));
+function initModule(KiwiModule, server_dir) {
+    var control_module = new KiwiModule('Control');
+
+    ControlInterface = require(path.join(server_dir, 'controlinterface.js'));
 
     /**
      * Start the control socket server to serve connections

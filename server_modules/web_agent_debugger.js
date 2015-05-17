@@ -7,10 +7,9 @@
 
 var path = require('path');
 
-function initModule(server_dir) {
-    var kiwiModules = require(path.join(server_dir, 'modules.js')),
-        agent = require('webkit-devtools-agent'),
-        debugger_module = new kiwiModules.Module('web_agent_debugger');
+function initModule(KiwiModule, server_dir) {
+    var agent = require('webkit-devtools-agent'),
+        debugger_module = new KiwiModule('web_agent_debugger');
 
     agent.start({
         port: 9999,
