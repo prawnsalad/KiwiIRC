@@ -6,9 +6,8 @@
 
 var fs = require('fs');
 
-function initModule(server_dir) {
-    var kiwiModules = require(path.join(server_dir, 'modules.js'));,
-        stats_module = new kiwiModules.Module('stats_file'),
+function initModule(KiwiModule) {
+    var stats_module = new KiwiModule('stats_file'),
         stats_file = fs.createWriteStream('kiwi_stats.log', {'flags': 'a'});
 
     stats_module.on('stat counter', function (event, event_data) {

@@ -8,9 +8,8 @@ var util = require('util'),
     path = require('path'),
     net  = require('net');
 
-function initModule(server_dir) {
-    var kiwiModules = require(path.join(server_dir, 'modules.js')),
-        proxychecker_module = new kiwiModules.Module('proxychecker'),
+function initModule(KiwiModule) {
+    var proxychecker_module = new KiwiModule('proxychecker'),
         client_addr = event_data.connection.state.client.websocket.meta.real_address;
 
     event.wait = true;

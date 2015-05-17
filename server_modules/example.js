@@ -1,8 +1,7 @@
 var path = require('path');
 
-function initModule(server_dir) {
-    var kiwiModules = require(path.join(server_dir, 'modules.js')),
-        example_module = new kiwiModules.Module('Example Module');
+function initModule(KiwiModule) {
+    var example_module = new KiwiModule('Example Module');
 
     // A web client is connected
     example_module.on('client created', function(event, data) {
