@@ -67,8 +67,9 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         imgur: function () {
             var that = this;
 
-            $.getJSON('http://api.imgur.com/oembed?url=' + this.url, function (data) {
-                var img_html = '<a href="' + data.url + '" target="_blank"><img height="100" src="' + data.url + '" /></a>';
+            $.getJSON('https://api.imgur.com/oembed?url=' + this.url, function (data) {
+                var url = 'https' + data.url.substr(4);
+                var img_html = '<a href="' + url + '" target="_blank"><img height="100" src="' + url + '" /></a>';
                 that.$content.find('.content').html(img_html);
             });
 
@@ -80,7 +81,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             var that = this;
             var matches = (/reddit\.com\/r\/([a-zA-Z0-9_\-]+)\/comments\/([a-z0-9]+)\/([^\/]+)?/gi).exec(this.url);
 
-            $.getJSON('http://www.' + matches[0] + '.json?jsonp=?', function (data) {
+            $.getJSON('https://www.' + matches[0] + '.json?jsonp=?', function (data) {
                 console.log('Loaded reddit data', data);
                 var post = data[0].data.children[0].data;
                 var thumb = '';
@@ -88,22 +89,23 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 // Show a thumbnail if there is one
                 if (post.thumbnail) {
                     //post.thumbnail = 'http://www.eurotunnel.com/uploadedImages/commercial/back-steps-icon-arrow.png';
+                    var thumbnail = 'https' + post.thumbnail.substr(4);
 
                     // Hide the thumbnail if an over_18 image
                     if (post.over_18) {
                         thumb = '<span class="thumbnail_nsfw" onclick="$(this).find(\'p\').remove(); $(this).find(\'img\').css(\'visibility\', \'visible\');">';
                         thumb += '<p style="font-size:0.9em;line-height:1.2em;cursor:pointer;">Show<br />NSFW</p>';
-                        thumb += '<img src="' + post.thumbnail + '" class="thumbnail" style="visibility:hidden;" />';
+                        thumb += '<img src="' + thumbnail + '" class="thumbnail" style="visibility:hidden;" />';
                         thumb += '</span>';
                     } else {
-                        thumb = '<img src="' + post.thumbnail + '" class="thumbnail" />';
+                        thumb = '<img src="' + thumbnail + '" class="thumbnail" />';
                     }
                 }
 
                 // Build the template string up
                 var tmpl = '<div>' + thumb + '<b><%- title %></b><br />Posted by <%- author %>. &nbsp;&nbsp; ';
                 tmpl += '<i class="fa fa-arrow-up"></i> <%- ups %> &nbsp;&nbsp; <i class="fa fa-arrow-down"></i> <%- downs %><br />';
-                tmpl += '<%- num_comments %> comments made. <a href="http://www.reddit.com<%- permalink %>">View post</a></div>';
+                tmpl += '<%- num_comments %> comments made. <a href="https://www.reddit.com<%- permalink %>">View post</a></div>';
 
                 that.$content.find('.content').html(_.template(tmpl, post));
             });
