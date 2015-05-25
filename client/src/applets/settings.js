@@ -16,6 +16,7 @@
                 count_all_activity    : translateText('client_applets_settings_notification_count_all_activity'),
                 timestamps            : translateText('client_applets_settings_timestamp'),
                 timestamp_24          : translateText('client_applets_settings_timestamp_24_hour'),
+                timestamp_seconds     : translateText('client_applets_settings_timestamp_seconds'),
                 mute                  : translateText('client_applets_settings_notification_sound'),
                 emoticons             : translateText('client_applets_settings_emoticons'),
                 scroll_history        : translateText('client_applets_settings_history_length'),

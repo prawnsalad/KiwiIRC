@@ -198,6 +198,7 @@ conf.client = {
         show_joins_parts: true,
         show_timestamps: false,
         use_24_hour_timestamps: true,
+        show_timestamp_seconds: true,
         mute_sounds: false,
         show_emoticons: true,
         count_all_activity: false,

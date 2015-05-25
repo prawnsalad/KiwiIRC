@@ -368,7 +368,10 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Build up and add the line
         if (_kiwi.global.settings.get('use_24_hour_timestamps')) {
-            msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
+            msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0");
+            if (_kiwi.global.settings.get('show_timestamp_seconds')) {
+                msg.time_string += ":" + msg.time.getSeconds().toString().lpad(2, "0");
+            }
         } else {
             hour = msg.time.getHours();
             pm = hour > 11;
@@ -381,7 +384,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 'client_views_panel_timestamp_pm' :
                 'client_views_panel_timestamp_am';
 
-            msg.time_string = translateText(am_pm_locale_key, hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+            timestr = hour + ":" + msg.time.getMinutes().toString().lpad(2, "0");
+            if (_kiwi.global.settings.get('show_timestamp_seconds')) {
+                timestr += ":" + msg.time.getSeconds().toString().lpad(2, "0");
+            }
+            msg.time_string = translateText(am_pm_locale_key, timestr);
         }
 
         return msg;
