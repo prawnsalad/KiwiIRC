@@ -5,36 +5,36 @@
  */
 
 var util = require('util'),
-    kiwiModules = require('../server/modules');
+    path = require('path'),
+    net  = require('net');
 
+function initModule(KiwiModule) {
+    var proxychecker_module = new KiwiModule('proxychecker'),
+        client_addr = event_data.connection.state.client.websocket.meta.real_address;
 
-var module = new kiwiModules.Module('proxychecker');
-
-module.on('irc connecting', function (event, event_data) {
     event.wait = true;
 
-    var client_addr = event_data.connection.state.client.websocket.meta.real_address;
+    proxychecker_module.on('irc connecting', function (event, event_data) {
+        checkForOpenProxies(client_addr, function(is_proxy, host, port) {
+            var err;
+            if (is_proxy) {
+                err = new Error(util.format('Proxy detected on %s:%d', client_addr, port));
+                err.code = 'Blocked proxy';
 
-    checkForOpenProxies(client_addr, function(is_proxy, host, port) {
-        if (is_proxy) {
-            var err = new Error(util.format('Proxy detected on %s:%d', client_addr, port));
-            err.code = 'Blocked proxy';
+                event_data.connection.emit('error', err);
+                event.preventDefault();
+                event.callback();
 
-            event_data.connection.emit('error', err);
-            event.preventDefault();
-            event.callback();
-
-        } else {
-            event.callback();
-        }
+            } else {
+                event.callback();
+            }
+        });
     });
-});
+}
 
-
+module.exports = initModule;
 
 function checkForOpenProxies(host, callback) {
-    var net = require('net');
-
     var ports = [80,8080,81,1080,6588,8000];
     var ports_completed = 0;
 
