@@ -429,20 +429,17 @@
 
 #kiwi.chanlist_treeview .panels { left:160px; }
 #kiwi.chanlist_treeview .toolbar { position:static; }
-#kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#121314; overflow-y:auto; }
-#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
-#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.chanlist_treeview .toolbar .app_tools { float:none; width: 160px; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:0px; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#383838; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block;}
+#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; border-bottom: 1px solid #666 }
 #kiwi.chanlist_treeview .tabs ul li .activity { position:absolute; right:5px; }
-#kiwi.chanlist_treeview .toolbar .panellist li {
-    padding: 4px 8px;
-}
+#kiwi.chanlist_treeview .toolbar .panellist li { }
 #kiwi.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
-#kiwi.chanlist_treeview .tabs ul li.active {
-    margin-right:0;
-    border-right-width:0;
-}
+#kiwi.chanlist_treeview .tabs ul li.active { margin-right:0; border-right-width:0}
+#kiwi.chanlist_treeview .toolbar .topic { margin-left: 160px;}
+
 #kiwi .applet_chanlist {
     margin: 0.5em 1em;
 }
