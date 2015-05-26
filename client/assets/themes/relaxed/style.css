@@ -41,7 +41,7 @@
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
 
-#kiwi .toolbar .connections { list-style: none; }
+#kiwi .toolbar .connections { list-style: none; float: left}
 #kiwi .toolbar .panellist {
     /*background: #2b2b2b*/;
     color: #a5a5a5;
