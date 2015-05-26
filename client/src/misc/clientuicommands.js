@@ -221,10 +221,10 @@
             }
 
             // We have a parameter, so add it, first convert it to regex.
-            var normalised = normaliseIgnore(ev.params[0]);
-            list.push(normalised);
+            var user_mask = toUserMask(ev.params[0]);
+            list.push(user_mask);
             this.app.connections.active_connection.set('ignore_list', list);
-            this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [normalised[0]])}));
+            this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [user_mask[0]])}));
         }
     };
 
@@ -239,14 +239,14 @@
                 return;
             }
 
-            var normalised = normaliseIgnore(ev.params[0]);
+            var user_mask = toUserMask(ev.params[0]);
             list = _.reject(list, function(pattern) {
-                return pattern[1].toString() === normalised[1].toString();
+                return pattern[1].toString() === user_mask[1].toString();
             });
 
             this.app.connections.active_connection.set('ignore_list', list);
 
-            this.app.panels().active.addMsg(' ', styleText('ignore_stopped', {text: translateText('client_models_application_ignore_stopped', [normalised[0]])}));
+            this.app.panels().active.addMsg(' ', styleText('ignore_stopped', {text: translateText('client_models_application_ignore_stopped', [user_mask[0]])}));
         }
     };
 

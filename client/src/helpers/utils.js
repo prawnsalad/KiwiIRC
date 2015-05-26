@@ -594,16 +594,16 @@ function styleText(string_id, params) {
 *   @param      {String}    host The user mask to format.
 *   @returns    {Array}          An array with the full user mask and regex.
 */
-function normaliseIgnore (inp, noArray) {
-         // Convert input to full user masks.
-         var tmp = inp.match(/([^!@]+)!?([^!@]+)?@?(.+)?/),
-             res = (tmp[1]||'*') + '!' + (tmp[2]||'*') + '@' + (tmp[3]||'*');
+function toUserMask (inp, no_array) {
+    // Convert input to full user masks.
+    var tmp = inp.match(/([^!@]+)!?([^!@]+)?@?(.+)?/),
+        res = (tmp[1]||'*') + '!' + (tmp[2]||'*') + '@' + (tmp[3]||'*');
 
-         // Return the full user mask only if noArray is true.
-         if (noArray) {
-            return res;
-          } else {
-            // Return an array with the full user mask and RegEx.
-            return [res, new RegExp('^'+res.toLowerCase().replace(/\./g,'\\.').replace(/\*/g,'(.[^!@]*?)')+'$','i')];
-         }
+    // Return the generated user mask only if no_array is true.
+    if (no_array) {
+       return res;
+    } else {
+       // Return an array with the full user mask and RegEx.
+       return [res, new RegExp('^'+res.toLowerCase().replace(/\./g,'\\.').replace(/\*/g,'(.[^!@]*?)')+'$','i')];
+    }
 }
