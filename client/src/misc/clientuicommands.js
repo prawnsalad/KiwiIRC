@@ -212,7 +212,7 @@
                 if (list.length > 0) {
                     this.app.panels().active.addMsg(' ', styleText('ignore_title', {text: translateText('client_models_application_ignore_title')}));
                     $.each(list, function (idx, ignored_pattern) {
-                        that.app.panels().active.addMsg(' ', styleText('ignored_pattern', {text: ignored_pattern}));
+                        that.app.panels().active.addMsg(' ', styleText('ignored_pattern', {text: ignored_pattern[0]}));
                     });
                 } else {
                     this.app.panels().active.addMsg(' ', styleText('ignore_none', {text: translateText('client_models_application_ignore_none')}));
@@ -220,10 +220,11 @@
                 return;
             }
 
-            // We have a parameter, so add it
-            list.push(ev.params[0]);
+            // We have a parameter, so add it, first convert it to regex.
+            var normalised = normaliseIgnore(ev.params[0]);
+            list.push(normalised);
             this.app.connections.active_connection.set('ignore_list', list);
-            this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [ev.params[0]])}));
+            this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [normalised[0]])}));
         }
     };
 
@@ -238,13 +239,14 @@
                 return;
             }
 
+            var normalised = normaliseIgnore(ev.params[0]);
             list = _.reject(list, function(pattern) {
-                return pattern === ev.params[0];
+                return pattern[1].toString() === normalised[1].toString();
             });
 
             this.app.connections.active_connection.set('ignore_list', list);
 
-            this.app.panels().active.addMsg(' ', styleText('ignore_stopped', {text: translateText('client_models_application_ignore_stopped', [ev.params[0]])}));
+            this.app.panels().active.addMsg(' ', styleText('ignore_stopped', {text: translateText('client_models_application_ignore_stopped', [normalised[0]])}));
         }
     };
 
