@@ -250,21 +250,33 @@
 #kiwi .autocomplete {
     position: absolute;
     box-sizing: border-box;
-    left: 9em;
-    right: 0;
+    box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
+    border: 1px solid #CCC;
+    left: 12em;
+    right: 4em;
     bottom: 100%;
-    padding: 0.1em 0.1em 0 0.1em;
-    border: 1px solid #ccc;
     background: #eee;
     overflow-y: auto;
     display: none;
+}
+#kiwi .autocomplete_header {
+    background: #DADADA none repeat scroll 0 0 padding-box;
+    border-bottom: 1px solid #CCC;
+    color: #8A8A8A;
+    font-size: 12px;
+    padding: 5px 10px 4px;
+}
+#kiwi .autocomplete_header_label {
+    font-weight: bold;
+}
+#kiwi .autocomplete_header_help {
+    float: right;
 }
 #kiwi.narrow .autocomplete {
     left: 0;
 }
 #kiwi .autocomplete-item {
-    border: 1px solid #CCC;
-    border-bottom: none;
+    border-bottom: 1px solid #CCC;
     background: #fff;
     padding: 5px 20px;
     list-style: none;
