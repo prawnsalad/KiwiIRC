@@ -30,6 +30,7 @@ var AutoComplete = Backbone.View.extend({
     setWords: function(word_list, filter_list) {
         var new_list = [];
         var template_str_default = '<li class="autocomplete-item"><span class="word"><%= word %></span><span class="matches"><%= match_list %></span><span class="description"><%= description %></span></li>';
+        var template_str_commands = '<li class="autocomplete-item autocomplete-command"><span class="word"><%= match_list %></span><span class="description"><%= description %></span></li>';
         var template_str_nicks = '<li class="autocomplete-item autocomplete-nick" data-nick="<%= word %>"><span class="word"><%= match_list %></span><span class="actions"><a class="action" data-event="message">Message</a><a class="action" data-event="more">More...</a></span></li>';
         var template = {};
 
@@ -50,7 +51,14 @@ var AutoComplete = Backbone.View.extend({
                     template.description = word.description || '';
                 }
 
-                template_str = (word.type === 'nick') ? template_str_nicks : template_str_default;
+                if(word.type === 'nick') {
+                    template_str = template_str_nicks;
+                } else if (word.type === 'command') {
+                    template_str = template_str_commands;
+                } else {
+                    template_str = template_str_default;
+                }
+                
                 $el = $(_.template(template_str, template)).hide();
                 $word = $el.find('.word');
             } else {

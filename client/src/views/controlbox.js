@@ -308,6 +308,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         _.each(commands, function(description, command) {
             this.autocomplete_command_list.push({
                 match: [command],
+                type: 'command',
                 description: description
             });
         }, this);
