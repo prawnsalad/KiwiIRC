@@ -33,6 +33,7 @@ _kiwi.global = {
         this.utils.formatIRCMsg = formatIRCMsg;
         this.utils.styleText = styleText;
         this.utils.hsl2rgb = hsl2rgb;
+        this.utils.toUserMask = toUserMask;
 
         this.utils.notifications = _kiwi.utils.notifications;
         this.utils.formatDate = _kiwi.utils.formatDate;
