@@ -205,7 +205,8 @@
         descrption: 'Ignore messages from somebody',
         fn: function(ev) {
             var that = this,
-                list = this.app.connections.active_connection.get('ignore_list');
+                list = this.app.connections.active_connection.get('ignore_list'),
+                user_mask;
 
             // No parameters passed so list them
             if (!ev.params[0]) {
@@ -221,7 +222,7 @@
             }
 
             // We have a parameter, so add it, first convert it to regex.
-            var user_mask = toUserMask(ev.params[0], true);
+            user_mask = toUserMask(ev.params[0], true);
             list.push(user_mask);
             this.app.connections.active_connection.set('ignore_list', list);
             this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [user_mask[0]])}));
@@ -232,14 +233,15 @@
     fn_to_bind['command:unignore'] = {
         descrption: 'Stop ignoring somebody',
         fn: function(ev) {
-            var list = this.app.connections.active_connection.get('ignore_list');
+            var list = this.app.connections.active_connection.get('ignore_list'),
+                user_mask;
 
             if (!ev.params[0]) {
                 this.app.panels().active.addMsg(' ', styleText('ignore_stop_notice', {text: translateText('client_models_application_ignore_stop_notice')}));
                 return;
             }
 
-            var user_mask = toUserMask(ev.params[0], true);
+            user_mask = toUserMask(ev.params[0], true);
             list = _.reject(list, function(pattern) {
                 return pattern[1].toString() === user_mask[1].toString();
             });
