@@ -231,7 +231,7 @@
             if (typeof mask === "object") {
                mask = (mask.nick||'*')+'!'+(mask.ident||'*')+'@'+(mask.hostname||'*');
             } else if (typeof mask === "string") {
-               mask = toUserMask(mask, true);
+               mask = toUserMask(mask);
             }
 
             for (idx = 0; idx < list.length; idx++) {

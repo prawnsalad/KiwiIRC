@@ -221,7 +221,7 @@
             }
 
             // We have a parameter, so add it, first convert it to regex.
-            var user_mask = toUserMask(ev.params[0]);
+            var user_mask = toUserMask(ev.params[0], true);
             list.push(user_mask);
             this.app.connections.active_connection.set('ignore_list', list);
             this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [user_mask[0]])}));
@@ -239,7 +239,7 @@
                 return;
             }
 
-            var user_mask = toUserMask(ev.params[0]);
+            var user_mask = toUserMask(ev.params[0], true);
             list = _.reject(list, function(pattern) {
                 return pattern[1].toString() === user_mask[1].toString();
             });
