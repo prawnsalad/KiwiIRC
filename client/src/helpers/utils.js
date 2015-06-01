@@ -594,7 +594,7 @@ function styleText(string_id, params) {
 *   @param      {String}    host The user mask to format.
 *   @returns    {Array}          An array with the full user mask and regex.
 */
-function toUserMask (inp, no_array) {
+function toUserMask(inp, no_array) {
     // Convert input to full user masks.
     var tmp = inp.match(/([^!@]+)!?([^!@]+)?@?(.+)?/),
         res = (tmp[1]||'*') + '!' + (tmp[2]||'*') + '@' + (tmp[3]||'*');
