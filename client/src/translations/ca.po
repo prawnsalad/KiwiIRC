@@ -308,35 +308,35 @@ msgstr "Carregant gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nuevo sobrenombre"
+msgstr "Nou sobrenom"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Cambiar"
+msgstr "Canviar"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Cancelar"
+msgstr "Cancel·lar"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "¡La gente está hablando!"
+msgstr "La gent està parlant!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Piensa en un sobrenombre..."
+msgstr "Pensa un sobrenom..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Nick"
+msgstr "Sobrenom"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Tengo contraseña"
+msgstr "Tinc contrassenya"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Password"
+msgstr "Contrassenya"
 
 #: 
 msgid "client_views_serverselect_channel"
@@ -344,23 +344,23 @@ msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Clave de canal"
+msgstr "Contrassenya del canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "El canal requiere una clave"
+msgstr "El canal té contrassenya"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Clave"
+msgstr "Contrassenya"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Comenzar..."
+msgstr "Començar..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Servidor y red"
+msgstr "Servidor i xarxa"
 
 #: 
 msgid "client_views_serverselect_server"
@@ -368,47 +368,47 @@ msgstr "Servidor"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Puerto"
+msgstr "Port"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Potenciado por Kiwi IRC"
+msgstr "Impulsat per Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "¡Selecciona un sobrenombre primero!"
+msgstr "Abans has de seleccionar un sobrenom!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Conectado"
+msgstr "Connectat"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Conectando..."
+msgstr "Connectant..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "El sobrenombre ya está en uso"
+msgstr "El sobrenom ja està en ús"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Sobrenombre erróneo"
+msgstr "Sobrenom erroni"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Contraseña incorrecta"
+msgstr "Contrassenya incorrecta"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Error al conectar"
+msgstr "Error al connectar"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Servidor no encontrado"
+msgstr "No s'ha trobat el servidor"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Conexión rechazada"
+msgstr "Connexió refusada"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -416,15 +416,15 @@ msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-Op"
+msgstr "Treu Op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voz"
+msgstr "Veu"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-Voz"
+msgstr "Treu Veu"
 
 #: 
 msgid "client_views_userbox_kick"
@@ -436,15 +436,15 @@ msgstr "Prohibir"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Mensaje"
+msgstr "Missatge"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Información"
+msgstr "Informació"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "¡Bofetear!"
+msgstr "Bofetejar!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -452,71 +452,71 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "En 5 minutos serás reconectado y serás reingresado a tus canales. ¡Prepárate!"
+msgstr "En 5 minuts seràs reconnectat i reentraràs als canal. Preparat!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Reconectándote de forma segura..."
+msgstr "Reconnectant de forma segura..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Notificaciones de escritorio"
+msgstr "Notificacions d'escriptori"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Habilitar notificaciones"
+msgstr "Habilitar notificacions"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Mostrar emoticons"
+msgstr "Mostrar emoticones"
 
 #: 
 msgid "client_applet_about"
-msgstr "Acerca de Kiwi"
+msgstr "Sobre Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Página del proyecto"
+msgstr "Pàgina del projecte"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link a este canal"
+msgstr "Enllaç a aquest canal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Comparte este canal"
+msgstr "Comparteix aquest canal"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "Mis redes"
+msgstr "Les meves xarxes"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Redes favoritas"
+msgstr "Xarxes preferides"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Agregar red"
+msgstr "Afegir xarxa"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Guardar red"
+msgstr "Desar xarxa
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Borrar red"
+msgstr "Suprimir xarxa"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Incluir mensajes de ingreso/salida como actividad"
+msgstr "Mostrar missatges d'entrada/sortida a l'activitat"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "desatender"
+msgstr "desatendre"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Usar formato de 24 horas"
+msgstr "Utilitzar format de 24 hores"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -528,19 +528,19 @@ msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "fue invitado a %s"
+msgstr "ha estat convidat a %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "ya está en este canal"
+msgstr "ja està en aquest canal"
 
 #: Date format
 msgid "client_date_format"
-msgstr "d/m/Y"
+msgstr "dia/mes/any"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Ene"
+msgstr "Gen"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
@@ -556,7 +556,7 @@ msgstr "Abr"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "May"
+msgstr "Mai"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
@@ -572,7 +572,7 @@ msgstr "Ago"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Sep"
+msgstr "Set"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
@@ -584,19 +584,19 @@ msgstr "Nov"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Dic"
+msgstr "Des"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "Enero"
+msgstr "Gener"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "Febrero"
+msgstr "Febrer"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "Marzo"
+msgstr "Març"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
@@ -604,23 +604,23 @@ msgstr "Abril"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "Mayo"
+msgstr "Maig"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "Junio"
+msgstr "Juny"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "Julio"
+msgstr "Juliol"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "Agosto"
+msgstr "Agost"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "Septiembre"
+msgstr "Setembre"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
@@ -628,92 +628,92 @@ msgstr "Octubre"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "Noviembre"
+msgstr "Novembre"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "Diciembre"
+msgstr "Desembre"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Lun"
+msgstr "Dl"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Mar"
+msgstr "Dm"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Mié"
+msgstr "Dx"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Jue"
+msgstr "Dj"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Vie"
+msgstr "Dv"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Sáb"
+msgstr "Ds"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Dom"
+msgstr "Dg"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Lunes"
+msgstr "Dilluns"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Martes"
+msgstr "Dimarts"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Miércoles"
+msgstr "Dimecres"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Jueves"
+msgstr "Dijous"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Viernes"
+msgstr "Divendres"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Sábado"
+msgstr "Dissabte"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Domingo"
+msgstr "Diumenge"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Chat Moderado"
+msgstr "Xat Moderat"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Sólo Invitados"
+msgstr "Només convidats"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Solo operadores pueden cambiar el tema"
+msgstr "Nomes els operadors poden canviar el tema"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Bloquear mensajes desde fuera del canal"
+msgstr "Bloquejar missatges de fora del canal"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Ocultar Lista de Baneados"
+msgstr "Amagar llista de bandejats"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Enviar mensaje..."
+msgstr "Enviar missatge..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Això et desconnectara d'aquesta xarxa IRC. N'estàs segur?"
