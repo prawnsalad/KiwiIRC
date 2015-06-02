@@ -266,11 +266,17 @@
     font-size: 12px;
     padding: 5px 10px 4px;
 }
+#kiwi.narrow .autocomplete_header {
+    display: none;
+}
 #kiwi .autocomplete_header_label {
     font-weight: bold;
 }
 #kiwi .autocomplete_header_help {
     float: right;
+}
+#kiwi .autocomplete-list {
+    overflow-y: auto;
 }
 #kiwi.narrow .autocomplete {
     left: 0;
@@ -284,11 +290,13 @@
 #kiwi .autocomplete-item.selected { background: #D1EACD; }
 #kiwi .autocomplete-item .word { font-weight: bold; }
 #kiwi .autocomplete-item .matches { font-size: 0.9em; margin-left: 2em; }
+#kiwi.narrow .autocomplete-item .matches {display: none;}
 #kiwi .autocomplete-item .actions { float: right; font-size: 0.9em; margin-right: 2em; }
 #kiwi .autocomplete-item .actions a { margin-left: 1em; }
 #kiwi .autocomplete-item .description {
-    font-size: 0.9em;
-    margin-left: 2em;
+    float: right;
+    margin-right: 1em;
+    font-style: italic;
 }
 
 #kiwi .controlbox .input {

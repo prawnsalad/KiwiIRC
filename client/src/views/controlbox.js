@@ -298,7 +298,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             break;
 
         case (ev.keyCode === 191 && inp_val === ''):    // Forward slash in an empty box
-            this.showAutocomplete(this.autocomplete_command_list, true);
+            this.showAutocomplete(this.autocomplete_command_list, 'command', true);
             break;
         }
     },
@@ -308,7 +308,6 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         _.each(commands, function(description, command) {
             this.autocomplete_command_list.push({
                 match: [command],
-                type: 'command',
                 description: description
             });
         }, this);
@@ -391,7 +390,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     },
 
 
-    showAutocomplete: function(list, filter_list) {
+    showAutocomplete: function(list, type, filter_list) {
         var $inp = this.$('.inp'),
             tokens = $inp.val().trim().substring(0, $inp[0].selectionStart).split(' ');
 
@@ -401,6 +400,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             caret_pos: $inp[0].selectionStart
         };
 
+        this.autocomplete.setTitle(type);
         this.autocomplete.setWords(list, filter_list);
         this.autocomplete.update(tokens[tokens.length - 1]);
         this.autocomplete.show();
