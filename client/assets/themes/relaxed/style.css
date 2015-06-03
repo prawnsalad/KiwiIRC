@@ -259,20 +259,21 @@
     overflow-y: auto;
     display: none;
 }
-#kiwi .autocomplete_header {
+#kiwi .autocomplete-header {
     background: #DADADA none repeat scroll 0 0 padding-box;
     border-bottom: 1px solid #CCC;
     color: #8A8A8A;
     font-size: 12px;
     padding: 5px 10px 4px;
+    overflow: hidden;
 }
-#kiwi.narrow .autocomplete_header {
+#kiwi.narrow .autocomplete-header {
     display: none;
 }
-#kiwi .autocomplete_header_label {
+#kiwi .autocomplete-header-label {
     font-weight: bold;
 }
-#kiwi .autocomplete_header_help {
+#kiwi .autocomplete-header-help {
     float: right;
 }
 #kiwi .autocomplete-list {

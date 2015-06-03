@@ -77,9 +77,9 @@ var AutoComplete = Backbone.View.extend({
 
     setTitle: function(type) {
         if(type == undefined) {
-            this.$('.autocomplete_header_label').text('People or channels');
+            this.$('.autocomplete-header-label').text('People or channels');
         } else if (type == 'command') {
-            this.$('.autocomplete_header_label').text('Commands');
+            this.$('.autocomplete-header-label').text('Commands');
         }
     },
 
