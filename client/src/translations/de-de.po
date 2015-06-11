@@ -716,3 +716,6 @@ msgstr "Nachricht senden..."
 msgid "disconnect_from_server"
 msgstr "This will disconnect from the IRC network. Are you sure?"
 
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Highlights (getrennt durch Leerzeichen)"
