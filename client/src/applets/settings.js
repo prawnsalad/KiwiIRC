@@ -4,7 +4,8 @@
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
             'click .register_protocol': 'registerProtocol',
-            'click .enable_notifications': 'enableNotifications'
+            'click .enable_notifications': 'enableNotifications',
+            'click .show-category': 'onClickShowCategory'
         },
 
         initialize: function (options) {
@@ -44,8 +45,8 @@
             // Incase any settings change while we have this open, update them
             _kiwi.global.settings.on('change', this.loadSettings, this);
 
-            // Now actually show the current settings
-            this.loadSettings();
+            // Now actually show the first cetegory of settings
+            this.showCategory('appearance');
 
         },
 
@@ -132,6 +133,23 @@
                     this.$('.notification_enabler').remove();
                 }
             }, this));
+        },
+
+
+        showCategory: function(category) {
+            this.$('.settings-category').removeClass('active');
+            this.$('.settings-category-' + category).addClass('active');
+
+            // Load the current settings
+            this.loadSettings();
+        },
+
+
+        onClickShowCategory: function(event) {
+            var category = $(event.currentTarget).data('category');
+            if (category) {
+                this.showCategory(category);
+            }
         }
 
     });

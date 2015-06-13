@@ -323,7 +323,24 @@ html, body { height:100%; }
 
 /* Some of these styles will move to global styling later */
 #kiwi .settings_container {
-    padding: 50px;
+    padding: 25px;
+}
+
+#kiwi .settings_container .settings-category {
+    display: none;
+    margin-left: 160px;
+}
+
+#kiwi .settings_container .settings-category.active {
+    display: block;
+}
+#kiwi .settings_container .settings-category-list {
+    float: left;
+    width: 100px;
+}
+#kiwi .settings_container .settings-category-list a {
+    display: block;
+    line-height: 2.5em;
 }
 
 #kiwi .settings_container .thumbnails:before {
