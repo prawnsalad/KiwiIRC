@@ -157,7 +157,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     // Let nicks be clickable + colourise within messages
     parseMessageNicks: function(word, colourise) {
-        var members, member, nick, nickRe, style = '';
+        var members, member, nick, nick_re, style = '';
 
         if (!(members = this.model.get('members')) || !(member = members.getByNick(word))) {
             return;
@@ -169,11 +169,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             // Use the nick from the member object so the style matches the letter casing
             style = this.getNickStyles(nick).asCssString();
         }
-        nickRe = new RegExp('(.*)\\b(' + _kiwi.global.utils.escapeRegex(nick) + ')\\b(.*)', 'i');
-        return word.replace(nickRe, function (__, before, nickInOrigCase, after) {
+        nick_re = new RegExp('(.*)\\b(' + _kiwi.global.utils.escapeRegex(nick) + ')\\b(.*)', 'i');
+        return word.replace(nick_re, function (__, before, nick_in_orig_case, after) {
             return _.escape(before)
                 + '<span class="inline-nick" style="' + style + '; cursor:pointer" data-nick="' + _.escape(nick) + '">'
-                + _.escape(nickInOrigCase)
+                + _.escape(nick_in_orig_case)
                 + '</span>'
                 + _.escape(after);
         });
