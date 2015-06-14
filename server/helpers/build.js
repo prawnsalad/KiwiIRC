@@ -64,6 +64,7 @@ var source_files = [
     global.config.public_http + '/src/views/application.js',
     global.config.public_http + '/src/views/apptoolbar.js',
     global.config.public_http + '/src/views/controlbox.js',
+    global.config.public_http + '/src/views/autocomplete.js',
     global.config.public_http + '/src/views/favicon.js',
     global.config.public_http + '/src/views/mediamessage.js',
     global.config.public_http + '/src/views/member.js',

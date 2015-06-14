@@ -8,10 +8,18 @@ var url         = require('url'),
 
 
 
+// Cached list of available translations
+var cached_available_locales = null;
+
+
 
 var HttpHandler = function (config) {
-    var public_http = config.public_http || 'client/';
+    var public_http = config.public_http || global.config.public_http  || 'client/';
     this.file_server = new node_static.Server(public_http);
+
+    if (!cached_available_locales) {
+        updateLocalesCache();
+    }
 };
 
 module.exports.HttpHandler = HttpHandler;
@@ -85,25 +93,30 @@ HttpHandler.prototype.serve = function (request, response) {
 };
 
 
-// Cached list of available translations
-var cached_available_locales = [];
 
-// Get a list of the available translations we have
-fs.readdir('client/assets/locales', function (err, files) {
-    if (err) {
-        if (err.code === 'ENOENT') {
-            winston.error('No locale files could be found at ' + err.path);
-        } else {
-            winston.error('Error reading locales.', err);
-        }
-    }
 
-    (files || []).forEach(function (file) {
-        if (file.substr(-5) === '.json') {
-            cached_available_locales.push(file.slice(0, -5));
+/**
+ * Cache the available locales we have so we don't read the same directory for each request
+ **/
+function updateLocalesCache() {
+    cached_available_locales = [];
+
+    fs.readdir(global.config.public_http + '/assets/locales', function (err, files) {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                winston.error('No locale files could be found at ' + err.path);
+            } else {
+                winston.error('Error reading locales.', err);
+            }
         }
+
+        (files || []).forEach(function (file) {
+            if (file.substr(-5) === '.json') {
+                cached_available_locales.push(file.slice(0, -5));
+            }
+        });
     });
-});
+}
 
 
 

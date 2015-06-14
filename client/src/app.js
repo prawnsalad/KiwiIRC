@@ -33,6 +33,7 @@ _kiwi.global = {
         this.utils.formatIRCMsg = formatIRCMsg;
         this.utils.styleText = styleText;
         this.utils.hsl2rgb = hsl2rgb;
+        this.utils.toUserMask = toUserMask;
 
         this.utils.notifications = _kiwi.utils.notifications;
         this.utils.formatDate = _kiwi.utils.formatDate;
@@ -217,7 +218,8 @@ _kiwi.global = {
         window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
 
         locale_promise = new Promise(function (resolve) {
-            var locale = _kiwi.global.settings.get('locale') || 'magic';
+            // In order, find a locale from the users saved settings, the URL, default settings on the server, or auto detect
+            var locale = _kiwi.global.settings.get('locale') || opts.locale || opts.server_settings.client.settings.locale || 'magic';
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
                 if (locale) {
                     that.i18n = new Jed(locale);
@@ -411,18 +413,6 @@ _kiwi.global = {
 
             if (_kiwi.app.server_settings.connection.ssl) {
                 defaults.ssl = _kiwi.app.server_settings.connection.ssl;
-            }
-
-            if (_kiwi.app.server_settings.connection.channel) {
-                defaults.channel = _kiwi.app.server_settings.connection.channel;
-            }
-
-            if (_kiwi.app.server_settings.connection.channel_key) {
-                defaults.channel_key = _kiwi.app.server_settings.connection.channel_key;
-            }
-
-            if (_kiwi.app.server_settings.connection.nick) {
-                defaults.nick = _kiwi.app.server_settings.connection.nick;
             }
         }
 

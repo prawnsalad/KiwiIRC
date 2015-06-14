@@ -712,3 +712,7 @@ msgstr "Mostra Banlist"
 msgid "client_views_controlbox_message"
 msgstr "Invia messaggio..."
 
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
+

@@ -71,6 +71,50 @@ function secondsToTime(secs) {
 }
 
 
+/* Set or get the caret position or selection range of inputs and textareas */
+$.fn.selectRange = function(start, end) {
+    var e = $(this)[0];
+    if (!e) return;
+
+    if (typeof start === 'undefined') {
+        var caret_pos = 0;
+
+        if (document.selection) {
+            var sel = document.selection.createRange ();
+            sel.moveStart ('character', -e.value.length);
+            caret_pos = sel.text.length;
+        } else if (e.selectionStart || e.selectionStart == '0') {
+            caret_pos = e.selectionStart;
+        }
+
+        return caret_pos;
+
+    } else {
+        if (typeof end === 'undefined') {
+            end = start;
+        }
+
+        // WebKit
+        if (e.setSelectionRange) {
+            e.focus();
+            e.setSelectionRange(start, end);
+        }
+        // IE
+        else if (e.createTextRange) {
+            var range = e.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', start);
+            range.select();
+        }
+        else if (e.selectionStart) {
+            e.selectionStart = start;
+            e.selectionEnd = end;
+        }
+    }
+};
+
+
 /* Command input Alias + re-writing */
 function InputPreProcessor () {
     this.recursive_depth = 3;
@@ -219,7 +263,7 @@ function hsl2rgb(h, s, l) {
  */
 function formatToIrcMsg(message) {
     // Format any colour codes (eg. $c4)
-    message = message.replace(/%C(\d)/ig, function(match, colour_number) {
+    message = message.replace(/%C(\d)/g, function(match, colour_number) {
         return String.fromCharCode(3) + colour_number.toString();
     });
 
@@ -229,7 +273,7 @@ function formatToIrcMsg(message) {
         U: '\x1F',    // Underline
         O: '\x0F'     // Out / Clear formatting
     };
-    message = message.replace(/%([BIUO])/ig, function(match, format_code) {
+    message = message.replace(/%([BIUO])/g, function(match, format_code) {
         if (typeof formatters[format_code.toUpperCase()] !== 'undefined')
             return formatters[format_code.toUpperCase()];
     });
@@ -542,4 +586,24 @@ function styleText(string_id, params) {
     });
 
     return text;
+}
+
+
+/*
+* Convert input to valid ignore regex.
+*   @param      {String}    host The user mask to format.
+*   @returns    {Array}          An array with the full user mask and regex.
+*/
+function toUserMask(inp, return_regex) {
+    // Convert input to full user masks.
+    var tmp = inp.match(/([^!@]+)!?([^!@]+)?@?(.+)?/),
+        res = (tmp[1]||'*') + '!' + (tmp[2]||'*') + '@' + (tmp[3]||'*');
+
+    // Return the generated user mask only if no_array is true.
+    if (!return_regex) {
+       return res;
+    } else {
+       // Return an array with the full user mask and RegEx.
+       return [res, new RegExp('^'+res.toLowerCase().replace(/\./g,'\\.').replace(/\*/g,'(.[^!@]*?)')+'$','i')];
+    }
 }

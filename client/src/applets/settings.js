@@ -4,7 +4,8 @@
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
             'click .register_protocol': 'registerProtocol',
-            'click .enable_notifications': 'enableNotifications'
+            'click .enable_notifications': 'enableNotifications',
+            'click .show-category': 'onClickShowCategory'
         },
 
         initialize: function (options) {
@@ -27,6 +28,7 @@
                 default_note          : translateText('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
                 html5_notifications   : translateText('client_applets_settings_html5_notifications'),
                 enable_notifications  : translateText('client_applets_settings_enable_notifications'),
+                custom_highlights     : translateText('client_applets_settings_custom_highlights'),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
@@ -44,8 +46,8 @@
             // Incase any settings change while we have this open, update them
             _kiwi.global.settings.on('change', this.loadSettings, this);
 
-            // Now actually show the current settings
-            this.loadSettings();
+            // Now actually show the first cetegory of settings
+            this.showCategory('appearance');
 
         },
 
@@ -132,6 +134,23 @@
                     this.$('.notification_enabler').remove();
                 }
             }, this));
+        },
+
+
+        showCategory: function(category) {
+            this.$('.settings-category').removeClass('active');
+            this.$('.settings-category-' + category).addClass('active');
+
+            // Load the current settings
+            this.loadSettings();
+        },
+
+
+        onClickShowCategory: function(event) {
+            var category = $(event.currentTarget).data('category');
+            if (category) {
+                this.showCategory(category);
+            }
         }
 
     });

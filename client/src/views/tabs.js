@@ -69,7 +69,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
 
     panelAdded: function (panel) {
         // Add a tab to the panel
-        panel.tab = $('<li><span>' + (panel.get('title') || panel.get('name')) + '</span><div class="activity"></div></li>');
+        panel.tab = $('<li><span></span><div class="activity"></div></li>');
+        panel.tab.find('span').text(panel.get('title') || panel.get('name'));
 
         if (panel.isServer()) {
             panel.tab.addClass('server');

@@ -201,7 +201,8 @@ conf.client = {
         mute_sounds: false,
         show_emoticons: true,
         allow_queries: true,
-        count_all_activity: false
+        count_all_activity: false,
+        locale: null // null = use the browser locale settings
     },
     window_title: 'Kiwi IRC'
 };
@@ -219,10 +220,7 @@ conf.client_themes = [
 //conf.restrict_server = "irc.kiwiirc.com";
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;
-//conf.restrict_server_channel = "#kiwiirc";
-//conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
-//conf.restrict_server_nick = "kiwi_";
 
 
 

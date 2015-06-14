@@ -61,9 +61,8 @@ msgid "client_applets_settings_channelview_list_notice"
 msgstr "para una gran cantidad de canales"
 
 #: 
-#, fuzzy
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Une/Separa notificaciones de canal"
+msgstr "Notificaciones de entrada/salida de canal"
 
 #: 
 msgid "client_applets_settings_timestamp"
@@ -179,7 +178,7 @@ msgstr "Error al conectarse a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "se ha ingresado"
+msgstr "ha ingresado"
 
 #: 
 msgid "client_models_channel_quit"
@@ -254,7 +253,6 @@ msgid "client_models_network_channel_badkey"
 msgstr "Clave de canal incorrecta para %s"
 
 #: 
-#, fuzzy
 msgid "client_models_network_channel_inviteonly"
 msgstr "es solo con invitación."
 
@@ -712,5 +710,9 @@ msgstr "Ocultar Lista de Baneados"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Send message..."
+msgstr "Enviar mensaje..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 

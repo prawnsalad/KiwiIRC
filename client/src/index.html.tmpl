@@ -53,6 +53,7 @@
             </div>
 
             <div class="controlbox">
+                <div class="autocomplete"></div>
                 <div class="input">
                     <span class="nick"> </span>
                     <div class="input_wrap"><textarea class="inp"></textarea></div>
@@ -242,7 +243,76 @@
 
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
-            <form>
+            <div class="settings-category-list">
+                <a class="show-category" data-category="appearance">Appearance</a>
+                <a class="show-category" data-category="messages">Messages</a>
+            </div>
+
+            <form class="settings-category settings-category-messages">
+                <h5>Messages</h5>
+                <section>
+                    <h6>Chat Messages</h6>
+                    <div class="control-group">
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_timestamps" type="checkbox">
+                                <%= timestamps %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="use_24_hour_timestamps" type="checkbox">
+                                <%= timestamp_24 %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_emoticons" type="checkbox">
+                                <%= emoticons %>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                                <span><%= scroll_history %></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h6>Alerts / Notifications</h6>
+                    <div class="control-group">
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_joins_parts" type="checkbox">
+                                <%= join_part %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="count_all_activity" type="checkbox">
+                                <%= count_all_activity %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="mute_sounds" type="checkbox">
+                                <%= mute %>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <div><%= custom_highlights %></div>
+                                <input data-setting="custom_highlights" class="input-small" type="text" size="20">
+                            </label>
+                        </div>
+                    </div>
+                </section>
+            </form>
+
+            <form class="settings-category settings-category-appearance">
+                <h5>Appearance</h5>
                 <section>
                     <h6>Theme</h6>
                     <div class="control-group">
@@ -267,48 +337,6 @@
                             <label>
                                 <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
                                 <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <h6>Chat window</h6>
-                    <div class="control-group">
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="show_joins_parts" type="checkbox">
-                                <%= join_part %>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="count_all_activity" type="checkbox">
-                                <%= count_all_activity %>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="show_timestamps" type="checkbox">
-                                <%= timestamps %>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="use_24_hour_timestamps" type="checkbox">
-                                <%= timestamp_24 %>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="mute_sounds" type="checkbox">
-                                <%= mute %>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="show_emoticons" type="checkbox">
-                                <%= emoticons %>
                             </label>
                         </div>
                         <div class="checkbox">
@@ -448,7 +476,8 @@
             opts = {
                 container: $('body'),
                 base_path: base_path,
-                settings_path: base_path + '/assets/settings.json'
+                settings_path: base_path + '/assets/settings.json',
+                locale: getQueryVariable('locale')
             },
             script_promise, script_promise_resolve,
             onload_promise,
@@ -523,7 +552,6 @@
                 opts.server_settings = data.server_settings;
                 opts.client_plugins = data.client_plugins;
                 opts.translations = data.translations;
-                opts.locale = data.locale;
                 opts.themes = data.themes;
 
                 if (typeof data.kiwi_server !== 'undefined') {

@@ -31,7 +31,9 @@ _kiwi.view.UserBox = Backbone.View.extend({
         this.user = user;
         this.channel = channel;
 
-        var is_ignored = _kiwi.app.connections.active_connection.isNickIgnored(this.user.get('nick'));
+        var user_mask = toUserMask(this.user.get('nick')),
+            is_ignored = _kiwi.app.connections.active_connection.isUserIgnored(user_mask);
+
         this.$('.ignore input').attr('checked', is_ignored ? 'checked' : false);
     },
 

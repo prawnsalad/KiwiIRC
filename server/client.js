@@ -9,6 +9,11 @@ var util             = require('util'),
     Stats            = require('./stats.js');
 
 
+var next_client_id = 1;
+function generateClientId() {
+    return next_client_id++;
+}
+
 var Client = function (websocket, opts) {
     var that = this;
 
@@ -31,12 +36,8 @@ var Client = function (websocket, opts) {
     // Clients address
     this.real_address = this.websocket.meta.real_address;
 
-    // A hash to identify this client instance
-    this.hash = crypto.createHash('sha256')
-        .update(this.real_address)
-        .update('' + Date.now())
-        .update(Math.floor(Math.random() * 100000).toString())
-        .digest('hex');
+    // An ID to identify this client instance
+    this.id = generateClientId();
 
     this.state = new State(this);
 
@@ -65,6 +66,9 @@ var Client = function (websocket, opts) {
     });
 
     this.disposed = false;
+
+    // Start the heartbeating process
+    this.heartbeat();
 
     // Let the client know it's finished connecting
     this.sendKiwiCommand('connected');
@@ -119,7 +123,7 @@ Client.prototype.heartbeat = function() {
 
 Client.prototype._heartbeat_timeout = function() {
     Stats.incr('client.timeout');
-    this.dispose();
+    websocketDisconnect.apply(this);
 };
 
 

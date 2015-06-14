@@ -518,11 +518,11 @@ msgstr "Folosește formatul de 24 de ore"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "% AM"
+msgstr "%s AM"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "% PM"
+msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
@@ -711,4 +711,8 @@ msgstr "Comută lista de blocări"
 #: 
 msgid "client_views_controlbox_message"
 msgstr "Trimite mesajul..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 

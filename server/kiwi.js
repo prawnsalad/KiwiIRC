@@ -1,6 +1,4 @@
-var fs          = require('fs'),
-    _           = require('lodash'),
-    util        = require('util'),
+var _           = require('lodash'),
     winston     = require('winston'),
     WebListener = require('./weblistener.js'),
     config      = require('./configuration.js'),

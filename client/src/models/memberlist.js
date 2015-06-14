@@ -36,8 +36,8 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
             // b has modes but a doesn't so b should appear first
             return 1;
         }
-        a_nick = a.get("nick").toLocaleUpperCase();
-        b_nick = b.get("nick").toLocaleUpperCase();
+        a_nick = a.get("nick").toLocaleLowerCase();
+        b_nick = b.get("nick").toLocaleLowerCase();
         // Lexicographical sorting
         if (a_nick < b_nick) {
             return -1;

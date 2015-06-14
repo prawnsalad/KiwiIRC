@@ -22,7 +22,7 @@ msgstr "Nazwa kanału"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Użytkownicy"
+msgstr "Użytkowników"
 
 #: 
 msgid "client_applets_chanlist_topic"
@@ -511,7 +511,7 @@ msgstr "Używaj wiadomości join/part jako aktywności"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "Ignorować"
+msgstr "Ignoruj"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
@@ -712,4 +712,8 @@ msgstr "Przełącz Banlistę"
 #: 
 msgid "client_views_controlbox_message"
 msgstr "Wyślij wiadomość..."
+
+#: 
+msgid "disconnect_from_server"
+msgstr "This will disconnect from the IRC network. Are you sure?"
 
