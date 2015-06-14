@@ -714,5 +714,9 @@ msgstr "Pošalji poruku..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Ovo će vas diskonektovati sa IRC mreže. Da li ste sigurni?"
+
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Custom highlights (space separated)"
 

@@ -77,10 +77,6 @@ msgid "client_applets_settings_history_length"
 msgstr "messages in scroll history"
 
 #: 
-msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
-
-#: 
 msgid "client_applets_settings_default_client"
 msgstr "Default IRC client"
 
@@ -719,4 +715,8 @@ msgstr "Send message..."
 #: 
 msgid "disconnect_from_server"
 msgstr "This will disconnect from the IRC network. Are you sure?"
+
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Custom highlights (space separated)"
 

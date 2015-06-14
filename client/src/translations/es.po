@@ -26,11 +26,11 @@ msgstr "Usuarios"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Tema"
+msgstr "Tema del canal"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Lista de Canales"
+msgstr "Lista de canales"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
@@ -38,15 +38,15 @@ msgstr "Guardar"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Error de Script. %s"
+msgstr "Error de script: %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "El script se ha guardado y está activo"
+msgstr "Tu script ha sido guardado y está ahora activo"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Editor de Script"
+msgstr "Editor de scripts"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
@@ -58,7 +58,7 @@ msgstr "Lista"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "para una gran cantidad de canales"
+msgstr "para muchos canales"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
@@ -70,35 +70,35 @@ msgstr "Marcas de tiempo"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Silenciar notificaciones sonoras"
+msgstr "Silenciar sonido de notificaciones"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "Mensajes en historia de desplazamiento"
+msgstr "Historial de mensajes por ventana"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Cliente IRC por defecto"
+msgstr "Cliente IRC predeterminado"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Hacer Kiwi mi cliente por defecto"
+msgstr "Hacer KiwiIRC mi cliente IRC predeterminado"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Nota: Los cambios solo tomarán efecto luego de refrescar la página"
+msgstr "Nota: Los cambios tendrán efecto después de actualizar la página"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Nota: Usuarios de Chrome o Chromium quizás deban revisar sus ajustes en %s si nada sucede"
+msgstr "Nota: Los usuarios de Chrome o Chromium quizás deban revisar sus configuraciones en %s si nada ocurre"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Ajustes"
+msgstr "Configuraciones"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Applet desconocido"
+msgstr "Applet desconocida"
 
 #: 
 msgid "client_models_applet_loading"
@@ -110,59 +110,59 @@ msgstr "No encontrado"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Has sido desconectado. Intentado reconexión"
+msgstr "Has sido desconectado. Intentando reconectar"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Has sido desconectado. Intentando reconectarse nuevamente en %d segundos"
+msgstr "Has sido desconectado. Intentando reconectar en %d segundos"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Está bien, estás conectado nuevamente"
+msgstr "Conexión reestablecida"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Los ajustes han sido guardados"
+msgstr "La configuración ha sido guardada"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Sobrenombres ignorados"
+msgstr "Nicks ignorados"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "No ignorando a nadie"
+msgstr "Tu lista de ignorados está vacía"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Ignorando a %s"
+msgstr "Ignorando %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Especifica qué sobrenombre deseas dejar de ignorar"
+msgstr "Especifica qué nick quieres dejar de ignorar"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Se dejó de ignorar a %s"
+msgstr "Se ha dejado de ignorar a %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" no existe"
+msgstr "El Applet \"%s\" no existe"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Encoding modificado a %s"
+msgstr "Codificación modificada a %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s no es un encoding válido"
+msgstr "%s no es una codificación válida"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Encoding no especificado"
+msgstr "Codificación no especificada"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Uso: /encoding [NUEVO-ENCODING]"
+msgstr "Uso: /encoding [NUEVA-CODIFICACIÓN]"
 
 #: 
 msgid "client_models_application_connection_create"
@@ -170,23 +170,23 @@ msgstr "Nueva conexión"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Conectándose a %s:%s..."
+msgstr "Conectando a %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Error al conectarse a %s:%s (%s)"
+msgstr "Error conectando a %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "ha ingresado"
+msgstr "ha entrado"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "ha salido %s"
+msgstr "ha abandonado %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "ha sido expulsado por %s %s"
+msgstr "fue expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
@@ -194,7 +194,7 @@ msgstr "Has sido expulsado por %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "ha abandonado %s"
+msgstr "ha salido de %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
@@ -202,23 +202,23 @@ msgstr "no es un nombre de canal válido"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Desconectado de la red IRC"
+msgstr "Desconectado de la red"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "es ahora %s"
+msgstr "ha cambiado su nick a %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Tema elegido por %s en %s"
+msgstr "Tema del canal puesto por %s a las %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "elige modo %s"
+msgstr "puso modo %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "elige modo %s"
+msgstr "puso modo %s"
 
 #: 
 msgid "client_models_network_channels"
@@ -226,35 +226,35 @@ msgstr "Canales: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Conectado al server: %s %s"
+msgstr "Conectado al servidor: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Inactivo por %s, conectado desde %s"
+msgstr "Inactivo hace %s, conectado desde %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "Ausente: %s"
+msgstr "Inactivo: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Inactivo por %s"
+msgstr "Inactivo hace: %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "No existe tal sobrenombre"
+msgstr "Nick no existe"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "Tienes prohibido el acceso a %s. %s"
+msgstr "Has sido baneado de %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Clave de canal incorrecta para %s"
+msgstr "Contraseña del canal incorrecta para %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "es solo con invitación."
+msgstr "es sólo para invitados."
 
 #: 
 msgid "client_models_network_channel_limitreached"
@@ -262,27 +262,27 @@ msgstr "está lleno."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "El sobrenombre \"%s\" ya está en uso. Por favor selecciona uno nuevo"
+msgstr "El nick \"%s\" ya está en uso. Elige otro distinto"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Password incorrecto"
+msgstr "Contraseña incorrecta"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Esto cerrará todas las conversaciones de KiwiIRC. ¿Está seguro que desea cerrar esta ventana?"
+msgstr "Esto cerrará todas las conexiones. ¿Estás seguro de que quieres cerrar KiwiIRC?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Ingresando al canal..."
+msgstr "Entrando al canal..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Tema para %s es: %s"
+msgstr "Tema del canal %s es: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Cerrar elemento"
+msgstr "Cerrar"
 
 #: 
 msgid "client_views_mediamessage_notfound"
@@ -290,23 +290,23 @@ msgstr "No encontrado"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Cargando tweet"
+msgstr "Cargando Tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Cargando imágen"
+msgstr "Cargando imagen"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Cargando tema de Reddit"
+msgstr "Cargando Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Cargando gist"
+msgstr "Cargando Gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nuevo sobrenombre"
+msgstr "Nuevo nick"
 
 #: 
 msgid "client_views_nickchangebox_change"
@@ -318,11 +318,11 @@ msgstr "Cancelar"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "¡La gente está hablando!"
+msgstr "¡Gente hablando!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Piensa en un sobrenombre..."
+msgstr "Elige un nick..."
 
 #: 
 msgid "client_views_serverselect_nickname"
@@ -330,11 +330,11 @@ msgstr "Nick"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Tengo contraseña"
+msgstr "Tengo una contraseña"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Password"
+msgstr "Contraseña"
 
 #: 
 msgid "client_views_serverselect_channel"
@@ -342,19 +342,19 @@ msgstr "Canal"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Clave de canal"
+msgstr "Contraseña del canal"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "El canal requiere una clave"
+msgstr "Canal requiere una contraseña"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Clave"
+msgstr "Contraseña"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Comenzar..."
+msgstr "Conectando..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
@@ -370,11 +370,11 @@ msgstr "Puerto"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Potenciado por Kiwi IRC"
+msgstr "Funciona con KiwiIRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "¡Selecciona un sobrenombre primero!"
+msgstr "Debes elegir un nick primero"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
@@ -386,11 +386,11 @@ msgstr "Conectando..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "El sobrenombre ya está en uso"
+msgstr "Nick ya está en uso"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Sobrenombre erróneo"
+msgstr "Nick inválido"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
@@ -406,23 +406,23 @@ msgstr "Servidor no encontrado"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Conexión rechazada"
+msgstr "Conexión denegada"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Op"
+msgstr "Dar op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-Op"
+msgstr "Quitar op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voz"
+msgstr "Dar voz"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-Voz"
+msgstr "Quitar voz"
 
 #: 
 msgid "client_views_userbox_kick"
@@ -430,7 +430,7 @@ msgstr "Expulsar"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Prohibir"
+msgstr "Banear"
 
 #: 
 msgid "client_views_userbox_query"
@@ -438,7 +438,7 @@ msgstr "Mensaje"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Información"
+msgstr "Info"
 
 #: 
 msgid "client_views_userbox_slap"
@@ -450,39 +450,39 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "En 5 minutos serás reconectado y serás reingresado a tus canales. ¡Prepárate!"
+msgstr "En 5 minutos serás reconectado y entrarás automaticamente a tus canales. ¡Prepárate!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Reconectándote de forma segura..."
+msgstr "Reconectando..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Notificaciones de escritorio"
+msgstr "Activar notificaciones de escritorio HTML5"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Habilitar notificaciones"
+msgstr "Activar notificaciones"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Mostrar emoticons"
+msgstr "Mostrar emoticones"
 
 #: 
 msgid "client_applet_about"
-msgstr "Acerca de Kiwi"
+msgstr "Acerca de KiwiIRC"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Página del proyecto"
+msgstr "Página principal del proyecto"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link a este canal"
+msgstr "Enlace a este canal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Comparte este canal"
+msgstr "Compartir este canal"
 
 #: 
 msgid "client_applet_fav_my_networks"
@@ -502,19 +502,19 @@ msgstr "Guardar red"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Borrar red"
+msgstr "Eliminar red"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Incluir mensajes de ingreso/salida como actividad"
+msgstr "Incluir mensajes de entrada/salida del canal"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "desatender"
+msgstr "Ignorar"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Usar formato de 24 horas"
+msgstr "Usar horario de 24-horas"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -526,7 +526,7 @@ msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "fue invitado a %s"
+msgstr "ha sido invitado a %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
@@ -690,23 +690,23 @@ msgstr "Domingo"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Chat Moderado"
+msgstr "Chat moderado"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Sólo Invitados"
+msgstr "Sólo invitados"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Solo operadores pueden cambiar el tema"
+msgstr "Sólo operadores pueden cambiar el tema del canal"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Bloquear mensajes desde fuera del canal"
+msgstr "Bloquear mensajes desde otros canales"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Ocultar Lista de Baneados"
+msgstr "Alternar lista de Ban"
 
 #: 
 msgid "client_views_controlbox_message"
@@ -714,5 +714,9 @@ msgstr "Enviar mensaje..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Esto te desconectará de la red IRC. ¿Estás seguro?"
+
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Custom highlights (space separated)"
 

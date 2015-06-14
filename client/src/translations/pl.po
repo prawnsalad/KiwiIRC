@@ -126,7 +126,7 @@ msgstr "Ustawienia zostały zapisane."
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Ksywki ignorowane"
+msgstr "Ignorowane pseudonimy"
 
 #: 
 msgid "client_models_application_ignore_none"
@@ -138,7 +138,7 @@ msgstr "Ignorujesz %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Podaj ksywkę którą chcesz przestać ignorować"
+msgstr "Podaj pseudonim, który chcesz przestać ignorować"
 
 #: 
 msgid "client_models_application_ignore_stopped"
@@ -262,7 +262,7 @@ msgstr "jest pełny."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Ta ksywka \"%s\" jest już w użyciu. Proszę wybrać nową ksywkę."
+msgstr "Pseudonim „%s” jest już w użyciu. Proszę wybrać nowy."
 
 #: 
 msgid "client_models_network_badpassword"
@@ -306,7 +306,7 @@ msgstr "Ładowanie gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nowa ksywka"
+msgstr "Nowy pseudonim"
 
 #: 
 msgid "client_views_nickchangebox_change"
@@ -322,11 +322,11 @@ msgstr "Ludziska rozmawiają!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Wymyśl sobie ksywke..."
+msgstr "Wymyśl sobie pseudonim..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Ksywka"
+msgstr "Pseudonim"
 
 #: 
 msgid "client_views_serverselect_enable_password"
@@ -374,7 +374,7 @@ msgstr "Powered by Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Wybierz najpierw ksywkę!"
+msgstr "Wybierz najpierw pseudonim!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
@@ -386,11 +386,11 @@ msgstr "Łączenie.."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Ksywka już zajęta"
+msgstr "Ten pseudonim jest już zajęty"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Błędna ksywka"
+msgstr "Błędny pseudonim"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
@@ -715,5 +715,9 @@ msgstr "Wyślij wiadomość..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Uczynienie tego spowoduje, że zostaniesz odłączony od sieci IRC. Jesteś tego pewien?"
+
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Custom highlights (space separated)"
 

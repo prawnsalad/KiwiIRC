@@ -182,7 +182,7 @@ msgstr "hat den Raum betreten"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "hat %s verlassen"
+msgstr "hat den Raum verlassen %s"
 
 #: 
 msgid "client_models_channel_kicked"
@@ -714,5 +714,9 @@ msgstr "Nachricht senden..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Dies wird dich vom IRC-Netzwerk trennen. Bist du sicher?"
+
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Custom highlights (space separated)"
 
