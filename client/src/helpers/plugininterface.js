@@ -3,6 +3,7 @@
  */
 
 
+define('helpers/plugininterface', function(require, exports, module) {
 
 function PluginInterface () {
     // Holder for all the bound listeners by this module
@@ -252,6 +253,7 @@ if (typeof module === 'object' && typeof module.exports !== 'undefined') {
 }
 
 
+});
 
 /*
  * Example usage

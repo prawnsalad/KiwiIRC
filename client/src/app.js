@@ -242,7 +242,7 @@ _kiwi.global = {
             _kiwi.app.initializeInterfaces();
 
             // Event emitter to let plugins interface with parts of kiwi
-            _kiwi.global.events  = new PluginInterface();
+            _kiwi.global.events  = new (require('helpers/plugininterface'))();
 
             // Now everything has started up, load the plugin manager for third party plugins
             _kiwi.global.plugins = new (require('models/pluginmanager'))();
