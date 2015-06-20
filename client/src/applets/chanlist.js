@@ -1,7 +1,5 @@
 (function () {
 
-    var utils = require('helpers/utils');
-
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
@@ -165,7 +163,8 @@
         },
 
         addChannel: function (channels) {
-            var that = this;
+            var that = this,
+                utils = require('helpers/utils');
 
             if (!_.isArray(channels)) {
                 channels = [channels];

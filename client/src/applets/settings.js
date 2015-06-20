@@ -1,7 +1,5 @@
 (function () {
 
-    var utils = require('helpers/utils');
-
     var View = Backbone.View.extend({
         events: {
             'change [data-setting]': 'saveSettings',
@@ -12,7 +10,9 @@
         },
 
         initialize: function (options) {
-            var application = require('models/application').instance();
+            var application = require('models/application').instance(),
+                utils = require('helpers/utils');
+
             var text = {
                 tabs                  : utils.translateText('client_applets_settings_channelview_tabs'),
                 list                  : utils.translateText('client_applets_settings_channelview_list'),
@@ -163,6 +163,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
+            var utils = require('helpers/utils');
             this.set('title', utils.translateText('client_applets_settings_title'));
             this.view = new View();
         }
