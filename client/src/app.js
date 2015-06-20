@@ -92,7 +92,8 @@ _kiwi.global = {
         },
 
         Network: function(connection_id) {
-            var connection_event;
+            var app = require('models/application').instance(),
+                connection_event;
 
             // If no connection id given, use all connections
             if (typeof connection_id !== 'undefined') {
@@ -104,8 +105,8 @@ _kiwi.global = {
             // Helper to get the network object
             var getNetwork = function() {
                 var network = typeof connection_id === 'undefined' ?
-                    _kiwi.app.connections.active_connection :
-                    _kiwi.app.connections.getByConnectionId(connection_id);
+                    app.connections.active_connection :
+                    app.connections.getByConnectionId(connection_id);
 
                 return network ?
                     network :
@@ -182,7 +183,8 @@ _kiwi.global = {
         },
 
         ControlInput: function() {
-            var obj = new this.EventComponent(_kiwi.app.controlbox);
+            var app = require('models/application').instance();
+            var obj = new this.EventComponent(app.controlbox);
             var funcs = {
                 run: 'processInput', addPluginIcon: 'addPluginIcon'
             };
@@ -190,12 +192,12 @@ _kiwi.global = {
             _.each(funcs, function(controlbox_fn, func_name) {
                 obj[func_name] = function() {
                     var fn_name = controlbox_fn;
-                    return _kiwi.app.controlbox[fn_name].apply(_kiwi.app.controlbox, arguments);
+                    return app.controlbox[fn_name].apply(app.controlbox, arguments);
                 };
             });
 
             // Give access to the control input textarea
-            obj.input = _kiwi.app.controlbox.$('.inp');
+            obj.input = app.controlbox.$('.inp');
 
             return obj;
         }
@@ -259,12 +261,14 @@ _kiwi.global = {
     },
 
     start: function() {
-        _kiwi.app.showStartup();
+        var app = require('models/application').instance();
+        app.showStartup();
     },
 
     // Allow plugins to change the startup applet
     registerStartupApplet: function(startup_applet_name) {
-        _kiwi.app.startup_applet_name = startup_applet_name;
+        var app = require('models/application').instance();
+        app.startup_applet_name = startup_applet_name;
     },
 
     /**
@@ -281,6 +285,7 @@ _kiwi.global = {
      * Taking settings from the server and URL, extract the default server/channel/nick settings
      */
     defaultServerSettings: function () {
+        var app = require('models/application').instance();
         var parts;
         var defaults = {
             nick: '',
@@ -297,24 +302,24 @@ _kiwi.global = {
          * Get any settings set by the server
          * These settings may be changed in the server selection dialog or via URL parameters
          */
-        if (_kiwi.app.server_settings.client) {
-            if (_kiwi.app.server_settings.client.nick)
-                defaults.nick = _kiwi.app.server_settings.client.nick;
+        if (app.server_settings.client) {
+            if (app.server_settings.client.nick)
+                defaults.nick = app.server_settings.client.nick;
 
-            if (_kiwi.app.server_settings.client.server)
-                defaults.server = _kiwi.app.server_settings.client.server;
+            if (app.server_settings.client.server)
+                defaults.server = app.server_settings.client.server;
 
-            if (_kiwi.app.server_settings.client.port)
-                defaults.port = _kiwi.app.server_settings.client.port;
+            if (app.server_settings.client.port)
+                defaults.port = app.server_settings.client.port;
 
-            if (_kiwi.app.server_settings.client.ssl)
-                defaults.ssl = _kiwi.app.server_settings.client.ssl;
+            if (app.server_settings.client.ssl)
+                defaults.ssl = app.server_settings.client.ssl;
 
-            if (_kiwi.app.server_settings.client.channel)
-                defaults.channel = _kiwi.app.server_settings.client.channel;
+            if (app.server_settings.client.channel)
+                defaults.channel = app.server_settings.client.channel;
 
-            if (_kiwi.app.server_settings.client.channel_key)
-                defaults.channel_key = _kiwi.app.server_settings.client.channel_key;
+            if (app.server_settings.client.channel_key)
+                defaults.channel_key = app.server_settings.client.channel_key;
         }
 
 
@@ -333,7 +338,7 @@ _kiwi.global = {
 
 
         // Process the URL part by part, extracting as we go
-        parts = window.location.pathname.toString().replace(_kiwi.app.get('base_path'), '').split('/');
+        parts = window.location.pathname.toString().replace(app.get('base_path'), '').split('/');
 
         if (parts.length > 0) {
             parts.shift();
@@ -402,17 +407,17 @@ _kiwi.global = {
          * Get any server restrictions as set in the server config
          * These settings can not be changed in the server selection dialog
          */
-        if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
-            if (_kiwi.app.server_settings.connection.server) {
-                defaults.server = _kiwi.app.server_settings.connection.server;
+        if (app.server_settings && app.server_settings.connection) {
+            if (app.server_settings.connection.server) {
+                defaults.server = app.server_settings.connection.server;
             }
 
-            if (_kiwi.app.server_settings.connection.port) {
-                defaults.port = _kiwi.app.server_settings.connection.port;
+            if (app.server_settings.connection.port) {
+                defaults.port = app.server_settings.connection.port;
             }
 
-            if (_kiwi.app.server_settings.connection.ssl) {
-                defaults.ssl = _kiwi.app.server_settings.connection.ssl;
+            if (app.server_settings.connection.ssl) {
+                defaults.ssl = app.server_settings.connection.ssl;
             }
         }
 

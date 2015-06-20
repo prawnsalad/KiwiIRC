@@ -1,4 +1,7 @@
 define('models/gateway', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.Model.extend({
 
         initialize: function () {
@@ -27,13 +30,14 @@ define('models/gateway', function(require, exports, module) {
         *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
         */
         connect: function (callback) {
-            var that = this;
+            var that = this,
+                application = Application.instance();
 
             this.connect_callback = callback;
 
             this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
-                transports: _kiwi.app.server_settings.transports || ['polling', 'websocket'],
-                path: _kiwi.app.get('base_path') + '/transport',
+                transports: application.server_settings.transports || ['polling', 'websocket'],
+                path: application.get('base_path') + '/transport',
                 reconnect_max_attempts: 5,
                 reconnect_delay: 2000
             });
@@ -119,7 +123,8 @@ define('models/gateway', function(require, exports, module) {
          * Return a new network object with the new connection details
          */
         newConnection: function(connection_info, callback_fn) {
-            var that = this;
+            var that = this,
+                application = Application.instance();
 
             // If not connected, connect first then re-call this function
             if (!this.isConnected()) {
@@ -139,7 +144,7 @@ define('models/gateway', function(require, exports, module) {
                 var connection;
 
                 if (!err) {
-                    if (!_kiwi.app.connections.getByConnectionId(server_num)){
+                    if (!application.connections.getByConnectionId(server_num)){
                         var inf = {
                             connection_id: server_num,
                             nick: connection_info.nick,
@@ -149,7 +154,7 @@ define('models/gateway', function(require, exports, module) {
                             password: connection_info.password
                         };
                         connection = new (require('models/network'))(inf);
-                        _kiwi.app.connections.add(connection);
+                        application.connections.add(connection);
                     }
 
                     console.log("_kiwi.gateway.socket.on('connect')", connection);
@@ -262,10 +267,11 @@ define('models/gateway', function(require, exports, module) {
         *   @param  {Number}    connection_id   Connection ID this call relates to
         */
         rpcCall: function(method, connection_id) {
-            var args = Array.prototype.slice.call(arguments, 0);
+            var args = Array.prototype.slice.call(arguments, 0),
+                application = Application.instance();
 
             if (typeof args[1] === 'undefined' || args[1] === null)
-                args[1] = _kiwi.app.connections.active_connection.get('connection_id');
+                args[1] = application.connections.active_connection.get('connection_id');
 
             return this.rpc.apply(this.rpc, args);
         },

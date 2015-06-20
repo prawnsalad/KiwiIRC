@@ -1,4 +1,7 @@
 define('views/userbox', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'click .query': 'queryClick',
@@ -33,7 +36,7 @@ define('views/userbox', function(require, exports, module) {
             this.channel = channel;
 
             var user_mask = toUserMask(this.user.get('nick')),
-                is_ignored = _kiwi.app.connections.active_connection.isUserIgnored(user_mask);
+                is_ignored = Application.instance().connections.active_connection.isUserIgnored(user_mask);
 
             this.$('.ignore input').attr('checked', is_ignored ? 'checked' : false);
         },
@@ -48,11 +51,11 @@ define('views/userbox', function(require, exports, module) {
 
         queryClick: function (event) {
             var nick = this.user.get('nick');
-            _kiwi.app.connections.active_connection.createQuery(nick);
+            Application.instance().connections.active_connection.createQuery(nick);
         },
 
         infoClick: function (event) {
-            _kiwi.app.controlbox.processInput('/whois ' + this.user.get('nick'));
+            Application.instance().controlbox.processInput('/whois ' + this.user.get('nick'));
         },
 
         ignoreClick: function (event) {
@@ -62,36 +65,36 @@ define('views/userbox', function(require, exports, module) {
 
         ignoreChange: function (event) {
             if ($(event.currentTarget).find('input').is(':checked')) {
-                _kiwi.app.controlbox.processInput('/ignore ' + this.user.get('nick'));
+                Application.instance().controlbox.processInput('/ignore ' + this.user.get('nick'));
             } else {
-                _kiwi.app.controlbox.processInput('/unignore ' + this.user.get('nick'));
+                Application.instance().controlbox.processInput('/unignore ' + this.user.get('nick'));
             }
         },
 
         opClick: function (event) {
-            _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +o ' + this.user.get('nick'));
+            Application.instance().controlbox.processInput('/mode ' + this.channel.get('name') + ' +o ' + this.user.get('nick'));
         },
 
         deopClick: function (event) {
-            _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -o ' + this.user.get('nick'));
+            Application.instance().controlbox.processInput('/mode ' + this.channel.get('name') + ' -o ' + this.user.get('nick'));
         },
 
         voiceClick: function (event) {
-            _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +v ' + this.user.get('nick'));
+            Application.instance().controlbox.processInput('/mode ' + this.channel.get('name') + ' +v ' + this.user.get('nick'));
         },
 
         devoiceClick: function (event) {
-            _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -v ' + this.user.get('nick'));
+            Application.instance().controlbox.processInput('/mode ' + this.channel.get('name') + ' -v ' + this.user.get('nick'));
         },
 
         kickClick: function (event) {
             // TODO: Enable the use of a custom kick message
-            _kiwi.app.controlbox.processInput('/kick ' + this.user.get('nick') + ' Bye!');
+            Application.instance().controlbox.processInput('/kick ' + this.user.get('nick') + ' Bye!');
         },
 
         banClick: function (event) {
             // TODO: Set ban on host, not just on nick
-            _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.user.get('nick') + '!*');
+            Application.instance().controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.user.get('nick') + '!*');
         }
     });
 });

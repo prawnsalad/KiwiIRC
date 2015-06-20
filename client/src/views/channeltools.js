@@ -1,4 +1,7 @@
 define('views/channeltools', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'click .channel_info': 'infoClick',
@@ -8,11 +11,11 @@ define('views/channeltools', function(require, exports, module) {
         initialize: function () {},
 
         infoClick: function (event) {
-            new (require('models/channelinfo'))({channel: _kiwi.app.panels().active});
+            new (require('models/channelinfo'))({channel: Application.instance().panels().active});
         },
 
         partClick: function (event) {
-            _kiwi.app.connections.active_connection.gateway.part(_kiwi.app.panels().active.get('name'));
+            Application.instance().connections.active_connection.gateway.part(Application.instance().panels().active.get('name'));
         }
     });
 });

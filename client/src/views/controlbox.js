@@ -1,4 +1,7 @@
 define('views/controlbox', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'keydown .inp': 'inputKeyDown',
@@ -21,16 +24,16 @@ define('views/controlbox', function(require, exports, module) {
             this.bindAutocomplete();
 
             // Keep the nick view updated with nick changes
-            _kiwi.app.connections.on('change:nick', function(connection) {
+            Application.instance().connections.on('change:nick', function(connection) {
                 // Only update the nick view if it's the active connection
-                if (connection !== _kiwi.app.connections.active_connection)
+                if (connection !== Application.instance().connections.active_connection)
                     return;
 
                 $('.nick', that.$el).text(connection.get('nick'));
             });
 
             // Update our nick view as we flick between connections
-            _kiwi.app.connections.on('active', function(panel, connection) {
+            Application.instance().connections.on('active', function(panel, connection) {
                 $('.nick', that.$el).text(connection.get('nick'));
             });
         },
@@ -100,7 +103,7 @@ define('views/controlbox', function(require, exports, module) {
             });
 
             this.listenTo(this.autocomplete, 'action-message', function(nick) {
-                _kiwi.app.connections.active_connection.createQuery(nick);
+                Application.instance().connections.active_connection.createQuery(nick);
                 this.autocomplete.close();
                 this.$('.inp').val('');
             });
@@ -274,7 +277,7 @@ define('views/controlbox', function(require, exports, module) {
 
                 // Get possible autocompletions
                 var autocomplete_list = [],
-                    members = _kiwi.app.panels().active.get('members');
+                    members = Application.instance().panels().active.get('members');
 
                 if (members) {
                     members.forEach(function (member) {
@@ -284,7 +287,7 @@ define('views/controlbox', function(require, exports, module) {
                 }
 
                 // Add this channels name into the auto complete list
-                autocomplete_list.push(_kiwi.app.panels().active.get('name'));
+                autocomplete_list.push(Application.instance().panels().active.get('name'));
 
                 // Sort what we have alphabetically
                 autocomplete_list = _.sortBy(autocomplete_list, function (entry) {
@@ -343,7 +346,7 @@ define('views/controlbox', function(require, exports, module) {
 
             // If sending a message when not in a channel or query window, automatically
             // convert it into a command
-            if (command_raw[0] !== '/' && !_kiwi.app.panels().active.isChannel() && !_kiwi.app.panels().active.isQuery()) {
+            if (command_raw[0] !== '/' && !Application.instance().panels().active.isChannel() && !Application.instance().panels().active.isQuery()) {
                 command_raw = '/' + command_raw;
             }
 
@@ -353,12 +356,12 @@ define('views/controlbox', function(require, exports, module) {
                 command_raw = command_raw.replace(/^\/\//, '/');
 
                 // Prepend the default command
-                command_raw = '/msg ' + _kiwi.app.panels().active.get('name') + ' ' + command_raw;
+                command_raw = '/msg ' + Application.instance().panels().active.get('name') + ' ' + command_raw;
             }
 
             // Process the raw command for any aliases
-            this.preprocessor.vars.server = _kiwi.app.connections.active_connection.get('name');
-            this.preprocessor.vars.channel = _kiwi.app.panels().active.get('name');
+            this.preprocessor.vars.server = Application.instance().connections.active_connection.get('name');
+            this.preprocessor.vars.channel = Application.instance().panels().active.get('name');
             this.preprocessor.vars.destination = this.preprocessor.vars.channel;
             command_raw = this.preprocessor.process(command_raw);
 
@@ -370,7 +373,7 @@ define('views/controlbox', function(require, exports, module) {
             } else {
                 // Default command
                 command = 'msg';
-                params.unshift(_kiwi.app.panels().active.get('name'));
+                params.unshift(Application.instance().panels().active.get('name'));
             }
 
             // Emit a plugin event for any modifications
@@ -410,7 +413,7 @@ define('views/controlbox', function(require, exports, module) {
         addPluginIcon: function ($icon) {
             var $tool = $('<div class="tool"></div>').append($icon);
             this.$el.find('.input_tools').append($tool);
-            _kiwi.app.view.doLayout();
+            Application.instance().view.doLayout();
         }
     });
 });

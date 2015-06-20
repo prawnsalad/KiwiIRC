@@ -1,5 +1,8 @@
-// var f = new (require('models/channelinfo'))({channel: _kiwi.app.panels().active});
+// var f = new (require('models/channelinfo'))({channel: Application.instance().panels().active});
 define('views/channelinfo', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'click .toggle_banlist': 'toggleBanList',
@@ -31,7 +34,7 @@ define('views/channelinfo', function(require, exports, module) {
             this.menu.$el.appendTo(channel.view.$container);
             this.menu.show();
 
-            this.menu.$el.offset({top: _kiwi.app.view.$el.find('.panels').offset().top});
+            this.menu.$el.offset({top: Application.instance().view.$el.find('.panels').offset().top});
 
             // Menu box will call this destroy on closing
             this.$el.dispose = _.bind(this.dispose, this);

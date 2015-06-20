@@ -90,9 +90,10 @@ define('models/applet', function(require, exports, module) {
     {
         // Load an applet type once only. If it already exists, return that
         loadOnce: function (applet_name) {
+            var application = require('models/application').instance();
 
             // See if we have an instance loaded already
-            var applet = _.find(_kiwi.app.panels('applets'), function(panel) {
+            var applet = _.find(application.panels('applets'), function(panel) {
                 // Ignore if it's not an applet
                 if (!panel.isApplet()) return;
 
@@ -113,7 +114,8 @@ define('models/applet', function(require, exports, module) {
 
 
         load: function (applet_name, options) {
-            var applet, applet_obj;
+            var application = require('models/application').instance(),
+                applet, applet_obj;
 
             options = options || {};
 
@@ -128,7 +130,7 @@ define('models/applet', function(require, exports, module) {
 
             // Add it into the tab list if needed (default)
             if (!options.no_tab)
-                _kiwi.app.applet_panels.add(applet);
+                application.applet_panels.add(applet);
 
 
             return applet;

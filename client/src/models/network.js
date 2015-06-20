@@ -1,5 +1,7 @@
 define('models/network', function(require, exports, module) {
 
+    var Application = require('models/application');
+
     module.exports = Backbone.Model.extend({
         defaults: {
             connection_id: 0,
@@ -520,7 +522,7 @@ define('models/network', function(require, exports, module) {
                 panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
 
                 // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
-                active_panel = _kiwi.app.panels().active;
+                active_panel = Application.instance().panels().active;
 
                 if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
                     if (active_panel.get('network') === this && (active_panel.isChannel() || active_panel.isQuery()))
@@ -589,7 +591,7 @@ define('models/network', function(require, exports, module) {
 
         // If this is the active channel, update the topic bar too
         if (c.get('name') === this.panels.active.get('name')) {
-            _kiwi.app.topicbar.setCurrentTopic(event.topic);
+            Application.instance().topicbar.setCurrentTopic(event.topic);
         }
     }
 
@@ -770,7 +772,7 @@ define('models/network', function(require, exports, module) {
                 idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
             }
 
-            panel = _kiwi.app.panels().active;
+            panel = Application.instance().panels().active;
             if (event.ident) {
                 panel.addMsg(event.nick, styleText('whois_ident', {nick: event.nick, ident: event.ident, host: event.hostname, text: event.msg}), 'whois');
 
@@ -800,7 +802,7 @@ define('models/network', function(require, exports, module) {
         if (event.end)
             return;
 
-        panel = _kiwi.app.panels().active;
+        panel = Application.instance().panels().active;
         if (event.hostname) {
             panel.addMsg(event.nick, styleText('who', {nick: event.nick, ident: event.ident, host: event.hostname, realname: event.real_name, text: event.msg}), 'whois');
         } else {
@@ -839,26 +841,26 @@ define('models/network', function(require, exports, module) {
         switch (event.error) {
         case 'banned_from_channel':
             panel.addMsg(' ', styleText('channel_banned', {nick: event.nick, text: translateText('client_models_network_banned', [event.channel, event.reason]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
+            Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
             break;
         case 'bad_channel_key':
             panel.addMsg(' ', styleText('channel_badkey', {nick: event.nick, text: translateText('client_models_network_channel_badkey', [event.channel]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
+            Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
             break;
         case 'invite_only_channel':
             panel.addMsg(' ', styleText('channel_inviteonly', {nick: event.nick, text: translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
+            Application.instance().message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
             break;
         case 'user_on_channel':
             panel.addMsg(' ', styleText('channel_alreadyin', {nick: event.nick, text: translateText('client_models_network_channel_alreadyin'), channel: event.channel}));
             break;
         case 'channel_is_full':
             panel.addMsg(' ', styleText('channel_limitreached', {nick: event.nick, text: translateText('client_models_network_channel_limitreached', [event.channel]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
+            Application.instance().message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
             break;
         case 'chanop_privs_needed':
             panel.addMsg(' ', styleText('chanop_privs_needed', {text: event.reason, channel: event.channel}), 'status');
-            _kiwi.app.message.text(event.reason + ' (' + event.channel + ')');
+            Application.instance().message.text(event.reason + ' (' + event.channel + ')');
             break;
         case 'cannot_send_to_channel':
             panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Cannot send message to channel, you are not voiced').fetch(event.channel, event.reason), 'status');
@@ -874,11 +876,11 @@ define('models/network', function(require, exports, module) {
         case 'nickname_in_use':
             this.panels.server.addMsg(' ', styleText('nickname_alreadyinuse', {nick: event.nick, text: translateText('client_models_network_nickname_alreadyinuse', [event.nick]), channel: event.channel}), 'status');
             if (this.panels.server !== this.panels.active) {
-                _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
+                Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
             }
 
             // Only show the nickchange component if the controlbox is open
-            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
+            if (Application.instance().controlbox.$el.css('display') !== 'none') {
                 (new (require('views/nickchangebox'))()).render();
             }
 
@@ -914,7 +916,7 @@ define('models/network', function(require, exports, module) {
 
 
     function onWallops(event) {
-        var active_panel = _kiwi.app.panels().active;
+        var active_panel = Application.instance().panels().active;
 
         // Send to server panel
         this.panels.server.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});

@@ -1,5 +1,8 @@
 define('models/application', function(require, exports, module) {
 
+    // Singleton instance
+    var instance = null;
+
     module.exports = Backbone.Model.extend({
         /** require('views/application') */
         view: null,
@@ -8,6 +11,8 @@ define('models/application', function(require, exports, module) {
         message: null,
 
         initialize: function (options) {
+            instance = this;
+
             this.app_options = options;
 
             if (options.container) {
@@ -101,8 +106,8 @@ define('models/application', function(require, exports, module) {
             this.rightbar = new (require('views/rightbar'))({el: this.view.$('.right_bar')[0]});
             this.topicbar = new (require('views/topicbar'))({el: this.view.$el.find('.topic')[0]});
 
-            new (require('views/apptoolbar'))({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
-            new (require('views/channeltools'))({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
+            new (require('views/apptoolbar'))({el: this.view.$el.find('.toolbar .app_tools')[0]});
+            new (require('views/channeltools'))({el: this.view.$el.find('.channel_tools')[0]});
 
             this.message = new (require('views/statusmessage'))({el: this.view.$el.find('.status_message')[0]});
 
@@ -143,7 +148,7 @@ define('models/application', function(require, exports, module) {
             var active_panel;
 
             var fn = function(panel_type) {
-                var app = _kiwi.app,
+                var application = require('models/application').instance(),
                     panels;
 
                 // Default panel type
@@ -151,17 +156,17 @@ define('models/application', function(require, exports, module) {
 
                 switch (panel_type) {
                 case 'connections':
-                    panels = app.connections.panels();
+                    panels = application.connections.panels();
                     break;
                 case 'applets':
-                    panels = app.applet_panels.models;
+                    panels = application.applet_panels.models;
                     break;
                 }
 
                 // Active panels / server
                 panels.active = active_panel;
-                panels.server = app.connections.active_connection ?
-                    app.connections.active_connection.panels.server :
+                panels.server = application.connections.active_connection ?
+                    application.connections.active_connection.panels.server :
                     null;
 
                 return panels;
@@ -209,7 +214,7 @@ define('models/application', function(require, exports, module) {
                     var msg = translateText('client_models_application_reconnect_in_x_seconds', [event.delay/1000]) + '...';
 
                     // Only need to mention the repeating re-connection messages on server panels
-                    _kiwi.app.connections.forEach(function(connection) {
+                    that.connections.forEach(function(connection) {
                         connection.panels.server.addMsg('', styleText('quit', {text: msg}), 'action quit');
                     });
                 });
@@ -236,7 +241,7 @@ define('models/application', function(require, exports, module) {
                         that.message.text(msg, {timeout: 5000});
 
                         // Mention the re-connection on every channel
-                        _kiwi.app.connections.forEach(function(connection) {
+                        that.connections.forEach(function(connection) {
                             connection.reconnect();
 
                             connection.panels.server.addMsg('', styleText('rejoin', {text: msg}), 'action join');
@@ -302,6 +307,10 @@ define('models/application', function(require, exports, module) {
             });
         }
 
+    }, {
+        instance: function() {
+            return instance;
+        }
     });
 
 });

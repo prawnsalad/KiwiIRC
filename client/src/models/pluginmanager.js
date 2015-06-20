@@ -1,8 +1,11 @@
 define('models/pluginmanager', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.Model.extend({
         initialize: function () {
             this.$plugin_holder = $('<div id="kiwi_plugins" style="display:none;"></div>')
-                .appendTo(_kiwi.app.view.$el);
+                .appendTo(Application.instance().view.$el);
 
             this.loading_plugins = 0;
             this.loaded_plugins = {};

@@ -565,10 +565,11 @@ function translateText(string_id, params) {
  *   %O:        cancel styles
  **/
 function styleText(string_id, params) {
-    var style, text;
+    var application = require('models/application').instance(),
+        style, text;
 
-    //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
-    style = _kiwi.app.text_theme[string_id];
+    //style = formatToIrcMsg(application.text_theme[string_id]);
+    style = application.text_theme[string_id];
     style = formatToIrcMsg(style);
 
     // Expand a member mask into its individual parts (nick, ident, hostname)

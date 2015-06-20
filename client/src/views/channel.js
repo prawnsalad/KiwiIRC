@@ -1,4 +1,7 @@
 define('views/channel', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = require('views/panel').extend({
         events: function(){
             var parent_events = this.constructor.__super__.events;
@@ -87,30 +90,30 @@ define('views/channel', function(require, exports, module) {
                     this.alert('action');
 
                 } else if (msg.is_highlight) {
-                    _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
-                    _kiwi.app.view.favicon.newHighlight();
-                    _kiwi.app.view.playSound('highlight');
-                    _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
+                    Application.instance().view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                    Application.instance().view.favicon.newHighlight();
+                    Application.instance().view.playSound('highlight');
+                    Application.instance().view.showNotification(this.model.get('name'), msg.unparsed_msg);
                     this.alert('highlight');
 
                 } else {
                     // If this is the active panel, send an alert out
                     if (this.model.isActive()) {
-                        _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                        Application.instance().view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
                     }
                     this.alert('activity');
                 }
 
                 if (this.model.isQuery() && !this.model.isActive()) {
-                    _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                    Application.instance().view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
 
                     // Highlights have already been dealt with above
                     if (!msg.is_highlight) {
-                        _kiwi.app.view.favicon.newHighlight();
+                        Application.instance().view.favicon.newHighlight();
                     }
 
-                    _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
-                    _kiwi.app.view.playSound('highlight');
+                    Application.instance().view.showNotification(this.model.get('name'), msg.unparsed_msg);
+                    Application.instance().view.playSound('highlight');
                 }
 
                 // Update the activity counters
@@ -249,7 +252,7 @@ define('views/channel', function(require, exports, module) {
                 var nick_lightness, nick_int, rgb;
 
                 // Get the lightness option from the theme. Defaults to 35.
-                nick_lightness = (_.find(_kiwi.app.themes, function (theme) {
+                nick_lightness = (_.find(Application.instance().themes, function (theme) {
                     return theme.name.toLowerCase() === _kiwi.global.settings.get('theme').toLowerCase();
                 }) || {}).nick_lightness;
 
@@ -300,7 +303,7 @@ define('views/channel', function(require, exports, module) {
             msg.time_string = '';
 
             // Nick + custom highlight detecting
-            nick = _kiwi.app.connections.active_connection.get('nick');
+            nick = Application.instance().connections.active_connection.get('nick');
             if (msg.nick.localeCompare(nick) !== 0) {
                 // Build a list of all highlights and escape them for regex
                 regexpStr = _.chain((_kiwi.global.settings.get('custom_highlights') || '').split(/[\s,]+/))
@@ -395,15 +398,15 @@ define('views/channel', function(require, exports, module) {
             this.model.addMsg('', styleText('channel_topic', {text: topic, channel: this.model.get('name')}), 'topic');
 
             // If this is the active channel then update the topic bar
-            if (_kiwi.app.panels().active === this.model) {
-                _kiwi.app.topicbar.setCurrentTopicFromChannel(this.model);
+            if (Application.instance().panels().active === this.model) {
+                Application.instance().topicbar.setCurrentTopicFromChannel(this.model);
             }
         },
 
         topicSetBy: function (topic) {
             // If this is the active channel then update the topic bar
-            if (_kiwi.app.panels().active === this.model) {
-                _kiwi.app.topicbar.setCurrentTopicFromChannel(this.model);
+            if (Application.instance().panels().active === this.model) {
+                Application.instance().topicbar.setCurrentTopicFromChannel(this.model);
             }
         },
 
@@ -447,7 +450,7 @@ define('views/channel', function(require, exports, module) {
 
         openUserMenuForNick: function ($target, member) {
             var members = this.model.get('members'),
-                are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
+                are_we_an_op = !!members.getByNick(Application.instance().connections.active_connection.get('nick')).get('is_op'),
                 userbox, menubox;
 
             userbox = new (require('views/userbox'))();
@@ -491,7 +494,7 @@ define('views/channel', function(require, exports, module) {
         chanClick: function (event) {
             var target = (event.target) ? $(event.target).data('channel') : $(event.srcElement).data('channel');
 
-            _kiwi.app.connections.active_connection.gateway.join(target);
+            Application.instance().connections.active_connection.gateway.join(target);
         },
 
 

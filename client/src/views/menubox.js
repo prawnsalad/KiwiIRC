@@ -1,4 +1,7 @@
 define('views/menubox', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'click .ui_menu_foot .close, a.close_menu': 'dispose'
@@ -105,10 +108,10 @@ define('views/menubox', function(require, exports, module) {
                 $controlbox, menu_height;
 
             this.render();
-            this.$el.appendTo(_kiwi.app.view.$el);
+            this.$el.appendTo(Application.instance().view.$el);
 
             // Ensure the menu doesn't get too tall to overlap the input bar at the bottom
-            $controlbox = _kiwi.app.view.$el.find('.controlbox');
+            $controlbox = Application.instance().view.$el.find('.controlbox');
             $items = this.$el.find('.items');
             menu_height = this.$el.outerHeight() - $items.outerHeight();
 

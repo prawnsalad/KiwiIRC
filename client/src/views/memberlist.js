@@ -1,4 +1,7 @@
 define('views/memberlist', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         tagName: "div",
         events: {
@@ -51,7 +54,7 @@ define('views/memberlist', function(require, exports, module) {
         openUserMenuForItem: function($target) {
             var member = $target.data('member'),
                 userbox,
-                are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
+                are_we_an_op = !!this.model.getByNick(Application.instance().connections.active_connection.get('nick')).get('is_op');
 
             userbox = new (require('views/userbox'))();
             userbox.setTargets(member, this.model.channel);

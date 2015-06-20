@@ -1,4 +1,7 @@
 define('views/serverselect', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'submit form': 'submitForm',
@@ -30,8 +33,8 @@ define('views/serverselect', function(require, exports, module) {
             this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
 
             // Remove the 'more' link if the server has disabled server changing
-            if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
-                if (!_kiwi.app.server_settings.connection.allow_change) {
+            if (Application.instance().server_settings && Application.instance().server_settings.connection) {
+                if (!Application.instance().server_settings.connection.allow_change) {
                     this.$el.find('.show_more').remove();
                     this.$el.addClass('single_server');
                 }
@@ -256,7 +259,7 @@ define('views/serverselect', function(require, exports, module) {
         },
 
         networkConnected: function (event) {
-            this.model.trigger('connected', _kiwi.app.connections.getByConnectionId(event.server));
+            this.model.trigger('connected', Application.instance().connections.getByConnectionId(event.server));
             this.model.current_connecting_network = null;
         },
 
@@ -277,7 +280,7 @@ define('views/serverselect', function(require, exports, module) {
             if (!this.model.current_connecting_network)
                 return;
 
-            _kiwi.app.view.barsShow();
+            Application.instance().view.barsShow();
             this.model.current_connecting_network.panels.server.view.show();
         },
 

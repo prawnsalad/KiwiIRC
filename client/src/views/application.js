@@ -213,13 +213,15 @@ define('views/application', function(require, exports, module) {
 
 
         alertWindow: function (title) {
+            var app = this.model;
+
             if (!this.alertWindowTimer) {
                 this.alertWindowTimer = new (function () {
                     var that = this;
                     var tmr;
                     var has_focus = true;
                     var state = 0;
-                    var default_title = _kiwi.app.server_settings.client.window_title || 'Kiwi IRC';
+                    var default_title = app.server_settings.client.window_title || 'Kiwi IRC';
                     var title = 'Kiwi IRC';
 
                     this.setTitle = function (new_title) {
@@ -357,10 +359,11 @@ define('views/application', function(require, exports, module) {
         },
 
         monitorPanelFallback: function() {
-            var panel_access = [];
+            var that = this,
+                panel_access = [];
 
             this.model.panels.on('active', function() {
-                var panel = _kiwi.app.panels().active,
+                var panel = that.model.panels().active,
                     panel_index;
 
                 // If the panel is already open, remove it so we can put it back in first place
@@ -380,7 +383,7 @@ define('views/application', function(require, exports, module) {
                     panel_access.shift();
 
                     //Get the last-accessed panel model now that we removed the closed one
-                    var model = _.find(_kiwi.app.panels('applets').concat(_kiwi.app.panels('connections')), {cid: panel_access[0]});
+                    var model = _.find(that.model.panels('applets').concat(that.model.panels('connections')), {cid: panel_access[0]});
 
                     if (model) {
                         model.view.show();

@@ -1,4 +1,7 @@
 define('views/notification', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         className: 'notification',
 
@@ -28,7 +31,7 @@ define('views/notification', function(require, exports, module) {
         show: function() {
             var that = this;
 
-            this.render().$el.appendTo(_kiwi.app.view.$el);
+            this.render().$el.appendTo(Application.instance().view.$el);
 
             // The element won't have any CSS transitions applied
             // until after a tick + paint.

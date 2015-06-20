@@ -1,4 +1,7 @@
 define('models/panel', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.Model.extend({
         initialize: function (attributes) {
             var name = this.get("name") || "";
@@ -12,7 +15,7 @@ define('models/panel', function(require, exports, module) {
         },
 
         close: function () {
-            _kiwi.app.panels.trigger('close', this);
+            Application.instance().panels.trigger('close', this);
             _kiwi.global.events.emit('panel:close', {panel: this});
 
             if (this.view) {
@@ -51,7 +54,7 @@ define('models/panel', function(require, exports, module) {
         },
 
         isActive: function () {
-            return (_kiwi.app.panels().active === this);
+            return (Application.instance().panels().active === this);
         }
     });
 });

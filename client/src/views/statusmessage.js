@@ -1,4 +1,7 @@
 define('views/statusmessage', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         initialize: function () {
             this.$el.hide();
@@ -14,7 +17,7 @@ define('views/statusmessage', function(require, exports, module) {
             opt.timeout = opt.timeout || 5000;
 
             this.$el.text(text).addClass(opt.type);
-            this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
+            this.$el.slideDown($.proxy(Application.instance().view.doLayout, Application.instance().view));
 
             if (opt.timeout) this.doTimeout(opt.timeout);
         },
@@ -26,13 +29,13 @@ define('views/statusmessage', function(require, exports, module) {
             opt.timeout = opt.timeout || 5000;
 
             this.$el.html(html).addClass(opt.type);
-            this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
+            this.$el.slideDown($.proxy(Application.instance().view.doLayout, Application.instance().view));
 
             if (opt.timeout) this.doTimeout(opt.timeout);
         },
 
         hide: function () {
-            this.$el.slideUp($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
+            this.$el.slideUp($.proxy(Application.instance().view.doLayout, Application.instance().view));
         },
 
         doTimeout: function (length) {

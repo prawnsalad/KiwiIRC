@@ -1,5 +1,8 @@
 // Model for this = require('models/networkpanellist')
 define('views/networktabs', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         tagName: 'ul',
         className: 'connections',
@@ -8,7 +11,7 @@ define('views/networktabs', function(require, exports, module) {
             this.model.on('add', this.networkAdded, this);
             this.model.on('remove', this.networkRemoved, this);
 
-            this.$el.appendTo(_kiwi.app.view.$el.find('.tabs'));
+            this.$el.appendTo(Application.instance().view.$el.find('.tabs'));
         },
 
         networkAdded: function(network) {
@@ -23,7 +26,7 @@ define('views/networktabs', function(require, exports, module) {
 
             network.panels.view.remove();
 
-            _kiwi.app.view.doLayout();
+            Application.instance().view.doLayout();
         }
     });
 });

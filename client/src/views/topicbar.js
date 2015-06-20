@@ -1,11 +1,14 @@
 define('views/topicbar', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'keydown div': 'process'
         },
 
         initialize: function () {
-            _kiwi.app.panels.bind('active', function (active_panel) {
+            Application.instance().panels.bind('active', function (active_panel) {
                 // If it's a channel topic, update and make editable
                 if (active_panel.isChannel()) {
                     this.setCurrentTopicFromChannel(active_panel);
@@ -24,13 +27,13 @@ define('views/topicbar', function(require, exports, module) {
                 inp_val = inp.text();
 
             // Only allow topic editing if this is a channel panel
-            if (!_kiwi.app.panels().active.isChannel()) {
+            if (!Application.instance().panels().active.isChannel()) {
                 return false;
             }
 
             // If hit return key, update the current topic
             if (ev.keyCode === 13) {
-                _kiwi.app.connections.active_connection.gateway.topic(_kiwi.app.panels().active.get('name'), inp_val);
+                Application.instance().connections.active_connection.gateway.topic(Application.instance().panels().active.get('name'), inp_val);
                 return false;
             }
         },

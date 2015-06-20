@@ -9,6 +9,7 @@
         },
 
         initialize: function (options) {
+            var application = require('models/application').instance();
             var text = {
                 tabs                  : translateText('client_applets_settings_channelview_tabs'),
                 list                  : translateText('client_applets_settings_channelview_list'),
@@ -20,7 +21,7 @@
                 mute                  : translateText('client_applets_settings_notification_sound'),
                 emoticons             : translateText('client_applets_settings_emoticons'),
                 scroll_history        : translateText('client_applets_settings_history_length'),
-                languages             : _kiwi.app.translations,
+                languages             : application.translations,
                 default_client        : translateText('client_applets_settings_default_client'),
                 make_default          : translateText('client_applets_settings_default_client_enable'),
                 locale_restart_needed : translateText('client_applets_settings_locale_restart_needed'),
@@ -28,7 +29,7 @@
                 html5_notifications   : translateText('client_applets_settings_html5_notifications'),
                 enable_notifications  : translateText('client_applets_settings_enable_notifications'),
                 custom_highlights     : translateText('client_applets_settings_custom_highlights'),
-                theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
+                theme_thumbnails: _.map(application.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
             };
@@ -120,8 +121,10 @@
         registerProtocol: function (event) {
             event.preventDefault();
 
-            navigator.registerProtocolHandler('irc', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
-            navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
+            var application = require('models/application').instance();
+
+            navigator.registerProtocolHandler('irc', document.location.origin + application.get('base_path') + '/%s', 'Kiwi IRC');
+            navigator.registerProtocolHandler('ircs', document.location.origin + application.get('base_path') + '/%s', 'Kiwi IRC');
         },
 
         enableNotifications: function(event){

@@ -1,4 +1,7 @@
 define('views/nickchangebox', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'submit': 'changeNick',
@@ -16,10 +19,10 @@ define('views/nickchangebox', function(require, exports, module) {
 
         render: function () {
             // Add the UI component and give it focus
-            _kiwi.app.controlbox.$el.prepend(this.$el);
+            Application.instance().controlbox.$el.prepend(this.$el);
             this.$el.find('input').focus();
 
-            this.$el.css('bottom', _kiwi.app.controlbox.$el.outerHeight(true));
+            this.$el.css('bottom', Application.instance().controlbox.$el.outerHeight(true));
         },
 
         close: function () {
@@ -30,7 +33,7 @@ define('views/nickchangebox', function(require, exports, module) {
         changeNick: function (event) {
             event.preventDefault();
 
-            var connection = _kiwi.app.connections.active_connection;
+            var connection = Application.instance().connections.active_connection;
             this.listenTo(connection, 'change:nick', function() {
                 this.close();
             });

@@ -1,4 +1,7 @@
 define('views/rightbar', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'click .right-bar-toggle': 'onClickToggle',
@@ -78,7 +81,7 @@ define('views/rightbar', function(require, exports, module) {
 
             // Hacky, but we need to ignore the toggle() call from doLayout() as we are overriding it
             this.ignore_layout = true;
-            _kiwi.app.view.doLayout();
+            Application.instance().view.doLayout();
 
             // No longer ignoring the toggle() call from doLayout()
             delete this.ignore_layout;

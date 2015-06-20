@@ -1,5 +1,8 @@
 // Model for this = require('models/panellist')
 define('views/tabs', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         tagName: 'ul',
         className: 'panellist',
@@ -61,7 +64,7 @@ define('views/tabs', function(require, exports, module) {
                 panel.tab.appendTo(that.$el);
             });
 
-            _kiwi.app.view.doLayout();
+            Application.instance().view.doLayout();
         },
 
         updateTabTitle: function (panel, new_title) {
@@ -89,23 +92,23 @@ define('views/tabs', function(require, exports, module) {
             panel.bind('change:title', this.updateTabTitle);
             panel.bind('change:name', this.updateTabTitle);
 
-            _kiwi.app.view.doLayout();
+            Application.instance().view.doLayout();
         },
         panelRemoved: function (panel) {
-            var connection = _kiwi.app.connections.active_connection;
+            var connection = Application.instance().connections.active_connection;
 
             panel.tab.remove();
             delete panel.tab;
 
-            _kiwi.app.panels.trigger('remove', panel);
+            Application.instance().panels.trigger('remove', panel);
 
-            _kiwi.app.view.doLayout();
+            Application.instance().view.doLayout();
         },
 
         panelActive: function (panel, previously_active_panel) {
             // Remove any existing tabs or part images
-            _kiwi.app.view.$el.find('.panellist .part').remove();
-            _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
+            Application.instance().view.$el.find('.panellist .part').remove();
+            Application.instance().view.$el.find('.panellist .active').removeClass('active');
 
             panel.tab.addClass('active');
 
@@ -139,8 +142,8 @@ define('views/tabs', function(require, exports, module) {
             } else if(panel.isServer()) {
                 if (!this.model.network.get('connected') || confirm(translateText('disconnect_from_server'))) {
                     this.model.network.gateway.quit("Leaving");
-                    _kiwi.app.connections.remove(this.model.network);
-                    _kiwi.app.startup_applet.view.show();
+                    Application.instance().connections.remove(this.model.network);
+                    Application.instance().startup_applet.view.show();
                 }
 
             } else {

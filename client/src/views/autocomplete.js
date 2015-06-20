@@ -1,4 +1,7 @@
 define('views/autocomplete', function(require, exports, module) {
+
+    var Application = require('models/application');
+
     module.exports = Backbone.View.extend({
         events: {
             'click .autocomplete-item': 'onItemClick',
@@ -133,7 +136,7 @@ define('views/autocomplete', function(require, exports, module) {
         show: function() {
             this.open = true;
             if (this._show_ui) {
-                this.$el.css('max-height', (_kiwi.app.view.$el.height() / 2) + 'px').show();
+                this.$el.css('max-height', (Application.instance().view.$el.height() / 2) + 'px').show();
             }
         },
 
