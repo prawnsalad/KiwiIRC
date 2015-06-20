@@ -1,6 +1,8 @@
-(function() {
+define('misc/clientuicommands', function(require, exports, module) {
 
     var utils = require('helpers/utils');
+
+    module.exports = ClientUiCommands;
 
     function ClientUiCommands(app, controlbox) {
         this.app = app;
@@ -8,10 +10,7 @@
 
         this.addDefaultAliases();
         this.bindCommand(fn_to_bind);
-    }
-
-    _kiwi.misc.ClientUiCommands = ClientUiCommands;
-
+    };
 
     // Add the default user command aliases
     ClientUiCommands.prototype.addDefaultAliases = function() {
@@ -642,4 +641,4 @@
         });
     }
 
-})();
+});

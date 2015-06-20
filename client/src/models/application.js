@@ -103,7 +103,7 @@ define('models/application', function(require, exports, module) {
              * Set the UI components up
              */
             this.controlbox = (new (require('views/controlbox'))({el: $('#kiwi .controlbox')[0]})).render();
-            this.client_ui_commands = new _kiwi.misc.ClientUiCommands(this, this.controlbox);
+            this.client_ui_commands = new (require('misc/clientuicommands'))(this, this.controlbox);
 
             this.rightbar = new (require('views/rightbar'))({el: this.view.$('.right_bar')[0]});
             this.topicbar = new (require('views/topicbar'))({el: this.view.$el.find('.topic')[0]});
