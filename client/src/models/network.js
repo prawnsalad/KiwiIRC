@@ -1,6 +1,7 @@
 define('models/network', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.Model.extend({
         defaults: {
@@ -233,7 +234,7 @@ define('models/network', function(require, exports, module) {
             if (typeof mask === "object") {
                mask = (mask.nick||'*')+'!'+(mask.ident||'*')+'@'+(mask.hostname||'*');
             } else if (typeof mask === "string") {
-               mask = toUserMask(mask);
+               mask = utils.toUserMask(mask);
             }
 
             for (idx = 0; idx < list.length; idx++) {
@@ -271,7 +272,7 @@ define('models/network', function(require, exports, module) {
 
         $.each(this.panels.models, function (index, panel) {
             if (!panel.isApplet()) {
-                panel.addMsg('', styleText('network_disconnected', {text: translateText('client_models_network_disconnected', [])}), 'action quit');
+                panel.addMsg('', utils.styleText('network_disconnected', {text: utils.translateText('client_models_network_disconnected', [])}), 'action quit');
             }
         });
     }
@@ -326,7 +327,7 @@ define('models/network', function(require, exports, module) {
 
 
     function onMotd(event) {
-        this.panels.server.addMsg(this.get('name'), styleText('motd', {text: event.msg}), 'motd');
+        this.panels.server.addMsg(this.get('name'), utils.styleText('motd', {text: event.msg}), 'motd');
     }
 
 
@@ -404,9 +405,9 @@ define('models/network', function(require, exports, module) {
         $.each(this.panels.models, function (index, panel) {
             // Let any query panels know they quit
             if (panel.isQuery() && panel.get('name').toLowerCase() === event.nick.toLowerCase()) {
-                panel.addMsg(' ', styleText('channel_quit', {
+                panel.addMsg(' ', utils.styleText('channel_quit', {
                     nick: event.nick,
-                    text: translateText('client_models_channel_quit', [quit_options.message])
+                    text: utils.translateText('client_models_channel_quit', [quit_options.message])
                 }), 'action quit', {time: quit_options.time});
             }
 
@@ -511,22 +512,22 @@ define('models/network', function(require, exports, module) {
 
             switch (event.type){
             case 'message':
-                panel.addMsg(event.nick, styleText('privmsg', {text: event.msg}), 'privmsg', {time: event.time});
+                panel.addMsg(event.nick, utils.styleText('privmsg', {text: event.msg}), 'privmsg', {time: event.time});
                 break;
 
             case 'action':
-                panel.addMsg('', styleText('action', {nick: event.nick, text: event.msg}), 'action', {time: event.time});
+                panel.addMsg('', utils.styleText('action', {nick: event.nick, text: event.msg}), 'action', {time: event.time});
                 break;
 
             case 'notice':
-                panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
+                panel.addMsg('[' + (event.nick||'') + ']', utils.styleText('notice', {text: event.msg}), 'notice', {time: event.time});
 
                 // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
                 active_panel = Application.instance().panels().active;
 
                 if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
                     if (active_panel.get('network') === this && (active_panel.isChannel() || active_panel.isQuery()))
-                        active_panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
+                        active_panel.addMsg('[' + (event.nick||'') + ']', utils.styleText('notice', {text: event.msg}), 'notice', {time: event.time});
                 }
                 break;
             }
@@ -547,7 +548,7 @@ define('models/network', function(require, exports, module) {
             member = panel.get('members').getByNick(event.nick);
             if (member) {
                 member.set('nick', event.newnick);
-                panel.addMsg('', styleText('nick_changed', {nick: event.nick, text: translateText('client_models_network_nickname_changed', [event.newnick]), channel: name}), 'action nick', {time: event.time});
+                panel.addMsg('', utils.styleText('nick_changed', {nick: event.nick, text: utils.translateText('client_models_network_nickname_changed', [event.newnick]), channel: name}), 'action nick', {time: event.time});
             }
         });
     }
@@ -576,7 +577,7 @@ define('models/network', function(require, exports, module) {
             return;
         }
 
-        this.panels.server.addMsg('[' + event.nick + ']',  styleText('ctcp', {text: event.msg}), 'ctcp', {time: event.time});
+        this.panels.server.addMsg('[' + event.nick + ']',  utils.styleText('ctcp', {text: event.msg}), 'ctcp', {time: event.time});
     }
 
 
@@ -741,7 +742,7 @@ define('models/network', function(require, exports, module) {
                     request_updated_banlist = true;
             }
 
-            channel.addMsg('', styleText('mode', {nick: event.nick, text: translateText('client_models_network_mode', [friendlyModeString()]), channel: event.target}), 'action mode', {time: event.time});
+            channel.addMsg('', utils.styleText('mode', {nick: event.nick, text: utils.translateText('client_models_network_mode', [friendlyModeString()]), channel: event.target}), 'action mode', {time: event.time});
 
             // TODO: Be smart, remove the specific ban from the banlist rather than request a whole banlist
             if (request_updated_banlist)
@@ -750,7 +751,7 @@ define('models/network', function(require, exports, module) {
         } else {
             // This is probably a mode being set on us.
             if (event.target.toLowerCase() === this.get("nick").toLowerCase()) {
-                this.panels.server.addMsg('', styleText('selfmode', {nick: event.nick, text: translateText('client_models_network_mode', [friendlyModeString()]), channel: event.target}), 'action mode');
+                this.panels.server.addMsg('', utils.styleText('selfmode', {nick: event.nick, text: utils.translateText('client_models_network_mode', [friendlyModeString()]), channel: event.target}), 'action mode');
             } else {
                console.log('MODE command recieved for unknown target %s: ', event.target, event);
             }
@@ -768,30 +769,30 @@ define('models/network', function(require, exports, module) {
                 return;
 
             if (typeof event.idle !== 'undefined') {
-                idle_time = secondsToTime(parseInt(event.idle, 10));
+                idle_time = utils.secondsToTime(parseInt(event.idle, 10));
                 idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
             }
 
             panel = Application.instance().panels().active;
             if (event.ident) {
-                panel.addMsg(event.nick, styleText('whois_ident', {nick: event.nick, ident: event.ident, host: event.hostname, text: event.msg}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois_ident', {nick: event.nick, ident: event.ident, host: event.hostname, text: event.msg}), 'whois');
 
             } else if (event.chans) {
-                panel.addMsg(event.nick, styleText('whois_channels', {nick: event.nick, text: translateText('client_models_network_channels', [event.chans])}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois_channels', {nick: event.nick, text: utils.translateText('client_models_network_channels', [event.chans])}), 'whois');
             } else if (event.irc_server) {
-                panel.addMsg(event.nick, styleText('whois_server', {nick: event.nick, text: translateText('client_models_network_server', [event.irc_server, event.server_info])}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois_server', {nick: event.nick, text: utils.translateText('client_models_network_server', [event.irc_server, event.server_info])}), 'whois');
             } else if (event.msg) {
-                panel.addMsg(event.nick, styleText('whois', {text: event.msg}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois', {text: event.msg}), 'whois');
             } else if (event.logon) {
                 logon_date = new Date();
                 logon_date.setTime(event.logon * 1000);
                 logon_date = require('utils/formatdate')(logon_date);
 
-                panel.addMsg(event.nick, styleText('whois_idle_and_signon', {nick: event.nick, text: translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois_idle_and_signon', {nick: event.nick, text: utils.translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
             } else if (event.away_reason) {
-                panel.addMsg(event.nick, styleText('whois_away', {nick: event.nick, text: translateText('client_models_network_away', [event.away_reason])}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois_away', {nick: event.nick, text: utils.translateText('client_models_network_away', [event.away_reason])}), 'whois');
             } else {
-                panel.addMsg(event.nick, styleText('whois_idle', {nick: event.nick, text: translateText('client_models_network_idle', [idle_time])}), 'whois');
+                panel.addMsg(event.nick, utils.styleText('whois_idle', {nick: event.nick, text: utils.translateText('client_models_network_idle', [idle_time])}), 'whois');
             }
         });
     }
@@ -804,9 +805,9 @@ define('models/network', function(require, exports, module) {
 
         panel = Application.instance().panels().active;
         if (event.hostname) {
-            panel.addMsg(event.nick, styleText('who', {nick: event.nick, ident: event.ident, host: event.hostname, realname: event.real_name, text: event.msg}), 'whois');
+            panel.addMsg(event.nick, utils.styleText('who', {nick: event.nick, ident: event.ident, host: event.hostname, realname: event.real_name, text: event.msg}), 'whois');
         } else {
-            panel.addMsg(event.nick, styleText('whois_notfound', {nick: event.nick, text: translateText('client_models_network_nickname_notfound', [])}), 'whois');
+            panel.addMsg(event.nick, utils.styleText('whois_notfound', {nick: event.nick, text: utils.translateText('client_models_network_nickname_notfound', [])}), 'whois');
         }
     }
 
@@ -840,26 +841,26 @@ define('models/network', function(require, exports, module) {
 
         switch (event.error) {
         case 'banned_from_channel':
-            panel.addMsg(' ', styleText('channel_banned', {nick: event.nick, text: translateText('client_models_network_banned', [event.channel, event.reason]), channel: event.channel}), 'status');
+            panel.addMsg(' ', utils.styleText('channel_banned', {nick: event.nick, text: utils.translateText('client_models_network_banned', [event.channel, event.reason]), channel: event.channel}), 'status');
             Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
             break;
         case 'bad_channel_key':
-            panel.addMsg(' ', styleText('channel_badkey', {nick: event.nick, text: translateText('client_models_network_channel_badkey', [event.channel]), channel: event.channel}), 'status');
+            panel.addMsg(' ', utils.styleText('channel_badkey', {nick: event.nick, text: utils.translateText('client_models_network_channel_badkey', [event.channel]), channel: event.channel}), 'status');
             Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
             break;
         case 'invite_only_channel':
-            panel.addMsg(' ', styleText('channel_inviteonly', {nick: event.nick, text: translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), channel: event.channel}), 'status');
+            panel.addMsg(' ', utils.styleText('channel_inviteonly', {nick: event.nick, text: utils.translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), channel: event.channel}), 'status');
             Application.instance().message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
             break;
         case 'user_on_channel':
-            panel.addMsg(' ', styleText('channel_alreadyin', {nick: event.nick, text: translateText('client_models_network_channel_alreadyin'), channel: event.channel}));
+            panel.addMsg(' ', utils.styleText('channel_alreadyin', {nick: event.nick, text: utils.translateText('client_models_network_channel_alreadyin'), channel: event.channel}));
             break;
         case 'channel_is_full':
-            panel.addMsg(' ', styleText('channel_limitreached', {nick: event.nick, text: translateText('client_models_network_channel_limitreached', [event.channel]), channel: event.channel}), 'status');
+            panel.addMsg(' ', utils.styleText('channel_limitreached', {nick: event.nick, text: utils.translateText('client_models_network_channel_limitreached', [event.channel]), channel: event.channel}), 'status');
             Application.instance().message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
             break;
         case 'chanop_privs_needed':
-            panel.addMsg(' ', styleText('chanop_privs_needed', {text: event.reason, channel: event.channel}), 'status');
+            panel.addMsg(' ', utils.styleText('chanop_privs_needed', {text: event.reason, channel: event.channel}), 'status');
             Application.instance().message.text(event.reason + ' (' + event.channel + ')');
             break;
         case 'cannot_send_to_channel':
@@ -868,13 +869,13 @@ define('models/network', function(require, exports, module) {
         case 'no_such_nick':
             tmp = this.panels.getByName(event.nick);
             if (tmp) {
-                tmp.addMsg(' ', styleText('no_such_nick', {nick: event.nick, text: event.reason, channel: event.channel}), 'status');
+                tmp.addMsg(' ', utils.styleText('no_such_nick', {nick: event.nick, text: event.reason, channel: event.channel}), 'status');
             } else {
-                this.panels.server.addMsg(' ', styleText('no_such_nick', {nick: event.nick, text: event.reason, channel: event.channel}), 'status');
+                this.panels.server.addMsg(' ', utils.styleText('no_such_nick', {nick: event.nick, text: event.reason, channel: event.channel}), 'status');
             }
             break;
         case 'nickname_in_use':
-            this.panels.server.addMsg(' ', styleText('nickname_alreadyinuse', {nick: event.nick, text: translateText('client_models_network_nickname_alreadyinuse', [event.nick]), channel: event.channel}), 'status');
+            this.panels.server.addMsg(' ', utils.styleText('nickname_alreadyinuse', {nick: event.nick, text: utils.translateText('client_models_network_nickname_alreadyinuse', [event.nick]), channel: event.channel}), 'status');
             if (this.panels.server !== this.panels.active) {
                 Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
             }
@@ -887,12 +888,12 @@ define('models/network', function(require, exports, module) {
             break;
 
         case 'password_mismatch':
-            this.panels.server.addMsg(' ', styleText('channel_badpassword', {nick: event.nick, text: translateText('client_models_network_badpassword', []), channel: event.channel}), 'status');
+            this.panels.server.addMsg(' ', utils.styleText('channel_badpassword', {nick: event.nick, text: utils.translateText('client_models_network_badpassword', []), channel: event.channel}), 'status');
             break;
 
         case 'error':
             if (event.reason) {
-                this.panels.server.addMsg(' ', styleText('general_error', {text: event.reason}), 'status');
+                this.panels.server.addMsg(' ', utils.styleText('general_error', {text: event.reason}), 'status');
             }
             break;
 
@@ -911,7 +912,7 @@ define('models/network', function(require, exports, module) {
             display_params.shift();
         }
 
-        this.panels.server.addMsg('', styleText('unknown_command', {text: '[' + event.command + '] ' + display_params.join(', ', '')}));
+        this.panels.server.addMsg('', utils.styleText('unknown_command', {text: '[' + event.command + '] ' + display_params.join(', ', '')}));
     }
 
 
@@ -919,11 +920,11 @@ define('models/network', function(require, exports, module) {
         var active_panel = Application.instance().panels().active;
 
         // Send to server panel
-        this.panels.server.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+        this.panels.server.addMsg('[' + (event.nick||'') + ']', utils.styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
 
         // Send to active panel if its a channel/query *and* it's related to this network
         if (active_panel !== this.panels.server && (active_panel.isChannel() || active_panel.isQuery()) && active_panel.get('network') === this)
-            active_panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
+            active_panel.addMsg('[' + (event.nick||'') + ']', utils.styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
     }
 
 });

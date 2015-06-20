@@ -1,6 +1,7 @@
 define('views/controlbox', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         events: {
@@ -16,7 +17,7 @@ define('views/controlbox', function(require, exports, module) {
             this.buffer = [];  // Stores previously run commands
             this.buffer_pos = 0;  // The current position in the buffer
 
-            this.preprocessor = new InputPreProcessor();
+            this.preprocessor = new utils.InputPreProcessor();
             this.preprocessor.recursive_depth = 5;
 
             this.autocomplete = new (require('views/autocomplete'))({el: this.$('.autocomplete')[0]});
@@ -39,7 +40,7 @@ define('views/controlbox', function(require, exports, module) {
         },
 
         render: function() {
-            var send_message_text = translateText('client_views_controlbox_message');
+            var send_message_text = utils.translateText('client_views_controlbox_message');
             this.$('.inp').attr('placeholder', send_message_text);
 
             return this;

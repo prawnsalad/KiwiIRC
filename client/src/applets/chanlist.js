@@ -1,5 +1,7 @@
 (function () {
 
+    var utils = require('helpers/utils');
+
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
@@ -171,7 +173,7 @@
             _.each(channels, function (chan) {
                 var row;
                 row = document.createElement("tr");
-                row.innerHTML = '<td class="chanlist_name"><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="chanlist_num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;" class="chanlist_topic">' + formatIRCMsg(_.escape(chan.topic)) + '</td>';
+                row.innerHTML = '<td class="chanlist_name"><a class="chan" data-channel="' + chan.channel + '">' + _.escape(chan.channel) + '</a></td><td class="chanlist_num_users" style="text-align: center;">' + chan.num_users + '</td><td style="padding-left: 2em;" class="chanlist_topic">' + utils.formatIRCMsg(_.escape(chan.topic)) + '</td>';
                 chan.dom = row;
                 that.view.channels.push(chan);
             });

@@ -1,6 +1,9 @@
 define('models/channel', function(require, exports, module) {
     // TODO: Channel modes
     // TODO: Listen to gateway events for anythign related to this channel
+
+    var utils = require('helpers/utils');
+
     module.exports = require('models/panel').extend({
         initialize: function (attributes) {
             var name = this.get("name") || "",
@@ -23,7 +26,7 @@ define('models/channel', function(require, exports, module) {
                     return;
                 }
 
-                this.addMsg(' ', styleText('channel_join', {member: member.getMaskParts(), text: translateText('client_models_channel_join'), channel: name}), 'action join', {time: options.kiwi.time});
+                this.addMsg(' ', utils.styleText('channel_join', {member: member.getMaskParts(), text: utils.translateText('client_models_channel_join'), channel: name}), 'action join', {time: options.kiwi.time});
             }, this);
 
             members.bind("remove", function (member, members, options) {
@@ -31,20 +34,20 @@ define('models/channel', function(require, exports, module) {
                 var msg = (options.kiwi.message) ? '(' + options.kiwi.message + ')' : '';
 
                 if (options.kiwi.type === 'quit' && show_message) {
-                    this.addMsg(' ', styleText('channel_quit', {member: member.getMaskParts(), text: translateText('client_models_channel_quit', [msg]), channel: name}), 'action quit', {time: options.kiwi.time});
+                    this.addMsg(' ', utils.styleText('channel_quit', {member: member.getMaskParts(), text: utils.translateText('client_models_channel_quit', [msg]), channel: name}), 'action quit', {time: options.kiwi.time});
 
                 } else if (options.kiwi.type === 'kick') {
 
                     if (!options.kiwi.current_user_kicked) {
                         //If user kicked someone, show the message regardless of settings.
                         if (show_message || options.kiwi.current_user_initiated) {
-                            this.addMsg(' ', styleText('channel_kicked', {member: member.getMaskParts(), text: translateText('client_models_channel_kicked', [options.kiwi.by, msg]), channel: name}), 'action kick', {time: options.kiwi.time});
+                            this.addMsg(' ', utils.styleText('channel_kicked', {member: member.getMaskParts(), text: utils.translateText('client_models_channel_kicked', [options.kiwi.by, msg]), channel: name}), 'action kick', {time: options.kiwi.time});
                         }
                     } else {
-                        this.addMsg(' ', styleText('channel_selfkick', {text: translateText('client_models_channel_selfkick', [options.kiwi.by, msg]), channel: name}), 'action kick', {time: options.kiwi.time});
+                        this.addMsg(' ', utils.styleText('channel_selfkick', {text: utils.translateText('client_models_channel_selfkick', [options.kiwi.by, msg]), channel: name}), 'action kick', {time: options.kiwi.time});
                     }
                 } else if (show_message) {
-                    this.addMsg(' ', styleText('channel_part', {member: member.getMaskParts(), text: translateText('client_models_channel_part', [msg]), channel: name}), 'action part', {time: options.kiwi.time});
+                    this.addMsg(' ', utils.styleText('channel_part', {member: member.getMaskParts(), text: utils.translateText('client_models_channel_part', [msg]), channel: name}), 'action part', {time: options.kiwi.time});
 
                 }
             }, this);

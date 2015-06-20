@@ -1,4 +1,7 @@
 (function () {
+
+    var utils = require('helpers/utils');
+
     var View = Backbone.View.extend({
         events: {
             'change [data-setting]': 'saveSettings',
@@ -11,24 +14,24 @@
         initialize: function (options) {
             var application = require('models/application').instance();
             var text = {
-                tabs                  : translateText('client_applets_settings_channelview_tabs'),
-                list                  : translateText('client_applets_settings_channelview_list'),
-                large_amounts_of_chans: translateText('client_applets_settings_channelview_list_notice'),
-                join_part             : translateText('client_applets_settings_notification_joinpart'),
-                count_all_activity    : translateText('client_applets_settings_notification_count_all_activity'),
-                timestamps            : translateText('client_applets_settings_timestamp'),
-                timestamp_24          : translateText('client_applets_settings_timestamp_24_hour'),
-                mute                  : translateText('client_applets_settings_notification_sound'),
-                emoticons             : translateText('client_applets_settings_emoticons'),
-                scroll_history        : translateText('client_applets_settings_history_length'),
+                tabs                  : utils.translateText('client_applets_settings_channelview_tabs'),
+                list                  : utils.translateText('client_applets_settings_channelview_list'),
+                large_amounts_of_chans: utils.translateText('client_applets_settings_channelview_list_notice'),
+                join_part             : utils.translateText('client_applets_settings_notification_joinpart'),
+                count_all_activity    : utils.translateText('client_applets_settings_notification_count_all_activity'),
+                timestamps            : utils.translateText('client_applets_settings_timestamp'),
+                timestamp_24          : utils.translateText('client_applets_settings_timestamp_24_hour'),
+                mute                  : utils.translateText('client_applets_settings_notification_sound'),
+                emoticons             : utils.translateText('client_applets_settings_emoticons'),
+                scroll_history        : utils.translateText('client_applets_settings_history_length'),
                 languages             : application.translations,
-                default_client        : translateText('client_applets_settings_default_client'),
-                make_default          : translateText('client_applets_settings_default_client_enable'),
-                locale_restart_needed : translateText('client_applets_settings_locale_restart_needed'),
-                default_note          : translateText('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
-                html5_notifications   : translateText('client_applets_settings_html5_notifications'),
-                enable_notifications  : translateText('client_applets_settings_enable_notifications'),
-                custom_highlights     : translateText('client_applets_settings_custom_highlights'),
+                default_client        : utils.translateText('client_applets_settings_default_client'),
+                make_default          : utils.translateText('client_applets_settings_default_client_enable'),
+                locale_restart_needed : utils.translateText('client_applets_settings_locale_restart_needed'),
+                default_note          : utils.translateText('client_applets_settings_default_client_notice', '<a href="chrome://settings/handlers">chrome://settings/handlers</a>'),
+                html5_notifications   : utils.translateText('client_applets_settings_html5_notifications'),
+                enable_notifications  : utils.translateText('client_applets_settings_enable_notifications'),
+                custom_highlights     : utils.translateText('client_applets_settings_custom_highlights'),
                 theme_thumbnails: _.map(application.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
@@ -160,7 +163,7 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', translateText('client_applets_settings_title'));
+            this.set('title', utils.translateText('client_applets_settings_title'));
             this.view = new View();
         }
     });

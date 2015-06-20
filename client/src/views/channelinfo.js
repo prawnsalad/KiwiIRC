@@ -2,6 +2,7 @@
 define('views/channelinfo', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         events: {
@@ -18,11 +19,11 @@ define('views/channelinfo', function(require, exports, module) {
                 text;
 
             text = {
-                moderated_chat: translateText('client_views_channelinfo_moderated'),
-                invite_only: translateText('client_views_channelinfo_inviteonly'),
-                ops_change_topic: translateText('client_views_channelinfo_opschangechannel'),
-                external_messages: translateText('client_views_channelinfo_externalmessages'),
-                toggle_banlist: translateText('client_views_channelinfo_togglebanlist'),
+                moderated_chat: utils.translateText('client_views_channelinfo_moderated'),
+                invite_only: utils.translateText('client_views_channelinfo_inviteonly'),
+                ops_change_topic: utils.translateText('client_views_channelinfo_opschangechannel'),
+                external_messages: utils.translateText('client_views_channelinfo_externalmessages'),
+                toggle_banlist: utils.translateText('client_views_channelinfo_togglebanlist'),
                 channel_name: channel.get('name')
             };
 

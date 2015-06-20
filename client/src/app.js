@@ -26,14 +26,8 @@ _kiwi.global = {
 
     // Make public some internal utils for plugins to make use of
     initUtils: function() {
-        this.utils.randomString = randomString;
-        this.utils.secondsToTime = secondsToTime;
-        this.utils.parseISO8601 = parseISO8601;
-        this.utils.escapeRegex = escapeRegex;
-        this.utils.formatIRCMsg = formatIRCMsg;
-        this.utils.styleText = styleText;
-        this.utils.hsl2rgb = hsl2rgb;
-        this.utils.toUserMask = toUserMask;
+        var utils = require('helpers/utils');
+        _.extend(this.utils, utils);
 
         this.utils.notifications = require('utils/notifications');
         this.utils.formatDate = require('utils/formatdate');

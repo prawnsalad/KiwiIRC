@@ -1,6 +1,7 @@
 define('views/memberlist', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         tagName: "div",
@@ -37,7 +38,7 @@ define('views/memberlist', function(require, exports, module) {
         },
 
         renderMeta: function() {
-            var members_count = this.model.length + ' ' + translateText('client_applets_chanlist_users');
+            var members_count = this.model.length + ' ' + utils.translateText('client_applets_chanlist_users');
             this.$meta.text(members_count);
         },
 

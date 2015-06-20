@@ -1,5 +1,7 @@
 (function() {
 
+    var utils = require('helpers/utils');
+
     function ClientUiCommands(app, controlbox) {
         this.app = app;
         this.controlbox = controlbox;
@@ -151,7 +153,7 @@
             }
 
             // Read the value to the user
-            this.app.panels().active.addMsg('', styleText('set_setting', {text: setting + ' = ' + _kiwi.global.settings.get(setting).toString()}));
+            this.app.panels().active.addMsg('', utils.styleText('set_setting', {text: setting + ' = ' + _kiwi.global.settings.get(setting).toString()}));
         }
     };
 
@@ -160,7 +162,7 @@
         descrption: 'Save the current kiwi settings',
         fn: function(ev) {
             _kiwi.global.settings.save();
-            this.app.panels().active.addMsg('', styleText('settings_saved', {text: translateText('client_models_application_settings_saved')}));
+            this.app.panels().active.addMsg('', utils.styleText('settings_saved', {text: utils.translateText('client_models_application_settings_saved')}));
         }
     };
 
@@ -174,7 +176,7 @@
             // No parameters passed so list them
             if (!ev.params[1]) {
                 $.each(this.controlbox.preprocessor.aliases, function (name, rule) {
-                    that.app.panels().server.addMsg(' ', styleText('list_aliases', {text: name + '   =>   ' + rule}));
+                    that.app.panels().server.addMsg(' ', utils.styleText('list_aliases', {text: name + '   =>   ' + rule}));
                 });
                 return;
             }
@@ -211,21 +213,21 @@
             // No parameters passed so list them
             if (!ev.params[0]) {
                 if (list.length > 0) {
-                    this.app.panels().active.addMsg(' ', styleText('ignore_title', {text: translateText('client_models_application_ignore_title')}));
+                    this.app.panels().active.addMsg(' ', utils.styleText('ignore_title', {text: utils.translateText('client_models_application_ignore_title')}));
                     $.each(list, function (idx, ignored_pattern) {
-                        that.app.panels().active.addMsg(' ', styleText('ignored_pattern', {text: ignored_pattern[0]}));
+                        that.app.panels().active.addMsg(' ', utils.styleText('ignored_pattern', {text: ignored_pattern[0]}));
                     });
                 } else {
-                    this.app.panels().active.addMsg(' ', styleText('ignore_none', {text: translateText('client_models_application_ignore_none')}));
+                    this.app.panels().active.addMsg(' ', utils.styleText('ignore_none', {text: utils.translateText('client_models_application_ignore_none')}));
                 }
                 return;
             }
 
             // We have a parameter, so add it, first convert it to regex.
-            user_mask = toUserMask(ev.params[0], true);
+            user_mask = utils.toUserMask(ev.params[0], true);
             list.push(user_mask);
             this.app.connections.active_connection.set('ignore_list', list);
-            this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [user_mask[0]])}));
+            this.app.panels().active.addMsg(' ', utils.styleText('ignore_nick', {text: utils.translateText('client_models_application_ignore_nick', [user_mask[0]])}));
         }
     };
 
@@ -237,18 +239,18 @@
                 user_mask;
 
             if (!ev.params[0]) {
-                this.app.panels().active.addMsg(' ', styleText('ignore_stop_notice', {text: translateText('client_models_application_ignore_stop_notice')}));
+                this.app.panels().active.addMsg(' ', utils.styleText('ignore_stop_notice', {text: utils.translateText('client_models_application_ignore_stop_notice')}));
                 return;
             }
 
-            user_mask = toUserMask(ev.params[0], true);
+            user_mask = utils.toUserMask(ev.params[0], true);
             list = _.reject(list, function(pattern) {
                 return pattern[1].toString() === user_mask[1].toString();
             });
 
             this.app.connections.active_connection.set('ignore_list', list);
 
-            this.app.panels().active.addMsg(' ', styleText('ignore_stopped', {text: translateText('client_models_application_ignore_stopped', [user_mask[0]])}));
+            this.app.panels().active.addMsg(' ', utils.styleText('ignore_stopped', {text: utils.translateText('client_models_application_ignore_stopped', [user_mask[0]])}));
         }
     };
 
@@ -296,7 +298,7 @@
 
         if (message) {
             this.app.connections.active_connection.gateway.msg(panel.get('name'), message);
-            panel.addMsg(this.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
+            panel.addMsg(this.app.connections.active_connection.get('nick'), utils.styleText('privmsg', {text: message}), 'privmsg');
         }
 
     }
@@ -310,7 +312,7 @@
         ev.params.shift();
         message = ev.params.join(' ');
 
-        panel.addMsg(this.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
+        panel.addMsg(this.app.connections.active_connection.get('nick'), utils.styleText('privmsg', {text: message}), 'privmsg');
         this.app.connections.active_connection.gateway.msg(destination, message);
     }
 
@@ -321,7 +323,7 @@
         }
 
         var panel = this.app.panels().active;
-        panel.addMsg('', styleText('action', {nick: this.app.connections.active_connection.get('nick'), text: ev.params.join(' ')}), 'action');
+        panel.addMsg('', utils.styleText('action', {nick: this.app.connections.active_connection.get('nick'), text: ev.params.join(' ')}), 'action');
         this.app.connections.active_connection.gateway.action(panel.get('name'), ev.params.join(' '));
     }
 
@@ -471,7 +473,7 @@
             if (this.applets[ev.params[0]]) {
                 panel.load(new this.applets[ev.params[0]]());
             } else {
-                this.app.panels().server.addMsg('', styleText('applet_notfound', {text: translateText('client_models_application_applet_notfound', [ev.params[0]])}));
+                this.app.panels().server.addMsg('', utils.styleText('applet_notfound', {text: utils.translateText('client_models_application_applet_notfound', [ev.params[0]])}));
                 return;
             }
         }
@@ -497,7 +499,7 @@
 
         this.app.connections.active_connection.gateway.raw('INVITE ' + nick + ' ' + channel);
 
-        this.app.panels().active.addMsg('', styleText('channel_has_been_invited', {nick: nick, text: translateText('client_models_application_has_been_invited', [channel])}), 'action');
+        this.app.panels().active.addMsg('', utils.styleText('channel_has_been_invited', {nick: nick, text: utils.translateText('client_models_application_has_been_invited', [channel])}), 'action');
     }
 
 
@@ -540,14 +542,14 @@
         if (ev.params[0]) {
             _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
                 if (success) {
-                    that.app.panels().active.addMsg('', styleText('encoding_changed', {text: translateText('client_models_application_encoding_changed', [ev.params[0]])}));
+                    that.app.panels().active.addMsg('', utils.styleText('encoding_changed', {text: utils.translateText('client_models_application_encoding_changed', [ev.params[0]])}));
                 } else {
-                    that.app.panels().active.addMsg('', styleText('encoding_invalid', {text: translateText('client_models_application_encoding_invalid', [ev.params[0]])}));
+                    that.app.panels().active.addMsg('', utils.styleText('encoding_invalid', {text: utils.translateText('client_models_application_encoding_invalid', [ev.params[0]])}));
                 }
             });
         } else {
-            this.app.panels().active.addMsg('', styleText('client_models_application_encoding_notspecified', {text: translateText('client_models_application_encoding_notspecified')}));
-            this.app.panels().active.addMsg('', styleText('client_models_application_encoding_usage', {text: translateText('client_models_application_encoding_usage')}));
+            this.app.panels().active.addMsg('', utils.styleText('client_models_application_encoding_notspecified', {text: utils.translateText('client_models_application_encoding_notspecified')}));
+            this.app.panels().active.addMsg('', utils.styleText('client_models_application_encoding_usage', {text: utils.translateText('client_models_application_encoding_usage')}));
         }
     }
 
@@ -622,7 +624,7 @@
         // Use the same nick as we currently have
         nick = this.app.connections.active_connection.get('nick');
 
-        this.app.panels().active.addMsg('', styleText('server_connecting', {text: translateText('client_models_application_connection_connecting', [server, port.toString()])}));
+        this.app.panels().active.addMsg('', utils.styleText('server_connecting', {text: utils.translateText('client_models_application_connection_connecting', [server, port.toString()])}));
 
         _kiwi.gateway.newConnection({
             nick: nick,
@@ -634,8 +636,8 @@
             var translated_err;
 
             if (err) {
-                translated_err = translateText('client_models_application_connection_error', [server, port.toString(), err.toString()]);
-                that.app.panels().active.addMsg('', styleText('server_connecting_error', {text: translated_err}));
+                translated_err = utils.translateText('client_models_application_connection_error', [server, port.toString(), err.toString()]);
+                that.app.panels().active.addMsg('', utils.styleText('server_connecting_error', {text: translated_err}));
             }
         });
     }

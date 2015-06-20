@@ -1,5 +1,7 @@
 define('models/application', function(require, exports, module) {
 
+    var utils = require('helpers/utils');
+
     // Singleton instance
     var instance = null;
 
@@ -211,11 +213,11 @@ define('models/application', function(require, exports, module) {
 
 
                 gw.on('reconnecting', function (event) {
-                    var msg = translateText('client_models_application_reconnect_in_x_seconds', [event.delay/1000]) + '...';
+                    var msg = utils.translateText('client_models_application_reconnect_in_x_seconds', [event.delay/1000]) + '...';
 
                     // Only need to mention the repeating re-connection messages on server panels
                     that.connections.forEach(function(connection) {
-                        connection.panels.server.addMsg('', styleText('quit', {text: msg}), 'action quit');
+                        connection.panels.server.addMsg('', utils.styleText('quit', {text: msg}), 'action quit');
                     });
                 });
 
@@ -237,20 +239,20 @@ define('models/application', function(require, exports, module) {
                         // No longer in the reconnection state
                         gw_stat = 0;
 
-                        msg = translateText('client_models_application_reconnect_successfully') + ' :)';
+                        msg = utils.translateText('client_models_application_reconnect_successfully') + ' :)';
                         that.message.text(msg, {timeout: 5000});
 
                         // Mention the re-connection on every channel
                         that.connections.forEach(function(connection) {
                             connection.reconnect();
 
-                            connection.panels.server.addMsg('', styleText('rejoin', {text: msg}), 'action join');
+                            connection.panels.server.addMsg('', utils.styleText('rejoin', {text: msg}), 'action join');
 
                             connection.panels.forEach(function(panel) {
                                 if (!panel.isChannel())
                                     return;
 
-                                panel.addMsg('', styleText('rejoin', {text: msg}), 'action join');
+                                panel.addMsg('', utils.styleText('rejoin', {text: msg}), 'action join');
                             });
                         });
                     }

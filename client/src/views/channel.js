@@ -1,6 +1,7 @@
 define('views/channel', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = require('views/panel').extend({
         events: function(){
@@ -80,7 +81,7 @@ define('views/channel', function(require, exports, module) {
 
                 // Format the nick to the config defined format
                 var display_obj = _.clone(msg);
-                display_obj.nick = styleText('message_nick', {nick: msg.nick, prefix: msg.nick_prefix || ''});
+                display_obj.nick = utils.styleText('message_nick', {nick: msg.nick, prefix: msg.nick_prefix || ''});
 
                 line_msg = '<div class="msg <%= type %> <%= css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
                 this.$messages.append($(_.template(line_msg, display_obj)).data('message', msg));
@@ -173,7 +174,7 @@ define('views/channel', function(require, exports, module) {
                 // Use the nick from the member object so the style matches the letter casing
                 style = this.getNickStyles(nick).asCssString();
             }
-            nick_re = new RegExp('(.*)\\b(' + _kiwi.global.utils.escapeRegex(nick) + ')\\b(.*)', 'i');
+            nick_re = new RegExp('(.*)\\b(' + utils.escapeRegex(nick) + ')\\b(.*)', 'i');
             return word.replace(nick_re, function (__, before, nick_in_orig_case, after) {
                 return _.escape(before)
                     + '<span class="inline-nick" style="' + style + '; cursor:pointer" data-nick="' + _.escape(nick) + '">'
@@ -194,7 +195,7 @@ define('views/channel', function(require, exports, module) {
                 return;
             }
 
-            re = new RegExp('(^|\\s)([' + escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
+            re = new RegExp('(^|\\s)([' + utils.escapeRegex(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
 
             if (!word.match(re)) {
                 return parsed;
@@ -263,7 +264,7 @@ define('views/channel', function(require, exports, module) {
                 }
 
                 nick_int = _.reduce(nick.split(''), sumCharCodes, 0);
-                rgb = hsl2rgb(nick_int % 256, 70, nick_lightness);
+                rgb = utils.hsl2rgb(nick_int % 256, 70, nick_lightness);
 
                 return {
                     color: '#' + ('000000' + (rgb[2] | (rgb[1] << 8) | (rgb[0] << 16)).toString(16)).substr(-6),
@@ -309,7 +310,7 @@ define('views/channel', function(require, exports, module) {
                 regexpStr = _.chain((_kiwi.global.settings.get('custom_highlights') || '').split(/[\s,]+/))
                     .compact()
                     .concat(nick)
-                    .map(escapeRegex)
+                    .map(utils.escapeRegex)
                     .join('|')
                     .value();
 
@@ -336,7 +337,7 @@ define('views/channel', function(require, exports, module) {
 
                 // Replace text emoticons with images
                 if (_kiwi.global.settings.get('show_emoticons')) {
-                    parsed_word = emoticonFromText(parsed_word);
+                    parsed_word = utils.emoticonFromText(parsed_word);
                 }
 
                 return parsed_word;
@@ -346,7 +347,7 @@ define('views/channel', function(require, exports, module) {
             msg.msg = message_words.join(' ');
 
             // Convert IRC formatting into HTML formatting
-            msg.msg = formatIRCMsg(msg.msg);
+            msg.msg = utils.formatIRCMsg(msg.msg);
 
             // Add some style to the nick
             msg.nick_style = this.getNickStyles(msg.nick).asCssString();
@@ -383,7 +384,7 @@ define('views/channel', function(require, exports, module) {
                     'client_views_panel_timestamp_pm' :
                     'client_views_panel_timestamp_am';
 
-                msg.time_string = translateText(am_pm_locale_key, hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
+                msg.time_string = utils.translateText(am_pm_locale_key, hour + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0"));
             }
 
             return msg;
@@ -395,7 +396,7 @@ define('views/channel', function(require, exports, module) {
                 topic = this.model.get("topic");
             }
 
-            this.model.addMsg('', styleText('channel_topic', {text: topic, channel: this.model.get('name')}), 'topic');
+            this.model.addMsg('', utils.styleText('channel_topic', {text: topic, channel: this.model.get('name')}), 'topic');
 
             // If this is the active channel then update the topic bar
             if (Application.instance().panels().active === this.model) {

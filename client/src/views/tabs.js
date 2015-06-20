@@ -2,6 +2,7 @@
 define('views/tabs', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         tagName: 'ul',
@@ -140,7 +141,7 @@ define('views/tabs', function(require, exports, module) {
                 this.model.network.gateway.part(panel.get('name'));
 
             } else if(panel.isServer()) {
-                if (!this.model.network.get('connected') || confirm(translateText('disconnect_from_server'))) {
+                if (!this.model.network.get('connected') || confirm(utils.translateText('disconnect_from_server'))) {
                     this.model.network.gateway.quit("Leaving");
                     Application.instance().connections.remove(this.model.network);
                     Application.instance().startup_applet.view.show();

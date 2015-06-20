@@ -1,4 +1,7 @@
 define('models/memberlist', function(require, exports, module) {
+
+    var utils = require('helpers/utils');
+
     module.exports = Backbone.Collection.extend({
         model: require('models/member'),
         comparator: function (a, b) {
@@ -63,7 +66,7 @@ define('models/memberlist', function(require, exports, module) {
         initNickCache: function() {
             var updateRegex = _.bind(function () {
                     this.nick_regex = new RegExp(
-                        '\\b(' + Object.keys(this.nick_cache).map(_kiwi.global.utils.escapeRegex).join('|') + ')\\b', 'i'
+                        '\\b(' + Object.keys(this.nick_cache).map(utils.escapeRegex).join('|') + ')\\b', 'i'
                     );
                 }, this);
 

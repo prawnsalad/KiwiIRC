@@ -1,6 +1,7 @@
 define('views/userbox', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         events: {
@@ -35,7 +36,7 @@ define('views/userbox', function(require, exports, module) {
             this.user = user;
             this.channel = channel;
 
-            var user_mask = toUserMask(this.user.get('nick')),
+            var user_mask = utils.toUserMask(this.user.get('nick')),
                 is_ignored = Application.instance().connections.active_connection.isUserIgnored(user_mask);
 
             this.$('.ignore input').attr('checked', is_ignored ? 'checked' : false);
