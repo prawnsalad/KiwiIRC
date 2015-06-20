@@ -93,6 +93,6 @@
         });
 
 
-        _kiwi.model.Applet.register('kiwi_script_editor', applet);
-        //_kiwi.model.Applet.loadOnce('kiwi_script_editor');
+        require('models/applet').register('kiwi_script_editor', applet);
+        //require('models/applet').loadOnce('kiwi_script_editor');
     })();

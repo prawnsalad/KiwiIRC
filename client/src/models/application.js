@@ -1,10 +1,10 @@
-(function () {
+define('models/application', function(require, exports, module) {
 
-    _kiwi.model.Application = Backbone.Model.extend({
-        /** _kiwi.view.Application */
+    module.exports = Backbone.Model.extend({
+        /** require('views/application') */
         view: null,
 
-        /** _kiwi.view.StatusMessage */
+        /** require('views/statusmessage') */
         message: null,
 
         initialize: function (options) {
@@ -44,7 +44,7 @@
             var kiwi_server = this.app_options.kiwi_server || this.detectKiwiServer();
 
             // Set the gateway up
-            _kiwi.gateway = new _kiwi.model.Gateway({kiwi_server: kiwi_server});
+            _kiwi.gateway = new (require('models/gateway'))({kiwi_server: kiwi_server});
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();
@@ -66,7 +66,7 @@
 
 
         showStartup: function() {
-            this.startup_applet = _kiwi.model.Applet.load(this.startup_applet_name, {no_tab: true});
+            this.startup_applet = require('models/applet').load(this.startup_applet_name, {no_tab: true});
             this.startup_applet.tab = this.view.$('.console');
             this.startup_applet.view.show();
 
@@ -75,10 +75,10 @@
 
 
         initializeClient: function () {
-            this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
+            this.view = new (require('views/application'))({model: this, el: this.get('container')});
 
             // Takes instances of model_network
-            this.connections = new _kiwi.model.NetworkPanelList();
+            this.connections = new (require('models/networkpanellist'))();
 
             // If all connections are removed at some point, hide the bars
             this.connections.on('remove', _.bind(function() {
@@ -88,25 +88,25 @@
             }, this));
 
             // Applets panel list
-            this.applet_panels = new _kiwi.model.PanelList();
+            this.applet_panels = new (require('models/panellist'))();
             this.applet_panels.view.$el.addClass('panellist applets');
             this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
             /**
              * Set the UI components up
              */
-            this.controlbox = (new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]})).render();
+            this.controlbox = (new (require('views/controlbox'))({el: $('#kiwi .controlbox')[0]})).render();
             this.client_ui_commands = new _kiwi.misc.ClientUiCommands(this, this.controlbox);
 
-            this.rightbar = new _kiwi.view.RightBar({el: this.view.$('.right_bar')[0]});
-            this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
+            this.rightbar = new (require('views/rightbar'))({el: this.view.$('.right_bar')[0]});
+            this.topicbar = new (require('views/topicbar'))({el: this.view.$el.find('.topic')[0]});
 
-            new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
-            new _kiwi.view.ChannelTools({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
+            new (require('views/apptoolbar'))({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
+            new (require('views/channeltools'))({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
 
-            this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
+            this.message = new (require('views/statusmessage'))({el: this.view.$el.find('.status_message')[0]});
 
-            this.resize_handle = new _kiwi.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
+            this.resize_handle = new (require('views/resizehandler'))({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();
@@ -119,11 +119,11 @@
             _kiwi.global.panels = this.panels;
             _kiwi.global.panels.applets = this.applet_panels;
 
-            _kiwi.global.components.Applet = _kiwi.model.Applet;
-            _kiwi.global.components.Panel =_kiwi.model.Panel;
-            _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
-            _kiwi.global.components.DataStore = _kiwi.model.DataStore;
-            _kiwi.global.components.Notification = _kiwi.view.Notification;
+            _kiwi.global.components.Applet = require('models/applet');
+            _kiwi.global.components.Panel =require('models/panel');
+            _kiwi.global.components.MenuBox = require('views/menubox');
+            _kiwi.global.components.DataStore = require('models/datastore');
+            _kiwi.global.components.Notification = require('views/notification');
             _kiwi.global.components.Events = function() {
                 return kiwi.events.createProxy();
             };
@@ -304,4 +304,4 @@
 
     });
 
-})();
+});

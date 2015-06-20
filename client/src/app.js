@@ -18,8 +18,8 @@ _kiwi.utils = {};
  */
 _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
-    settings: undefined, // Instance of _kiwi.model.DataStore
-    plugins: undefined, // Instance of _kiwi.model.PluginManager
+    settings: undefined, // Instance of require('models/datastore')
+    plugins: undefined, // Instance of require('models/pluginmanager')
     events: undefined, // Instance of PluginInterface
     rpc: undefined, // Instance of WebsocketRpc
     utils: {}, // References to misc. re-usable helpers / functions
@@ -35,12 +35,12 @@ _kiwi.global = {
         this.utils.hsl2rgb = hsl2rgb;
         this.utils.toUserMask = toUserMask;
 
-        this.utils.notifications = _kiwi.utils.notifications;
-        this.utils.formatDate = _kiwi.utils.formatDate;
+        this.utils.notifications = require('utils/notifications');
+        this.utils.formatDate = require('utils/formatdate');
     },
 
     addMediaMessageType: function(match, buildHtml) {
-        _kiwi.view.MediaMessage.addType(match, buildHtml);
+        require('views/mediamessage').addType(match, buildHtml);
     },
 
     // Event managers for plugins
@@ -211,7 +211,7 @@ _kiwi.global = {
         this.initUtils();
 
         // Set up the settings datastore
-        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
+        _kiwi.global.settings = require('models/datastore').instance('kiwi.settings');
         _kiwi.global.settings.load();
 
         // Set the window title
@@ -240,7 +240,7 @@ _kiwi.global = {
 
 
         Promise.all([locale_promise, theme_promise]).then(function () {
-            _kiwi.app = new _kiwi.model.Application(opts);
+            _kiwi.app = new (require('models/application'))(opts);
 
             // Start the client up
             _kiwi.app.initializeInterfaces();
@@ -249,7 +249,7 @@ _kiwi.global = {
             _kiwi.global.events  = new PluginInterface();
 
             // Now everything has started up, load the plugin manager for third party plugins
-            _kiwi.global.plugins = new _kiwi.model.PluginManager();
+            _kiwi.global.plugins = new (require('models/pluginmanager'))();
 
             callback();
 

@@ -1,5 +1,7 @@
-_kiwi.model.ChannelInfo = Backbone.Model.extend({
-    initialize: function () {
-        this.view = new _kiwi.view.ChannelInfo({"model": this});
-    }
+define('models/channelinfo', function(require, exports, module) {
+	module.exports = Backbone.Model.extend({
+	    initialize: function () {
+	        this.view = new (require('views/channelinfo'))({"model": this});
+	    }
+	});
 });

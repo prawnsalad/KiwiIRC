@@ -38,7 +38,7 @@
                 this.$('.protocol_handler').remove();
             }
 
-            if (_kiwi.utils.notifications.allowed() !== null) {
+            if (require('utils/notifications').allowed() !== null) {
                 this.$('.notification_enabler').remove();
             }
 
@@ -126,7 +126,7 @@
 
         enableNotifications: function(event){
             event.preventDefault();
-            var notifications = _kiwi.utils.notifications;
+            var notifications = require('utils/notifications');
 
             notifications.requestPermission().always(_.bind(function () {
                 if (notifications.allowed() !== null) {
@@ -163,5 +163,5 @@
     });
 
 
-    _kiwi.model.Applet.register('kiwi_settings', Applet);
+    require('models/applet').register('kiwi_settings', Applet);
 })();

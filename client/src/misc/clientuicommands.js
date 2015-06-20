@@ -288,7 +288,7 @@
         // Check if we have the panel already. If not, create it
         panel = this.app.connections.active_connection.panels.getByName(destination);
         if (!panel) {
-            panel = new _kiwi.model.Query({name: destination});
+            panel = new (require('models/query'))({name: destination});
             this.app.connections.active_connection.panels.add(panel);
         }
 
@@ -447,13 +447,13 @@
 
 
     function settingsCommand (ev) {
-        var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
+        var settings = require('models/applet').loadOnce('kiwi_settings');
         settings.view.show();
     }
 
 
     function scriptCommand (ev) {
-        var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
+        var editor = require('models/applet').loadOnce('kiwi_script_editor');
         editor.view.show();
     }
 
@@ -461,7 +461,7 @@
     function appletCommand (ev) {
         if (!ev.params[0]) return;
 
-        var panel = new _kiwi.model.Applet();
+        var panel = new (require('models/applet'))();
 
         if (ev.params[1]) {
             // Url and name given
@@ -558,7 +558,7 @@
         if (!active_panel.isChannel())
             return;
 
-        new _kiwi.model.ChannelInfo({channel: this.app.panels().active});
+        new (require('models/channelinfo'))({channel: this.app.panels().active});
     }
 
 
@@ -579,8 +579,8 @@
 
         // If no server address given, show the new connection dialog
         if (!ev.params[0]) {
-            tmp = new _kiwi.view.MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
-            tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
+            tmp = new (require('views/menubox'))(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
+            tmp.addItem('new_connection', new (require('models/newconnection'))().view.$el);
             tmp.show();
 
             // Center screen the dialog

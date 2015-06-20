@@ -1,6 +1,6 @@
-(function () {
+define('models/network', function(require, exports, module) {
 
-    _kiwi.model.Network = Backbone.Model.extend({
+    module.exports = Backbone.Model.extend({
         defaults: {
             connection_id: 0,
             /**
@@ -73,11 +73,11 @@
             }
 
             // Create our panel list (tabs)
-            this.panels = new _kiwi.model.PanelList([], this);
+            this.panels = new (require('models/panellist'))([], this);
             //this.panels.network = this;
 
             // Automatically create a server tab
-            var server_panel = new _kiwi.model.Server({name: 'Server', network: this});
+            var server_panel = new (require('models/server'))({name: 'Server', network: this});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
         },
@@ -187,7 +187,7 @@
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
-                    channel = new _kiwi.model.Channel({name: channel_name, network: that});
+                    channel = new (require('models/channel'))({name: channel_name, network: that});
                     that.panels.add(channel);
                 }
 
@@ -251,7 +251,7 @@
             // Check if we have the panel already. If not, create it
             query = that.panels.getByName(nick);
             if (!query) {
-                query = new _kiwi.model.Query({name: nick});
+                query = new (require('models/query'))({name: nick});
                 that.panels.add(query);
             }
 
@@ -333,7 +333,7 @@
         var c, members, user;
         c = this.panels.getByName(event.channel);
         if (!c) {
-            c = new _kiwi.model.Channel({name: event.channel, network: this});
+            c = new (require('models/channel'))({name: event.channel, network: this});
             this.panels.add(c);
         }
 
@@ -345,7 +345,7 @@
             return;
         }
 
-        user = new _kiwi.model.Member({
+        user = new (require('models/member'))({
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
@@ -494,7 +494,7 @@
                 // If a panel isn't found for this PM, create one
                 panel = this.panels.getByName(event.nick);
                 if (!panel) {
-                    panel = new _kiwi.model.Query({name: event.nick, network: this});
+                    panel = new (require('models/query'))({name: event.nick, network: this});
                     this.panels.add(panel);
                 }
 
@@ -628,7 +628,7 @@
 
         channel.temp_userlist = channel.temp_userlist || [];
         _.each(event.users, function (item) {
-            var user = new _kiwi.model.Member({
+            var user = new (require('models/member'))({
                 nick: item.nick,
                 modes: item.modes,
                 user_prefixes: that.get('user_prefixes')
@@ -783,7 +783,7 @@
             } else if (event.logon) {
                 logon_date = new Date();
                 logon_date.setTime(event.logon * 1000);
-                logon_date = _kiwi.utils.formatDate(logon_date);
+                logon_date = require('utils/formatdate')(logon_date);
 
                 panel.addMsg(event.nick, styleText('whois_idle_and_signon', {nick: event.nick, text: translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
             } else if (event.away_reason) {
@@ -823,7 +823,7 @@
 
 
     function onListStart(event) {
-        var chanlist = _kiwi.model.Applet.loadOnce('kiwi_chanlist');
+        var chanlist = require('models/applet').loadOnce('kiwi_chanlist');
         chanlist.view.show();
     }
 
@@ -879,7 +879,7 @@
 
             // Only show the nickchange component if the controlbox is open
             if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
-                (new _kiwi.view.NickChangeBox()).render();
+                (new (require('views/nickchangebox'))()).render();
             }
 
             break;
@@ -924,6 +924,4 @@
             active_panel.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});
     }
 
-}
-
-)();
+});

@@ -200,5 +200,5 @@
 
 
 
-    _kiwi.model.Applet.register('kiwi_chanlist', Applet);
+    require('models/applet').register('kiwi_chanlist', Applet);
 })();
