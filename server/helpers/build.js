@@ -1,7 +1,9 @@
-var fs           = require('fs'),
-    uglifyJS     = require('uglify-js'),
-    po2json      = require('po2json'),
-    package_json = require('../../package.json');
+var fs            = require('fs'),
+    path          = require('path'),
+    uglifyJS      = require('uglify-js'),
+    po2json       = require('po2json'),
+    sourceListing = require('./sourcelisting'),
+    package_json  = require('../../package.json');
 
 var FILE_ENCODING = 'utf-8',
     EOL = '\n';
@@ -39,67 +41,9 @@ if (!require('./configloader.js')()) {
     process.exit(1);
 }
 
-var source_files = [
-    global.config.public_http + '/src/app.js',
-    global.config.public_http + '/src/models/application.js',
-    global.config.public_http + '/src/models/gateway.js',
-    global.config.public_http + '/src/models/network.js',
-    global.config.public_http + '/src/models/member.js',
-    global.config.public_http + '/src/models/memberlist.js',
-    global.config.public_http + '/src/models/newconnection.js',
-    global.config.public_http + '/src/models/panel.js',
-    global.config.public_http + '/src/models/panellist.js',
-    global.config.public_http + '/src/models/networkpanellist.js',
-    global.config.public_http + '/src/models/channel.js',
-    global.config.public_http + '/src/models/query.js',
-    global.config.public_http + '/src/models/server.js',
-    global.config.public_http + '/src/models/applet.js',
-    global.config.public_http + '/src/models/pluginmanager.js',
-    global.config.public_http + '/src/models/datastore.js',
-    global.config.public_http + '/src/models/channelinfo.js',
-
-    global.config.public_http + '/src/views/panel.js',
-    global.config.public_http + '/src/views/channel.js',
-    global.config.public_http + '/src/views/applet.js',
-    global.config.public_http + '/src/views/application.js',
-    global.config.public_http + '/src/views/apptoolbar.js',
-    global.config.public_http + '/src/views/controlbox.js',
-    global.config.public_http + '/src/views/autocomplete.js',
-    global.config.public_http + '/src/views/favicon.js',
-    global.config.public_http + '/src/views/mediamessage.js',
-    global.config.public_http + '/src/views/member.js',
-    global.config.public_http + '/src/views/memberlist.js',
-    global.config.public_http + '/src/views/menubox.js',
-    global.config.public_http + '/src/views/networktabs.js',
-    global.config.public_http + '/src/views/nickchangebox.js',
-    global.config.public_http + '/src/views/resizehandler.js',
-    global.config.public_http + '/src/views/serverselect.js',
-    global.config.public_http + '/src/views/statusmessage.js',
-    global.config.public_http + '/src/views/tabs.js',
-    global.config.public_http + '/src/views/topicbar.js',
-    global.config.public_http + '/src/views/userbox.js',
-    global.config.public_http + '/src/views/channeltools.js',
-    global.config.public_http + '/src/views/channelinfo.js',
-    global.config.public_http + '/src/views/rightbar.js',
-    global.config.public_http + '/src/views/notification.js',
-
-    global.config.public_http + '/src/misc/clientuicommands.js',
-
-    global.config.public_http + '/src/applets/settings.js',
-    global.config.public_http + '/src/applets/chanlist.js',
-    global.config.public_http + '/src/applets/scripteditor.js',
-    global.config.public_http + '/src/applets/startup.js'
-];
 
 
-var helpers_path = global.config.public_http + '/src/helpers/';
-var helpers_sources = fs.readdirSync(helpers_path)
-    .map(function(file){
-        return helpers_path + file;
-    });
-
-source_files = source_files.concat(helpers_sources);
-
+var source_files = sourceListing(global.config.public_http + '/src/');
 
 /**
  * Build the kiwi.js/kiwi.min.js files
