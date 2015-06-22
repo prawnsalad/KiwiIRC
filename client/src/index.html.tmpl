@@ -423,68 +423,6 @@
 /* Script loader (https://github.com/ded/script.js) */
 (function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this);
 
-
-
-// Require/Define
-(function(global) {
-    var definitions = Object.create(null);
-    var modules = Object.create(null);
-
-    global.require = function require(name) {
-        var mod_id = normalisePath(name);
-
-        if (!modules[mod_id] && definitions[mod_id]) {
-            initModule(mod_id);
-        }
-
-        return modules[mod_id];
-    }
-
-    global.define = function define(name, definition) {
-        var mod_id = normalisePath(name);
-        definitions[mod_id] = definition;
-    }
-
-    function initModule(mod_id) {
-        var mod_path_parts = mod_id.split('/');
-        var mod_name = mod_path_parts[mod_path_parts.length-1];
-        var mod_path = mod_path_parts.slice(0, mod_path_parts.length-1).join('/');
-        var module_obj = {exports: {}};
-
-        var requireFn = function(name) {
-            var require_name = name;
-            if (name[0] === '.') {
-                require_name = (mod_path ? mod_path + '/' : '') + name;
-            }
-
-            return require(require_name);
-        };
-
-        definitions[mod_id](requireFn, module_obj.exports, module_obj);
-        modules[mod_id] = module_obj.exports;
-    }
-
-    // Normalise '.' and '..' from paths
-    function normalisePath(path) {
-        var parts = path.splice ? path : path.split('/');
-        var normalised = [];
-        for (var i=0; i<parts.length; i++) {
-            if (parts[i] === '..') {
-                normalised.pop();
-            } else if (parts[i] === '.') {
-                continue;
-            } else {
-                normalised.push(parts[i]);
-            }
-        }
-
-        return normalised.join('/');
-    }
-
-    return define;
-})(window);
-
-
     // Avoid `console` errors in browsers that lack a console. (https://github.com/h5bp/html5-boilerplate)
     function normalizeConsole() {
         var method;
@@ -588,7 +526,8 @@
             scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
             scripts.push([
                 'assets/libs/backbone.min.js?t=<%build_time%>',
-                'assets/libs/jed.js?t=<%build_time%>'
+                'assets/libs/jed.js?t=<%build_time%>',
+                'assets/libs/definenrequire.js?t=<%build_time%>'
             ]);
             scripts.push([
                 'assets/kiwi.min.js?t=<%build_time%>',

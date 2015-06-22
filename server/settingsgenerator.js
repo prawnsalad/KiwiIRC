@@ -167,14 +167,19 @@ function addTranslations() {
 
 function addScripts(vars, debug) {
     if (!debug) {
-        vars.scripts.push(['assets/kiwi.min.js', 'assets/libs/engine.io.bundle.min.js']);
+        vars.scripts.push([
+            'assets/kiwi.min.js',
+            'assets/libs/engine.io.bundle.min.js',
+            'assets/libs/definenrequire.js'
+        ]);
         return;
     }
 
     vars.scripts = vars.scripts.concat([
         [
             'assets/libs/engine.io.js',
-            'assets/libs/engine.io.tools.js'
+            'assets/libs/engine.io.tools.js',
+            'assets/libs/definenrequire.js'
         ]
     ]);
 

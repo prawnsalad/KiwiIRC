@@ -1,3 +1,7 @@
+var defreq = new DefineNRequire(),
+    define = defreq.define,
+    require = defreq.require;
+
 // Holds anything kiwi client specific (ie. front, gateway, _kiwi.plugs..)
 /**
 *   @namespace
