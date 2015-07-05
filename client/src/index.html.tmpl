@@ -244,14 +244,14 @@
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
             <div class="settings-category-list">
-                <a class="show-category" data-category="appearance">Appearance</a>
-                <a class="show-category" data-category="messages">Messages</a>
+                <a class="show-category show-category-appearance" data-category="appearance"><%= appearance %></a>
+                <a class="show-category show-category-messages" data-category="messages"><%= messages %></a>
             </div>
 
             <form class="settings-category settings-category-messages">
-                <h5>Messages</h5>
+                <h5><%= messages %></h5>
                 <section>
-                    <h6>Chat Messages</h6>
+                    <h6><%= chat_messages %></h6>
                     <div class="control-group">
                         <div class="checkbox">
                             <label>
@@ -281,7 +281,7 @@
                 </section>
 
                 <section>
-                    <h6>Alerts / Notifications</h6>
+                    <h6><%= alerts_notifications %></h6>
                     <div class="control-group">
                         <div class="checkbox">
                             <label>
@@ -312,9 +312,9 @@
             </form>
 
             <form class="settings-category settings-category-appearance">
-                <h5>Appearance</h5>
+                <h5><%= appearance %></h5>
                 <section>
-                    <h6>Theme</h6>
+                    <h6><%= theme %></h6>
                     <div class="control-group">
                         <div class="thumbnails">
                             <% _.forEach(theme_thumbnails, function(thumbnail) { %>
@@ -325,7 +325,7 @@
                 </section>
 
                 <section>
-                    <h6>Channels</h6>
+                    <h6><%= channels %></h6>
                     <div class="control-group">
                         <div class="radio">
                             <label>
@@ -343,7 +343,7 @@
                 </section>
 
                 <section class="language">
-                    <h6>Language</h6>
+                    <h6><%= language %></h6>
                     <div class="control-group">
                         <select data-setting="locale">
                             <option value=""></li>
