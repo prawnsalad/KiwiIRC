@@ -5,11 +5,12 @@
             },
 
             initialize: function (options) {
-                var that = this,
-                    text = {
-                        save: _kiwi.global.i18n.translate('client_applets_scripteditor_save').fetch()
-                    };
-                this.$el = $(_.template($('#tmpl_script_editor').html().trim(), text));
+                var tmp_el = document.createElement('div'),
+                    that = this;
+
+                tmp_el.innerHTML = $('#tmpl_script_editor').html().trim();
+                _kiwi.global.i18n.translateDOM(tmp_el);
+                this.setElement(tmp_el.removeChild(tmp_el.firstChild));
 
                 this.model.on('applet_loaded', function () {
                     that.$el.parent().css('height', '100%');

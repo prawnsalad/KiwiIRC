@@ -206,7 +206,7 @@ _kiwi.global = {
         var locale_promise, theme_promise,
             that = this;
 
-        opts = opts || {};
+        this.opts = opts = opts || {};
 
         this.initUtils();
 
@@ -222,9 +222,9 @@ _kiwi.global = {
             var locale = _kiwi.global.settings.get('locale') || opts.locale || opts.server_settings.client.settings.locale || 'magic';
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
                 if (locale) {
-                    that.i18n = new Jed(locale);
+                    that.i18n = new I18n(locale);
                 } else {
-                    that.i18n = new Jed();
+                    that.i18n = new I18n();
                 }
                 resolve();
             });

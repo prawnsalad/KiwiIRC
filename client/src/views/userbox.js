@@ -13,18 +13,10 @@ _kiwi.view.UserBox = Backbone.View.extend({
     },
 
     initialize: function () {
-        var text = {
-            op: _kiwi.global.i18n.translate('client_views_userbox_op').fetch(),
-            de_op: _kiwi.global.i18n.translate('client_views_userbox_deop').fetch(),
-            voice: _kiwi.global.i18n.translate('client_views_userbox_voice').fetch(),
-            de_voice: _kiwi.global.i18n.translate('client_views_userbox_devoice').fetch(),
-            kick: _kiwi.global.i18n.translate('client_views_userbox_kick').fetch(),
-            ban: _kiwi.global.i18n.translate('client_views_userbox_ban').fetch(),
-            message: _kiwi.global.i18n.translate('client_views_userbox_query').fetch(),
-            info: _kiwi.global.i18n.translate('client_views_userbox_whois').fetch(),
-            ignore: _kiwi.global.i18n.translate('client_views_userbox_ignore').fetch()
-        };
-        this.$el = $(_.template($('#tmpl_userbox').html().trim(), text));
+        var tmp_el = document.createElement('div');
+        tmp_el.innerHTML = $('#tmpl_userbox').html().trim();
+        _kiwi.global.i18n.translateDOM(tmp_el);
+        this.setElement(tmp_el.removeChild(tmp_el.firstChild));
     },
 
     setTargets: function (user, channel) {

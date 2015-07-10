@@ -106,6 +106,15 @@
             settings.set($setting.data('setting'), value);
             settings.save();
 
+            if ($setting.data('setting') === 'locale') {
+                $.getJSON(_kiwi.global.opts.base_path + '/assets/locales/' + value + '.json', function (locale) {
+                    if (locale) {
+                        _kiwi.global.i18n.update_locale(locale);
+                        _kiwi.global.i18n.translateDOM(_kiwi.app.get('container')[0]);
+                    }
+                });
+            }
+
             // Continue listening for setting changes
             _kiwi.global.settings.on('change', this.loadSettings, this);
         },
