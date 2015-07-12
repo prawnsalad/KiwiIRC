@@ -491,11 +491,14 @@
                 }
 
             } else if (is_pm) {
-                // If a panel isn't found for this PM, create one
+                // If a panel isn't found for this PM and we allow new queries, create one
                 panel = this.panels.getByName(event.nick);
-                if (!panel) {
+                if (!panel && _kiwi.global.settings.get('allow_queries')) {
                     panel = new _kiwi.model.Query({name: event.nick, network: this});
                     this.panels.add(panel);
+                } else if(!panel) {
+                    // We have not allowed new queries and we have not opened the panel ourselves, don't process the message
+                    return;
                 }
 
             } else {
@@ -653,8 +656,8 @@
         delete channel.temp_userlist;
     }
 
-
-
+    
+    
     function onBanlist(event) {
         var channel = this.panels.getByName(event.channel);
         if (!channel)
