@@ -328,7 +328,8 @@ html, body { height:100%; }
 
 #kiwi .settings_container .settings-category {
     display: none;
-    margin-left: 160px;
+    margin-left: 130px;
+    padding: 2em;
 }
 
 #kiwi .settings_container .settings-category.active {
@@ -336,11 +337,13 @@ html, body { height:100%; }
 }
 #kiwi .settings_container .settings-category-list {
     float: left;
-    width: 100px;
+    width: 130px;
 }
 #kiwi .settings_container .settings-category-list a {
     display: block;
     line-height: 2.5em;
+    padding: 0 1em;
+    width: 100%;
 }
 
 #kiwi .settings_container .thumbnails:before {

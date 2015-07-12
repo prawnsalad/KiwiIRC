@@ -565,16 +565,27 @@
 #kiwi .notification .close:hover { color: #DBDBDB; }
 
 
+#kiwi .settings_container .settings-category {
+    background-color: #FFF;
+}
 #kiwi .settings_container .settings-category > h5 {
     border-bottom: 1px solid #A5C42C;
     padding-bottom: 20px;
     margin-bottom: 20px;
+    margin-top: 0;
+    padding-top: 15px;
 }
 #kiwi .settings_container .settings-category-list {
     background: #FFF;
-    padding: 1em;
     margin-top: 3.4em;
 }
 #kiwi .settings_container .settings-category-list a {
     line-height: 2.5em;
+    background-color: #FFF;
+    border-left: solid 4px #FFF;
+    color: #999;
+}
+#kiwi .settings_container .settings-category-list a.active {
+    border-left: solid 4px #a6c42c;
+    color: #36C;
 }
