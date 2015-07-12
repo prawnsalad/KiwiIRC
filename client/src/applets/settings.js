@@ -145,8 +145,9 @@
 
         showCategory: function(category) {
             this.$('.settings-category').removeClass('active');
-            this.$('.show-category').removeClass('active');
             this.$('.settings-category-' + category).addClass('active');
+
+            this.$('.show-category').removeClass('active');
             this.$('.show-category-' + category).addClass('active');
 
             // Load the current settings
