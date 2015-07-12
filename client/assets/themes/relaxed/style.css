@@ -250,33 +250,56 @@
 #kiwi .autocomplete {
     position: absolute;
     box-sizing: border-box;
-    left: 9em;
-    right: 0;
+    box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
+    border: 1px solid #CCC;
+    left: 12em;
+    right: 4em;
     bottom: 100%;
-    padding: 0.1em 0.1em 0 0.1em;
-    border: 1px solid #ccc;
     background: #eee;
     overflow-y: auto;
     display: none;
 }
+#kiwi .autocomplete-header {
+    background: #DADADA none repeat scroll 0 0 padding-box;
+    border-bottom: 1px solid #CCC;
+    color: #8A8A8A;
+    font-size: 12px;
+    padding: 5px 10px 4px;
+    overflow: hidden;
+}
+#kiwi.narrow .autocomplete-header {
+    display: none;
+}
+#kiwi .autocomplete-header-label {
+    font-weight: bold;
+}
+#kiwi .autocomplete-header-help {
+    float: right;
+}
+#kiwi .autocomplete-list {
+    overflow-y: auto;
+}
 #kiwi.narrow .autocomplete {
     left: 0;
+    right: 0;
 }
 #kiwi .autocomplete-item {
-    border: 1px solid #CCC;
-    border-bottom: none;
+    border-bottom: 1px solid #CCC;
     background: #fff;
     padding: 5px 20px;
     list-style: none;
+    overflow: hidden;
 }
 #kiwi .autocomplete-item.selected { background: #D1EACD; }
 #kiwi .autocomplete-item .word { font-weight: bold; }
 #kiwi .autocomplete-item .matches { font-size: 0.9em; margin-left: 2em; }
+#kiwi.narrow .autocomplete-item .matches {display: none;}
 #kiwi .autocomplete-item .actions { float: right; font-size: 0.9em; margin-right: 2em; }
 #kiwi .autocomplete-item .actions a { margin-left: 1em; }
 #kiwi .autocomplete-item .description {
-    font-size: 0.9em;
-    margin-left: 2em;
+    float: right;
+    margin-right: 1em;
+    font-style: italic;
 }
 
 #kiwi .controlbox .input {
