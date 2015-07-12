@@ -281,12 +281,14 @@
 }
 #kiwi.narrow .autocomplete {
     left: 0;
+    right: 0;
 }
 #kiwi .autocomplete-item {
     border-bottom: 1px solid #CCC;
     background: #fff;
     padding: 5px 20px;
     list-style: none;
+    overflow: hidden;
 }
 #kiwi .autocomplete-item.selected { background: #D1EACD; }
 #kiwi .autocomplete-item .word { font-weight: bold; }
