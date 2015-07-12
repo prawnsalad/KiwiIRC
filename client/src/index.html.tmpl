@@ -277,6 +277,12 @@
                                 <%= emoticons %>
                             </label>
                         </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="allow_queries" type="checkbox">
+                                <%= queries %>
+                            </label>
+                        </div>
                         <div>
                             <label>
                                 <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
@@ -343,12 +349,6 @@
                             <label>
                                 <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
                                 <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input data-setting="allow_queries" type="checkbox">
-                                <%= queries %>
                             </label>
                         </div>
                         <label>
