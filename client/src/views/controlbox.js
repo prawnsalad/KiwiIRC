@@ -293,7 +293,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                     entry.toLowerCase();
             });
 
-            this.showAutocomplete(autocomplete_list);
+            this.showAutocomplete(autocomplete_list, 'nicks');
 
             break;
 
