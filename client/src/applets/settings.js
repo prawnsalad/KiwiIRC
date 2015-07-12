@@ -10,9 +10,16 @@
 
         initialize: function (options) {
             var text = {
+                messages              : translateText('client_applets_settings_messages'),
+                chat_messages         : translateText('client_applets_settings_chat_messages'),
+                alerts_notifications  : translateText('client_applets_settings_alerts_notifications'),
+                appearance            : translateText('client_applets_settings_appearance'),
+                theme                 : translateText('client_applets_settings_theme'),
+                channels              : translateText('client_applets_settings_channels'),
                 tabs                  : translateText('client_applets_settings_channelview_tabs'),
                 list                  : translateText('client_applets_settings_channelview_list'),
                 large_amounts_of_chans: translateText('client_applets_settings_channelview_list_notice'),
+                language              : translateText('client_applets_settings_language'),
                 join_part             : translateText('client_applets_settings_notification_joinpart'),
                 count_all_activity    : translateText('client_applets_settings_notification_count_all_activity'),
                 timestamps            : translateText('client_applets_settings_timestamp'),
@@ -138,7 +145,9 @@
 
         showCategory: function(category) {
             this.$('.settings-category').removeClass('active');
+            this.$('.show-category').removeClass('active');
             this.$('.settings-category-' + category).addClass('active');
+            this.$('.show-category-' + category).addClass('active');
 
             // Load the current settings
             this.loadSettings();
