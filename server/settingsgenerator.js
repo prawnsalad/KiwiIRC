@@ -59,7 +59,7 @@ function generateSettings(debug) {
                 [
                     'assets/libs/lodash.min.js'
                 ],
-                ['assets/libs/backbone.min.js', 'assets/libs/jed.js']
+                ['assets/libs/backbone.min.js', 'assets/libs/jed.js', 'assets/libs/i18n.js']
             ]
         };
 

@@ -5,12 +5,10 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
     },
 
     initialize: function () {
-        var text = {
-            new_nick: _kiwi.global.i18n.translate('client_views_nickchangebox_new').fetch(),
-            change: _kiwi.global.i18n.translate('client_views_nickchangebox_change').fetch(),
-            cancel: _kiwi.global.i18n.translate('client_views_nickchangebox_cancel').fetch()
-        };
-        this.$el = $(_.template($('#tmpl_nickchange').html().trim(), text));
+        var tmp_el = document.createElement('div');
+        tmp_el.innerHTML = $('#tmpl_nickchange').html().trim();
+        _kiwi.global.i18n.translateDOM(tmp_el);
+        this.setElement(tmp_el.removeChild(tmp_el.firstChild));
     },
 
     render: function () {

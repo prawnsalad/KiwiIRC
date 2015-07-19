@@ -9,24 +9,11 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     initialize: function () {
-        var that = this,
-            text = {
-                think_nick: _kiwi.global.i18n.translate('client_views_serverselect_form_title').fetch(),
-                nickname: _kiwi.global.i18n.translate('client_views_serverselect_nickname').fetch(),
-                have_password: _kiwi.global.i18n.translate('client_views_serverselect_enable_password').fetch(),
-                password: _kiwi.global.i18n.translate('client_views_serverselect_password').fetch(),
-                channel: _kiwi.global.i18n.translate('client_views_serverselect_channel').fetch(),
-                channel_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey').fetch(),
-                require_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey_required').fetch(),
-                key: _kiwi.global.i18n.translate('client_views_serverselect_key').fetch(),
-                start: _kiwi.global.i18n.translate('client_views_serverselect_connection_start').fetch(),
-                server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
-                server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
-                port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
-                powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
-            };
+        var tmp_el = document.createElement('div');
 
-        this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
+        tmp_el.innerHTML = $('#tmpl_server_select').html().trim();
+        _kiwi.global.i18n.translateDOM(tmp_el);
+        this.setElement(tmp_el.removeChild(tmp_el.firstChild));
 
         // Remove the 'more' link if the server has disabled server changing
         if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {

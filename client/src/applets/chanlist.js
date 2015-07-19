@@ -10,12 +10,10 @@
 
 
         initialize: function (options) {
-            var text = {
-                channel_name: _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch(),
-                users: _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch(),
-                topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
-            };
-            this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
+            var tmp_el = document.createElement('div');
+            tmp_el.innerHTML = $('#tmpl_channel_list').html().trim();
+            _kiwi.global.i18n.translateDOM(tmp_el);
+            this.setElement(tmp_el.removeChild(tmp_el.firstChild));
 
             this.channels = [];
 

@@ -124,22 +124,22 @@
 
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="close_menu if_op op"><i class="fa fa-star"></i><%= op %></a>
-            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
-            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
-            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
-            <a class="close_menu if_op kick"><i class="fa fa-times"></i><%= kick %></a>
-            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><%= ban %></a>
+            <a class="close_menu if_op op"><i class="fa fa-star"></i><span data-translate="client_views_userbox_op"></span></a>
+            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><span data-translate="client_views_userbox_deop"></span></a>
+            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><span data-translate="client_views_userbox_voice"></span></a>
+            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><span data-translate="client_views_userbox_devoice"></span></a>
+            <a class="close_menu if_op kick"><i class="fa fa-times"></i><span data-translate="client_views_userbox_kick"></span></a>
+            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><span data-translate="client_views_userbox_ban"></span></a>
 
-            <a class="close_menu query"><i class="fa fa-comment"></i><%= message %></a>
-            <a class="close_menu info"><i class="fa fa-info-circle"></i><%= info %></a>
-            <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
+            <a class="close_menu query"><i class="fa fa-comment"></i><span data-translate="client_views_userbox_query"></span></a>
+            <a class="close_menu info"><i class="fa fa-info-circle"></i><span data-translate="client_views_userbox_whois"></span></a>
+            <a class="close_menu ignore"><label><i><input type="checkbox" /></i><span data-translate="client_views_userbox_ignore"></span></label></a>
         </div>
     </script>
 
     <script type="text/html" id="tmpl_nickchange">
         <form class="nickchange">
-            <label for="nickchange"><%= new_nick %>:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button><%= change %></button> <a class="cancel"><%= cancel %></a>
+            <label for="nickchange"><span data-translate="client_views_nickchangebox_new"></:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button><span data-translate="client_views_nickchangebox_change"></span></button> <a class="cancel"><span data-translate="client_views_nickchangebox_cancel"></span></a>
         </form>
     </script>
 
@@ -161,67 +161,67 @@
             </div>
 
             <div class="server_details" style="position:relative;width:320px;">
-                <div class="status"><%= think_nick %></div>
+                <div class="status"><span data-translate="client_views_serverselect_form_title"></span></div>
 
                 <form>
                     <div class="basic">
                         <table>
                             <tr class="nick">
-                                <td><label for="server_select_nick"><%= nickname %></label></td>
+                                <td><label for="server_select_nick"><span data-translate="client_views_serverselect_nickname"></span></label></td>
                                 <td><input type="text" class="nick" id="server_select_nick"></td>
                             </tr>
 
                             <tr class="have_pass">
                                 <td colspan="2">
-                                    <label for="server_select_show_pass"><%= have_password %></label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
+                                    <label for="server_select_show_pass"><span data-translate="client_views_serverselect_enable_password"></span></label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="pass">
-                                <td><label for="server_select_password"><%= password %></label></td>
+                                <td><label for="server_select_password"><span data-translate="client_views_serverselect_password"></span></label></td>
                                 <td><input type="password" class="password" id="server_select_password"></td>
                             </tr>
 
                             <tr class="channel">
-                                <td><label for="server_select_channel"><%= channel %></label></td>
+                                <td><label for="server_select_channel"><span data-translate="client_views_serverselect_channel"></span></label></td>
                                 <td>
                                     <div style="position:relative;">
                                         <input type="text" class="channel" id="server_select_channel">
-                                        <i class="fa fa-key" title="<%= channel_key %>"></i>
+                                        <i class="fa fa-key" data-translate-attr="title" data-translate-attr-key="client_views_serverselect_channelkey"></i>
                                     </div>
                                 </td>
                             </tr>
 
                             <tr class="have_key">
                                 <td colspan="2">
-                                    <label for="server_select_show_channel_key"><%= require_key %></label> <input type="checkbox" id="server_select_show_channel_key" style="width:auto;" />
+                                    <label for="server_select_show_channel_key"><span data-translate="client_views_serverselect_channelkey_required"></span></label> <input type="checkbox" id="server_select_show_channel_key" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="key">
-                                <td><label for="server_select_channel_key"><%= key %></label></td>
+                                <td><label for="server_select_channel_key"><span data-translate="client_views_serverselect_key"></span></label></td>
                                 <td><input type="password" class="channel_key" id="server_select_channel_key"></td>
                             </tr>
 
                             <tr class="start">
                                 <td></td>
-                                <td><button type="submit"><%= start %></button></td>
+                                <td><button type="submit"><span data-translate="client_views_serverselect_connection_start"></span></button></td>
                             </tr>
                         </table>
 
-                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
+                        <a href="" onclick="return false;" class="show_more"><span data-translate="client_views_serverselect_server_and_network"></span> <i class="fa fa-caret-down"></i></a>
                     </div>
 
 
                     <div class="more">
                         <table>
                             <tr class="server">
-                                <td><label for="server_select_server"><%= server %></label></td>
+                                <td><label for="server_select_server"><span data-translate="client_views_serverselect_server"></span></label></td>
                                 <td><input type="text" class="server" id="server_select_server"></td>
                             <tr>
 
                             <tr class="port">
-                                <td><label for="server_select_port"><%= port %></label></td>
+                                <td><label for="server_select_port"><span data-translate="client_views_serverselect_port"></span></label></td>
                                 <td><input type="text" class="port" id="server_select_port"></td>
                             </tr>
 
@@ -234,7 +234,7 @@
                 </form>
 
                 <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
-                    <h1><span><%= powered_by %></span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
+                    <h1><span><span data-translate="client_views_serverselect_poweredby"></span></span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
                 </a>
             </div>
         </div>
@@ -397,9 +397,9 @@
             <table>
                 <thead style="font-weight: bold;">
                     <tr>
-                        <td><a class="channel_name_title"><%= channel_name %></a></td>
-                        <td><a class="users_title"><%= users %></a></td>
-                        <td style="padding-left: 2em;"><%= topic %></td>
+                        <td><a class="channel_name_title"><span data-translate="client_applets_chanlist_channelname"></span></a></td>
+                        <td><a class="users_title"><span data-translate="client_applets_chanlist_users"></span></a></td>
+                        <td style="padding-left: 2em;"><span data-translate="client_applets_chanlist_topic"></span></td>
                     </tr>
                 </thead>
                 <tbody style="vertical-align: top;">
@@ -418,7 +418,7 @@
                 #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
             <div class="script_editor" style="height:100%; position:relative;">
-                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
+                <div class="se_toolbar"><button class="btn_save"><span data-translate="#tmpl_channel_list"></span><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
                 <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
             </div>
         </div>
@@ -543,7 +543,8 @@
             scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
             scripts.push([
                 'assets/libs/backbone.min.js?t=<%build_time%>',
-                'assets/libs/jed.js?t=<%build_time%>'
+                'assets/libs/jed.js?t=<%build_time%>',
+                'assets/libs/i18n.js?t=<%build_time%>'
             ]);
             scripts.push([
                 'assets/kiwi.min.js?t=<%build_time%>',
