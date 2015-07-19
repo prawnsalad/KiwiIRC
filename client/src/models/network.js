@@ -493,7 +493,7 @@
             } else if (is_pm) {
                 // If a panel isn't found for this PM and we allow new queries, create one
                 panel = this.panels.getByName(event.nick);
-                if (!panel && _kiwi.global.settings.get('allow_queries')) {
+                if (!panel && !_kiwi.global.settings.get('ignore_new_queries')) {
                     panel = new _kiwi.model.Query({name: event.nick, network: this});
                     this.panels.add(panel);
                 } else if(!panel) {
@@ -656,8 +656,8 @@
         delete channel.temp_userlist;
     }
 
-    
-    
+
+
     function onBanlist(event) {
         var channel = this.panels.getByName(event.channel);
         if (!channel)
