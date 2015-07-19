@@ -26,6 +26,7 @@
                 timestamp_24          : translateText('client_applets_settings_timestamp_24_hour'),
                 mute                  : translateText('client_applets_settings_notification_sound'),
                 emoticons             : translateText('client_applets_settings_emoticons'),
+                queries               : translateText('client_applets_settings_ignore_new_queries'),
                 scroll_history        : translateText('client_applets_settings_history_length'),
                 languages             : _kiwi.app.translations,
                 default_client        : translateText('client_applets_settings_default_client'),

@@ -277,6 +277,12 @@
                                 <%= emoticons %>
                             </label>
                         </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="ignore_new_queries" type="checkbox">
+                                <%= queries %>
+                            </label>
+                        </div>
                         <div>
                             <label>
                                 <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
@@ -345,6 +351,10 @@
                                 <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
                             </label>
                         </div>
+                        <label>
+                            <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                            <span><%= scroll_history %></span>
+                        </label>
                     </div>
                 </section>
 

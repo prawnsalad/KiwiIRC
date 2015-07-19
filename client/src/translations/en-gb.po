@@ -496,6 +496,10 @@ msgstr "Enable notifications"
 msgid "client_applets_settings_emoticons"
 msgstr "Show emoticons"
 
+#:
+msgid "client_applets_settings_ignore_new_queries"
+msgstr "Block new private messages"
+
 #: 
 msgid "client_applet_about"
 msgstr "About Kiwi"
