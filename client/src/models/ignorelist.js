@@ -1,59 +1,68 @@
 _kiwi.model.IgnoreList = Backbone.Collection.extend({
-    initialize: function (network) {
-        this.ignore_data = _kiwi.model.DataStore.instance('kiwi.ignore_list')
+    initialize: function() {
+        this.network_address = '';
+        this.ignore_data = _kiwi.model.DataStore.instance('kiwi.ignore_list');
         this.ignore_data.load();
 
-        this.network_address = network.get('address');
-        this.stored_ignore_list = this.ignore_data.get(this.network_address) || [];
+        this.on('add', _.bind(this.onAdd, this));
+        this.on('add', _.bind(this.saveList, this));
+        this.on('remove', _.bind(this.saveList, this));
+    },
 
-        // Load the localStorage ignores to the network
-        _.each(this.stored_ignore_list, function(item) {
-            var new_ignore_list = network.get('ignore_list'),
-                user_mask;
 
+    onAdd: function(entry) {
+        if (!entry.get('mask')) return;
+
+        if (!entry.get('time')) {
+            entry.set('time', (new Date()).getTime());
+        }
+
+        if (!entry.get('regex')) {
+            entry.set('regex', toUserMask(entry.get('mask'), true)[1]);
+        }
+    },
+
+
+    loadFromNetwork: function(network) {
+        this.network_address = network.get('address').toLowerCase();
+
+        var ignore_list = this.ignore_data.get(this.network_address) || [];
+
+        _.each(ignore_list, function(item, idx) {
             // Make the regex for the given user mask
-            user_mask = toUserMask(item[1], true);
-            
-            // Set the ignore list
-            new_ignore_list.push(user_mask);
-            network.set('ignore_list', new_ignore_list);
+            item.regex = toUserMask(item.mask, true)[1];
         });
 
-        // Bind adding and removing ignores to update localStorage
-        _kiwi.global.events.on('change:ignore_list_add', _.bind(this.saveAddToIgnore, this));
-        _kiwi.global.events.on('change:ignore_list_remove', _.bind(this.saveRemoveIgnore, this));
+        this.reset(ignore_list);
     },
 
-    saveAddToIgnore: function(event, mask) {
-        var now,
-            time,
-            new_ignore_item;
 
-        now = $.now();
-        time = now.toString();
+    saveList: function() {
+        var list = [];
 
-        // Prepare the new ignore list
-        new_ignore_item = [time, mask];
-        this.stored_ignore_list.push(new_ignore_item);
-        
-        // Store the new item
-        this.ignore_data.set(this.network_address, this.stored_ignore_list);
+        this.forEach(function(entry) {
+            var obj = _.clone(entry.attributes);
+            delete obj.regex;
+            list.push(obj);
+        });
+
+        this.ignore_data.set(this.network_address, list);
         this.ignore_data.save();
     },
 
-    saveRemoveIgnore: function(event, mask) {
-        var index_to_remove;
 
-        _.each(this.stored_ignore_list, function(item, index) {
-            if(item[1] == mask) {
-                index_to_remove = index;
-            }
+    addMask: function(mask) {
+        return this.add({mask: mask});
+    },
+
+
+    removeMask: function(mask) {
+        var entry = this.find(function(entry) {
+            return entry.get('mask') == mask;
         });
 
-        this.stored_ignore_list.splice(index_to_remove, 1);
-
-        // Store the updated list
-        this.ignore_data.set(this.network_address, this.stored_ignore_list);
-        this.ignore_data.save();
+        if (entry) {
+            this.remove(entry);
+        }
     }
 });
