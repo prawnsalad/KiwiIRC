@@ -223,9 +223,13 @@
 
             // We have a parameter, so add it, first convert it to regex.
             user_mask = toUserMask(ev.params[0], true);
+
+            // Set the ignore list
             list.push(user_mask);
             this.app.connections.active_connection.set('ignore_list', list);
+
             this.app.panels().active.addMsg(' ', styleText('ignore_nick', {text: translateText('client_models_application_ignore_nick', [user_mask[0]])}));
+            _kiwi.global.events.emit('change:ignore_list_add', user_mask[0]);
         }
     };
 
@@ -249,6 +253,7 @@
             this.app.connections.active_connection.set('ignore_list', list);
 
             this.app.panels().active.addMsg(' ', styleText('ignore_stopped', {text: translateText('client_models_application_ignore_stopped', [user_mask[0]])}));
+            _kiwi.global.events.emit('change:ignore_list_remove', user_mask[0]);
         }
     };
 
