@@ -277,7 +277,7 @@
 
 
     function onConnect(event) {
-        var panels, channel_names;
+        var panels, channel_names, ignore_list;
 
         // Update our nick with what the network gave us
         this.set('nick', event.nick);
@@ -297,6 +297,9 @@
 
             delete this.auto_join;
         }
+
+        // Load the ignore_list from previous visits
+        ignore_list = new _kiwi.model.IgnoreList(this).list;
     }
 
 

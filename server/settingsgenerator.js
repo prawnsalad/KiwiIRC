@@ -187,6 +187,7 @@ function addScripts(vars, debug) {
             'src/models/panel.js',
             'src/models/member.js',
             'src/models/memberlist.js',
+            'src/models/ignorelist.js',
             'src/models/network.js',
             'src/models/channelinfo.js'
         ],
