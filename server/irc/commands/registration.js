@@ -60,7 +60,7 @@ var handlers = {
         var request;
 
         // Which capabilities we want to enable
-        var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso', 'znc.in/server-time'];
+        var want = ['multi-prefix', 'away-notify', 'server-time', 'znc.in/server-time-iso', 'znc.in/server-time', 'twitch.tv/membership'];
 
         if (this.irc_connection.password) {
             want.push('sasl');
