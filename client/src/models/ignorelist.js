@@ -29,6 +29,8 @@ _kiwi.model.IgnoreList = Backbone.Collection.extend({
         var ignore_list = this.ignore_data.get(this.network_address) || [];
 
         _.each(ignore_list, function(item, idx) {
+            if (!item || !item.mask) return;
+
             // Make the regex for the given user mask
             item.regex = toUserMask(item.mask, true)[1];
         });
