@@ -478,7 +478,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 top: t
             });
         }, this))
-        .catch(_.bind(function() {
+        .then(null, _.bind(function() {
             userbox = null;
 
             menu.dispose();
