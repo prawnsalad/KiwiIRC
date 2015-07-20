@@ -46,6 +46,7 @@ var source_files = [
     global.config.public_http + '/src/models/network.js',
     global.config.public_http + '/src/models/member.js',
     global.config.public_http + '/src/models/memberlist.js',
+    global.config.public_http + '/src/models/ignorelist.js',
     global.config.public_http + '/src/models/newconnection.js',
     global.config.public_http + '/src/models/panel.js',
     global.config.public_http + '/src/models/panellist.js',
