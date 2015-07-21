@@ -53,7 +53,13 @@
             </div>
 
             <div class="controlbox">
-                <div class="autocomplete"></div>
+                <div class="autocomplete">
+                    <div class="autocomplete-header">
+                        <span class="autocomplete-header-label">People or channels</span>
+                        <span class="autocomplete-header-help">
+                            <strong>tab</strong>&nbsp; or &nbsp;<strong>↑</strong> <strong>↓</strong>&nbsp; to navigate <strong class="left_margin">↵</strong>&nbsp; to select <strong class="left_margin">esc</strong>&nbsp; to dismiss</span>
+                    </div>
+                </div>
                 <div class="input">
                     <span class="nick"> </span>
                     <div class="input_wrap"><textarea class="inp"></textarea></div>
@@ -244,14 +250,14 @@
     <script type="text/html" id="tmpl_applet_settings">
         <div class="settings_container">
             <div class="settings-category-list">
-                <a class="show-category" data-category="appearance">Appearance</a>
-                <a class="show-category" data-category="messages">Messages</a>
+                <a class="show-category show-category-appearance" data-category="appearance"><%= appearance %></a>
+                <a class="show-category show-category-messages" data-category="messages"><%= messages %></a>
             </div>
 
             <form class="settings-category settings-category-messages">
-                <h5>Messages</h5>
+                <h5><%= messages %></h5>
                 <section>
-                    <h6>Chat Messages</h6>
+                    <h6><%= chat_messages %></h6>
                     <div class="control-group">
                         <div class="checkbox">
                             <label>
@@ -271,6 +277,12 @@
                                 <%= emoticons %>
                             </label>
                         </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="ignore_new_queries" type="checkbox">
+                                <%= queries %>
+                            </label>
+                        </div>
                         <div>
                             <label>
                                 <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
@@ -281,7 +293,7 @@
                 </section>
 
                 <section>
-                    <h6>Alerts / Notifications</h6>
+                    <h6><%= alerts_notifications %></h6>
                     <div class="control-group">
                         <div class="checkbox">
                             <label>
@@ -312,9 +324,9 @@
             </form>
 
             <form class="settings-category settings-category-appearance">
-                <h5>Appearance</h5>
+                <h5><%= appearance %></h5>
                 <section>
-                    <h6>Theme</h6>
+                    <h6><%= theme %></h6>
                     <div class="control-group">
                         <div class="thumbnails">
                             <% _.forEach(theme_thumbnails, function(thumbnail) { %>
@@ -325,7 +337,7 @@
                 </section>
 
                 <section>
-                    <h6>Channels</h6>
+                    <h6><%= channels %></h6>
                     <div class="control-group">
                         <div class="radio">
                             <label>
@@ -339,11 +351,15 @@
                                 <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
                             </label>
                         </div>
+                        <label>
+                            <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                            <span><%= scroll_history %></span>
+                        </label>
                     </div>
                 </section>
 
                 <section class="language">
-                    <h6>Language</h6>
+                    <h6><%= language %></h6>
                     <div class="control-group">
                         <select data-setting="locale">
                             <option value=""></li>

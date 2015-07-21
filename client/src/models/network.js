@@ -58,13 +58,7 @@ define('models/network', function(require, exports, module) {
                 {symbol: '@', mode: 'o'},
                 {symbol: '%', mode: 'h'},
                 {symbol: '+', mode: 'v'}
-            ],
-
-            /**
-            *   List of nicks we are ignoring
-            *   @type Array
-            */
-            ignore_list: []
+            ]
         },
 
 
@@ -83,6 +77,8 @@ define('models/network', function(require, exports, module) {
             var server_panel = new (require('models/server'))({name: 'Server', network: this});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
+
+            this.ignore_list = new (require('models/ignorelist'))();
         },
 
 
@@ -229,7 +225,7 @@ define('models/network', function(require, exports, module) {
         // Check if a user is ignored.
         // Accepts an object with nick, ident and hostname OR a string.
         isUserIgnored: function (mask) {
-            var idx, list = this.get('ignore_list');
+            var found_mask;
 
             if (typeof mask === "object") {
                mask = (mask.nick||'*')+'!'+(mask.ident||'*')+'@'+(mask.hostname||'*');
@@ -237,13 +233,11 @@ define('models/network', function(require, exports, module) {
                mask = utils.toUserMask(mask);
             }
 
-            for (idx = 0; idx < list.length; idx++) {
-                if (list[idx][1].test(mask)) {
-                   return true;
-                }
-            }
+            found_mask = this.ignore_list.find(function(entry) {
+                return entry.get('regex').test(mask);
+            });
 
-            return false;
+            return !!found_mask;
         },
 
         // Create a new query panel
@@ -286,6 +280,8 @@ define('models/network', function(require, exports, module) {
         this.set('nick', event.nick);
 
         this.set('connected', true);
+
+        this.ignore_list.loadFromNetwork(this);
 
         // If this is a re-connection then we may have some channels to re-join
         this.rejoinAllChannels();
@@ -494,11 +490,14 @@ define('models/network', function(require, exports, module) {
                 }
 
             } else if (is_pm) {
-                // If a panel isn't found for this PM, create one
+                // If a panel isn't found for this PM and we allow new queries, create one
                 panel = this.panels.getByName(event.nick);
-                if (!panel) {
-                    panel = new (require('models/query'))({name: event.nick, network: this});
+                if (!panel && !_kiwi.global.settings.get('ignore_new_queries')) {
+                    panel = new new (require('models/query'))({name: event.nick, network: this});
                     this.panels.add(panel);
+                } else if(!panel) {
+                    // We have not allowed new queries and we have not opened the panel ourselves, don't process the message
+                    return;
                 }
 
             } else {

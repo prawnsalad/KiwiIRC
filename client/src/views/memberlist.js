@@ -99,7 +99,7 @@ define('views/memberlist', function(require, exports, module) {
                 });
 
             }, this))
-            .catch(_.bind(function() {
+            .then(null, _.bind(function() {
                 userbox = null;
 
                 menu.dispose();

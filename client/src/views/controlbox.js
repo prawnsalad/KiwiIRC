@@ -298,12 +298,12 @@ define('views/controlbox', function(require, exports, module) {
                         entry.toLowerCase();
                 });
 
-                this.showAutocomplete(autocomplete_list);
+                this.showAutocomplete(autocomplete_list, 'nicks');
 
                 break;
 
             case (ev.keyCode === 191 && inp_val === ''):    // Forward slash in an empty box
-                this.showAutocomplete(this.autocomplete_command_list, true);
+                this.showAutocomplete(this.autocomplete_command_list, 'command', true);
                 break;
             }
         },
@@ -395,7 +395,7 @@ define('views/controlbox', function(require, exports, module) {
         },
 
 
-        showAutocomplete: function(list, filter_list) {
+        showAutocomplete: function(list, type, filter_list) {
             var $inp = this.$('.inp'),
                 tokens = $inp.val().trim().substring(0, $inp[0].selectionStart).split(' ');
 
@@ -405,6 +405,7 @@ define('views/controlbox', function(require, exports, module) {
                 caret_pos: $inp[0].selectionStart
             };
 
+            this.autocomplete.setTitle(type);
             this.autocomplete.setWords(list, filter_list);
             this.autocomplete.update(tokens[tokens.length - 1]);
             this.autocomplete.show();

@@ -206,15 +206,15 @@ define('misc/clientuicommands', function(require, exports, module) {
         descrption: 'Ignore messages from somebody',
         fn: function(ev) {
             var that = this,
-                list = this.app.connections.active_connection.get('ignore_list'),
+                ignore_list = this.app.connections.active_connection.ignore_list,
                 user_mask;
 
             // No parameters passed so list them
             if (!ev.params[0]) {
-                if (list.length > 0) {
+                if (ignore_list.length > 0) {
                     this.app.panels().active.addMsg(' ', utils.styleText('ignore_title', {text: utils.translateText('client_models_application_ignore_title')}));
-                    $.each(list, function (idx, ignored_pattern) {
-                        that.app.panels().active.addMsg(' ', utils.styleText('ignored_pattern', {text: ignored_pattern[0]}));
+                    ignore_list.forEach(function(ignored) {
+                        that.app.panels().active.addMsg(' ', utils.styleText('ignored_pattern', {text: ignored.get('mask')}));
                     });
                 } else {
                     this.app.panels().active.addMsg(' ', utils.styleText('ignore_none', {text: utils.translateText('client_models_application_ignore_none')}));
@@ -222,11 +222,11 @@ define('misc/clientuicommands', function(require, exports, module) {
                 return;
             }
 
-            // We have a parameter, so add it, first convert it to regex.
-            user_mask = utils.toUserMask(ev.params[0], true);
-            list.push(user_mask);
-            this.app.connections.active_connection.set('ignore_list', list);
-            this.app.panels().active.addMsg(' ', utils.styleText('ignore_nick', {text: utils.translateText('client_models_application_ignore_nick', [user_mask[0]])}));
+            // We have a parameter, so add it, first convert it to a full mask.
+            user_mask = utils.toUserMask(ev.params[0]);
+            ignore_list.addMask(user_mask);
+
+            this.app.panels().active.addMsg(' ', utils.styleText('ignore_nick', {text: utils.translateText('client_models_application_ignore_nick', [user_mask])}));
         }
     };
 
@@ -234,22 +234,21 @@ define('misc/clientuicommands', function(require, exports, module) {
     fn_to_bind['command:unignore'] = {
         descrption: 'Stop ignoring somebody',
         fn: function(ev) {
-            var list = this.app.connections.active_connection.get('ignore_list'),
-                user_mask;
+            var ignore_list = this.app.connections.active_connection.ignore_list,
+                user_mask, matches;
 
             if (!ev.params[0]) {
                 this.app.panels().active.addMsg(' ', utils.styleText('ignore_stop_notice', {text: utils.translateText('client_models_application_ignore_stop_notice')}));
                 return;
             }
 
-            user_mask = utils.toUserMask(ev.params[0], true);
-            list = _.reject(list, function(pattern) {
-                return pattern[1].toString() === user_mask[1].toString();
-            });
+            user_mask = utils.toUserMask(ev.params[0]);
+            matches = ignore_list.where({mask: user_mask});
+            if (matches) {
+                ignore_list.remove(matches);
+            }
 
-            this.app.connections.active_connection.set('ignore_list', list);
-
-            this.app.panels().active.addMsg(' ', utils.styleText('ignore_stopped', {text: utils.translateText('client_models_application_ignore_stopped', [user_mask[0]])}));
+            this.app.panels().active.addMsg(' ', utils.styleText('ignore_stopped', {text: utils.translateText('client_models_application_ignore_stopped', [user_mask])}));
         }
     };
 

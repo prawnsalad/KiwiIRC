@@ -50,11 +50,14 @@ define('views/autocomplete', function(require, exports, module) {
                         template.word = word;
                         template.description = '';
                     } else {
-                        template.match_list = template.word = word.match.join(', ');
+                        // Only show the alternative matches for this word if there is more than 1
+                        // Eg. for matching /part show the alternatives ['/part', '/leave']
+                        template.match_list = template.word = (word.match.length > 1 ? word.match.join(', ') : '');
                         template.description = word.description || '';
                     }
 
                     template_str = (word.type === 'nick') ? template_str_nicks : template_str_default;
+
                     $el = $(_.template(template_str, template)).hide();
                     $word = $el.find('.word');
                 } else {
@@ -78,6 +81,14 @@ define('views/autocomplete', function(require, exports, module) {
             this.list = new_list;
         },
 
+        setTitle: function(type) {
+            var texts = {
+                nicks: 'People or channels',
+                command: 'Commands'
+            };
+
+            this.$('.autocomplete-header-label').text(texts[type] || texts['nicks']);
+        },
 
         // Update the list with a word to search for
         update: function(word) {
@@ -132,14 +143,13 @@ define('views/autocomplete', function(require, exports, module) {
             }
         },
 
-
         show: function() {
             this.open = true;
             if (this._show_ui) {
-                this.$el.css('max-height', (Application.instance().view.$el.height() / 2) + 'px').show();
+                this.$el.css('max-height', (_kiwi.app.view.$el.height() / 2) + 'px').show();
+                this.$list.css('max-height', (_kiwi.app.view.$el.height() / 2)-32 + 'px').show();
             }
         },
-
 
         close: function() {
             this.open = false;

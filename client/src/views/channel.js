@@ -483,7 +483,7 @@ define('views/channel', function(require, exports, module) {
                     top: t
                 });
             }, this))
-            .catch(_.bind(function() {
+            .then(null, _.bind(function() {
                 userbox = null;
 
                 menu.dispose();

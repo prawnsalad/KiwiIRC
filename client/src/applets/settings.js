@@ -14,15 +14,23 @@
                 utils = require('helpers/utils');
 
             var text = {
+                messages              : utils.translateText('client_applets_settings_messages'),
+                chat_messages         : utils.translateText('client_applets_settings_chat_messages'),
+                alerts_notifications  : utils.translateText('client_applets_settings_alerts_notifications'),
+                appearance            : utils.translateText('client_applets_settings_appearance'),
+                theme                 : utils.translateText('client_applets_settings_theme'),
+                channels              : utils.translateText('client_applets_settings_channels'),
                 tabs                  : utils.translateText('client_applets_settings_channelview_tabs'),
                 list                  : utils.translateText('client_applets_settings_channelview_list'),
                 large_amounts_of_chans: utils.translateText('client_applets_settings_channelview_list_notice'),
+                language              : utils.translateText('client_applets_settings_language'),
                 join_part             : utils.translateText('client_applets_settings_notification_joinpart'),
                 count_all_activity    : utils.translateText('client_applets_settings_notification_count_all_activity'),
                 timestamps            : utils.translateText('client_applets_settings_timestamp'),
                 timestamp_24          : utils.translateText('client_applets_settings_timestamp_24_hour'),
                 mute                  : utils.translateText('client_applets_settings_notification_sound'),
                 emoticons             : utils.translateText('client_applets_settings_emoticons'),
+                queries               : utils.translateText('client_applets_settings_ignore_new_queries'),
                 scroll_history        : utils.translateText('client_applets_settings_history_length'),
                 languages             : application.translations,
                 default_client        : utils.translateText('client_applets_settings_default_client'),
@@ -145,6 +153,9 @@
         showCategory: function(category) {
             this.$('.settings-category').removeClass('active');
             this.$('.settings-category-' + category).addClass('active');
+
+            this.$('.show-category').removeClass('active');
+            this.$('.show-category-' + category).addClass('active');
 
             // Load the current settings
             this.loadSettings();
