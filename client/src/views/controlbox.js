@@ -105,7 +105,40 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         });
 
         this.listenTo(this.autocomplete, 'action-more', function(nick) {
-            console.log('Not implimented: Show user box');
+            var active_panel = _kiwi.app.panels().active,
+                members = active_panel.get('members'),
+                member = members.getByNick(nick),
+                userbox,
+                are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
+
+            userbox = new _kiwi.view.UserBox();
+            userbox.setTargets(member, active_panel);
+            userbox.displayOpItems(are_we_an_op);
+
+            var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+            menu.addItem('userbox', userbox.$el);
+            menu.showFooter(false);
+
+            _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox, user: member})
+            .then(_.bind(function() {
+                menu.show();
+
+                var t = _kiwi.app.view.$el.height() - this.autocomplete.$el.outerHeight() - menu.$el.outerHeight();
+                var l = _kiwi.app.view.$el.width() - menu.$el.outerWidth();
+
+                // Set the new positon
+                menu.$el.offset({
+                    left: l,
+                    top: t
+                });
+
+            }, this))
+            .then(null, _.bind(function() {
+                userbox = null;
+
+                menu.dispose();
+                menu = null;
+            }, this));
         });
     },
 
