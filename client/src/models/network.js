@@ -245,7 +245,7 @@
             // Check if we have the panel already. If not, create it
             query = that.panels.getByName(nick);
             if (!query) {
-                query = new _kiwi.model.Query({name: nick});
+                query = new _kiwi.model.Query({name: nick, network: this});
                 that.panels.add(query);
             }
 

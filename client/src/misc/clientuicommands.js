@@ -287,7 +287,7 @@
         // Check if we have the panel already. If not, create it
         panel = this.app.connections.active_connection.panels.getByName(destination);
         if (!panel) {
-            panel = new _kiwi.model.Query({name: destination});
+            panel = new _kiwi.model.Query({name: destination, network: this.app.connections.active_connection});
             this.app.connections.active_connection.panels.add(panel);
         }
 
