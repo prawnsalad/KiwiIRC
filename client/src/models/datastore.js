@@ -2,6 +2,7 @@ _kiwi.model.DataStore = Backbone.Model.extend({
 	initialize: function () {
 		this._namespace = '';
 		this.new_data = {};
+		this.stored_attributes = {};
 	},
 
 	namespace: function (new_namespace) {
@@ -11,22 +12,35 @@ _kiwi.model.DataStore = Backbone.Model.extend({
 
 	// Overload the original save() method
 	save: function () {
-		localStorage.setItem(this._namespace, JSON.stringify(this.attributes));
+		// Save the current data and update the stored_attributes with a copy
+		var stringified = JSON.stringify(this.attributes);
+		localStorage.setItem(this._namespace, stringified);
+		this.stored_attributes = JSON.parse(this.stringified);
+	},
+
+	// Save only one attribute to storage
+	saveOne: function (key_name) {
+		this.stored_attributes[key_name] = this.get(key_name);
+		localStorage.setItem(this._namespace, JSON.stringify(this.stored_attributes));
 	},
 
 	// Overload the original load() method
 	load: function () {
 		if (!localStorage) return;
 
-		var data;
+		var raw, data, stored_data;
 
 		try {
-			data = JSON.parse(localStorage.getItem(this._namespace)) || {};
+			raw = localStorage.getItem(this._namespace);
+			data = JSON.parse(raw) || {};
+			stored_data = JSON.parse(raw) || {};
 		} catch (error) {
 			data = {};
+			stored_data = {};
 		}
 
 		this.attributes = data;
+		this.stored_attributes = stored_data;
 	}
 },
 

@@ -109,13 +109,8 @@
                     break;
             }
 
-            // Stop settings being updated while we're saving one by one
-            _kiwi.global.settings.off('change', this.loadSettings, this);
             settings.set($setting.data('setting'), value);
-            settings.save();
-
-            // Continue listening for setting changes
-            _kiwi.global.settings.on('change', this.loadSettings, this);
+            settings.saveOne($setting.data('setting'));
         },
 
         selectTheme: function(event) {
