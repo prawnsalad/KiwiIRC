@@ -113,7 +113,7 @@
 
 
     fn_to_bind['command:js'] = {
-        descrption: 'Load a javascript file from a URL',
+        description: 'Load a javascript file from a URL',
         fn: function(ev) {
             if (!ev.params[0]) return;
             $script(ev.params[0] + '?' + (new Date().getTime()));
@@ -122,7 +122,7 @@
 
 
     fn_to_bind['command:set'] = {
-        descrption: 'Set a kiwi config setting',
+        description: 'Set a kiwi config setting',
         fn: function(ev) {
             if (!ev.params[0]) return;
 
@@ -157,7 +157,7 @@
 
 
     fn_to_bind['command:save'] = {
-        descrption: 'Save the current kiwi settings',
+        description: 'Save the current kiwi settings',
         fn: function(ev) {
             _kiwi.global.settings.save();
             this.app.panels().active.addMsg('', styleText('settings_saved', {text: translateText('client_models_application_settings_saved')}));
@@ -166,7 +166,7 @@
 
 
     fn_to_bind['command:alias'] = {
-        descrption: 'Create an alias to an existing /command',
+        description: 'Create an alias to an existing /command',
         fn: function(ev) {
             var that = this,
                 name, rule;
@@ -202,7 +202,7 @@
 
 
     fn_to_bind['command:ignore'] = {
-        descrption: 'Ignore messages from somebody',
+        description: 'Ignore messages from somebody',
         fn: function(ev) {
             var that = this,
                 ignore_list = this.app.connections.active_connection.ignore_list,
@@ -231,7 +231,7 @@
 
 
     fn_to_bind['command:unignore'] = {
-        descrption: 'Stop ignoring somebody',
+        description: 'Stop ignoring somebody',
         fn: function(ev) {
             var ignore_list = this.app.connections.active_connection.ignore_list,
                 user_mask, matches;
