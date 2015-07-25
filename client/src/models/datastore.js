@@ -15,7 +15,7 @@ _kiwi.model.DataStore = Backbone.Model.extend({
 		// Save the current data and update the stored_attributes with a copy
 		var stringified = JSON.stringify(this.attributes);
 		localStorage.setItem(this._namespace, stringified);
-		this.stored_attributes = JSON.parse(this.stringified);
+		this.stored_attributes = JSON.parse(stringified);
 	},
 
 	// Save only one attribute to storage
