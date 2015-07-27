@@ -869,3 +869,7 @@ msgstr "Ignore messages from somebody"
 msgid "command_description_unignore"
 msgstr "Stop ignoring somebody"
 
+#: 
+msgid "client_applets_settings_autocomplete_slideout"
+msgstr "Show the autocomplete slideout"
+

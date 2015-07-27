@@ -433,6 +433,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             caret_pos: $inp[0].selectionStart
         };
 
+        this.autocomplete.showUi(!!_kiwi.global.settings.get('show_autocomplete_slideout'));
         this.autocomplete.setTitle(type);
         this.autocomplete.setWords(list, filter_list);
         this.autocomplete.update(tokens[tokens.length - 1]);

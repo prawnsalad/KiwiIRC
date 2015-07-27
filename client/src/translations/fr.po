@@ -726,145 +726,149 @@ msgstr "Messages"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Messages du chat"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Alertes / Notifications"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Appearance"
+msgstr "Apparence"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Theme"
+msgstr "Thème"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Salons"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Langue"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
+msgstr "Bloquer les nouveaux messages privés"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Envoyer un message"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Faire une action"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Rejoindre un salon"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Quitter un salon"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Quitter puis revenir sur un salon"
 
 #: 
 msgid "command_description_nick"
-msgstr "Change your nickname"
+msgstr "Changer de pseudo"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Démarrer une conversation privée avec quelqu'un"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Inviter quelqu'un dans le salon"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Définir le sujet du salon"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Envoyer une notice"
 
 #: 
 msgid "command_description_quote"
-msgstr "Send a raw command to the IRC server"
+msgstr "Envoyer un message brut au serveur IRC"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Éjecter quelqu'un du salon"
 
 #: 
 msgid "command_description_clear"
-msgstr "Clear all messages from this window"
+msgstr "Effacer tous les messages de cette fenêtre"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Send a CTCP command to somebody"
+msgstr "Envoyer une commande CTCP à quelqu'un"
 
 #: 
 msgid "command_description_quit"
-msgstr "Disconnect from the IRC server"
+msgstr "Quitter le serveur IRC"
 
 #: 
 msgid "command_description_server"
-msgstr "Connect to a new IRC network"
+msgstr "Se connecter à un nouveau serveur IRC"
 
 #: 
 msgid "command_description_whois"
-msgstr "Request information on somebody"
+msgstr "Obtenir des infos à propos de quelqu'un"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Obtenir des informations à propos de quelqu'un qui a quitté récemment"
 
 #: 
 msgid "command_description_away"
-msgstr "Mark yourself as away"
+msgstr "S'absenter"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Modifier l'encodage de votre connexion"
 
 #: 
 msgid "command_description_settings"
-msgstr "Show the settings window"
+msgstr "Afficher l'écran de paramètres"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Modifier les scripts utilisateur kiwi"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Recharger les feuilles de style de la page"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Charger un javascript depuis un fichier"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Définir un réglage kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Save the current kiwi settings"
+msgstr "Enregistrer les paramètres actuels"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Créer un alias pour une commande"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ignore messages from somebody"
+msgstr "Ignorer les messages de quelqu'un"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop ignoring somebody"
+msgstr "Ne plus ignorer les messages de quelqu'un"
+
+#: 
+msgid "client_applets_settings_autocomplete_slideout"
+msgstr "Show the autocomplete slideout"
 
