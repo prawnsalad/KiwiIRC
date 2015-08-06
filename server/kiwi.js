@@ -103,17 +103,17 @@ global.clients = {
     port_pairs: {},
 
     add: function (client) {
-        this.clients[client.hash] = client;
+        this.clients[client.id] = client;
         if (typeof this.addresses[client.real_address] === 'undefined') {
             this.addresses[client.real_address] = Object.create(null);
         }
-        this.addresses[client.real_address][client.hash] = client;
+        this.addresses[client.real_address][client.id] = client;
     },
 
     remove: function (client) {
-        if (typeof this.clients[client.hash] !== 'undefined') {
-            delete this.clients[client.hash];
-            delete this.addresses[client.real_address][client.hash];
+        if (typeof this.clients[client.id] !== 'undefined') {
+            delete this.clients[client.id];
+            delete this.addresses[client.real_address][client.id];
             if (Object.keys(this.addresses[client.real_address]).length < 1) {
                 delete this.addresses[client.real_address];
             }
