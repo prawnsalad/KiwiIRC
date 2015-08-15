@@ -173,7 +173,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             // Use the nick from the member object so the style matches the letter casing
             style = this.getNickStyles(nick).asCssString();
         }
-        nick_re = new RegExp('(.*)\\b(' + _kiwi.global.utils.escapeRegex(nick) + ')\\b(.*)', 'i');
+        nick_re = new RegExp('(.*)(' + _kiwi.global.utils.escapeRegex(nick) + ')(.*)', 'i');
         return word.replace(nick_re, function (__, before, nick_in_orig_case, after) {
             return _.escape(before)
                 + '<span class="inline-nick" style="' + style + '; cursor:pointer" data-nick="' + _.escape(nick) + '">'
