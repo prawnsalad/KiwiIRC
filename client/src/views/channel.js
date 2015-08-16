@@ -8,7 +8,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         return _.extend({}, parent_events, {
             'click .msg .nick' : 'nickClick',
             'click .msg .inline-nick' : 'nickClick',
-            "click .chan": "chanClick",
+            'contextmenu .msg .nick' : 'nickClick',
+            'contextmenu .msg .inline-nick' : 'nickClick',
+            'dblclick .msg .nick' : 'nickClick',
+            'dblclick .msg .inline-nick' : 'nickClick',
+            'click .chan': 'chanClick',
             'click .media .open': 'mediaClick',
             'mouseenter .msg .nick': 'msgEnter',
             'mouseleave .msg .nick': 'msgLeave'
@@ -433,8 +437,18 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return;
         }
 
-        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'message'})
-        .then(_.bind(this.openUserMenuForNick, this, $target, member));
+        if(event.type === 'dblclick') {
+            _kiwi.global.events.emit('nick:dblclick', {target: $target, member: member, source: 'message', type: event.which})
+            .then(_kiwi.app.connections.active_connection.createQuery(nick));
+        } else {
+            _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'message', type: event.which})
+            .then(_.bind(this.openUserMenuForNick, this, $target, member));
+
+            // Disable context menu
+            if(event.which === 3) {
+                return false;
+            }
+        }
     },
 
 
