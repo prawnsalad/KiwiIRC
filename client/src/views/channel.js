@@ -437,18 +437,14 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return;
         }
 
-        if(event.type === 'dblclick') {
-            _kiwi.global.events.emit('nick:dblclick', {target: $target, member: member, source: 'message', type: event.which})
-            .then(_kiwi.app.connections.active_connection.createQuery(nick));
-        } else {
-            _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'message', type: event.which})
-            .then(_.bind(this.openUserMenuForNick, this, $target, member));
-
-            // Disable context menu
-            if(event.which === 3) {
-                return false;
-            }
-        }
+        _kiwi.global.events.emit('nick:select', {
+            target: $target,
+            member: member,
+            network: this.model.get('network'),
+            source: 'message',
+            $event: event
+        })
+        .then(_.bind(this.openUserMenuForNick, this, $target, member));
     },
 
 

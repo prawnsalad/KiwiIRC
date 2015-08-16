@@ -42,18 +42,15 @@ _kiwi.view.MemberList = Backbone.View.extend({
     nickClick: function (event) {
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member');
-        
-        if(event.type === 'dblclick') {
-            _kiwi.global.events.emit('nick:dblclick', {target: $target, member: member, source: 'nicklist', type: event.which})
-            .then(_kiwi.app.connections.active_connection.createQuery(member.get('nick')));
-        } else {
-            _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist', type: event.which})
-            .then(_.bind(this.openUserMenuForItem, this, $target));
 
-            if(event.which === 3) {
-                return false;
-            }
-        }
+        _kiwi.global.events.emit('nick:select', {
+            target: $target,
+            member: member,
+            network: this.model.channel.get('network'),
+            source: 'nicklist',
+            $event: event
+        })
+        .then(_.bind(this.openUserMenuForItem, this, $target));
     },
 
 
