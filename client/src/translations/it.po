@@ -182,7 +182,7 @@ msgstr "è entrato nel canale"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "ha chiuso la chat %s"
+msgstr "ha lasciato %s"
 
 #: 
 msgid "client_models_channel_kicked"
@@ -266,7 +266,7 @@ msgstr "Il nickname “%s” è già in uso. Scegli un altro nickname."
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "La password è errata"
+msgstr "La password specificata è errata"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
@@ -294,7 +294,7 @@ msgstr "Caricamento del tweet…"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Caricamento dell'immagine…"
+msgstr "Caricamento dell’immagine…"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
@@ -690,15 +690,15 @@ msgstr "Domenica"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Canale Moderato"
+msgstr "Canale moderato"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Solo ad invito"
+msgstr "Solo su invito"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Solo gli operatori possono cambiare il topic"
+msgstr "Solo gli operatori possono cambiare l’argomento"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
@@ -710,13 +710,166 @@ msgstr "Mostra Banlist"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Invia messaggio..."
+msgstr "Invia messaggio…"
 
 #: 
 msgid "disconnect_from_server"
 msgstr "Ciò comporta la disconnessione dalla rete IRC. Procedere?"
 
+#. What are those highlights?
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Parole da evidenziare personalizzate (separate da spazio)"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_messages"
+msgstr "Messaggi"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_chat_messages"
+msgstr "Messaggi della chat"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_alerts_notifications"
+msgstr "Avvisi / notifiche"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_appearance"
+msgstr "Aspetto"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_theme"
+msgstr "Tema"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channels"
+msgstr "Canali"
+
+#: 
+msgid "client_applets_settings_language"
+msgstr "Lingua"
+
+#: 
+msgid "client_applets_settings_ignore_new_queries"
+msgstr "Blocca nuovi messaggi privati"
+
+#: 
+msgid "command_description_msg"
+msgstr "Invia un messaggio"
+
+#: 
+msgid "command_description_action"
+msgstr "Fai qualcosa di fisico"
+
+#: 
+msgid "command_description_join"
+msgstr "Unisciti a un canale"
+
+#: 
+msgid "command_description_part"
+msgstr "Lascia un canale"
+
+#: 
+msgid "command_description_cycle"
+msgstr "Lascia e ri-entra in un canale"
+
+#: 
+msgid "command_description_nick"
+msgstr "Cambia il tuo nick"
+
+#: 
+msgid "command_description_query"
+msgstr "Inizia un messaggio privato con qualcuno"
+
+#: 
+msgid "command_description_invite"
+msgstr "Invita qualcuno a entrare nel canale"
+
+#: 
+msgid "command_description_topic"
+msgstr "Imposta l’argomento di questo canale"
+
+#: 
+msgid "command_description_notice"
+msgstr "Invia un avviso"
+
+#: 
+msgid "command_description_quote"
+msgstr "Invia un comando direttamente al server IRC"
+
+#: 
+msgid "command_description_kick"
+msgstr "Espelli qualcuno dal canale"
+
+#: 
+msgid "command_description_clear"
+msgstr "Cancella tutti i messaggi di questa finestra"
+
+#: 
+msgid "command_description_ctcp"
+msgstr "Invia un comando CTCP a qualcuno"
+
+#: 
+msgid "command_description_quit"
+msgstr "Disconnettiti dal server IRC"
+
+#: 
+msgid "command_description_server"
+msgstr "Connettiti a una nuova rete IRC"
+
+#: 
+msgid "command_description_whois"
+msgstr "Richiedi informazioni su qualcuno"
+
+#: 
+msgid "command_description_whowas"
+msgstr "Richiedi informazioni su qualcuno disconnesso recentemente"
+
+#: 
+msgid "command_description_away"
+msgstr "Imposta il tuo stato su “Non al computer”"
+
+#: 
+msgid "command_description_encoding"
+msgstr "Cambia la codifica della tua connessione"
+
+#: 
+msgid "command_description_settings"
+msgstr "Apri la finestra delle impostazioni"
+
+#: 
+msgid "command_description_script"
+msgstr "Modifica gli script utente di Kiwi"
+
+#: 
+msgid "command_description_css"
+msgstr "Ricarica i fogli di stile della pagina"
+
+#: 
+msgid "command_description_js"
+msgstr "Carica un file JavaScript da un URL"
+
+#: 
+msgid "command_description_set"
+msgstr "Imposta una configurazione di Kiwi"
+
+#: 
+msgid "command_description_save"
+msgstr "Salva le impostazioni correnti di Kiwi"
+
+#: 
+msgid "command_description_alias"
+msgstr "Crea un alias a un /comando esistente"
+
+#: 
+msgid "command_description_ignore"
+msgstr "Ignora i messaggi di qualcuno"
+
+#: 
+msgid "command_description_unignore"
+msgstr "Smetti di ignorare qualcuno"
+
+#: 
+msgid "client_applets_settings_autocomplete_slideout"
+msgstr "Show the autocomplete slideout"
 

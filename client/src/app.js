@@ -146,6 +146,24 @@ _kiwi.global = {
                 return network.createQuery(nick);
             };
 
+            obj.ignoreMask = function(mask) {
+                var network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.ignore_list.addMask(mask);
+            };
+
+            obj.unignoreMask = function(mask) {
+                var network = getNetwork();
+                if (!network) {
+                    return;
+                }
+
+                return network.ignore_list.removeMask(mask);
+            };
+
             // Add the networks getters/setters
             obj.get = function(name) {
                 var network, restricted_keys;

@@ -425,7 +425,7 @@ define('helpers/utils', function(require, exports, module) {
     }
 
     exports.escapeRegex = function escapeRegex (str) {
-        return str.replace(/[\[\\\^\$\.\|\?\*\+\(\)]/g, '\\$&');
+        return str.replace(/[\[\]\\\^\$\.\|\?\*\+\-\(\)]/g, '\\$&');
     }
 
     exports.emoticonFromText = function emoticonFromText(str) {

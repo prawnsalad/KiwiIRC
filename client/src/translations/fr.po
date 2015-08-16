@@ -718,5 +718,157 @@ msgstr "Vous allez être déconnecté du réseau IRC. Voulez-vous vraiment vous 
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Notifications personnalisées (séparées par des espaces)"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_messages"
+msgstr "Messages"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_chat_messages"
+msgstr "Messages du chat"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_alerts_notifications"
+msgstr "Alertes / Notifications"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_appearance"
+msgstr "Apparence"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_theme"
+msgstr "Thème"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channels"
+msgstr "Salons"
+
+#: 
+msgid "client_applets_settings_language"
+msgstr "Langue"
+
+#: 
+msgid "client_applets_settings_ignore_new_queries"
+msgstr "Bloquer les nouveaux messages privés"
+
+#: 
+msgid "command_description_msg"
+msgstr "Envoyer un message"
+
+#: 
+msgid "command_description_action"
+msgstr "Faire une action"
+
+#: 
+msgid "command_description_join"
+msgstr "Rejoindre un salon"
+
+#: 
+msgid "command_description_part"
+msgstr "Quitter un salon"
+
+#: 
+msgid "command_description_cycle"
+msgstr "Quitter puis revenir sur un salon"
+
+#: 
+msgid "command_description_nick"
+msgstr "Changer de pseudo"
+
+#: 
+msgid "command_description_query"
+msgstr "Démarrer une conversation privée avec quelqu'un"
+
+#: 
+msgid "command_description_invite"
+msgstr "Inviter quelqu'un dans le salon"
+
+#: 
+msgid "command_description_topic"
+msgstr "Définir le sujet du salon"
+
+#: 
+msgid "command_description_notice"
+msgstr "Envoyer une notice"
+
+#: 
+msgid "command_description_quote"
+msgstr "Envoyer un message brut au serveur IRC"
+
+#: 
+msgid "command_description_kick"
+msgstr "Éjecter quelqu'un du salon"
+
+#: 
+msgid "command_description_clear"
+msgstr "Effacer tous les messages de cette fenêtre"
+
+#: 
+msgid "command_description_ctcp"
+msgstr "Envoyer une commande CTCP à quelqu'un"
+
+#: 
+msgid "command_description_quit"
+msgstr "Quitter le serveur IRC"
+
+#: 
+msgid "command_description_server"
+msgstr "Se connecter à un nouveau serveur IRC"
+
+#: 
+msgid "command_description_whois"
+msgstr "Obtenir des infos à propos de quelqu'un"
+
+#: 
+msgid "command_description_whowas"
+msgstr "Obtenir des informations à propos de quelqu'un qui a quitté récemment"
+
+#: 
+msgid "command_description_away"
+msgstr "S'absenter"
+
+#: 
+msgid "command_description_encoding"
+msgstr "Modifier l'encodage de votre connexion"
+
+#: 
+msgid "command_description_settings"
+msgstr "Afficher l'écran de paramètres"
+
+#: 
+msgid "command_description_script"
+msgstr "Modifier les scripts utilisateur kiwi"
+
+#: 
+msgid "command_description_css"
+msgstr "Recharger les feuilles de style de la page"
+
+#: 
+msgid "command_description_js"
+msgstr "Charger un javascript depuis un fichier"
+
+#: 
+msgid "command_description_set"
+msgstr "Définir un réglage kiwi"
+
+#: 
+msgid "command_description_save"
+msgstr "Enregistrer les paramètres actuels"
+
+#: 
+msgid "command_description_alias"
+msgstr "Créer un alias pour une commande"
+
+#: 
+msgid "command_description_ignore"
+msgstr "Ignorer les messages de quelqu'un"
+
+#: 
+msgid "command_description_unignore"
+msgstr "Ne plus ignorer les messages de quelqu'un"
+
+#: 
+msgid "client_applets_settings_autocomplete_slideout"
+msgstr "Show the autocomplete slideout"
 

@@ -345,6 +345,7 @@ IrcConnection.prototype.connect = function () {
             that.disposeSocket();
 
             if (!global.config.ircd_reconnect) {
+                Stats.incr('irc.connection.closed');
                 that.emit('close', had_error);
 
             } else {
@@ -467,13 +468,13 @@ IrcConnection.prototype.flushWriteBuffer = function () {
 IrcConnection.prototype.end = function (data) {
     var that = this;
 
-    if (!this.connected) {
+    if (!this.socket) {
         return;
     }
 
     this.requested_disconnect = true;
 
-    if (data) {
+    if (this.connected && data) {
         // Once the last bit of data has been sent, then re-run this function to close the socket
         this.write(data, true, function() {
             that.end();

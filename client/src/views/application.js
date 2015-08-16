@@ -323,7 +323,7 @@ define('views/application', function(require, exports, module) {
                 soundManager.setup({
                     url: base_path + '/assets/libs/soundmanager2/',
                     flashVersion: 9, // optional: shiny features (default = 8)// optional: ignore Flash where possible, use 100% HTML5 mode
-                    preferFlash: true,
+                    preferFlash: false,
 
                     onready: function() {
                         that.sound_object = soundManager.createSound({

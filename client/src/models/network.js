@@ -248,7 +248,7 @@ define('models/network', function(require, exports, module) {
             // Check if we have the panel already. If not, create it
             query = that.panels.getByName(nick);
             if (!query) {
-                query = new (require('models/query'))({name: nick});
+                query = new (require('models/query'))({name: nick, network: this});
                 that.panels.add(query);
             }
 

@@ -66,7 +66,7 @@ define('models/memberlist', function(require, exports, module) {
         initNickCache: function() {
             var updateRegex = _.bind(function () {
                     this.nick_regex = new RegExp(
-                        '\\b(' + Object.keys(this.nick_cache).map(utils.escapeRegex).join('|') + ')\\b', 'i'
+                        '^[^a-z0-9]?(' + Object.keys(this.nick_cache).map(utils.escapeRegex).join('|') + ')[^a-z0-9]?$', 'i'
                     );
                 }, this);
 

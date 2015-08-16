@@ -49,30 +49,6 @@ msgid "client_applets_scripteditor_title"
 msgstr "Script Editor"
 
 #: client/assets/src/applets/settings.js
-msgid "client_applets_settings_messages"
-msgstr "Messages"
-
-#: client/assets/src/applets/settings.js
-msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
-
-#: client/assets/src/applets/settings.js
-msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
-
-#: client/assets/src/applets/settings.js
-msgid "client_applets_settings_appearance"
-msgstr "Appearance"
-
-#: client/assets/src/applets/settings.js
-msgid "client_applets_settings_theme"
-msgstr "Theme"
-
-#: client/assets/src/applets/settings.js
-msgid "client_applets_settings_channels"
-msgstr "Channels"
-
-#: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
 msgstr "Tabs"
 
@@ -83,10 +59,6 @@ msgstr "List"
 #: 
 msgid "client_applets_settings_channelview_list_notice"
 msgstr "for large amounts of channels"
-
-#: 
-msgid "client_applets_settings_language"
-msgstr "Language"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
@@ -496,10 +468,6 @@ msgstr "Enable notifications"
 msgid "client_applets_settings_emoticons"
 msgstr "Show emoticons"
 
-#:
-msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
-
 #: 
 msgid "client_applet_about"
 msgstr "About Kiwi"
@@ -751,4 +719,156 @@ msgstr "This will disconnect from the IRC network. Are you sure?"
 #: 
 msgid "client_applets_settings_custom_highlights"
 msgstr "Custom highlights (space separated)"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_messages"
+msgstr "Messages"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_chat_messages"
+msgstr "Chat messages"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_alerts_notifications"
+msgstr "Alerts / Notifications"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_appearance"
+msgstr "Appearance"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_theme"
+msgstr "Theme"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channels"
+msgstr "Channels"
+
+#: 
+msgid "client_applets_settings_language"
+msgstr "Language"
+
+#: 
+msgid "client_applets_settings_ignore_new_queries"
+msgstr "Block new private messages"
+
+#: 
+msgid "command_description_msg"
+msgstr "Send a message"
+
+#: 
+msgid "command_description_action"
+msgstr "Do something physical"
+
+#: 
+msgid "command_description_join"
+msgstr "Join a channel"
+
+#: 
+msgid "command_description_part"
+msgstr "Leave a channel"
+
+#: 
+msgid "command_description_cycle"
+msgstr "Leave, then re-join a channel"
+
+#: 
+msgid "command_description_nick"
+msgstr "Change your nickname"
+
+#: 
+msgid "command_description_query"
+msgstr "Start a private message with someone"
+
+#: 
+msgid "command_description_invite"
+msgstr "Invite somebody into the channel"
+
+#: 
+msgid "command_description_topic"
+msgstr "Set the topic for this channel"
+
+#: 
+msgid "command_description_notice"
+msgstr "Send a notice"
+
+#: 
+msgid "command_description_quote"
+msgstr "Send a raw command to the IRC server"
+
+#: 
+msgid "command_description_kick"
+msgstr "Kick sombody from the channel"
+
+#: 
+msgid "command_description_clear"
+msgstr "Clear all messages from this window"
+
+#: 
+msgid "command_description_ctcp"
+msgstr "Send a CTCP command to somebody"
+
+#: 
+msgid "command_description_quit"
+msgstr "Disconnect from the IRC server"
+
+#: 
+msgid "command_description_server"
+msgstr "Connect to a new IRC network"
+
+#: 
+msgid "command_description_whois"
+msgstr "Request information on somebody"
+
+#: 
+msgid "command_description_whowas"
+msgstr "Request information on somebody that disconnected recently"
+
+#: 
+msgid "command_description_away"
+msgstr "Mark yourself as away"
+
+#: 
+msgid "command_description_encoding"
+msgstr "Change your connection encoding"
+
+#: 
+msgid "command_description_settings"
+msgstr "Show the settings window"
+
+#: 
+msgid "command_description_script"
+msgstr "Modify kiwi user scripts"
+
+#: 
+msgid "command_description_css"
+msgstr "Reload the page stylesheets"
+
+#: 
+msgid "command_description_js"
+msgstr "Load a javascript file from a URL"
+
+#: 
+msgid "command_description_set"
+msgstr "Set a kiwi config setting"
+
+#: 
+msgid "command_description_save"
+msgstr "Save the current kiwi settings"
+
+#: 
+msgid "command_description_alias"
+msgstr "Create an alias to an existing /command"
+
+#: 
+msgid "command_description_ignore"
+msgstr "Ignore messages from somebody"
+
+#: 
+msgid "command_description_unignore"
+msgstr "Stop ignoring somebody"
+
+#: 
+msgid "client_applets_settings_autocomplete_slideout"
+msgstr "Show the autocomplete slideout"
 

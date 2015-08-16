@@ -40,6 +40,7 @@
                 html5_notifications   : utils.translateText('client_applets_settings_html5_notifications'),
                 enable_notifications  : utils.translateText('client_applets_settings_enable_notifications'),
                 custom_highlights     : utils.translateText('client_applets_settings_custom_highlights'),
+                autocomplete_slideout : utils.translateText('client_applets_settings_autocomplete_slideout'),
                 theme_thumbnails: _.map(application.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
@@ -113,13 +114,8 @@
                     break;
             }
 
-            // Stop settings being updated while we're saving one by one
-            _kiwi.global.settings.off('change', this.loadSettings, this);
             settings.set($setting.data('setting'), value);
-            settings.save();
-
-            // Continue listening for setting changes
-            _kiwi.global.settings.on('change', this.loadSettings, this);
+            settings.saveOne($setting.data('setting'));
         },
 
         selectTheme: function(event) {
