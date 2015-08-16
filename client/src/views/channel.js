@@ -463,7 +463,7 @@ define('views/channel', function(require, exports, module) {
                 return;
             }
 
-            userbox = new _kiwi.view.UserBox();
+            userbox = new (require('views/userbox'))();
             userbox.setTargets(member, this.model);
             userbox.displayOpItems(are_we_an_op);
 

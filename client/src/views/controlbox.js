@@ -116,11 +116,11 @@ define('views/controlbox', function(require, exports, module) {
                     userbox,
                     are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
-                userbox = new _kiwi.view.UserBox();
+                userbox = new (require('views/userbox'))();
                 userbox.setTargets(member, active_panel);
                 userbox.displayOpItems(are_we_an_op);
 
-                var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+                var menu = new (require('views/menubox'))(member.get('nick') || 'User');
                 menu.addItem('userbox', userbox.$el);
                 menu.showFooter(false);
 
