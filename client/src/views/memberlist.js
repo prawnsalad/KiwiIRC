@@ -7,6 +7,8 @@ define('views/memberlist', function(require, exports, module) {
         tagName: "div",
         events: {
             "click .nick": "nickClick",
+            "contextmenu .nick": "nickClick",
+            "dblclick .nick": "nickClick",
             "click .channel_info": "channelInfoClick"
         },
 
@@ -46,7 +48,13 @@ define('views/memberlist', function(require, exports, module) {
             var $target = $(event.currentTarget).parent('li'),
                 member = $target.data('member');
 
-            _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist'})
+            _kiwi.global.events.emit('nick:select', {
+                target: $target,
+                member: member,
+                network: this.model.channel.get('network'),
+                source: 'nicklist',
+                $event: event
+            })
             .then(_.bind(this.openUserMenuForItem, this, $target));
         },
 

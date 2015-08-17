@@ -13,7 +13,11 @@ define('views/channel', function(require, exports, module) {
             return _.extend({}, parent_events, {
                 'click .msg .nick' : 'nickClick',
                 'click .msg .inline-nick' : 'nickClick',
-                "click .chan": "chanClick",
+                'contextmenu .msg .nick' : 'nickClick',
+                'contextmenu .msg .inline-nick' : 'nickClick',
+                'dblclick .msg .nick' : 'nickClick',
+                'dblclick .msg .inline-nick' : 'nickClick',
+                'click .chan': 'chanClick',
                 'click .media .open': 'mediaClick',
                 'mouseenter .msg .nick': 'msgEnter',
                 'mouseleave .msg .nick': 'msgLeave'
@@ -436,7 +440,13 @@ define('views/channel', function(require, exports, module) {
                 return;
             }
 
-            _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'message'})
+            _kiwi.global.events.emit('nick:select', {
+                target: $target,
+                member: member,
+                network: this.model.get('network'),
+                source: 'message',
+                $event: event
+            })
             .then(_.bind(this.openUserMenuForNick, this, $target, member));
         },
 
