@@ -76,6 +76,7 @@
             'unknown_command':     unknownCommand,
             'command':             allCommands,
             'command:msg':         {fn: msgCommand, description: translateText('command_description_msg')},
+            'command:amsg':        {fn: amsgCommand, description: translateText('command_description_amsg')},
             'command:action':      {fn: actionCommand, description: translateText('command_description_action')},
             'command:join':        {fn: joinCommand, description: translateText('command_description_join')},
             'command:part':        {fn: partCommand, description: translateText('command_description_part')},
@@ -319,6 +320,20 @@
     }
 
 
+    function amsgCommand (ev) {
+        var panels = this.app.connections.active_connection.panels,
+            message = ev.params.join(' ');
+
+        panels.forEach(_.bind(function(panel) {
+            // Send the message to all channels
+            if(panel.isChannel()) {
+                panel.addMsg(this.app.connections.active_connection.get('nick'), styleText('privmsg', {text: message}), 'privmsg');
+                this.app.connections.active_connection.gateway.msg(panel.get('name'), message);
+            }
+        }, this));
+    }
+
+
     function actionCommand (ev) {
         if (this.app.panels().active.isServer()) {
             return;
@@ -420,7 +435,6 @@
 
         this.app.connections.active_connection.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
     }
-
 
     function clearCommand (ev) {
         // Can't clear a server or applet panel
