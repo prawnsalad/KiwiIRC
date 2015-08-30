@@ -62,7 +62,7 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
     initNickCache: function() {
         var updateRegex = _.bind(function () {
                 this.nick_regex = new RegExp(
-                    '^[^a-z0-9]?(' + Object.keys(this.nick_cache).map(_kiwi.global.utils.escapeRegex).join('|') + ')[^a-z0-9]?$', 'i'
+                    '^[^a-z0-9\\-\\_\\[\\]\\^\\`]?(' + Object.keys(this.nick_cache).map(_kiwi.global.utils.escapeRegex).join('|') + ')[^a-z0-9\\-\\_\\[\\]\\^\\`]?$', 'i'
                 );
             }, this);
 
