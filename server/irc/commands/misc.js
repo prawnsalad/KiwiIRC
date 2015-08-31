@@ -103,6 +103,13 @@ var handlers = {
         });
     },
 
+    ERR_NOSUCHSERVER: function (command) {
+        this.emit('server ' + this.irc_connection.irc_host.hostname + ' no_such_server', {
+            server: command.params[1],
+            reason: command.params[command.params.length - 1]
+        });
+    },
+
     ERR_CANNOTSENDTOCHAN: function (command) {
         this.emit('server ' + this.irc_connection.irc_host.hostname + ' cannot_send_to_channel', {
             channel: command.params[1],
@@ -645,12 +652,6 @@ var handlers = {
     },
 
     RPL_ENDINFO: function (command) {
-        var params = _.clone(command.params);
-        params.shift();
-        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
-    },
-
-    RPL_NOSUCHSERVER: function (command) {
         var params = _.clone(command.params);
         params.shift();
         this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);

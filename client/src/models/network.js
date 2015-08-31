@@ -865,9 +865,17 @@
         case 'no_such_nick':
             tmp = this.panels.getByName(event.nick);
             if (tmp) {
-                tmp.addMsg(' ', styleText('no_such_nick', {nick: event.nick, text: event.reason, channel: event.channel}), 'status');
+                tmp.addMsg(' ', styleText('no_such_nick', {nick: event.nick, text: event.reason}), 'status');
             } else {
-                this.panels.server.addMsg(' ', styleText('no_such_nick', {nick: event.nick, text: event.reason, channel: event.channel}), 'status');
+                this.panels.server.addMsg(' ', styleText('no_such_nick', {nick: event.nick, text: event.reason}), 'status');
+            }
+            break;
+        case 'no_such_server':
+            tmp = this.panels.getByName(event.nick);
+            if (tmp) {
+                tmp.addMsg(' ', styleText('no_such_server', {server: event.server, text: event.reason}), 'status');
+            } else {
+                this.panels.server.addMsg(' ', styleText('no_such_server', {server: event.server, text: event.reason}), 'status');
             }
             break;
         case 'nickname_in_use':

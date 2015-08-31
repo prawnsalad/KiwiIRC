@@ -25,6 +25,7 @@ var IrcServer = function (irc_connection) {
         password_mismatch:      onPasswordMismatch,
         channel_redirect:       onChannelRedirect,
         no_such_nick:           onNoSuchNick,
+        no_such_server:         onNoSuchServer,
         cannot_send_to_channel: onCannotSendToChan,
         too_many_channels:      onTooManyChannels,
         user_not_in_channel:    onUserNotInChannel,
@@ -162,6 +163,14 @@ function onNoSuchNick(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'no_such_nick',
         nick: event.nick,
+        reason: event.reason
+    });
+}
+
+function onNoSuchServer(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'no_such_server',
+        server: event.server,
         reason: event.reason
     });
 }
