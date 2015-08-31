@@ -221,4 +221,46 @@ var handlers = {
             channel: command.params[1]
         });
     },
+
+
+    RPL_INVITELIST: function (command) {
+        this.emit('channel ' + command.params[1] + ' invitelist', {
+            channel: command.params[1],
+            banned: command.params[2],
+            banned_by: command.params[3],
+            banned_at: command.params[4]
+        });
+    },
+
+
+    RPL_ENDOFINVITELIST: function (command) {
+        this.emit('channel ' + command.params[1] + ' invitelist_end', {
+            channel: command.params[1]
+        });
+    },
+
+
+    RPL_EXCEPTLIST: function (command) {
+        this.emit('channel ' + command.params[1] + ' exceptlist', {
+            channel: command.params[1],
+            banned: command.params[2],
+            banned_by: command.params[3],
+            banned_at: command.params[4]
+        });
+    },
+
+
+    RPL_ENDOFEXCEPTLIST: function (command) {
+        this.emit('channel ' + command.params[1] + ' exceptlist_end', {
+            channel: command.params[1]
+        });
+    },
+
+
+    ERR_NOSUCHCHANNEL: function (command) {
+        this.emit('channel ' + command.params[1] + ' wasnosuchchannel', {
+            channel: command.params[1]
+        });
+    },
+
 };

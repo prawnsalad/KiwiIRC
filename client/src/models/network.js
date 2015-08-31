@@ -883,6 +883,32 @@
 
             break;
 
+        case 'nickname_collision':
+            this.panels.server.addMsg(' ', styleText('nickname_alreadyinuse', {nick: event.nick, text: translateText('client_models_network_nickname_alreadyinuse', [event.nick]), channel: event.channel}), 'status');
+            if (this.panels.server !== this.panels.active) {
+                _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
+            }
+
+            // Only show the nickchange component if the controlbox is open
+            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
+                (new _kiwi.view.NickChangeBox()).render();
+            }
+
+            break;
+
+        case 'banned_nickname_change':
+            panel.addMsg(' ', styleText('channel_banned', {nick: event.nick, text: translateText('client_models_network_banned', [event.channel, event.reason]), channel: event.channel}), 'status');
+            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
+
+            break;
+
+        case 'nick_change_too_fast':
+            this.panels.server.addMsg(' ', styleText('nick_change_too_fast', {nick: event.nick, text: translateText('client_models_network_nick_change_too_fast', [event.nick]), channel: event.channel}), 'status');
+            if (this.panels.server !== this.panels.active) {
+                _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_nick_change_too_fast').fetch(event.reason));
+            }
+            break;
+
         case 'password_mismatch':
             this.panels.server.addMsg(' ', styleText('channel_badpassword', {nick: event.nick, text: translateText('client_models_network_badpassword', []), channel: event.channel}), 'status');
             break;

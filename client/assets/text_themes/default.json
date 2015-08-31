@@ -7,6 +7,7 @@
     "channel_badpassword": "× %text",
     "channel_topic": "ⓘ %text",
     "channel_banned": "× %text",
+    "nick_change_too_fast": "⚠ %text",
     "channel_badkey": "⚠ %text",
     "channel_inviteonly": "⚠ %channel %text",
     "channel_alreadyin": "⚠ %nick %text",

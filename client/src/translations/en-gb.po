@@ -249,6 +249,10 @@ msgid "client_models_network_banned"
 msgstr "You are banned from %s. %s"
 
 #: 
+msgid "client_models_network_nick_change_too_fast"
+msgstr "Nick change too fast. %s"
+
+#: 
 msgid "client_models_network_channel_badkey"
 msgstr "Bad channel key for %s"
 
