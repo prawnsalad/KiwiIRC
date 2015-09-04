@@ -16,7 +16,7 @@
   "dependencies": {
     "daemonize2": "0.4.2",
     "engine.io": "^1.4.0",
-    "es6-promise": "^1.0.0",
+    "es6-promise": "^3.0.2",
     "eventemitter2": "0.4.14",
     "iconv-lite": "0.4.4",
     "ipaddr.js": "0.1.3",
