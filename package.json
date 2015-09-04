@@ -21,7 +21,7 @@
     "iconv-lite": "0.4.11",
     "ipaddr.js": "^1.0.3",
     "lodash": "^3.10.1",
-    "negotiator": "0.4.3",
+    "negotiator": "^0.5.3",
     "node-static": "0.7.4",
     "po2json": "0.3.0",
     "socksjs": "0.4.4",
