@@ -766,7 +766,7 @@ function findWebIrc(connect_data) {
 
     if (found_webirc_pass) {
         // Build the WEBIRC line to be sent before IRC registration
-        tmp = 'WEBIRC ' + webirc_pass[this.irc_host.hostname] + ' KiwiIRC ';
+        tmp = 'WEBIRC ' + found_webirc_pass + ' KiwiIRC ';
         tmp += this.user.hostname + ' ' + this.user.address;
 
         connect_data.prepend_data = [tmp];
