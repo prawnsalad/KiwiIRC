@@ -8,8 +8,8 @@ _kiwi.view.Member = Backbone.View.extend({
         var $this = this.$el,
             prefix_css_class = (this.model.get('modes') || []).join(' ');
 
-        $this.attr('class', 'mode ' + prefix_css_class);
-        $this.html('<a class="nick"><span class="prefix">' + this.model.get("prefix") + '</span>' + this.model.get("nick") + '</a>');
+        $this.attr('class', 'mode ' + prefix_css_class + ' member member-' + prefix_css_class);
+        $this.html('<a class="nick"><span class="prefix prefix-' + prefix_css_class + '">' + this.model.get("prefix") + '</span>' + this.model.get("nick") + '</a>');
 
         return this;
     }
