@@ -1,2 +1,2 @@
 @echo off
-node %~dp0\server\helpers\launcher.js %*
+"C:\Program Files\NodeJS\node.exe" %~dp0\server\helpers\launcher.js %*
