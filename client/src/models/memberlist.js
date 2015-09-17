@@ -65,7 +65,7 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
                 // .. where <punctuation> is any character not allowed in an IRC nick
                 var regex_valid_nick_chars = 'a-z0-9_\\-{}[\\]^`|\\\\';
                 var regex_nicks = Object.keys(this.nick_cache)
-                    .map(kiwi.utils.escapeRegex)
+                    .map(_.escapeRegExp)
                     .join('|');
 
                 this.nick_regex = new RegExp(
