@@ -61,8 +61,15 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
      */
     initNickCache: function() {
         var updateRegex = _.bind(function () {
+                // Allows checking for a nick that contains 'the_nick' or '<punctuation>the_nick<punctuation>'
+                // .. where <punctuation> is any character not allowed in an IRC nick
+                var regex_valid_nick_chars = 'a-z0-9_\\-{}[\\]^`|\\\\';
+                var regex_nicks = Object.keys(this.nick_cache)
+                    .map(kiwi.utils.escapeRegex)
+                    .join('|');
+
                 this.nick_regex = new RegExp(
-                    '^[^a-z0-9]?(' + Object.keys(this.nick_cache).map(_kiwi.global.utils.escapeRegex).join('|') + ')[^a-z0-9]?$', 'i'
+                    '^[^'+regex_valid_nick_chars+']?(' + regex_nicks + ')[^'+regex_valid_nick_chars+']?$', 'i'
                 );
             }, this);
 
