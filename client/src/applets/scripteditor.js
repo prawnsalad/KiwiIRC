@@ -9,7 +9,7 @@
                     text = {
                         save: _kiwi.global.i18n.translate('client_applets_scripteditor_save').fetch()
                     };
-                this.$el = $(_.template($('#tmpl_script_editor').html().trim(), text));
+                this.$el = $(_.template($('#tmpl_script_editor').html().trim())(text));
 
                 this.model.on('applet_loaded', function () {
                     that.$el.parent().css('height', '100%');

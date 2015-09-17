@@ -54,7 +54,7 @@ var AutoComplete = Backbone.View.extend({
 
                 template_str = (word.type === 'nick') ? template_str_nicks : template_str_default;
 
-                $el = $(_.template(template_str, template)).hide();
+                $el = $(_.template(template_str)(template)).hide();
                 $word = $el.find('.word');
             } else {
                 template_str = '';

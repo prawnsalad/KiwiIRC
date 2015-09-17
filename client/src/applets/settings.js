@@ -38,10 +38,10 @@
                 custom_highlights     : translateText('client_applets_settings_custom_highlights'),
                 autocomplete_slideout : translateText('client_applets_settings_autocomplete_slideout'),
                 theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
-                    return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
+                    return _.template($('#tmpl_theme_thumbnail').html().trim())(theme);
                 })
             };
-            this.$el = $(_.template($('#tmpl_applet_settings').html().trim(), text));
+            this.$el = $(_.template($('#tmpl_applet_settings').html().trim())(text));
 
             if (!navigator.registerProtocolHandler) {
                 this.$('.protocol_handler').remove();

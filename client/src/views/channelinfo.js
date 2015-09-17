@@ -23,7 +23,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
             channel_name: channel.get('name')
         };
 
-        this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
+        this.$el = $(_.template($('#tmpl_channel_info').html().trim())(text));
 
         // Create the menu box this view will sit inside
         this.menu = new _kiwi.view.MenuBox(channel.get('name'));

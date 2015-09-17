@@ -24,7 +24,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
             info: _kiwi.global.i18n.translate('client_views_userbox_whois').fetch(),
             ignore: _kiwi.global.i18n.translate('client_views_userbox_ignore').fetch()
         };
-        this.$el = $(_.template($('#tmpl_userbox').html().trim(), text));
+        this.$el = $(_.template($('#tmpl_userbox').html().trim())(text));
     },
 
     setTargets: function (user, channel) {

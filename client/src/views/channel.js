@@ -83,7 +83,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             display_obj.nick = styleText('message_nick', {nick: msg.nick, prefix: msg.nick_prefix || ''});
 
             line_msg = '<div class="msg <%= type %> <%= css_classes %>"><div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div></div>';
-            this.$messages.append($(_.template(line_msg, display_obj)).data('message', msg));
+            this.$messages.append($(_.template(line_msg)(display_obj)).data('message', msg));
 
             // Activity/alerts based on the type of new message. We only do this if we have
             // an associated network (think: could be a broadcasted channel so alerts are not needed)
