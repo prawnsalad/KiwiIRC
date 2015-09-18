@@ -201,7 +201,7 @@ msgstr "δεν είναι έγκυρο όνομα καναλιού"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Αποσυνδέθηκες από το δίκτυο Hellenic IRC"
+msgstr "Αποσυνδέθηκες από το IRC δίκτυο"
 
 #: 
 msgid "client_models_network_nickname_changed"
@@ -269,7 +269,7 @@ msgstr "Δώθηκε λάθος password"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Αυτό θα κλείσει όλες τις συζητήσεις του Hellenic IRC. Είσαι σίγουρος πως θέλεις να κλείσεις το παράθυρο?"
+msgstr "Αυτό θα κλείσει όλες τις συζητήσεις του Kiwi IRC. Είσαι σίγουρος πως θέλεις να κλείσεις το παράθυρο?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -369,7 +369,7 @@ msgstr "Port"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Powered by Hellenic IRC"
+msgstr "Powered by Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
@@ -469,7 +469,7 @@ msgstr "Δείξε emoticons"
 
 #: 
 msgid "client_applet_about"
-msgstr "Σχετικά με το Hellenic"
+msgstr "Σχετικά με το KiwiIRC"
 
 #: 
 msgid "client_applet_about_homepage"
@@ -713,4 +713,4 @@ msgstr "Στείλε μήνυμα..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "Αυτό θα σε αποσυνδέσει από το Hellenic IRC. Είσαι σίγουρος?"
+msgstr "Αυτό θα σε αποσυνδέσει από το KiwiIRC IRC. Είσαι σίγουρος?"
