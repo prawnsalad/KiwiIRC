@@ -2,6 +2,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     events: {
         'submit form': 'submitForm',
         'click .show_more': 'showMore',
+        'click .show_advanced': 'showAdvanced',
         'change .have_pass input': 'showPass',
         'change .have_key input': 'showKey',
         'click .fa-key': 'channelKeyIconClick',
@@ -23,7 +24,10 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
                 server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
                 server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
                 port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
-                powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
+                powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch(),
+                advanced: _kiwi.global.i18n.translate('client_views_serverselect_advanced').fetch(),
+                username: _kiwi.global.i18n.translate('client_views_serverselect_username').fetch(),
+                realname: _kiwi.global.i18n.translate('client_views_serverselect_realname').fetch()
             };
 
         this.$el = $(_.template($('#tmpl_server_select').html().trim())(text));
@@ -32,6 +36,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
             if (!_kiwi.app.server_settings.connection.allow_change) {
                 this.$el.find('.show_more').remove();
+                this.$el.find('.show_advanced').remove();
                 this.$el.addClass('single_server');
             }
         }
@@ -40,6 +45,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         this.state = 'all';
 
         this.more_shown = false;
+        this.advanced_shown = false;
 
         this.model.bind('new_network', this.newNetwork, this);
 
@@ -87,6 +93,8 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             port: $('input.port', this.$el).val(),
             ssl: $('input.ssl', this.$el).prop('checked'),
             password: $('input.password', this.$el).val(),
+            realname: $('input.realname', this.$el).val(),
+            username: $('input.username', this.$el).val(),
             channel: $('input.channel', this.$el).val(),
             channel_key: $('input.channel_key', this.$el).val(),
             options: this.server_options
@@ -140,9 +148,28 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         }
     },
 
-    populateFields: function (defaults) {
-        var nick, server, port, channel, channel_key, ssl, password;
+    showAdvanced: function (event) {
+        if (!this.advanced_shown) {
+            $('.advanced', this.$el).slideDown('fast');
+            $('.show_advanced', this.$el)
+                .children('.fa-caret-down')
+                .removeClass('fa-caret-down')
+                .addClass('fa-caret-up');
+            $('input.ident', this.$el).select();
+            this.advanced_shown = true;
+        } else {
+            $('.advanced', this.$el).slideUp('fast');
+            $('.show_advanced', this.$el)
+                .children('.fa-caret-up')
+                .removeClass('fa-caret-up')
+                .addClass('fa-caret-down');
+            $('input.nick', this.$el).select();
+            this.advanced_shown = false;
+        }
+    },
 
+    populateFields: function (defaults) {
+        var nick, server, port, channel, channel_key, ssl, password, username, realname;
         defaults = defaults || {};
 
         nick = defaults.nick || '';
@@ -152,9 +179,13 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         password = defaults.password || '';
         channel = defaults.channel || '';
         channel_key = defaults.channel_key || '';
+        username = defaults.username || '';
+        realname = defaults.realname || '';
 
         $('input.nick', this.$el).val(nick);
         $('input.server', this.$el).val(server);
+        $('input.username', this.$el).val(username);
+        $('input.realname', this.$el).val(realname);
         $('input.port', this.$el).val(port);
         $('input.ssl', this.$el).prop('checked', ssl);
         $('input#server_select_show_pass', this.$el).prop('checked', !(!password));

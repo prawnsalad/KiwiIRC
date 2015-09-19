@@ -26,7 +26,9 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
             port: new_connection_event.port,
             ssl: new_connection_event.ssl,
             password: new_connection_event.password,
-            options: new_connection_event.options
+            options: new_connection_event.options,
+            realname: new_connection_event.realname,
+            username: new_connection_event.username
         }, function(err, network) {
             that.onNewNetwork(err, network);
         });

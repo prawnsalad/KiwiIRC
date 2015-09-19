@@ -204,7 +204,9 @@ conf.client = {
         count_all_activity: false,
         locale: null // null = use the browser locale settings
     },
-    window_title: 'Kiwi IRC'
+    window_title: 'Kiwi IRC',
+    username: 'kiwiirc',        //this value dont work if ip_as_username is defined
+    realname: '[[ kiwiirc.com ]]'
 };
 
 // List of themes available for the user to choose from
@@ -221,6 +223,8 @@ conf.client_themes = [
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;
 //conf.restrict_server_password = "";
+//conf.restrict_server_realname = "[[ kiwiirc.com ]]";
+//conf.restrict_server_username = "kiwiirc";
 
 
 

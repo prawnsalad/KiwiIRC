@@ -140,6 +140,8 @@ Client.prototype.attachKiwiCommands = function() {
                 options.encoding = command.encoding;
 
             options.password = global.config.restrict_server_password || command.password;
+            options.realname = global.config.restrict_server_realname || command.realname;
+            options.username = global.config.restrict_server_username || command.username;
 
             that.state.connect(
                 (global.config.restrict_server || command.hostname),
