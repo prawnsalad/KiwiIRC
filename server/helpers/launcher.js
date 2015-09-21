@@ -29,7 +29,11 @@ switch (process.argv[2]) {
         break;
 
     case 'start':
-        daemon.start();
+        if (process.argv.indexOf('-f') > -1) {
+            require(kiwi_app);
+        } else {
+            daemon.start();
+        }
         break;
 
     case 'stop':
