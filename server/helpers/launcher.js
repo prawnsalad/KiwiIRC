@@ -69,5 +69,5 @@ switch (process.argv[2]) {
         break;
 
     default:
-        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-c <config file>] [-p <pid file>]]');
+        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-v] [-c <config file>] [-p <pid file>]]');
 }
