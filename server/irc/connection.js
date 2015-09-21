@@ -26,6 +26,11 @@ if (version_values[1] >= 10) {
     Socks = require('socksjs');
 }
 
+var next_connection_id = 1;
+function generateConnectionId() {
+    return next_connection_id++;
+}
+
 var IrcConnection = function (hostname, port, ssl, nick, user, options, state, con_num) {
     EE.call(this,{
         wildcard: true,
@@ -36,6 +41,9 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     Stats.incr('irc.connection.created');
 
     options = options || {};
+
+    // An ID to identify this connection instance
+    this.id = generateConnectionId();
 
     // Socket state
     this.connected = false;
@@ -402,9 +410,11 @@ IrcConnection.prototype.write = function (data, force, force_complete_fn) {
 
     if (force) {
         this.socket && this.socket.write(encoded_buffer, force_complete_fn);
+        winston.debug('RAW (connection ' + this.id + ') C:', data);
         return;
     }
 
+    winston.debug('RAW (connection ' + this.id + ') C:', data);
     this.write_buffer.push(encoded_buffer);
 
     // Only flush if we're not writing already
@@ -892,6 +902,8 @@ function parseIrcLine(buffer_line) {
 
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
+
+    winston.debug('RAW (connection ' + this.id + ') S:', line.replace(/^\r+|\r+$/, ''));
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
