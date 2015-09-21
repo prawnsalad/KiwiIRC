@@ -321,6 +321,7 @@ IrcConnection.prototype.connect = function () {
                 rawSocketConnect.call(that, this);
             }
 
+            winston.debug('(connection ' + that.id + ') Socket connected');
             Stats.incr('irc.connection.connected');
             that.connected = true;
 
@@ -341,6 +342,7 @@ IrcConnection.prototype.connect = function () {
                 safely_registered = (new Date()) - that.server.registered > 10000, // Safely = registered + 10secs after.
                 should_reconnect = false;
 
+            winston.debug('(connection ' + that.id + ') Socket closed');
             that.connected = false;
             that.server.reset();
 
@@ -370,6 +372,7 @@ IrcConnection.prototype.connect = function () {
                 }
 
                 if (should_reconnect) {
+                    winston.debug('(connection ' + that.id + ') Socket reconnecting');
                     Stats.incr('irc.connection.reconnect');
                     that.reconnect_attempts++;
                     that.emit('reconnecting');
@@ -410,11 +413,11 @@ IrcConnection.prototype.write = function (data, force, force_complete_fn) {
 
     if (force) {
         this.socket && this.socket.write(encoded_buffer, force_complete_fn);
-        winston.debug('RAW (connection ' + this.id + ') C:', data);
+        winston.debug('(connection ' + this.id + ') Raw C:', data);
         return;
     }
 
-    winston.debug('RAW (connection ' + this.id + ') C:', data);
+    winston.debug('(connection ' + this.id + ') Raw C:', data);
     this.write_buffer.push(encoded_buffer);
 
     // Only flush if we're not writing already
@@ -903,7 +906,7 @@ function parseIrcLine(buffer_line) {
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 
-    winston.debug('RAW (connection ' + this.id + ') S:', line.replace(/^\r+|\r+$/, ''));
+    winston.debug('(connection ' + this.id + ') Raw S:', line.replace(/^\r+|\r+$/, ''));
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
