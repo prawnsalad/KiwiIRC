@@ -96,8 +96,8 @@
             'command:whowas':      {fn: whowasCommand, description: translateText('command_description_whowas')},
             'command:away':        {fn: awayCommand, description: translateText('command_description_away')},
             'command:encoding':    {fn: encodingCommand, description: translateText('command_description_encoding')},
-            'command:channel':     channelCommand,
-            'command:applet':      appletCommand,
+            'command:channel':     {fn: channelCommand, description: ''},
+            'command:applet':      {fn: appletCommand, description: ''},
             'command:settings':    {fn: settingsCommand, description: translateText('command_description_settings')},
             'command:script':      {fn: scriptCommand, description: translateText('command_description_script')}
         };
