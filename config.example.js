@@ -81,7 +81,16 @@ conf.default_encoding = 'utf8';
 * %n will be replaced with the users nick
 * %h will be replaced with the users hostname
 */
-//conf.default_gecos = 'Web IRC Client';
+conf.default_gecos = '%n is using a Web IRC client';
+
+
+/*
+* Default ident / username for IRC connections
+* %n will be replaced with the users nick
+* %h will be replaced with the users hostname
+* %i will be replaced with a hexed value of the users IP
+*/
+conf.default_ident = '%i';
 
 
 /*
@@ -108,13 +117,17 @@ conf.client_plugins = [
 conf.module_dir = "../server_modules/";
 
 // Which modules to load
-conf.modules = [];
+conf.modules = [
+    // "control"
+];
 
 
 
 
 // WebIRC password enabled for this server
-//conf.webirc_pass = "foobar";
+conf.webirc_pass = "";
+
+// Use the above *OR* the below webirc_pass option
 
 // Multiple WebIRC passwords may be used for multiple servers
 //conf.webirc_pass = {
@@ -122,11 +135,6 @@ conf.modules = [];
 //    "127.0.0.1":        "foobar"
 //};
 
-// Some IRCDs require the clients IP via the username/ident
-conf.ip_as_username = [
-    //"irc.network.com",
-    //"127.0.0.1"
-];
 
 // Whether to verify IRC servers' SSL certificates against built-in well-known certificate authorities
 conf.reject_unauthorised_certificates = false;
