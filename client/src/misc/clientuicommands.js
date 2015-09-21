@@ -87,6 +87,7 @@
             'command:notice':      {fn: noticeCommand, description: translateText('command_description_notice')},
             'command:quote':       {fn: quoteCommand, description: translateText('command_description_quote')},
             'command:kick':        {fn: kickCommand, description: translateText('command_description_kick')},
+            'command:names':       {fn: namesCommand, description: ''},
             'command:clear':       {fn: clearCommand, description: translateText('command_description_clear')},
             'command:ctcp':        {fn: ctcpCommand, description: translateText('command_description_ctcp')},
             'command:quit':        {fn: quitCommand, description: translateText('command_description_quit')},
@@ -419,6 +420,20 @@
         ev.params.shift();
 
         this.app.connections.active_connection.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
+    }
+
+
+    function namesCommand (ev) {
+        var channel, panel = this.app.panels().active;
+
+        if (!panel.isChannel()) return;
+
+        // Make sure we have a channel
+        channel = ev.params.length === 0 ?
+            panel.get('name') :
+            ev.params[0];
+
+        this.app.connections.active_connection.gateway.raw('NAMES ' + channel);
     }
 
 
