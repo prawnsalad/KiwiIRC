@@ -4,6 +4,7 @@ var net             = require('net'),
     dns             = require('dns'),
     _               = require('lodash'),
     winston         = require('winston'),
+    Socks           = require('socksjs'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
     IrcCommands     = require('./commands.js'),
@@ -12,19 +13,8 @@ var net             = require('net'),
     EE              = require('../ee.js'),
     iconv           = require('iconv-lite'),
     Proxy           = require('../proxy.js'),
-    Stats           = require('../stats.js'),
-    Socks;
+    Stats           = require('../stats.js');
 
-
-// Break the Node.js version down into usable parts
-var version_values = process.version.substr(1).split('.').map(function (item) {
-    return parseInt(item, 10);
-});
-
-// If we have a suitable Nodejs version, bring in the SOCKS functionality
-if (version_values[1] >= 10) {
-    Socks = require('socksjs');
-}
 
 var next_connection_id = 1;
 function generateConnectionId() {
