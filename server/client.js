@@ -96,6 +96,7 @@ Client.prototype.sendKiwiCommand = function (command, data, callback) {
 };
 
 Client.prototype.dispose = function () {
+    winston.debug('(client ' + this.id + ') Disposing');
     Stats.incr('client.disposed');
 
     if (this._heartbeat_tmr) {
