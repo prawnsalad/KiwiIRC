@@ -47,6 +47,12 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // Last few lines from the IRCd for context when disconnected (server errors, etc)
     this.last_few_lines = [];
 
+    // IRCd message buffers
+    this.read_buffer = [];
+
+    // In process of reading the IRCd messages?
+    this.reading_buffer = false;
+
     // IRCd write buffers (flood controll)
     this.write_buffer = [];
 
@@ -146,8 +152,8 @@ module.exports.IrcConnection = IrcConnection;
 /**
  * Create and keep track of all timers so they can be easily removed
  */
-IrcConnection.prototype.setTimeout = function(fn, length) {
-    var tmr = setTimeout(fn, length);
+IrcConnection.prototype.setTimeout = function(fn, length /*, argN */) {
+    var tmr = setTimeout.apply(null, arguments);
     this._timers = this._timers || [];
     this._timers.push(tmr);
     return tmr;
@@ -840,11 +846,8 @@ function socketOnData(data) {
         data.copy(this.held_data, 0, line_start);
     }
 
-    // Process our data line by line
-    for (i = 0; i < lines.length; i++) {
-        parseIrcLine.call(this, lines[i]);
-    }
-
+    this.read_buffer = this.read_buffer.concat(lines);
+    processIrcLines(this);
 }
 
 
@@ -867,6 +870,32 @@ function ip2Hex(ip) {
     }).join('');
 
     return hexed;
+}
+
+
+
+/**
+ * Process the messages recieved from the IRCd that are buffered on an IrcConnection object
+ * Will only process 4 lines per JS tick so that node can handle any other events while
+ * handling a large buffer
+ */
+function processIrcLines(irc_con, continue_processing) {
+    if (irc_con.reading_buffer && !continue_processing) return;
+    irc_con.reading_buffer = true;
+
+    var lines_per_js_tick = 4,
+        processed_lines = 0;
+
+    while(processed_lines < lines_per_js_tick && irc_con.read_buffer.length > 0) {
+        parseIrcLine.call(irc_con, irc_con.read_buffer.shift());
+        processed_lines++;
+    }
+
+    if (irc_con.read_buffer.length > 0) {
+        irc_con.setTimeout(processIrcLines, 1, irc_con, true);
+    } else {
+        irc_con.reading_buffer = false;
+    }
 }
 
 
