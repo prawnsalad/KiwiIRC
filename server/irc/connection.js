@@ -887,7 +887,7 @@ function processIrcLines(irc_con, continue_processing) {
         processed_lines = 0;
 
     while(processed_lines < lines_per_js_tick && irc_con.read_buffer.length > 0) {
-        parseIrcLine.call(irc_con, irc_con.read_buffer.shift());
+        parseIrcLine(irc_con, irc_con.read_buffer.shift());
         processed_lines++;
     }
 
@@ -907,7 +907,7 @@ function processIrcLines(irc_con, continue_processing) {
  */
 var parse_regex = /^(?:(?:(?:@([^ ]+) )?):(?:([^\s!]+)|([^\s!]+)!([^\s@]+)@?([^\s]+)?) )?(\S+)(?: (?!:)(.+?))?(?: :(.*))?$/i;
 
-function parseIrcLine(buffer_line) {
+function parseIrcLine(irc_con, buffer_line) {
     var msg,
         i,
         tags = [],
@@ -917,7 +917,7 @@ function parseIrcLine(buffer_line) {
         hold_last_lines;
 
     // Decode server encoding
-    line = iconv.decode(buffer_line, this.encoding);
+    line = iconv.decode(buffer_line, irc_con.encoding);
     if (!line) {
         return;
     }
@@ -925,7 +925,7 @@ function parseIrcLine(buffer_line) {
     // Parse the complete line, removing any carriage returns
     msg = parse_regex.exec(line.replace(/^\r+|\r+$/, ''));
 
-    winston.debug('(connection ' + this.id + ') Raw S:', line.replace(/^\r+|\r+$/, ''));
+    winston.debug('(connection ' + irc_con.id + ') Raw S:', line.replace(/^\r+|\r+$/, ''));
 
     if (!msg) {
         // The line was not parsed correctly, must be malformed
@@ -935,13 +935,13 @@ function parseIrcLine(buffer_line) {
 
     // If enabled, keep hold of the last X lines
     if (global.config.hold_ircd_lines) {
-        this.last_few_lines.push(line.replace(/^\r+|\r+$/, ''));
+        irc_con.last_few_lines.push(line.replace(/^\r+|\r+$/, ''));
 
         // Trim the array down if it's getting to long. (max 3 by default)
         hold_last_lines = parseInt(global.config.hold_ircd_lines, 10) || 3;
 
-        if (this.last_few_lines.length > hold_last_lines) {
-            this.last_few_lines = this.last_few_lines.slice(this.last_few_lines.length - hold_last_lines);
+        if (irc_con.last_few_lines.length > hold_last_lines) {
+            irc_con.last_few_lines = irc_con.last_few_lines.slice(irc_con.last_few_lines.length - hold_last_lines);
         }
     }
 
@@ -969,5 +969,5 @@ function parseIrcLine(buffer_line) {
         msg_obj.params.push(msg[8].trimRight());
     }
 
-    this.irc_commands.dispatch(new IrcCommands.Command(msg_obj.command.toUpperCase(), msg_obj));
+    irc_con.irc_commands.dispatch(new IrcCommands.Command(msg_obj.command.toUpperCase(), msg_obj));
 }
