@@ -284,7 +284,7 @@ var AutoComplete = Backbone.View.extend({
         var dont_process_other_input_keys = false;
 
         // Handling input box caret positioning
-        var caret_pos = 0,
+        var caret_pos = $inp[0].selectionStart,
             new_position = 0,
             text_range;
 
@@ -298,18 +298,23 @@ var AutoComplete = Backbone.View.extend({
             event.preventDefault();
             dont_process_other_input_keys = true;
         }
+        else if (caret_pos === 1 && (event.keyCode === 37 || event.keyCode === 8)) { // Caret about to move to the beginning of the box
+            event.preventDefault();
+            this.cancel('caret_moved');
+        }
         else if (0 && event.keyCode === 37) { // left
             // If the caret is moved before the current word, stop autocompleting
-            caret_pos = $inp[0].selectionStart;
             if (caret_pos > 0 && $inp.val().toUpperCase()[caret_pos-1] === ' ') {
                 event.preventDefault();
                 this.cancel('caret_moved');
             }
         }
         else if (event.keyCode === 13) { // return
-            this.trigger('match', this.currentMatch(), this.matches[this.selected_idx]);
-            event.preventDefault();
-            dont_process_other_input_keys = true;
+            if (this.selected_idx) {
+                this.trigger('match', this.currentMatch(), this.matches[this.selected_idx]);
+                event.preventDefault();
+                dont_process_other_input_keys = true;
+            }
         }
         else if (event.keyCode === 27) { // escape
             this.cancel();
