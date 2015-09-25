@@ -237,6 +237,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             }
 
             inp.val('');
+
+            // The auto complete may not have thrown a match if it was empty, so
+            // just make sure it's closed
+            if (this.autocomplete.open) {
+                this.autocomplete.close();
+            }
+
             return false;
 
             break;
