@@ -273,7 +273,9 @@ var AutoComplete = Backbone.View.extend({
 
 
     currentMatch: function() {
-        return this.matches[this.selected_idx].matched_word;
+        return this.matches[this.selected_idx] ?
+            this.matches[this.selected_idx].matched_word :
+            null;
     },
 
 
