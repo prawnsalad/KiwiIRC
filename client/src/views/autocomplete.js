@@ -312,7 +312,7 @@ var AutoComplete = Backbone.View.extend({
             }
         }
         else if (event.keyCode === 13) { // return
-            if (this.selected_idx) {
+            if (this.matches[this.selected_idx]) {
                 this.trigger('match', this.currentMatch(), this.matches[this.selected_idx]);
                 event.preventDefault();
                 dont_process_other_input_keys = true;
