@@ -889,6 +889,7 @@ function processIrcLines(irc_con, continue_processing) {
     while(processed_lines < lines_per_js_tick && irc_con.read_buffer.length > 0) {
         parseIrcLine(irc_con, irc_con.read_buffer.shift());
         processed_lines++;
+        Stats.incr('irc.connection.parsed_lines');
     }
 
     if (irc_con.read_buffer.length > 0) {
