@@ -311,6 +311,15 @@
             case 'PREFIX':
                 that.set('user_prefixes', value);
                 break;
+            case 'NICKLEN':
+                that.set('nick_max_length', parseInt(value, 10));
+                break;
+            case 'CHANNELLEN':
+                that.set('channel_max_length', parseInt(value, 10));
+                break;
+            case 'TOPICLEN':
+                that.set('topic_max_length', parseInt(value, 10));
+                break;
             }
         });
 
