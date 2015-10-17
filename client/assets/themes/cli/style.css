@@ -132,6 +132,36 @@
 #kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
 #kiwi .userbox .divider-horizontal { display:none; }
 
+#kiwi .autocomplete {
+    box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
+    border: 1px solid #8A8A8A;
+    background: #191919;
+}
+#kiwi .autocomplete-header {
+    background: #252525 none repeat scroll 0 0 padding-box;
+    border-bottom: 1px solid #8A8A8A;
+    color: #8A8A8A;
+    font-size: 12px;
+    padding: 5px 10px 4px;
+}
+#kiwi .autocomplete-header-label {
+    font-weight: bold;
+}
+#kiwi .autocomplete-item {
+    border-bottom: 1px solid #8A8A8A;
+    background: #191919;
+    padding: 5px 20px;
+}
+#kiwi .autocomplete-item.selected { background: #303327; }
+#kiwi .autocomplete-item .word { font-weight: bold; }
+#kiwi .autocomplete-item .matches { font-size: 0.9em; }
+#kiwi .autocomplete-item .actions { font-size: 0.9em; }
+#kiwi .autocomplete-item .actions a { margin-left: 1em; }
+#kiwi .autocomplete-item .description {
+    margin-right: 1em;
+    font-style: italic;
+}
+
 #kiwi .status_message {
     background: #363636;
     border-bottom: 1px solid #444444;

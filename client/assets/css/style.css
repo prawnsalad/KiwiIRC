@@ -220,6 +220,52 @@ html, body { height:100%; }
 
 
 /**
+ * Auto complete UI
+ */
+#kiwi .autocomplete {
+    position: absolute;
+    box-sizing: border-box;
+    left: 12em;
+    right: 4em;
+    bottom: 100%;
+    overflow-y: auto;
+    display: none;
+}
+#kiwi .autocomplete-header {
+    overflow: hidden;
+}
+#kiwi.narrow .autocomplete-header {
+    display: none;
+}
+#kiwi .autocomplete-header-help {
+    float: right;
+}
+#kiwi .autocomplete-list {
+    overflow-y: auto;
+}
+#kiwi.narrow .autocomplete {
+    left: 0;
+    right: 0;
+}
+#kiwi .autocomplete-item {
+    list-style: none;
+    overflow: hidden;
+}
+#kiwi .autocomplete-item .matches {
+    margin-left: 2em;
+}
+#kiwi.narrow .autocomplete-item .matches {
+    display: none;
+}
+#kiwi .autocomplete-item .actions {
+    float: right; margin-right: 2em;
+}
+#kiwi .autocomplete-item .description {
+    float: right;
+}
+
+
+/**
  * Control box
  */
 #kiwi .controlbox .input {
