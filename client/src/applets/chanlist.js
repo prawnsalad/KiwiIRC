@@ -11,9 +11,9 @@
 
         initialize: function (options) {
             var text = {
-                channel_name: _kiwi.global.i18n.translate('client_applets_chanlist_channelname').fetch(),
-                users: _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch(),
-                topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
+                channel_name: _melon.global.i18n.translate('client_applets_chanlist_channelname').fetch(),
+                users: _melon.global.i18n.translate('client_applets_chanlist_users').fetch(),
+                topic: _melon.global.i18n.translate('client_applets_chanlist_topic').fetch()
             };
             this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
 
@@ -76,10 +76,10 @@
 
         chanClick: function (event) {
             if (event.target) {
-                _kiwi.gateway.join(null, $(event.target).data('channel'));
+                _melon.gateway.join(null, $(event.target).data('channel'));
             } else {
                 // IE...
-                _kiwi.gateway.join(null, $(event.srcElement).data('channel'));
+                _melon.gateway.join(null, $(event.srcElement).data('channel'));
             }
         },
 
@@ -143,10 +143,10 @@
 
     var Applet = Backbone.Model.extend({
         initialize: function () {
-            this.set('title', _kiwi.global.i18n.translate('client_applets_chanlist_channellist').fetch());
+            this.set('title', _melon.global.i18n.translate('client_applets_chanlist_channellist').fetch());
             this.view = new View();
 
-            this.network = _kiwi.global.components.Network();
+            this.network = _melon.global.components.Network();
             this.network.on('list_channel', this.onListChannel, this);
             this.network.on('list_start', this.onListStart, this);
         },
@@ -200,5 +200,5 @@
 
 
 
-    _kiwi.model.Applet.register('kiwi_chanlist', Applet);
+    _melon.model.Applet.register('melon_chanlist', Applet);
 })();

@@ -1,4 +1,4 @@
-_kiwi.model.Gateway = Backbone.Model.extend({
+_melon.model.Gateway = Backbone.Model.extend({
 
     initialize: function () {
 
@@ -23,16 +23,16 @@ _kiwi.model.Gateway = Backbone.Model.extend({
 
     /**
     *   Connects to the server
-    *   @param  {Function}  callback    A callback function to be invoked once Kiwi's server has connected to the IRC server
+    *   @param  {Function}  callback    A callback function to be invoked once Melon's server has connected to the IRC server
     */
     connect: function (callback) {
         var that = this;
 
         this.connect_callback = callback;
 
-        this.socket = new EngineioTools.ReconnectingSocket(this.get('kiwi_server'), {
-            transports: _kiwi.app.server_settings.transports || ['polling', 'websocket'],
-            path: _kiwi.app.get('base_path') + '/transport',
+        this.socket = new EngineioTools.ReconnectingSocket(this.get('melon_server'), {
+            transports: _melon.app.server_settings.transports || ['polling', 'websocket'],
+            path: _melon.app.get('base_path') + '/transport',
             reconnect_max_attempts: 5,
             reconnect_delay: 2000
         });
@@ -49,7 +49,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
         });
 
         this.socket.on('error', function (e) {
-            console.log("_kiwi.gateway.socket.on('error')", {reason: e});
+            console.log("_melon.gateway.socket.on('error')", {reason: e});
             if (that.connect_callback) {
                 that.connect_callback(e);
                 delete that.connect_callback;
@@ -59,14 +59,14 @@ _kiwi.model.Gateway = Backbone.Model.extend({
         });
 
         this.socket.on('connecting', function (transport_type) {
-            console.log("_kiwi.gateway.socket.on('connecting')");
+            console.log("_melon.gateway.socket.on('connecting')");
             that.trigger("connecting");
         });
 
         /**
-         * Once connected to the kiwi server send the IRC connect command along
+         * Once connected to the melon server send the IRC connect command along
          * with the IRC server details.
-         * A `connect` event is sent from the kiwi server once connected to the
+         * A `connect` event is sent from the melon server once connected to the
          * IRCD and the nick has been accepted.
          */
         this.socket.on('open', function () {
@@ -77,13 +77,13 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             var heartbeat = function() {
                 if (!that.rpc) return;
 
-                that.rpc('kiwi.heartbeat');
+                that.rpc('melon.heartbeat');
                 that._heartbeat_tmr = setTimeout(heartbeat, 60000);
             };
 
             heartbeat();
 
-            console.log("_kiwi.gateway.socket.on('open')");
+            console.log("_melon.gateway.socket.on('open')");
         });
 
         this.rpc.on('too_many_connections', function () {
@@ -94,22 +94,22 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             that.parse(data.command, data.data);
         });
 
-        this.rpc.on('kiwi', function (response, data) {
-            that.parseKiwi(data.command, data.data);
+        this.rpc.on('melon', function (response, data) {
+            that.parseMelon(data.command, data.data);
         });
 
         this.socket.on('close', function () {
             that.trigger("disconnect", {});
-            console.log("_kiwi.gateway.socket.on('close')");
+            console.log("_melon.gateway.socket.on('close')");
         });
 
         this.socket.on('reconnecting', function (status) {
-            console.log("_kiwi.gateway.socket.on('reconnecting')");
+            console.log("_melon.gateway.socket.on('reconnecting')");
             that.trigger("reconnecting", {delay: status.delay, attempts: status.attempts});
         });
 
         this.socket.on('reconnecting_failed', function () {
-            console.log("_kiwi.gateway.socket.on('reconnect_failed')");
+            console.log("_melon.gateway.socket.on('reconnect_failed')");
         });
     },
 
@@ -138,7 +138,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             var connection;
 
             if (!err) {
-                if (!_kiwi.app.connections.getByConnectionId(server_num)){
+                if (!_melon.app.connections.getByConnectionId(server_num)){
                     var inf = {
                         connection_id: server_num,
                         nick: connection_info.nick,
@@ -147,15 +147,15 @@ _kiwi.model.Gateway = Backbone.Model.extend({
                         ssl: connection_info.ssl,
                         password: connection_info.password
                     };
-                    connection = new _kiwi.model.Network(inf);
-                    _kiwi.app.connections.add(connection);
+                    connection = new _melon.model.Network(inf);
+                    _melon.app.connections.add(connection);
                 }
 
-                console.log("_kiwi.gateway.socket.on('connect')", connection);
+                console.log("_melon.gateway.socket.on('connect')", connection);
                 callback_fn && callback_fn(err, connection);
 
             } else {
-                console.log("_kiwi.gateway.socket.on('error')", {reason: err});
+                console.log("_melon.gateway.socket.on('error')", {reason: err});
                 callback_fn && callback_fn(err);
             }
         });
@@ -180,7 +180,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
         if (connection_info.options.encoding)
             server_info.encoding = connection_info.options.encoding;
 
-        this.rpc('kiwi.connect_irc', server_info, function (err, server_num) {
+        this.rpc('melon.connect_irc', server_info, function (err, server_num) {
             if (!err) {
                 callback_fn && callback_fn(err, server_num);
 
@@ -198,16 +198,16 @@ _kiwi.model.Gateway = Backbone.Model.extend({
 
 
 
-    parseKiwi: function (command, data) {
+    parseMelon: function (command, data) {
         var args;
 
         switch (command) {
         case 'connected':
             // Send some info on this client to the server
             args = {
-                build_version: _kiwi.global.build_version
+                build_version: _melon.global.build_version
             };
-            this.rpc('kiwi.client_info', args);
+            this.rpc('melon.client_info', args);
 
             this.connect_callback && this.connect_callback();
             delete this.connect_callback;
@@ -215,8 +215,8 @@ _kiwi.model.Gateway = Backbone.Model.extend({
             break;
         }
 
-        this.trigger('kiwi:' + command, data);
-        this.trigger('kiwi', data);
+        this.trigger('melon:' + command, data);
+        this.trigger('melon', data);
     },
 
     /**
@@ -264,7 +264,7 @@ _kiwi.model.Gateway = Backbone.Model.extend({
         var args = Array.prototype.slice.call(arguments, 0);
 
         if (typeof args[1] === 'undefined' || args[1] === null)
-            args[1] = _kiwi.app.connections.active_connection.get('connection_id');
+            args[1] = _melon.app.connections.active_connection.get('connection_id');
 
         return this.rpc.apply(this.rpc, args);
     },

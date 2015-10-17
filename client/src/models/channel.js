@@ -1,60 +1,60 @@
 // TODO: Channel modes
 // TODO: Listen to gateway events for anythign related to this channel
-_kiwi.model.Channel = _kiwi.model.Panel.extend({
+_melon.model.Channel = _melon.model.Panel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;
 
         this.set({
-            "members": new _kiwi.model.MemberList(),
+            "members": new _melon.model.MemberList(),
             "name": name,
             "scrollback": [],
             "topic": ""
         }, {"silent": true});
 
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
+        this.view = new _melon.view.Channel({"model": this, "name": name});
 
         members = this.get("members");
         members.channel = this;
         members.bind("add", function (member, members, options) {
-            var show_message = _kiwi.global.settings.get('show_joins_parts');
+            var show_message = _melon.global.settings.get('show_joins_parts');
             if (show_message === false) {
                 return;
             }
 
-            this.addMsg(' ', styleText('channel_join', {member: member.getMaskParts(), text: translateText('client_models_channel_join'), channel: name}), 'action join', {time: options.kiwi.time});
+            this.addMsg(' ', styleText('channel_join', {member: member.getMaskParts(), text: translateText('client_models_channel_join'), channel: name}), 'action join', {time: options.melon.time});
         }, this);
 
         members.bind("remove", function (member, members, options) {
-            var show_message = _kiwi.global.settings.get('show_joins_parts');
-            var msg = (options.kiwi.message) ? '(' + options.kiwi.message + ')' : '';
+            var show_message = _melon.global.settings.get('show_joins_parts');
+            var msg = (options.melon.message) ? '(' + options.melon.message + ')' : '';
 
-            if (options.kiwi.type === 'quit' && show_message) {
-                this.addMsg(' ', styleText('channel_quit', {member: member.getMaskParts(), text: translateText('client_models_channel_quit', [msg]), channel: name}), 'action quit', {time: options.kiwi.time});
+            if (options.melon.type === 'quit' && show_message) {
+                this.addMsg(' ', styleText('channel_quit', {member: member.getMaskParts(), text: translateText('client_models_channel_quit', [msg]), channel: name}), 'action quit', {time: options.melon.time});
 
-            } else if (options.kiwi.type === 'kick') {
+            } else if (options.melon.type === 'kick') {
 
-                if (!options.kiwi.current_user_kicked) {
+                if (!options.melon.current_user_kicked) {
                     //If user kicked someone, show the message regardless of settings.
-                    if (show_message || options.kiwi.current_user_initiated) {
-                        this.addMsg(' ', styleText('channel_kicked', {member: member.getMaskParts(), text: translateText('client_models_channel_kicked', [options.kiwi.by, msg]), channel: name}), 'action kick', {time: options.kiwi.time});
+                    if (show_message || options.melon.current_user_initiated) {
+                        this.addMsg(' ', styleText('channel_kicked', {member: member.getMaskParts(), text: translateText('client_models_channel_kicked', [options.melon.by, msg]), channel: name}), 'action kick', {time: options.melon.time});
                     }
                 } else {
-                    this.addMsg(' ', styleText('channel_selfkick', {text: translateText('client_models_channel_selfkick', [options.kiwi.by, msg]), channel: name}), 'action kick', {time: options.kiwi.time});
+                    this.addMsg(' ', styleText('channel_selfkick', {text: translateText('client_models_channel_selfkick', [options.melon.by, msg]), channel: name}), 'action kick', {time: options.melon.time});
                 }
             } else if (show_message) {
-                this.addMsg(' ', styleText('channel_part', {member: member.getMaskParts(), text: translateText('client_models_channel_part', [msg]), channel: name}), 'action part', {time: options.kiwi.time});
+                this.addMsg(' ', styleText('channel_part', {member: member.getMaskParts(), text: translateText('client_models_channel_part', [msg]), channel: name}), 'action part', {time: options.melon.time});
 
             }
         }, this);
 
-        _kiwi.global.events.emit('panel:created', {panel: this});
+        _melon.global.events.emit('panel:created', {panel: this});
     },
 
 
     addMsg: function (nick, msg, type, opts) {
         var message_obj, bs, d, members, member,
-            scrollback = (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250);
+            scrollback = (parseInt(_melon.global.settings.get('scrollback'), 10) || 250);
 
         opts = opts || {};
 

@@ -1,17 +1,17 @@
 /**
  * Stats counter
  *
- * Retreive stats for internal kiwi events. Handy for graphing
+ * Retreive stats for internal melon events. Handy for graphing
  */
 
-var kiwiModules = require('../server/modules'),
+var melonModules = require('../server/modules'),
     fs = require('fs');
 
 
 
-var module = new kiwiModules.Module('stats_file');
+var module = new melonModules.Module('stats_file');
 
-var stats_file = fs.createWriteStream('kiwi_stats.log', {'flags': 'a'});
+var stats_file = fs.createWriteStream('melon_stats.log', {'flags': 'a'});
 
 module.on('stat counter', function (event, event_data) {
     var stat_name = event_data.name,

@@ -1,8 +1,8 @@
-_kiwi.model.Applet = _kiwi.model.Panel.extend({
+_melon.model.Applet = _melon.model.Panel.extend({
     initialize: function (attributes) {
         // Temporary name
         var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
-        this.view = new _kiwi.view.Applet({model: this, name: name});
+        this.view = new _melon.view.Applet({model: this, name: name});
 
         this.set({
             "name": name
@@ -20,7 +20,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
             if (applet_object.get || applet_object.extend) {
 
                 // Try find a title for the applet
-                this.set('title', applet_object.get('title') || _kiwi.global.i18n.translate('client_models_applet_unknown').fetch());
+                this.set('title', applet_object.get('title') || _melon.global.i18n.translate('client_models_applet_unknown').fetch());
 
                 // Update the tabs title if the applet changes it
                 applet_object.bind('change:title', function (obj, new_value) {
@@ -51,16 +51,16 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     loadFromUrl: function(applet_url, applet_name) {
         var that = this;
 
-        this.view.$el.html(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
+        this.view.$el.html(_melon.global.i18n.translate('client_models_applet_loading').fetch());
         $script(applet_url, function () {
             // Check if the applet loaded OK
-            if (!_kiwi.applets[applet_name]) {
-                that.view.$el.html(_kiwi.global.i18n.translate('client_models_applet_notfound').fetch());
+            if (!_melon.applets[applet_name]) {
+                that.view.$el.html(_melon.global.i18n.translate('client_models_applet_notfound').fetch());
                 return;
             }
 
             // Load a new instance of this applet
-            that.load(new _kiwi.applets[applet_name]());
+            that.load(new _melon.applets[applet_name]());
         });
     },
 
@@ -91,7 +91,7 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
     loadOnce: function (applet_name) {
 
         // See if we have an instance loaded already
-        var applet = _.find(_kiwi.app.panels('applets'), function(panel) {
+        var applet = _.find(_melon.app.panels('applets'), function(panel) {
             // Ignore if it's not an applet
             if (!panel.isApplet()) return;
 
@@ -122,12 +122,12 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
             return;
 
         // Create the applet and load the content
-        applet = new _kiwi.model.Applet();
+        applet = new _melon.model.Applet();
         applet.load(new applet_obj({_applet_name: applet_name}));
 
         // Add it into the tab list if needed (default)
         if (!options.no_tab)
-            _kiwi.app.applet_panels.add(applet);
+            _melon.app.applet_panels.add(applet);
 
 
         return applet;
@@ -135,11 +135,11 @@ _kiwi.model.Applet = _kiwi.model.Panel.extend({
 
 
     getApplet: function (applet_name) {
-        return _kiwi.applets[applet_name] || null;
+        return _melon.applets[applet_name] || null;
     },
 
 
     register: function (applet_name, applet) {
-        _kiwi.applets[applet_name] = applet;
+        _melon.applets[applet_name] = applet;
     }
 });

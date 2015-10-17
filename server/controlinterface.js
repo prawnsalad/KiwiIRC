@@ -1,7 +1,7 @@
 var _           = require('lodash'),
     rehash      = require('./rehash.js'),
     config      = require('../server/configuration.js'),
-    kiwiModules = require('../server/modules');
+    melonModules = require('../server/modules');
 
 
 
@@ -13,7 +13,7 @@ var ControlInterface = module.exports = function(stream_in, stream_out, opts) {
     opts = opts || {};
     this.prompt = (typeof opts.prompt === 'string') ?
         opts.prompt :
-        'Kiwi > ';
+        'Melon > ';
 
     this._custom_commands = {};
 
@@ -81,7 +81,7 @@ commands.help = function(args, raw) {
     help += 'help\n';
     help += '    This help menu\n';
     help += 'exit\n';
-    help += '    Close and exit this Kiwi admin console\n';
+    help += '    Close and exit this Melon admin console\n';
     help += 'reconfig\n';
     help += '    Reload the config.js file\n';
     help += 'stats\n';
@@ -90,8 +90,8 @@ commands.help = function(args, raw) {
     help += '    List the loaded server modules\n';
     help += 'module reload module_name\n';
     help += '    Reload the module_name module\n';
-    help += 'jumpserver [force] http://kiwi-server.com\n';
-    help += '    Tell all connected clients to reconnect to a different kiwi server. If \'force\' is given, they will be forced to reconnect in 5 minutes. \n';
+    help += 'jumpserver [force] http://melon-server.com\n';
+    help += '    Tell all connected clients to reconnect to a different melon server. If \'force\' is given, they will be forced to reconnect in 5 minutes. \n';
 
     this.write(help);
 };
@@ -133,15 +133,15 @@ commands.jumpserver = function(args, raw) {
         packet[args[args_idx]] = true;
     }
 
-    packet.kiwi_server = args[args_idx];
+    packet.melon_server = args[args_idx];
 
-    if (!packet.kiwi_server) {
-        this.write('No Kiwi server specified');
+    if (!packet.melon_server) {
+        this.write('No Melon server specified');
         return;
     }
 
     this.write('Broadcasting jumpserver to ' + num_clients.toString() + ' clients..');
-    global.clients.broadcastKiwiCommand('jumpserver', packet, function() {
+    global.clients.broadcastMelonCommand('jumpserver', packet, function() {
         that.write('Broadcast complete.');
     });
 };
@@ -155,12 +155,12 @@ commands.module = function(args, raw) {
                 return;
             }
 
-            if (!kiwiModules.unload(args[1])) {
+            if (!melonModules.unload(args[1])) {
                 this.write('Module ' + (args[1] || '') + ' is not loaded');
                 return;
             }
 
-            if (!kiwiModules.load(args[1])) {
+            if (!melonModules.load(args[1])) {
                 this.write('Error loading module ' + (args[1] || ''));
             }
             this.write('Module ' + args[1] + ' reloaded');
@@ -173,7 +173,7 @@ commands.module = function(args, raw) {
                 return;
             }
 
-            if (!kiwiModules.load(args[1])) {
+            if (!melonModules.load(args[1])) {
                 this.write('Error loading module ' + (args[1] || ''));
             }
             this.write('Module ' + args[1] + ' loaded');
@@ -186,7 +186,7 @@ commands.module = function(args, raw) {
                 return;
             }
 
-            if (!kiwiModules.unload(args[1])) {
+            if (!melonModules.unload(args[1])) {
                 this.write('Module ' + (args[1] || '') + ' is not loaded');
                 return;
             }
@@ -199,7 +199,7 @@ commands.module = function(args, raw) {
         case 'ls':
         default:
             var module_names = [];
-            kiwiModules.getRegisteredModules().forEach(function(module) {
+            melonModules.getRegisteredModules().forEach(function(module) {
                 module_names.push(module.module_name);
             });
             this.write('Loaded modules: ' + module_names.join(', '));

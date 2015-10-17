@@ -1,10 +1,10 @@
 (function () {
 
-    _kiwi.model.Application = Backbone.Model.extend({
-        /** _kiwi.view.Application */
+    _melon.model.Application = Backbone.Model.extend({
+        /** _melon.view.Application */
         view: null,
 
-        /** _kiwi.view.StatusMessage */
+        /** _melon.view.StatusMessage */
         message: null,
 
         initialize: function (options) {
@@ -14,7 +14,7 @@
                 this.set('container', options.container);
             }
 
-            // The base url to the kiwi server
+            // The base url to the melon server
             this.set('base_path', options.base_path ? options.base_path : '');
 
             // Path for the settings.json file
@@ -30,7 +30,7 @@
             this.text_theme = options.text_theme || {};
 
             // The applet to initially load
-            this.startup_applet_name = options.startup || 'kiwi_startup';
+            this.startup_applet_name = options.startup || 'melon_startup';
 
             // Set any default settings before anything else is applied
             if (this.server_settings && this.server_settings.client && this.server_settings.client.settings) {
@@ -40,12 +40,12 @@
 
 
         initializeInterfaces: function () {
-            // Best guess at where the kiwi server is if not already specified
-            var kiwi_server = this.app_options.kiwi_server || this.detectKiwiServer();
+            // Best guess at where the melon server is if not already specified
+            var melon_server = this.app_options.melon_server || this.detectMelonServer();
 
             // Set the gateway up
-            _kiwi.gateway = new _kiwi.model.Gateway({kiwi_server: kiwi_server});
-            this.bindGatewayCommands(_kiwi.gateway);
+            _melon.gateway = new _melon.model.Gateway({melon_server: melon_server});
+            this.bindGatewayCommands(_melon.gateway);
 
             this.initializeClient();
             this.initializeGlobals();
@@ -54,31 +54,31 @@
         },
 
 
-        detectKiwiServer: function () {
+        detectMelonServer: function () {
             // If running from file, default to localhost:7777 by default
             if (window.location.protocol === 'file:') {
                 return 'http://localhost:7778';
             } else {
-                // Assume the kiwi server is on the same server
+                // Assume the melon server is on the same server
                 return window.location.protocol + '//' + window.location.host;
             }
         },
 
 
         showStartup: function() {
-            this.startup_applet = _kiwi.model.Applet.load(this.startup_applet_name, {no_tab: true});
+            this.startup_applet = _melon.model.Applet.load(this.startup_applet_name, {no_tab: true});
             this.startup_applet.tab = this.view.$('.console');
             this.startup_applet.view.show();
 
-            _kiwi.global.events.emit('loaded');
+            _melon.global.events.emit('loaded');
         },
 
 
         initializeClient: function () {
-            this.view = new _kiwi.view.Application({model: this, el: this.get('container')});
+            this.view = new _melon.view.Application({model: this, el: this.get('container')});
 
             // Takes instances of model_network
-            this.connections = new _kiwi.model.NetworkPanelList();
+            this.connections = new _melon.model.NetworkPanelList();
 
             // If all connections are removed at some point, hide the bars
             this.connections.on('remove', _.bind(function() {
@@ -88,25 +88,25 @@
             }, this));
 
             // Applets panel list
-            this.applet_panels = new _kiwi.model.PanelList();
+            this.applet_panels = new _melon.model.PanelList();
             this.applet_panels.view.$el.addClass('panellist applets');
             this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
             /**
              * Set the UI components up
              */
-            this.controlbox = (new _kiwi.view.ControlBox({el: $('#kiwi .controlbox')[0]})).render();
-            this.client_ui_commands = new _kiwi.misc.ClientUiCommands(this, this.controlbox);
+            this.controlbox = (new _melon.view.ControlBox({el: $('#melon .controlbox')[0]})).render();
+            this.client_ui_commands = new _melon.misc.ClientUiCommands(this, this.controlbox);
 
-            this.rightbar = new _kiwi.view.RightBar({el: this.view.$('.right_bar')[0]});
-            this.topicbar = new _kiwi.view.TopicBar({el: this.view.$el.find('.topic')[0]});
+            this.rightbar = new _melon.view.RightBar({el: this.view.$('.right_bar')[0]});
+            this.topicbar = new _melon.view.TopicBar({el: this.view.$el.find('.topic')[0]});
 
-            new _kiwi.view.AppToolbar({el: _kiwi.app.view.$el.find('.toolbar .app_tools')[0]});
-            new _kiwi.view.ChannelTools({el: _kiwi.app.view.$el.find('.channel_tools')[0]});
+            new _melon.view.AppToolbar({el: _melon.app.view.$el.find('.toolbar .app_tools')[0]});
+            new _melon.view.ChannelTools({el: _melon.app.view.$el.find('.channel_tools')[0]});
 
-            this.message = new _kiwi.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
+            this.message = new _melon.view.StatusMessage({el: this.view.$el.find('.status_message')[0]});
 
-            this.resize_handle = new _kiwi.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
+            this.resize_handle = new _melon.view.ResizeHandler({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();
@@ -114,26 +114,26 @@
 
 
         initializeGlobals: function () {
-            _kiwi.global.connections = this.connections;
+            _melon.global.connections = this.connections;
 
-            _kiwi.global.panels = this.panels;
-            _kiwi.global.panels.applets = this.applet_panels;
+            _melon.global.panels = this.panels;
+            _melon.global.panels.applets = this.applet_panels;
 
-            _kiwi.global.components.Applet = _kiwi.model.Applet;
-            _kiwi.global.components.Panel =_kiwi.model.Panel;
-            _kiwi.global.components.MenuBox = _kiwi.view.MenuBox;
-            _kiwi.global.components.DataStore = _kiwi.model.DataStore;
-            _kiwi.global.components.Notification = _kiwi.view.Notification;
-            _kiwi.global.components.Events = function() {
-                return kiwi.events.createProxy();
+            _melon.global.components.Applet = _melon.model.Applet;
+            _melon.global.components.Panel =_melon.model.Panel;
+            _melon.global.components.MenuBox = _melon.view.MenuBox;
+            _melon.global.components.DataStore = _melon.model.DataStore;
+            _melon.global.components.Notification = _melon.view.Notification;
+            _melon.global.components.Events = function() {
+                return melon.events.createProxy();
             };
         },
 
 
         applyDefaultClientSettings: function (settings) {
             _.each(settings, function (value, setting) {
-                if (typeof _kiwi.global.settings.get(setting) === 'undefined') {
-                    _kiwi.global.settings.set(setting, value);
+                if (typeof _melon.global.settings.get(setting) === 'undefined') {
+                    _melon.global.settings.set(setting, value);
                 }
             });
         },
@@ -143,7 +143,7 @@
             var active_panel;
 
             var fn = function(panel_type) {
-                var app = _kiwi.app,
+                var app = _melon.app,
                     panels;
 
                 // Default panel type
@@ -174,7 +174,7 @@
                 var previous_panel = active_panel;
                 active_panel = new_active_panel;
 
-                _kiwi.global.events.emit('panel:active', {previous: previous_panel, active: active_panel});
+                _melon.global.events.emit('panel:active', {previous: previous_panel, active: active_panel});
             });
 
             return fn;
@@ -191,7 +191,7 @@
 
 
             /**
-             * Handle the reconnections to the kiwi server
+             * Handle the reconnections to the melon server
              */
             (function () {
                 // 0 = non-reconnecting state. 1 = reconnecting state.
@@ -209,22 +209,22 @@
                     var msg = translateText('client_models_application_reconnect_in_x_seconds', [event.delay/1000]) + '...';
 
                     // Only need to mention the repeating re-connection messages on server panels
-                    _kiwi.app.connections.forEach(function(connection) {
+                    _melon.app.connections.forEach(function(connection) {
                         connection.panels.server.addMsg('', styleText('quit', {text: msg}), 'action quit');
                     });
                 });
 
 
-                // After the socket has connected, kiwi handshakes and then triggers a kiwi:connected event
-                gw.on('kiwi:connected', function (event) {
+                // After the socket has connected, melon handshakes and then triggers a melon:connected event
+                gw.on('melon:connected', function (event) {
                     var msg;
 
                     that.view.$el.addClass('connected');
 
                     // Make the rpc globally available for plugins
-                    _kiwi.global.rpc = _kiwi.gateway.rpc;
+                    _melon.global.rpc = _melon.gateway.rpc;
 
-                    _kiwi.global.events.emit('connected');
+                    _melon.global.events.emit('connected');
 
                     // If we were reconnecting, show some messages we have connected back OK
                     if (gw_stat === 1) {
@@ -236,7 +236,7 @@
                         that.message.text(msg, {timeout: 5000});
 
                         // Mention the re-connection on every channel
-                        _kiwi.app.connections.forEach(function(connection) {
+                        _melon.app.connections.forEach(function(connection) {
                             connection.reconnect();
 
                             connection.panels.server.addMsg('', styleText('rejoin', {text: msg}), 'action join');
@@ -254,7 +254,7 @@
             })();
 
 
-            gw.on('kiwi:reconfig', function () {
+            gw.on('melon:reconfig', function () {
                 $.getJSON(that.get('settings_path'), function (data) {
                     that.server_settings = data.server_settings || {};
                     that.translations = data.translations || {};
@@ -262,13 +262,13 @@
             });
 
 
-            gw.on('kiwi:jumpserver', function (data) {
+            gw.on('melon:jumpserver', function (data) {
                 var serv;
                 // No server set? Then nowhere to jump to.
-                if (typeof data.kiwi_server === 'undefined')
+                if (typeof data.melon_server === 'undefined')
                     return;
 
-                serv = data.kiwi_server;
+                serv = data.melon_server;
 
                 // Strip any trailing slash from the end
                 if (serv[serv.length-1] === '/')
@@ -281,17 +281,17 @@
                     jump_server_interval = 1;
 
                     // Tell the user we are going to disconnect, wait 5 minutes then do the actual reconnect
-                    var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
+                    var msg = _melon.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
                     that.message.text(msg, {timeout: 10000});
 
                     setTimeout(function forcedReconnect() {
-                        var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_reconnect').fetch();
+                        var msg = _melon.global.i18n.translate('client_models_application_jumpserver_reconnect').fetch();
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {
-                            _kiwi.gateway.set('kiwi_server', serv);
+                            _melon.gateway.set('melon_server', serv);
 
-                            _kiwi.gateway.reconnect(function() {
+                            _melon.gateway.reconnect(function() {
                                 // Reconnect all the IRC connections
                                 that.connections.forEach(function(con){ con.reconnect(); });
                             });

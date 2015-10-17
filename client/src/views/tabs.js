@@ -1,5 +1,5 @@
-// Model for this = _kiwi.model.PanelList
-_kiwi.view.Tabs = Backbone.View.extend({
+// Model for this = _melon.model.PanelList
+_melon.view.Tabs = Backbone.View.extend({
     tagName: 'ul',
     className: 'panellist',
 
@@ -60,7 +60,7 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.appendTo(that.$el);
         });
 
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
     },
 
     updateTabTitle: function (panel, new_title) {
@@ -88,23 +88,23 @@ _kiwi.view.Tabs = Backbone.View.extend({
         panel.bind('change:title', this.updateTabTitle);
         panel.bind('change:name', this.updateTabTitle);
 
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
     },
     panelRemoved: function (panel) {
-        var connection = _kiwi.app.connections.active_connection;
+        var connection = _melon.app.connections.active_connection;
 
         panel.tab.remove();
         delete panel.tab;
 
-        _kiwi.app.panels.trigger('remove', panel);
+        _melon.app.panels.trigger('remove', panel);
 
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
     },
 
     panelActive: function (panel, previously_active_panel) {
         // Remove any existing tabs or part images
-        _kiwi.app.view.$el.find('.panellist .part').remove();
-        _kiwi.app.view.$el.find('.panellist .active').removeClass('active');
+        _melon.app.view.$el.find('.panellist .part').remove();
+        _melon.app.view.$el.find('.panellist .active').removeClass('active');
 
         panel.tab.addClass('active');
 
@@ -138,8 +138,8 @@ _kiwi.view.Tabs = Backbone.View.extend({
         } else if(panel.isServer()) {
             if (!this.model.network.get('connected') || confirm(translateText('disconnect_from_server'))) {
                 this.model.network.gateway.quit("Leaving");
-                _kiwi.app.connections.remove(this.model.network);
-                _kiwi.app.startup_applet.view.show();
+                _melon.app.connections.remove(this.model.network);
+                _melon.app.startup_applet.view.show();
             }
 
         } else {

@@ -5,7 +5,7 @@
  */
 
 var dns = require('dns'),
-    kiwiModules = require('../server/modules');
+    melonModules = require('../server/modules');
 
 
 // The available DNS zones to check against
@@ -17,7 +17,7 @@ var bl_zones = {
 var current_bl = 'dronebl';
 
 
-var module = new kiwiModules.Module('DNSBL');
+var module = new melonModules.Module('DNSBL');
 
 module.on('irc connecting', function (event, event_data) {
     event.wait = true;

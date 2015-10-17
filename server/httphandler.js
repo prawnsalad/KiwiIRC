@@ -27,7 +27,7 @@ module.exports.HttpHandler = HttpHandler;
 
 
 HttpHandler.prototype.serve = function (request, response) {
-    // The incoming requests base path (ie. /kiwiclient)
+    // The incoming requests base path (ie. /melonclient)
     var base_path, base_check,
         whitelisted_folders = ['/assets', '/src'],
         is_whitelisted_folder = false;

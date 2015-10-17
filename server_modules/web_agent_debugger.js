@@ -6,11 +6,11 @@
  */
 
 
-var kiwiModules = require('../server/modules'),
+var melonModules = require('../server/modules'),
 	agent = require('webkit-devtools-agent');
 
 
-var module = new kiwiModules.Module('web_agent_debugger');
+var module = new melonModules.Module('web_agent_debugger');
 
 agent.start({
         port: 9999,

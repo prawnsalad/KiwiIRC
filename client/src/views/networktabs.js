@@ -1,5 +1,5 @@
-// Model for this = _kiwi.model.NetworkPanelList
-_kiwi.view.NetworkTabs = Backbone.View.extend({
+// Model for this = _melon.model.NetworkPanelList
+_melon.view.NetworkTabs = Backbone.View.extend({
     tagName: 'ul',
     className: 'connections',
 
@@ -7,7 +7,7 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
         this.model.on('add', this.networkAdded, this);
         this.model.on('remove', this.networkRemoved, this);
 
-        this.$el.appendTo(_kiwi.app.view.$el.find('.tabs'));
+        this.$el.appendTo(_melon.app.view.$el.find('.tabs'));
     },
 
     networkAdded: function(network) {
@@ -22,6 +22,6 @@ _kiwi.view.NetworkTabs = Backbone.View.extend({
 
         network.panels.view.remove();
 
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
     }
 });

@@ -112,7 +112,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         this.socks = false;
     }
 
-    // Kiwi proxy info may be set within a server module. {port: 7779, host: 'kiwi.proxy.com', ssl: false}
+    // Melon proxy info may be set within a server module. {port: 7779, host: 'melon.proxy.com', ssl: false}
     this.proxy = false;
 
     // Net. interface this connection should be made through
@@ -719,7 +719,7 @@ var socketConnectHandler = function () {
 
         } else if (!gecos) {
             // We don't have a gecos nor a default, so lets set somthing
-            gecos = '[www.kiwiirc.com] ' + that.nick;
+            gecos = '[www.melonirc.com] ' + that.nick;
         }
 
         // Send any initial data for webirc/etc
@@ -765,7 +765,7 @@ function findWebIrc(connect_data) {
 
     if (found_webirc_pass) {
         // Build the WEBIRC line to be sent before IRC registration
-        tmp = 'WEBIRC ' + webirc_pass[this.irc_host.hostname] + ' KiwiIRC ';
+        tmp = 'WEBIRC ' + webirc_pass[this.irc_host.hostname] + ' MelonIRC ';
         tmp += this.user.hostname + ' ' + this.user.address;
 
         connect_data.prepend_data = [tmp];

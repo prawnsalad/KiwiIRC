@@ -1,25 +1,25 @@
-// Holds anything kiwi client specific (ie. front, gateway, _kiwi.plugs..)
+// Holds anything melon client specific (ie. front, gateway, _melon.plugs..)
 /**
 *   @namespace
 */
-var _kiwi = {};
+var _melon = {};
 
-_kiwi.misc = {};
-_kiwi.model = {};
-_kiwi.view = {};
-_kiwi.applets = {};
-_kiwi.utils = {};
+_melon.misc = {};
+_melon.model = {};
+_melon.view = {};
+_melon.applets = {};
+_melon.utils = {};
 
 
 /**
  * A global container for third party access
- * Will be used to access a limited subset of kiwi functionality
+ * Will be used to access a limited subset of melon functionality
  * and data (think: plugins)
  */
-_kiwi.global = {
-    build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
-    settings: undefined, // Instance of _kiwi.model.DataStore
-    plugins: undefined, // Instance of _kiwi.model.PluginManager
+_melon.global = {
+    build_version: '',  // Melon IRC version this is built from (Set from index.html)
+    settings: undefined, // Instance of _melon.model.DataStore
+    plugins: undefined, // Instance of _melon.model.PluginManager
     events: undefined, // Instance of PluginInterface
     rpc: undefined, // Instance of WebsocketRpc
     utils: {}, // References to misc. re-usable helpers / functions
@@ -34,12 +34,12 @@ _kiwi.global = {
         this.utils.styleText = styleText;
         this.utils.hsl2rgb = hsl2rgb;
 
-        this.utils.notifications = _kiwi.utils.notifications;
-        this.utils.formatDate = _kiwi.utils.formatDate;
+        this.utils.notifications = _melon.utils.notifications;
+        this.utils.formatDate = _melon.utils.formatDate;
     },
 
     addMediaMessageType: function(match, buildHtml) {
-        _kiwi.view.MediaMessage.addType(match, buildHtml);
+        _melon.view.MediaMessage.addType(match, buildHtml);
     },
 
     // Event managers for plugins
@@ -57,7 +57,7 @@ _kiwi.global = {
              * For all other events, we only have one argument:
              *     1. The event data
              *
-             * When this is used via `new kiwi.components.Network()`, this listens
+             * When this is used via `new melon.components.Network()`, this listens
              * for 'all' events so the first argument is the event name which is
              * the connection ID. We don't want to re-trigger this event name so
              * we need to juggle the arguments to find the real event name we want
@@ -103,8 +103,8 @@ _kiwi.global = {
             // Helper to get the network object
             var getNetwork = function() {
                 var network = typeof connection_id === 'undefined' ?
-                    _kiwi.app.connections.active_connection :
-                    _kiwi.app.connections.getByConnectionId(connection_id);
+                    _melon.app.connections.active_connection :
+                    _melon.app.connections.getByConnectionId(connection_id);
 
                 return network ?
                     network :
@@ -112,11 +112,11 @@ _kiwi.global = {
             };
 
             // Create the return object (events proxy from the gateway)
-            var obj = new this.EventComponent(_kiwi.gateway, connection_event);
+            var obj = new this.EventComponent(_melon.gateway, connection_event);
 
             // Proxy several gateway functions onto the return object
             var funcs = {
-                kiwi: 'kiwi', raw: 'raw', kick: 'kick', topic: 'topic',
+                melon: 'melon', raw: 'raw', kick: 'kick', topic: 'topic',
                 part: 'part', join: 'join', action: 'action', ctcp: 'ctcp',
                 ctcpRequest: 'ctcpRequest', ctcpResponse: 'ctcpResponse',
                 notice: 'notice', msg: 'privmsg', say: 'privmsg',
@@ -133,7 +133,7 @@ _kiwi.global = {
                     args.unshift(connection_id);
 
                     // Call the gateway function on behalf of this connection
-                    return _kiwi.gateway[fn_name].apply(_kiwi.gateway, args);
+                    return _melon.gateway[fn_name].apply(_melon.gateway, args);
                 };
             });
 
@@ -181,7 +181,7 @@ _kiwi.global = {
         },
 
         ControlInput: function() {
-            var obj = new this.EventComponent(_kiwi.app.controlbox);
+            var obj = new this.EventComponent(_melon.app.controlbox);
             var funcs = {
                 run: 'processInput', addPluginIcon: 'addPluginIcon'
             };
@@ -189,18 +189,18 @@ _kiwi.global = {
             _.each(funcs, function(controlbox_fn, func_name) {
                 obj[func_name] = function() {
                     var fn_name = controlbox_fn;
-                    return _kiwi.app.controlbox[fn_name].apply(_kiwi.app.controlbox, arguments);
+                    return _melon.app.controlbox[fn_name].apply(_melon.app.controlbox, arguments);
                 };
             });
 
             // Give access to the control input textarea
-            obj.input = _kiwi.app.controlbox.$('.inp');
+            obj.input = _melon.app.controlbox.$('.inp');
 
             return obj;
         }
     },
 
-    // Entry point to start the kiwi application
+    // Entry point to start the melon application
     init: function (opts, callback) {
         var locale_promise, theme_promise,
             that = this;
@@ -210,15 +210,15 @@ _kiwi.global = {
         this.initUtils();
 
         // Set up the settings datastore
-        _kiwi.global.settings = _kiwi.model.DataStore.instance('kiwi.settings');
-        _kiwi.global.settings.load();
+        _melon.global.settings = _melon.model.DataStore.instance('melon.settings');
+        _melon.global.settings.load();
 
         // Set the window title
-        window.document.title = opts.server_settings.client.window_title || 'Kiwi IRC';
+        window.document.title = opts.server_settings.client.window_title || 'Melon IRC';
 
         locale_promise = new Promise(function (resolve) {
             // In order, find a locale from the users saved settings, the URL, default settings on the server, or auto detect
-            var locale = _kiwi.global.settings.get('locale') || opts.locale || opts.server_settings.client.settings.locale || 'magic';
+            var locale = _melon.global.settings.get('locale') || opts.locale || opts.server_settings.client.settings.locale || 'magic';
             $.getJSON(opts.base_path + '/assets/locales/' + locale + '.json', function (locale) {
                 if (locale) {
                     that.i18n = new Jed(locale);
@@ -239,16 +239,16 @@ _kiwi.global = {
 
 
         Promise.all([locale_promise, theme_promise]).then(function () {
-            _kiwi.app = new _kiwi.model.Application(opts);
+            _melon.app = new _melon.model.Application(opts);
 
             // Start the client up
-            _kiwi.app.initializeInterfaces();
+            _melon.app.initializeInterfaces();
 
-            // Event emitter to let plugins interface with parts of kiwi
-            _kiwi.global.events  = new PluginInterface();
+            // Event emitter to let plugins interface with parts of melon
+            _melon.global.events  = new PluginInterface();
 
             // Now everything has started up, load the plugin manager for third party plugins
-            _kiwi.global.plugins = new _kiwi.model.PluginManager();
+            _melon.global.plugins = new _melon.model.PluginManager();
 
             callback();
 
@@ -258,12 +258,12 @@ _kiwi.global = {
     },
 
     start: function() {
-        _kiwi.app.showStartup();
+        _melon.app.showStartup();
     },
 
     // Allow plugins to change the startup applet
     registerStartupApplet: function(startup_applet_name) {
-        _kiwi.app.startup_applet_name = startup_applet_name;
+        _melon.app.startup_applet_name = startup_applet_name;
     },
 
     /**
@@ -272,7 +272,7 @@ _kiwi.global = {
      * @param {Function} callback function(err, network){}
      */
     newIrcConnection: function(connection_details, callback) {
-        _kiwi.gateway.newConnection(connection_details, callback);
+        _melon.gateway.newConnection(connection_details, callback);
     },
 
 
@@ -296,24 +296,24 @@ _kiwi.global = {
          * Get any settings set by the server
          * These settings may be changed in the server selection dialog or via URL parameters
          */
-        if (_kiwi.app.server_settings.client) {
-            if (_kiwi.app.server_settings.client.nick)
-                defaults.nick = _kiwi.app.server_settings.client.nick;
+        if (_melon.app.server_settings.client) {
+            if (_melon.app.server_settings.client.nick)
+                defaults.nick = _melon.app.server_settings.client.nick;
 
-            if (_kiwi.app.server_settings.client.server)
-                defaults.server = _kiwi.app.server_settings.client.server;
+            if (_melon.app.server_settings.client.server)
+                defaults.server = _melon.app.server_settings.client.server;
 
-            if (_kiwi.app.server_settings.client.port)
-                defaults.port = _kiwi.app.server_settings.client.port;
+            if (_melon.app.server_settings.client.port)
+                defaults.port = _melon.app.server_settings.client.port;
 
-            if (_kiwi.app.server_settings.client.ssl)
-                defaults.ssl = _kiwi.app.server_settings.client.ssl;
+            if (_melon.app.server_settings.client.ssl)
+                defaults.ssl = _melon.app.server_settings.client.ssl;
 
-            if (_kiwi.app.server_settings.client.channel)
-                defaults.channel = _kiwi.app.server_settings.client.channel;
+            if (_melon.app.server_settings.client.channel)
+                defaults.channel = _melon.app.server_settings.client.channel;
 
-            if (_kiwi.app.server_settings.client.channel_key)
-                defaults.channel_key = _kiwi.app.server_settings.client.channel_key;
+            if (_melon.app.server_settings.client.channel_key)
+                defaults.channel_key = _melon.app.server_settings.client.channel_key;
         }
 
 
@@ -332,7 +332,7 @@ _kiwi.global = {
 
 
         // Process the URL part by part, extracting as we go
-        parts = window.location.pathname.toString().replace(_kiwi.app.get('base_path'), '').split('/');
+        parts = window.location.pathname.toString().replace(_melon.app.get('base_path'), '').split('/');
 
         if (parts.length > 0) {
             parts.shift();
@@ -401,29 +401,29 @@ _kiwi.global = {
          * Get any server restrictions as set in the server config
          * These settings can not be changed in the server selection dialog
          */
-        if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
-            if (_kiwi.app.server_settings.connection.server) {
-                defaults.server = _kiwi.app.server_settings.connection.server;
+        if (_melon.app.server_settings && _melon.app.server_settings.connection) {
+            if (_melon.app.server_settings.connection.server) {
+                defaults.server = _melon.app.server_settings.connection.server;
             }
 
-            if (_kiwi.app.server_settings.connection.port) {
-                defaults.port = _kiwi.app.server_settings.connection.port;
+            if (_melon.app.server_settings.connection.port) {
+                defaults.port = _melon.app.server_settings.connection.port;
             }
 
-            if (_kiwi.app.server_settings.connection.ssl) {
-                defaults.ssl = _kiwi.app.server_settings.connection.ssl;
+            if (_melon.app.server_settings.connection.ssl) {
+                defaults.ssl = _melon.app.server_settings.connection.ssl;
             }
 
-            if (_kiwi.app.server_settings.connection.channel) {
-                defaults.channel = _kiwi.app.server_settings.connection.channel;
+            if (_melon.app.server_settings.connection.channel) {
+                defaults.channel = _melon.app.server_settings.connection.channel;
             }
 
-            if (_kiwi.app.server_settings.connection.channel_key) {
-                defaults.channel_key = _kiwi.app.server_settings.connection.channel_key;
+            if (_melon.app.server_settings.connection.channel_key) {
+                defaults.channel_key = _melon.app.server_settings.connection.channel_key;
             }
 
-            if (_kiwi.app.server_settings.connection.nick) {
-                defaults.nick = _kiwi.app.server_settings.connection.nick;
+            if (_melon.app.server_settings.connection.nick) {
+                defaults.nick = _melon.app.server_settings.connection.nick;
             }
         }
 
@@ -439,10 +439,10 @@ _kiwi.global = {
 
 
 
-// If within a closure, expose the kiwi globals
+// If within a closure, expose the melon globals
 if (typeof global !== 'undefined') {
-    global.kiwi = _kiwi.global;
+    global.melon = _melon.global;
 } else {
     // Not within a closure so set a var in the current scope
-    var kiwi = _kiwi.global;
+    var melon = _melon.global;
 }

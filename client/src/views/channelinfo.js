@@ -1,6 +1,6 @@
-// var f = new _kiwi.model.ChannelInfo({channel: _kiwi.app.panels().active});
+// var f = new _melon.model.ChannelInfo({channel: _melon.app.panels().active});
 
-_kiwi.view.ChannelInfo = Backbone.View.extend({
+_melon.view.ChannelInfo = Backbone.View.extend({
     events: {
         'click .toggle_banlist': 'toggleBanList',
         'change .channel-mode': 'onModeChange',
@@ -26,12 +26,12 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
         this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
 
         // Create the menu box this view will sit inside
-        this.menu = new _kiwi.view.MenuBox(channel.get('name'));
+        this.menu = new _melon.view.MenuBox(channel.get('name'));
         this.menu.addItem('channel_info', this.$el);
         this.menu.$el.appendTo(channel.view.$container);
         this.menu.show();
 
-        this.menu.$el.offset({top: _kiwi.app.view.$el.find('.panels').offset().top});
+        this.menu.$el.offset({top: _melon.app.view.$el.find('.panels').offset().top});
 
         // Menu box will call this destroy on closing
         this.$el.dispose = _.bind(this.dispose, this);
@@ -137,7 +137,7 @@ _kiwi.view.ChannelInfo = Backbone.View.extend({
 
                 $('<td></td>').text(ban.banned).appendTo($tr);
                 $('<td></td>').text(ban.banned_by.split(/[!@]/)[0]).appendTo($tr);
-                $('<td></td>').text(_kiwi.utils.formatDate(new Date(parseInt(ban.banned_at, 10) * 1000))).appendTo($tr);
+                $('<td></td>').text(_melon.utils.formatDate(new Date(parseInt(ban.banned_at, 10) * 1000))).appendTo($tr);
                 $('<td><i class="fa fa-rtimes remove-ban"></i></td>').appendTo($tr);
 
                 $table.append($tr);

@@ -1,4 +1,4 @@
-_kiwi.view.ControlBox = Backbone.View.extend({
+_melon.view.ControlBox = Backbone.View.extend({
     events: {
         'keydown .inp': 'process',
         'click .nick': 'showNickChange'
@@ -17,21 +17,21 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         this.tabcomplete = {active: false, data: [], prefix: ''};
 
         // Keep the nick view updated with nick changes
-        _kiwi.app.connections.on('change:nick', function(connection) {
+        _melon.app.connections.on('change:nick', function(connection) {
             // Only update the nick view if it's the active connection
-            if (connection !== _kiwi.app.connections.active_connection)
+            if (connection !== _melon.app.connections.active_connection)
                 return;
 
             $('.nick', that.$el).text(connection.get('nick'));
         });
 
         // Update our nick view as we flick between connections
-        _kiwi.app.connections.on('active', function(panel, connection) {
+        _melon.app.connections.on('active', function(panel, connection) {
             $('.nick', that.$el).text(connection.get('nick'));
         });
 
         // Keep focus on the input box as we flick between panels
-        _kiwi.app.panels.bind('active', function (active_panel) {
+        _melon.app.panels.bind('active', function (active_panel) {
             if (active_panel.isChannel() || active_panel.isServer() || active_panel.isQuery()) {
                 that.$('.inp').focus();
             }
@@ -50,7 +50,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         if (this.nick_change)
             return;
 
-        this.nick_change = new _kiwi.view.NickChangeBox();
+        this.nick_change = new _melon.view.NickChangeBox();
         this.nick_change.render();
 
         this.listenTo(this.nick_change, 'close', function() {
@@ -112,7 +112,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         case (ev.keyCode === 219 && meta):            // [ + meta
             // Find all the tab elements and get the index of the active tab
-            var $tabs = $('#kiwi .tabs').find('li[class!=connection]');
+            var $tabs = $('#melon .tabs').find('li[class!=connection]');
             var cur_tab_ind = (function() {
                 for (var idx=0; idx<$tabs.length; idx++){
                     if ($($tabs[idx]).hasClass('active'))
@@ -132,7 +132,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         case (ev.keyCode === 221 && meta):            // ] + meta
             // Find all the tab elements and get the index of the active tab
-            var $tabs = $('#kiwi .tabs').find('li[class!=connection]');
+            var $tabs = $('#melon .tabs').find('li[class!=connection]');
             var cur_tab_ind = (function() {
                 for (var idx=0; idx<$tabs.length; idx++){
                     if ($($tabs[idx]).hasClass('active'))
@@ -159,7 +159,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             if (_.isEqual(this.tabcomplete.data, [])) {
                 // Get possible autocompletions
                 var ac_data = [],
-                    members = _kiwi.app.panels().active.get('members');
+                    members = _melon.app.panels().active.get('members');
 
                 // If we have a members list, get the models. Otherwise empty array
                 members = members ? members.models : [];
@@ -169,7 +169,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
                     ac_data.push(member.get('nick'));
                 });
 
-                ac_data.push(_kiwi.app.panels().active.get('name'));
+                ac_data.push(_melon.app.panels().active.get('name'));
 
                 ac_data = _.sortBy(ac_data, function (nick) {
                     return nick.toLowerCase();
@@ -250,7 +250,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
         // If sending a message when not in a channel or query window, automatically
         // convert it into a command
-        if (command_raw[0] !== '/' && !_kiwi.app.panels().active.isChannel() && !_kiwi.app.panels().active.isQuery()) {
+        if (command_raw[0] !== '/' && !_melon.app.panels().active.isChannel() && !_melon.app.panels().active.isQuery()) {
             command_raw = '/' + command_raw;
         }
 
@@ -260,12 +260,12 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             command_raw = command_raw.replace(/^\/\//, '/');
 
             // Prepend the default command
-            command_raw = '/msg ' + _kiwi.app.panels().active.get('name') + ' ' + command_raw;
+            command_raw = '/msg ' + _melon.app.panels().active.get('name') + ' ' + command_raw;
         }
 
         // Process the raw command for any aliases
-        this.preprocessor.vars.server = _kiwi.app.connections.active_connection.get('name');
-        this.preprocessor.vars.channel = _kiwi.app.panels().active.get('name');
+        this.preprocessor.vars.server = _melon.app.connections.active_connection.get('name');
+        this.preprocessor.vars.channel = _melon.app.panels().active.get('name');
         this.preprocessor.vars.destination = this.preprocessor.vars.channel;
         command_raw = this.preprocessor.process(command_raw);
 
@@ -277,13 +277,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         } else {
             // Default command
             command = 'msg';
-            params.unshift(_kiwi.app.panels().active.get('name'));
+            params.unshift(_melon.app.panels().active.get('name'));
         }
 
         // Emit a plugin event for any modifications
         events_data = {command: command, params: params};
 
-        _kiwi.global.events.emit('command', events_data)
+        _melon.global.events.emit('command', events_data)
         .then(function() {
             // Trigger the command events
             that.trigger('command', {command: events_data.command, params: events_data.params});
@@ -301,6 +301,6 @@ _kiwi.view.ControlBox = Backbone.View.extend({
     addPluginIcon: function ($icon) {
         var $tool = $('<div class="tool"></div>').append($icon);
         this.$el.find('.input_tools').append($tool);
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
     }
 });

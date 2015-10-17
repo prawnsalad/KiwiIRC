@@ -27,7 +27,7 @@ var RESPONSE_ETIMEDOUT     = '5';
 
 /**
  * ProxyServer
- * Listens for connections from a kiwi server, dispatching ProxyPipe
+ * Listens for connections from a melon server, dispatching ProxyPipe
  * instances for each connection
  */
 function ProxyServer() {
@@ -96,22 +96,22 @@ ProxyServer.prototype.close = function(callback) {
 
 /**
  * ProxyPipe
- * Takes connections from a kiwi server, then:
+ * Takes connections from a melon server, then:
  * 1. Reads its meta data such as username for identd lookups
  * 2. Make the connection to the IRC server
- * 3. Reply to the kiwi server with connection status
+ * 3. Reply to the melon server with connection status
  * 4. If all ok, pipe data between the 2 sockets as a proxy
  */
-function ProxyPipe(kiwi_socket, proxy_server) {
-    debug('[KiwiProxy] New Kiwi connection');
+function ProxyPipe(melon_socket, proxy_server) {
+    debug('[MelonProxy] New Melon connection');
 
-    this.kiwi_socket  = kiwi_socket;
+    this.melon_socket  = melon_socket;
     this.proxy_server = proxy_server;
     this.irc_socket   = null;
     this.buffers      = [];
     this.meta         = null;
 
-    kiwi_socket.on('readable', this.kiwiSocketOnReadable.bind(this));
+    melon_socket.on('readable', this.melonSocketOnReadable.bind(this));
 }
 
 
@@ -125,18 +125,18 @@ ProxyPipe.prototype.destroy = function() {
         this.irc_socket = null;
     }
 
-    if (this.kiwi_socket) {
-        this.kiwi_socket.destroy();
-        this.kiwi_socket.removeAllListeners();
-        this.kiwi_socket = null;
+    if (this.melon_socket) {
+        this.melon_socket.destroy();
+        this.melon_socket.removeAllListeners();
+        this.melon_socket = null;
     }
 };
 
 
-ProxyPipe.prototype.kiwiSocketOnReadable = function() {
+ProxyPipe.prototype.melonSocketOnReadable = function() {
     var chunk, buffer, meta;
 
-    while ((chunk = this.kiwi_socket.read()) !== null) {
+    while ((chunk = this.melon_socket.read()) !== null) {
         this.buffers.push(chunk);
     }
 
@@ -149,29 +149,29 @@ ProxyPipe.prototype.kiwiSocketOnReadable = function() {
     this.buffers = null;
 
     try {
-        debug('[KiwiProxy] Found a complete line in the buffer');
+        debug('[MelonProxy] Found a complete line in the buffer');
         meta = JSON.parse(buffer.toString('utf8'));
     } catch (err) {
-        debug('[KiwiProxy] Error parsing meta');
+        debug('[MelonProxy] Error parsing meta');
         this.destroy();
         return;
     }
 
     if (!meta.username) {
-        debug('[KiwiProxy] Meta does not contain a username');
+        debug('[MelonProxy] Meta does not contain a username');
         this.destroy();
         return;
     }
 
     this.meta = meta;
-    this.kiwi_socket.removeAllListeners('readable');
+    this.melon_socket.removeAllListeners('readable');
 
     this.makeIrcConnection();
 };
 
 
 ProxyPipe.prototype.makeIrcConnection = function() {
-    debug('[KiwiProxy] Opening proxied connection to: ' + this.meta.host + ':' + this.meta.port.toString());
+    debug('[MelonProxy] Opening proxied connection to: ' + this.meta.host + ':' + this.meta.port.toString());
 
     var local_address = this.meta.interface ?
         this.meta.interface :
@@ -212,13 +212,13 @@ ProxyPipe.prototype._onRawSocketConnect = function() {
 
 
 ProxyPipe.prototype._onSocketConnect = function() {
-    debug('[KiwiProxy] ProxyPipe::_onSocketConnect()');
+    debug('[MelonProxy] ProxyPipe::_onSocketConnect()');
 
     this.proxy_server.emit('connection_open', this);
 
     // Now that we're connected to the detination, return no
-    // error back to the kiwi server and start piping
-    this.kiwi_socket.write(new Buffer(RESPONSE_OK.toString()), this.startPiping.bind(this));
+    // error back to the melon server and start piping
+    this.melon_socket.write(new Buffer(RESPONSE_OK.toString()), this.startPiping.bind(this));
 };
 
 
@@ -229,28 +229,28 @@ ProxyPipe.prototype._onSocketError = function(err) {
         ENOTFOUND: RESPONSE_ENOTFOUND,
         ETIMEDOUT: RESPONSE_ETIMEDOUT
     };
-    debug('[KiwiProxy] IRC Error ' + err.code);
-    this.kiwi_socket.write(new Buffer((replies[err.code] || RESPONSE_ERROR).toString()), 'UTF8', this.destroy.bind(this));
+    debug('[MelonProxy] IRC Error ' + err.code);
+    this.melon_socket.write(new Buffer((replies[err.code] || RESPONSE_ERROR).toString()), 'UTF8', this.destroy.bind(this));
 };
 
 
 ProxyPipe.prototype._onSocketTimeout = function() {
     this.has_timed_out = true;
-    debug('[KiwiProxy] IRC Timeout');
+    debug('[MelonProxy] IRC Timeout');
     this.irc_socket.destroy();
-    this.kiwi_socket.write(new Buffer(RESPONSE_ETIMEDOUT.toString()), 'UTF8', this.destroy.bind(this));
+    this.melon_socket.write(new Buffer(RESPONSE_ETIMEDOUT.toString()), 'UTF8', this.destroy.bind(this));
 };
 
 
 ProxyPipe.prototype._onSocketClose = function() {
-    debug('[KiwiProxy] IRC Socket closed');
+    debug('[MelonProxy] IRC Socket closed');
     this.proxy_server.emit('connection_close', this);
     this.destroy();
 };
 
 
 ProxyPipe.prototype.startPiping = function() {
-    debug('[KiwiProxy] ProxyPipe::startPiping()');
+    debug('[MelonProxy] ProxyPipe::startPiping()');
 
     // Let the piping handle socket closures
     this.irc_socket.removeAllListeners('error');
@@ -258,8 +258,8 @@ ProxyPipe.prototype.startPiping = function() {
 
     this.irc_socket.on('close', this._onSocketClose.bind(this));
 
-    this.kiwi_socket.pipe(this.irc_socket);
-    this.irc_socket.pipe(this.kiwi_socket);
+    this.melon_socket.pipe(this.irc_socket);
+    this.irc_socket.pipe(this.melon_socket);
 };
 
 
@@ -268,7 +268,7 @@ ProxyPipe.prototype.startPiping = function() {
 
 /**
  * ProxySocket
- * Transparent socket interface to a kiwi proxy
+ * Transparent socket interface to a melon proxy
  */
 function ProxySocket(proxy_port, proxy_addr, meta, proxy_opts) {
     stream.Duplex.call(this);
@@ -303,11 +303,11 @@ ProxySocket.prototype.connect = function(dest_port, dest_addr, connected_fn) {
     this.connected_fn = connected_fn;
 
     if (!this.meta.host || !this.meta.port) {
-        debug('[KiwiProxy] Invalid destination addr/port', this.meta);
+        debug('[MelonProxy] Invalid destination addr/port', this.meta);
         return false;
     }
 
-    debug('[KiwiProxy] Connecting to proxy ' + this.proxy_addr + ':' + this.proxy_port.toString() + ' SSL: ' + (!!this.proxy_opts.ssl).toString());
+    debug('[MelonProxy] Connecting to proxy ' + this.proxy_addr + ':' + this.proxy_port.toString() + ' SSL: ' + (!!this.proxy_opts.ssl).toString());
     if (this.proxy_opts.ssl) {
         this.socket = tls.connect({
             port: this.proxy_port,
@@ -336,7 +336,7 @@ ProxySocket.prototype.destroy = function() {
     this.socket.destroy();
     delete this.socket;
 
-    debug('[KiwiProxy] Destroying socket');
+    debug('[MelonProxy] Destroying socket');
 };
 
 
@@ -359,7 +359,7 @@ ProxySocket.prototype._write = function(chunk, encoding, callback) {
     if (this.state === 'connected' && this.socket) {
         return this.socket.write(chunk, encoding, callback);
     } else {
-        debug('[KiwiProxy] Trying to write to an unfinished socket. State=' + this.state);
+        debug('[MelonProxy] Trying to write to an unfinished socket. State=' + this.state);
         callback('Not connected');
     }
 };
@@ -370,7 +370,7 @@ ProxySocket.prototype._onSocketConnect = function() {
 
     this.state = 'handshaking';
 
-    debug('[KiwiProxy] Connected to proxy, sending meta');
+    debug('[MelonProxy] Connected to proxy, sending meta');
     this.socket.write(JSON.stringify(meta) + '\n');
 };
 
@@ -392,9 +392,9 @@ ProxySocket.prototype._onSocketData = function(data) {
     error_codes[RESPONSE_ENOTFOUND]    = 'ENOTFOUND';
     error_codes[RESPONSE_ETIMEDOUT]    = 'ETIMEDOUT';
 
-    debug('[KiwiProxy] Recieved socket status: ' + data.toString());
+    debug('[MelonProxy] Recieved socket status: ' + data.toString());
     if (status === RESPONSE_OK) {
-        debug('[KiwiProxy] Remote socket connected OK');
+        debug('[MelonProxy] Remote socket connected OK');
         this.state = 'connected';
 
         if (typeof this.connected_fn === 'function')
@@ -406,14 +406,14 @@ ProxySocket.prototype._onSocketData = function(data) {
         this.destroy();
 
         error_code = error_codes[status] || error_codes[RESPONSE_ERROR];
-        debug('[KiwiProxy] Error: ' + error_code);
+        debug('[MelonProxy] Error: ' + error_code);
         this.emit('error', new Error(error_code));
     }
 };
 
 
 ProxySocket.prototype._onSocketClose = function(had_error) {
-    debug('[KiwiProxy] _onSocketClose() had_error=' + had_error.toString());
+    debug('[MelonProxy] _onSocketClose() had_error=' + had_error.toString());
     if (this.state === 'connected') {
         this.emit('close', had_error);
         return;
@@ -425,7 +425,7 @@ ProxySocket.prototype._onSocketClose = function(had_error) {
 
 
 ProxySocket.prototype._onSocketError = function(err) {
-    debug('[KiwiProxy] _onSocketError() err=' + err.toString());
+    debug('[MelonProxy] _onSocketError() err=' + err.toString());
     this.ignore_close = true;
     this.emit('error', err);
 };

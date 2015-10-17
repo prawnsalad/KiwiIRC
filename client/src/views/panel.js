@@ -1,4 +1,4 @@
-_kiwi.view.Panel = Backbone.View.extend({
+_melon.view.Panel = Backbone.View.extend({
     tagName: "div",
     className: "panel",
 
@@ -17,7 +17,7 @@ _kiwi.view.Panel = Backbone.View.extend({
         if (options.container) {
             this.$container = $(options.container);
         } else {
-            this.$container = $('#kiwi .panels .container1');
+            this.$container = $('#melon .panels .container1');
         }
 
         this.$el.appendTo(this.$container);
@@ -57,20 +57,20 @@ _kiwi.view.Panel = Backbone.View.extend({
         // Show this panels memberlist
         var members = this.model.get("members");
         if (members) {
-            _kiwi.app.rightbar.show();
+            _melon.app.rightbar.show();
             members.view.show();
         } else {
-            _kiwi.app.rightbar.hide();
+            _melon.app.rightbar.hide();
         }
 
         // Remove any alerts and activity counters for this panel
         this.alert('none');
         this.model.set('activity_counter', 0);
 
-        _kiwi.app.panels.trigger('active', this.model, _kiwi.app.panels().active);
+        _melon.app.panels.trigger('active', this.model, _melon.app.panels().active);
         this.model.trigger('active', this.model);
 
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
 
         if (!this.model.isApplet())
             this.scrollToBottom(true);
@@ -79,7 +79,7 @@ _kiwi.view.Panel = Backbone.View.extend({
 
     alert: function (level) {
         // No need to highlight if this si the active panel
-        if (this.model == _kiwi.app.panels().active) return;
+        if (this.model == _melon.app.panels().active) return;
 
         var types, type_idx;
         types = ['none', 'action', 'activity', 'highlight'];
@@ -116,7 +116,7 @@ _kiwi.view.Panel = Backbone.View.extend({
     // Scroll to the bottom of the panel
     scrollToBottom: function (force_down) {
         // If this isn't the active panel, don't scroll
-        if (this.model !== _kiwi.app.panels().active) return;
+        if (this.model !== _melon.app.panels().active) return;
 
         // Don't scroll down if we're scrolled up the panel a little
         if (force_down || this.$container.scrollTop() + this.$container.height() > this.$el.outerHeight() - 150) {

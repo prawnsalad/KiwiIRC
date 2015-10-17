@@ -1,4 +1,4 @@
-_kiwi.view.Notification = Backbone.View.extend({
+_melon.view.Notification = Backbone.View.extend({
     className: 'notification',
 
     events: {
@@ -27,7 +27,7 @@ _kiwi.view.Notification = Backbone.View.extend({
     show: function() {
         var that = this;
 
-        this.render().$el.appendTo(_kiwi.app.view.$el);
+        this.render().$el.appendTo(_melon.app.view.$el);
 
         // The element won't have any CSS transitions applied
         // until after a tick + paint.

@@ -5,7 +5,7 @@ var fs      = require('fs'),
     winston = require('winston');
 
 var config_filename = 'config.js',
-    config_dirs = ['/etc/kiwiirc/', __dirname + '/../'],
+    config_dirs = ['/etc/melonirc/', __dirname + '/../'],
     environment = 'production',
     loaded_config = Object.create(null);
 

@@ -1,4 +1,4 @@
-_kiwi.view.Favicon = Backbone.View.extend({
+_melon.view.Favicon = Backbone.View.extend({
     initialize: function () {
         var that = this,
             $win = $(window);

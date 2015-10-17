@@ -1,6 +1,6 @@
 (function () {
 
-    _kiwi.model.Network = Backbone.Model.extend({
+    _melon.model.Network = Backbone.Model.extend({
         defaults: {
             connection_id: 0,
             /**
@@ -68,16 +68,16 @@
         initialize: function () {
             // If we already have a connection, bind our events
             if (typeof this.get('connection_id') !== 'undefined') {
-                this.gateway = _kiwi.global.components.Network(this.get('connection_id'));
+                this.gateway = _melon.global.components.Network(this.get('connection_id'));
                 this.bindGatewayEvents();
             }
 
             // Create our panel list (tabs)
-            this.panels = new _kiwi.model.PanelList([], this);
+            this.panels = new _melon.model.PanelList([], this);
             //this.panels.network = this;
 
             // Automatically create a server tab
-            var server_panel = new _kiwi.model.Server({name: 'Server', network: this});
+            var server_panel = new _melon.model.Server({name: 'Server', network: this});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
         },
@@ -93,12 +93,12 @@
                     password:   this.get('password')
                 };
 
-            _kiwi.gateway.makeIrcConnection(server_info, function(err, connection_id) {
+            _melon.gateway.makeIrcConnection(server_info, function(err, connection_id) {
                 if (!err) {
                     that.gateway.dispose();
 
                     that.set('connection_id', connection_id);
-                    that.gateway = _kiwi.global.components.Network(that.get('connection_id'));
+                    that.gateway = _melon.global.components.Network(that.get('connection_id'));
                     that.bindGatewayEvents();
 
                     // Reset each of the panels connection ID
@@ -109,7 +109,7 @@
                     callback_fn && callback_fn(err);
 
                 } else {
-                    console.log("_kiwi.gateway.socket.on('error')", {reason: err});
+                    console.log("_melon.gateway.socket.on('error')", {reason: err});
                     callback_fn && callback_fn(err);
                 }
             });
@@ -187,7 +187,7 @@
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
-                    channel = new _kiwi.model.Channel({name: channel_name, network: that});
+                    channel = new _melon.model.Channel({name: channel_name, network: that});
                     that.panels.add(channel);
                 }
 
@@ -248,7 +248,7 @@
             // Check if we have the panel already. If not, create it
             query = that.panels.getByName(nick);
             if (!query) {
-                query = new _kiwi.model.Query({name: nick});
+                query = new _melon.model.Query({name: nick});
                 that.panels.add(query);
             }
 
@@ -330,7 +330,7 @@
         var c, members, user;
         c = this.panels.getByName(event.channel);
         if (!c) {
-            c = new _kiwi.model.Channel({name: event.channel, network: this});
+            c = new _melon.model.Channel({name: event.channel, network: this});
             this.panels.add(c);
         }
 
@@ -342,16 +342,16 @@
             return;
         }
 
-        user = new _kiwi.model.Member({
+        user = new _melon.model.Member({
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
             user_prefixes: this.get('user_prefixes')
         });
 
-        _kiwi.global.events.emit('channel:join', {channel: event.channel, user: user, network: this.gateway})
+        _melon.global.events.emit('channel:join', {channel: event.channel, user: user, network: this.gateway})
         .then(function() {
-            members.add(user, {kiwi: event});
+            members.add(user, {melon: event});
         });
     }
 
@@ -380,9 +380,9 @@
         user = members.getByNick(event.nick);
         if (!user) return;
 
-        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'part', message: part_options.message, network: this.gateway})
+        _melon.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'part', message: part_options.message, network: this.gateway})
         .then(function() {
-            members.remove(user, {kiwi: part_options});
+            members.remove(user, {melon: part_options});
         });
     }
 
@@ -409,9 +409,9 @@
             if (panel.isChannel()) {
                 member = panel.get('members').getByNick(event.nick);
                 if (member) {
-                    _kiwi.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: quit_options.message, network: this.gateway})
+                    _melon.global.events.emit('channel:leave', {channel: panel.get('name'), user: member, type: 'quit', message: quit_options.message, network: this.gateway})
                     .then(function() {
-                        panel.get('members').remove(member, {kiwi: quit_options});
+                        panel.get('members').remove(member, {melon: quit_options});
                     });
                 }
             }
@@ -441,9 +441,9 @@
         if (!user) return;
 
 
-        _kiwi.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'kick', message: part_options.message, network: this.gateway})
+        _melon.global.events.emit('channel:leave', {channel: event.channel, user: user, type: 'kick', message: part_options.message, network: this.gateway})
         .then(function() {
-            members.remove(user, {kiwi: part_options});
+            members.remove(user, {melon: part_options});
 
             if (part_options.current_user_kicked) {
                 members.reset([]);
@@ -454,7 +454,7 @@
 
 
     function onMessage(event) {
-        _kiwi.global.events.emit('message:new', {network: this.gateway, message: event})
+        _melon.global.events.emit('message:new', {network: this.gateway, message: event})
         .then(_.bind(function() {
             var panel,
                 is_pm = ((event.target || '').toLowerCase() == this.get('nick').toLowerCase());
@@ -491,7 +491,7 @@
                 // If a panel isn't found for this PM, create one
                 panel = this.panels.getByName(event.nick);
                 if (!panel) {
-                    panel = new _kiwi.model.Query({name: event.nick, network: this});
+                    panel = new _melon.model.Query({name: event.nick, network: this});
                     this.panels.add(panel);
                 }
 
@@ -517,7 +517,7 @@
                 panel.addMsg('[' + (event.nick||'') + ']', styleText('notice', {text: event.msg}), 'notice', {time: event.time});
 
                 // Show this notice to the active panel if it didn't have a set target, but only in an active channel or query window
-                active_panel = _kiwi.app.panels().active;
+                active_panel = _melon.app.panels().active;
 
                 if (!event.from_server && panel === this.panels.server && active_panel !== this.panels.server) {
                     if (active_panel.get('network') === this && (active_panel.isChannel() || active_panel.isQuery()))
@@ -586,7 +586,7 @@
 
         // If this is the active channel, update the topic bar too
         if (c.get('name') === this.panels.active.get('name')) {
-            _kiwi.app.topicbar.setCurrentTopic(event.topic);
+            _melon.app.topicbar.setCurrentTopic(event.topic);
         }
     }
 
@@ -625,7 +625,7 @@
 
         channel.temp_userlist = channel.temp_userlist || [];
         _.each(event.users, function (item) {
-            var user = new _kiwi.model.Member({
+            var user = new _melon.model.Member({
                 nick: item.nick,
                 modes: item.modes,
                 user_prefixes: that.get('user_prefixes')
@@ -765,7 +765,7 @@
             idle_time = idle_time.h.toString().lpad(2, "0") + ':' + idle_time.m.toString().lpad(2, "0") + ':' + idle_time.s.toString().lpad(2, "0");
         }
 
-        panel = _kiwi.app.panels().active;
+        panel = _melon.app.panels().active;
         if (event.ident) {
             panel.addMsg(event.nick, styleText('whois_ident', {nick: event.nick, ident: event.ident, host: event.hostname, text: event.msg}), 'whois');
 
@@ -778,7 +778,7 @@
         } else if (event.logon) {
             logon_date = new Date();
             logon_date.setTime(event.logon * 1000);
-            logon_date = _kiwi.utils.formatDate(logon_date);
+            logon_date = _melon.utils.formatDate(logon_date);
 
             panel.addMsg(event.nick, styleText('whois_idle_and_signon', {nick: event.nick, text: translateText('client_models_network_idle_and_signon', [idle_time, logon_date])}), 'whois');
         } else if (event.away_reason) {
@@ -794,7 +794,7 @@
         if (event.end)
             return;
 
-        panel = _kiwi.app.panels().active;
+        panel = _melon.app.panels().active;
         if (event.hostname) {
             panel.addMsg(event.nick, styleText('who', {nick: event.nick, ident: event.ident, host: event.hostname, realname: event.real_name, text: event.msg}), 'whois');
         } else {
@@ -817,7 +817,7 @@
 
 
     function onListStart(event) {
-        var chanlist = _kiwi.model.Applet.loadOnce('kiwi_chanlist');
+        var chanlist = _melon.model.Applet.loadOnce('melon_chanlist');
         chanlist.view.show();
     }
 
@@ -833,29 +833,29 @@
         switch (event.error) {
         case 'banned_from_channel':
             panel.addMsg(' ', styleText('channel_banned', {nick: event.nick, text: translateText('client_models_network_banned', [event.channel, event.reason]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
+            _melon.app.message.text(_melon.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
             break;
         case 'bad_channel_key':
             panel.addMsg(' ', styleText('channel_badkey', {nick: event.nick, text: translateText('client_models_network_channel_badkey', [event.channel]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
+            _melon.app.message.text(_melon.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
             break;
         case 'invite_only_channel':
             panel.addMsg(' ', styleText('channel_inviteonly', {nick: event.nick, text: translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
+            _melon.app.message.text(event.channel + ' ' + _melon.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
             break;
         case 'user_on_channel':
             panel.addMsg(' ', styleText('channel_alreadyin', {nick: event.nick, text: translateText('client_models_network_channel_alreadyin'), channel: event.channel}));
             break;
         case 'channel_is_full':
             panel.addMsg(' ', styleText('channel_limitreached', {nick: event.nick, text: translateText('client_models_network_channel_limitreached', [event.channel]), channel: event.channel}), 'status');
-            _kiwi.app.message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
+            _melon.app.message.text(event.channel + ' ' + _melon.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
             break;
         case 'chanop_privs_needed':
             panel.addMsg(' ', styleText('chanop_privs_needed', {text: event.reason, channel: event.channel}), 'status');
-            _kiwi.app.message.text(event.reason + ' (' + event.channel + ')');
+            _melon.app.message.text(event.reason + ' (' + event.channel + ')');
             break;
         case 'cannot_send_to_channel':
-            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Cannot send message to channel, you are not voiced').fetch(event.channel, event.reason), 'status');
+            panel.addMsg(' ', '== ' + _melon.global.i18n.translate('Cannot send message to channel, you are not voiced').fetch(event.channel, event.reason), 'status');
             break;
         case 'no_such_nick':
             tmp = this.panels.getByName(event.nick);
@@ -868,12 +868,12 @@
         case 'nickname_in_use':
             this.panels.server.addMsg(' ', styleText('nickname_alreadyinuse', {nick: event.nick, text: translateText('client_models_network_nickname_alreadyinuse', [event.nick]), channel: event.channel}), 'status');
             if (this.panels.server !== this.panels.active) {
-                _kiwi.app.message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
+                _melon.app.message.text(_melon.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
             }
 
             // Only show the nickchange component if the controlbox is open
-            if (_kiwi.app.controlbox.$el.css('display') !== 'none') {
-                (new _kiwi.view.NickChangeBox()).render();
+            if (_melon.app.controlbox.$el.css('display') !== 'none') {
+                (new _melon.view.NickChangeBox()).render();
             }
 
             break;
@@ -890,7 +890,7 @@
 
         default:
             // We don't know what data contains, so don't do anything with it.
-            //_kiwi.front.tabviews.server.addMsg(null, ' ', '== ' + data, 'status');
+            //_melon.front.tabviews.server.addMsg(null, ' ', '== ' + data, 'status');
         }
     }
 
@@ -908,7 +908,7 @@
 
 
     function onWallops(event) {
-        var active_panel = _kiwi.app.panels().active;
+        var active_panel = _melon.app.panels().active;
 
         // Send to server panel
         this.panels.server.addMsg('[' + (event.nick||'') + ']', styleText('wallops', {text: event.msg}), 'wallops', {time: event.time});

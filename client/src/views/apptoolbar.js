@@ -1,4 +1,4 @@
-_kiwi.view.AppToolbar = Backbone.View.extend({
+_melon.view.AppToolbar = Backbone.View.extend({
     events: {
         'click .settings': 'clickSettings',
         'click .startup': 'clickStartup'
@@ -6,18 +6,18 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
 
     initialize: function () {
         // Remove the new connection/startup link if the server has disabled server changing
-        if (_kiwi.app.server_settings.connection && !_kiwi.app.server_settings.connection.allow_change) {
+        if (_melon.app.server_settings.connection && !_melon.app.server_settings.connection.allow_change) {
             this.$('.startup').css('display', 'none');
         }
     },
 
     clickSettings: function (event) {
         event.preventDefault();
-        _kiwi.app.controlbox.processInput('/settings');
+        _melon.app.controlbox.processInput('/settings');
     },
 
     clickStartup: function (event) {
         event.preventDefault();
-        _kiwi.app.startup_applet.view.show();
+        _melon.app.startup_applet.view.show();
     }
 });

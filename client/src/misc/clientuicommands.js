@@ -8,7 +8,7 @@
         this.bindCommand(fn_to_bind);
     }
 
-    _kiwi.misc.ClientUiCommands = ClientUiCommands;
+    _melon.misc.ClientUiCommands = ClientUiCommands;
 
 
     // Add the default user command aliases
@@ -128,16 +128,16 @@
             if (parseInt(value, 10).toString() === value)
                 value = parseInt(value, 10);
 
-            _kiwi.global.settings.set(setting, value);
+            _melon.global.settings.set(setting, value);
         }
 
         // Read the value to the user
-        this.app.panels().active.addMsg('', styleText('set_setting', {text: setting + ' = ' + _kiwi.global.settings.get(setting).toString()}));
+        this.app.panels().active.addMsg('', styleText('set_setting', {text: setting + ' = ' + _melon.global.settings.get(setting).toString()}));
     };
 
 
     fn_to_bind['command:save'] = function (ev) {
-        _kiwi.global.settings.save();
+        _melon.global.settings.save();
         this.app.panels().active.addMsg('', styleText('settings_saved', {text: translateText('client_models_application_settings_saved')}));
     };
 
@@ -252,7 +252,7 @@
         // Check if we have the panel already. If not, create it
         panel = this.app.connections.active_connection.panels.getByName(destination);
         if (!panel) {
-            panel = new _kiwi.model.Query({name: destination});
+            panel = new _melon.model.Query({name: destination});
             this.app.connections.active_connection.panels.add(panel);
         }
 
@@ -411,13 +411,13 @@
 
 
     function settingsCommand (ev) {
-        var settings = _kiwi.model.Applet.loadOnce('kiwi_settings');
+        var settings = _melon.model.Applet.loadOnce('melon_settings');
         settings.view.show();
     }
 
 
     function scriptCommand (ev) {
-        var editor = _kiwi.model.Applet.loadOnce('kiwi_script_editor');
+        var editor = _melon.model.Applet.loadOnce('melon_script_editor');
         editor.view.show();
     }
 
@@ -425,7 +425,7 @@
     function appletCommand (ev) {
         if (!ev.params[0]) return;
 
-        var panel = new _kiwi.model.Applet();
+        var panel = new _melon.model.Applet();
 
         if (ev.params[1]) {
             // Url and name given
@@ -502,7 +502,7 @@
         var that = this;
 
         if (ev.params[0]) {
-            _kiwi.gateway.setEncoding(null, ev.params[0], function (success) {
+            _melon.gateway.setEncoding(null, ev.params[0], function (success) {
                 if (success) {
                     that.app.panels().active.addMsg('', styleText('encoding_changed', {text: translateText('client_models_application_encoding_changed', [ev.params[0]])}));
                 } else {
@@ -522,7 +522,7 @@
         if (!active_panel.isChannel())
             return;
 
-        new _kiwi.model.ChannelInfo({channel: this.app.panels().active});
+        new _melon.model.ChannelInfo({channel: this.app.panels().active});
     }
 
 
@@ -543,8 +543,8 @@
 
         // If no server address given, show the new connection dialog
         if (!ev.params[0]) {
-            tmp = new _kiwi.view.MenuBox(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
-            tmp.addItem('new_connection', new _kiwi.model.NewConnection().view.$el);
+            tmp = new _melon.view.MenuBox(_melon.global.i18n.translate('client_models_application_connection_create').fetch());
+            tmp.addItem('new_connection', new _melon.model.NewConnection().view.$el);
             tmp.show();
 
             // Center screen the dialog
@@ -588,7 +588,7 @@
 
         this.app.panels().active.addMsg('', styleText('server_connecting', {text: translateText('client_models_application_connection_connecting', [server, port.toString()])}));
 
-        _kiwi.gateway.newConnection({
+        _melon.gateway.newConnection({
             nick: nick,
             host: server,
             port: port,

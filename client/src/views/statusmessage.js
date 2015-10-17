@@ -1,4 +1,4 @@
-_kiwi.view.StatusMessage = Backbone.View.extend({
+_melon.view.StatusMessage = Backbone.View.extend({
     initialize: function () {
         this.$el.hide();
 
@@ -13,7 +13,7 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.timeout = opt.timeout || 5000;
 
         this.$el.text(text).addClass(opt.type);
-        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
+        this.$el.slideDown($.proxy(_melon.app.view.doLayout, _melon.app.view));
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
@@ -25,13 +25,13 @@ _kiwi.view.StatusMessage = Backbone.View.extend({
         opt.timeout = opt.timeout || 5000;
 
         this.$el.html(html).addClass(opt.type);
-        this.$el.slideDown($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
+        this.$el.slideDown($.proxy(_melon.app.view.doLayout, _melon.app.view));
 
         if (opt.timeout) this.doTimeout(opt.timeout);
     },
 
     hide: function () {
-        this.$el.slideUp($.proxy(_kiwi.app.view.doLayout, _kiwi.app.view));
+        this.$el.slideUp($.proxy(_melon.app.view.doLayout, _melon.app.view));
     },
 
     doTimeout: function (length) {

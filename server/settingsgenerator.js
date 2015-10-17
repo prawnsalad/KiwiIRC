@@ -168,7 +168,7 @@ function addTranslations() {
 
 function addScripts(vars, debug) {
     if (!debug) {
-        vars.scripts.push(['assets/kiwi.min.js', 'assets/libs/engine.io.bundle.min.js']);
+        vars.scripts.push(['assets/melon.min.js', 'assets/libs/engine.io.bundle.min.js']);
         return;
     }
 

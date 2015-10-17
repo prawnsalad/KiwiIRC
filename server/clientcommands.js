@@ -75,7 +75,7 @@ ClientCommands.prototype.addRpcEvents = function(client, rpc) {
     addRpcMethod('irc.notice',       listeners.notice);
     addRpcMethod('irc.mode',         listeners.mode);
     addRpcMethod('irc.nick',         listeners.nick);
-    addRpcMethod('irc.kiwi',         listeners.kiwi);
+    addRpcMethod('irc.melon',         listeners.melon);
     addRpcMethod('irc.encoding',     listeners.encoding);
 };
 
@@ -217,7 +217,7 @@ var listeners = {
     },
 
 
-    kiwi:  function (irc_connection, callback, args) {
+    melon:  function (irc_connection, callback, args) {
         if ((args.target) && (args.data)) {
             irc_connection.write('PRIVMSG ' + args.target + ': ' + String.fromCharCode(1) + 'KIWI ' + args.data + String.fromCharCode(1), callback);
         }

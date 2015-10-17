@@ -215,7 +215,7 @@ function hsl2rgb(h, s, l) {
 
 
 /**
- * Formats a kiwi message to IRC format
+ * Formats a melon message to IRC format
  */
 function formatToIrcMsg(message) {
     // Format any colour codes (eg. $c4)
@@ -501,7 +501,7 @@ function parseISO8601(str) {
 function translateText(string_id, params) {
     params = params || '';
 
-    return _kiwi.global.i18n.translate(string_id).fetch(params);
+    return _melon.global.i18n.translate(string_id).fetch(params);
 }
 
 /**
@@ -523,8 +523,8 @@ function translateText(string_id, params) {
 function styleText(string_id, params) {
     var style, text;
 
-    //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
-    style = _kiwi.app.text_theme[string_id];
+    //style = formatToIrcMsg(_melon.app.text_theme[string_id]);
+    style = _melon.app.text_theme[string_id];
     style = formatToIrcMsg(style);
 
     // Expand a member mask into its individual parts (nick, ident, hostname)

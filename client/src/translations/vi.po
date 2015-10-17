@@ -1,11 +1,11 @@
 # Please report any translation errors on one of the following:
-#     Mailing list: https://groups.google.com/d/forum/kiwiirc
-#     IRC: irc.freenode.net #kiwiirc
+#     Mailing list: https://groups.google.com/d/forum/melonirc
+#     IRC: irc.freenode.net #melonirc
 #
 # Want to translate into your own language? Please send your translated file to the
 # mailing list mentioned above and we will upload it to our translation manager -
 # http://poeditor.com/. An account will be set up for you to make any further changes
-# as the Kiwi project progresses.
+# as the Melon project progresses.
 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
-"Project-Id-Version: Kiwi\n"
+"Project-Id-Version: Melon\n"
 "Language: vi\n"
 
 #: client/assets/src/applets/chanlist.js
@@ -82,7 +82,7 @@ msgstr "Chương trình IRC mặc định"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Chọn Kiwi làm chương trình IRC mặc định"
+msgstr "Chọn Melon làm chương trình IRC mặc định"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
@@ -270,7 +270,7 @@ msgstr "Sai mật khẩu"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Hành động này sẽ đóng tất cả các hội thoại KiwiIRC. Bạn có chắc chắn muốn đóng cửa sổ này không?"
+msgstr "Hành động này sẽ đóng tất cả các hội thoại MelonIRC. Bạn có chắc chắn muốn đóng cửa sổ này không?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -370,7 +370,7 @@ msgstr "Cổng"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Được vận hành bởi Kiwi IRC"
+msgstr "Được vận hành bởi Melon IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
@@ -470,7 +470,7 @@ msgstr "Hiện các mặt cười"
 
 #: 
 msgid "client_applet_about"
-msgstr "Giới thiệu về Kiwi"
+msgstr "Giới thiệu về Melon"
 
 #: 
 msgid "client_applet_about_homepage"

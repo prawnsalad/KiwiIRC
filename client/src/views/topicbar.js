@@ -1,10 +1,10 @@
-_kiwi.view.TopicBar = Backbone.View.extend({
+_melon.view.TopicBar = Backbone.View.extend({
     events: {
         'keydown div': 'process'
     },
 
     initialize: function () {
-        _kiwi.app.panels.bind('active', function (active_panel) {
+        _melon.app.panels.bind('active', function (active_panel) {
             // If it's a channel topic, update and make editable
             if (active_panel.isChannel()) {
                 this.setCurrentTopicFromChannel(active_panel);
@@ -23,13 +23,13 @@ _kiwi.view.TopicBar = Backbone.View.extend({
             inp_val = inp.text();
 
         // Only allow topic editing if this is a channel panel
-        if (!_kiwi.app.panels().active.isChannel()) {
+        if (!_melon.app.panels().active.isChannel()) {
             return false;
         }
 
         // If hit return key, update the current topic
         if (ev.keyCode === 13) {
-            _kiwi.app.connections.active_connection.gateway.topic(_kiwi.app.panels().active.get('name'), inp_val);
+            _melon.app.connections.active_connection.gateway.topic(_melon.app.panels().active.get('name'), inp_val);
             return false;
         }
     },
@@ -48,7 +48,7 @@ _kiwi.view.TopicBar = Backbone.View.extend({
         this.setCurrentTopic(channel.get("topic"));
 
         if (set_by) {
-            set_by_text += translateText('client_models_network_topic', [set_by.nick, _kiwi.utils.formatDate(set_by.when)]);
+            set_by_text += translateText('client_models_network_topic', [set_by.nick, _melon.utils.formatDate(set_by.when)]);
             this.$el.attr('title', set_by_text);
         } else {
             this.$el.attr('title', '');

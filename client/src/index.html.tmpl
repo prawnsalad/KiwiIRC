@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base target="_blank">
 
-<title> Kiwi IRC </title>
+<title> Melon IRC </title>
 
 <link rel="shortcut icon" href="<%base_path%>/assets/img/favicon.ico">
 
@@ -15,13 +15,13 @@
 <body>
 
     <script type="text/html" id="tmpl_application">
-        <div id="kiwi" class="theme_relaxed">
+        <div id="melon" class="theme_relaxed">
             <div class="toolbar">
                 <div class="app_tools">
                     <ul class="main">
                         <li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
                         <li class="startup"><i class="fa fa-home" title="Home"></i></li>
-                        <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
+                        <li><a href="https://melonirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="MelonIRC" title="MelonIRC" /></a></li>
                     </ul>
                 </div>
 
@@ -138,10 +138,10 @@
 
     <script type="text/html" id="tmpl_new_connection_info">
         <div style="margin:1em 20px;">
-            <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" style="display:block; margin:0 auto;"/> <br />
+            <img src="<%base_path%>/assets/img/ico.png" alt="MelonIRC Logo" title="Melon IRC" style="display:block; margin:0 auto;"/> <br />
             <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
 
-            <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://www.kiwiirc.com/">Kiwi IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a> page. This network of people may not be associated with Kiwi IRC itself.</p>
+            <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://www.melonirc.com/">Melon IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/MelonIRC/">GitHub</a> page. This network of people may not be associated with Melon IRC itself.</p>
         </div>
     </script>
 
@@ -226,8 +226,8 @@
                     </div>
                 </form>
 
-                <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
-                    <h1><span><%= powered_by %></span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
+                <a class="melon_logo" href="https://melonirc.com/" target="_blank">
+                    <h1><span><%= powered_by %></span> <img src="<%base_path%>/assets/img/ico.png" alt="MelonIRC Logo" title="Melon IRC" /></h1>
                 </a>
             </div>
         </div>
@@ -380,10 +380,10 @@
     <script type="text/html" id="tmpl_script_editor">
         <div style="height:100%;">
             <style>
-                #kiwi .script_editor .se_toolbar { padding: 10px 20px; }
-                #kiwi .script_editor .se_toolbar span.status { margin-left:2em; font-style:italic; }
-                #kiwi .script_editor .se_toolbar button { height:30px; padding:0 1em; }
-                #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
+                #melon .script_editor .se_toolbar { padding: 10px 20px; }
+                #melon .script_editor .se_toolbar span.status { margin-left:2em; font-style:italic; }
+                #melon .script_editor .se_toolbar button { height:30px; padding:0 1em; }
+                #melon .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
             <div class="script_editor" style="height:100%; position:relative;">
                 <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
@@ -445,7 +445,7 @@
     }
 
     (function afterPromiseAvailable() {
-        var base_path = '<%base_path%>', // Entry path for the kiwi application
+        var base_path = '<%base_path%>', // Entry path for the melon application
             scripts = [],
             opts = {
                 container: $('body'),
@@ -514,7 +514,7 @@
                 'assets/libs/jed.js?t=<%build_time%>'
             ]);
             scripts.push([
-                'assets/kiwi.min.js?t=<%build_time%>',
+                'assets/melon.min.js?t=<%build_time%>',
                 'assets/libs/engine.io.bundle.min.js?t=<%build_time%>'
             ]);
 
@@ -528,8 +528,8 @@
                 opts.translations = data.translations;
                 opts.themes = data.themes;
 
-                if (typeof data.kiwi_server !== 'undefined') {
-                    opts.kiwi_server = data.kiwi_server;
+                if (typeof data.melon_server !== 'undefined') {
+                    opts.melon_server = data.melon_server;
                 }
 
                 resolve();
@@ -565,26 +565,26 @@
         Promise.all([onload_promise, settings_promise])
         .then(function(){return script_promise})
         .then(function startApp() {
-            // Kiwi IRC version this is built from
-            kiwi.build_version = '<%build_version%>';
+            // Melon IRC version this is built from
+            melon.build_version = '<%build_version%>';
 
             // Start the app after loading plugins
-            kiwi.init(opts, function() {
+            melon.init(opts, function() {
                 if (opts.client_plugins && opts.client_plugins.length > 0) {
 
                     // Wait until all plugins are loaded before starting the app
-                    kiwi.plugins.once('loaded', function() {
-                        kiwi.start();
+                    melon.plugins.once('loaded', function() {
+                        melon.start();
                     });
 
                     _.each(opts.client_plugins, function (plugin_url) {
-                        kiwi.plugins.load(plugin_url);
+                        melon.plugins.load(plugin_url);
                     });
 
                 } else {
 
                     // No plugins were needed so start the app
-                    kiwi.start();
+                    melon.start();
                 }
             });
         });

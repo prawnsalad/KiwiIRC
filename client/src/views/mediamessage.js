@@ -1,4 +1,4 @@
-_kiwi.view.MediaMessage = Backbone.View.extend({
+_melon.view.MediaMessage = Backbone.View.extend({
     events: {
         'click .media_close': 'close'
     },
@@ -28,8 +28,8 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
     open: function () {
         // Create the content div if we haven't already
         if (!this.$content) {
-            this.$content = $('<div class="media_content"><a class="media_close"><i class="fa fa-chevron-up"></i> ' + _kiwi.global.i18n.translate('client_views_mediamessage_close').fetch() + '</a><br /><div class="content"></div></div>');
-            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || _kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch() + ' :(');
+            this.$content = $('<div class="media_content"><a class="media_close"><i class="fa fa-chevron-up"></i> ' + _melon.global.i18n.translate('client_views_mediamessage_close').fetch() + '</a><br /><div class="content"></div></div>');
+            this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || _melon.global.i18n.translate('client_views_mediamessage_notfound').fetch() + ' :(');
         }
 
         // Now show the content if not already
@@ -55,7 +55,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(data.html);
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_tweet').fetch() + '...</div>');
+            return $('<div>' + _melon.global.i18n.translate('client_views_mediamessage_load_tweet').fetch() + '...</div>');
         },
 
 
@@ -72,7 +72,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(img_html);
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_image').fetch() + '...</div>');
+            return $('<div>' + _melon.global.i18n.translate('client_views_mediamessage_load_image').fetch() + '...</div>');
         },
 
 
@@ -108,7 +108,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(_.template(tmpl, post));
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_reddit').fetch() + '...</div>');
+            return $('<div>' + _melon.global.i18n.translate('client_views_mediamessage_load_reddit').fetch() + '...</div>');
         },
 
 
@@ -131,7 +131,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                 that.$content.find('.content').html(data.div);
             });
 
-            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_gist').fetch() + '...</div>');
+            return $('<div>' + _melon.global.i18n.translate('client_views_mediamessage_load_gist').fetch() + '...</div>');
         },
 
         spotify: function () {
@@ -164,7 +164,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         soundcloud: function () {
             var url = this.$el.data('url'),
-                $content = $('<div></div>').text(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
+                $content = $('<div></div>').text(_melon.global.i18n.translate('client_models_applet_loading').fetch());
 
             $.getJSON('https://soundcloud.com/oembed', { url: url })
                 .then(function (data) {
@@ -172,7 +172,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
                         $(data.html).attr('height', data.height - 100)
                     );
                 }, function () {
-                    $content.text(_kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch());
+                    $content.text(_melon.global.i18n.translate('client_views_mediamessage_notfound').fetch());
                 });
 
             return $content;

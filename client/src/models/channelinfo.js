@@ -1,5 +1,5 @@
-_kiwi.model.ChannelInfo = Backbone.Model.extend({
+_melon.model.ChannelInfo = Backbone.Model.extend({
     initialize: function () {
-        this.view = new _kiwi.view.ChannelInfo({"model": this});
+        this.view = new _melon.view.ChannelInfo({"model": this});
     }
 });

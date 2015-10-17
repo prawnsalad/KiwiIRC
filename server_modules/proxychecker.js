@@ -5,10 +5,10 @@
  */
 
 var util = require('util'),
-    kiwiModules = require('../server/modules');
+    melonModules = require('../server/modules');
 
 
-var module = new kiwiModules.Module('proxychecker');
+var module = new melonModules.Module('proxychecker');
 
 module.on('irc connecting', function (event, event_data) {
     event.wait = true;

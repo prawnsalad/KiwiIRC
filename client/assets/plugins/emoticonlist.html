@@ -1,5 +1,5 @@
 <style>
-    #kiwi .emoticon-list {
+    #melon .emoticon-list {
         position: absolute;
         display: block;
         z-index: 1000;
@@ -9,7 +9,7 @@
         width: 460px;
     }
 
-    #kiwi .emoticon-list .emoticon {
+    #melon .emoticon-list .emoticon {
         display: inline-block;
         width: 15px;
         height: 15px;
@@ -52,7 +52,7 @@
 
             var $this = $(this);
 
-            $list.appendTo($('#kiwi'))
+            $list.appendTo($('#melon'))
                 .show()
                 .css({
                     bottom: ($('.controlbox').outerHeight()) + 'px',
@@ -72,7 +72,7 @@
             $list.hide();
         });
 
-        var control = kiwi.components.ControlInput();
+        var control = melon.components.ControlInput();
         control.addPluginIcon($icon);
     })();
 </script>

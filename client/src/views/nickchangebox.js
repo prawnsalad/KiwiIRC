@@ -1,4 +1,4 @@
-_kiwi.view.NickChangeBox = Backbone.View.extend({
+_melon.view.NickChangeBox = Backbone.View.extend({
     events: {
         'submit': 'changeNick',
         'click .cancel': 'close'
@@ -6,19 +6,19 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
 
     initialize: function () {
         var text = {
-            new_nick: _kiwi.global.i18n.translate('client_views_nickchangebox_new').fetch(),
-            change: _kiwi.global.i18n.translate('client_views_nickchangebox_change').fetch(),
-            cancel: _kiwi.global.i18n.translate('client_views_nickchangebox_cancel').fetch()
+            new_nick: _melon.global.i18n.translate('client_views_nickchangebox_new').fetch(),
+            change: _melon.global.i18n.translate('client_views_nickchangebox_change').fetch(),
+            cancel: _melon.global.i18n.translate('client_views_nickchangebox_cancel').fetch()
         };
         this.$el = $(_.template($('#tmpl_nickchange').html().trim(), text));
     },
 
     render: function () {
         // Add the UI component and give it focus
-        _kiwi.app.controlbox.$el.prepend(this.$el);
+        _melon.app.controlbox.$el.prepend(this.$el);
         this.$el.find('input').focus();
 
-        this.$el.css('bottom', _kiwi.app.controlbox.$el.outerHeight(true));
+        this.$el.css('bottom', _melon.app.controlbox.$el.outerHeight(true));
     },
 
     close: function () {
@@ -29,7 +29,7 @@ _kiwi.view.NickChangeBox = Backbone.View.extend({
     changeNick: function (event) {
         event.preventDefault();
 
-        var connection = _kiwi.app.connections.active_connection;
+        var connection = _melon.app.connections.active_connection;
         this.listenTo(connection, 'change:nick', function() {
             this.close();
         });

@@ -1,4 +1,4 @@
-_kiwi.view.Application = Backbone.View.extend({
+_melon.view.Application = Backbone.View.extend({
     initialize: function () {
         var that = this;
 
@@ -20,14 +20,14 @@ _kiwi.view.Application = Backbone.View.extend({
         this.elements.controlbox.resize(function() { that.doLayout.apply(that); });
 
         // Change the theme when the config is changed
-        _kiwi.global.settings.on('change:theme', this.updateTheme, this);
+        _melon.global.settings.on('change:theme', this.updateTheme, this);
         this.updateTheme(getQueryVariable('theme'));
 
-        _kiwi.global.settings.on('change:channel_list_style', this.setTabLayout, this);
-        this.setTabLayout(_kiwi.global.settings.get('channel_list_style'));
+        _melon.global.settings.on('change:channel_list_style', this.setTabLayout, this);
+        this.setTabLayout(_melon.global.settings.get('channel_list_style'));
 
-        _kiwi.global.settings.on('change:show_timestamps', this.displayTimestamps, this);
-        this.displayTimestamps(_kiwi.global.settings.get('show_timestamps'));
+        _melon.global.settings.on('change:show_timestamps', this.displayTimestamps, this);
+        this.displayTimestamps(_melon.global.settings.get('show_timestamps'));
 
         this.$el.appendTo($('body'));
         this.doLayout();
@@ -36,8 +36,8 @@ _kiwi.view.Application = Backbone.View.extend({
 
         // Confirmation require to leave the page
         window.onbeforeunload = function () {
-            if (_kiwi.gateway.isConnected()) {
-                return _kiwi.global.i18n.translate('client_views_application_close_notice').fetch();
+            if (_melon.gateway.isConnected()) {
+                return _melon.global.i18n.translate('client_views_application_close_notice').fetch();
             }
         };
 
@@ -64,7 +64,7 @@ _kiwi.view.Application = Backbone.View.extend({
         });
 
 
-        this.favicon = new _kiwi.view.Favicon();
+        this.favicon = new _melon.view.Favicon();
         this.initSound();
 
         this.monitorPanelFallback();
@@ -74,12 +74,12 @@ _kiwi.view.Application = Backbone.View.extend({
 
     updateTheme: function (theme_name) {
         // If called by the settings callback, get the correct new_value
-        if (theme_name === _kiwi.global.settings) {
+        if (theme_name === _melon.global.settings) {
             theme_name = arguments[1];
         }
 
         // If we have no theme specified, get it from the settings
-        if (!theme_name) theme_name = _kiwi.global.settings.get('theme') || 'relaxed';
+        if (!theme_name) theme_name = _melon.global.settings.get('theme') || 'relaxed';
 
         theme_name = theme_name.toLowerCase();
 
@@ -101,7 +101,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
     setTabLayout: function (layout_style) {
         // If called by the settings callback, get the correct new_value
-        if (layout_style === _kiwi.global.settings) {
+        if (layout_style === _melon.global.settings) {
             layout_style = arguments[1];
         }
 
@@ -117,7 +117,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
     displayTimestamps: function (show_timestamps) {
         // If called by the settings callback, get the correct new_value
-        if (show_timestamps === _kiwi.global.settings) {
+        if (show_timestamps === _melon.global.settings) {
             show_timestamps = arguments[1];
         }
 
@@ -141,19 +141,19 @@ _kiwi.view.Application = Backbone.View.extend({
             return;
         }
 
-        $('#kiwi .controlbox .inp').focus();
+        $('#melon .controlbox .inp').focus();
     },
 
 
     doLayout: function () {
-        var $kiwi = this.$el;
+        var $melon = this.$el;
         var $panels = this.elements.panels;
         var $right_bar = this.elements.right_bar;
         var $toolbar = this.elements.toolbar;
         var $controlbox = this.elements.controlbox;
         var $resize_handle = this.elements.resize_handle;
 
-        if (!$kiwi.is(':visible')) {
+        if (!$melon.is(':visible')) {
             return;
         }
 
@@ -178,17 +178,17 @@ _kiwi.view.Application = Backbone.View.extend({
         $resize_handle.css(css_heights);
 
         // If we have channel tabs on the side, adjust the height
-        if ($kiwi.hasClass('chanlist_treeview')) {
-            this.$el.find('.tabs', $kiwi).css(css_heights);
+        if ($melon.hasClass('chanlist_treeview')) {
+            this.$el.find('.tabs', $melon).css(css_heights);
         }
 
         // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
-        if ($kiwi.outerWidth() < 420) {
-            $kiwi.addClass('narrow');
+        if ($melon.outerWidth() < 420) {
+            $melon.addClass('narrow');
             if (this.model.rightbar && this.model.rightbar.keep_hidden !== true)
                 this.model.rightbar.toggle(true);
         } else {
-            $kiwi.removeClass('narrow');
+            $melon.removeClass('narrow');
             if (this.model.rightbar && this.model.rightbar.keep_hidden !== false)
                 this.model.rightbar.toggle(false);
         }
@@ -218,8 +218,8 @@ _kiwi.view.Application = Backbone.View.extend({
                 var tmr;
                 var has_focus = true;
                 var state = 0;
-                var default_title = _kiwi.app.server_settings.client.window_title || 'Kiwi IRC';
-                var title = 'Kiwi IRC';
+                var default_title = _melon.app.server_settings.client.window_title || 'Melon IRC';
+                var title = 'Melon IRC';
 
                 this.setTitle = function (new_title) {
                     new_title = new_title || default_title;
@@ -287,10 +287,10 @@ _kiwi.view.Application = Backbone.View.extend({
 
         if (!instant) {
             this.$el.find('.toolbar').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
-            $('#kiwi .controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#melon .controlbox').slideUp({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             this.$el.find('.toolbar').slideUp(0);
-            $('#kiwi .controlbox').slideUp(0);
+            $('#melon .controlbox').slideUp(0);
             this.doLayout();
         }
     },
@@ -300,10 +300,10 @@ _kiwi.view.Application = Backbone.View.extend({
 
         if (!instant) {
             this.$el.find('.toolbar').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
-            $('#kiwi .controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
+            $('#melon .controlbox').slideDown({queue: false, duration: 400, step: $.proxy(this.doLayout, this)});
         } else {
             this.$el.find('.toolbar').slideDown(0);
-            $('#kiwi .controlbox').slideDown(0);
+            $('#melon .controlbox').slideDown(0);
             this.doLayout();
         }
     },
@@ -336,7 +336,7 @@ _kiwi.view.Application = Backbone.View.extend({
     playSound: function (sound_id) {
         if (!this.sound_object) return;
 
-        if (_kiwi.global.settings.get('mute_sounds'))
+        if (_melon.global.settings.get('mute_sounds'))
             return;
 
         soundManager.play(sound_id);
@@ -345,7 +345,7 @@ _kiwi.view.Application = Backbone.View.extend({
 
     showNotification: function(title, message) {
         var icon = this.model.get('base_path') + '/assets/img/ico.png',
-            notifications = _kiwi.utils.notifications;
+            notifications = _melon.utils.notifications;
 
         if (!this.has_focus && notifications.allowed()) {
             notifications
@@ -359,7 +359,7 @@ _kiwi.view.Application = Backbone.View.extend({
         var panel_access = [];
 
         this.model.panels.on('active', function() {
-            var panel = _kiwi.app.panels().active,
+            var panel = _melon.app.panels().active,
                 panel_index;
 
             // If the panel is already open, remove it so we can put it back in first place
@@ -379,7 +379,7 @@ _kiwi.view.Application = Backbone.View.extend({
                 panel_access.shift();
 
                 //Get the last-accessed panel model now that we removed the closed one
-                var model = _.find(_kiwi.app.panels('applets').concat(_kiwi.app.panels('connections')), {cid: panel_access[0]});
+                var model = _.find(_melon.app.panels('applets').concat(_melon.app.panels('connections')), {cid: panel_access[0]});
 
                 if (model) {
                     model.view.show();

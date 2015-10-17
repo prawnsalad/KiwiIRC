@@ -1,4 +1,4 @@
-_kiwi.model.Member = Backbone.Model.extend({
+_melon.model.Member = Backbone.Model.extend({
     initialize: function (attributes) {
         var nick, modes, prefix;
 
@@ -14,7 +14,7 @@ _kiwi.model.Member = Backbone.Model.extend({
 
         this.updateOpStatus();
 
-        this.view = new _kiwi.view.Member({"model": this});
+        this.view = new _melon.view.Member({"model": this});
     },
 
 

@@ -78,11 +78,11 @@ var handlers = {
                     version_string += ', client build: ' + client_info.build_version;
                 }
 
-                version_string = 'KiwiIRC (' + version_string + ')';
+                version_string = 'MelonIRC (' + version_string + ')';
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'VERSION ' + version_string + String.fromCharCode(1));
 
             } else if (msg.substr(1, 6) === 'SOURCE') {
-                this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'SOURCE http://www.kiwiirc.com/' + String.fromCharCode(1));
+                this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'SOURCE http://www.melonirc.com/' + String.fromCharCode(1));
 
             } else if (msg.substr(1, 10) === 'CLIENTINFO') {
                 this.irc_connection.write('NOTICE ' + command.nick + ' :' + String.fromCharCode(1) + 'CLIENTINFO SOURCE VERSION TIME' + String.fromCharCode(1));

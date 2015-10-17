@@ -1,4 +1,4 @@
-_kiwi.view.ChannelTools = Backbone.View.extend({
+_melon.view.ChannelTools = Backbone.View.extend({
     events: {
         'click .channel_info': 'infoClick',
         'click .channel_part': 'partClick'
@@ -7,10 +7,10 @@ _kiwi.view.ChannelTools = Backbone.View.extend({
     initialize: function () {},
 
     infoClick: function (event) {
-        new _kiwi.model.ChannelInfo({channel: _kiwi.app.panels().active});
+        new _melon.model.ChannelInfo({channel: _melon.app.panels().active});
     },
 
     partClick: function (event) {
-        _kiwi.app.connections.active_connection.gateway.part(_kiwi.app.panels().active.get('name'));
+        _melon.app.connections.active_connection.gateway.part(_melon.app.panels().active.get('name'));
     }
 });
