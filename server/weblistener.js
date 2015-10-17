@@ -182,8 +182,10 @@ function initialiseSocket(socket, callback) {
         // Multiple reverse proxies will have a comma delimited list of IPs. We only need the first
         address = address.split(',')[0].trim();
 
-        // Some reverse proxies (IIS) may include the port, so lets remove that
-        address = (address || '').split(':')[0];
+        // Some reverse proxies (IIS) may include the port, so lets remove that (if ipv4)
+        if (address.indexOf('.') > -1) {
+            address = (address || '').split(':')[0];
+        }
     }
 
     socket.meta.real_address = address;
