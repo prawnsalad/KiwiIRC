@@ -3,13 +3,13 @@
     // Author: https://github.com/pepijndevos/
     
     $script("//api.filepicker.io/v1/filepicker.js", function () {
-        var network = kiwi.components.Network();
-        var control = kiwi.components.ControlInput();
+        var network = melon.components.Network();
+        var control = melon.components.ControlInput();
 
         filepicker.setKey("YOUR_API_KEY");
 
         function uploaded(files) {
-            var area = $("#kiwi .controlbox textarea");
+            var area = $("#melon .controlbox textarea");
 
             for (var i = 0; files.length>i; i++) {
                 var f = files[i];
@@ -17,7 +17,7 @@
             }
         }
 
-        filepicker.makeDropPane($("#kiwi .panels")[0], { onSuccess: uploaded });
+        filepicker.makeDropPane($("#melon .panels")[0], { onSuccess: uploaded });
 
         var $icon = $("<a class=\"upload\" title=\"Send File\"><i class=\"fa fa-upload\"></i></a>");
         $icon.click(function () { filepicker.pickMultiple(uploaded); });

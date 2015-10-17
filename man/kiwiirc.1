@@ -1,47 +1,47 @@
 .TH KIWIIRC 1
 .SH NAME
-kiwiirc \- the Kiwi IRC web client
+melonirc \- the Melon IRC web client
 .SH SYNOPSIS
-.B kiwiirc
+.B melonirc
 [\fB\-f\fR | \fBstart\fR | \fBstop\fR | \fBrestart\fR | \fBstatus\fR | \fBreconfig\fR | \fBbuild\fR] [\fB\-c\fR\ \fIconfig_file\fR] [\fB\-p\fR\ \fIpid_file\fR]
 .SH DESCRIPTION
-Kiwi IRC is a web-based IRC client built using Node.js.
+Melon IRC is a web-based IRC client built using Node.js.
 .SH OPTIONS
 .TP
 .BR \-f\fR
-Run the kiwi server in the foreground. When run in the foreground kiwi will print all logs to stdout.
+Run the melon server in the foreground. When run in the foreground melon will print all logs to stdout.
 .TP
 .BR start\fR
-Start the kiwi server and fork in to the background. 
+Start the melon server and fork in to the background. 
 .TP
 .BR stop\fR
-Stop the kiwi server if it is running.
+Stop the melon server if it is running.
 .TP
 .BR restart\fR
-Restart the kiwi server. If it is not running, it will be started.
+Restart the melon server. If it is not running, it will be started.
 .TP
 .BR status\fR
-Output to stdout whether the kiwi server is running or not. If it is running it will also display the server's PID.
+Output to stdout whether the melon server is running or not. If it is running it will also display the server's PID.
 .TP
 .BR reconfig\fR
-Forces the kiwi server to re-load its configuration file by sending the process \fBSIGUSR1\fR.
+Forces the melon server to re-load its configuration file by sending the process \fBSIGUSR1\fR.
 .TP
 .BR build\fR
 Builds the necessary client files. This will process translation files, build the HTML file and bundle and minify the client-side JavaScript code.
 .TP
 .BR \-c\fR\ \fIconfig_file\fR
-Use the specified \fIconfig_file\fR instead of searching the pre-defined locations. By default the kiwi server will look in \fI/etc/kiwiirc\fR and the installation directory for a configuration file named \fIconfig.js\fR.
+Use the specified \fIconfig_file\fR instead of searching the pre-defined locations. By default the melon server will look in \fI/etc/melonirc\fR and the installation directory for a configuration file named \fIconfig.js\fR.
 .TP
 .BR \-p\fR\ \fIpid_file\fR
-Write the kiwi server's PID to this file. By default, kiwi will write the PID to a file called \fIkiwiirc.pid\fR in the installation directory unless it is started with the \fB\-f\fR flag.
+Write the melon server's PID to this file. By default, melon will write the PID to a file called \fImelonirc.pid\fR in the installation directory unless it is started with the \fB\-f\fR flag.
 .SH FILES
 .TP
-.IR /etc/kiwiirc/config.js
-If this file exists, and the \fB\-c\fR option has not been specified, kiwi will use this file as its configuration file. If it does not exist, kiwi will try to locate \fIconfig.js\fR in its installation directory.
+.IR /etc/melonirc/config.js
+If this file exists, and the \fB\-c\fR option has not been specified, melon will use this file as its configuration file. If it does not exist, melon will try to locate \fIconfig.js\fR in its installation directory.
 .SH BUGS
 Please report bugs on the GitHub issues page at
-.UR https://github.com/prawnsalad/KiwiIRC/issues 
+.UR https://github.com/prawnsalad/MelonIRC/issues 
 .UE
 or on the mailing list at
-.MT kiwiirc@googlegroups.com
+.MT melonirc@googlegroups.com
 .ME .

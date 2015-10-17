@@ -1,4 +1,4 @@
-_kiwi.view.UserBox = Backbone.View.extend({
+_melon.view.UserBox = Backbone.View.extend({
     events: {
         'click .query': 'queryClick',
         'click .info': 'infoClick',
@@ -14,15 +14,15 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     initialize: function () {
         var text = {
-            op: _kiwi.global.i18n.translate('client_views_userbox_op').fetch(),
-            de_op: _kiwi.global.i18n.translate('client_views_userbox_deop').fetch(),
-            voice: _kiwi.global.i18n.translate('client_views_userbox_voice').fetch(),
-            de_voice: _kiwi.global.i18n.translate('client_views_userbox_devoice').fetch(),
-            kick: _kiwi.global.i18n.translate('client_views_userbox_kick').fetch(),
-            ban: _kiwi.global.i18n.translate('client_views_userbox_ban').fetch(),
-            message: _kiwi.global.i18n.translate('client_views_userbox_query').fetch(),
-            info: _kiwi.global.i18n.translate('client_views_userbox_whois').fetch(),
-            ignore: _kiwi.global.i18n.translate('client_views_userbox_ignore').fetch()
+            op: _melon.global.i18n.translate('client_views_userbox_op').fetch(),
+            de_op: _melon.global.i18n.translate('client_views_userbox_deop').fetch(),
+            voice: _melon.global.i18n.translate('client_views_userbox_voice').fetch(),
+            de_voice: _melon.global.i18n.translate('client_views_userbox_devoice').fetch(),
+            kick: _melon.global.i18n.translate('client_views_userbox_kick').fetch(),
+            ban: _melon.global.i18n.translate('client_views_userbox_ban').fetch(),
+            message: _melon.global.i18n.translate('client_views_userbox_query').fetch(),
+            info: _melon.global.i18n.translate('client_views_userbox_whois').fetch(),
+            ignore: _melon.global.i18n.translate('client_views_userbox_ignore').fetch()
         };
         this.$el = $(_.template($('#tmpl_userbox').html().trim(), text));
     },
@@ -31,7 +31,7 @@ _kiwi.view.UserBox = Backbone.View.extend({
         this.user = user;
         this.channel = channel;
 
-        var is_ignored = _kiwi.app.connections.active_connection.isNickIgnored(this.user.get('nick'));
+        var is_ignored = _melon.app.connections.active_connection.isNickIgnored(this.user.get('nick'));
         this.$('.ignore input').attr('checked', is_ignored ? 'checked' : false);
     },
 
@@ -45,11 +45,11 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     queryClick: function (event) {
         var nick = this.user.get('nick');
-        _kiwi.app.connections.active_connection.createQuery(nick);
+        _melon.app.connections.active_connection.createQuery(nick);
     },
 
     infoClick: function (event) {
-        _kiwi.app.controlbox.processInput('/whois ' + this.user.get('nick'));
+        _melon.app.controlbox.processInput('/whois ' + this.user.get('nick'));
     },
 
     ignoreClick: function (event) {
@@ -59,35 +59,35 @@ _kiwi.view.UserBox = Backbone.View.extend({
 
     ignoreChange: function (event) {
         if ($(event.currentTarget).find('input').is(':checked')) {
-            _kiwi.app.controlbox.processInput('/ignore ' + this.user.get('nick'));
+            _melon.app.controlbox.processInput('/ignore ' + this.user.get('nick'));
         } else {
-            _kiwi.app.controlbox.processInput('/unignore ' + this.user.get('nick'));
+            _melon.app.controlbox.processInput('/unignore ' + this.user.get('nick'));
         }
     },
 
     opClick: function (event) {
-        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +o ' + this.user.get('nick'));
+        _melon.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +o ' + this.user.get('nick'));
     },
 
     deopClick: function (event) {
-        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -o ' + this.user.get('nick'));
+        _melon.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -o ' + this.user.get('nick'));
     },
 
     voiceClick: function (event) {
-        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +v ' + this.user.get('nick'));
+        _melon.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +v ' + this.user.get('nick'));
     },
 
     devoiceClick: function (event) {
-        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -v ' + this.user.get('nick'));
+        _melon.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' -v ' + this.user.get('nick'));
     },
 
     kickClick: function (event) {
         // TODO: Enable the use of a custom kick message
-        _kiwi.app.controlbox.processInput('/kick ' + this.user.get('nick') + ' Bye!');
+        _melon.app.controlbox.processInput('/kick ' + this.user.get('nick') + ' Bye!');
     },
 
     banClick: function (event) {
         // TODO: Set ban on host, not just on nick
-        _kiwi.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.user.get('nick') + '!*');
+        _melon.app.controlbox.processInput('/mode ' + this.channel.get('name') + ' +b ' + this.user.get('nick') + '!*');
     }
 });

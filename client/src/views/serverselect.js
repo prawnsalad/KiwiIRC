@@ -1,4 +1,4 @@
-_kiwi.view.ServerSelect = Backbone.View.extend({
+_melon.view.ServerSelect = Backbone.View.extend({
     events: {
         'submit form': 'submitForm',
         'click .show_more': 'showMore',
@@ -11,26 +11,26 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     initialize: function () {
         var that = this,
             text = {
-                think_nick: _kiwi.global.i18n.translate('client_views_serverselect_form_title').fetch(),
-                nickname: _kiwi.global.i18n.translate('client_views_serverselect_nickname').fetch(),
-                have_password: _kiwi.global.i18n.translate('client_views_serverselect_enable_password').fetch(),
-                password: _kiwi.global.i18n.translate('client_views_serverselect_password').fetch(),
-                channel: _kiwi.global.i18n.translate('client_views_serverselect_channel').fetch(),
-                channel_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey').fetch(),
-                require_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey_required').fetch(),
-                key: _kiwi.global.i18n.translate('client_views_serverselect_key').fetch(),
-                start: _kiwi.global.i18n.translate('client_views_serverselect_connection_start').fetch(),
-                server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
-                server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
-                port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
-                powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
+                think_nick: _melon.global.i18n.translate('client_views_serverselect_form_title').fetch(),
+                nickname: _melon.global.i18n.translate('client_views_serverselect_nickname').fetch(),
+                have_password: _melon.global.i18n.translate('client_views_serverselect_enable_password').fetch(),
+                password: _melon.global.i18n.translate('client_views_serverselect_password').fetch(),
+                channel: _melon.global.i18n.translate('client_views_serverselect_channel').fetch(),
+                channel_key: _melon.global.i18n.translate('client_views_serverselect_channelkey').fetch(),
+                require_key: _melon.global.i18n.translate('client_views_serverselect_channelkey_required').fetch(),
+                key: _melon.global.i18n.translate('client_views_serverselect_key').fetch(),
+                start: _melon.global.i18n.translate('client_views_serverselect_connection_start').fetch(),
+                server_network: _melon.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
+                server: _melon.global.i18n.translate('client_views_serverselect_server').fetch(),
+                port: _melon.global.i18n.translate('client_views_serverselect_port').fetch(),
+                powered_by: _melon.global.i18n.translate('client_views_serverselect_poweredby').fetch()
             };
 
         this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
 
         // Remove the 'more' link if the server has disabled server changing
-        if (_kiwi.app.server_settings && _kiwi.app.server_settings.connection) {
-            if (!_kiwi.app.server_settings.connection.allow_change) {
+        if (_melon.app.server_settings && _melon.app.server_settings.connection) {
+            if (!_melon.app.server_settings.connection.allow_change) {
                 this.$el.find('.show_more').remove();
                 this.$el.addClass('single_server');
             }
@@ -43,7 +43,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
 
         this.model.bind('new_network', this.newNetwork, this);
 
-        this.gateway = _kiwi.global.components.Network();
+        this.gateway = _melon.global.components.Network();
         this.gateway.on('connect', this.networkConnected, this);
         this.gateway.on('connecting', this.networkConnecting, this);
         this.gateway.on('disconnect', this.networkDisconnected, this);
@@ -62,7 +62,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
 
         // Make sure a nick is chosen
         if (!$('input.nick', this.$el).val().trim()) {
-            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_error_empty').fetch());
+            this.setStatus(_melon.global.i18n.translate('client_views_serverselect_nickname_error_empty').fetch());
             $('input.nick', this.$el).select();
             return;
         }
@@ -96,7 +96,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     submitNickChange: function (event) {
-        _kiwi.gateway.changeNick(null, $('input.nick', this.$el).val());
+        _melon.gateway.changeNick(null, $('input.nick', this.$el).val());
         this.networkConnecting();
     },
 
@@ -255,7 +255,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     networkConnected: function (event) {
-        this.model.trigger('connected', _kiwi.app.connections.getByConnectionId(event.server));
+        this.model.trigger('connected', _melon.app.connections.getByConnectionId(event.server));
         this.model.current_connecting_network = null;
     },
 
@@ -266,7 +266,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
 
     networkConnecting: function (event) {
         this.model.trigger('connecting');
-        this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_connection_trying').fetch(), 'ok');
+        this.setStatus(_melon.global.i18n.translate('client_views_serverselect_connection_trying').fetch(), 'ok');
 
         this.$('.status').append('<a class="show_server"><i class="fa fa-info-circle"></i></a>');
     },
@@ -276,7 +276,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
         if (!this.model.current_connecting_network)
             return;
 
-        _kiwi.app.view.barsShow();
+        _melon.app.view.barsShow();
         this.model.current_connecting_network.panels.server.view.show();
     },
 
@@ -285,7 +285,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
 
         switch(data.error) {
         case 'nickname_in_use':
-            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_error_alreadyinuse').fetch());
+            this.setStatus(_melon.global.i18n.translate('client_views_serverselect_nickname_error_alreadyinuse').fetch());
             this.show('nick_change');
             this.$el.find('.nick').select();
             break;
@@ -293,13 +293,13 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
             if (data.reason) {
                 this.setStatus(data.reason);
             } else {
-                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
+                this.setStatus(_melon.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
             }
             this.show('nick_change');
             this.$el.find('.nick').select();
             break;
         case 'password_mismatch':
-            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_password_incorrect').fetch());
+            this.setStatus(_melon.global.i18n.translate('client_views_serverselect_password_incorrect').fetch());
             this.show('enter_password');
             this.$el.find('.password').select();
             break;
@@ -310,16 +310,16 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     },
 
     showError: function (error_reason) {
-        var err_text = _kiwi.global.i18n.translate('client_views_serverselect_connection_error').fetch();
+        var err_text = _melon.global.i18n.translate('client_views_serverselect_connection_error').fetch();
 
         if (error_reason) {
             switch (error_reason) {
             case 'ENOTFOUND':
-                err_text = _kiwi.global.i18n.translate('client_views_serverselect_server_notfound').fetch();
+                err_text = _melon.global.i18n.translate('client_views_serverselect_server_notfound').fetch();
                 break;
 
             case 'ECONNREFUSED':
-                err_text += ' (' + _kiwi.global.i18n.translate('client_views_serverselect_connection_refused').fetch() + ')';
+                err_text += ' (' + _melon.global.i18n.translate('client_views_serverselect_connection_refused').fetch() + ')';
                 break;
 
             default:

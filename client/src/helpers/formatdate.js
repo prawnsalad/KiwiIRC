@@ -1,4 +1,4 @@
-_kiwi.utils.formatDate = (function() {
+_melon.utils.formatDate = (function() {
     /*
     Modified version of date.format.js
     https://github.com/jacwright/date.format
@@ -68,50 +68,50 @@ _kiwi.utils.formatDate = (function() {
 
     var initLocaleFormats = function() {
         shortMonths = [
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.january').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.february').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.march').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.april').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.may').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.june').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.july').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.august').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.september').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.october').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.november').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_months.december').fetch()
+            _melon.global.i18n.translate('client.libs.date_format.short_months.january').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.february').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.march').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.april').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.may').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.june').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.july').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.august').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.september').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.october').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.november').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_months.december').fetch()
         ];
         longMonths = [
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.january').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.february').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.march').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.april').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.may').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.june').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.july').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.august').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.september').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.october').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.november').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_months.december').fetch()
+            _melon.global.i18n.translate('client.libs.date_format.long_months.january').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.february').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.march').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.april').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.may').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.june').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.july').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.august').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.september').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.october').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.november').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_months.december').fetch()
         ];
         shortDays = [
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.monday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.tuesday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.wednesday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.thursday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.friday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.saturday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.short_days.sunday').fetch()
+            _melon.global.i18n.translate('client.libs.date_format.short_days.monday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_days.tuesday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_days.wednesday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_days.thursday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_days.friday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_days.saturday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.short_days.sunday').fetch()
         ];
         longDays = [
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.monday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.tuesday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.wednesday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.thursday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.friday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.saturday').fetch(),
-            _kiwi.global.i18n.translate('client.libs.date_format.long_days.sunday').fetch()
+            _melon.global.i18n.translate('client.libs.date_format.long_days.monday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_days.tuesday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_days.wednesday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_days.thursday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_days.friday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_days.saturday').fetch(),
+            _melon.global.i18n.translate('client.libs.date_format.long_days.sunday').fetch()
         ];
 
         locale_init = true;
@@ -125,7 +125,7 @@ _kiwi.utils.formatDate = (function() {
             initLocaleFormats();
 
         working_date = working_date || new Date();
-        format = format || _kiwi.global.i18n.translate('client_date_format').fetch();
+        format = format || _melon.global.i18n.translate('client_date_format').fetch();
 
         return format.replace(/(\\?)(.)/g, function(_, esc, chr) {
             return (esc === '' && replaceChars[chr]) ? replaceChars[chr].call(working_date) : chr;

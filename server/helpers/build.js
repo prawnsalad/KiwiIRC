@@ -101,17 +101,17 @@ source_files = source_files.concat(helpers_sources);
 
 
 /**
- * Build the kiwi.js/kiwi.min.js files
+ * Build the melon.js/melon.min.js files
  */
 concat(source_files, function (err, src) {
     if (!err) {
         src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
-        fs.writeFile(global.config.public_http + '/assets/kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(global.config.public_http + '/assets/melon.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
-                console.log('Built kiwi.js');
+                console.log('Built melon.js');
             } else {
-                console.error('Error building kiwi.js:', err);
+                console.error('Error building melon.js:', err);
             }
         });
 
@@ -119,7 +119,7 @@ concat(source_files, function (err, src) {
         // but it's not wraped in an IIFE and produces a slightly larger file
         //src = uglifyJS.minify(source_files);
 
-        var ast = uglifyJS.parse(src, {filename: 'kiwi.js'});
+        var ast = uglifyJS.parse(src, {filename: 'melon.js'});
         ast.figure_out_scope();
         ast = ast.transform(uglifyJS.Compressor({warnings: false}));
         ast.figure_out_scope();
@@ -127,15 +127,15 @@ concat(source_files, function (err, src) {
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(global.config.public_http + '/assets/kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(global.config.public_http + '/assets/melon.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
-                console.log('Built kiwi.min.js');
+                console.log('Built melon.min.js');
             } else {
-                console.error('Error building kiwi.min.js:', err);
+                console.error('Error building melon.min.js:', err);
             }
         });
     } else {
-        console.error('Error building kiwi.js and kiwi.min.js:', err);
+        console.error('Error building melon.js and melon.min.js:', err);
     }
 });
 

@@ -49,8 +49,8 @@ var Client = function (websocket, opts) {
     this.client_commands = new ClientCommands(this);
     this.client_commands.addRpcEvents(this, this.rpc);
 
-    // Handles the kiwi.* RPC functions
-    this.attachKiwiCommands();
+    // Handles the melon.* RPC functions
+    this.attachMelonCommands();
 
     websocket.on('message', function() {
         // A message from the client is a sure sign the client is still alive, so consider it a heartbeat
@@ -70,7 +70,7 @@ var Client = function (websocket, opts) {
     this.heartbeat();
 
     // Let the client know it's finished connecting
-    this.sendKiwiCommand('connected');
+    this.sendMelonCommand('connected');
 };
 util.inherits(Client, events.EventEmitter);
 
@@ -87,9 +87,9 @@ Client.prototype.sendIrcCommand = function (command, data, callback) {
     this.rpc('irc', c, callback);
 };
 
-Client.prototype.sendKiwiCommand = function (command, data, callback) {
+Client.prototype.sendMelonCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.rpc('kiwi', c, callback);
+    this.rpc('melon', c, callback);
 };
 
 Client.prototype.dispose = function () {
@@ -127,10 +127,10 @@ Client.prototype._heartbeat_timeout = function() {
 
 
 
-Client.prototype.attachKiwiCommands = function() {
+Client.prototype.attachMelonCommands = function() {
     var that = this;
 
-    this.rpc.on('kiwi.connect_irc', function(callback, command) {
+    this.rpc.on('melon.connect_irc', function(callback, command) {
         if (command.hostname && command.port && command.nick) {
             var options = {};
 
@@ -156,7 +156,7 @@ Client.prototype.attachKiwiCommands = function() {
     });
 
 
-    this.rpc.on('kiwi.client_info', function(callback, args) {
+    this.rpc.on('melon.client_info', function(callback, args) {
         // keep hold of selected parts of the client_info
         that.client_info = {
             build_version: args.build_version.toString() || undefined
@@ -165,7 +165,7 @@ Client.prototype.attachKiwiCommands = function() {
 
 
     // Just to let us know the client is still there
-    this.rpc.on('kiwi.heartbeat', function(callback, args) {
+    this.rpc.on('melon.heartbeat', function(callback, args) {
         that.heartbeat();
     });
 };

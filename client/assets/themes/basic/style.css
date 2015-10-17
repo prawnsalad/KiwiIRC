@@ -1,45 +1,45 @@
-#kiwi {
+#melon {
     background: url(background-light.png) left top repeat-x #E3E3E3;
     color: #555555;
 }
-#kiwi,
-#kiwi input,
-#kiwi button,
-#kiwi textarea {
+#melon,
+#melon input,
+#melon button,
+#melon textarea {
     font-family:Arial, Helvetica, sans-serif;
     font-size:14px; line-height:1.4em;
 }
-#kiwi button, #kiwi input { padding: 3px 7px; }
-#kiwi input, #kiwi textarea {
+#melon button, #melon input { padding: 3px 7px; }
+#melon input, #melon textarea {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
     border: none;
     border-radius: 3px;
 }
-#kiwi button {
+#melon button {
     border-radius: 2px;
     border: none;
     background: #8ab746;
     cursor: pointer;
     color: #1b1b1b;
 }
-#kiwi button:disabled { color: #464646; background:#9cc164; }
+#melon button:disabled { color: #464646; background:#9cc164; }
 
-#kiwi .toolbar {
+#melon .toolbar {
     background-color:#1B1B1B; font-size:0.9em;
 }
-#kiwi .controlbox { background-color:#1B1B1B; }
-#kiwi .memberlists_resize_handle {
+#melon .controlbox { background-color:#1B1B1B; }
+#melon .memberlists_resize_handle {
     /*display:none; width:0;*/
 }
 
-#kiwi .toolbar .connections { list-style: none; }
-#kiwi .toolbar .panellist {
+#melon .toolbar .connections { list-style: none; }
+#melon .toolbar .panellist {
     background: #2b2b2b;
     color: #a5a5a5;
     margin: 5px 0 0 5px;
     float: left;
 }
-#kiwi .toolbar .panellist li {
+#melon .toolbar .panellist li {
     line-height: 1.4em;
     vertical-align: middle;
 
@@ -51,103 +51,103 @@
     margin: 0;
 }
 
-#kiwi .toolbar .tabs { margin-right:0 !important; }
-#kiwi .toolbar .panellist .alert_highlight { font-weight:bold; color:red; }
-#kiwi .toolbar .panellist .alert_activity { font-weight:normal; color:green; }
-#kiwi .toolbar .panellist .alert_action { font-weight:normal; color:green; }
+#melon .toolbar .tabs { margin-right:0 !important; }
+#melon .toolbar .panellist .alert_highlight { font-weight:bold; color:red; }
+#melon .toolbar .panellist .alert_activity { font-weight:normal; color:green; }
+#melon .toolbar .panellist .alert_action { font-weight:normal; color:green; }
 
-#kiwi .toolbar .panellist .active { padding-right:25px; border-top:2px solid #df6b26; border-bottom:none; }
-#kiwi .toolbar .panellist li .part {}
-#kiwi .toolbar .panellist li .part:before { content:"[x]"; }
+#melon .toolbar .panellist .active { padding-right:25px; border-top:2px solid #df6b26; border-bottom:none; }
+#melon .toolbar .panellist li .part {}
+#melon .toolbar .panellist li .part:before { content:"[x]"; }
 
-#kiwi .toolbar .panellist li.server span { padding-left: 5px; }
-#kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
-#kiwi .toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
+#melon .toolbar .panellist li.server span { padding-left: 5px; }
+#melon.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#melon .toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
 
 
 /* Tab texts are within a span */
-#kiwi .toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
+#melon .toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
 
-#kiwi .toolbar .panellist li .activity { display:inline; margin-left:0.5em; font-style:italic; font-size:0.8em; }
-#kiwi .toolbar .panellist.applets li .activity { display: none; }
-#kiwi .toolbar .panellist li .activity:before { content:"("; }
-#kiwi .toolbar .panellist li .activity:after { content:")"; }
+#melon .toolbar .panellist li .activity { display:inline; margin-left:0.5em; font-style:italic; font-size:0.8em; }
+#melon .toolbar .panellist.applets li .activity { display: none; }
+#melon .toolbar .panellist li .activity:before { content:"("; }
+#melon .toolbar .panellist li .activity:after { content:")"; }
 
-#kiwi .status_message {
+#melon .status_message {
     background: #FEEFB3; color: #9F6000;
     border-bottom: 1px solid #d7bb71;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }
-#kiwi .status_message.err { color:#D8000C; background:#FFBABA; }
+#melon .status_message.err { color:#D8000C; background:#FFBABA; }
 
-#kiwi .channel_tools {
+#melon .channel_tools {
     margin-bottom: 5px;
     padding: 0 5%;
     background: #DADADA;
 }
-#kiwi .channel_tools i {
+#melon .channel_tools i {
     width: 30%;
     font-size: 1.6em;
     line-height: 1.6em;
 }
-#kiwi .channel_tools i:hover {
+#melon .channel_tools i:hover {
     transition: color 0.3s;
     color: #88C56A;
 }
 
-#kiwi .messages {  }
-#kiwi .messages.active { }
-#kiwi .messages a { text-decoration:underline; }
+#melon .messages {  }
+#melon .messages.active { }
+#melon .messages a { text-decoration:underline; }
 
-#kiwi .messages .msg { border: none; padding: 2px 5px; }
-#kiwi .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
-#kiwi .messages .msg .time { display:none; margin-right:1em; margin-left:2px; color:gray; }
-#kiwi .messages .msg .nick { display:inline; margin-right:1em; }
-#kiwi .messages .msg .nick:before { content:"<"; }
-#kiwi .messages .msg .nick:after { content:">"; }
-#kiwi .messages .msg .text { white-space:pre-wrap; word-wrap:break-word; color:#1e1e1e; }
+#melon .messages .msg { border: none; padding: 2px 5px; }
+#melon .messages .msg > div { font-family: Consolas, "Lucida Console", monospace; font-size:0.9em; }
+#melon .messages .msg .time { display:none; margin-right:1em; margin-left:2px; color:gray; }
+#melon .messages .msg .nick { display:inline; margin-right:1em; }
+#melon .messages .msg .nick:before { content:"<"; }
+#melon .messages .msg .nick:after { content:">"; }
+#melon .messages .msg .text { white-space:pre-wrap; word-wrap:break-word; color:#1e1e1e; }
 
-#kiwi .messages .msg.action .nick,
-#kiwi .messages .msg.static .nick,
-#kiwi .messages .msg.topic { margin: 5px; background: #FFF5AB; border: 1px solid #F3C572; border-radius: 5px; }
-#kiwi .messages .msg.topic .time { display:none; }
-#kiwi .messages .msg.topic .nick { display:none; }
-#kiwi .messages .msg.topic .text { color:#009900; margin-left:0; font-style: italic; border:none; }
+#melon .messages .msg.action .nick,
+#melon .messages .msg.static .nick,
+#melon .messages .msg.topic { margin: 5px; background: #FFF5AB; border: 1px solid #F3C572; border-radius: 5px; }
+#melon .messages .msg.topic .time { display:none; }
+#melon .messages .msg.topic .nick { display:none; }
+#melon .messages .msg.topic .text { color:#009900; margin-left:0; font-style: italic; border:none; }
 
-#kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
-#kiwi .messages .msg.action.join { color:#009900; }
-#kiwi .messages .msg.action.part .text { color:#900; }
-#kiwi .messages .msg.action.quit .text { color:#900; }
-#kiwi .messages .msg.action.kick .text { color:#900; }
+#melon .messages .msg.action .text { color:#009900; font-style:italic; }
+#melon .messages .msg.action.join { color:#009900; }
+#melon .messages .msg.action.part .text { color:#900; }
+#melon .messages .msg.action.quit .text { color:#900; }
+#melon .messages .msg.action.kick .text { color:#900; }
 
-#kiwi .messages .msg.motd { border:none; }
-/*#kiwi .messages .msg.motd .nick { display:none; }*/
-#kiwi .messages .msg.motd .text { color:#666; }
-#kiwi .messages .msg.whois .nick { font-weight:normal; }
-#kiwi .messages .msg.whois .text { padding-left:1em; border-left:1px dashed #999; }
-#kiwi .messages .msg.error .text {
+#melon .messages .msg.motd { border:none; }
+/*#melon .messages .msg.motd .nick { display:none; }*/
+#melon .messages .msg.motd .text { color:#666; }
+#melon .messages .msg.whois .nick { font-weight:normal; }
+#melon .messages .msg.whois .text { padding-left:1em; border-left:1px dashed #999; }
+#melon .messages .msg.error .text {
     border:1px solid #A33F3F; background-color:#D28A8A;
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
 
-#kiwi.timestamps .messages .msg .time { display:inline; }
-#kiwi.timestamps .messages .msg .text { }
+#melon.timestamps .messages .msg .time { display:inline; }
+#melon.timestamps .messages .msg .text { }
 
-#kiwi .messages .msg.global_nick_highlight,
-#kiwi .messages .msg.highlight { background:#D9D9D9; }
+#melon .messages .msg.global_nick_highlight,
+#melon .messages .msg.highlight { background:#D9D9D9; }
 
 /* Narrow styling (window width < 400px) */
-#kiwi.narrow .messages .msg .nick { width: auto; }
-#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
-#kiwi.narrow .messages .msg.action .text { margin-left: 1em; }
+#melon.narrow .messages .msg .nick { width: auto; }
+#melon.narrow .messages .msg .text { margin-left: 1em; border:none; }
+#melon.narrow .messages .msg.action .text { margin-left: 1em; }
 
-#kiwi .messages .msg .media { margin-left:0.5em; }
-#kiwi .messages .msg .media a { text-decoration:none; }
-#kiwi .messages .msg .media .media_close { font-size:0.9em; }
-#kiwi .messages .msg .media .media_content { margin:10px 0 0 2em; overflow:hidden; }
-#kiwi .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
-#kiwi .messages .msg .media .media_content > .content {
+#melon .messages .msg .media { margin-left:0.5em; }
+#melon .messages .msg .media a { text-decoration:none; }
+#melon .messages .msg .media .media_close { font-size:0.9em; }
+#melon .messages .msg .media .media_content { margin:10px 0 0 2em; overflow:hidden; }
+#melon .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
+#melon .messages .msg .media .media_content > .content {
     background: white;
     overflow: hidden;
     padding: 10px;
@@ -161,61 +161,61 @@
     float: left;
 }
 
-#kiwi .messages .msg .media.twitter .media_content > .content {
+#melon .messages .msg .media.twitter .media_content > .content {
     background: transparent;
     border:none;
     overflow: hidden;
     box-shadow: none;
     padding: 0;
 }
-#kiwi .messages .msg .media.reddit .thumbnail_nsfw {
+#melon .messages .msg .media.reddit .thumbnail_nsfw {
     display: inline-block;
     float: left;
 }
-#kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
+#melon .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
 
 
-#kiwi .messages .last_seen {
+#melon .messages .last_seen {
     border-bottom: #b0cf82 solid 1px;
 }
 
-#kiwi .right_bar {
+#melon .right_bar {
     background-color: #DADADA;
     border-left: 1px dashed #8A8A8A;
 }
-#kiwi.narrow .right_bar { width:100%; }
-#kiwi.narrow .right_bar.disabled { width:0; }
+#melon.narrow .right_bar { width:100%; }
+#melon.narrow .right_bar.disabled { width:0; }
 
-#kiwi .memberlists .meta {
+#melon .memberlists .meta {
     font-size: 0.9em;
     margin-bottom: 10px;
     text-align: center;
 }
 
-#kiwi .memberlists ul { list-style: none; margin-left:2px; }
-#kiwi .memberlists ul.active { }
-#kiwi .memberlists ul li { padding:0 2px; }
-#kiwi.narrow .memberlists ul li {
+#melon .memberlists ul { list-style: none; margin-left:2px; }
+#melon .memberlists ul.active { }
+#melon .memberlists ul li { padding:0 2px; }
+#melon.narrow .memberlists ul li {
     padding: 0.5em 1em;
     border-bottom: 1px solid lightgray;
     text-align: center;
 }
-#kiwi.touch .memberlists ul li {
+#melon.touch .memberlists ul li {
     padding: 1em 0.5em;
 }
-#kiwi .memberlists ul li:hover {}
-#kiwi .memberlists ul li a.nick { display:block; color:black; }
+#melon .memberlists ul li:hover {}
+#melon .memberlists ul li a.nick { display:block; color:black; }
 
-#kiwi .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
-#kiwi .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
-#kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
+#melon .userbox { margin:0 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#melon .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#melon .userbox a i { font-size:1.1em; margin-right:5px; }
 
 
-#kiwi .controlbox .input {
+#melon .controlbox .input {
     background:#fff; margin:3px;
     height:1.7em;
 }
-#kiwi .controlbox .input .nick {
+#melon .controlbox .input .nick {
     text-align: right;
     width: 11em;
     left: 0px;
@@ -224,17 +224,17 @@
     overflow: hidden;
 }
 
-#kiwi.narrow .controlbox .input .nick { display:none; }
-#kiwi.narrow .controlbox .input .input_wrap { left:7px; }
+#melon.narrow .controlbox .input .nick { display:none; }
+#melon.narrow .controlbox .input .input_wrap { left:7px; }
 
-#kiwi .controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
-#kiwi .controlbox .input .nick a { text-decoration:none; color:black; }
-#kiwi .controlbox .input .input_wrap {
+#melon .controlbox .input .nick:after { content:">"; margin-left:3px; top:2px; }
+#melon .controlbox .input .nick a { text-decoration:none; color:black; }
+#melon .controlbox .input .input_wrap {
     position:absolute;
     right:3px; left:12em;
     height:1.7em;
 }
-#kiwi .controlbox .input .inp {
+#melon .controlbox .input .inp {
     line-height:1.7em;
     border: medium none;
     box-shadow: none;
@@ -248,17 +248,17 @@
 }
 
 
-#kiwi .controlbox .nickchange {
+#melon .controlbox .nickchange {
     padding:10px; left: 0px;
     background: #1B1B1B; color:#eeeeee;
 }
-#kiwi .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; }
-#kiwi .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
+#melon .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; }
+#melon .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
 
 
 
-#kiwi .toolbar .topic {  }
-#kiwi .toolbar .topic div {
+#melon .toolbar .topic {  }
+#melon .toolbar .topic div {
     top:2; bottom:2px; left:0; width:100%;
     padding: 0.2em 1em;
     text-align: center;
@@ -269,7 +269,7 @@
     overflow: hidden;
     outline: none;
 }
-#kiwi .toolbar .topic:hover div {
+#melon .toolbar .topic:hover div {
     min-height:1.5em;
     white-space:pre-wrap; word-wrap:break-word;
     overflow:visible;
@@ -280,26 +280,26 @@
 }
 
 
-#kiwi .toolbar .app_tools { padding-left:10px; color:#D4D4D4; }
-#kiwi.narrow .toolbar .tabs { margin-right:0; }
-#kiwi.narrow .toolbar .app_tools { width:auto; }
-#kiwi .toolbar .app_tools ul li {
+#melon .toolbar .app_tools { padding-left:10px; color:#D4D4D4; }
+#melon.narrow .toolbar .tabs { margin-right:0; }
+#melon.narrow .toolbar .app_tools { width:auto; }
+#melon .toolbar .app_tools ul li {
     font-size:26px;
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
     transition: all .3s ease;
     margin-left:10px;
 }
-#kiwi .toolbar .app_tools ul li:hover { color:#88C56A; }
-#kiwi .toolbar .app_tools img { }
+#melon .toolbar .app_tools ul li:hover { color:#88C56A; }
+#melon .toolbar .app_tools img { }
 
 
 /* The server select dialog */
-#kiwi .server_select { margin-left:auto; margin-right:auto; }
-#kiwi .server_select a { text-decoration: none; }
-#kiwi .server_select .more { display: none; width:270px; margin:0 auto; }
-#kiwi .server_select table tr td { padding:5px; }
-#kiwi .server_select button {
+#melon .server_select { margin-left:auto; margin-right:auto; }
+#melon .server_select a { text-decoration: none; }
+#melon .server_select .more { display: none; width:270px; margin:0 auto; }
+#melon .server_select table tr td { padding:5px; }
+#melon .server_select button {
     /*padding: 10px 25px;*/
     padding: 0.5em 1em;
     font-size: 1.1em;
@@ -307,85 +307,85 @@
     margin: 20px auto;
     display: block;
 }
-#kiwi .server_select input { padding:3px 7px; width:150px; }
-#kiwi .server_select label { }
-#kiwi .server_select br { clear:both; }
-#kiwi .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
-#kiwi .server_select .basic input { width:170px; }
-#kiwi .server_select .basic label { font-size:1.3em; margin-top:4px; }
-#kiwi .server_select .basic tr.have_pass { font-size:0.8em; }
-#kiwi .server_select .basic tr.channel td { padding-top:1em; }
-#kiwi .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
-#kiwi .server_select.single_server .basic { border:none; }
-#kiwi .server_select .status { text-align: center; font-weight: bold; padding:1em; }
-#kiwi .server_select .status.ok { }
-#kiwi .server_select .status.error {
+#melon .server_select input { padding:3px 7px; width:150px; }
+#melon .server_select label { }
+#melon .server_select br { clear:both; }
+#melon .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
+#melon .server_select .basic input { width:170px; }
+#melon .server_select .basic label { font-size:1.3em; margin-top:4px; }
+#melon .server_select .basic tr.have_pass { font-size:0.8em; }
+#melon .server_select .basic tr.channel td { padding-top:1em; }
+#melon .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
+#melon .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
+#melon .server_select.single_server .basic { border:none; }
+#melon .server_select .status { text-align: center; font-weight: bold; padding:1em; }
+#melon .server_select .status.ok { }
+#melon .server_select .status.error {
     border:1px solid #A33F3F; background-color:#D28A8A;
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
-#kiwi .server_select .show_server { margin-left: 1em; font-size:0.9em; color: #555555; }
+#melon .server_select .show_server { margin-left: 1em; font-size:0.9em; color: #555555; }
 
 
-#kiwi .server_select .kiwi_logo { margin-top:30px; text-align:center; display:block; }
-#kiwi .server_select .kiwi_logo h1 {
+#melon .server_select .melon_logo { margin-top:30px; text-align:center; display:block; }
+#melon .server_select .melon_logo h1 {
     font-size:14px;
     line-height:48px; vertical-align: middle;
     color: #555555;
 }
-#kiwi .server_select .kiwi_logo img { display:inline; width:24px; }
+#melon .server_select .melon_logo img { display:inline; width:24px; }
 
 
-#kiwi.chanlist_treeview .panels { left:160px; }
-#kiwi.chanlist_treeview .toolbar { position:static; }
-#kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
-#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
-#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
-#kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
-#kiwi.chanlist_treeview .toolbar .panellist li {
+#melon.chanlist_treeview .panels { left:160px; }
+#melon.chanlist_treeview .toolbar { position:static; }
+#melon.chanlist_treeview .toolbar .app_tools { float:none; }
+#melon.chanlist_treeview .toolbar > div { margin-left:160px; }
+#melon.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#melon.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
+#melon.chanlist_treeview .tabs ul li { display:block; float:none; }
+#melon.chanlist_treeview .tabs ul li .activity { float:right; }
+#melon.chanlist_treeview .toolbar .panellist li {
     padding: 4px 8px;
 }
-#kiwi.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
-#kiwi.chanlist_treeview .tabs ul li.active {
+#melon.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
+#melon.chanlist_treeview .tabs ul li.active {
     margin-right:0;
     border-right-width:0;
 }
-#kiwi .applet_chanlist {
+#melon .applet_chanlist {
     margin: 0.5em 1em;
 }
-#kiwi .applet_chanlist table {
+#melon .applet_chanlist table {
     border-collapse: collapse;
     width: 100%;
 }
-#kiwi .applet_chanlist thead {
+#melon .applet_chanlist thead {
     text-align: center;
 }
-#kiwi .applet_chanlist tbody td {
+#melon .applet_chanlist tbody td {
     border: 1px solid #C4C4C4;
     padding: 0.3em 1em;
 }
-#kiwi .applet_chanlist .chanlist_name, #kiwi .applet_chanlist .chanlist_num_users {
+#melon .applet_chanlist .chanlist_name, #melon .applet_chanlist .chanlist_num_users {
     border-width: 0 1px 0 0;
 }
-#kiwi .applet_chanlist .chanlist_topic {
+#melon .applet_chanlist .chanlist_topic {
     border-width: 0;
 }
-#kiwi .applet_chanlist tr:nth-child(even) {
+#melon .applet_chanlist tr:nth-child(even) {
     background: none repeat scroll 0 0 #DBDBDB;
 }
 
 
-#kiwi .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
-#kiwi .ui_menu .ui_menu_foot .close:hover { color: #222; }
+#melon .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#melon .ui_menu .ui_menu_foot .close:hover { color: #222; }
 
-#kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
-#kiwi .channel_info .channel-banlist thead { font-style: italic; }
-#kiwi .channel_info .remove-ban:hover { color: #900; }
+#melon .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#melon .channel_info .channel-banlist thead { font-style: italic; }
+#melon .channel_info .remove-ban:hover { color: #900; }
 
 
-#kiwi .notification {
+#melon .notification {
     /* .show class reveals this element */
     max-height: 0;
     overflow: hidden;
@@ -412,8 +412,8 @@
 
 
 }
-#kiwi .notification.show { max-height: 500px; }
-#kiwi .notification .close {
+#melon .notification.show { max-height: 500px; }
+#melon .notification .close {
     font-size:16px;
     border:1px solid #1b1b1b;
     border-left, border-bottom: none;
@@ -428,4 +428,4 @@
     -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
     box-shadow: inset 0 1px rgba(255, 255, 255, 0.15);
 }
-#kiwi .notification .close:hover { color: #DBDBDB; }
+#melon .notification .close:hover { color: #DBDBDB; }

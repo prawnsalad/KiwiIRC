@@ -1,5 +1,5 @@
 <style>
-    #kiwi .style-grid {
+    #melon .style-grid {
         position: absolute;
         display: block;
         z-index: 1000;
@@ -11,15 +11,15 @@
         border-radius: 3px;
     }
 
-    #kiwi .style-colours { overflow: hidden; }
-    #kiwi .style-colour {
+    #melon .style-colours { overflow: hidden; }
+    #melon .style-colour {
         width: 25%;
         height: 27px;
         display: block;
         float: left;
         cursor: pointer;
     }
-    #kiwi .style-color-selected {
+    #melon .style-color-selected {
         -webkit-box-shadow: inset 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
         -moz-box-shadow:    inset 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
         box-shadow:         inset 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
@@ -27,22 +27,22 @@
         position: relative;
     }
 
-    #kiwi .style-formats {
+    #melon .style-formats {
         margin: 10px 0;
         overflow: hidden;
     }
 
-    #kiwi .style-format {
+    #melon .style-format {
         width: 33%;
         cursor: pointer;
         display: block;
         float: left;
         text-align: center;
     }
-    #kiwi .style-format-bold { font-weight: bold; }
-    #kiwi .style-format-italic { font-style: italic; }
-    #kiwi .style-format-underline { text-decoration: underline; }
-    #kiwi .style-reset {
+    #melon .style-format-bold { font-weight: bold; }
+    #melon .style-format-italic { font-style: italic; }
+    #melon .style-format-underline { text-decoration: underline; }
+    #melon .style-reset {
         color: #D6D6D6;
         font-size: 20px;
         text-align: right;
@@ -88,9 +88,9 @@
     (function() {
         var $list = $($('#tmpl_styles').html());
         var $icon = $('<a><i class="fa fa-font"></i></a>');
-        var $inp = $('#kiwi .controlbox .inp');
+        var $inp = $('#melon .controlbox .inp');
 
-        var control = kiwi.components.ControlInput();
+        var control = melon.components.ControlInput();
         control.addPluginIcon($icon);
 
         var styles = {
@@ -107,13 +107,13 @@
             $inp.css('font-style', styles.italic ? 'italic' : '');
             $inp.css('text-decoration', styles.underline ? 'underline' : '');
 
-            $('#kiwi .style-colour').removeClass('style-color-selected');
-            $('#kiwi .style-colour[data-colour='+styles.colour+']').addClass('style-color-selected');
+            $('#melon .style-colour').removeClass('style-color-selected');
+            $('#melon .style-colour[data-colour='+styles.colour+']').addClass('style-color-selected');
         };
 
 
         // When a message is typed in, add any styling we have enabled
-        kiwi.events.on('command', function(event, data) {
+        melon.events.on('command', function(event, data) {
             if (data.command !== 'msg') {
                 return;
             }
@@ -153,7 +153,7 @@
         $icon.on('click', function(event) {
             event.stopPropagation();
 
-            $list.appendTo($('#kiwi'))
+            $list.appendTo($('#melon'))
                 .show()
                 .css({
                     bottom: ($('.controlbox').outerHeight()) + 'px',

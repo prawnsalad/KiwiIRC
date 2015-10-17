@@ -7,13 +7,13 @@
             initialize: function (options) {
                 var that = this,
                     text = {
-                        save: _kiwi.global.i18n.translate('client_applets_scripteditor_save').fetch()
+                        save: _melon.global.i18n.translate('client_applets_scripteditor_save').fetch()
                     };
                 this.$el = $(_.template($('#tmpl_script_editor').html().trim(), text));
 
                 this.model.on('applet_loaded', function () {
                     that.$el.parent().css('height', '100%');
-                    $script(_kiwi.app.get('base_path') + '/assets/libs/ace/ace.js', function (){ that.createAce(); });
+                    $script(_melon.app.get('base_path') + '/assets/libs/ace/ace.js', function (){ that.createAce(); });
                 });
             },
 
@@ -28,7 +28,7 @@
                 this.editor.setTheme("ace/theme/monokai");
                 this.editor.getSession().setMode("ace/mode/javascript");
 
-                var script_content = _kiwi.global.settings.get('user_script') || '';
+                var script_content = _melon.global.settings.get('user_script') || '';
                 this.editor.setValue(script_content);
             },
 
@@ -37,9 +37,9 @@
                 var script_content, user_fn;
 
                 // Build the user script up with some pre-defined components
-                script_content = 'var network = kiwi.components.Network();\n';
-                script_content += 'var input = kiwi.components.ControlInput();\n';
-                script_content += 'var events = kiwi.components.Events();\n';
+                script_content = 'var network = melon.components.Network();\n';
+                script_content += 'var input = melon.components.ControlInput();\n';
+                script_content += 'var events = melon.components.Events();\n';
                 script_content += this.editor.getValue() + '\n';
 
                 // Add a dispose method to the user script for cleaning up
@@ -50,22 +50,22 @@
                     user_fn = new Function(script_content);
 
                     // Dispose any existing user script
-                    if (_kiwi.user_script && _kiwi.user_script._dispose)
-                        _kiwi.user_script._dispose();
+                    if (_melon.user_script && _melon.user_script._dispose)
+                        _melon.user_script._dispose();
 
                     // Create and run the new user script
-                    _kiwi.user_script = new user_fn();
+                    _melon.user_script = new user_fn();
 
                 } catch (err) {
-                    this.setStatus(_kiwi.global.i18n.translate('client_applets_scripteditor_error').fetch(err.toString()));
+                    this.setStatus(_melon.global.i18n.translate('client_applets_scripteditor_error').fetch(err.toString()));
                     return;
                 }
 
                 // If we're this far, no errors occured. Save the user script
-                _kiwi.global.settings.set('user_script', this.editor.getValue());
-                _kiwi.global.settings.save();
+                _melon.global.settings.set('user_script', this.editor.getValue());
+                _melon.global.settings.save();
 
-                this.setStatus(_kiwi.global.i18n.translate('client_applets_scripteditor_saved').fetch() + ' :)');
+                this.setStatus(_melon.global.i18n.translate('client_applets_scripteditor_saved').fetch() + ' :)');
             },
 
 
@@ -86,13 +86,13 @@
             initialize: function () {
                 var that = this;
 
-                this.set('title', _kiwi.global.i18n.translate('client_applets_scripteditor_title').fetch());
+                this.set('title', _melon.global.i18n.translate('client_applets_scripteditor_title').fetch());
                 this.view = new view({model: this});
 
             }
         });
 
 
-        _kiwi.model.Applet.register('kiwi_script_editor', applet);
-        //_kiwi.model.Applet.loadOnce('kiwi_script_editor');
+        _melon.model.Applet.register('melon_script_editor', applet);
+        //_melon.model.Applet.loadOnce('melon_script_editor');
     })();

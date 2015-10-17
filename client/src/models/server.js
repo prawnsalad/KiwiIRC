@@ -1,13 +1,13 @@
-_kiwi.model.Server = _kiwi.model.Channel.extend({
+_melon.model.Server = _melon.model.Channel.extend({
     initialize: function (attributes) {
         var name = "Server";
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
+        this.view = new _melon.view.Channel({"model": this, "name": name});
         this.set({
             "scrollback": [],
             "name": name
         }, {"silent": true});
 
-        _kiwi.global.events.emit('panel:created', {panel: this});
+        _melon.global.events.emit('panel:created', {panel: this});
     },
 
     isServer: function () {

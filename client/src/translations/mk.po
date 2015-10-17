@@ -1,11 +1,11 @@
 # Please report any translation errors on one of the following:
-#     Mailing list: https://groups.google.com/d/forum/kiwiirc
-#     IRC: irc.freenode.net #kiwiirc
+#     Mailing list: https://groups.google.com/d/forum/melonirc
+#     IRC: irc.freenode.net #melonirc
 #
 # Want to translate into your own language? Please send your translated file to the
 # mailing list mentioned above and we will upload it to our translation manager -
 # http://poeditor.com/. An account will be set up for you to make any further changes
-# as the Kiwi project progresses.
+# as the Melon project progresses.
 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
-"Project-Id-Version: Kiwi\n"
+"Project-Id-Version: Melon\n"
 "Language: mk\n"
 
 #: client/assets/src/applets/chanlist.js
@@ -82,7 +82,7 @@ msgstr "Вообичаен ИРЦ клиент"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Направи го Kiwi мој вообичаен irc клиент"
+msgstr "Направи го Melon мој вообичаен irc клиент"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
@@ -270,7 +270,7 @@ msgstr "Грешна лозинка"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Ова ќе ги затвори сите KiwiIRC разговори. Дали сте сигурни дека сакате да го затворите прозорецов?"
+msgstr "Ова ќе ги затвори сите MelonIRC разговори. Дали сте сигурни дека сакате да го затворите прозорецов?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -370,7 +370,7 @@ msgstr "Порта"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Овозможено од KiwiIRC"
+msgstr "Овозможено од MelonIRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
@@ -470,7 +470,7 @@ msgstr "Прикажи емотикони"
 
 #: 
 msgid "client_applet_about"
-msgstr "За Kiwi"
+msgstr "За Melon"
 
 #: 
 msgid "client_applet_about_homepage"

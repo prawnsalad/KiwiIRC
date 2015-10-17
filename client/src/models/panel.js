@@ -1,18 +1,18 @@
-_kiwi.model.Panel = Backbone.Model.extend({
+_melon.model.Panel = Backbone.Model.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "";
-        this.view = new _kiwi.view.Panel({"model": this, "name": name});
+        this.view = new _melon.view.Panel({"model": this, "name": name});
         this.set({
             "scrollback": [],
             "name": name
         }, {"silent": true});
 
-        _kiwi.global.events.emit('panel:created', {panel: this});
+        _melon.global.events.emit('panel:created', {panel: this});
     },
 
     close: function () {
-        _kiwi.app.panels.trigger('close', this);
-        _kiwi.global.events.emit('panel:close', {panel: this});
+        _melon.app.panels.trigger('close', this);
+        _melon.global.events.emit('panel:close', {panel: this});
 
         if (this.view) {
             this.view.unbind();
@@ -50,6 +50,6 @@ _kiwi.model.Panel = Backbone.Model.extend({
     },
 
     isActive: function () {
-        return (_kiwi.app.panels().active === this);
+        return (_melon.app.panels().active === this);
     }
 });

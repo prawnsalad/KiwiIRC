@@ -1,12 +1,12 @@
 var conf = {};
 
-// Run the Kiwi server under a different user/group
+// Run the Melon server under a different user/group
 conf.user = "";
 conf.group = "";
 
 
 // Log file location
-conf.log = "kiwi.log";
+conf.log = "melon.log";
 
 
 
@@ -65,8 +65,8 @@ conf.max_client_conns = 5;
 // Max connections per server. 0 to disable.
 // Setting is ignored if:
 //   - There is a WEBIRC password configured for the server,
-//   - Kiwi is configured to send the client's ip as a username for the server, or
-//   - Kiwi is running in restricted server mode.
+//   - Melon is configured to send the client's ip as a username for the server, or
+//   - Melon is running in restricted server mode.
 conf.max_server_conns = 0;
 
 /*
@@ -85,7 +85,7 @@ conf.default_encoding = 'utf8';
 
 
 /*
-* Auto reconnect if the IRC server disconnects a kiwi user
+* Auto reconnect if the IRC server disconnects a melon user
 * Hundreds of connected users getting disconnected then reconnecting at once may see
 * high CPU usage causing further dropouts. Set to false if under high usage.
 */
@@ -95,10 +95,10 @@ conf.ircd_reconnect = true;
 /*
  * Client side plugins
  * Array of URLs that will be loaded into the browser when the client first loads up
- * See http://github.com/prawnsalad/KiwiIRC/wiki/Client-plugins
+ * See http://github.com/prawnsalad/MelonIRC/wiki/Client-plugins
  */
 conf.client_plugins = [
-    // "http://server.com/kiwi/plugins/myplugin.html"
+    // "http://server.com/melon/plugins/myplugin.html"
 ];
 
 
@@ -136,7 +136,7 @@ conf.reject_unauthorised_certificates = false;
 /*
  * Reverse proxy settings
  * Reverse proxies that have been reported to work can be found at:
- *     https://kiwiirc.com/docs/installing/proxies
+ *     https://melonirc.com/docs/installing/proxies
  */
 
 // Whitelisted HTTP proxies in CIDR format
@@ -145,8 +145,8 @@ conf.http_proxies = ["127.0.0.1/32"];
 // Header that contains the real-ip from the HTTP proxy
 conf.http_proxy_ip_header = "x-forwarded-for";
 
-// Base HTTP path to the KIWI IRC client (eg. /kiwi)
-conf.http_base_path = "/kiwi";
+// Base HTTP path to the KIWI IRC client (eg. /melon)
+conf.http_base_path = "/melon";
 
 
 /*
@@ -179,17 +179,17 @@ conf.socks_proxy.pass = null;
 
 
 // Default quit message
-conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
+conf.quit_message = "http://www.melonirc.com/ - A hand-crafted IRC client";
 
 
 // Default settings for the client. These may be changed in the browser
 conf.client = {
-    server: 'irc.kiwiirc.com',
+    server: 'irc.melonirc.com',
     port:    6697,
     ssl:     true,
-    channel: '#kiwiirc',
+    channel: '#melonirc',
     channel_key: '',
-    nick:    'kiwi_?',
+    nick:    'melon_?',
     settings: {
         theme: 'relaxed',
         text_theme: 'default',
@@ -203,7 +203,7 @@ conf.client = {
         count_all_activity: false,
         locale: null // null = use the browser locale settings
     },
-    window_title: 'Kiwi IRC'
+    window_title: 'Melon IRC'
 };
 
 // List of themes available for the user to choose from
@@ -216,13 +216,13 @@ conf.client_themes = [
 
 
 // If set, the client may only connect to this 1 IRC server
-//conf.restrict_server = "irc.kiwiirc.com";
+//conf.restrict_server = "irc.melonirc.com";
 //conf.restrict_server_port = 6667;
 //conf.restrict_server_ssl = false;
-//conf.restrict_server_channel = "#kiwiirc";
+//conf.restrict_server_channel = "#melonirc";
 //conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";
-//conf.restrict_server_nick = "kiwi_";
+//conf.restrict_server_nick = "melon_";
 
 
 

@@ -1,4 +1,4 @@
-_kiwi.view.Applet = _kiwi.view.Panel.extend({
+_melon.view.Applet = _melon.view.Panel.extend({
     className: 'panel applet',
     initialize: function (options) {
         this.initializePanel(options);

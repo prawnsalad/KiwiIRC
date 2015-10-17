@@ -1,4 +1,4 @@
-_kiwi.view.MemberList = Backbone.View.extend({
+_melon.view.MemberList = Backbone.View.extend({
     tagName: "div",
     events: {
         "click .nick": "nickClick",
@@ -7,7 +7,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
     initialize: function (options) {
         this.model.bind('all', this.render, this);
-        this.$el.appendTo('#kiwi .memberlists');
+        this.$el.appendTo('#melon .memberlists');
 
         // Holds meta data. User counts, etc
         this.$meta = $('<div class="meta"></div>').appendTo(this.$el);
@@ -41,7 +41,7 @@ _kiwi.view.MemberList = Backbone.View.extend({
         var $target = $(event.currentTarget).parent('li'),
             member = $target.data('member');
 
-        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist'})
+        _melon.global.events.emit('nick:select', {target: $target, member: member, source: 'nicklist'})
         .then(_.bind(this.openUserMenuForItem, this, $target));
     },
 
@@ -50,17 +50,17 @@ _kiwi.view.MemberList = Backbone.View.extend({
     openUserMenuForItem: function($target) {
         var member = $target.data('member'),
             userbox,
-            are_we_an_op = !!this.model.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
+            are_we_an_op = !!this.model.getByNick(_melon.app.connections.active_connection.get('nick')).get('is_op');
 
-        userbox = new _kiwi.view.UserBox();
+        userbox = new _melon.view.UserBox();
         userbox.setTargets(member, this.model.channel);
         userbox.displayOpItems(are_we_an_op);
 
-        var menu = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+        var menu = new _melon.view.MenuBox(member.get('nick') || 'User');
         menu.addItem('userbox', userbox.$el);
         menu.showFooter(false);
 
-        _kiwi.global.events.emit('usermenu:created', {menu: menu, userbox: userbox, user: member})
+        _melon.global.events.emit('usermenu:created', {menu: menu, userbox: userbox, user: member})
         .then(_.bind(function() {
             menu.show();
 
@@ -104,12 +104,12 @@ _kiwi.view.MemberList = Backbone.View.extend({
 
 
     channelInfoClick: function(event) {
-        new _kiwi.model.ChannelInfo({channel: this.model.channel});
+        new _melon.model.ChannelInfo({channel: this.model.channel});
     },
 
 
     show: function () {
-        $('#kiwi .memberlists').children().removeClass('active');
+        $('#melon .memberlists').children().removeClass('active');
         $(this.el).addClass('active');
 
         this.renderMeta();

@@ -1,4 +1,4 @@
-_kiwi.view.Channel = _kiwi.view.Panel.extend({
+_melon.view.Channel = _melon.view.Panel.extend({
     events: function(){
         var parent_events = this.constructor.__super__.events;
 
@@ -47,7 +47,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
         // Only show the loader if this is a channel (ie. not a query)
         if (this.model.isChannel()) {
-            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + _kiwi.global.i18n.translate('client_views_channel_joining').fetch() + ' <span class="loader"></span></div>');
+            this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + _melon.global.i18n.translate('client_views_channel_joining').fetch() + ' <span class="loader"></span></div>');
         }
 
         this.model.bind('msg', this.newMsg, this);
@@ -70,7 +70,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         // Parse the msg object into properties fit for displaying
         msg = this.generateMessageDisplayObj(msg);
 
-        _kiwi.global.events.emit('message:display', {panel: this.model, message: msg})
+        _melon.global.events.emit('message:display', {panel: this.model, message: msg})
         .then(_.bind(function() {
             var line_msg;
 
@@ -86,30 +86,30 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 this.alert('action');
 
             } else if (msg.is_highlight) {
-                _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
-                _kiwi.app.view.favicon.newHighlight();
-                _kiwi.app.view.playSound('highlight');
-                _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
+                _melon.app.view.alertWindow('* ' + _melon.global.i18n.translate('client_views_panel_activity').fetch());
+                _melon.app.view.favicon.newHighlight();
+                _melon.app.view.playSound('highlight');
+                _melon.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
                 this.alert('highlight');
 
             } else {
                 // If this is the active panel, send an alert out
                 if (this.model.isActive()) {
-                    _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                    _melon.app.view.alertWindow('* ' + _melon.global.i18n.translate('client_views_panel_activity').fetch());
                 }
                 this.alert('activity');
             }
 
             if (this.model.isQuery() && !this.model.isActive()) {
-                _kiwi.app.view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                _melon.app.view.alertWindow('* ' + _melon.global.i18n.translate('client_views_panel_activity').fetch());
 
                 // Highlights have already been dealt with above
                 if (!msg.is_highlight) {
-                    _kiwi.app.view.favicon.newHighlight();
+                    _melon.app.view.favicon.newHighlight();
                 }
 
-                _kiwi.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
-                _kiwi.app.view.playSound('highlight');
+                _melon.app.view.showNotification(this.model.get('name'), msg.unparsed_msg);
+                _melon.app.view.playSound('highlight');
             }
 
             // Update the activity counters
@@ -117,7 +117,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 // Only inrement the counters if we're not the active panel
                 if (this.model.isActive()) return;
 
-                var count_all_activity = _kiwi.global.settings.get('count_all_activity'),
+                var count_all_activity = _melon.global.settings.get('count_all_activity'),
                     exclude_message_types, new_count;
 
                 // Set the default config value
@@ -147,7 +147,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
             // Make sure our DOM isn't getting too large (Acts as scrollback)
             this.msg_count++;
-            if (this.msg_count > (parseInt(_kiwi.global.settings.get('scrollback'), 10) || 250)) {
+            if (this.msg_count > (parseInt(_melon.global.settings.get('scrollback'), 10) || 250)) {
                 $('.msg:first', this.$messages).remove();
                 this.msg_count--;
             }
@@ -232,7 +232,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             }
 
             // Get any media HTML if supported
-            extra_html = _kiwi.view.MediaMessage.buildHtml(url);
+            extra_html = _melon.view.MediaMessage.buildHtml(url);
 
             // Make the link clickable
             return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url.replace(/"/g, '%22') + '">' + _.escape(nice) + '</a>' + extra_html;
@@ -250,8 +250,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             var nick_lightness, nick_int, rgb;
 
             // Get the lightness option from the theme. Defaults to 35.
-            nick_lightness = (_.find(_kiwi.app.themes, function (theme) {
-                return theme.name.toLowerCase() === _kiwi.global.settings.get('theme').toLowerCase();
+            nick_lightness = (_.find(_melon.app.themes, function (theme) {
+                return theme.name.toLowerCase() === _melon.global.settings.get('theme').toLowerCase();
             }) || {}).nick_lightness;
 
             if (typeof nick_lightness !== 'number') {
@@ -301,10 +301,10 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         msg.time_string = '';
 
         // Nick + custom highlight detecting
-        nick = _kiwi.app.connections.active_connection.get('nick');
+        nick = _melon.app.connections.active_connection.get('nick');
         if (msg.nick.localeCompare(nick) !== 0) {
             // Build a list of all highlights and escape them for regex
-            regexpStr = _.chain((_kiwi.global.settings.get('custom_highlights') || '').split(/[\s,]+/))
+            regexpStr = _.chain((_melon.global.settings.get('custom_highlights') || '').split(/[\s,]+/))
                 .compact()
                 .concat(nick)
                 .map(escapeRegex)
@@ -333,7 +333,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             parsed_word = _.escape(word);
 
             // Replace text emoticons with images
-            if (_kiwi.global.settings.get('show_emoticons')) {
+            if (_melon.global.settings.get('show_emoticons')) {
                 parsed_word = emoticonFromText(parsed_word);
             }
 
@@ -367,7 +367,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         }
 
         // Build up and add the line
-        if (_kiwi.global.settings.get('use_24_hour_timestamps')) {
+        if (_melon.global.settings.get('use_24_hour_timestamps')) {
             msg.time_string = msg.time.getHours().toString().lpad(2, "0") + ":" + msg.time.getMinutes().toString().lpad(2, "0") + ":" + msg.time.getSeconds().toString().lpad(2, "0");
         } else {
             hour = msg.time.getHours();
@@ -396,15 +396,15 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         this.model.addMsg('', styleText('channel_topic', {text: topic, channel: this.model.get('name')}), 'topic');
 
         // If this is the active channel then update the topic bar
-        if (_kiwi.app.panels().active === this.model) {
-            _kiwi.app.topicbar.setCurrentTopicFromChannel(this.model);
+        if (_melon.app.panels().active === this.model) {
+            _melon.app.topicbar.setCurrentTopicFromChannel(this.model);
         }
     },
 
     topicSetBy: function (topic) {
         // If this is the active channel then update the topic bar
-        if (_kiwi.app.panels().active === this.model) {
-            _kiwi.app.topicbar.setCurrentTopicFromChannel(this.model);
+        if (_melon.app.panels().active === this.model) {
+            _melon.app.topicbar.setCurrentTopicFromChannel(this.model);
         }
     },
 
@@ -430,7 +430,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return;
         }
 
-        _kiwi.global.events.emit('nick:select', {target: $target, member: member, source: 'message'})
+        _melon.global.events.emit('nick:select', {target: $target, member: member, source: 'message'})
         .then(_.bind(this.openUserMenuForNick, this, $target, member));
     },
 
@@ -448,18 +448,18 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
     openUserMenuForNick: function ($target, member) {
         var members = this.model.get('members'),
-            are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op'),
+            are_we_an_op = !!members.getByNick(_melon.app.connections.active_connection.get('nick')).get('is_op'),
             userbox, menubox;
 
-        userbox = new _kiwi.view.UserBox();
+        userbox = new _melon.view.UserBox();
         userbox.setTargets(member, this.model);
         userbox.displayOpItems(are_we_an_op);
 
-        menubox = new _kiwi.view.MenuBox(member.get('nick') || 'User');
+        menubox = new _melon.view.MenuBox(member.get('nick') || 'User');
         menubox.addItem('userbox', userbox.$el);
         menubox.showFooter(false);
 
-        _kiwi.global.events.emit('usermenu:created', {menu: menubox, userbox: userbox, user: member})
+        _melon.global.events.emit('usermenu:created', {menu: menubox, userbox: userbox, user: member})
         .then(_.bind(function() {
             menubox.show();
 
@@ -492,7 +492,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
     chanClick: function (event) {
         var target = (event.target) ? $(event.target).data('channel') : $(event.srcElement).data('channel');
 
-        _kiwi.app.connections.active_connection.gateway.join(target);
+        _melon.app.connections.active_connection.gateway.join(target);
     },
 
 
@@ -503,7 +503,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if ($media.data('media')) {
             media_message = $media.data('media');
         } else {
-            media_message = new _kiwi.view.MediaMessage({el: $media[0]});
+            media_message = new _melon.view.MediaMessage({el: $media[0]});
 
             // Cache this MediaMessage instance for when it's opened again
             $media.data('media', media_message);

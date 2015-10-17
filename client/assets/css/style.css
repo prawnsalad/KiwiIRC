@@ -3,80 +3,80 @@ html, body { height:100%; }
 
 
 
-/* Few resets for within the kiwi container */
-#kiwi {
+/* Few resets for within the melon container */
+#melon {
     overflow:hidden; position:relative;
     height:100%;
 }
-#kiwi * { margin:0px; padding:0px; }
-#kiwi p { margin:0.5em 0; }
-#kiwi a { color:#36C; text-decoration:none; cursor:pointer; }
-#kiwi a img { border:none; }
-#kiwi .format_span a { color: inherit; background-color: inherit; text-decoration: inherit; font-style: inherit; font-weight: inherit;}
+#melon * { margin:0px; padding:0px; }
+#melon p { margin:0.5em 0; }
+#melon a { color:#36C; text-decoration:none; cursor:pointer; }
+#melon a img { border:none; }
+#melon .format_span a { color: inherit; background-color: inherit; text-decoration: inherit; font-style: inherit; font-weight: inherit;}
 
-#kiwi h1,
-#kiwi h2,
-#kiwi h3 {
+#melon h1,
+#melon h2,
+#melon h3 {
     margin-top: 22px;
     margin-bottom: 11px;
 }
-#kiwi h4,
-#kiwi h5,
-#kiwi h6 {
+#melon h4,
+#melon h5,
+#melon h6 {
     margin-top: 11px;
     margin-bottom: 11px;
 }
-#kiwi h1 { font-size: 46px; }
-#kiwi h2 { font-size: 40px; }
-#kiwi h3 { font-size: 34px; }
-#kiwi h4 { font-size: 28px; }
-#kiwi h5 { font-size: 22px; }
-#kiwi h6 { font-size: 16px; }
+#melon h1 { font-size: 46px; }
+#melon h2 { font-size: 40px; }
+#melon h3 { font-size: 34px; }
+#melon h4 { font-size: 28px; }
+#melon h5 { font-size: 22px; }
+#melon h6 { font-size: 16px; }
 
 
 /**
  * Main layout blocks
  */
-#kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; z-index:1; }
-#kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
-#kiwi .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
-#kiwi .right-bar-content { position:relative; height:100%; z-index:0; }
-#kiwi .controlbox { position: absolute; bottom:0px; width:100%; display:none; }
-#kiwi .memberlists_resize_handle {
+#melon .toolbar { position:absolute; top:0px; width:100%; display:none; z-index:1; }
+#melon .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
+#melon .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
+#melon .right-bar-content { position:relative; height:100%; z-index:0; }
+#melon .controlbox { position: absolute; bottom:0px; width:100%; display:none; }
+#melon .memberlists_resize_handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
 }
 
 
-#kiwi .toolbar .tabs { margin-right: 200px; overflow: hidden; }
-#kiwi .toolbar .panellist {
+#melon .toolbar .tabs { margin-right: 200px; overflow: hidden; }
+#melon .toolbar .panellist {
     overflow: hidden;
     display:block;
 }
-#kiwi .toolbar .panellist li {
+#melon .toolbar .panellist li {
     float: left; list-style: none;
     display:inline; position:relative;
     padding:5px; margin:3px;
     cursor: pointer;
 }
 
-#kiwi .toolbar .panellist .active { padding-right:23px; }
-#kiwi .toolbar .panellist .alert_highlight { font-weight: bold; }
-#kiwi .toolbar .panellist .alert_activity { font-weight: bold; }
-#kiwi .toolbar .panellist .alert_action { font-weight: bold; }
+#melon .toolbar .panellist .active { padding-right:23px; }
+#melon .toolbar .panellist .alert_highlight { font-weight: bold; }
+#melon .toolbar .panellist .alert_activity { font-weight: bold; }
+#melon .toolbar .panellist .alert_action { font-weight: bold; }
 
-#kiwi .toolbar .panellist li { width: auto; text-align: left; }
-#kiwi .toolbar .panellist li .part { position: absolute; top: 5px; right: 5px; }
-#kiwi .toolbar .panellist li .part:before { content:"[x]"; }
-#kiwi .toolbar .panellist li .part:hover { color: #900; }
-#kiwi .toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
+#melon .toolbar .panellist li { width: auto; text-align: left; }
+#melon .toolbar .panellist li .part { position: absolute; top: 5px; right: 5px; }
+#melon .toolbar .panellist li .part:before { content:"[x]"; }
+#melon .toolbar .panellist li .part:hover { color: #900; }
+#melon .toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
 
-#kiwi .toolbar .connections { overflow:hidden; }
-#kiwi .toolbar .connections .connection { float:left; }
-#kiwi.chanlist_treeview .toolbar .connections .connection { float:none; }
-#kiwi .toolbar .connections .panellist { display:inline; }
-#kiwi .toolbar .connections .panellist:after { content:""; }
+#melon .toolbar .connections { overflow:hidden; }
+#melon .toolbar .connections .connection { float:left; }
+#melon.chanlist_treeview .toolbar .connections .connection { float:none; }
+#melon .toolbar .connections .panellist { display:inline; }
+#melon .toolbar .connections .panellist:after { content:""; }
 
-#kiwi .status_message {
+#melon .status_message {
     position: absolute;
     left: 0;
     right: 0;
@@ -86,63 +86,63 @@ html, body { height:100%; }
     text-align: center;
 }
 
-#kiwi .channel_tools {
+#melon .channel_tools {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1;
 }
-#kiwi .channel_tools i {
+#melon .channel_tools i {
     width: 32%;
     display: inline-block;
     text-align: center;
     cursor: pointer;
 }
 
-#kiwi .panel_container { overflow-y:auto; height:100%; }
-#kiwi .panel {
+#melon .panel_container { overflow-y:auto; height:100%; }
+#melon .panel {
     overflow-x:wrap;
     border:none; display: none;
 }
 
-#kiwi .messages a {}
-#kiwi .messages.active { display:block; }
+#melon .messages a {}
+#melon .messages.active { display:block; }
 
-#kiwi .messages .msg {}
-#kiwi .messages .msg .time { display:inline; }
-#kiwi .messages .msg .nick { display:inline; cursor: pointer; }
-#kiwi .messages .msg .text { display:inline; }
+#melon .messages .msg {}
+#melon .messages .msg .time { display:inline; }
+#melon .messages .msg .nick { display:inline; cursor: pointer; }
+#melon .messages .msg .text { display:inline; }
 
-#kiwi .messages .msg.action .nick { display:none; }
-#kiwi .messages .msg.action .text { }
-#kiwi .messages .msg.action.join { }
-#kiwi .messages .msg.action.part .text { }
-#kiwi .messages .msg.action.quit .text { }
-#kiwi .messages .msg.action.kick .text { }
-#kiwi .messages .msg.status .nick { display:none; }
-#kiwi .messages .msg.status .text { }
-#kiwi .messages .msg.topic .nick { display:none; }
-#kiwi .messages .msg.topic .text { }
-#kiwi .messages .msg.motd { }
-#kiwi .messages .msg.motd .nick { }
-#kiwi .messages .msg.motd .text { }
-#kiwi .messages .msg.whois .nick { }
-#kiwi .messages .msg.whois .text { }
-#kiwi .messages .msg.error .text { }
+#melon .messages .msg.action .nick { display:none; }
+#melon .messages .msg.action .text { }
+#melon .messages .msg.action.join { }
+#melon .messages .msg.action.part .text { }
+#melon .messages .msg.action.quit .text { }
+#melon .messages .msg.action.kick .text { }
+#melon .messages .msg.status .nick { display:none; }
+#melon .messages .msg.status .text { }
+#melon .messages .msg.topic .nick { display:none; }
+#melon .messages .msg.topic .text { }
+#melon .messages .msg.motd { }
+#melon .messages .msg.motd .nick { }
+#melon .messages .msg.motd .text { }
+#melon .messages .msg.whois .nick { }
+#melon .messages .msg.whois .text { }
+#melon .messages .msg.error .text { }
 
-#kiwi .messages .msg.global_nick_highlight { }
-#kiwi .messages .msg.highlight { }
+#melon .messages .msg.global_nick_highlight { }
+#melon .messages .msg.highlight { }
 
-#kiwi .messages .msg .media .media_content { white-space: normal; }
+#melon .messages .msg .media .media_content { white-space: normal; }
 
 
-#kiwi .right_bar { border-left: 1px solid #8A8A8A; }
-#kiwi .right_bar.disabled { width:0; }
-#kiwi .right_bar.disabled .channel_tools,
-#kiwi .right_bar.disabled .memberlists { display:none; }
+#melon .right_bar { border-left: 1px solid #8A8A8A; }
+#melon .right_bar.disabled { width:0; }
+#melon .right_bar.disabled .channel_tools,
+#melon .right_bar.disabled .memberlists { display:none; }
 
-#kiwi .right-bar-toggle {
+#melon .right-bar-toggle {
     position: absolute;
     top: 10px;
     left: -2.3em;
@@ -170,7 +170,7 @@ html, body { height:100%; }
 }
 
 /* The active channels nicklist */
-#kiwi .memberlists {
+#melon .memberlists {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -179,83 +179,83 @@ html, body { height:100%; }
     overflow-y: auto;
     padding-top: 50px;
 }
-#kiwi .memberlists > div { display:none; }
-#kiwi .memberlists > div.active { display:block; }
-#kiwi .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
-#kiwi .memberlists ul li a.nick { }
+#melon .memberlists > div { display:none; }
+#melon .memberlists > div.active { display:block; }
+#melon .memberlists ul li { overflow-y:auto; overflow-x:hidden; cursor:pointer; }
+#melon .memberlists ul li a.nick { }
 
 /* The userbox shown when clicking a nick */
-#kiwi .userbox { position:relative; width:100px; }
-#kiwi .userbox a { }
-#kiwi .userbox a i { width:1em; text-align:center; }
+#melon .userbox { position:relative; width:100px; }
+#melon .userbox a { }
+#melon .userbox a i { width:1em; text-align:center; }
 
 
 /* Emoticons */
-#kiwi .emoticon {
+#melon .emoticon {
     display: inline-block;
     height: 15px; width: 17px;
     overflow: hidden;
     font-size: 0;
     background: url(../img/emoticons.png) no-repeat;
 }
-#kiwi .emoticon.smile { background-position:0px 0; }
-#kiwi .emoticon.sad { background-position:-25px 0; }
-#kiwi .emoticon.lion { background-position:-50px 0; }
-#kiwi .emoticon.winky_lion { background-position:-75px 0; }
-#kiwi .emoticon.confused { background-position:-100px 0; }
-#kiwi .emoticon.cry { background-position:-125px 0; }
-#kiwi .emoticon.wink { background-position:-150px 0; }
-#kiwi .emoticon.wink_happy { background-position:-175px 0; }
-#kiwi .emoticon.tongue { background-position:-200px 0; }
-#kiwi .emoticon.cringe_tongue { background-position:-225px 0; }
-#kiwi .emoticon.shocked { background-position:-250px 0; }
-#kiwi .emoticon.happy { background-position:-275px 0; }
-#kiwi .emoticon.eyebrows { background-position:-300px 0; }
-#kiwi .emoticon.heart { background-position:-325px 0; }
-#kiwi .emoticon.doh { background-position:-373px 0; }
-#kiwi .emoticon.big_grin { background-position:-398px 0; }
-#kiwi .emoticon.wide_eye_right { background-position:-423px 0; }
-#kiwi .emoticon.wide_eye_left { background-position:-448px 0; }
-#kiwi .emoticon.unsure { background-position:-473px 0; }
+#melon .emoticon.smile { background-position:0px 0; }
+#melon .emoticon.sad { background-position:-25px 0; }
+#melon .emoticon.lion { background-position:-50px 0; }
+#melon .emoticon.winky_lion { background-position:-75px 0; }
+#melon .emoticon.confused { background-position:-100px 0; }
+#melon .emoticon.cry { background-position:-125px 0; }
+#melon .emoticon.wink { background-position:-150px 0; }
+#melon .emoticon.wink_happy { background-position:-175px 0; }
+#melon .emoticon.tongue { background-position:-200px 0; }
+#melon .emoticon.cringe_tongue { background-position:-225px 0; }
+#melon .emoticon.shocked { background-position:-250px 0; }
+#melon .emoticon.happy { background-position:-275px 0; }
+#melon .emoticon.eyebrows { background-position:-300px 0; }
+#melon .emoticon.heart { background-position:-325px 0; }
+#melon .emoticon.doh { background-position:-373px 0; }
+#melon .emoticon.big_grin { background-position:-398px 0; }
+#melon .emoticon.wide_eye_right { background-position:-423px 0; }
+#melon .emoticon.wide_eye_left { background-position:-448px 0; }
+#melon .emoticon.unsure { background-position:-473px 0; }
 
 
 /**
  * Control box
  */
-#kiwi .controlbox .input {
+#melon .controlbox .input {
     height:1.7em; position:relative;
 }
 
 /* The nick label */
-#kiwi .controlbox .input .nick { cursor: pointer; }
-#kiwi .controlbox .input .nick a { }
+#melon .controlbox .input .nick { cursor: pointer; }
+#melon .controlbox .input .nick a { }
 
 /* Wrapper div around the text area input */
-#kiwi .controlbox .input .input_wrap { display:inline; }
+#melon .controlbox .input .input_wrap { display:inline; }
 
 /* The textarea input */
-#kiwi .controlbox .input .inp { white-space: nowrap; }
+#melon .controlbox .input .inp { white-space: nowrap; }
 
 
 /* Nick change dialog showed when clicking the nick label */
-#kiwi .controlbox .nickchange {
+#melon .controlbox .nickchange {
     position: absolute;
     background: #FFF;
 }
-#kiwi .controlbox .nickchange input { }
-#kiwi .controlbox .nickchange button { }
+#melon .controlbox .nickchange input { }
+#melon .controlbox .nickchange button { }
 
 /* Plugin tools */
-#kiwi .controlbox .input_tools { float:right; }
-#kiwi .controlbox .input_tools .tool { margin:0 1em; display:inline; }
+#melon .controlbox .input_tools { float:right; }
+#melon .controlbox .input_tools .tool { margin:0 1em; display:inline; }
 
 
 
 /**
  * Topic bar
  */
-#kiwi .toolbar .topic { position:relative; height:2em; }
-#kiwi .toolbar .topic div {
+#melon .toolbar .topic { position:relative; height:2em; }
+#melon .toolbar .topic div {
     position:absolute;
     top:0; bottom:0; left:0; right:0;
     overflow: hidden;
@@ -268,199 +268,199 @@ html, body { height:100%; }
 /**
  * Server selection dialog
  */
-#kiwi .server_select { position:relative; width:320px; margin:0 auto; overflow:hidden; }
-#kiwi .server_select.initial { margin-top: 3em; }
-#kiwi .server_select .more { display: none; }
-#kiwi .server_select button {  }
-#kiwi .server_select input { }
-#kiwi .server_select label { }
-#kiwi .server_select br { clear:both; }
-#kiwi .server_select .basic input { }
-#kiwi .server_select .basic label { }
-#kiwi .server_select .basic { border-bottom: 1px solid gray; margin-bottom:1em; }
-#kiwi .server_select .basic .show_more { }
-#kiwi .server_select .basic tr.pass { display:none; }
-#kiwi .server_select .basic tr.key { display:none; }
-#kiwi .server_select.single_server .basic { border:none; }
-#kiwi .server_select .status {  }
+#melon .server_select { position:relative; width:320px; margin:0 auto; overflow:hidden; }
+#melon .server_select.initial { margin-top: 3em; }
+#melon .server_select .more { display: none; }
+#melon .server_select button {  }
+#melon .server_select input { }
+#melon .server_select label { }
+#melon .server_select br { clear:both; }
+#melon .server_select .basic input { }
+#melon .server_select .basic label { }
+#melon .server_select .basic { border-bottom: 1px solid gray; margin-bottom:1em; }
+#melon .server_select .basic .show_more { }
+#melon .server_select .basic tr.pass { display:none; }
+#melon .server_select .basic tr.key { display:none; }
+#melon .server_select.single_server .basic { border:none; }
+#melon .server_select .status {  }
 
 /* Channel key icon */
-#kiwi .server_select .basic tr.channel td { position: relative; }
-#kiwi .server_select .basic tr.channel .fa-key {
+#melon .server_select .basic tr.channel td { position: relative; }
+#melon .server_select .basic tr.channel .fa-key {
     position: absolute;
     top: 0.4em;
     right: 0.6em;
     font-size: 1.3em;
     cursor: pointer;
 }
-#kiwi .server_select .basic tr.have_key { display:none; }
+#melon .server_select .basic tr.have_key { display:none; }
 
 /* When connected to an IRC server, .ok is set on the status div */
-#kiwi .server_select .status.ok { }
+#melon .server_select .status.ok { }
 
 /* IRC server connection error, .error is set on the status div */
-#kiwi .server_select .status.error { }
+#melon .server_select .status.error { }
 
 
 
 /* Logo and title in the server selection dialog */
-#kiwi .server_select .kiwi_logo { text-align: center; display:block; }
-#kiwi .server_select .kiwi_logo h1 { }
-#kiwi .server_select .kiwi_logo img { }
+#melon .server_select .melon_logo { text-align: center; display:block; }
+#melon .server_select .melon_logo h1 { }
+#melon .server_select .melon_logo img { }
 
 
 
 /* Icons in the top right corner */
-#kiwi .toolbar .app_tools { float:right; }
-#kiwi .toolbar .app_tools ul li {
+#melon .toolbar .app_tools { float:right; }
+#melon .toolbar .app_tools ul li {
     display:inline; cursor:pointer;
 }
-#kiwi .toolbar .app_tools img { height:25px; width:25px; margin: 6px 0.7em 0 0; }
+#melon .toolbar .app_tools img { height:25px; width:25px; margin: 6px 0.7em 0 0; }
 
 
 
 /* Settings applet */
 
 /* Some of these styles will move to global styling later */
-#kiwi .settings_container {
+#melon .settings_container {
     padding: 50px;
 }
 
-#kiwi .settings_container .thumbnails:before {
+#melon .settings_container .thumbnails:before {
     content: ' ';
     display: table;
 }
-#kiwi .settings_container .thumbnails:after {
+#melon .settings_container .thumbnails:after {
     content: ' ';
     display: table;
     clear: both;
 }
 
-#kiwi .settings_container .thumbnails {
+#melon .settings_container .thumbnails {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-#kiwi .settings_container .thumbnails > li {
+#melon .settings_container .thumbnails > li {
     display: inline-block;
 }
 
-#kiwi .settings_container label {
+#melon .settings_container label {
     cursor: pointer;
 }
 
-#kiwi_ form label { display: block; }
-#kiwi form input,
-#kiwi form select,
-#kiwi form textarea {
+#melon_ form label { display: block; }
+#melon form input,
+#melon form select,
+#melon form textarea {
     /*width: 100%;
     box-sizing: border-box;*/
 }
 
-#kiwi form input[size],
-#kiwi form select[size],
-#kiwi form textarea[size] {
+#melon form input[size],
+#melon form select[size],
+#melon form textarea[size] {
     width: auto;
 }
 
-#kiwi form input[type="file"],
-#kiwi form input[type="image"],
-#kiwi form input[type="submit"],
-#kiwi form input[type="reset"],
-#kiwi form input[type="button"] {
+#melon form input[type="file"],
+#melon form input[type="image"],
+#melon form input[type="submit"],
+#melon form input[type="reset"],
+#melon form input[type="button"] {
     width: auto;
 }
 
-#kiwi form input[type="radio"] {
+#melon form input[type="radio"] {
     width: auto;
     cursor: pointer;
     margin-top: 2px;
 }
 
-#kiwi form input[type="checkbox"] {
+#melon form input[type="checkbox"] {
     width: auto;
     cursor: pointer;
     margin-top: 3px;
 }
 
-#kiwi form .radio,
-#kiwi form .checkbox {
+#melon form .radio,
+#melon form .checkbox {
     margin-bottom: 10px;
     padding-left: 20px;
 }
 
-#kiwi form .radio:last-child,
-#kiwi form .checkbox:last-child {
+#melon form .radio:last-child,
+#melon form .checkbox:last-child {
     margin-bottom: 0;
 }
 
-#kiwi form .radio input[type="radio"],
-#kiwi form .checkbox input[type="checkbox"] {
+#melon form .radio input[type="radio"],
+#melon form .checkbox input[type="checkbox"] {
     float: left;
     margin-left: -20px;
 }
 
-#kiwi form .radio+.radio,
-#kiwi form .checkbox+.checkbox {
+#melon form .radio+.radio,
+#melon form .checkbox+.checkbox {
     margin-top: -7px;
 }
 
-#kiwi .settings_container .thumbnail {
+#melon .settings_container .thumbnail {
     float: left;
     margin-right: 15px;
     text-align: center;
 }
 
-#kiwi .settings_container .thumbnail > .thumbnail_wrapper {
+#melon .settings_container .thumbnail > .thumbnail_wrapper {
     border-radius: 3px;
     padding: 3px;
 }
 
-#kiwi .settings_container .thumbnail > img {
+#melon .settings_container .thumbnail > img {
     border-radius: 2px;
 }
 
-#kiwi .settings_container .thumbnail.active > .thumbnail_wrapper {
+#melon .settings_container .thumbnail.active > .thumbnail_wrapper {
     background-color: #a6c42c;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a6c42c), color-stop(100%, #76bd2b));
     background-image: -webkit-linear-gradient(#a6c42c, #76bd2b);
     background-image: linear-gradient(#a6c42c, #76bd2b);
 }
 
-#kiwi .settings_container section {
+#melon .settings_container section {
     padding-bottom: 20px;
 }
 
-#kiwi .settings_container .theme_color {
+#melon .settings_container .theme_color {
     border-radius: 2px;
     height: 75px;
     width: 75px;
 }
 
-#kiwi .control-group {
+#melon .control-group {
     margin: 0 0 20px 20px;
 }
 
-#kiwi .control-group:last-child {
+#melon .control-group:last-child {
     margin-bottom: 0;
 }
 
-#kiwi .settings_container section.language select { width:300px; }
+#melon .settings_container section.language select { width:300px; }
 
 @media screen and (max-width: 768px) {
-    #kiwi .settings_container {
+    #melon .settings_container {
         padding: 25px;
     }
 }
 
 
-#kiwi .channel_info label { display: block; }
-#kiwi .channel_info .channel_url {
+#melon .channel_info label { display: block; }
+#melon .channel_info .channel_url {
     display: none;
 }
-#kiwi .channel_info .channel-banlist table { display: none; }
-#kiwi .channel_info .remove-ban { cursor: pointer; }
+#melon .channel_info .channel-banlist table { display: none; }
+#melon .channel_info .remove-ban { cursor: pointer; }
 
 
 
@@ -472,7 +472,7 @@ html, body { height:100%; }
  * Reusable componants
  */
 
-#kiwi .divider-verticle {
+#melon .divider-verticle {
     border-left: 1px solid #CFCFCF;
     border-right: 1px solid #FFFFFF;
     position: absolute;
@@ -481,7 +481,7 @@ html, body { height:100%; }
     width:0;
 }
 
-#kiwi .divider-horizontal {
+#melon .divider-horizontal {
     border-top: 1px solid #CFCFCF;
     border-bottom: 1px solid #FFFFFF;
     position: absolute;
@@ -492,7 +492,7 @@ html, body { height:100%; }
 
 
 
-#kiwi .loader {
+#melon .loader {
     background:url(../img/loader.gif) no-repeat;
     width:43px; height:11px;
     display:inline-block;
@@ -501,7 +501,7 @@ html, body { height:100%; }
 
 
 
-#kiwi .ui_menu {
+#melon .ui_menu {
     padding: 0;
     z-index:10;
     position: absolute;
@@ -510,27 +510,27 @@ html, body { height:100%; }
     border: 1px solid #bbb;
     background-clip: padding-box;
 }
-#kiwi .ui_menu .ui_menu_title {
+#melon .ui_menu .ui_menu_title {
     padding: 5px 10px 5px 10px; font-weight: bold; overflow:hidden; background:#ddd;
 }
-#kiwi .ui_menu .ui_menu_content { padding: 5px 10px 5px 10px; border-top:1px solid #e9e9e9; overflow:hidden; position:relative; }
-#kiwi .ui_menu .ui_menu_content > a { display: block; }
-#kiwi .ui_menu .ui_menu_content > a[class^="fa-"]:before,
-#kiwi .ui_menu .ui_menu_content > a[class*=" fa-"]:before { margin-right: 5px; color:#666; }
-#kiwi .ui_menu .ui_menu_foot {
+#melon .ui_menu .ui_menu_content { padding: 5px 10px 5px 10px; border-top:1px solid #e9e9e9; overflow:hidden; position:relative; }
+#melon .ui_menu .ui_menu_content > a { display: block; }
+#melon .ui_menu .ui_menu_content > a[class^="fa-"]:before,
+#melon .ui_menu .ui_menu_content > a[class*=" fa-"]:before { margin-right: 5px; color:#666; }
+#melon .ui_menu .ui_menu_foot {
     padding: 5px; border-top:1px solid #e9e9e9; background:#ddd; overflow:hidden;
 }
-#kiwi .ui_menu .ui_menu_foot .close { }
+#melon .ui_menu .ui_menu_foot .close { }
 
-#kiwi .applet .applet_chanlist .fa-sort-asc:before, #kiwi .applet .applet_chanlist .fa-sort-desc:before {
+#melon .applet .applet_chanlist .fa-sort-asc:before, #melon .applet .applet_chanlist .fa-sort-desc:before {
     padding-left: 1em;
 }
-#kiwi .applet .applet_chanlist td {
+#melon .applet .applet_chanlist td {
     min-width: 120px;
 }
 
 
-#kiwi .notification {
+#melon .notification {
     z-index: 1;
     position:absolute;
     top:3px; right:3px;
@@ -540,12 +540,12 @@ html, body { height:100%; }
     /* .show class reveals this element */
     display: none;
 }
-#kiwi .notification.show { display: block; }
-#kiwi .notification-inner {
+#melon .notification.show { display: block; }
+#melon .notification-inner {
     position:relative;
     padding:0 10px 23px 10px;
 }
-#kiwi .notification .close {
+#melon .notification .close {
     position:absolute;
     bottom: 10px;
     left: 10px;

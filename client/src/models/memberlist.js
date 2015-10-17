@@ -1,5 +1,5 @@
-_kiwi.model.MemberList = Backbone.Collection.extend({
-    model: _kiwi.model.Member,
+_melon.model.MemberList = Backbone.Collection.extend({
+    model: _melon.model.Member,
     comparator: function (a, b) {
         var i, a_modes, b_modes, a_idx, b_idx, a_nick, b_nick;
         var user_prefixes = this.channel.get('network').get('user_prefixes');
@@ -50,7 +50,7 @@ _kiwi.model.MemberList = Backbone.Collection.extend({
 
 
     initialize: function (options) {
-        this.view = new _kiwi.view.MemberList({"model": this});
+        this.view = new _melon.view.MemberList({"model": this});
         this.initNickCache();
     },
 

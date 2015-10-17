@@ -1,8 +1,8 @@
-_kiwi.model.NetworkPanelList = Backbone.Collection.extend({
-    model: _kiwi.model.Network,
+_melon.model.NetworkPanelList = Backbone.Collection.extend({
+    model: _melon.model.Network,
 
     initialize: function() {
-        this.view = new _kiwi.view.NetworkTabs({model: this});
+        this.view = new _melon.view.NetworkTabs({model: this});
         
         this.on('add', this.onNetworkAdd, this);
         this.on('remove', this.onNetworkRemove, this);

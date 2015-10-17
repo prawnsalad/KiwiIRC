@@ -1,6 +1,6 @@
-var kiwiModules = require('../server/modules');
+var melonModules = require('../server/modules');
 
-var module = new kiwiModules.Module('Example Module');
+var module = new melonModules.Module('Example Module');
 
 
 // A web client is connected

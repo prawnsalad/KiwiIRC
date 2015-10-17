@@ -53,9 +53,9 @@
             startGraphing: function() {
                 var that = this;
 
-                // Create our kiwi components
-                var net = kiwi.components.Network();
-                var input = kiwi.components.ControlInput();
+                // Create our melon components
+                var net = melon.components.Network();
+                var input = melon.components.ControlInput();
 
                 // Holder for our stats and numbers
                 this.stats = {};
@@ -86,14 +86,14 @@
                 });
 
                 // Bla...
-                net.on('kiwi', function (event) { console.log('kiwi', event); });
+                net.on('melon', function (event) { console.log('melon', event); });
                 input.on('command:graph', function (event) { console.log(event); });
             }
         });
 
 
-        kiwi.components.Applet.register('canvas', applet);
-        kiwi.components.Applet.loadOnce('canvas');
+        melon.components.Applet.register('canvas', applet);
+        melon.components.Applet.loadOnce('canvas');
     })();
 
 </script>

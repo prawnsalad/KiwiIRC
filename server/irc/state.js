@@ -100,8 +100,8 @@ State.prototype.sendIrcCommand = function () {
     this.client.sendIrcCommand.apply(this.client, arguments);
 };
 
-State.prototype.sendKiwiCommand = function () {
-    this.client.sendKiwicommand.apply(this.client, arguments);
+State.prototype.sendMelonCommand = function () {
+    this.client.sendMeloncommand.apply(this.client, arguments);
 };
 
 State.prototype.dispose = function () {

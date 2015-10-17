@@ -1,16 +1,16 @@
 {
-  "name": "kiwiirc",
+  "name": "melonirc",
   "version": "0.9.1",
   "description": "A hand-crafted webirc client",
-  "homepage": "https://www.kiwiirc.com/",
+  "homepage": "https://www.melonirc.com/",
   "preferGlobal": "true",
   "bin": {
-    "kiwiirc": "./kiwi"
+    "melonirc": "./melon"
   },
-  "man": "./man/kiwiirc.1",
+  "man": "./man/melonirc.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/prawnsalad/KiwiIRC.git"
+    "url": "https://github.com/prawnsalad/MelonIRC.git"
   },
   "dependencies": {
     "daemonize2": "0.4.2",

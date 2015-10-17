@@ -5,8 +5,8 @@ var IdentdServer = module.exports = function(opts) {
 
     var that = this;
 
-    var default_user_id = 'kiwi',
-        default_system_id = 'UNIX-KiwiIRC';
+    var default_user_id = 'melon',
+        default_system_id = 'UNIX-MelonIRC';
 
     // Option defaults
     opts = opts || {};

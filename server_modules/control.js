@@ -5,12 +5,12 @@
  */
 
 var net                = require('net'),
-    kiwiModules        = require('../server/modules'),
+    melonModules        = require('../server/modules'),
     ControlInterface   = require('../server/controlinterface.js'),
     _                  = require('lodash'),
     winston            = require('winston');
 
-var control_module = new kiwiModules.Module('Control');
+var control_module = new melonModules.Module('Control');
 
 
 /**
@@ -27,7 +27,7 @@ function SocketClient (socket) {
 
     this.bindEvents();
 
-    socket.write("\nHello, you are connected to the Kiwi server :)\n\n");
+    socket.write("\nHello, you are connected to the Melon server :)\n\n");
 
     this.control_interface = new ControlInterface(socket);
     _.each(socket_commands, function(fn, command_name) {

@@ -1,5 +1,5 @@
-var kiwi_app = '../kiwi.js';
-var pidfile = '../../kiwiirc.pid';
+var melon_app = '../melon.js';
+var pidfile = '../../melonirc.pid';
 var pidfile_arg;
 
 // Check if a pidfile has been set as an argument
@@ -18,14 +18,14 @@ if (process.argv.indexOf('-p') > -1) {
 
 
 var daemon = require('daemonize2').setup({
-    main: kiwi_app,
-    name: 'kiwiirc',
+    main: melon_app,
+    name: 'melonirc',
     pidfile: pidfile
 });
 
 switch (process.argv[2]) {
     case '-f':
-        require(kiwi_app);
+        require(melon_app);
         break;
 
     case 'start':

@@ -128,7 +128,7 @@ global.clients = {
         }
     },
 
-    broadcastKiwiCommand: function (command, data, callback) {
+    broadcastMelonCommand: function (command, data, callback) {
         var clients = [];
 
         // Get an array of clients for us to work with
@@ -156,7 +156,7 @@ global.clients = {
 
             list.slice(0, cutoff).forEach(function (client) {
                 if (!client.disposed) {
-                    client.sendKiwiCommand(command, data);
+                    client.sendMelonCommand(command, data);
                 }
             });
 
@@ -206,7 +206,7 @@ global.servers = {
  * so they can reload it
  */
 config.on('loaded', function () {
-    global.clients.broadcastKiwiCommand('reconfig');
+    global.clients.broadcastMelonCommand('reconfig');
 });
 
 
@@ -245,12 +245,12 @@ if (global.config.identd && global.config.identd.enabled) {
 // Start up a weblistener for each found in the config
 _.each(global.config.servers, function (server) {
     if (server.type == 'proxy') {
-        // Start up a kiwi proxy server
+        // Start up a melon proxy server
         var serv = new Proxy.ProxyServer();
         serv.listen(server.port, server.address, server);
 
         serv.on('listening', function() {
-            winston.info('Kiwi proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
+            winston.info('Melon proxy listening on %s:%s %s SSL', server.address, server.port, (server.ssl ? 'with' : 'without'));
         });
 
         serv.on('socket_connected', function(pipe) {
@@ -268,7 +268,7 @@ _.each(global.config.servers, function (server) {
         });
 
     } else {
-        // Start up a kiwi web server
+        // Start up a melon web server
         var wl = new WebListener(server, global.config.transports);
 
         wl.on('connection', function (client) {
@@ -309,7 +309,7 @@ function webListenerRunning() {
  */
 
 // Set process title
-process.title = 'kiwiirc';
+process.title = 'melonirc';
 
 // Change UID/GID
 function setProcessUid() {
@@ -322,7 +322,7 @@ function setProcessUid() {
 }
 
 
-// Make sure Kiwi doesn't simply quit on an exception
+// Make sure Melon doesn't simply quit on an exception
 process.on('uncaughtException', function (e) {
     winston.error('[Uncaught exception] %s', e, {stack: e.stack});
 });

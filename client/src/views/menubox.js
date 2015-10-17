@@ -1,4 +1,4 @@
-_kiwi.view.MenuBox = Backbone.View.extend({
+_melon.view.MenuBox = Backbone.View.extend({
     events: {
         'click .ui_menu_foot .close, a.close_menu': 'dispose'
     },
@@ -104,10 +104,10 @@ _kiwi.view.MenuBox = Backbone.View.extend({
             $controlbox, menu_height;
 
         this.render();
-        this.$el.appendTo(_kiwi.app.view.$el);
+        this.$el.appendTo(_melon.app.view.$el);
 
         // Ensure the menu doesn't get too tall to overlap the input bar at the bottom
-        $controlbox = _kiwi.app.view.$el.find('.controlbox');
+        $controlbox = _melon.app.view.$el.find('.controlbox');
         $items = this.$el.find('.items');
         menu_height = this.$el.outerHeight() - $items.outerHeight();
 

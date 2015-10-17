@@ -1,4 +1,4 @@
-_kiwi.view.RightBar = Backbone.View.extend({
+_melon.view.RightBar = Backbone.View.extend({
     events: {
         'click .right-bar-toggle': 'onClickToggle',
         'click .right-bar-toggle-inner': 'onClickToggle'
@@ -75,7 +75,7 @@ _kiwi.view.RightBar = Backbone.View.extend({
 
         // Hacky, but we need to ignore the toggle() call from doLayout() as we are overriding it
         this.ignore_layout = true;
-        _kiwi.app.view.doLayout();
+        _melon.app.view.doLayout();
 
         // No longer ignoring the toggle() call from doLayout()
         delete this.ignore_layout;

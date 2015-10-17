@@ -19,7 +19,7 @@
                 mute                  : translateText('client_applets_settings_notification_sound'),
                 emoticons             : translateText('client_applets_settings_emoticons'),
                 scroll_history        : translateText('client_applets_settings_history_length'),
-                languages             : _kiwi.app.translations,
+                languages             : _melon.app.translations,
                 default_client        : translateText('client_applets_settings_default_client'),
                 make_default          : translateText('client_applets_settings_default_client_enable'),
                 locale_restart_needed : translateText('client_applets_settings_locale_restart_needed'),
@@ -27,7 +27,7 @@
                 html5_notifications   : translateText('client_applets_settings_html5_notifications'),
                 enable_notifications  : translateText('client_applets_settings_enable_notifications'),
                 custom_highlights     : translateText('client_applets_settings_custom_highlights'),
-                theme_thumbnails: _.map(_kiwi.app.themes, function (theme) {
+                theme_thumbnails: _.map(_melon.app.themes, function (theme) {
                     return _.template($('#tmpl_theme_thumbnail').html().trim(), theme);
                 })
             };
@@ -37,12 +37,12 @@
                 this.$('.protocol_handler').remove();
             }
 
-            if (_kiwi.utils.notifications.allowed() !== null) {
+            if (_melon.utils.notifications.allowed() !== null) {
                 this.$('.notification_enabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
-            _kiwi.global.settings.on('change', this.loadSettings, this);
+            _melon.global.settings.on('change', this.loadSettings, this);
 
             // Now actually show the current settings
             this.loadSettings();
@@ -51,7 +51,7 @@
 
         loadSettings: function () {
 
-            _.each(_kiwi.global.settings.attributes, function(value, key) {
+            _.each(_melon.global.settings.attributes, function(value, key) {
 
                 var $el = this.$('[data-setting="' + key + '"]');
 
@@ -81,7 +81,7 @@
 
         saveSettings: function (event) {
             var value,
-                settings = _kiwi.global.settings,
+                settings = _melon.global.settings,
                 $setting = $(event.currentTarget);
 
             switch (event.currentTarget.type) {
@@ -101,12 +101,12 @@
             }
 
             // Stop settings being updated while we're saving one by one
-            _kiwi.global.settings.off('change', this.loadSettings, this);
+            _melon.global.settings.off('change', this.loadSettings, this);
             settings.set($setting.data('setting'), value);
             settings.save();
 
             // Continue listening for setting changes
-            _kiwi.global.settings.on('change', this.loadSettings, this);
+            _melon.global.settings.on('change', this.loadSettings, this);
         },
 
         selectTheme: function(event) {
@@ -119,13 +119,13 @@
         registerProtocol: function (event) {
             event.preventDefault();
 
-            navigator.registerProtocolHandler('irc', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
-            navigator.registerProtocolHandler('ircs', document.location.origin + _kiwi.app.get('base_path') + '/%s', 'Kiwi IRC');
+            navigator.registerProtocolHandler('irc', document.location.origin + _melon.app.get('base_path') + '/%s', 'Melon IRC');
+            navigator.registerProtocolHandler('ircs', document.location.origin + _melon.app.get('base_path') + '/%s', 'Melon IRC');
         },
 
         enableNotifications: function(event){
             event.preventDefault();
-            var notifications = _kiwi.utils.notifications;
+            var notifications = _melon.utils.notifications;
 
             notifications.requestPermission().always(_.bind(function () {
                 if (notifications.allowed() !== null) {
@@ -145,5 +145,5 @@
     });
 
 
-    _kiwi.model.Applet.register('kiwi_settings', Applet);
+    _melon.model.Applet.register('melon_settings', Applet);
 })();

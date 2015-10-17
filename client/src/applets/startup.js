@@ -9,7 +9,7 @@
 
 
         showConnectionDialog: function() {
-            var connection_dialog = this.connection_dialog = new _kiwi.model.NewConnection();
+            var connection_dialog = this.connection_dialog = new _melon.model.NewConnection();
             connection_dialog.populateDefaultServerSettings();
 
             connection_dialog.view.$el.addClass('initial');
@@ -53,5 +53,5 @@
     });
 
 
-    _kiwi.model.Applet.register('kiwi_startup', applet);
+    _melon.model.Applet.register('melon_startup', applet);
 })();

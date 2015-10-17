@@ -1,6 +1,6 @@
-_kiwi.model.NewConnection = Backbone.Collection.extend({
+_melon.model.NewConnection = Backbone.Collection.extend({
     initialize: function() {
-        this.view = new _kiwi.view.ServerSelect({model: this});
+        this.view = new _melon.view.ServerSelect({model: this});
 
         this.view.bind('server_connect', this.onMakeConnection, this);
 
@@ -8,7 +8,7 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
 
     populateDefaultServerSettings: function() {
-        var defaults = _kiwi.global.defaultServerSettings();
+        var defaults = _melon.global.defaultServerSettings();
         this.view.populateFields(defaults);
     },
 
@@ -20,7 +20,7 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
         this.view.networkConnecting();
 
-        _kiwi.gateway.newConnection({
+        _melon.gateway.newConnection({
             nick: new_connection_event.nick,
             host: new_connection_event.server,
             port: new_connection_event.port,

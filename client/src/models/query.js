@@ -1,15 +1,15 @@
-_kiwi.model.Query = _kiwi.model.Channel.extend({
+_melon.model.Query = _melon.model.Channel.extend({
     initialize: function (attributes) {
         var name = this.get("name") || "",
             members;
 
-        this.view = new _kiwi.view.Channel({"model": this, "name": name});
+        this.view = new _melon.view.Channel({"model": this, "name": name});
         this.set({
             "name": name,
             "scrollback": []
         }, {"silent": true});
 
-        _kiwi.global.events.emit('panel:created', {panel: this});
+        _melon.global.events.emit('panel:created', {panel: this});
     },
 
     isChannel: function () {
