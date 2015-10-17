@@ -94,6 +94,14 @@ conf.default_ident = '%i';
 
 
 /*
+* Default quit message
+* If a browser gets disconnected without sending a QUIT command, this
+* message will be used instead.
+*/
+conf.quit_message = 'http://www.kiwiirc.com/ - A hand-crafted IRC client';
+
+
+/*
 * Auto reconnect if the IRC server disconnects a kiwi user
 * Hundreds of connected users getting disconnected then reconnecting at once may see
 * high CPU usage causing further dropouts. Set to false if under high usage.
@@ -183,11 +191,6 @@ conf.socks_proxy.port = 1080;
 // Set user to null to disable password authentication
 conf.socks_proxy.user = null;
 conf.socks_proxy.pass = null;
-
-
-
-// Default quit message
-conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
 
 
 // Default settings for the client. These may be changed in the browser
