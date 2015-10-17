@@ -315,7 +315,11 @@ var AutoComplete = Backbone.View.extend({
             if (this.matches[this.selected_idx]) {
                 this.trigger('match', this.currentMatch(), this.matches[this.selected_idx]);
                 event.preventDefault();
-                dont_process_other_input_keys = true;
+
+                // If the UI is not open, let the return key keep processing as normal.
+                // If we did not let this happen, since there is no visual UI it would look
+                // weird to the user if they had to press return twice for something to happen.
+                dont_process_other_input_keys = this._show_ui ? true : false;
             }
         }
         else if (event.keyCode === 27) { // escape
