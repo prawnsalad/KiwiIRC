@@ -231,6 +231,18 @@ conf.client_themes = [
 //conf.restrict_server_password = "";
 
 
+/*
+ * If running multiple kiwi servers you may specify them here.
+ * Note: All kiwi servers must have the same conf.http_base_path config option.
+ * 
+ * To force the client to connect to one other kiwi server, use:
+ *     conf.client.kiwi_server = 'https://kiwi-server2.com';
+ *
+ * To force the client to connect to a random kiwi server from a list, use:
+ *     conf.client.kiwi_server = ['https://kiwi-server1.com', 'https://kiwi-server2.com'];
+ */
+//conf.client.kiwi_server = '';
+
 
 
 /*
