@@ -46,8 +46,4 @@ Report bugs using the issue tracker on github: https://github.com/prawnsalad/Kiw
 
 ### Licence
 GNU Affero
-http://www.gnu.org/licenses/agpl.html
-
-
-### Thanks to
-The KiwiIRC logo credited to Michael Drahony (www.drahony.com)
+http://www.gnu.org/licenses/agpl.html
