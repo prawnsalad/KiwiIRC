@@ -339,9 +339,9 @@
             this.app.connections.active_connection.gateway.part(this.app.panels().active.get('name'));
         } else {
             chans = ev.params[0].split(',');
-            msg = ev.params[1];
+            msg = ev.params.slice(1).join(' ');
             _.each(chans, function (channel) {
-                that.connections.active_connection.gateway.part(channel, msg);
+                that.app.connections.active_connection.gateway.part(channel, msg);
             });
         }
     }
