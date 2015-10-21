@@ -135,10 +135,14 @@ var WebListener = module.exports = function (web_config) {
             global.modules.emit('client created', {client: client});
         });
     });
+
+    this.hs = hs;
 };
 util.inherits(WebListener, events.EventEmitter);
 
-
+WebListener.prototype.close = function (callback) {
+    this.hs.close(callback);
+}
 
 function rangeCheck(addr, range) {
     var i, ranges, parts;
