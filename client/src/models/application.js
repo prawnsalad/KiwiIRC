@@ -310,6 +310,11 @@
                     }, jump_server_interval * 1000);
                 }
             });
+
+
+            gw.on('kiwi:asset_files_changes', function (data) {
+                that.view.reloadStyles();
+            });
         }
 
     });

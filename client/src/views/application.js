@@ -99,6 +99,14 @@ _kiwi.view.Application = Backbone.View.extend({
     },
 
 
+    reloadStyles: function() {
+        var query_string = '?reload=' + new Date().getTime();
+        $('link[rel="stylesheet"]').each(function() {
+            this.href = this.href.replace(/\?.*|$/, query_string);
+        });
+    },
+
+
     setTabLayout: function (layout_style) {
         // If called by the settings callback, get the correct new_value
         if (layout_style === _kiwi.global.settings) {

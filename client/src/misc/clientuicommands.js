@@ -106,10 +106,7 @@
         fn_to_bind['command:css'] = {
             description: translateText('command_description_css'),
             fn: function(ev) {
-                var queryString = '?reload=' + new Date().getTime();
-                $('link[rel="stylesheet"]').each(function () {
-                    this.href = this.href.replace(/\?.*|$/, queryString);
-                });
+                this.app.view.reloadStyles();
             }
         };
 
