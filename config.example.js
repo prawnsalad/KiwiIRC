@@ -126,7 +126,11 @@ conf.module_dir = "../server_modules/";
 
 // Which modules to load
 conf.modules = [
-    // "control"
+    // Open a TCP port to control the Kiwi server (default port 8888)
+    // "control",
+
+    // Automatically reload CSS files when a theme changes
+    // "client_file_watcher",
 ];
 
 
