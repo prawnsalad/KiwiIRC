@@ -12,13 +12,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"X-Generator: Poedit 1.8.6\n"
 "Project-Id-Version: Kiwi\n"
 "Language: uk\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Artem Polivanchuk <a.polivanchuk@outlook.com>\n"
+"Language-Team: \n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Ім’я канала"
+msgstr "Ім’я каналу"
 
 #: 
 msgid "client_applets_chanlist_users"
@@ -250,11 +254,11 @@ msgstr "Ви заблоковані на %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Не вірний ключ для %s"
+msgstr "Неправильний ключ для %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "тільки по запрошенню"
+msgstr "тільки за запрошенням"
 
 #: 
 msgid "client_models_network_channel_limitreached"
@@ -266,11 +270,11 @@ msgstr "Нікнейм %s вже використовується. Оберіт�
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Отриманий пароль не вірний"
+msgstr "Отриманий пароль неправильний"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Це призведе до закриття всіх вікон KiwiIRC. Ви певні, що бажаєте закрити дане вікно?"
+msgstr "Це призведе до закриття всіх вікон KiwiIRC. Ви впевнені, що бажаєте закрити дане вікно?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -390,11 +394,11 @@ msgstr "Нікнейм вже використовується"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Не коректний нікнейм"
+msgstr "Некоректний нікнейм"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Не вірний пароль"
+msgstr "Неправильний пароль"
 
 #: 
 msgid "client_views_serverselect_connection_error"
@@ -406,7 +410,7 @@ msgstr "Сервер не знайдено"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "У з’єднання відмовлено"
+msgstr "У з’єднанні відмовлено"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
@@ -514,7 +518,7 @@ msgstr "ігнорувати"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Використовувати 24-годинний формат часу"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -526,11 +530,11 @@ msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "has been invited to %s"
+msgstr "був запрошений до %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "is already on this channel"
+msgstr "вже на цьому каналі"
 
 #: Date format
 msgid "client_date_format"
@@ -714,5 +718,4 @@ msgstr "client_views_controlbox_message"
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
-
+msgstr "Це призведе до від'єднання від мережі IRC. Ви впевнені?"
