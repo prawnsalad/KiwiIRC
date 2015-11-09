@@ -41,12 +41,13 @@
     /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
 }
 
-#kiwi .toolbar .connections { list-style: none; float: left}
+#kiwi .toolbar .connections { list-style: none; /*float: left*/}
 #kiwi .toolbar .panellist {
     /*background: #2b2b2b*/;
     color: #a5a5a5;
     /*margin: 1px 0 0 5px;*/
     float: left;
+    margin-bottom: 3px;
 }
 #kiwi .toolbar .panellist.applets { }
 #kiwi .toolbar .panellist li {
@@ -54,18 +55,19 @@
     display: list-item;
     float: left;
     border: none;
-    background: none;
+    background: #4e4e4e;
     padding: 8px;
     color: #DADADA;
-    border-right: 1px solid #666;
-    margin: 0px;
+    border-right: 1px solid #2b2b2b;
+    margin: 3px;
+    box-shadow: 0px 1px 3px #222;
 }
 
 #kiwi .toolbar .panellist .alert_highlight { /*background: #990000;*/ }
 #kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #CB0000; border-bottom:none; background-color: #F7F7F7; color: #333}
+#kiwi .toolbar .panellist .active { padding-right:23px; border-top:1px solid #CB0000; border-bottom:none; background-color: #F7F7F7; color: #333}
 #kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left: 5px; font-weight: bold; font-family: Arial,Helvetica,sans-serif; }
@@ -432,8 +434,8 @@
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; width: 160px; }
 #kiwi.chanlist_treeview .toolbar > div { margin-left:0px; }
 #kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#383838; overflow-y:auto; }
-#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block;}
-#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; border-bottom: 1px solid #666 }
+#kiwi.chanlist_treeview .toolbar .panellist { float: right; display: block;}
+#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; margin-right: 0px; /*border-bottom: 1px solid #666*/ }
 #kiwi.chanlist_treeview .tabs ul li .activity { position:absolute; right:5px; }
 #kiwi.chanlist_treeview .toolbar .panellist li { }
 #kiwi.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
