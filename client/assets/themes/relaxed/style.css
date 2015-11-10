@@ -45,9 +45,7 @@
 #kiwi .toolbar .panellist {
     /*background: #2b2b2b*/;
     color: #a5a5a5;
-    /*margin: 1px 0 0 5px;*/
     float: left;
-    margin-bottom: 3px;
 }
 #kiwi .toolbar .panellist.applets { }
 #kiwi .toolbar .panellist li {
@@ -59,15 +57,15 @@
     padding: 8px;
     color: #DADADA;
     border-right: 1px solid #2b2b2b;
-    margin: 3px;
+    margin: 2px;
     box-shadow: 0px 1px 3px #222;
 }
 
-#kiwi .toolbar .panellist .alert_highlight { /*background: #990000;*/ }
+#kiwi .toolbar .panellist .alert_highlight { font-weight:normal; }
 #kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
 #kiwi .toolbar .panellist .alert_action { font-weight:normal; }
 
-#kiwi .toolbar .panellist .active { padding-right:23px; border-top:1px solid #CB0000; border-bottom:none; background-color: #F7F7F7; color: #333}
+#kiwi .toolbar .panellist .active { padding-right:23px; padding-top:7px; border-top:1px solid #CB0000; border-bottom:none; background-color: #F7F7F7; color: #333}
 #kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left: 5px; font-weight: bold; font-family: Arial,Helvetica,sans-serif; }
@@ -82,10 +80,12 @@
 #kiwi .toolbar .panellist li .activity {
     padding: 1px 3px; margin-left:1em;
     border-radius: 4px;
-    background: #3F9532; color:#000; /*color: #ff5300;*/
+    background: #3F9532; color:#000;
     text-align: center; font-size: 10px;
     display:inline-block;
     width:2.5em;
+    line-height: 1.7em;
+    font-family: Arial,Helvetica,sans-serif;
 }
 #kiwi .toolbar .panellist li.alert_highlight .activity {
     color: #fff; background: #a60400;
@@ -118,10 +118,10 @@
 #kiwi .messages.active { }
 #kiwi .messages a { text-decoration:none; }
 
-#kiwi .messages .msg { border-bottom: 0px solid #f7f5f5; padding: 0px; font-family:arial; /*font-size:0.9em;*/; min-height: 20px; }
+#kiwi .messages .msg { border-bottom: 1px solid #f7f5f5; padding: 0px; font-family:arial; /*font-size:0.9em;*/; min-height: 20px; }
 #kiwi .messages .msg .time { float:right; margin-top: 1px; color:#999; padding:1px; display:none; font-size: 11px; padding-left: 0.6em; width: 5em;}
-#kiwi .messages .msg .nick { width: 8em; float:left; font-size:12px; font-family:Arial; text-align:right; padding: 1px; overflow:hidden; white-space: nowrap; line-height: 20px;}
-#kiwi .messages .msg .text { min-height: 20px; display:block; margin-left:8em; border-left: 0px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:1px; padding-left: 10px; border-left: 1px solid #dedede; line-height: 20px;}
+#kiwi .messages .msg .nick { width: 8em; float:left; font-size:12px; font-family:Arial; text-align:right; padding: 4px; overflow:hidden; white-space: nowrap; line-height: 20px;}
+#kiwi .messages .msg .text { min-height: 20px; display:block; margin-left:8em; border-left: 0px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:4px; padding-left: 10px; border-left: 1px solid #dedede; line-height: 20px; }
 
 #kiwi .messages .msg.action .nick { }
 #kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
@@ -139,7 +139,7 @@
 /*#kiwi .messages .msg.motd .nick { display:none; }*/
 #kiwi .messages .msg.motd .text { color:#666; font-family:monospace; }
 #kiwi .messages .msg.whois .nick { font-weight:normal; }
-#kiwi .messages .msg.whois .text { margin-left:18em; padding-left:1em; border-left:1px dashed #999; }
+#kiwi .messages .msg.whois .text { margin-left:18em; padding-left:1em; border-left-width:5px; }
 #kiwi .messages .msg.error .text {
     border:1px solid #A33F3F; background-color:#D28A8A;
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
@@ -432,7 +432,7 @@
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; width: 160px; }
 #kiwi.chanlist_treeview .toolbar > div { margin-left:0px; }
 #kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#383838; overflow-y:auto; }
-#kiwi.chanlist_treeview .toolbar .panellist { float: right; display: block;}
+#kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block;}
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; margin-right: 0px; /*border-bottom: 1px solid #666*/ }
 #kiwi.chanlist_treeview .tabs ul li .activity { position:absolute; right:5px; }
 #kiwi.chanlist_treeview .toolbar .panellist li { }
