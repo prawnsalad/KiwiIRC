@@ -119,7 +119,7 @@
 #kiwi .messages a { text-decoration:none; }
 
 #kiwi .messages .msg { border-bottom: 1px solid #f7f5f5; padding: 0px; font-family:arial; /*font-size:0.9em;*/; min-height: 20px; }
-#kiwi .messages .msg .time { float:right; margin-top: 1px; color:#999; padding:1px; display:none; font-size: 11px; padding-left: 0.6em; width: 5em;}
+#kiwi .messages .msg .time { float:right; margin-top: 3px; color:#999; padding:1px 5px 0 0; display:none; font-size: 11px; width: 6em; text-align:right; }
 #kiwi .messages .msg .nick { width: 8em; float:left; font-size:12px; font-family:Arial; text-align:right; padding: 4px; overflow:hidden; white-space: nowrap; line-height: 20px;}
 #kiwi .messages .msg .text { min-height: 20px; display:block; margin-left:8em; border-left: 0px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:4px; padding-left: 10px; border-left: 1px solid #dedede; line-height: 20px; }
 
