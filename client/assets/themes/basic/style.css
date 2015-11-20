@@ -281,7 +281,7 @@
 
 #kiwi .controlbox .nickchange {
     padding:10px; left: 0px;
-    background: #1B1B1B; color:#eeeeee;
+    background: #1B1B1B; color:#DADADA;
 }
 #kiwi .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; }
 #kiwi .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
