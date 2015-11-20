@@ -1,4 +1,4 @@
-#kiwi { background:#191919; color:#6d6d6d; }
+#kiwi { background:#181818; color:#6d6d6d; }
 #kiwi,
 #kiwi input,
 #kiwi button,
@@ -8,31 +8,33 @@
 }
 #kiwi button, #kiwi input { padding: 3px 7px; }
 
-#kiwi .controlbox { background:#111111; border-top:1px solid #444444; color:#909090; font-size:1.3em; line-height:2em; }
-#kiwi .controlbox .input_wrap:before { content:"> " }
+#kiwi .controlbox { background:#252525; border-top:1px solid #191919; color:#909090; font-size:1.3em; line-height:2em; }
 #kiwi .controlbox .input { background:none; border:none;}
 #kiwi .controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; overflow:hidden; }
 #kiwi .controlbox .input .input_wrap {
     position:absolute;
-    right:7px; left: 12.2em;
-    height:1.7em;
+    right:7px; left: 12.2em; top: 3px;
+    background: #bbb;
+    height: 1.3em;
+    border-radius: 3px;
 }
 #kiwi .controlbox .input .inp {
     line-height:1.4em;
-    font-size:1.3em;
-    background:transparent; color:#909090;
+    font-size:1em;
+    background:transparent; color:#383838;
     border: medium none;
     box-shadow: none;
     border-radius: 0;
     outline:none; resize:none;
     overflow:hidden;
     position:absolute;
-    top: 0px;
+    top: 1px;
     height:99%; width:98%;
     display: inline;
     padding-left:0.5em;
 }
 
+#kiwi .toolbar { background:#252525; }
 #kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #2B2B2B; border-top:1px solid #2B2B2B; }
 #kiwi .toolbar .topic div {
     width:100%; height: 1.5em;
@@ -78,6 +80,7 @@
     vertical-align: middle;
 
     border: 1px solid #333;
+    margin: 1px 2px;
     background-color: #111;
 }
 
@@ -104,12 +107,15 @@
 }
 
 
-#kiwi .right_bar { background:#252525; }
+#kiwi .right_bar {
+    background:#252525;
+    border-left: none;
+}
 #kiwi.narrow .right_bar { width:100%; }
 #kiwi.narrow .right_bar.disabled { width:0; }
 
 #kiwi .memberlists .meta {
-    border-bottom: 1px solid #8A8A8A;
+    border-bottom: 1px solid #181818;
     font-size: 0.9em;
     margin-bottom: 10px;
     padding: 0 0 5%;
@@ -135,7 +141,7 @@
 #kiwi .autocomplete {
     box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
     border: 1px solid #8A8A8A;
-    background: #191919;
+    background: #282828;
 }
 #kiwi .autocomplete-header {
     background: #252525 none repeat scroll 0 0 padding-box;
@@ -170,7 +176,7 @@
 }
 
 #kiwi .channel_tools {
-    border-bottom: 1px solid #8A8A8A;
+    border-bottom: 1px solid #181818;
     margin-bottom: 10px;
     padding: 0 5%;
 }
@@ -184,7 +190,7 @@
     color: #88C56A;
 }
 
-#kiwi .messages .msg > div { color:#6d6d6d; font-family: Inconsolata, Consolas, 'courier new', monospace; }
+#kiwi .messages .msg > div { color:#888888; font-family: Inconsolata, Consolas, 'courier new', monospace; }
 #kiwi .messages .msg { border: none; padding: 2px 5px; }
 #kiwi .messages .msg .time { display:inline; margin-right:1em; color:#777; }
 #kiwi .messages .msg .nick { display:inline; margin-right:1em; }
@@ -256,7 +262,7 @@
 
 
 /* The server select dialog */
-#kiwi .server_select { margin-left:auto; margin-right:auto; color:#eee; }
+#kiwi .server_select { margin-left:auto; margin-right:auto; color:#8a8a8a; }
 #kiwi .server_select .more { display: none; width:270px; margin:0 auto; }
 #kiwi .server_select table tr td { padding:5px; }
 #kiwi .server_select button { float:right; padding:3px 7px; margin-top:10px; }
@@ -286,7 +292,7 @@
 #kiwi .server_select .kiwi_logo h1 {
     font-size:20px;
     line-height:48px; vertical-align: middle;
-    color: #bbb;
+    color: #8a8a8a;
 }
 #kiwi .server_select .kiwi_logo img { display:inline; width:24px; }
 
@@ -306,11 +312,13 @@
 #kiwi.chanlist_treeview .panels { left:160px; }
 #kiwi.chanlist_treeview .toolbar { position:static; }
 #kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:0px; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#252525; overflow-y:auto; }
 #kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
-#kiwi.chanlist_treeview .tabs ul li.active { padding-left:1em; }
+#kiwi.chanlist_treeview .tabs ul li.active { padding-top:4px; }
+#kiwi.chanlist_treeview .panellist { margin-top: 5px; }
+#kiwi.chanlist_treeview .panellist li { margin: 0 2px; border-bottom: none; }
 #kiwi .applet_chanlist {
     margin: 0.5em 1em;
 }
@@ -337,12 +345,20 @@
 
 
 #kiwi .ui_menu {
-    color: #333;
+    color: #BBBBBB;
+    background: #252525;
+    border: 1px solid #383838;
 }
-#kiwi .ui_menu .ui_menu_title { }
-#kiwi .ui_menu .ui_menu_content { }
-#kiwi .ui_menu .ui_menu_content.hover:hover { background:#f7f7f7; }
+#kiwi .ui_menu .ui_menu_title {
+    background: #252525;
+    color: #909090;
+}
+#kiwi .ui_menu .ui_menu_content { border-top: 1px solid #383838; }
+#kiwi .ui_menu .ui_menu_content.hover:hover {  }
 #kiwi .ui_menu .ui_menu_foot {
+    background: #252525;
+    color: #909090;
+    border-top: 1px solid #383838;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 }
@@ -353,7 +369,11 @@
 #kiwi .channel_info .channel-banlist thead { font-style: italic; }
 #kiwi .channel_info .remove-ban:hover { color: #900; }
 
-
+#kiwi .controlbox .nickchange {
+    background: #252525;
+    padding: 5px 10px;
+    font-size: 0.9em;
+}
 
 #kiwi .notification {
     /* .show class reveals this element */

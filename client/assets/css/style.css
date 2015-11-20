@@ -53,8 +53,8 @@ html, body { height:100%; }
     display:block;
 }
 #kiwi .toolbar .panellist li {
-    float: left; list-style: none;
-    display:inline; position:relative;
+    list-style: none;
+    display:inline-block; position:relative;
     padding:5px; margin:3px;
     cursor: pointer;
 }
