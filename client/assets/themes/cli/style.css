@@ -232,6 +232,12 @@
 #kiwi .messages .msg.global_nick_highlight { background:#111111; }
 #kiwi .messages .msg.highlight { background:#111111; }
 
+/* Narrow styling (window width < 420px) */
+#kiwi.narrow .messages .msg .time { display:none; }
+#kiwi.narrow .messages .msg .nick { display:block; float:none; text-align:left; padding-bottom:0;}
+#kiwi.narrow .messages .msg .text { display:block; white-space:pre-wrap; word-wrap:break-word; padding-top:0; margin:0 0 0 10px;}
+#kiwi.narrow .messages .msg.action .text { }
+#kiwi.narrow .messages .msg.repeated_nick .nick { display:none; }
 
 
 #kiwi .messages .msg .media { margin-left:0.5em; }
