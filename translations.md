@@ -36,4 +36,4 @@ Current translations are handled by the following (only listing translators will
 * **Catalan** - NeoMahler (https://github.com/NeoMahler)
 * **Bosnian** - Predsjednik (predsjednik@live.com)
 * **Polish** - Piotr Doroszewski (piotrekd at vivaldi dot net)
-* **Serbian** - Stefan C.
+* **Serbian** - Stefan C. (admin@xshellz.com)
