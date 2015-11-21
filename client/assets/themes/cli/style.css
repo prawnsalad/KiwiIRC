@@ -34,6 +34,9 @@
     padding-left:0.5em;
 }
 
+#kiwi.narrow .controlbox .input .nick { display:none; }
+#kiwi.narrow .controlbox .input .input_wrap { left:7px; }
+
 #kiwi .toolbar { background:#252525; }
 #kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #2B2B2B; border-top:1px solid #2B2B2B; }
 #kiwi .toolbar .topic div {
@@ -65,6 +68,8 @@
 }
 
 #kiwi .toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
+#kiwi.narrow .toolbar .tabs { margin-right:0; }
+#kiwi.narrow .toolbar .app_tools { width:auto; }
 #kiwi .toolbar .app_tools ul li {
     font-size:26px;
     -webkit-transition: all .3s ease;
@@ -123,6 +128,11 @@
 }
 
 #kiwi .memberlists ul li { padding: 0.2em 1em; }
+#kiwi.narrow .memberlists ul li {
+    padding: 1em 1em;
+    border-bottom: 1px solid #181818;
+    text-align: center;
+}
 #kiwi .memberlists ul li a.nick { color:#6d6d6d; }
 #kiwi .memberlists ul li:hover {
     border-left: 5px solid #88C56A;
@@ -179,6 +189,7 @@
     border-bottom: 1px solid #181818;
     margin-bottom: 10px;
     padding: 0 5%;
+    background: #252525;
 }
 #kiwi .channel_tools i {
     width: 30%;
