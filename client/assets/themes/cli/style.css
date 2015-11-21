@@ -116,6 +116,11 @@
     background:#252525;
     border-left: none;
 }
+#kiwi .right-bar-toggle {
+    border-color: #000;
+    background: #464646;
+    color: #789E65;
+}
 #kiwi.narrow .right_bar { width:100%; }
 #kiwi.narrow .right_bar.disabled { width:0; }
 
