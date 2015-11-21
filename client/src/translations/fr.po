@@ -870,5 +870,5 @@ msgstr "Ne plus ignorer les messages de quelqu'un"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Afficher la popup d'auto complétion"
 

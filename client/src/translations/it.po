@@ -70,7 +70,7 @@ msgstr "Data/ora"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Spegni notifiche sonore"
+msgstr "Disattiva notifiche sonore"
 
 #: 
 msgid "client_applets_settings_history_length"
@@ -871,5 +871,5 @@ msgstr "Smetti di ignorare qualcuno"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Mostra il pannello dell’autocompletamento"
 

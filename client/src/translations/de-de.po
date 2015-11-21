@@ -722,15 +722,15 @@ msgstr "Highlights (getrennt durch Leerzeichen)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Messages"
+msgstr "Nachrichten"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Chat Nachrichten"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Hinweise / Benachrichtigungen"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
@@ -742,11 +742,11 @@ msgstr "Theme"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Räume"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Sprache"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
@@ -754,7 +754,7 @@ msgstr "Block new private messages"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Sende eine Nachricht"
 
 #: 
 msgid "command_description_action"
@@ -762,35 +762,36 @@ msgstr "Do something physical"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Betrete einen Raum"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Verlasse einen Raum"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Verlasse und betrete einen Raum erneut"
 
 #: 
 msgid "command_description_nick"
 msgstr "Change your nickname"
 
+#. Wouldn't "Start a private *conversation* with someone" be better / more accurate in the original text?
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Start a private conversation with someone"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Lade jemanden in den Raum ein"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Setze ein Thema für diesen Raum"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Sende eine Notiz"
 
 #: 
 msgid "command_description_quote"
@@ -798,7 +799,7 @@ msgstr "Send a raw command to the IRC server"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Kick somebody from the channel"
 
 #: 
 msgid "command_description_clear"
@@ -870,5 +871,5 @@ msgstr "Stop ignoring somebody"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Show the autocomplete box"
 

@@ -138,7 +138,7 @@ msgstr "Ignoring %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Specifiy which nick you wish to stop ignoring"
+msgstr "Specify which nick you wish to stop ignoring"
 
 #: 
 msgid "client_models_application_ignore_stopped"
@@ -390,7 +390,7 @@ msgstr "Nickname already taken"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Erroneus nickname"
+msgstr "Erroneous nickname"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
@@ -778,7 +778,7 @@ msgstr "Change your nickname"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Start a private conversation with someone"
 
 #: 
 msgid "command_description_invite"
@@ -798,7 +798,7 @@ msgstr "Send a raw command to the IRC server"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Kick somebody from the channel"
 
 #: 
 msgid "command_description_clear"
@@ -870,5 +870,5 @@ msgstr "Stop ignoring somebody"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Show the autocomplete box"
 

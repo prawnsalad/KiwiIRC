@@ -54,7 +54,7 @@ msgstr "Faner"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "List"
+msgstr "Liste"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
@@ -86,11 +86,11 @@ msgstr "Gjør Kiwi din standard IRC-klient"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Merk: Forandringer vil ta effekt når du laster siden inn på nytt"
+msgstr "Merk: Forandringer vil bli aktivert når du laster siden inn på nytt"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Merk: Dersom du bruker Chrome- eller Chromium som nettleser, kan det hende du må sjekke innstillinger via %s om ingenting skjer"
+msgstr "Merk: Dersom du bruker Chrome eller Chromium som nettleser, kan det hende du må sjekke innstillinger via %s dersom ingenting skjer"
 
 #: 
 msgid "client_applets_settings_title"
@@ -114,7 +114,7 @@ msgstr "Du har blitt frakoblet. Forsøker å koble til på nytt"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "DU har blitt frakoblet. Forsøker en oppkobling om %d sekunder"
+msgstr "Du har blitt frakoblet. Forsøker en oppkobling om %d sekunder"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
@@ -138,11 +138,11 @@ msgstr "Ignorerer %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Spesifiser hvilket kallenavn du vil stoppe å ignorere"
+msgstr "Spesifiser hvilket kallenavn du vil slutte å ignorere"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Stoppet å ignorere %s"
+msgstr "Sluttet å ignorere %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
@@ -306,7 +306,7 @@ msgstr "Laster gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nytt nick"
+msgstr "Nytt kallenavn"
 
 #: 
 msgid "client_views_nickchangebox_change"
@@ -506,7 +506,7 @@ msgstr "Slett nettverk"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Inluder personer som kommer inn og ut av kanalen som aktivitet"
+msgstr "Inkluder personer som kommer inn og ut av kanalen som aktivitet"
 
 #: 
 msgid "client_views_userbox_ignore"
@@ -714,161 +714,161 @@ msgstr "Send melding..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Dette vil koble deg fra IRC-nettverket. Er du sikker?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Egendefinerte uthevinger (adskilt med mellomrom)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Messages"
+msgstr "Meldinger"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Chatmeldinger"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Varsler / Påminnelser"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Appearance"
+msgstr "Utseende"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Theme"
+msgstr "Tema"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Kanaler"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Språk"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
+msgstr "Blokkér nye private meldinger"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Send en melding"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Gjør noe fysisk"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Bli med i en kanal"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Forlat en kanal"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Forlat, så bli med igjen i en kanal"
 
 #: 
 msgid "command_description_nick"
-msgstr "Change your nickname"
+msgstr "Bytt ditt kallenavn"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Start en privat samtale med noen"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Invitér noen til kanalen"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Sett emnet for denne kanalen"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Send et varsel"
 
 #: 
 msgid "command_description_quote"
-msgstr "Send a raw command to the IRC server"
+msgstr "Send en råkommando til IRC-serveren"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Spark noen fra kanalen"
 
 #: 
 msgid "command_description_clear"
-msgstr "Clear all messages from this window"
+msgstr "Tøm alle meldinger fra dette vinduet"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Send a CTCP command to somebody"
+msgstr "Send en CTCP-kommando til noen"
 
 #: 
 msgid "command_description_quit"
-msgstr "Disconnect from the IRC server"
+msgstr "Koble fra IRC-serveren"
 
 #: 
 msgid "command_description_server"
-msgstr "Connect to a new IRC network"
+msgstr "Koble til en ny IRC-server"
 
 #: 
 msgid "command_description_whois"
-msgstr "Request information on somebody"
+msgstr "Be om informasjon om noen"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Be om informasjon om noen som koblet fra nylig"
 
 #: 
 msgid "command_description_away"
-msgstr "Mark yourself as away"
+msgstr "Merk deg selv som borte"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Bytt koding på din tilkobling"
 
 #: 
 msgid "command_description_settings"
-msgstr "Show the settings window"
+msgstr "Vis vinduet for innstillinger"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Endre kiwi brukerskript"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Last sidens stilsett på nytt"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Last en javascriptfil fra en URL"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Sett en konfigurasjonsverdi for Kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Save the current kiwi settings"
+msgstr "Lagre nåværende innstillinger for Kiwi"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Lag et alias for en eksisterende /kommando"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ignore messages from somebody"
+msgstr "Ignorér meldinger fra noen"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop ignoring somebody"
+msgstr "Slutt å ignorere noen"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Vis boks for autofullføringer"
 
