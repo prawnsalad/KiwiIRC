@@ -6,7 +6,7 @@ Kiwi IRC has been translated to 25 different languages:
 * Catalan
 * Čeština
 * Deutsch
-* English (British)
+* English
 * Español
 * Español (Latino America)
 * Français
