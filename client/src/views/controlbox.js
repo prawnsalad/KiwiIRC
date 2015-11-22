@@ -345,12 +345,13 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
 
     setAutoCompleteCommands: function(commands) {
-        _.each(commands, function(description, command) {
+        _.each(commands, function(command) {
             this.autocomplete_command_list.push({
-                match: [command],
-                description: description
+                match: command.matches || [],
+                description: command.description
             });
         }, this);
+
         /*
         var command_list = [
             {match: ['/join'], description: 'Join or start a channel'},

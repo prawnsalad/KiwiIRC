@@ -50,12 +50,22 @@
             descriptions = {};
 
         _.each(command, function(fn, event_name) {
-            var command_fn;
+            var command_fn, matches;
             if (typeof fn === 'function') {
                 command_fn = fn;
+
             } else {
                 command_fn = fn.fn;
-                descriptions['/' + event_name.split(':')[1]] = fn.description;
+                matches = ['/' + event_name.split(':')[1]];
+                if (fn.aliases) {
+                    matches = matches.concat(_.map(fn.aliases, function(a) {
+                        return '/' + a;
+                    }));
+                }
+                descriptions['/' + event_name.split(':')[1]] = {
+                    description: fn.description,
+                    matches: matches
+                };
             }
 
             that.controlbox.on(event_name, _.bind(command_fn, that));
@@ -76,23 +86,23 @@
             'unknown_command':     unknownCommand,
             'command':             allCommands,
             'command:msg':         {fn: msgCommand, description: translateText('command_description_msg')},
-            'command:action':      {fn: actionCommand, description: translateText('command_description_action')},
-            'command:join':        {fn: joinCommand, description: translateText('command_description_join')},
-            'command:part':        {fn: partCommand, description: translateText('command_description_part')},
+            'command:action':      {fn: actionCommand, description: translateText('command_description_action'), aliases: ['me']},
+            'command:join':        {fn: joinCommand, description: translateText('command_description_join'), aliases: ['j']},
+            'command:part':        {fn: partCommand, description: translateText('command_description_part'), aliases: ['p']},
             'command:cycle':       {fn: cycleCommand, description: translateText('command_description_cycle')},
             'command:nick':        {fn: nickCommand, description: translateText('command_description_nick')},
             'command:query':       {fn: queryCommand, description: translateText('command_description_query')},
             'command:invite':      {fn: inviteCommand, description: translateText('command_description_invite')},
             'command:topic':       {fn: topicCommand, description: translateText('command_description_topic')},
             'command:notice':      {fn: noticeCommand, description: translateText('command_description_notice')},
-            'command:quote':       {fn: quoteCommand, description: translateText('command_description_quote')},
+            'command:quote':       {fn: quoteCommand, description: translateText('command_description_quote'), aliases: ['raw']},
             'command:kick':        {fn: kickCommand, description: translateText('command_description_kick')},
             'command:names':       {fn: namesCommand, description: ''},
             'command:clear':       {fn: clearCommand, description: translateText('command_description_clear')},
             'command:ctcp':        {fn: ctcpCommand, description: translateText('command_description_ctcp')},
-            'command:quit':        {fn: quitCommand, description: translateText('command_description_quit')},
+            'command:quit':        {fn: quitCommand, description: translateText('command_description_quit'), aliases: ['q']},
             'command:server':      {fn: serverCommand, description: translateText('command_description_server')},
-            'command:whois':       {fn: whoisCommand, description: translateText('command_description_whois')},
+            'command:whois':       {fn: whoisCommand, description: translateText('command_description_whois'), aliases: ['w']},
             'command:whowas':      {fn: whowasCommand, description: translateText('command_description_whowas')},
             'command:away':        {fn: awayCommand, description: translateText('command_description_away')},
             'command:encoding':    {fn: encodingCommand, description: translateText('command_description_encoding')},
