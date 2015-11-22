@@ -44,10 +44,9 @@ Open your new Kiwi instance in your browser. By default: http://localhost:7778/
 ### Bugs
 Report bugs using the issue tracker on github: https://github.com/prawnsalad/KiwiIRC/issues
 
+### Translations
+Kiwi IRC has been translated to 25 different languages. The translators can be found in translations.md
+
 ### Licence
 GNU Affero
 http://www.gnu.org/licenses/agpl.html
-
-
-### Thanks to
-The KiwiIRC logo credited to Michael Drahony (www.drahony.com)

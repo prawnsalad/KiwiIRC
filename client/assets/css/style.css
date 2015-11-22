@@ -53,8 +53,8 @@ html, body { height:100%; }
     display:block;
 }
 #kiwi .toolbar .panellist li {
-    float: left; list-style: none;
-    display:inline; position:relative;
+    list-style: none;
+    display:inline-block; position:relative;
     padding:5px; margin:3px;
     cursor: pointer;
 }
@@ -65,7 +65,7 @@ html, body { height:100%; }
 #kiwi .toolbar .panellist .alert_action { font-weight: bold; }
 
 #kiwi .toolbar .panellist li { width: auto; text-align: left; }
-#kiwi .toolbar .panellist li .part { position: absolute; top: 5px; right: 5px; }
+#kiwi .toolbar .panellist li .part { position: absolute; top: 7px; right: 5px; }
 #kiwi .toolbar .panellist li .part:before { content:"[x]"; }
 #kiwi .toolbar .panellist li .part:hover { color: #900; }
 #kiwi .toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
@@ -217,6 +217,52 @@ html, body { height:100%; }
 #kiwi .emoticon.wide_eye_right { background-position:-423px 0; }
 #kiwi .emoticon.wide_eye_left { background-position:-448px 0; }
 #kiwi .emoticon.unsure { background-position:-473px 0; }
+
+
+/**
+ * Auto complete UI
+ */
+#kiwi .autocomplete {
+    position: absolute;
+    box-sizing: border-box;
+    left: 12em;
+    right: 4em;
+    bottom: 100%;
+    overflow-y: auto;
+    display: none;
+}
+#kiwi .autocomplete-header {
+    overflow: hidden;
+}
+#kiwi.narrow .autocomplete-header {
+    display: none;
+}
+#kiwi .autocomplete-header-help {
+    float: right;
+}
+#kiwi .autocomplete-list {
+    overflow-y: auto;
+}
+#kiwi.narrow .autocomplete {
+    left: 0;
+    right: 0;
+}
+#kiwi .autocomplete-item {
+    list-style: none;
+    overflow: hidden;
+}
+#kiwi .autocomplete-item .matches {
+    margin-left: 2em;
+}
+#kiwi.narrow .autocomplete-item .matches {
+    display: none;
+}
+#kiwi .autocomplete-item .actions {
+    float: right; margin-right: 2em;
+}
+#kiwi .autocomplete-item .description {
+    float: right;
+}
 
 
 /**

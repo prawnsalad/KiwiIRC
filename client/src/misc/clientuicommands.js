@@ -51,12 +51,22 @@ define('misc/clientuicommands', function(require, exports, module) {
             descriptions = {};
 
         _.each(command, function(fn, event_name) {
-            var command_fn;
+            var command_fn, matches;
             if (typeof fn === 'function') {
                 command_fn = fn;
+
             } else {
                 command_fn = fn.fn;
-                descriptions['/' + event_name.split(':')[1]] = fn.description;
+                matches = ['/' + event_name.split(':')[1]];
+                if (fn.aliases) {
+                    matches = matches.concat(_.map(fn.aliases, function(a) {
+                        return '/' + a;
+                    }));
+                }
+                descriptions['/' + event_name.split(':')[1]] = {
+                    description: fn.description,
+                    matches: matches
+                };
             }
 
             that.controlbox.on(event_name, _.bind(command_fn, that));
@@ -77,27 +87,28 @@ define('misc/clientuicommands', function(require, exports, module) {
             'unknown_command':     unknownCommand,
             'command':             allCommands,
             'command:msg':         {fn: msgCommand, description: utils.translateText('command_description_msg')},
-            'command:action':      {fn: actionCommand, description: utils.translateText('command_description_action')},
-            'command:join':        {fn: joinCommand, description: utils.translateText('command_description_join')},
-            'command:part':        {fn: partCommand, description: utils.translateText('command_description_part')},
+            'command:action':      {fn: actionCommand, description: utils.translateText('command_description_action'), aliases: ['me']},
+            'command:join':        {fn: joinCommand, description: utils.translateText('command_description_join'), aliases: ['j']},
+            'command:part':        {fn: partCommand, description: utils.translateText('command_description_part'), aliases: ['p']},
             'command:cycle':       {fn: cycleCommand, description: utils.translateText('command_description_cycle')},
             'command:nick':        {fn: nickCommand, description: utils.translateText('command_description_nick')},
             'command:query':       {fn: queryCommand, description: utils.translateText('command_description_query')},
             'command:invite':      {fn: inviteCommand, description: utils.translateText('command_description_invite')},
             'command:topic':       {fn: topicCommand, description: utils.translateText('command_description_topic')},
             'command:notice':      {fn: noticeCommand, description: utils.translateText('command_description_notice')},
-            'command:quote':       {fn: quoteCommand, description: utils.translateText('command_description_quote')},
+            'command:quote':       {fn: quoteCommand, description: utils.translateText('command_description_quote'), aliases: ['raw']},
             'command:kick':        {fn: kickCommand, description: utils.translateText('command_description_kick')},
+            'command:names':       {fn: namesCommand, description: ''},
             'command:clear':       {fn: clearCommand, description: utils.translateText('command_description_clear')},
             'command:ctcp':        {fn: ctcpCommand, description: utils.translateText('command_description_ctcp')},
-            'command:quit':        {fn: quitCommand, description: utils.translateText('command_description_quit')},
+            'command:quit':        {fn: quitCommand, description: utils.translateText('command_description_quit'), aliases: ['q']},
             'command:server':      {fn: serverCommand, description: utils.translateText('command_description_server')},
-            'command:whois':       {fn: whoisCommand, description: utils.translateText('command_description_whois')},
+            'command:whois':       {fn: whoisCommand, description: utils.translateText('command_description_whois'), aliases: ['w']},
             'command:whowas':      {fn: whowasCommand, description: utils.translateText('command_description_whowas')},
             'command:away':        {fn: awayCommand, description: utils.translateText('command_description_away')},
             'command:encoding':    {fn: encodingCommand, description: utils.translateText('command_description_encoding')},
-            'command:channel':     channelCommand,
-            'command:applet':      appletCommand,
+            'command:channel':     {fn: channelCommand, description: ''},
+            'command:applet':      {fn: appletCommand, description: ''},
             'command:settings':    {fn: settingsCommand, description: utils.translateText('command_description_settings')},
             'command:script':      {fn: scriptCommand, description: utils.translateText('command_description_script')}
         };
@@ -106,10 +117,7 @@ define('misc/clientuicommands', function(require, exports, module) {
         fn_to_bind['command:css'] = {
             description: utils.translateText('command_description_css'),
             fn: function(ev) {
-                var queryString = '?reload=' + new Date().getTime();
-                $('link[rel="stylesheet"]').each(function () {
-                    this.href = this.href.replace(/\?.*|$/, queryString);
-                });
+                this.app.view.reloadStyles();
             }
         };
 
@@ -341,9 +349,9 @@ define('misc/clientuicommands', function(require, exports, module) {
             this.app.connections.active_connection.gateway.part(this.app.panels().active.get('name'));
         } else {
             chans = ev.params[0].split(',');
-            msg = ev.params[1];
+            msg = ev.params.slice(1).join(' ');
             _.each(chans, function (channel) {
-                that.connections.active_connection.gateway.part(channel, msg);
+                that.app.connections.active_connection.gateway.part(channel, msg);
             });
         }
     }
@@ -422,6 +430,20 @@ define('misc/clientuicommands', function(require, exports, module) {
         ev.params.shift();
 
         this.app.connections.active_connection.gateway.kick(panel.get('name'), nick, ev.params.join(' '));
+    }
+
+
+    function namesCommand (ev) {
+        var channel, panel = this.app.panels().active;
+
+        if (!panel.isChannel()) return;
+
+        // Make sure we have a channel
+        channel = ev.params.length === 0 ?
+            panel.get('name') :
+            ev.params[0];
+
+        this.app.connections.active_connection.gateway.raw('NAMES ' + channel);
     }
 
 

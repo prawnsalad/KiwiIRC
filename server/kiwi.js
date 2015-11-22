@@ -58,6 +58,11 @@ if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
 }
 
 
+// Extra debugging output if the -v flag is given
+if (process.argv.indexOf('-v') > -1) {
+    winston.level = 'debug';
+}
+
 
 // Make sure we have a valid config file and at least 1 server
 if (!global.config || Object.keys(global.config).length === 0) {

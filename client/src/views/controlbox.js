@@ -242,6 +242,13 @@ define('views/controlbox', function(require, exports, module) {
                 }
 
                 inp.val('');
+
+                // The auto complete may not have thrown a match if it was empty, so
+                // just make sure it's closed
+                if (this.autocomplete.open) {
+                    this.autocomplete.close();
+                }
+
                 return false;
 
                 break;
@@ -343,12 +350,13 @@ define('views/controlbox', function(require, exports, module) {
 
 
         setAutoCompleteCommands: function(commands) {
-            _.each(commands, function(description, command) {
+            _.each(commands, function(command) {
                 this.autocomplete_command_list.push({
-                    match: [command],
-                    description: description
+                    match: command.matches || [],
+                    description: command.description
                 });
             }, this);
+
             /*
             var command_list = [
                 {match: ['/join'], description: 'Join or start a channel'},

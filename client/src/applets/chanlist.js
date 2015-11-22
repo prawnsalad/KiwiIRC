@@ -15,7 +15,7 @@
                 users: _kiwi.global.i18n.translate('client_applets_chanlist_users').fetch(),
                 topic: _kiwi.global.i18n.translate('client_applets_chanlist_topic').fetch()
             };
-            this.$el = $(_.template($('#tmpl_channel_list').html().trim(), text));
+            this.$el = $(_.template($('#tmpl_channel_list').html().trim())(text));
 
             this.channels = [];
 

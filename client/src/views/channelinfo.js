@@ -27,7 +27,7 @@ define('views/channelinfo', function(require, exports, module) {
                 channel_name: channel.get('name')
             };
 
-            this.$el = $(_.template($('#tmpl_channel_info').html().trim(), text));
+            this.$el = $(_.template($('#tmpl_channel_info').html().trim())(text));
 
             // Create the menu box this view will sit inside
             this.menu = new (require('views/menubox'))(channel.get('name'));

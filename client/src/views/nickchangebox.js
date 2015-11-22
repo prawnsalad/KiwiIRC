@@ -14,7 +14,7 @@ define('views/nickchangebox', function(require, exports, module) {
                 change: _kiwi.global.i18n.translate('client_views_nickchangebox_change').fetch(),
                 cancel: _kiwi.global.i18n.translate('client_views_nickchangebox_cancel').fetch()
             };
-            this.$el = $(_.template($('#tmpl_nickchange').html().trim(), text));
+            this.$el = $(_.template($('#tmpl_nickchange').html().trim())(text));
         },
 
         render: function () {

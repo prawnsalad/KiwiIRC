@@ -14,435 +14,436 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: uk\n"
+"Language: el\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Ім’я каналу"
+msgstr "Όνομα καναλιού"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Користувачі"
+msgstr "Χρήστες"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Тема"
+msgstr "Θέμα"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Перелік каналів"
+msgstr "Λίστα καναλιών"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Зберегти"
+msgstr "Αποθήκευση"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Помилка в скрипті. %s"
+msgstr "Σφάλμα σεναρίου εντολών. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Ваш скрипт збережений і активний"
+msgstr "Το σενάριο εντολών σας έχει αποθηκευτεί και είναι ενεργό"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Редактор скриптів"
+msgstr "Επεξεργαστής σεναρίου εντολών"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Вкладки"
+msgstr "Καρτέλες"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "Список"
+msgstr "Λίστα"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "для великої кількості каналів"
+msgstr "για μεγάλο αριθμό καναλιών"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Сповіщення каналу про вхід/вихід"
+msgstr "Ειδοποιήσεις εισόδου/εξόδου σε κανάλι"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Відмітки часу"
+msgstr "Χρονική σημάνση"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Вимкнути звукові сповіщення"
+msgstr "Σίγαση ειδοποιήσεων ήχου"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "Історія повідомлень при прокручуванні"
+msgstr "Μηνύματα στο ιστορικό κύλισης"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Типовий IRC-клієнт"
+msgstr "Προεπιλεγμένη εφαρμογή IRC"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Призначити Kiwi типовим IRC-клієнтом"
+msgstr "Κάντε το Kiwi προεπιλεγμένη εφαρμογή IRC"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Увага: зміни вступають в силу тільки після того, як Ви оновите сторінку"
+msgstr "Σημείωση: Οι αλλαγές θα πραγματοποιηθούν αφ΄ότου κάνεις ανανέωση τη σελίδα"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Примітка: користувачам браузера Chrome чи Chromium, можливо, потрібно перевірити їх налаштування через %s, якщо нічого не стається"
+msgstr "Σημείωση: Οι χρήστες που μπαίνουν μέσω Chrome ή Chromium, ίσως χρειαστεί να ελέγξουν τις ρυθμίσεις τους μέσω του %s αν δεν συμβεί τίποτα"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Налаштування"
+msgstr "Ρυθμίσεις"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Невідомий аплет"
+msgstr "Άγνωστη μικροεφαρμογή"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Завантаження.."
+msgstr "Φορτώνει..\n"
+""
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Не знайдено"
+msgstr "Δεν βρέθηκε"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Ви були від'єднані. Спроба відновити з'єднання"
+msgstr "Έχετε αποσυνδεθεί. Γίνεται προσπάθεια επανασύνδεσης"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Ви були від'єднані. Спроба відновити з'єднання через %d секунд"
+msgstr "Έχετε αποσυνδεθεί. Γίνεται προσπάθεια επανασύνδεσης σε %d δευτερόλεπτα"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Все добре. Ви знову на зв’язку"
+msgstr "Όλα εντάξει, είσαι πάλι συνδεδεμένος"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Налаштування збережені"
+msgstr "Οι ρυθμίσεις έχουν αποθηκευτεί"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Ігноровані псевдоніми"
+msgstr "Αγνοημένα ψευδώνυμα"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Нікого не ігноруємо"
+msgstr "Δεν αγνοείς κανέναν"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Ігноруємо %s"
+msgstr "Αγνοείς %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Вкажіть, який псевдонім ви хочете перестати ігнорувати"
+msgstr "Καθόρισε ποιό όνομα επιθυμείς να σταματήσεις να αγνοείς"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Перестали ігнорувати %s"
+msgstr "Σταμάτησες να αγνοείς τον %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Аплет \"%s\" не знайдено"
+msgstr "Η Μικροεφαρμογή \"%s\" δεν υπάρχει"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Кодування змінено на %s"
+msgstr "Η κωδικοποίηση τροποποιημένη για %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s не є правильним кодуванням"
+msgstr "%s δεν είναι έγκυρη κωδικοποίηση"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Кодування не вказано"
+msgstr "Η Κωδικοποίηση δεν προσδιορίστηκε"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Використовуйте: /encoding [НОВЕ-КОДУВАННЯ]"
+msgstr "Χρήση: /encoding [Νέα-Κωδικοποίηση]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "Нове з’єднання"
+msgstr "Νέα σύνδεση"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Підключення до  %s:%s..."
+msgstr "Σύνδεση στο %s:%s..."
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "Помилка з’єднання до %s:%s (%s)"
+msgstr "Σφάλμα κατα την σύνδεση στο %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "увійшов на канал"
+msgstr "έχει συνδεθεί"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "від’єднався %s"
+msgstr "εγκατέλειψε %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "був викинутий %s %s"
+msgstr "εκδιώχθηκε από %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Ви були викинуті %s %s"
+msgstr "Έχετε εκδιωχθεί από %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "вийшов з каналу %s"
+msgstr "έφυγε από το %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "неправильна назва каналу"
+msgstr "δεν είναι ένα έγκυρο όνομα του καναλιού"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Від’єднаний від IRC-мережі"
+msgstr "Αποσυνδέθηκες από το δίκτυο,"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "змінив псевдонім на %s"
+msgstr "είναι πλέον γνωστός ως %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Тему змінив %s у %s"
+msgstr "Το θέμα καθορίστηκε από τον χρήστη %s στις %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "встановив мод %s"
+msgstr "ορίζει κατάσταση %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "встановили моди %s"
+msgstr "όρισε κατάσταση %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Канали: %s"
+msgstr "Κανάλια: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Під’єднався до сервера: %s %s"
+msgstr "Συνδέθηκε με τον διακομιστή: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "мовчить %s, під’єднався %s"
+msgstr "Αδρανής επί %s, συνδέθηκε στις %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "відсутній: %s"
+msgstr "Απών: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "мовчить %s"
+msgstr "Αδρανής επί %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Немає такого псевдоніма"
+msgstr "Κανένα τέτοιο ψευδώνυμο"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "Ви заблоковані на %s. %s"
+msgstr "Έχετε απαγορευτεί από %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "Неправильний ключ для %s"
+msgstr "Λανθασμένο κλειδί καναλιού για %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "тільки за запрошенням."
+msgstr "είναι μόνο με πρόσκληση."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "повний."
+msgstr "είναι γεμάτο."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Псевдонім %s вже використовується. Оберіть будь ласка інший"
+msgstr "Το ψευδώνυμο \"%s\" είναι ήδη σε χρήση. Παρακαλώ διαλέξτε ένα άλλο ψευδώνυμο"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Отриманий пароль неправильний"
+msgstr "Δόθηκε εσφαλμένος κωδικός πρόσβασης"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Це призведе до закриття всіх вікон KiwiIRC. Ви впевнені, що бажаєте закрити дане вікно?"
+msgstr "Αυτό θα κλείσει όλες τις συνομιλίες KiwiIRC. Είστε σίγουροι ότι θέλετε να κλείσετε αυτό το παράθυρο?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Вхід на канал.."
+msgstr "Συμμετοχή στο κανάλι.."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Тема %s: %s"
+msgstr "Το θέμα για %s είναι: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Закрити медіа"
+msgstr "Κλείσιμο πολυμέσων"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Не знайдено"
+msgstr "Δεν βρέθηκε"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Завантаження твіту"
+msgstr "Φόρτωση tweet"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Завантаження зображення"
+msgstr "Φόρτωση εικόνας"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Завантаження Reddit повідомлення"
+msgstr "Φόρτωση νήματος από Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Завантаження gist"
+msgstr "Φόρτωση gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Новий псевдонім"
+msgstr "Νέο ψευδώνυμο"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Змінити"
+msgstr "Αλλαγή"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Скасувати"
+msgstr "Ακύρωση"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Люди говорять!"
+msgstr "Οι χρήστες μιλούν!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Подумайте про псевдонім..."
+msgstr "Σκεφτείτε ένα ψευδώνυμο..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Псевдонім"
+msgstr "Ψευδώνυμο"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "У мене є пароль"
+msgstr "Έχω έναν κωδικό πρόσβασης"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Пароль"
+msgstr "Κωδικός πρόσβασης"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Канал"
+msgstr "Κανάλι"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Ключ каналу"
+msgstr "Κλειδί Καναλιού"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Для входу на канал необхідний ключ"
+msgstr "Το κανάλι απαιτεί ένα κλειδί"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Ключ"
+msgstr "κλειδί"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "З’єднання..."
+msgstr "Εκκίνηση..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Сервер і мережа"
+msgstr "Διακομιστής και δίκτυο"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Сервер"
+msgstr "Διακομιστής"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Порт"
+msgstr "Πύλη"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Працює на Kiwi IRC"
+msgstr "Powered by Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Спочатку оберіть псевдонім!"
+msgstr "Επιλέξτε ένα ψευδώνυμο πρώτα!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "З’єднано"
+msgstr "Συνδεδεμένος"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "З’єнуюсь.."
+msgstr "Σύνδεση.."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Псевдонім вже використовується"
+msgstr "Ψευδώνυμο ήδη χρησιμοποιείται"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Неправильний псевдонім"
+msgstr "Προβληματικό ψευδώνυμο"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Неправильний пароль"
+msgstr "Λάθος κωδικός πρόσβασης"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Помилка з’єднання"
+msgstr "Σφάλμα κατά τη σύνδεση"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Сервер не знайдено"
+msgstr "Ο διακομιστής δεν βρέθηκε"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "У з’єднанні відмовлено"
+msgstr "Αρνήθηκε η σύνδεση"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Оп"
+msgstr "Op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "Де-оп"
+msgstr "De-op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Войс"
+msgstr "Voice"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "Де-войс"
+msgstr "De-voice"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Кік"
+msgstr "Kick"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Бан"
+msgstr "Ban"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Повідомлення"
+msgstr "Μήνυμα"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Інформація"
+msgstr "Πληροφορίες"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Шльоп!"
+msgstr "Slap!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -450,425 +451,425 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Через 5 хвилин вас буде повторно під'єднано і приєднано до ваших каналів. Будьте готові!"
+msgstr "Σε 5 λεπτά θα επανασυνδεθείτε στα κανάλια σας εκ νέου. Ετοιμαστείτε!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Безпечне з’єднання.."
+msgstr "Ασφαλής επανασύνδεση σας τώρα.."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Сповіщення на робочому столі"
+msgstr "Ειδοποιήσεις στην επιφάνεια εργασίας"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Увімкнути сповіщення"
+msgstr "Ενεργοποίηση ειδοποιήσεων"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Показати посмішки"
+msgstr "Εμφάνιση emoticons"
 
 #: 
 msgid "client_applet_about"
-msgstr "Про Kiwi"
+msgstr "Περί Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Домашня сторінка проекту"
+msgstr "Ιστοσελίδα του έργου"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Посилання на цей канал"
+msgstr "Σύνδεσμος σε αυτό το κανάλι"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Поширити цей канал"
+msgstr "Μοιραστείτε αυτό το κανάλι"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "Мої мережі"
+msgstr "Τα δίκτυα μου"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Обрані мережі"
+msgstr "Αγαπημένα δίκτυα"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Додати мережу"
+msgstr "Προσθήκη δικτύου"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Зберегти мережу"
+msgstr "Αποθήκευση δικτύου"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Видалити мережу"
+msgstr "Διαγραφή δικτύου"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Включити повідомлення входу/виходу"
+msgstr "Συμπεριλάβετε μηνύματα Συμμετοχής/αποχώρησης ως δραστηριότητα"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "Ігнорувати"
+msgstr "Αγνόηση"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Використовувати 24-годинний формат часу"
+msgstr "Χρήση 24-ωρών χρονικών σημάνσεων"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "%s ΠΜ"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "%s ΜΜ"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "був запрошений до %s"
+msgstr "προσκλήθηκε στο %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "вже на цьому каналі"
+msgstr "είναι ήδη στο κανάλι"
 
 #: Date format
 msgid "client_date_format"
-msgstr "м/д/р"
+msgstr "μ/η/Ε"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Січ"
+msgstr "Ιαν"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
-msgstr "Лют"
+msgstr "Φεβ"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "Бер"
+msgstr "Μαρ"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
-msgstr "Кві"
+msgstr "Απρ"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "Тра"
+msgstr "Μαϊ"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
-msgstr "Чер"
+msgstr "Ιουν"
 
 #: client.libs.date_format.shortMonths.july
 msgid "client.libs.date_format.short_months.july"
-msgstr "Лип"
+msgstr "Ιούλ"
 
 #: client.libs.date_format.shortMonths.august
 msgid "client.libs.date_format.short_months.august"
-msgstr "Сер"
+msgstr "Αυγ"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Вер"
+msgstr "Σεπ"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
-msgstr "Жов"
+msgstr "Οκτ"
 
 #: client.libs.date_format.shortMonths.november
 msgid "client.libs.date_format.short_months.november"
-msgstr "Лис"
+msgstr "Νοε"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Гру"
+msgstr "Δεκ"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "Січень"
+msgstr "Ιανουάριος"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "Лютий"
+msgstr "Φεβρουάριος"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "Березень"
+msgstr "Μάρτιος"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
-msgstr "Квітень"
+msgstr "Απρίλιος"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "Травень"
+msgstr "Μάιος"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "Червень"
+msgstr "Ιούνιος"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "Липень"
+msgstr "Ιούλιος"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "Серпень"
+msgstr "Αύγουστος"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "Вересень"
+msgstr "Σεπτέμβριος"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
-msgstr "Жовтень"
+msgstr "Οκτώβριος"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "Листопад"
+msgstr "Νοέμβριος"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "Грудень"
+msgstr "Δεκέμβριος"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "ПН"
+msgstr "Δευ"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "ВТ"
+msgstr "Τρι"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "СР"
+msgstr "Τετ"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "ЧТ"
+msgstr "Πεμ"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "ПТ"
+msgstr "Παρ"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "СБ"
+msgstr "Σαβ"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "НД"
+msgstr "Κυρ"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Понеділок"
+msgstr "Δευτέρα"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Вівторок"
+msgstr "Τρίτη"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Середа"
+msgstr "Τετάρτη"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Четвер"
+msgstr "Πέμπτη"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "П'ятниця"
+msgstr "Παρασκευή"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Субота"
+msgstr "Σάββατο"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Неділя"
+msgstr "Κυριακή"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Модерований чат"
+msgstr "Συντονισμένη συζήτηση"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Лише за запрошенням"
+msgstr "Μόνο με πρόσκληση"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Лише оператори можуть змінювати тему"
+msgstr "Μόνο διαχειριστές μπορούν να αλλάξουν το θέμα"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Блокувати повідомлення з поза меж каналу"
+msgstr "Αποκλείστε τη λήψη μηνυμάτων από το εξωτερικό αυτό το κανάλι"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Перемкнути список банів"
+msgstr "Εναλλαγή Banlist"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Надіслати повідомлення..."
+msgstr "Αποστολή μηνύματος..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "Це призведе до від'єднання від мережі IRC. Ви впевнені?"
+msgstr "Αυτό θα σας αποσυνδέσει από το δίκτυο IRC. Είστε σίγουρος;"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Власні підсвічування (розділені пробілом)"
+msgstr "Προσαρμοσμένα στιγμιότυπα (χωρισμένα με κενό)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Повідомлення"
+msgstr "Μηνύματα"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Повідомлення чату"
+msgstr "Chat μηνύματα"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Попередження / Сповіщення"
+msgstr "Ανακοινώσεις / Ειδοποιήσεις"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Вигляд"
+msgstr "Εμφάνιση"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Тема"
+msgstr "Θέμα"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Канали"
+msgstr "Κανάλια"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Мова"
+msgstr "Γλώσσα"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Блокувати нові приватні повідомлення"
+msgstr "Αποκλεισμός νέων ιδιωτικών μηνυμάτων"
 
 #: 
 msgid "command_description_msg"
-msgstr "Надіслати повідомлення"
+msgstr "Στείλε ένα μήνυμα"
 
 #: 
 msgid "command_description_action"
-msgstr "Зробити щось"
+msgstr "Κάντε κάτι φυσικό"
 
 #: 
 msgid "command_description_join"
-msgstr "Приєднатися до каналу"
+msgstr "Συνδεθείτε σε ένα κανάλι"
 
 #: 
 msgid "command_description_part"
-msgstr "Покинути канал"
+msgstr "Αποχωρήστε από ένα κανάλι"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Покинути, а потім знову приєднатися до каналу"
+msgstr "Αποχωρήστε, στη συνέχεια συνδεθείτε σε ένα κανάλι"
 
 #: 
 msgid "command_description_nick"
-msgstr "Змінити псевдонім"
+msgstr "Αλλάξτε το ψευδώνυμό σας"
 
 #: 
 msgid "command_description_query"
-msgstr "Надіслати комусь приватне повідомлення"
+msgstr "Ξεκινήστε μία προσωπική συζήτηση με κάποιον"
 
 #: 
 msgid "command_description_invite"
-msgstr "Запросити когось до каналу"
+msgstr "Προσκαλέστε κάποιον στο κανάλι"
 
 #: 
 msgid "command_description_topic"
-msgstr "Встановити тему для цього каналу"
+msgstr "Ορίστε το θέμα για αυτό το κανάλι"
 
 #: 
 msgid "command_description_notice"
-msgstr "Надіслати зауваження"
+msgstr "Στείλτε μια ειδοποίηση"
 
 #: 
 msgid "command_description_quote"
-msgstr "Надіслати сиру команду на сервер IRC"
+msgstr "Αποστολή raw εντολών στον διακομιστή IRC"
 
 #: 
 msgid "command_description_kick"
-msgstr "Штурхнути когось на каналі"
+msgstr "Kick κάποιον από το κανάλι"
 
 #: 
 msgid "command_description_clear"
-msgstr "Стерти всі повідомлення з цього вікна"
+msgstr "Καταργήστε όλα τα μηνύματα από αυτό το παράθυρο"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Надіслати комусь команду CTCP"
+msgstr "Στείλτε μια εντολή CTCP σε κάποιον"
 
 #: 
 msgid "command_description_quit"
-msgstr "Від'єднатися від сервера IRC"
+msgstr "Αποσύνδεση από το διακομιστή IRC"
 
 #: 
 msgid "command_description_server"
-msgstr "З'єднатися з новою мережею IRC"
+msgstr "Σύνδεση σε ένα νέο δίκτυο IRC"
 
 #: 
 msgid "command_description_whois"
-msgstr "Запит інформації про когось"
+msgstr "Ζητήστε πληροφορίες για κάποιον"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Запит інформації про когось, хто недавно від'єднався"
+msgstr "Ζητήστε περισσότερες πληροφορίες για κάποιον που αποσυνδέθηκε πρόσφατα"
 
 #: 
 msgid "command_description_away"
-msgstr "Позначити себе недоступним"
+msgstr "Επισημάνετε τον εαυτό σας απώντα"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Змінити кодування свого з'єднання"
+msgstr "Αλλάξτε την κωδικοποίηση της σύνδεσή σας"
 
 #: 
 msgid "command_description_settings"
-msgstr "Показати вікно налаштувань"
+msgstr "Εμφανίζει το παράθυρο ρυθμίσεων"
 
 #: 
 msgid "command_description_script"
-msgstr "Змінити скрипти користувача kiwi"
+msgstr "Τροποποίηση των kiwi σεναρίων του χρήστη"
 
 #: 
 msgid "command_description_css"
-msgstr "Перезавантажити оформлення сторінки"
+msgstr "Ανανέωση των stylesheets της σελίδας"
 
 #: 
 msgid "command_description_js"
-msgstr "Завантажити файл javascript з URL"
+msgstr "Φορτώστε ένα αρχείο JavaScript από μια διεύθυνση URL"
 
 #: 
 msgid "command_description_set"
-msgstr "Встановити налаштування kiwi config"
+msgstr "Ορίστε μια ρύθμιση στo kiwi config"
 
 #: 
 msgid "command_description_save"
-msgstr "Зберегти поточні налаштування kiwi"
+msgstr "Αποθηκεύσετε τις τρέχουσες kiwi ρυθμίσεις"
 
 #: 
 msgid "command_description_alias"
-msgstr "Створити псевдонім до наявного /command"
+msgstr "Δημιουργήστε ένα ψευδώνυμο μιας υπάρχουσας εντολής /command"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ігнорувати повідомлення від когось"
+msgstr "Αγνοήστε τα μηνύματα από κάποιον"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Припинити ігнорувати когось"
+msgstr "Σταμάτα να αγνοείς κάποιον"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Показувати поле автозавершення"
+msgstr "Εμφάνιση της αυτόματης συμπλήρωσης"
 

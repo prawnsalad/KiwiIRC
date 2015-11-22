@@ -779,7 +779,7 @@ msgstr "Change your nickname"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Start a private conversation with someone"
 
 #: 
 msgid "command_description_invite"
@@ -799,7 +799,7 @@ msgstr "Send a raw command to the IRC server"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Kick somebody from the channel"
 
 #: 
 msgid "command_description_clear"
@@ -871,5 +871,5 @@ msgstr "Stop ignoring somebody"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Show the autocomplete box"
 

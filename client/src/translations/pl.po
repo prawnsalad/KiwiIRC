@@ -719,157 +719,157 @@ msgstr "Uczynienie tego spowoduje, że zostaniesz odłączony od sieci IRC. Jest
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Własne słowa do podświetlania (oddzielone spacjami)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Messages"
+msgstr "Wiadomości"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Wiadomości z czatu"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Powiadomienia"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Appearance"
+msgstr "Wygląd"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Theme"
+msgstr "Motyw"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Kanały"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Język"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
+msgstr "Blokuj nowe wiadomości prywatne"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Wyślij wiadomość"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Powiedz, co robisz"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Dołącz do kanału"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Opuść kanał"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Opuść kanał, a następnie ponownie doń dołącz"
 
 #: 
 msgid "command_description_nick"
-msgstr "Change your nickname"
+msgstr "Zmień nick"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Rozpocznij prywatną rozmowę z kimś"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Zaproś kogoś do kanału"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Ustaw temat tego kanału"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Wyślij powiadomienie"
 
 #: 
 msgid "command_description_quote"
-msgstr "Send a raw command to the IRC server"
+msgstr "Wyślij nieprzetworzone dane do serwera"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Wyrzuć kogoś z kanału"
 
 #: 
 msgid "command_description_clear"
-msgstr "Clear all messages from this window"
+msgstr "Wyczyść wszystkie wiadomości w tym oknie"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Send a CTCP command to somebody"
+msgstr "Wyślij wiadomość CTCP do kogoś."
 
 #: 
 msgid "command_description_quit"
-msgstr "Disconnect from the IRC server"
+msgstr "Odłącz się od serwera"
 
 #: 
 msgid "command_description_server"
-msgstr "Connect to a new IRC network"
+msgstr "Podłącz się do nowej sieci IRC"
 
 #: 
 msgid "command_description_whois"
-msgstr "Request information on somebody"
+msgstr "Obejrzyj informacje o kimś"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Obejrzyj informacje o kimś, kto niedawno się odłączył"
 
 #: 
 msgid "command_description_away"
-msgstr "Mark yourself as away"
+msgstr "Oznacz się jako osobę niobecną"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Zmień kodowanie połączenia"
 
 #: 
 msgid "command_description_settings"
-msgstr "Show the settings window"
+msgstr "Pokaż okno ustawień"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Zmodyfikuj skrypty Kiwi"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Przeładuj arkusze stylów"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Załaduj plik z kodem JavaScriptu z adresu URL"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Ustaw parametr konfiguracyjny Kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Save the current kiwi settings"
+msgstr "Zapisz obecne ustawienia Kiwi"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Utwórz alias do istniejącego polecenia"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ignore messages from somebody"
+msgstr "Ignoruj wiadomości od kogoś"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop ignoring somebody"
+msgstr "Zaprzestań ignorowania kogoś"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Pokaż okno autouzupełniania"
 

@@ -87,16 +87,24 @@ define('views/application', function(require, exports, module) {
             // Clear any current theme
             $('[data-theme]:not([disabled])').each(function (idx, link) {
                 var $link = $(link);
-                $link.attr('rel', 'alternate ' + $link.attr('rel')).attr('disabled', true)[0].disabled = true;
+                $link.attr('disabled', true)[0].disabled = true;
             });
 
             // Apply the new theme
             var link = $('[data-theme][title=' + theme_name + ']');
             if (link.length > 0) {
-                link.attr('rel', 'stylesheet').attr('disabled', false)[0].disabled = false;
+                link.attr('disabled', false)[0].disabled = false;
             }
 
             this.doLayout();
+        },
+
+
+        reloadStyles: function() {
+            var query_string = '?reload=' + new Date().getTime();
+            $('link[rel="stylesheet"]').each(function() {
+                this.href = this.href.replace(/\?.*|$/, query_string);
+            });
         },
 
 
@@ -184,7 +192,7 @@ define('views/application', function(require, exports, module) {
             }
 
             // Determine if we have a narrow window (mobile/tablet/or even small desktop window)
-            if ($kiwi.outerWidth() < 420) {
+            if ($kiwi.outerWidth() < 700) {
                 $kiwi.addClass('narrow');
                 if (this.model.rightbar && this.model.rightbar.keep_hidden !== true)
                     this.model.rightbar.toggle(true);

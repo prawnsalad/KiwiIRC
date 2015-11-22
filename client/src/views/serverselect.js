@@ -30,7 +30,7 @@ define('views/serverselect', function(require, exports, module) {
                     powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
                 };
 
-            this.$el = $(_.template($('#tmpl_server_select').html().trim(), text));
+            this.$el = $(_.template($('#tmpl_server_select').html().trim())(text));
 
             // Remove the 'more' link if the server has disabled server changing
             if (Application.instance().server_settings && Application.instance().server_settings.connection) {

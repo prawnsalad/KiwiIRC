@@ -29,7 +29,11 @@ switch (process.argv[2]) {
         break;
 
     case 'start':
-        daemon.start();
+        if (process.argv.indexOf('-f') > -1) {
+            require(kiwi_app);
+        } else {
+            daemon.start();
+        }
         break;
 
     case 'stop':
@@ -65,5 +69,5 @@ switch (process.argv[2]) {
         break;
 
     default:
-        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-c <config file>] [-p <pid file>]]');
+        console.log('Usage: [-f|start|stop|restart|status|reconfig|build [-v] [-c <config file>] [-p <pid file>]]');
 }

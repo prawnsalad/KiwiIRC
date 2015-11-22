@@ -108,7 +108,7 @@ define('views/mediamessage', function(require, exports, module) {
                     tmpl += '<i class="fa fa-arrow-up"></i> <%- ups %> &nbsp;&nbsp; <i class="fa fa-arrow-down"></i> <%- downs %><br />';
                     tmpl += '<%- num_comments %> comments made. <a href="https://www.reddit.com<%- permalink %>">View post</a></div>';
 
-                    that.$content.find('.content').html(_.template(tmpl, post));
+                    that.$content.find('.content').html(_.template(tmpl)(post));
                 });
 
                 return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_reddit').fetch() + '...</div>');

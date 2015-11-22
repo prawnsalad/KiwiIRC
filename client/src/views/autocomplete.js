@@ -58,7 +58,7 @@ define('views/autocomplete', function(require, exports, module) {
 
                     template_str = (word.type === 'nick') ? template_str_nicks : template_str_default;
 
-                    $el = $(_.template(template_str, template)).hide();
+                    $el = $(_.template(template_str)(template)).hide();
                     $word = $el.find('.word');
                 } else {
                     template_str = '';
@@ -274,7 +274,9 @@ define('views/autocomplete', function(require, exports, module) {
 
 
         currentMatch: function() {
-            return this.matches[this.selected_idx].matched_word;
+            return this.matches[this.selected_idx] ?
+                this.matches[this.selected_idx].matched_word :
+                null;
         },
 
 
@@ -285,7 +287,7 @@ define('views/autocomplete', function(require, exports, module) {
             var dont_process_other_input_keys = false;
 
             // Handling input box caret positioning
-            var caret_pos = 0,
+            var caret_pos = $inp[0].selectionStart,
                 new_position = 0,
                 text_range;
 
@@ -299,18 +301,27 @@ define('views/autocomplete', function(require, exports, module) {
                 event.preventDefault();
                 dont_process_other_input_keys = true;
             }
+            else if (caret_pos === 1 && (event.keyCode === 37 || event.keyCode === 8)) { // Caret about to move to the beginning of the box
+                event.preventDefault();
+                this.cancel('caret_moved');
+            }
             else if (0 && event.keyCode === 37) { // left
                 // If the caret is moved before the current word, stop autocompleting
-                caret_pos = $inp[0].selectionStart;
                 if (caret_pos > 0 && $inp.val().toUpperCase()[caret_pos-1] === ' ') {
                     event.preventDefault();
                     this.cancel('caret_moved');
                 }
             }
             else if (event.keyCode === 13) { // return
-                this.trigger('match', this.currentMatch(), this.matches[this.selected_idx]);
-                event.preventDefault();
-                dont_process_other_input_keys = true;
+                if (this.matches[this.selected_idx]) {
+                    this.trigger('match', this.currentMatch(), this.matches[this.selected_idx]);
+                    event.preventDefault();
+
+                    // If the UI is not open, let the return key keep processing as normal.
+                    // If we did not let this happen, since there is no visual UI it would look
+                    // weird to the user if they had to press return twice for something to happen.
+                    dont_process_other_input_keys = this._show_ui ? true : false;
+                }
             }
             else if (event.keyCode === 27) { // escape
                 this.cancel();

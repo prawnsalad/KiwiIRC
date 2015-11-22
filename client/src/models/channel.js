@@ -103,7 +103,7 @@ define('models/channel', function(require, exports, module) {
 
                 // Keep the scrolback limited
                 if (bs.length > scrollback) {
-                    bs = _.last(bs, scrollback);
+                    bs = _.takeRight(bs, scrollback);
                 }
                 this.set({"scrollback": bs}, {silent: true});
             }

@@ -718,157 +718,157 @@ msgstr "Això et desconnectara d'aquesta xarxa IRC. N'estàs segur?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Alertes personalitzades (separades por un espai)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Messages"
+msgstr "Missatges"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Missatges del xat"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Alertes / Notificacions"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Appearance"
+msgstr "Aparença"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Theme"
+msgstr "Tema"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Canals"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Idioma"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
+msgstr "Bloqueja missatges privats nous"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Envia un missatges"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Fes alguna cosa física"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Entra a un canal"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Surt d'un canal"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Surt i torna a entrar a un canal"
 
 #: 
 msgid "command_description_nick"
-msgstr "Change your nickname"
+msgstr "Canvia el teu sobrenom"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private message with someone"
+msgstr "Comença una conversa privada amb algú"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Convida algú al canal"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Configura el tema d'aquest canal"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Envia una notícia"
 
 #: 
 msgid "command_description_quote"
-msgstr "Send a raw command to the IRC server"
+msgstr "Envia una ordre «en cru» al servidor"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick sombody from the channel"
+msgstr "Fes fora a algú del canal"
 
 #: 
 msgid "command_description_clear"
-msgstr "Clear all messages from this window"
+msgstr "Neteja tots els missatges d'aquesta finestra"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Send a CTCP command to somebody"
+msgstr "Envia una ordre CTCP a algú"
 
 #: 
 msgid "command_description_quit"
-msgstr "Disconnect from the IRC server"
+msgstr "Desconnecta't  del servidor IRC"
 
 #: 
 msgid "command_description_server"
-msgstr "Connect to a new IRC network"
+msgstr "Connecta't a una xarxa IRC nova"
 
 #: 
 msgid "command_description_whois"
-msgstr "Request information on somebody"
+msgstr "Demana informació sobre algú"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Demana informació sobre algú que s'ha desconnectat recentment"
 
 #: 
 msgid "command_description_away"
-msgstr "Mark yourself as away"
+msgstr "Marca't com a absent"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Canvia la codificació de la teva connexió"
 
 #: 
 msgid "command_description_settings"
-msgstr "Show the settings window"
+msgstr "Mostra la finestra de configuració"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Modifica els scripts d'usuari"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Recarrega el full d'estil de la pàgina"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Carrega un fitxer javascript d'un url"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Configura una variable del kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Save the current kiwi settings"
+msgstr "Desa la configuració actual del kiwi"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Crea un àlies per una ordre existent"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ignore messages from somebody"
+msgstr "Ignora missatges d'algú"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop ignoring somebody"
+msgstr "Deixa d'ignorar algú"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete slideout"
+msgstr "Mostra la caixa d'autocompletació"
 

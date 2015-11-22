@@ -81,7 +81,24 @@ conf.default_encoding = 'utf8';
 * %n will be replaced with the users nick
 * %h will be replaced with the users hostname
 */
-//conf.default_gecos = 'Web IRC Client';
+conf.default_gecos = '%n is using a Web IRC client';
+
+
+/*
+* Default ident / username for IRC connections
+* %n will be replaced with the users nick
+* %h will be replaced with the users hostname
+* %i will be replaced with a hexed value of the users IP
+*/
+conf.default_ident = '%i';
+
+
+/*
+* Default quit message
+* If a browser gets disconnected without sending a QUIT command, this
+* message will be used instead.
+*/
+conf.quit_message = 'http://www.kiwiirc.com/ - A hand-crafted IRC client';
 
 
 /*
@@ -108,13 +125,21 @@ conf.client_plugins = [
 conf.module_dir = "../server_modules/";
 
 // Which modules to load
-conf.modules = [];
+conf.modules = [
+    // Open a TCP port to control the Kiwi server (default port 8888)
+    // "control",
+
+    // Automatically reload CSS files when a theme changes
+    // "client_file_watcher",
+];
 
 
 
 
 // WebIRC password enabled for this server
-//conf.webirc_pass = "foobar";
+conf.webirc_pass = "";
+
+// Use the above *OR* the below webirc_pass option
 
 // Multiple WebIRC passwords may be used for multiple servers
 //conf.webirc_pass = {
@@ -122,11 +147,6 @@ conf.modules = [];
 //    "127.0.0.1":        "foobar"
 //};
 
-// Some IRCDs require the clients IP via the username/ident
-conf.ip_as_username = [
-    //"irc.network.com",
-    //"127.0.0.1"
-];
 
 // Whether to verify IRC servers' SSL certificates against built-in well-known certificate authorities
 conf.reject_unauthorised_certificates = false;
@@ -177,11 +197,6 @@ conf.socks_proxy.user = null;
 conf.socks_proxy.pass = null;
 
 
-
-// Default quit message
-conf.quit_message = "http://www.kiwiirc.com/ - A hand-crafted IRC client";
-
-
 // Default settings for the client. These may be changed in the browser
 conf.client = {
     server: 'irc.kiwiirc.com',
@@ -222,6 +237,18 @@ conf.client_themes = [
 //conf.restrict_server_ssl = false;
 //conf.restrict_server_password = "";
 
+
+/*
+ * If running multiple kiwi servers you may specify them here.
+ * Note: All kiwi servers must have the same conf.http_base_path config option.
+ * 
+ * To force the client to connect to one other kiwi server, use:
+ *     conf.client.kiwi_server = 'https://kiwi-server2.com';
+ *
+ * To force the client to connect to a random kiwi server from a list, use:
+ *     conf.client.kiwi_server = ['https://kiwi-server1.com', 'https://kiwi-server2.com'];
+ */
+//conf.client.kiwi_server = '';
 
 
 

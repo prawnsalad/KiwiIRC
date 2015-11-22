@@ -212,6 +212,35 @@
 #kiwi .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
 #kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
 
+#kiwi .autocomplete {
+    box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
+    border: 1px solid #CCC;
+    background: #eee;
+}
+#kiwi .autocomplete-header {
+    background: #DADADA none repeat scroll 0 0 padding-box;
+    border-bottom: 1px solid #CCC;
+    color: #8A8A8A;
+    font-size: 12px;
+    padding: 5px 10px 4px;
+}
+#kiwi .autocomplete-header-label {
+    font-weight: bold;
+}
+#kiwi .autocomplete-item {
+    border-bottom: 1px solid #CCC;
+    background: #fff;
+    padding: 5px 20px;
+}
+#kiwi .autocomplete-item.selected { background: #D1EACD; }
+#kiwi .autocomplete-item .word { font-weight: bold; }
+#kiwi .autocomplete-item .matches { font-size: 0.9em; }
+#kiwi .autocomplete-item .actions { font-size: 0.9em; }
+#kiwi .autocomplete-item .actions a { margin-left: 1em; }
+#kiwi .autocomplete-item .description {
+    margin-right: 1em;
+    font-style: italic;
+}
 
 #kiwi .controlbox .input {
     background:#fff; margin:3px;
