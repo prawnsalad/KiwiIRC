@@ -1,4 +1,7 @@
 define('utils/formatdate', function(require, exports, module) {
+    
+    var utils = require('helpers/utils');
+
     module.exports = (function() {
         /*
         Modified version of date.format.js
@@ -69,50 +72,50 @@ define('utils/formatdate', function(require, exports, module) {
 
         var initLocaleFormats = function() {
             shortMonths = [
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.january').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.february').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.march').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.april').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.may').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.june').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.july').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.august').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.september').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.october').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.november').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_months.december').fetch()
+                utils.translateText('client.libs.date_format.short_months.january'),
+                utils.translateText('client.libs.date_format.short_months.february'),
+                utils.translateText('client.libs.date_format.short_months.march'),
+                utils.translateText('client.libs.date_format.short_months.april'),
+                utils.translateText('client.libs.date_format.short_months.may'),
+                utils.translateText('client.libs.date_format.short_months.june'),
+                utils.translateText('client.libs.date_format.short_months.july'),
+                utils.translateText('client.libs.date_format.short_months.august'),
+                utils.translateText('client.libs.date_format.short_months.september'),
+                utils.translateText('client.libs.date_format.short_months.october'),
+                utils.translateText('client.libs.date_format.short_months.november'),
+                utils.translateText('client.libs.date_format.short_months.december')
             ];
             longMonths = [
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.january').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.february').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.march').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.april').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.may').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.june').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.july').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.august').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.september').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.october').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.november').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_months.december').fetch()
+                utils.translateText('client.libs.date_format.long_months.january'),
+                utils.translateText('client.libs.date_format.long_months.february'),
+                utils.translateText('client.libs.date_format.long_months.march'),
+                utils.translateText('client.libs.date_format.long_months.april'),
+                utils.translateText('client.libs.date_format.long_months.may'),
+                utils.translateText('client.libs.date_format.long_months.june'),
+                utils.translateText('client.libs.date_format.long_months.july'),
+                utils.translateText('client.libs.date_format.long_months.august'),
+                utils.translateText('client.libs.date_format.long_months.september'),
+                utils.translateText('client.libs.date_format.long_months.october'),
+                utils.translateText('client.libs.date_format.long_months.november'),
+                utils.translateText('client.libs.date_format.long_months.december')
             ];
             shortDays = [
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.monday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.tuesday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.wednesday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.thursday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.friday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.saturday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.short_days.sunday').fetch()
+                utils.translateText('client.libs.date_format.short_days.monday'),
+                utils.translateText('client.libs.date_format.short_days.tuesday'),
+                utils.translateText('client.libs.date_format.short_days.wednesday'),
+                utils.translateText('client.libs.date_format.short_days.thursday'),
+                utils.translateText('client.libs.date_format.short_days.friday'),
+                utils.translateText('client.libs.date_format.short_days.saturday'),
+                utils.translateText('client.libs.date_format.short_days.sunday')
             ];
             longDays = [
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.monday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.tuesday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.wednesday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.thursday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.friday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.saturday').fetch(),
-                _kiwi.global.i18n.translate('client.libs.date_format.long_days.sunday').fetch()
+                utils.translateText('client.libs.date_format.long_days.monday'),
+                utils.translateText('client.libs.date_format.long_days.tuesday'),
+                utils.translateText('client.libs.date_format.long_days.wednesday'),
+                utils.translateText('client.libs.date_format.long_days.thursday'),
+                utils.translateText('client.libs.date_format.long_days.friday'),
+                utils.translateText('client.libs.date_format.long_days.saturday'),
+                utils.translateText('client.libs.date_format.long_days.sunday')
             ];
 
             locale_init = true;
@@ -126,7 +129,7 @@ define('utils/formatdate', function(require, exports, module) {
                 initLocaleFormats();
 
             working_date = working_date || new Date();
-            format = format || _kiwi.global.i18n.translate('client_date_format').fetch();
+            format = format || utils.translateText('client_date_format');
 
             return format.replace(/(\\?)(.)/g, function(_, esc, chr) {
                 return (esc === '' && replaceChars[chr]) ? replaceChars[chr].call(working_date) : chr;

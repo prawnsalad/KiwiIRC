@@ -298,11 +298,11 @@ define('models/application', function(require, exports, module) {
                     jump_server_interval = 1;
 
                     // Tell the user we are going to disconnect, wait 5 minutes then do the actual reconnect
-                    var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_prepare').fetch();
+                    var msg = utils.translateText('client_models_application_jumpserver_prepare');
                     that.message.text(msg, {timeout: 10000});
 
                     setTimeout(function forcedReconnect() {
-                        var msg = _kiwi.global.i18n.translate('client_models_application_jumpserver_reconnect').fetch();
+                        var msg = utils.translateText('client_models_application_jumpserver_reconnect');
                         that.message.text(msg, {timeout: 8000});
 
                         setTimeout(function forcedReconnectPartTwo() {

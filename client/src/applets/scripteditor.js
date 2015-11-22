@@ -1,4 +1,6 @@
     (function () {
+        var utils = require('helpers/utils');
+
         var view = Backbone.View.extend({
             events: {
                 'click .btn_save': 'onSave'
@@ -8,7 +10,7 @@
                 var that = this,
                     app = require('models/application').instance(),
                     text = {
-                        save: _kiwi.global.i18n.translate('client_applets_scripteditor_save').fetch()
+                        save: utils.translateText('client_applets_scripteditor_save')
                     };
                 this.$el = $(_.template($('#tmpl_script_editor').html().trim())(text));
 
@@ -58,7 +60,7 @@
                     _kiwi.user_script = new user_fn();
 
                 } catch (err) {
-                    this.setStatus(_kiwi.global.i18n.translate('client_applets_scripteditor_error').fetch(err.toString()));
+                    this.setStatus(utils.translateText('client_applets_scripteditor_error', err.toString()));
                     return;
                 }
 
@@ -66,7 +68,7 @@
                 _kiwi.global.settings.set('user_script', this.editor.getValue());
                 _kiwi.global.settings.save();
 
-                this.setStatus(_kiwi.global.i18n.translate('client_applets_scripteditor_saved').fetch() + ' :)');
+                this.setStatus(utils.translateText('client_applets_scripteditor_saved') + ' :)');
             },
 
 
@@ -87,7 +89,7 @@
             initialize: function () {
                 var that = this;
 
-                this.set('title', _kiwi.global.i18n.translate('client_applets_scripteditor_title').fetch());
+                this.set('title', utils.translateText('client_applets_scripteditor_title'));
                 this.view = new view({model: this});
 
             }

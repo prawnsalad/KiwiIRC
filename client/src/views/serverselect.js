@@ -1,6 +1,7 @@
 define('views/serverselect', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         events: {
@@ -15,19 +16,19 @@ define('views/serverselect', function(require, exports, module) {
         initialize: function () {
             var that = this,
                 text = {
-                    think_nick: _kiwi.global.i18n.translate('client_views_serverselect_form_title').fetch(),
-                    nickname: _kiwi.global.i18n.translate('client_views_serverselect_nickname').fetch(),
-                    have_password: _kiwi.global.i18n.translate('client_views_serverselect_enable_password').fetch(),
-                    password: _kiwi.global.i18n.translate('client_views_serverselect_password').fetch(),
-                    channel: _kiwi.global.i18n.translate('client_views_serverselect_channel').fetch(),
-                    channel_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey').fetch(),
-                    require_key: _kiwi.global.i18n.translate('client_views_serverselect_channelkey_required').fetch(),
-                    key: _kiwi.global.i18n.translate('client_views_serverselect_key').fetch(),
-                    start: _kiwi.global.i18n.translate('client_views_serverselect_connection_start').fetch(),
-                    server_network: _kiwi.global.i18n.translate('client_views_serverselect_server_and_network').fetch(),
-                    server: _kiwi.global.i18n.translate('client_views_serverselect_server').fetch(),
-                    port: _kiwi.global.i18n.translate('client_views_serverselect_port').fetch(),
-                    powered_by: _kiwi.global.i18n.translate('client_views_serverselect_poweredby').fetch()
+                    think_nick: utils.translateText('client_views_serverselect_form_title'),
+                    nickname: utils.translateText('client_views_serverselect_nickname'),
+                    have_password: utils.translateText('client_views_serverselect_enable_password'),
+                    password: utils.translateText('client_views_serverselect_password'),
+                    channel: utils.translateText('client_views_serverselect_channel'),
+                    channel_key: utils.translateText('client_views_serverselect_channelkey'),
+                    require_key: utils.translateText('client_views_serverselect_channelkey_required'),
+                    key: utils.translateText('client_views_serverselect_key'),
+                    start: utils.translateText('client_views_serverselect_connection_start'),
+                    server_network: utils.translateText('client_views_serverselect_server_and_network'),
+                    server: utils.translateText('client_views_serverselect_server'),
+                    port: utils.translateText('client_views_serverselect_port'),
+                    powered_by: utils.translateText('client_views_serverselect_poweredby')
                 };
 
             this.$el = $(_.template($('#tmpl_server_select').html().trim())(text));
@@ -66,7 +67,7 @@ define('views/serverselect', function(require, exports, module) {
 
             // Make sure a nick is chosen
             if (!$('input.nick', this.$el).val().trim()) {
-                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_error_empty').fetch());
+                this.setStatus(utils.translateText('client_views_serverselect_nickname_error_empty'));
                 $('input.nick', this.$el).select();
                 return;
             }
@@ -270,7 +271,7 @@ define('views/serverselect', function(require, exports, module) {
 
         networkConnecting: function (event) {
             this.model.trigger('connecting');
-            this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_connection_trying').fetch(), 'ok');
+            this.setStatus(utils.translateText('client_views_serverselect_connection_trying'), 'ok');
 
             this.$('.status').append('<a class="show_server"><i class="fa fa-info-circle"></i></a>');
         },
@@ -289,7 +290,7 @@ define('views/serverselect', function(require, exports, module) {
 
             switch(data.error) {
             case 'nickname_in_use':
-                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_error_alreadyinuse').fetch());
+                this.setStatus(utils.translateText('client_views_serverselect_nickname_error_alreadyinuse'));
                 this.show('nick_change');
                 this.$el.find('.nick').select();
                 break;
@@ -297,13 +298,13 @@ define('views/serverselect', function(require, exports, module) {
                 if (data.reason) {
                     this.setStatus(data.reason);
                 } else {
-                    this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_nickname_invalid').fetch());
+                    this.setStatus(utils.translateText('client_views_serverselect_nickname_invalid'));
                 }
                 this.show('nick_change');
                 this.$el.find('.nick').select();
                 break;
             case 'password_mismatch':
-                this.setStatus(_kiwi.global.i18n.translate('client_views_serverselect_password_incorrect').fetch());
+                this.setStatus(utils.translateText('client_views_serverselect_password_incorrect'));
                 this.show('enter_password');
                 this.$el.find('.password').select();
                 break;
@@ -314,16 +315,16 @@ define('views/serverselect', function(require, exports, module) {
         },
 
         showError: function (error_reason) {
-            var err_text = _kiwi.global.i18n.translate('client_views_serverselect_connection_error').fetch();
+            var err_text = utils.translateText('client_views_serverselect_connection_error');
 
             if (error_reason) {
                 switch (error_reason) {
                 case 'ENOTFOUND':
-                    err_text = _kiwi.global.i18n.translate('client_views_serverselect_server_notfound').fetch();
+                    err_text = utils.translateText('client_views_serverselect_server_notfound');
                     break;
 
                 case 'ECONNREFUSED':
-                    err_text += ' (' + _kiwi.global.i18n.translate('client_views_serverselect_connection_refused').fetch() + ')';
+                    err_text += ' (' + utils.translateText('client_views_serverselect_connection_refused') + ')';
                     break;
 
                 default:

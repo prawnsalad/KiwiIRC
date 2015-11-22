@@ -850,29 +850,29 @@ define('models/network', function(require, exports, module) {
         switch (event.error) {
         case 'banned_from_channel':
             panel.addMsg(' ', utils.styleText('channel_banned', {nick: event.nick, text: utils.translateText('client_models_network_banned', [event.channel, event.reason]), channel: event.channel}), 'status');
-            Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_banned').fetch(event.channel, event.reason));
+            Application.instance().message.text(utils.translateText('client_models_network_banned', [event.channel, event.reason]));
             break;
         case 'bad_channel_key':
             panel.addMsg(' ', utils.styleText('channel_badkey', {nick: event.nick, text: utils.translateText('client_models_network_channel_badkey', [event.channel]), channel: event.channel}), 'status');
-            Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_channel_badkey').fetch(event.channel));
+            Application.instance().message.text(utils.translateText('client_models_network_channel_badkey', [event.channel]));
             break;
         case 'invite_only_channel':
             panel.addMsg(' ', utils.styleText('channel_inviteonly', {nick: event.nick, text: utils.translateText('client_models_network_channel_inviteonly', [event.nick, event.channel]), channel: event.channel}), 'status');
-            Application.instance().message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_inviteonly').fetch());
+            Application.instance().message.text(event.channel + ' ' + utils.translateText('client_models_network_channel_inviteonly'));
             break;
         case 'user_on_channel':
             panel.addMsg(' ', utils.styleText('channel_alreadyin', {nick: event.nick, text: utils.translateText('client_models_network_channel_alreadyin'), channel: event.channel}));
             break;
         case 'channel_is_full':
             panel.addMsg(' ', utils.styleText('channel_limitreached', {nick: event.nick, text: utils.translateText('client_models_network_channel_limitreached', [event.channel]), channel: event.channel}), 'status');
-            Application.instance().message.text(event.channel + ' ' + _kiwi.global.i18n.translate('client_models_network_channel_limitreached').fetch(event.channel));
+            Application.instance().message.text(event.channel + ' ' + utils.translateText('client_models_network_channel_limitreached', [event.channel]));
             break;
         case 'chanop_privs_needed':
             panel.addMsg(' ', utils.styleText('chanop_privs_needed', {text: event.reason, channel: event.channel}), 'status');
             Application.instance().message.text(event.reason + ' (' + event.channel + ')');
             break;
         case 'cannot_send_to_channel':
-            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Cannot send message to channel, you are not voiced').fetch(event.channel, event.reason), 'status');
+            panel.addMsg(' ', '== ' + utils.translateText('Cannot send message to channel, you are not voiced', [event.channel, event.reason]), 'status');
             break;
         case 'no_such_nick':
             tmp = this.panels.getByName(event.nick);
@@ -885,7 +885,7 @@ define('models/network', function(require, exports, module) {
         case 'nickname_in_use':
             this.panels.server.addMsg(' ', utils.styleText('nickname_alreadyinuse', {nick: event.nick, text: utils.translateText('client_models_network_nickname_alreadyinuse', [event.nick]), channel: event.channel}), 'status');
             if (this.panels.server !== this.panels.active) {
-                Application.instance().message.text(_kiwi.global.i18n.translate('client_models_network_nickname_alreadyinuse').fetch(event.nick));
+                Application.instance().message.text(utils.translateText('client_models_network_nickname_alreadyinuse', [event.nick]));
             }
 
             // Only show the nickchange component if the controlbox is open

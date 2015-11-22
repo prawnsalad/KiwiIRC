@@ -608,7 +608,7 @@ define('misc/clientuicommands', function(require, exports, module) {
 
         // If no server address given, show the new connection dialog
         if (!ev.params[0]) {
-            tmp = new (require('views/menubox'))(_kiwi.global.i18n.translate('client_models_application_connection_create').fetch());
+            tmp = new (require('views/menubox'))(utils.translateText('client_models_application_connection_create'));
             tmp.addItem('new_connection', new (require('models/newconnection'))().view.$el);
             tmp.show();
 

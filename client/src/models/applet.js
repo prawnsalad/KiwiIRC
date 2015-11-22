@@ -1,4 +1,7 @@
 define('models/applet', function(require, exports, module) {
+    
+    var utils = require('helpers/utils');
+
     module.exports = require('models/panel').extend({
         initialize: function (attributes) {
             // Temporary name
@@ -21,7 +24,7 @@ define('models/applet', function(require, exports, module) {
                 if (applet_object.get || applet_object.extend) {
 
                     // Try find a title for the applet
-                    this.set('title', applet_object.get('title') || _kiwi.global.i18n.translate('client_models_applet_unknown').fetch());
+                    this.set('title', applet_object.get('title') || utils.translateText('client_models_applet_unknown'));
 
                     // Update the tabs title if the applet changes it
                     applet_object.bind('change:title', function (obj, new_value) {
@@ -52,11 +55,11 @@ define('models/applet', function(require, exports, module) {
         loadFromUrl: function(applet_url, applet_name) {
             var that = this;
 
-            this.view.$el.html(_kiwi.global.i18n.translate('client_models_applet_loading').fetch());
+            this.view.$el.html(utils.translateText('client_models_applet_loading'));
             $script(applet_url, function () {
                 // Check if the applet loaded OK
                 if (!_kiwi.applets[applet_name]) {
-                    that.view.$el.html(_kiwi.global.i18n.translate('client_models_applet_notfound').fetch());
+                    that.view.$el.html(utils.translateText('client_models_applet_notfound'));
                     return;
                 }
 

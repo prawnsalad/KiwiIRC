@@ -1,6 +1,7 @@
 define('views/nickchangebox', function(require, exports, module) {
 
     var Application = require('models/application');
+    var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
         events: {
@@ -10,9 +11,9 @@ define('views/nickchangebox', function(require, exports, module) {
 
         initialize: function () {
             var text = {
-                new_nick: _kiwi.global.i18n.translate('client_views_nickchangebox_new').fetch(),
-                change: _kiwi.global.i18n.translate('client_views_nickchangebox_change').fetch(),
-                cancel: _kiwi.global.i18n.translate('client_views_nickchangebox_cancel').fetch()
+                new_nick: utils.translateText('client_views_nickchangebox_new'),
+                change: utils.translateText('client_views_nickchangebox_change'),
+                cancel: utils.translateText('client_views_nickchangebox_cancel')
             };
             this.$el = $(_.template($('#tmpl_nickchange').html().trim())(text));
         },

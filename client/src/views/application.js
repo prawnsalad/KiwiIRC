@@ -1,4 +1,7 @@
 define('views/application', function(require, exports, module) {
+
+    var utils = require('helpers/utils');
+    
     module.exports = Backbone.View.extend({
         initialize: function () {
             var that = this;
@@ -38,7 +41,7 @@ define('views/application', function(require, exports, module) {
             // Confirmation require to leave the page
             window.onbeforeunload = function () {
                 if (_kiwi.gateway.isConnected()) {
-                    return _kiwi.global.i18n.translate('client_views_application_close_notice').fetch();
+                    return utils.translateText('client_views_application_close_notice');
                 }
             };
 

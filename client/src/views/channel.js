@@ -56,7 +56,7 @@ define('views/channel', function(require, exports, module) {
 
             // Only show the loader if this is a channel (ie. not a query)
             if (this.model.isChannel()) {
-                this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + _kiwi.global.i18n.translate('client_views_channel_joining').fetch() + ' <span class="loader"></span></div>');
+                this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + utils.translateText('client_views_channel_joining') + ' <span class="loader"></span></div>');
             }
 
             this.model.bind('msg', this.newMsg, this);
@@ -97,7 +97,7 @@ define('views/channel', function(require, exports, module) {
                         this.alert('action');
 
                     } else if (msg.is_highlight) {
-                        Application.instance().view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                        Application.instance().view.alertWindow('* ' + utils.translateText('client_views_panel_activity'));
                         Application.instance().view.favicon.newHighlight();
                         Application.instance().view.playSound('highlight');
                         Application.instance().view.showNotification(this.model.get('name'), msg.unparsed_msg);
@@ -106,13 +106,13 @@ define('views/channel', function(require, exports, module) {
                     } else {
                         // If this is the active panel, send an alert out
                         if (this.model.isActive()) {
-                            Application.instance().view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                            Application.instance().view.alertWindow('* ' + utils.translateText('client_views_panel_activity'));
                         }
                         this.alert('activity');
                     }
 
                     if (this.model.isQuery() && !this.model.isActive()) {
-                        Application.instance().view.alertWindow('* ' + _kiwi.global.i18n.translate('client_views_panel_activity').fetch());
+                        Application.instance().view.alertWindow('* ' + utils.translateText('client_views_panel_activity'));
 
                         // Highlights have already been dealt with above
                         if (!msg.is_highlight) {

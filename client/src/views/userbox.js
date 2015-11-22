@@ -19,15 +19,15 @@ define('views/userbox', function(require, exports, module) {
 
         initialize: function () {
             var text = {
-                op: _kiwi.global.i18n.translate('client_views_userbox_op').fetch(),
-                de_op: _kiwi.global.i18n.translate('client_views_userbox_deop').fetch(),
-                voice: _kiwi.global.i18n.translate('client_views_userbox_voice').fetch(),
-                de_voice: _kiwi.global.i18n.translate('client_views_userbox_devoice').fetch(),
-                kick: _kiwi.global.i18n.translate('client_views_userbox_kick').fetch(),
-                ban: _kiwi.global.i18n.translate('client_views_userbox_ban').fetch(),
-                message: _kiwi.global.i18n.translate('client_views_userbox_query').fetch(),
-                info: _kiwi.global.i18n.translate('client_views_userbox_whois').fetch(),
-                ignore: _kiwi.global.i18n.translate('client_views_userbox_ignore').fetch()
+                op: utils.translateText('client_views_userbox_op'),
+                de_op: utils.translateText('client_views_userbox_deop'),
+                voice: utils.translateText('client_views_userbox_voice'),
+                de_voice: utils.translateText('client_views_userbox_devoice'),
+                kick: utils.translateText('client_views_userbox_kick'),
+                ban: utils.translateText('client_views_userbox_ban'),
+                message: utils.translateText('client_views_userbox_query'),
+                info: utils.translateText('client_views_userbox_whois'),
+                ignore: utils.translateText('client_views_userbox_ignore')
             };
             this.$el = $(_.template($('#tmpl_userbox').html().trim())(text));
         },
