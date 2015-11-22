@@ -582,10 +582,9 @@
                 // Load themes
                 if (opts.themes) {
                     $.each(opts.themes, function (theme_idx, theme) {
-                        var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase()),
-                            rel = (disabled?'alternate ':'') + 'stylesheet';
+                        var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase());
 
-                        var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
+                        var link = $.parseHTML('<link rel="stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
                         link.disabled = disabled;
 
                         $(link).appendTo($('head'));
