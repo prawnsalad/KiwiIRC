@@ -96,6 +96,6 @@
         });
 
 
-        require('models/applet').register('kiwi_script_editor', applet);
-        //require('models/applet').loadOnce('kiwi_script_editor');
+        require('ui/panels/applet').register('kiwi_script_editor', applet);
+        //require('ui/panels/applet').loadOnce('kiwi_script_editor');
     })();

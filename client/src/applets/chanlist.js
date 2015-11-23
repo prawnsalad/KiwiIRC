@@ -203,5 +203,5 @@
 
 
 
-    require('models/applet').register('kiwi_chanlist', Applet);
+    require('ui/panels/applet').register('kiwi_chanlist', Applet);
 })();

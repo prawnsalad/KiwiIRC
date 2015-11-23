@@ -1,12 +1,12 @@
-define('models/applet', function(require, exports, module) {
+define('ui/panels/applet', function(require, exports, module) {
     
     var utils = require('helpers/utils');
 
-    module.exports = require('models/panel').extend({
+    module.exports = require('./panel').extend({
         initialize: function (attributes) {
             // Temporary name
             var name = "applet_"+(new Date().getTime().toString()) + Math.ceil(Math.random()*100).toString();
-            this.view = new (require('views/applet'))({model: this, name: name});
+            this.view = new (require('./applet_view'))({model: this, name: name});
 
             this.set({
                 "name": name
@@ -128,7 +128,7 @@ define('models/applet', function(require, exports, module) {
                 return;
 
             // Create the applet and load the content
-            applet = new (require('models/applet'))();
+            applet = new (require('./applet'))();
             applet.load(new applet_obj({_applet_name: applet_name}));
 
             // Add it into the tab list if needed (default)

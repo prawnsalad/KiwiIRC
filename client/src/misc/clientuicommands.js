@@ -303,7 +303,7 @@ define('misc/clientuicommands', function(require, exports, module) {
         // Check if we have the panel already. If not, create it
         panel = this.app.connections.active_connection.panels.getByName(destination);
         if (!panel) {
-            panel = new (require('models/query'))({name: destination, network: this.app.connections.active_connection});
+            panel = new (require('ui/panels/query'))({name: destination, network: this.app.connections.active_connection});
             this.app.connections.active_connection.panels.add(panel);
         }
 
@@ -476,13 +476,13 @@ define('misc/clientuicommands', function(require, exports, module) {
 
 
     function settingsCommand (ev) {
-        var settings = require('models/applet').loadOnce('kiwi_settings');
+        var settings = require('ui/panels/applet').loadOnce('kiwi_settings');
         settings.view.show();
     }
 
 
     function scriptCommand (ev) {
-        var editor = require('models/applet').loadOnce('kiwi_script_editor');
+        var editor = require('ui/panels/applet').loadOnce('kiwi_script_editor');
         editor.view.show();
     }
 
@@ -490,7 +490,7 @@ define('misc/clientuicommands', function(require, exports, module) {
     function appletCommand (ev) {
         if (!ev.params[0]) return;
 
-        var panel = new (require('models/applet'))();
+        var panel = new (require('ui/panels/applet'))();
 
         if (ev.params[1]) {
             // Url and name given

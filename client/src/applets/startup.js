@@ -53,5 +53,5 @@
     });
 
 
-    require('models/applet').register('kiwi_startup', applet);
+    require('ui/panels/applet').register('kiwi_startup', applet);
 })();

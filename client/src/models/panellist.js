@@ -1,6 +1,6 @@
 define('models/panellist', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
-        model: require('models/panel'),
+        model: require('ui/panels/panel'),
 
         comparator: function (chan) {
             return chan.get('name');

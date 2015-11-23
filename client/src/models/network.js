@@ -74,7 +74,7 @@ define('models/network', function(require, exports, module) {
             //this.panels.network = this;
 
             // Automatically create a server tab
-            var server_panel = new (require('models/server'))({name: 'Server', network: this});
+            var server_panel = new (require('ui/panels/server'))({name: 'Server', network: this});
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
 
@@ -186,7 +186,7 @@ define('models/network', function(require, exports, module) {
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
-                    channel = new (require('models/channel'))({name: channel_name, network: that});
+                    channel = new (require('ui/panels/channel'))({name: channel_name, network: that});
                     that.panels.add(channel);
                 }
 
@@ -248,7 +248,7 @@ define('models/network', function(require, exports, module) {
             // Check if we have the panel already. If not, create it
             query = that.panels.getByName(nick);
             if (!query) {
-                query = new (require('models/query'))({name: nick, network: this});
+                query = new (require('ui/panels/query'))({name: nick, network: this});
                 that.panels.add(query);
             }
 
@@ -341,7 +341,7 @@ define('models/network', function(require, exports, module) {
         var c, members, user;
         c = this.panels.getByName(event.channel);
         if (!c) {
-            c = new (require('models/channel'))({name: event.channel, network: this});
+            c = new (require('ui/panels/channel'))({name: event.channel, network: this});
             this.panels.add(c);
         }
 
@@ -502,7 +502,7 @@ define('models/network', function(require, exports, module) {
                 // If a panel isn't found for this PM and we allow new queries, create one
                 panel = this.panels.getByName(event.nick);
                 if (!panel && !_kiwi.global.settings.get('ignore_new_queries')) {
-                    panel = new new (require('models/query'))({name: event.nick, network: this});
+                    panel = new new (require('ui/panels/query'))({name: event.nick, network: this});
                     this.panels.add(panel);
                 } else if(!panel) {
                     // We have not allowed new queries and we have not opened the panel ourselves, don't process the message
@@ -834,7 +834,7 @@ define('models/network', function(require, exports, module) {
 
 
     function onListStart(event) {
-        var chanlist = require('models/applet').loadOnce('kiwi_chanlist');
+        var chanlist = require('ui/panels/applet').loadOnce('kiwi_chanlist');
         chanlist.view.show();
     }
 

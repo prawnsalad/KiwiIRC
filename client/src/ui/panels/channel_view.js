@@ -1,9 +1,9 @@
-define('views/channel', function(require, exports, module) {
+define('ui/panels/channel_view', function(require, exports, module) {
 
     var Application = require('ui/application/application');
     var utils = require('helpers/utils');
 
-    module.exports = require('views/panel').extend({
+    module.exports = require('./panel_view').extend({
         events: function(){
             var parent_events = this.constructor.__super__.events;
 

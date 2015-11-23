@@ -1,4 +1,4 @@
-define('views/panel', function(require, exports, module) {
+define('ui/panels/panel_view', function(require, exports, module) {
 
     var Application = require('ui/application/application');
 

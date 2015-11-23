@@ -84,7 +84,7 @@ define('ui/application/application', function(require, exports, module) {
 
 
         showStartup: function() {
-            this.startup_applet = require('models/applet').load(this.startup_applet_name, {no_tab: true});
+            this.startup_applet = require('ui/panels/applet').load(this.startup_applet_name, {no_tab: true});
             this.startup_applet.tab = this.view.$('.console');
             this.startup_applet.view.show();
 
@@ -137,8 +137,8 @@ define('ui/application/application', function(require, exports, module) {
             _kiwi.global.panels = this.panels;
             _kiwi.global.panels.applets = this.applet_panels;
 
-            _kiwi.global.components.Applet = require('models/applet');
-            _kiwi.global.components.Panel =require('models/panel');
+            _kiwi.global.components.Applet = require('ui/panels/applet');
+            _kiwi.global.components.Panel =require('ui/panels/panel');
             _kiwi.global.components.MenuBox = require('ui/menubox/menubox');
             _kiwi.global.components.DataStore = require('models/datastore');
             _kiwi.global.components.Notification = require('ui/notification/notification');

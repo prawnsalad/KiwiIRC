@@ -177,5 +177,5 @@
     });
 
 
-    require('models/applet').register('kiwi_settings', Applet);
+    require('ui/panels/applet').register('kiwi_settings', Applet);
 })();

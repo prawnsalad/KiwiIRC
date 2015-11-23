@@ -1,8 +1,8 @@
-define('models/server', function(require, exports, module) {
-    module.exports = require('models/channel').extend({
+define('ui/panels/server', function(require, exports, module) {
+    module.exports = require('./channel').extend({
         initialize: function (attributes) {
             var name = "Server";
-            this.view = new (require('views/channel'))({"model": this, "name": name});
+            this.view = new (require('./channel_view'))({"model": this, "name": name});
             this.set({
                 "scrollback": [],
                 "name": name

@@ -1,10 +1,10 @@
-define('models/channel', function(require, exports, module) {
+define('ui/panels/channel', function(require, exports, module) {
     // TODO: Channel modes
     // TODO: Listen to gateway events for anythign related to this channel
 
     var utils = require('helpers/utils');
 
-    module.exports = require('models/panel').extend({
+    module.exports = require('./panel').extend({
         initialize: function (attributes) {
             var name = this.get("name") || "",
                 members;
@@ -16,7 +16,7 @@ define('models/channel', function(require, exports, module) {
                 "topic": ""
             }, {"silent": true});
 
-            this.view = new (require('views/channel'))({"model": this, "name": name});
+            this.view = new (require('./channel_view'))({"model": this, "name": name});
 
             members = this.get("members");
             members.channel = this;

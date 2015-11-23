@@ -1,11 +1,11 @@
-define('models/panel', function(require, exports, module) {
+define('ui/panels/panel', function(require, exports, module) {
 
     var Application = require('ui/application/application');
 
     module.exports = Backbone.Model.extend({
         initialize: function (attributes) {
             var name = this.get("name") || "";
-            this.view = new (require('views/panel'))({"model": this, "name": name});
+            this.view = new (require('ui/panels/panel_view'))({"model": this, "name": name});
             this.set({
                 "scrollback": [],
                 "name": name
