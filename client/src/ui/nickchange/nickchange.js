@@ -1,6 +1,6 @@
-define('views/nickchangebox', function(require, exports, module) {
+define('ui/nickchange/nickchange', function(require, exports, module) {
 
-    var Application = require('models/application');
+    var Application = require('ui/application/application');
     var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({

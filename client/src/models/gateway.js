@@ -1,6 +1,6 @@
 define('models/gateway', function(require, exports, module) {
 
-    var Application = require('models/application');
+    var Application = require('ui/application/application');
 
     module.exports = Backbone.Model.extend({
 

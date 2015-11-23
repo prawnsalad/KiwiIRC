@@ -9,7 +9,7 @@
 
 
         showConnectionDialog: function() {
-            var connection_dialog = this.connection_dialog = new (require('models/newconnection'))();
+            var connection_dialog = this.connection_dialog = new (require('ui/newconnection/newconnection'))();
             connection_dialog.populateDefaultServerSettings();
 
             connection_dialog.view.$el.addClass('initial');

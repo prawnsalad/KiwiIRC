@@ -1,4 +1,4 @@
-define('views/mediamessage', function(require, exports, module) {
+define('ui/mediamessage/mediamessage', function(require, exports, module) {
 
     var utils = require('helpers/utils');
 

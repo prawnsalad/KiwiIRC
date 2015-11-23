@@ -568,7 +568,7 @@ define('helpers/utils', function(require, exports, module) {
      *   %O:        cancel styles
      **/
     exports.styleText = function styleText(string_id, params) {
-        var application = require('models/application').instance(),
+        var application = require('ui/application/application').instance(),
             style, text;
 
         //style = utils.formatToIrcMsg(application.text_theme[string_id]);

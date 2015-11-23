@@ -1,4 +1,4 @@
-define('views/member', function(require, exports, module) {
+define('ui/members/member_view', function(require, exports, module) {
     module.exports = Backbone.View.extend({
         tagName: "li",
         initialize: function (options) {

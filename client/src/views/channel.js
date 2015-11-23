@@ -1,6 +1,6 @@
 define('views/channel', function(require, exports, module) {
 
-    var Application = require('models/application');
+    var Application = require('ui/application/application');
     var utils = require('helpers/utils');
 
     module.exports = require('views/panel').extend({
@@ -242,7 +242,7 @@ define('views/channel', function(require, exports, module) {
                 }
 
                 // Get any media HTML if supported
-                extra_html = require('views/mediamessage').buildHtml(url);
+                extra_html = require('ui/mediamessage/mediamessage').buildHtml(url);
 
                 // Make the link clickable
                 return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url.replace(/"/g, '%22') + '">' + _.escape(nice) + '</a>' + extra_html;
@@ -474,11 +474,11 @@ define('views/channel', function(require, exports, module) {
                 return;
             }
 
-            userbox = new (require('views/userbox'))();
+            userbox = new (require('ui/userbox/userbox'))();
             userbox.setTargets(member, this.model);
             userbox.displayOpItems(are_we_an_op);
 
-            menubox = new (require('views/menubox'))(member.get('nick') || 'User');
+            menubox = new (require('ui/menubox/menubox'))(member.get('nick') || 'User');
             menubox.addItem('userbox', userbox.$el);
             menubox.showFooter(false);
 
@@ -526,7 +526,7 @@ define('views/channel', function(require, exports, module) {
             if ($media.data('media')) {
                 media_message = $media.data('media');
             } else {
-                media_message = new (require('views/mediamessage'))({el: $media[0]});
+                media_message = new (require('ui/mediamessage/mediamessage'))({el: $media[0]});
 
                 // Cache this MediaMessage instance for when it's opened again
                 $media.data('media', media_message);

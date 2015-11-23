@@ -1,9 +1,9 @@
-define('models/networkpanellist', function(require, exports, module) {
+define('ui/networkpanellist/networkpanellist', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
         model: require('models/network'),
 
         initialize: function() {
-            this.view = new (require('views/networktabs'))({model: this});
+            this.view = new (require('./tabs'))({model: this});
 
             this.on('add', this.onNetworkAdd, this);
             this.on('remove', this.onNetworkRemove, this);

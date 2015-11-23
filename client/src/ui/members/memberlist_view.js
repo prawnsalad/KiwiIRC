@@ -1,6 +1,6 @@
-define('views/memberlist', function(require, exports, module) {
+define('ui/members/memberlist_view', function(require, exports, module) {
 
-    var Application = require('models/application');
+    var Application = require('ui/application/application');
     var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({
@@ -65,11 +65,11 @@ define('views/memberlist', function(require, exports, module) {
                 userbox,
                 are_we_an_op = !!this.model.getByNick(Application.instance().connections.active_connection.get('nick')).get('is_op');
 
-            userbox = new (require('views/userbox'))();
+            userbox = new (require('ui/userbox/userbox'))();
             userbox.setTargets(member, this.model.channel);
             userbox.displayOpItems(are_we_an_op);
 
-            var menu = new (require('views/menubox'))(member.get('nick') || 'User');
+            var menu = new (require('ui/menubox/menubox'))(member.get('nick') || 'User');
             menu.addItem('userbox', userbox.$el);
             menu.showFooter(false);
 
@@ -117,7 +117,7 @@ define('views/memberlist', function(require, exports, module) {
 
 
         channelInfoClick: function(event) {
-            new (require('models/channelinfo'))({channel: this.model.channel});
+            new (require('ui/channelinfo/channelinfo'))({channel: this.model.channel});
         },
 
 

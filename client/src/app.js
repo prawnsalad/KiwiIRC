@@ -35,7 +35,7 @@ _kiwi.global = {
     },
 
     addMediaMessageType: function(match, buildHtml) {
-        require('views/mediamessage').addType(match, buildHtml);
+        require('ui/mediamessage/mediamessage').addType(match, buildHtml);
     },
 
     // Event managers for plugins
@@ -87,7 +87,7 @@ _kiwi.global = {
         },
 
         Network: function(connection_id) {
-            var app = require('models/application').instance(),
+            var app = require('ui/application/application').instance(),
                 connection_event;
 
             // If no connection id given, use all connections
@@ -196,7 +196,7 @@ _kiwi.global = {
         },
 
         ControlInput: function() {
-            var app = require('models/application').instance();
+            var app = require('ui/application/application').instance();
             var obj = new this.EventComponent(app.controlbox);
             var funcs = {
                 run: 'processInput', addPluginIcon: 'addPluginIcon'
@@ -255,7 +255,7 @@ _kiwi.global = {
 
 
         Promise.all([locale_promise, theme_promise]).then(function () {
-            _kiwi.app = new (require('models/application'))(opts);
+            _kiwi.app = new (require('ui/application/application'))(opts);
 
             // Start the client up
             _kiwi.app.initializeInterfaces();
@@ -274,13 +274,13 @@ _kiwi.global = {
     },
 
     start: function() {
-        var app = require('models/application').instance();
+        var app = require('ui/application/application').instance();
         app.showStartup();
     },
 
     // Allow plugins to change the startup applet
     registerStartupApplet: function(startup_applet_name) {
-        var app = require('models/application').instance();
+        var app = require('ui/application/application').instance();
         app.startup_applet_name = startup_applet_name;
     },
 
@@ -298,7 +298,7 @@ _kiwi.global = {
      * Taking settings from the server and URL, extract the default server/channel/nick settings
      */
     defaultServerSettings: function () {
-        var app = require('models/application').instance();
+        var app = require('ui/application/application').instance();
         var parts;
         var defaults = {
             nick: '',

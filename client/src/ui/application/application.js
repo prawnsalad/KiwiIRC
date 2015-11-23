@@ -1,4 +1,5 @@
-define('models/application', function(require, exports, module) {
+// models/application
+define('ui/application/application', function(require, exports, module) {
 
     var utils = require('helpers/utils');
 
@@ -6,10 +7,10 @@ define('models/application', function(require, exports, module) {
     var instance = null;
 
     module.exports = Backbone.Model.extend({
-        /** require('views/application') */
+        /** require('./view') */
         view: null,
 
-        /** require('views/statusmessage') */
+        /** require('ui/statusmessage/statusmessage') */
         message: null,
 
         initialize: function (options) {
@@ -92,10 +93,10 @@ define('models/application', function(require, exports, module) {
 
 
         initializeClient: function () {
-            this.view = new (require('views/application'))({model: this, el: this.get('container')});
+            this.view = new (require('./view'))({model: this, el: this.get('container')});
 
             // Takes instances of model_network
-            this.connections = new (require('models/networkpanellist'))();
+            this.connections = new (require('ui/networkpanellist/networkpanellist'))();
 
             // If all connections are removed at some point, hide the bars
             this.connections.on('remove', _.bind(function() {
@@ -112,16 +113,16 @@ define('models/application', function(require, exports, module) {
             /**
              * Set the UI components up
              */
-            this.controlbox = (new (require('views/controlbox'))({el: $('#kiwi .controlbox')[0]})).render();
+            this.controlbox = (new (require('ui/controlbox/controlbox'))({el: $('#kiwi .controlbox')[0]})).render();
             this.client_ui_commands = new (require('misc/clientuicommands'))(this, this.controlbox);
 
-            this.rightbar = new (require('views/rightbar'))({el: this.view.$('.right_bar')[0]});
-            this.topicbar = new (require('views/topicbar'))({el: this.view.$el.find('.topic')[0]});
+            this.rightbar = new (require('ui/rightbar/rightbar'))({el: this.view.$('.right_bar')[0]});
+            this.topicbar = new (require('ui/topicbar/topicbar'))({el: this.view.$el.find('.topic')[0]});
 
             new (require('views/apptoolbar'))({el: this.view.$el.find('.toolbar .app_tools')[0]});
             new (require('views/channeltools'))({el: this.view.$el.find('.channel_tools')[0]});
 
-            this.message = new (require('views/statusmessage'))({el: this.view.$el.find('.status_message')[0]});
+            this.message = new (require('ui/statusmessage/statusmessage'))({el: this.view.$el.find('.status_message')[0]});
 
             this.resize_handle = new (require('views/resizehandler'))({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
@@ -138,9 +139,9 @@ define('models/application', function(require, exports, module) {
 
             _kiwi.global.components.Applet = require('models/applet');
             _kiwi.global.components.Panel =require('models/panel');
-            _kiwi.global.components.MenuBox = require('views/menubox');
+            _kiwi.global.components.MenuBox = require('ui/menubox/menubox');
             _kiwi.global.components.DataStore = require('models/datastore');
-            _kiwi.global.components.Notification = require('views/notification');
+            _kiwi.global.components.Notification = require('ui/notification/notification');
             _kiwi.global.components.Events = function() {
                 return kiwi.events.createProxy();
             };
@@ -160,7 +161,7 @@ define('models/application', function(require, exports, module) {
             var active_panel;
 
             var fn = function(panel_type) {
-                var application = require('models/application').instance(),
+                var application = require('./application').instance(),
                     panels;
 
                 // Default panel type

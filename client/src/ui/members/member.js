@@ -1,4 +1,4 @@
-define('models/member', function(require, exports, module) {
+define('ui/members/member', function(require, exports, module) {
     module.exports = Backbone.Model.extend({
         initialize: function (attributes) {
             var nick, modes, prefix;
@@ -15,7 +15,7 @@ define('models/member', function(require, exports, module) {
 
             this.updateOpStatus();
 
-            this.view = new (require('views/member'))({"model": this});
+            this.view = new (require('./member_view'))({"model": this});
         },
 
 

@@ -1,7 +1,7 @@
-define('models/newconnection', function(require, exports, module) {
+define('ui/newconnection/newconnection', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
         initialize: function() {
-            this.view = new (require('views/serverselect'))({model: this});
+            this.view = new (require('./view'))({model: this});
 
             this.view.bind('server_connect', this.onMakeConnection, this);
 

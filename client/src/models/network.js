@@ -1,6 +1,6 @@
 define('models/network', function(require, exports, module) {
 
-    var Application = require('models/application');
+    var Application = require('ui/application/application');
     var utils = require('helpers/utils');
 
     module.exports = Backbone.Model.extend({
@@ -353,7 +353,7 @@ define('models/network', function(require, exports, module) {
             return;
         }
 
-        user = new (require('models/member'))({
+        user = new (require('ui/members/member'))({
             nick: event.nick,
             ident: event.ident,
             hostname: event.hostname,
@@ -639,7 +639,7 @@ define('models/network', function(require, exports, module) {
 
         channel.temp_userlist = channel.temp_userlist || [];
         _.each(event.users, function (item) {
-            var user = new (require('models/member'))({
+            var user = new (require('ui/members/member'))({
                 nick: item.nick,
                 modes: item.modes,
                 user_prefixes: that.get('user_prefixes')

@@ -1,6 +1,7 @@
-define('views/topicbar', function(require, exports, module) {
+// views/topicbar
+define('ui/topicbar/topicbar', function(require, exports, module) {
 
-    var Application = require('models/application');
+    var Application = require('ui/application/application');
     var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({

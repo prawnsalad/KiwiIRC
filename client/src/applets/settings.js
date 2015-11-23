@@ -10,7 +10,7 @@
         },
 
         initialize: function (options) {
-            var application = require('models/application').instance(),
+            var application = require('ui/application/application').instance(),
                 utils = require('helpers/utils');
 
             var text = {
@@ -128,7 +128,7 @@
         registerProtocol: function (event) {
             event.preventDefault();
 
-            var application = require('models/application').instance();
+            var application = require('ui/application/application').instance();
 
             navigator.registerProtocolHandler('irc', document.location.origin + application.get('base_path') + '/%s', 'Kiwi IRC');
             navigator.registerProtocolHandler('ircs', document.location.origin + application.get('base_path') + '/%s', 'Kiwi IRC');

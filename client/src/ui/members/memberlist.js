@@ -1,9 +1,9 @@
-define('models/memberlist', function(require, exports, module) {
+define('ui/members/memberlist', function(require, exports, module) {
 
     var utils = require('helpers/utils');
 
     module.exports = Backbone.Collection.extend({
-        model: require('models/member'),
+        model: require('./member'),
         comparator: function (a, b) {
             var i, a_modes, b_modes, a_idx, b_idx, a_nick, b_nick;
             var user_prefixes = this.channel.get('network').get('user_prefixes');
@@ -54,7 +54,7 @@ define('models/memberlist', function(require, exports, module) {
 
 
         initialize: function (options) {
-            this.view = new (require('views/memberlist'))({"model": this});
+            this.view = new (require('./memberlist_view'))({"model": this});
             this.initNickCache();
         },
 

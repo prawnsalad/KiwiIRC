@@ -10,7 +10,7 @@ define('models/channel', function(require, exports, module) {
                 members;
 
             this.set({
-                "members": new (require('models/memberlist'))(),
+                "members": new (require('ui/members/memberlist'))(),
                 "name": name,
                 "scrollback": [],
                 "topic": ""

@@ -1,4 +1,4 @@
-define('views/application', function(require, exports, module) {
+define('ui/application/view', function(require, exports, module) {
 
     var utils = require('helpers/utils');
     
@@ -68,7 +68,7 @@ define('views/application', function(require, exports, module) {
             });
 
 
-            this.favicon = new (require('views/favicon'))();
+            this.favicon = new (require('ui/favicon/favicon'))();
             this.initSound();
 
             this.monitorPanelFallback();
