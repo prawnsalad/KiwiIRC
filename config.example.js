@@ -217,6 +217,7 @@ conf.client = {
         show_emoticons: true,
         ignore_new_queries: false,
         count_all_activity: false,
+        show_autocomplete_slideout: true,
         locale: null // null = use the browser locale settings
     },
     window_title: 'Kiwi IRC'
