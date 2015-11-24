@@ -199,9 +199,12 @@ conf.socks_proxy.pass = null;
 
 // Default settings for the client. These may be changed in the browser
 conf.client = {
+    restricted_server: true,
     server: 'irc.kiwiirc.com',
     port:    6697,
     ssl:     true,
+    // The below password is not sent to the client. Only read from the server
+    password: '',
     channel: '#kiwiirc',
     channel_key: '',
     nick:    'kiwi_?',
@@ -230,13 +233,6 @@ conf.client_themes = [
     'cli',
     'basic'
 ];
-
-
-// If set, the client may only connect to this 1 IRC server
-//conf.restrict_server = "irc.kiwiirc.com";
-//conf.restrict_server_port = 6667;
-//conf.restrict_server_ssl = false;
-//conf.restrict_server_password = "";
 
 
 /*

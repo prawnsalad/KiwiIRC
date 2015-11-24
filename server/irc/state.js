@@ -39,7 +39,7 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
 
     // Check the per-server limit on the number of connections
     if ((global.config.max_server_conns > 0) &&
-        (!global.config.restrict_server) &&
+        (!global.config.client.restricted_server) &&
         (!(global.config.webirc_pass && global.config.webirc_pass[hostname])) &&
         (!(global.config.ip_as_username && _.contains(global.config.ip_as_username, hostname))) &&
         (global.servers.numOnHost(hostname) >= global.config.max_server_conns))

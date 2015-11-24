@@ -65,12 +65,12 @@ function generateSettings(debug) {
         };
 
     // Any restricted server mode set?
-    if (config.get().restrict_server) {
+    if (config.get().client.restricted_server) {
         vars.server_settings = {
             connection: {
-                server: config.get().restrict_server,
-                port: config.get().restrict_server_port || 6667,
-                ssl: config.get().restrict_server_ssl,
+                server: config.get().client.server,
+                port: config.get().client.port || 6667,
+                ssl: config.get().client.ssl,
                 allow_change: false
             }
         };

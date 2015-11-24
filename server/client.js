@@ -144,18 +144,32 @@ Client.prototype.attachKiwiCommands = function() {
             if (command.encoding)
                 options.encoding = command.encoding;
 
+            // May be a restricted server password or given by the user
             options.password = global.config.restrict_server_password || command.password;
 
-            that.state.connect(
-                (global.config.restrict_server || command.hostname),
-                (global.config.restrict_server_port || command.port),
-                (typeof global.config.restrict_server_ssl !== 'undefined' ?
-                    global.config.restrict_server_ssl :
-                    command.ssl),
-                command.nick,
-                {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
-                options,
-                callback);
+            if (global.config.restricted_server) {
+                that.state.connect(
+                    global.config.client.server,
+                    global.config.client.port,
+                    global.config.client.ssl,
+                    command.nick,
+                    {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
+                    options,
+                    callback
+                );
+                
+            } else {
+                that.state.connect(
+                    command.hostname,
+                    command.port,
+                    command.ssl,
+                    command.nick,
+                    {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
+                    options,
+                    callback
+                );
+            }
+
         } else {
             return callback('Hostname, port and nickname must be specified');
         }
