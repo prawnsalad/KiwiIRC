@@ -1,4 +1,4 @@
-define('models/gateway', function(require, exports, module) {
+define('misc/gateway', function(require, exports, module) {
 
     var Application = require('ui/application/application');
 
@@ -153,7 +153,7 @@ define('models/gateway', function(require, exports, module) {
                             ssl: connection_info.ssl,
                             password: connection_info.password
                         };
-                        connection = new (require('models/network'))(inf);
+                        connection = new (require('misc/network'))(inf);
                         application.connections.add(connection);
                     }
 

@@ -1,4 +1,4 @@
-define('models/datastore', function(require, exports, module) {
+define('misc/datastore', function(require, exports, module) {
 	module.exports = Backbone.Model.extend({
 		initialize: function () {
 			this._namespace = '';
@@ -48,7 +48,7 @@ define('models/datastore', function(require, exports, module) {
 	{
 		// Generates a new instance of DataStore with a set namespace
 		instance: function (namespace, attributes) {
-			var ds = require('models/datastore');
+			var ds = require('./datastore');
 			var datastore = new ds(attributes);
 			datastore.namespace(namespace);
 			return datastore;

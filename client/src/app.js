@@ -19,8 +19,8 @@ _kiwi.utils = {};
  */
 _kiwi.global = {
     build_version: '',  // Kiwi IRC version this is built from (Set from index.html)
-    settings: undefined, // Instance of require('models/datastore')
-    plugins: undefined, // Instance of require('models/pluginmanager')
+    settings: undefined, // Instance of require('misc/datastore')
+    plugins: undefined, // Instance of require('misc/pluginmanager')
     events: undefined, // Instance of PluginInterface
     rpc: undefined, // Instance of WebsocketRpc
     utils: {}, // References to misc. re-usable helpers / functions
@@ -226,7 +226,7 @@ _kiwi.global = {
         this.initUtils();
 
         // Set up the settings datastore
-        _kiwi.global.settings = require('models/datastore').instance('kiwi.settings');
+        _kiwi.global.settings = require('misc/datastore').instance('kiwi.settings');
         _kiwi.global.settings.load();
 
         // Set the window title
@@ -264,7 +264,7 @@ _kiwi.global = {
             _kiwi.global.events  = new (require('helpers/plugininterface'))();
 
             // Now everything has started up, load the plugin manager for third party plugins
-            _kiwi.global.plugins = new (require('models/pluginmanager'))();
+            _kiwi.global.plugins = new (require('misc/pluginmanager'))();
 
             callback();
 

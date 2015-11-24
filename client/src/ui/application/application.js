@@ -62,7 +62,7 @@ define('ui/application/application', function(require, exports, module) {
             }
 
             // Set the gateway up
-            _kiwi.gateway = new (require('models/gateway'))({kiwi_server: kiwi_server});
+            _kiwi.gateway = new (require('misc/gateway'))({kiwi_server: kiwi_server});
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();
@@ -140,7 +140,7 @@ define('ui/application/application', function(require, exports, module) {
             _kiwi.global.components.Applet = require('ui/panels/applet');
             _kiwi.global.components.Panel =require('ui/panels/panel');
             _kiwi.global.components.MenuBox = require('ui/menubox/menubox');
-            _kiwi.global.components.DataStore = require('models/datastore');
+            _kiwi.global.components.DataStore = require('misc/datastore');
             _kiwi.global.components.Notification = require('ui/notification/notification');
             _kiwi.global.components.Events = function() {
                 return kiwi.events.createProxy();
