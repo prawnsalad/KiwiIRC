@@ -1,4 +1,4 @@
-define('views/resizehandler', function(require, exports, module) {
+define('ui/resizehandler/resizehandler', function(require, exports, module) {
 
     var Application = require('ui/application/application');
 

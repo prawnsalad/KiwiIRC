@@ -70,7 +70,7 @@ define('models/network', function(require, exports, module) {
             }
 
             // Create our panel list (tabs)
-            this.panels = new (require('models/panellist'))([], this);
+            this.panels = new (require('ui/paneltabs/paneltabs'))([], this);
             //this.panels.network = this;
 
             // Automatically create a server tab

@@ -1,4 +1,4 @@
-define('models/panellist', function(require, exports, module) {
+define('ui/paneltabs/paneltabs', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
         model: require('ui/panels/panel'),
 
@@ -13,7 +13,7 @@ define('models/panellist', function(require, exports, module) {
                 this.network = network;
             }
 
-            this.view = new (require('views/tabs'))({model: this});
+            this.view = new (require('./tabs'))({model: this});
 
             // Holds the active panel
             this.active = null;

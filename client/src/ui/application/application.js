@@ -106,7 +106,7 @@ define('ui/application/application', function(require, exports, module) {
             }, this));
 
             // Applets panel list
-            this.applet_panels = new (require('models/panellist'))();
+            this.applet_panels = new (require('ui/paneltabs/paneltabs'))();
             this.applet_panels.view.$el.addClass('panellist applets');
             this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
@@ -119,12 +119,12 @@ define('ui/application/application', function(require, exports, module) {
             this.rightbar = new (require('ui/rightbar/rightbar'))({el: this.view.$('.right_bar')[0]});
             this.topicbar = new (require('ui/topicbar/topicbar'))({el: this.view.$el.find('.topic')[0]});
 
-            new (require('views/apptoolbar'))({el: this.view.$el.find('.toolbar .app_tools')[0]});
-            new (require('views/channeltools'))({el: this.view.$el.find('.channel_tools')[0]});
+            new (require('ui/apptoolbar/apptoolbar'))({el: this.view.$el.find('.toolbar .app_tools')[0]});
+            new (require('ui/channeltools/channeltools'))({el: this.view.$el.find('.channel_tools')[0]});
 
             this.message = new (require('ui/statusmessage/statusmessage'))({el: this.view.$el.find('.status_message')[0]});
 
-            this.resize_handle = new (require('views/resizehandler'))({el: this.view.$el.find('.memberlists_resize_handle')[0]});
+            this.resize_handle = new (require('ui/resizehandler/resizehandler'))({el: this.view.$el.find('.memberlists_resize_handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();

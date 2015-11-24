@@ -1,4 +1,4 @@
-define('views/channeltools', function(require, exports, module) {
+define('ui/channeltools/channeltools', function(require, exports, module) {
 
     var Application = require('ui/application/application');
 

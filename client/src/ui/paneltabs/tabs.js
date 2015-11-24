@@ -1,5 +1,4 @@
-// Model for this = require('models/panellist')
-define('views/tabs', function(require, exports, module) {
+define('ui/paneltabs/tabs', function(require, exports, module) {
 
     var Application = require('ui/application/application');
     var utils = require('helpers/utils');

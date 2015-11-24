@@ -1,4 +1,4 @@
-define('views/apptoolbar', function(require, exports, module) {
+define('ui/apptoolbar/apptoolbar', function(require, exports, module) {
 
     var Application = require('ui/application/application');
 
