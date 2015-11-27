@@ -1,6 +1,6 @@
 ### Translations
 
-Kiwi IRC has been translated to 25 different languages:
+Kiwi IRC has been translated to 26 different languages:
 * Albanian
 * Bosnian
 * Catalan
@@ -10,6 +10,7 @@ Kiwi IRC has been translated to 25 different languages:
 * Español
 * Español (Latino America)
 * Français
+* Galego
 * Greek
 * Hebrew
 * Italiano
@@ -37,3 +38,4 @@ Current translations are handled by the following (only listing translators will
 * **Bosnian** - Predsjednik (predsjednik@live.com)
 * **Polish** - Piotr Doroszewski (piotrekd at vivaldi dot net)
 * **Serbian** - Stefan C. (admin@xshellz.com)
+* **Galicia** - Chema Casanova (https://github.com/txenoo)
