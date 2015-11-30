@@ -168,26 +168,26 @@
                     <div class="basic">
                         <table>
                             <tr class="nick">
-                                <td><label for="server_select_nick"><%= nickname %></label></td>
-                                <td><input type="text" class="nick" id="server_select_nick"></td>
+                                <td><label><%= nickname %></label></td>
+                                <td><input type="text" class="nick"></td>
                             </tr>
 
                             <tr class="have_pass">
                                 <td colspan="2">
-                                    <label for="server_select_show_pass"><%= have_password %></label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
+                                    <label><%= have_password %></label> <input type="checkbox" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="pass">
-                                <td><label for="server_select_password"><%= password %></label></td>
-                                <td><input type="password" class="password" id="server_select_password"></td>
+                                <td><label><%= password %></label></td>
+                                <td><input type="password" class="password"></td>
                             </tr>
 
                             <tr class="channel">
-                                <td><label for="server_select_channel"><%= channel %></label></td>
+                                <td><label><%= channel %></label></td>
                                 <td>
                                     <div style="position:relative;">
-                                        <input type="text" class="channel" id="server_select_channel">
+                                        <input type="text" class="channel">
                                         <i class="fa fa-key" title="<%= channel_key %>"></i>
                                     </div>
                                 </td>
@@ -195,13 +195,13 @@
 
                             <tr class="have_key">
                                 <td colspan="2">
-                                    <label for="server_select_show_channel_key"><%= require_key %></label> <input type="checkbox" id="server_select_show_channel_key" style="width:auto;" />
+                                    <label><%= require_key %></label> <input type="checkbox" class="has_channel_key" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="key">
-                                <td><label for="server_select_channel_key"><%= key %></label></td>
-                                <td><input type="password" class="channel_key" id="server_select_channel_key"></td>
+                                <td><label><%= key %></label></td>
+                                <td><input type="password" class="channel_key"></td>
                             </tr>
 
                             <tr class="start">
@@ -218,17 +218,17 @@
                         <table>
                             <tr class="server">
                                 <td><label for="server_select_server"><%= server %></label></td>
-                                <td><input type="text" class="server" id="server_select_server"></td>
+                                <td><input type="text" class="server"></td>
                             <tr>
 
                             <tr class="port">
                                 <td><label for="server_select_port"><%= port %></label></td>
-                                <td><input type="text" class="port" id="server_select_port"></td>
+                                <td><input type="text" class="port"></td>
                             </tr>
 
                             <tr class="ssl">
                                 <td><label for="server_select_ssl">SSL</label></td>
-                                <td><input type="checkbox" class="ssl" id="server_select_ssl"></td>
+                                <td><input type="checkbox" class="ssl"></td>
                             </tr>
                         </table>
                     </div>
