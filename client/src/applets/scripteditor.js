@@ -3,7 +3,7 @@
 
         var view = Backbone.View.extend({
             events: {
-                'click .btn_save': 'onSave'
+                'click .btn-save': 'onSave'
             },
 
             initialize: function (options) {

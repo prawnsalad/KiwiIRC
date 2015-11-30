@@ -6,7 +6,7 @@ define('ui/channelinfo/view', function(require, exports, module) {
 
     module.exports = Backbone.View.extend({
         events: {
-            'click .toggle_banlist': 'toggleBanList',
+            'click .toggle-banlist': 'toggleBanList',
             'change .channel-mode': 'onModeChange',
             'click .remove-ban': 'onRemoveBanClick'
         },
@@ -122,11 +122,11 @@ define('ui/channelinfo/view', function(require, exports, module) {
 
             url = channel.get('info_url');
             if (url) {
-                this.$el.find('.channel_url')
+                this.$el.find('.channel-url')
                     .text(url)
                     .attr('href', url);
 
-                this.$el.find('.channel_url').slideDown();
+                this.$el.find('.channel-url').slideDown();
             }
 
             banlist = channel.get('banlist');

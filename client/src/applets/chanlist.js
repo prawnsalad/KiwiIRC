@@ -5,7 +5,7 @@
     var View = Backbone.View.extend({
         events: {
             "click .chan": "chanClick",
-            "click .channel_name_title": "sortChannelsByNameClick",
+            "click .channel-name-title": "sortChannelsByNameClick",
             "click .users_title": "sortChannelsByUsersClick"
         },
 
@@ -35,17 +35,17 @@
                 i;
 
             // Create the sort icon container and clean previous any previous ones
-            if($('.applet_chanlist .users_title').find('span.chanlist_sort_users').length == 0) {
+            if($('.applet-chanlist .users_title').find('span.chanlist_sort_users').length == 0) {
                 this.$('.users_title').append('<span class="chanlist_sort_users">&nbsp;&nbsp;</span>');
             } else {
                 this.$('.users_title span.chanlist_sort_users').removeClass('fa fa-sort-desc');
                 this.$('.users_title span.chanlist_sort_users').removeClass('fa fa-sort-asc');
             }
-            if ($('.applet_chanlist .channel_name_title').find('span.chanlist_sort_names').length == 0) {
-                this.$('.channel_name_title').append('<span class="chanlist_sort_names">&nbsp;&nbsp;</span>');
+            if ($('.applet-chanlist .channel-name-title').find('span.chanlist_sort_names').length == 0) {
+                this.$('.channel-name-title').append('<span class="chanlist_sort_names">&nbsp;&nbsp;</span>');
             } else {
-                this.$('.channel_name_title span.chanlist_sort_names').removeClass('fa fa-sort-desc');
-                this.$('.channel_name_title span.chanlist_sort_names').removeClass('fa fa-sort-asc');
+                this.$('.channel-name-title span.chanlist_sort_names').removeClass('fa fa-sort-desc');
+                this.$('.channel-name-title span.chanlist_sort_names').removeClass('fa fa-sort-asc');
             }
 
             // Push the new sort icon
@@ -58,10 +58,10 @@
                     this.$('.users_title span.chanlist_sort_users').addClass('fa fa-sort-desc');
                     break;
                 case 'name_asc':
-                    this.$('.channel_name_title span.chanlist_sort_names').addClass('fa fa-sort-desc');
+                    this.$('.channel-name-title span.chanlist_sort_names').addClass('fa fa-sort-desc');
                     break;
                 case 'name_desc':
-                    this.$('.channel_name_title span.chanlist_sort_names').addClass('fa fa-sort-asc');
+                    this.$('.channel-name-title span.chanlist_sort_names').addClass('fa fa-sort-asc');
                     break;
             }
 

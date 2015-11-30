@@ -456,7 +456,7 @@ define('ui/controlbox/controlbox', function(require, exports, module) {
 
         addPluginIcon: function ($icon) {
             var $tool = $('<div class="tool"></div>').append($icon);
-            this.$el.find('.input_tools').append($tool);
+            this.$el.find('.input-tools').append($tool);
             Application.instance().view.doLayout();
         }
     });

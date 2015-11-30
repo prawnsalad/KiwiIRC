@@ -4,8 +4,8 @@ define('ui/channeltools/channeltools', function(require, exports, module) {
 
     module.exports = Backbone.View.extend({
         events: {
-            'click .channel_info': 'infoClick',
-            'click .channel_part': 'partClick'
+            'click .channel-info': 'infoClick',
+            'click .channel-part': 'partClick'
         },
 
         initialize: function () {},

@@ -9,7 +9,7 @@ define('ui/members/memberlist_view', function(require, exports, module) {
             "click .nick": "nickClick",
             "contextmenu .nick": "nickClick",
             "dblclick .nick": "nickClick",
-            "click .channel_info": "channelInfoClick"
+            "click .channel-info": "channelInfoClick"
         },
 
         initialize: function (options) {

@@ -44,9 +44,9 @@ define('ui/userbox/userbox', function(require, exports, module) {
 
         displayOpItems: function(display_items) {
             if (display_items) {
-                this.$el.find('.if_op').css('display', 'block');
+                this.$el.find('.if-op').css('display', 'block');
             } else {
-                this.$el.find('.if_op').css('display', 'none');
+                this.$el.find('.if-op').css('display', 'none');
             }
         },
 

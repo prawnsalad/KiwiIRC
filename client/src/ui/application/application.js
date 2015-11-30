@@ -116,15 +116,15 @@ define('ui/application/application', function(require, exports, module) {
             this.controlbox = (new (require('ui/controlbox/controlbox'))({el: $('#kiwi .controlbox')[0]})).render();
             this.client_ui_commands = new (require('misc/clientuicommands'))(this, this.controlbox);
 
-            this.rightbar = new (require('ui/rightbar/rightbar'))({el: this.view.$('.right_bar')[0]});
+            this.rightbar = new (require('ui/rightbar/rightbar'))({el: this.view.$('.right-bar')[0]});
             this.topicbar = new (require('ui/topicbar/topicbar'))({el: this.view.$el.find('.topic')[0]});
 
-            new (require('ui/apptoolbar/apptoolbar'))({el: this.view.$el.find('.toolbar .app_tools')[0]});
-            new (require('ui/channeltools/channeltools'))({el: this.view.$el.find('.channel_tools')[0]});
+            new (require('ui/apptoolbar/apptoolbar'))({el: this.view.$el.find('.toolbar .app-tools')[0]});
+            new (require('ui/channeltools/channeltools'))({el: this.view.$el.find('.channel-tools')[0]});
 
-            this.message = new (require('ui/statusmessage/statusmessage'))({el: this.view.$el.find('.status_message')[0]});
+            this.message = new (require('ui/statusmessage/statusmessage'))({el: this.view.$el.find('.status-message')[0]});
 
-            this.resize_handle = new (require('ui/resizehandler/resizehandler'))({el: this.view.$el.find('.memberlists_resize_handle')[0]});
+            this.resize_handle = new (require('ui/resizehandler/resizehandler'))({el: this.view.$el.find('.memberlists-resize-handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();

@@ -4,7 +4,7 @@ define('ui/mediamessage/mediamessage', function(require, exports, module) {
 
     module.exports = Backbone.View.extend({
         events: {
-            'click .media_close': 'close'
+            'click .media-close': 'close'
         },
 
         initialize: function () {

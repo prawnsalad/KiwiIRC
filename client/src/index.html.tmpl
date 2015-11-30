@@ -16,9 +16,9 @@
 <body>
 
     <script type="text/html" id="tmpl_application">
-        <div id="kiwi" class="theme_relaxed">
+        <div id="kiwi" class="theme-relaxed">
             <div class="toolbar">
-                <div class="app_tools">
+                <div class="app-tools">
                     <ul class="main">
                         <li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
                         <li class="startup"><i class="fa fa-home" title="Home"></i></li>
@@ -32,21 +32,21 @@
                     <div contenteditable="true"></div>
                 </div>
 
-                <div class="status_message"></div>
+                <div class="status-message"></div>
             </div>
 
-            <div class="memberlists_resize_handle"></div>
+            <div class="memberlists-resize-handle"></div>
 
             <div class="panels">
-                <div class="panel_container container1"></div>
+                <div class="panel-container container1"></div>
             </div>
 
-            <div class="right_bar disabled">
+            <div class="right-bar disabled">
                 <div class="right-bar-toggle"><i class=""></i></div>
                 <div class="right-bar-content">
-                    <div class="channel_tools">
-                        <i class="fa fa-info-circle channel_info" title="Channel Info"></i>
-                        <i class="fa fa-sign-out channel_part" title="Leave Channel"></i>
+                    <div class="channel-tools">
+                        <i class="fa fa-info-circle channel-info" title="Channel Info"></i>
+                        <i class="fa fa-sign-out channel-part" title="Leave Channel"></i>
                         <i class="fa fa-angle-double-right right-bar-toggle-inner" title="Hide"></i>
                     </div>
                     <div class="memberlists"></div>
@@ -58,13 +58,13 @@
                     <div class="autocomplete-header">
                         <span class="autocomplete-header-label">People or channels</span>
                         <span class="autocomplete-header-help">
-                            <strong>tab</strong>&nbsp; or &nbsp;<strong>↑</strong> <strong>↓</strong>&nbsp; to navigate <strong class="left_margin">↵</strong>&nbsp; to select <strong class="left_margin">esc</strong>&nbsp; to dismiss</span>
+                            <strong>tab</strong>&nbsp; or &nbsp;<strong>↑</strong> <strong>↓</strong>&nbsp; to navigate <strong class="left-margin">↵</strong>&nbsp; to select <strong class="left-margin">esc</strong>&nbsp; to dismiss</span>
                     </div>
                 </div>
                 <div class="input">
                     <span class="nick"> </span>
-                    <div class="input_wrap"><textarea class="inp"></textarea></div>
-                    <div class="input_tools"></div>
+                    <div class="input-wrap"><textarea class="inp"></textarea></div>
+                    <div class="input-tools"></div>
                 </div>
             </div>
         </div>
@@ -72,11 +72,11 @@
 
 
     <script type="text/html" id="tmpl_channel_info">
-        <div class="channel_info">
-            <b class="channel_url"><a href=""></a></b>
+        <div class="channel-info">
+            <b class="channel-url"><a href=""></a></b>
 
             <form>
-                <div class="control-group channel_info_modes">
+                <div class="control-group channel-info_modes">
                     <label>
                         <input type="checkbox" name="channel_mute" class="channel-mode" data-mode="m" />
                         Moderated chat
@@ -104,7 +104,7 @@
 
 
                 <div class="control-group channel-banlist">
-                    <button class="toggle_banlist">Toggle banlist</button> <span class="banlist-status"></span>
+                    <button class="toggle-banlist">Toggle banlist</button> <span class="banlist-status"></span>
                     <table>
                         <thead>
                             <tr>
@@ -125,16 +125,16 @@
 
     <script type="text/html" id="tmpl_userbox">
         <div class="userbox">
-            <a class="close_menu if_op op"><i class="fa fa-star"></i><%= op %></a>
-            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
-            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
-            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
-            <a class="close_menu if_op kick"><i class="fa fa-times"></i><%= kick %></a>
-            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><%= ban %></a>
+            <a class="close-menu if-op op"><i class="fa fa-star"></i><%= op %></a>
+            <a class="close-menu if-op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
+            <a class="close-menu if-op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
+            <a class="close-menu if-op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
+            <a class="close-menu if-op kick"><i class="fa fa-times"></i><%= kick %></a>
+            <a class="close-menu if-op ban"><i class="fa fa-ban"></i><%= ban %></a>
 
-            <a class="close_menu query"><i class="fa fa-comment"></i><%= message %></a>
-            <a class="close_menu info"><i class="fa fa-info-circle"></i><%= info %></a>
-            <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
+            <a class="close-menu query"><i class="fa fa-comment"></i><%= message %></a>
+            <a class="close-menu info"><i class="fa fa-info-circle"></i><%= info %></a>
+            <a class="close-menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
         </div>
     </script>
 
@@ -154,14 +154,14 @@
     </script>
 
     <script type="text/html" id="tmpl_server_select">
-        <div class="server_select">
+        <div class="server-select">
 
-            <div class="side_panel" style="position:absolute;top:0px;left:320px;">
+            <div class="side-panel" style="position:absolute;top:0px;left:320px;">
                 <div class="content" style="position:relative;width:300px;">
                 </div>
             </div>
 
-            <div class="server_details" style="position:relative;width:320px;">
+            <div class="server-details" style="position:relative;width:320px;">
                 <div class="status"><%= think_nick %></div>
 
                 <form>
@@ -172,7 +172,7 @@
                                 <td><input type="text" class="nick"></td>
                             </tr>
 
-                            <tr class="have_pass">
+                            <tr class="have-pass">
                                 <td colspan="2">
                                     <label><%= have_password %></label> <input type="checkbox" style="width:auto;" />
                                 </td>
@@ -193,15 +193,15 @@
                                 </td>
                             </tr>
 
-                            <tr class="have_key">
+                            <tr class="have-key">
                                 <td colspan="2">
-                                    <label><%= require_key %></label> <input type="checkbox" class="has_channel_key" style="width:auto;" />
+                                    <label><%= require_key %></label> <input type="checkbox" class="has-channel-key" style="width:auto;" />
                                 </td>
                             </tr>
 
                             <tr class="key">
                                 <td><label><%= key %></label></td>
-                                <td><input type="password" class="channel_key"></td>
+                                <td><input type="password" class="channel-key"></td>
                             </tr>
 
                             <tr class="start">
@@ -210,31 +210,31 @@
                             </tr>
                         </table>
 
-                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
+                        <a href="" onclick="return false;" class="show-more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
                     </div>
 
 
                     <div class="more">
                         <table>
                             <tr class="server">
-                                <td><label for="server_select_server"><%= server %></label></td>
+                                <td><label><%= server %></label></td>
                                 <td><input type="text" class="server"></td>
                             <tr>
 
                             <tr class="port">
-                                <td><label for="server_select_port"><%= port %></label></td>
+                                <td><label><%= port %></label></td>
                                 <td><input type="text" class="port"></td>
                             </tr>
 
                             <tr class="ssl">
-                                <td><label for="server_select_ssl">SSL</label></td>
+                                <td><label>SSL</label></td>
                                 <td><input type="checkbox" class="ssl"></td>
                             </tr>
                         </table>
                     </div>
                 </form>
 
-                <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
+                <a class="kiwi-logo" href="https://kiwiirc.com/" target="_blank">
                     <h1><span><%= powered_by %></span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
                 </a>
             </div>
@@ -243,13 +243,13 @@
 
     <script type="text/html" id="tmpl_theme_thumbnail">
         <a class="thumbnail" data-setting="theme" data-value="<%= name.toLowerCase() %>" href="#">
-            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: <%= thumbnail_colour %>;"></div></div>
+            <div class="thumbnail-wrapper"><div class="theme-color" style="background-color: <%= thumbnail_colour %>;"></div></div>
             <div class="caption"><u><%= name %></u></div>
         </a>
     </script>
 
     <script type="text/html" id="tmpl_applet_settings">
-        <div class="settings_container">
+        <div class="settings-container">
             <div class="settings-category-list">
                 <a class="show-category show-category-appearance" data-category="appearance"><%= appearance %></a>
                 <a class="show-category show-category-messages" data-category="messages"><%= messages %></a>
@@ -379,19 +379,19 @@
                     </div>
                 </section>
 
-                <section class="protocol_handler">
+                <section class="protocol_-andler">
                     <h6><%= default_client %></h6>
                     <div class="control-group">
-                        <button class="register_protocol"><%= make_default %></button>
+                        <button class="register-protocol"><%= make_default %></button>
                         <br>
                         <small><%= default_note %></small>
                     </div>
                 </section>
 
-                <section class="notification_enabler">
+                <section class="notification-enabler">
                     <h6><%= html5_notifications %></h6>
                     <div class="control-group">
-                        <button class="enable_notifications"><%= enable_notifications %></button>
+                        <button class="enable-notifications"><%= enable_notifications %></button>
                     </div>
                 </section>
             </form>
@@ -400,12 +400,12 @@
 
 
     <script type="text/html" id="tmpl_channel_list">
-        <div class="applet_chanlist">
+        <div class="applet-chanlist">
             <table>
                 <thead style="font-weight: bold;">
                     <tr>
-                        <td><a class="channel_name_title"><%= channel_name %></a></td>
-                        <td><a class="users_title"><%= users %></a></td>
+                        <td><a class="channel-name-title"><%= channel_name %></a></td>
+                        <td><a class="users-title"><%= users %></a></td>
                         <td style="padding-left: 2em;"><%= topic %></td>
                     </tr>
                 </thead>
@@ -419,13 +419,13 @@
     <script type="text/html" id="tmpl_script_editor">
         <div style="height:100%;">
             <style>
-                #kiwi .script_editor .se_toolbar { padding: 10px 20px; }
-                #kiwi .script_editor .se_toolbar span.status { margin-left:2em; font-style:italic; }
-                #kiwi .script_editor .se_toolbar button { height:30px; padding:0 1em; }
-                #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
+                #kiwi .script-editor .se-toolbar { padding: 10px 20px; }
+                #kiwi .script-editor .se-toolbar span.status { margin-left:2em; font-style:italic; }
+                #kiwi .script-editor .se-toolbar button { height:30px; padding:0 1em; }
+                #kiwi .script-editor .se-toolbar button i { font-size:1.2em; margin-left:3px; }
             </style>
-            <div class="script_editor" style="height:100%; position:relative;">
-                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
+            <div class="script-editor" style="height:100%; position:relative;">
+                <div class="se-toolbar"><button class="btn-save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
                 <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
             </div>
         </div>

@@ -11,7 +11,7 @@
 #kiwi .controlbox { background:#252525; border-top:1px solid #191919; color:#909090; font-size:1.3em; line-height:2em; }
 #kiwi .controlbox .input { background:none; border:none;}
 #kiwi .controlbox .input .nick { line-height:1.7em; padding:0; text-align: right; width:11em; left:0px; position:absolute; overflow:hidden; }
-#kiwi .controlbox .input .input_wrap {
+#kiwi .controlbox .input .input-wrap {
     position:absolute;
     right:7px; left: 12.2em; top: 3px;
     background: #bbb;
@@ -35,7 +35,7 @@
 }
 
 #kiwi.narrow .controlbox .input .nick { display:none; }
-#kiwi.narrow .controlbox .input .input_wrap { left:7px; }
+#kiwi.narrow .controlbox .input .input-wrap { left:7px; }
 
 #kiwi .toolbar { background:#252525; }
 #kiwi .toolbar .topic { background:#111111; height:2em; border-bottom:1px solid #2B2B2B; border-top:1px solid #2B2B2B; }
@@ -67,18 +67,18 @@
     border-bottom: 1px solid #444444;
 }
 
-#kiwi .toolbar .app_tools { width:200px; padding-left:10px; color:#D4D4D4; }
+#kiwi .toolbar .app-tools { width:200px; padding-left:10px; color:#D4D4D4; }
 #kiwi.narrow .toolbar .tabs { margin-right:0; }
-#kiwi.narrow .toolbar .app_tools { width:auto; }
-#kiwi .toolbar .app_tools ul li {
+#kiwi.narrow .toolbar .app-tools { width:auto; }
+#kiwi .toolbar .app-tools ul li {
     font-size:26px;
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
     transition: all .3s ease;
     margin-left:10px;
 }
-#kiwi .toolbar .app_tools ul li:hover { color:#88C56A; }
-#kiwi .toolbar .app_tools img { }
+#kiwi .toolbar .app-tools ul li:hover { color:#88C56A; }
+#kiwi .toolbar .app-tools img { }
 
 #kiwi .toolbar .panellist li {
     line-height: 1.4em;
@@ -89,9 +89,9 @@
     background-color: #111;
 }
 
-#kiwi .toolbar .panellist .alert_highlight { font-weight:bold; }
-#kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
-#kiwi .toolbar .panellist .alert_action { font-weight:normal; }
+#kiwi .toolbar .panellist .alert-highlight { font-weight:bold; }
+#kiwi .toolbar .panellist .alert-activity { font-weight:normal; }
+#kiwi .toolbar .panellist .alert-action { font-weight:normal; }
 
 #kiwi .toolbar .panellist .active { padding-right:23px; border-top:2px solid #df6b26; border-bottom:none; }
 #kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
@@ -107,12 +107,12 @@
 #kiwi .toolbar .panellist.applets li .activity { display: none; }
 #kiwi .toolbar .panellist li .activity:before { content:"("; }
 #kiwi .toolbar .panellist li .activity:after { content:")"; }
-#kiwi .toolbar .panellist li.alert_highlight .activity {
+#kiwi .toolbar .panellist li.alert-highlight .activity {
     color: #fff; background: #a60400; padding:2px; border-radius:3px;
 }
 
 
-#kiwi .right_bar {
+#kiwi .right-bar {
     background:#252525;
     border-left: none;
 }
@@ -121,8 +121,8 @@
     background: #464646;
     color: #789E65;
 }
-#kiwi.narrow .right_bar { width:100%; }
-#kiwi.narrow .right_bar.disabled { width:0; }
+#kiwi.narrow .right-bar { width:100%; }
+#kiwi.narrow .right-bar.disabled { width:0; }
 
 #kiwi .memberlists .meta {
     border-bottom: 1px solid #181818;
@@ -183,25 +183,25 @@
     font-style: italic;
 }
 
-#kiwi .status_message {
+#kiwi .status-message {
     background: #363636;
     border-bottom: 1px solid #444444;
     padding: 0.9em;
     text-align: center; font-size:1.1em;
 }
 
-#kiwi .channel_tools {
+#kiwi .channel-tools {
     border-bottom: 1px solid #181818;
     margin-bottom: 10px;
     padding: 0 5%;
     background: #252525;
 }
-#kiwi .channel_tools i {
+#kiwi .channel-tools i {
     width: 30%;
     font-size: 1.6em;
     line-height: 1.6em;
 }
-#kiwi .channel_tools i:hover {
+#kiwi .channel-tools i:hover {
     transition: color 0.3s;
     color: #88C56A;
 }
@@ -235,7 +235,7 @@
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
 
-#kiwi .messages .msg.global_nick_highlight { background:#111111; }
+#kiwi .messages .msg.global-nick-highlight { background:#111111; }
 #kiwi .messages .msg.highlight { background:#111111; }
 
 /* Narrow styling (window width < 420px) */
@@ -243,14 +243,14 @@
 #kiwi.narrow .messages .msg .nick { display:block; float:none; text-align:left; padding-bottom:0;}
 #kiwi.narrow .messages .msg .text { display:block; white-space:pre-wrap; word-wrap:break-word; padding-top:0; margin:0 0 0 10px;}
 #kiwi.narrow .messages .msg.action .text { }
-#kiwi.narrow .messages .msg.repeated_nick .nick { display:none; }
+#kiwi.narrow .messages .msg.repeated-nick .nick { display:none; }
 
 
 #kiwi .messages .msg .media { margin-left:0.5em; }
-#kiwi .messages .msg .media .media_close { font-size:0.9em; }
-#kiwi .messages .msg .media .media_content { margin:10px 0 0 6em; overflow:hidden; }
-#kiwi .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
-#kiwi .messages .msg .media .media_content > .content {
+#kiwi .messages .msg .media .media-close { font-size:0.9em; }
+#kiwi .messages .msg .media .media-content { margin:10px 0 0 6em; overflow:hidden; }
+#kiwi .messages .msg .media .media-content img { padding:3px; border:1px solid gray; }
+#kiwi .messages .msg .media .media-content > .content {
     background: white;
     overflow: hidden;
     padding: 10px;
@@ -264,20 +264,20 @@
     float: left;
 }
 
-#kiwi .messages .msg .media.twitter .media_content > .content {
+#kiwi .messages .msg .media.twitter .media-content > .content {
     background: transparent;
     border:none;
     overflow: hidden;
     box-shadow: none;
     padding: 0;
 }
-#kiwi .messages .msg .media.reddit .thumbnail_nsfw {
+#kiwi .messages .msg .media.reddit .thumbnail-nsfw {
     display: inline-block;
     float: left;
 }
 #kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
 
-#kiwi .messages .last_seen {
+#kiwi .messages .last-seen {
     border-bottom-color: #090;
     border-bottom-style: dashed;
 }
@@ -285,39 +285,39 @@
 
 
 /* The server select dialog */
-#kiwi .server_select { margin-left:auto; margin-right:auto; color:#8a8a8a; }
-#kiwi .server_select .more { display: none; width:270px; margin:0 auto; }
-#kiwi .server_select table tr td { padding:5px; }
-#kiwi .server_select button { float:right; padding:3px 7px; margin-top:10px; }
-#kiwi .server_select input { padding:3px 7px; width:150px; }
-#kiwi .server_select label { width:5em; padding-top:3px }
-#kiwi .server_select br { clear:both; }
-#kiwi .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
-#kiwi .server_select .basic input { width:170px; }
-#kiwi .server_select .basic label { font-size:1.3em; margin-top:4px; }
-#kiwi .server_select .basic tr.have_pass { font-size:0.8em; }
-#kiwi .server_select .basic tr.channel td { padding-top:1em; }
-#kiwi .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi .server_select .basic .show_more { display: block; width:116px; margin:10px 0 0 0; font-size:0.8em; }
-#kiwi .server_select.single_server .basic { border:none; }
-#kiwi .server_select .status { text-align: center; font-weight: bold; padding:1em; }
-#kiwi .server_select .status.ok { }
-#kiwi .server_select .status.error {
+#kiwi .server-select { margin-left:auto; margin-right:auto; color:#8a8a8a; }
+#kiwi .server-select .more { display: none; width:270px; margin:0 auto; }
+#kiwi .server-select table tr td { padding:5px; }
+#kiwi .server-select button { float:right; padding:3px 7px; margin-top:10px; }
+#kiwi .server-select input { padding:3px 7px; width:150px; }
+#kiwi .server-select label { width:5em; padding-top:3px }
+#kiwi .server-select br { clear:both; }
+#kiwi .server-select .basic input, .server-select .basic button { font-size:1em; padding:0.5em 1em; }
+#kiwi .server-select .basic input { width:170px; }
+#kiwi .server-select .basic label { font-size:1.3em; margin-top:4px; }
+#kiwi .server-select .basic tr.have-pass { font-size:0.8em; }
+#kiwi .server-select .basic tr.channel td { padding-top:1em; }
+#kiwi .server-select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
+#kiwi .server-select .basic .show-more { display: block; width:116px; margin:10px 0 0 0; font-size:0.8em; }
+#kiwi .server-select.single-server .basic { border:none; }
+#kiwi .server-select .status { text-align: center; font-weight: bold; padding:1em; }
+#kiwi .server-select .status.ok { }
+#kiwi .server-select .status.error {
     border:1px solid #A33F3F; background-color:#D28A8A;
     padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
 }
-#kiwi .server_select .show_server { margin-left: 1em; font-size:0.9em; color: #eeeeee; }
+#kiwi .server-select .show-server { margin-left: 1em; font-size:0.9em; color: #eeeeee; }
 
-#kiwi .server_select .basic tr.channel .icon-key { color:#555; }
+#kiwi .server-select .basic tr.channel .icon-key { color:#555; }
 
 
-#kiwi .server_select .kiwi_logo { margin-top:30px; text-align:center; display:block; }
-#kiwi .server_select .kiwi_logo h1 {
+#kiwi .server-select .kiwi-logo { margin-top:30px; text-align:center; display:block; }
+#kiwi .server-select .kiwi-logo h1 {
     font-size:20px;
     line-height:48px; vertical-align: middle;
     color: #8a8a8a;
 }
-#kiwi .server_select .kiwi_logo img { display:inline; width:24px; }
+#kiwi .server-select .kiwi-logo img { display:inline; width:24px; }
 
 
 #kiwi .divider-verticle {
@@ -332,65 +332,65 @@
 
 
 
-#kiwi.chanlist_treeview .panels { left:160px; }
-#kiwi.chanlist_treeview .toolbar { position:static; }
-#kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { margin-left:0px; }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#252525; overflow-y:auto; }
-#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
-#kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
-#kiwi.chanlist_treeview .tabs ul li.active { padding-top:4px; }
-#kiwi.chanlist_treeview .panellist { margin-top: 5px; }
-#kiwi.chanlist_treeview .panellist li { margin: 0 2px; border-bottom: none; }
-#kiwi .applet_chanlist {
+#kiwi.chanlist-treeview .panels { left:160px; }
+#kiwi.chanlist-treeview .toolbar { position:static; }
+#kiwi.chanlist-treeview .toolbar .app-tools { float:none; }
+#kiwi.chanlist-treeview .toolbar > div { margin-left:0px; }
+#kiwi.chanlist-treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#252525; overflow-y:auto; }
+#kiwi.chanlist-treeview .tabs ul li { display:block; float:none; }
+#kiwi.chanlist-treeview .tabs ul li .activity { float:right; }
+#kiwi.chanlist-treeview .tabs ul li.active { padding-top:4px; }
+#kiwi.chanlist-treeview .panellist { margin-top: 5px; }
+#kiwi.chanlist-treeview .panellist li { margin: 0 2px; border-bottom: none; }
+#kiwi .applet-chanlist {
     margin: 0.5em 1em;
 }
-#kiwi .applet_chanlist table {
+#kiwi .applet-chanlist table {
     border-collapse: collapse;
     width: 100%;
 }
-#kiwi .applet_chanlist thead {
+#kiwi .applet-chanlist thead {
     text-align: center;
 }
-#kiwi .applet_chanlist tbody td {
+#kiwi .applet-chanlist tbody td {
     border: 1px solid #454545;
     padding: 0.3em 1em;
 }
-#kiwi .applet_chanlist .chanlist_name, #kiwi .applet_chanlist .chanlist_num_users {
+#kiwi .applet-chanlist .chanlist-name, #kiwi .applet-chanlist .chanlist-num-users {
     border-width: 0 1px 0 0;
 }
-#kiwi .applet_chanlist .chanlist_topic {
+#kiwi .applet-chanlist .chanlist-topic {
     border-width: 0;
 }
-#kiwi .applet_chanlist tr:nth-child(even) {
+#kiwi .applet-chanlist tr:nth-child(even) {
     background: none repeat scroll 0 0 #2B2929;
 }
 
 
-#kiwi .ui_menu {
+#kiwi .ui-menu {
     color: #BBBBBB;
     background: #252525;
     border: 1px solid #383838;
 }
-#kiwi .ui_menu .ui_menu_title {
+#kiwi .ui-menu .ui-menu-title {
     background: #252525;
     color: #909090;
 }
-#kiwi .ui_menu .ui_menu_content { border-top: 1px solid #383838; }
-#kiwi .ui_menu .ui_menu_content.hover:hover {  }
-#kiwi .ui_menu .ui_menu_foot {
+#kiwi .ui-menu .ui-menu-content { border-top: 1px solid #383838; }
+#kiwi .ui-menu .ui-menu-content.hover:hover {  }
+#kiwi .ui-menu .ui-menu-foot {
     background: #252525;
     color: #909090;
     border-top: 1px solid #383838;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 }
-#kiwi .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
-#kiwi .ui_menu .ui_menu_foot .close:hover { color: #222; }
+#kiwi .ui-menu .ui-menu-foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#kiwi .ui-menu .ui-menu-foot .close:hover { color: #222; }
 
-#kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
-#kiwi .channel_info .channel-banlist thead { font-style: italic; }
-#kiwi .channel_info .remove-ban:hover { color: #900; }
+#kiwi .channel-info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi .channel-info .channel-banlist thead { font-style: italic; }
+#kiwi .channel-info .remove-ban:hover { color: #900; }
 
 #kiwi .controlbox .nickchange {
     background: #252525;
@@ -443,27 +443,27 @@
 }
 #kiwi .notification .close:hover { color: #DBDBDB; }
 
-#kiwi .settings_container .settings-category {
+#kiwi .settings-container .settings-category {
     background-color: #252525;
 }
-#kiwi .settings_container .settings-category > h5 {
+#kiwi .settings-container .settings-category > h5 {
     border-bottom: 1px solid #A5C42C;
     padding-bottom: 20px;
     margin-bottom: 20px;
     margin-top: 0;
     padding-top: 15px;
 }
-#kiwi .settings_container .settings-category-list {
+#kiwi .settings-container .settings-category-list {
     background: #252525;
     margin-top: 3.4em;
 }
-#kiwi .settings_container .settings-category-list a {
+#kiwi .settings-container .settings-category-list a {
     line-height: 2.5em;
     background-color: #252525;
     border-left: solid 4px #252525;
     color: #6d6d6d;
 }
-#kiwi .settings_container .settings-category-list a.active {
+#kiwi .settings-container .settings-category-list a.active {
     border-left: solid 4px #df6b26;
     color: #6d6d6d;
 }

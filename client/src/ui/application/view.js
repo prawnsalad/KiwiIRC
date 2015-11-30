@@ -13,10 +13,10 @@ define('ui/application/view', function(require, exports, module) {
 
             this.elements = {
                 panels:        this.$el.find('.panels'),
-                right_bar:     this.$el.find('.right_bar'),
+                right_bar:     this.$el.find('.right-bar'),
                 toolbar:       this.$el.find('.toolbar'),
                 controlbox:    this.$el.find('.controlbox'),
-                resize_handle: this.$el.find('.memberlists_resize_handle')
+                resize_handle: this.$el.find('.memberlists-resize-handle')
             };
 
             $(window).resize(function() { that.doLayout.apply(that); });
@@ -218,8 +218,8 @@ define('ui/application/view', function(require, exports, module) {
                 $resize_handle.css('left', $panels.outerWidth(true));
             }
 
-            var input_wrap_width = parseInt($controlbox.find('.input_tools').outerWidth(), 10);
-            $controlbox.find('.input_wrap').css('right', input_wrap_width + 7);
+            var input_wrap_width = parseInt($controlbox.find('.input-tools').outerWidth(), 10);
+            $controlbox.find('.input-wrap').css('right', input_wrap_width + 7);
         },
 
 

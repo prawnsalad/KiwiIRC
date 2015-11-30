@@ -29,7 +29,7 @@ define('ui/resizehandler/resizehandler', function(require, exports, module) {
             var offset = $('#kiwi').offset().left;
 
             this.$el.css('left', event.clientX - (this.$el.outerWidth(true) / 2) - offset);
-            $('#kiwi .right_bar').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
+            $('#kiwi .right-bar').css('width', this.$el.parent().width() - (this.$el.position().left + this.$el.outerWidth()));
             Application.instance().view.doLayout();
         }
     });

@@ -12,7 +12,7 @@ html, body { height:100%; }
 #kiwi p { margin:0.5em 0; }
 #kiwi a { color:#36C; text-decoration:none; cursor:pointer; }
 #kiwi a img { border:none; }
-#kiwi .format_span a { color: inherit; background-color: inherit; text-decoration: inherit; font-style: inherit; font-weight: inherit;}
+#kiwi .format-span a { color: inherit; background-color: inherit; text-decoration: inherit; font-style: inherit; font-weight: inherit;}
 
 #kiwi h1,
 #kiwi h2,
@@ -39,10 +39,10 @@ html, body { height:100%; }
  */
 #kiwi .toolbar { position:absolute; top:0px; width:100%; display:none; z-index:1; }
 #kiwi .panels { position:absolute; left:0px; right:200px; bottom:100px; top:100px; }
-#kiwi .right_bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
+#kiwi .right-bar { position:absolute; right:0px; width:200px; bottom:100px; top:100px; overflow:visible; }
 #kiwi .right-bar-content { position:relative; height:100%; z-index:0; }
 #kiwi .controlbox { position: absolute; bottom:0px; width:100%; z-index: 1; display:none; }
-#kiwi .memberlists_resize_handle {
+#kiwi .memberlists-resize-handle {
     position: absolute; width:10px; z-index:1; cursor:w-resize;
 }
 
@@ -60,9 +60,9 @@ html, body { height:100%; }
 }
 
 #kiwi .toolbar .panellist .active { padding-right:23px; }
-#kiwi .toolbar .panellist .alert_highlight { font-weight: bold; }
-#kiwi .toolbar .panellist .alert_activity { font-weight: bold; }
-#kiwi .toolbar .panellist .alert_action { font-weight: bold; }
+#kiwi .toolbar .panellist .alert-highlight { font-weight: bold; }
+#kiwi .toolbar .panellist .alert-activity { font-weight: bold; }
+#kiwi .toolbar .panellist .alert-action { font-weight: bold; }
 
 #kiwi .toolbar .panellist li { width: auto; text-align: left; }
 #kiwi .toolbar .panellist li .part { position: absolute; top: 7px; right: 5px; }
@@ -72,11 +72,11 @@ html, body { height:100%; }
 
 #kiwi .toolbar .connections { overflow:hidden; }
 #kiwi .toolbar .connections .connection { float:left; }
-#kiwi.chanlist_treeview .toolbar .connections .connection { float:none; }
+#kiwi.chanlist-treeview .toolbar .connections .connection { float:none; }
 #kiwi .toolbar .connections .panellist { display:inline; }
 #kiwi .toolbar .connections .panellist:after { content:""; }
 
-#kiwi .status_message {
+#kiwi .status-message {
     position: absolute;
     left: 0;
     right: 0;
@@ -86,21 +86,21 @@ html, body { height:100%; }
     text-align: center;
 }
 
-#kiwi .channel_tools {
+#kiwi .channel-tools {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1;
 }
-#kiwi .channel_tools i {
+#kiwi .channel-tools i {
     width: 32%;
     display: inline-block;
     text-align: center;
     cursor: pointer;
 }
 
-#kiwi .panel_container { overflow-y:auto; height:100%; }
+#kiwi .panel-container { overflow-y:auto; height:100%; }
 #kiwi .panel {
     overflow-x:wrap;
     border:none; display: none;
@@ -131,16 +131,16 @@ html, body { height:100%; }
 #kiwi .messages .msg.whois .text { }
 #kiwi .messages .msg.error .text { }
 
-#kiwi .messages .msg.global_nick_highlight { }
+#kiwi .messages .msg.global-nick-highlight { }
 #kiwi .messages .msg.highlight { }
 
-#kiwi .messages .msg .media .media_content { white-space: normal; }
+#kiwi .messages .msg .media .media-content { white-space: normal; }
 
 
-#kiwi .right_bar { border-left: 1px solid #8A8A8A; }
-#kiwi .right_bar.disabled { width:0; }
-#kiwi .right_bar.disabled .channel_tools,
-#kiwi .right_bar.disabled .memberlists { display:none; }
+#kiwi .right-bar { border-left: 1px solid #8A8A8A; }
+#kiwi .right-bar.disabled { width:0; }
+#kiwi .right-bar.disabled .channel-tools,
+#kiwi .right-bar.disabled .memberlists { display:none; }
 
 #kiwi .right-bar-toggle {
     position: absolute;
@@ -201,21 +201,21 @@ html, body { height:100%; }
 #kiwi .emoticon.smile { background-position:0px 0; }
 #kiwi .emoticon.sad { background-position:-25px 0; }
 #kiwi .emoticon.lion { background-position:-50px 0; }
-#kiwi .emoticon.winky_lion { background-position:-75px 0; }
+#kiwi .emoticon.winky-lion { background-position:-75px 0; }
 #kiwi .emoticon.confused { background-position:-100px 0; }
 #kiwi .emoticon.cry { background-position:-125px 0; }
 #kiwi .emoticon.wink { background-position:-150px 0; }
-#kiwi .emoticon.wink_happy { background-position:-175px 0; }
+#kiwi .emoticon.wink-happy { background-position:-175px 0; }
 #kiwi .emoticon.tongue { background-position:-200px 0; }
-#kiwi .emoticon.cringe_tongue { background-position:-225px 0; }
+#kiwi .emoticon.cringe-tongue { background-position:-225px 0; }
 #kiwi .emoticon.shocked { background-position:-250px 0; }
 #kiwi .emoticon.happy { background-position:-275px 0; }
 #kiwi .emoticon.eyebrows { background-position:-300px 0; }
 #kiwi .emoticon.heart { background-position:-325px 0; }
 #kiwi .emoticon.doh { background-position:-373px 0; }
-#kiwi .emoticon.big_grin { background-position:-398px 0; }
-#kiwi .emoticon.wide_eye_right { background-position:-423px 0; }
-#kiwi .emoticon.wide_eye_left { background-position:-448px 0; }
+#kiwi .emoticon.big-grin { background-position:-398px 0; }
+#kiwi .emoticon.wide-eye-right { background-position:-423px 0; }
+#kiwi .emoticon.wide-eye-left { background-position:-448px 0; }
 #kiwi .emoticon.unsure { background-position:-473px 0; }
 
 
@@ -277,7 +277,7 @@ html, body { height:100%; }
 #kiwi .controlbox .input .nick a { }
 
 /* Wrapper div around the text area input */
-#kiwi .controlbox .input .input_wrap { display:inline; }
+#kiwi .controlbox .input .input-wrap { display:inline; }
 
 /* The textarea input */
 #kiwi .controlbox .input .inp { white-space: nowrap; }
@@ -292,8 +292,8 @@ html, body { height:100%; }
 #kiwi .controlbox .nickchange button { }
 
 /* Plugin tools */
-#kiwi .controlbox .input_tools { float:right; }
-#kiwi .controlbox .input_tools .tool { margin:0 1em; display:inline; }
+#kiwi .controlbox .input-tools { float:right; }
+#kiwi .controlbox .input-tools .tool { margin:0 1em; display:inline; }
 
 
 
@@ -314,109 +314,109 @@ html, body { height:100%; }
 /**
  * Server selection dialog
  */
-#kiwi .server_select { position:relative; width:320px; margin:0 auto; overflow:hidden; }
-#kiwi .server_select.initial { margin-top: 3em; }
-#kiwi .server_select .more { display: none; }
-#kiwi .server_select button {  }
-#kiwi .server_select input { }
-#kiwi .server_select label { }
-#kiwi .server_select br { clear:both; }
-#kiwi .server_select .basic input { }
-#kiwi .server_select .basic label { }
-#kiwi .server_select .basic { border-bottom: 1px solid gray; margin-bottom:1em; }
-#kiwi .server_select .basic .show_more { }
-#kiwi .server_select .basic tr.pass { display:none; }
-#kiwi .server_select .basic tr.key { display:none; }
-#kiwi .server_select.single_server .basic { border:none; }
-#kiwi .server_select .status {  }
+#kiwi .server-select { position:relative; width:320px; margin:0 auto; overflow:hidden; }
+#kiwi .server-select.initial { margin-top: 3em; }
+#kiwi .server-select .more { display: none; }
+#kiwi .server-select button {  }
+#kiwi .server-select input { }
+#kiwi .server-select label { }
+#kiwi .server-select br { clear:both; }
+#kiwi .server-select .basic input { }
+#kiwi .server-select .basic label { }
+#kiwi .server-select .basic { border-bottom: 1px solid gray; margin-bottom:1em; }
+#kiwi .server-select .basic .show-more { }
+#kiwi .server-select .basic tr.pass { display:none; }
+#kiwi .server-select .basic tr.key { display:none; }
+#kiwi .server-select.single-server .basic { border:none; }
+#kiwi .server-select .status {  }
 
 /* Channel key icon */
-#kiwi .server_select .basic tr.channel td { position: relative; }
-#kiwi .server_select .basic tr.channel .fa-key {
+#kiwi .server-select .basic tr.channel td { position: relative; }
+#kiwi .server-select .basic tr.channel .fa-key {
     position: absolute;
     top: 0.4em;
     right: 0.6em;
     font-size: 1.3em;
     cursor: pointer;
 }
-#kiwi .server_select .basic tr.have_key { display:none; }
+#kiwi .server-select .basic tr.have-key { display:none; }
 
 /* When connected to an IRC server, .ok is set on the status div */
-#kiwi .server_select .status.ok { }
+#kiwi .server-select .status.ok { }
 
 /* IRC server connection error, .error is set on the status div */
-#kiwi .server_select .status.error { }
+#kiwi .server-select .status.error { }
 
 
 
 /* Logo and title in the server selection dialog */
-#kiwi .server_select .kiwi_logo { text-align: center; display:block; }
-#kiwi .server_select .kiwi_logo h1 { }
-#kiwi .server_select .kiwi_logo img { }
+#kiwi .server-select .kiwi-logo { text-align: center; display:block; }
+#kiwi .server-select .kiwi-logo h1 { }
+#kiwi .server-select .kiwi-logo img { }
 
 
 
 /* Icons in the top right corner */
-#kiwi .toolbar .app_tools { float:right; }
-#kiwi .toolbar .app_tools ul li {
+#kiwi .toolbar .app-tools { float:right; }
+#kiwi .toolbar .app-tools ul li {
     display:inline; cursor:pointer;
 }
-#kiwi .toolbar .app_tools img { height:25px; width:25px; margin: 6px 0.7em 0 0; }
+#kiwi .toolbar .app-tools img { height:25px; width:25px; margin: 6px 0.7em 0 0; }
 
 
 
 /* Settings applet */
 
 /* Some of these styles will move to global styling later */
-#kiwi .settings_container {
+#kiwi .settings-container {
     padding: 25px;
 }
 
-#kiwi .settings_container .settings-category {
+#kiwi .settings-container .settings-category {
     display: none;
     margin-left: 130px;
     padding: 2em;
 }
 
-#kiwi .settings_container .settings-category.active {
+#kiwi .settings-container .settings-category.active {
     display: block;
 }
-#kiwi .settings_container .settings-category-list {
+#kiwi .settings-container .settings-category-list {
     float: left;
     width: 130px;
 }
-#kiwi .settings_container .settings-category-list a {
+#kiwi .settings-container .settings-category-list a {
     display: block;
     line-height: 2.5em;
     padding: 0 1em;
     width: 100%;
 }
 
-#kiwi .settings_container .thumbnails:before {
+#kiwi .settings-container .thumbnails:before {
     content: ' ';
     display: table;
 }
-#kiwi .settings_container .thumbnails:after {
+#kiwi .settings-container .thumbnails:after {
     content: ' ';
     display: table;
     clear: both;
 }
 
-#kiwi .settings_container .thumbnails {
+#kiwi .settings-container .thumbnails {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-#kiwi .settings_container .thumbnails > li {
+#kiwi .settings-container .thumbnails > li {
     display: inline-block;
 }
 
-#kiwi .settings_container label {
+#kiwi .settings-container label {
     cursor: pointer;
 }
 
-#kiwi_ form label { display: block; }
+#kiwi- form label { display: block; }
 #kiwi form input,
 #kiwi form select,
 #kiwi form textarea {
@@ -472,33 +472,33 @@ html, body { height:100%; }
     margin-top: -7px;
 }
 
-#kiwi .settings_container .thumbnail {
+#kiwi .settings-container .thumbnail {
     float: left;
     margin-right: 15px;
     text-align: center;
 }
 
-#kiwi .settings_container .thumbnail > .thumbnail_wrapper {
+#kiwi .settings-container .thumbnail > .thumbnail-wrapper {
     border-radius: 3px;
     padding: 3px;
 }
 
-#kiwi .settings_container .thumbnail > img {
+#kiwi .settings-container .thumbnail > img {
     border-radius: 2px;
 }
 
-#kiwi .settings_container .thumbnail.active > .thumbnail_wrapper {
+#kiwi .settings-container .thumbnail.active > .thumbnail-wrapper {
     background-color: #a6c42c;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a6c42c), color-stop(100%, #76bd2b));
     background-image: -webkit-linear-gradient(#a6c42c, #76bd2b);
     background-image: linear-gradient(#a6c42c, #76bd2b);
 }
 
-#kiwi .settings_container section {
+#kiwi .settings-container section {
     padding-bottom: 20px;
 }
 
-#kiwi .settings_container .theme_color {
+#kiwi .settings-container .theme-color {
     border-radius: 2px;
     height: 75px;
     width: 75px;
@@ -512,21 +512,21 @@ html, body { height:100%; }
     margin-bottom: 0;
 }
 
-#kiwi .settings_container section.language select { width:300px; }
+#kiwi .settings-container section.language select { width:300px; }
 
 @media screen and (max-width: 768px) {
-    #kiwi .settings_container {
+    #kiwi .settings-container {
         padding: 25px;
     }
 }
 
 
-#kiwi .channel_info label { display: block; }
-#kiwi .channel_info .channel_url {
+#kiwi .channel-info label { display: block; }
+#kiwi .channel-info .channel-url {
     display: none;
 }
-#kiwi .channel_info .channel-banlist table { display: none; }
-#kiwi .channel_info .remove-ban { cursor: pointer; }
+#kiwi .channel-info .channel-banlist table { display: none; }
+#kiwi .channel-info .remove-ban { cursor: pointer; }
 
 
 
@@ -567,7 +567,7 @@ html, body { height:100%; }
 
 
 
-#kiwi .ui_menu {
+#kiwi .ui-menu {
     padding: 0;
     z-index:10;
     position: absolute;
@@ -576,22 +576,22 @@ html, body { height:100%; }
     border: 1px solid #bbb;
     background-clip: padding-box;
 }
-#kiwi .ui_menu .ui_menu_title {
+#kiwi .ui-menu .ui-menu-title {
     padding: 5px 10px 5px 10px; font-weight: bold; overflow:hidden; background:#ddd;
 }
-#kiwi .ui_menu .ui_menu_content { padding: 5px 10px 5px 10px; border-top:1px solid #e9e9e9; overflow:hidden; position:relative; }
-#kiwi .ui_menu .ui_menu_content > a { display: block; }
-#kiwi .ui_menu .ui_menu_content > a[class^="fa-"]:before,
-#kiwi .ui_menu .ui_menu_content > a[class*=" fa-"]:before { margin-right: 5px; color:#666; }
-#kiwi .ui_menu .ui_menu_foot {
+#kiwi .ui-menu .ui-menu-content { padding: 5px 10px 5px 10px; border-top:1px solid #e9e9e9; overflow:hidden; position:relative; }
+#kiwi .ui-menu .ui-menu-content > a { display: block; }
+#kiwi .ui-menu .ui-menu-content > a[class^="fa-"]:before,
+#kiwi .ui-menu .ui-menu-content > a[class*=" fa-"]:before { margin-right: 5px; color:#666; }
+#kiwi .ui-menu .ui-menu-foot {
     padding: 5px; border-top:1px solid #e9e9e9; background:#ddd; overflow:hidden;
 }
-#kiwi .ui_menu .ui_menu_foot .close { }
+#kiwi .ui-menu .ui-menu-foot .close { }
 
-#kiwi .applet .applet_chanlist .fa-sort-asc:before, #kiwi .applet .applet_chanlist .fa-sort-desc:before {
+#kiwi .applet .applet-chanlist .fa-sort-asc:before, #kiwi .applet .applet-chanlist .fa-sort-desc:before {
     padding-left: 1em;
 }
-#kiwi .applet .applet_chanlist td {
+#kiwi .applet .applet-chanlist td {
     min-width: 120px;
 }
 

@@ -4,8 +4,8 @@
         events: {
             'change [data-setting]': 'saveSettings',
             'click [data-setting="theme"]': 'selectTheme',
-            'click .register_protocol': 'registerProtocol',
-            'click .enable_notifications': 'enableNotifications',
+            'click .register-protocol': 'registerProtocol',
+            'click .enable-notifications': 'enableNotifications',
             'click .show-category': 'onClickShowCategory'
         },
 
@@ -48,11 +48,11 @@
             this.$el = $(_.template($('#tmpl_applet_settings').html().trim())(text));
 
             if (!navigator.registerProtocolHandler) {
-                this.$('.protocol_handler').remove();
+                this.$('.protocol-handler').remove();
             }
 
             if (require('utils/notifications').allowed() !== null) {
-                this.$('.notification_enabler').remove();
+                this.$('.notification-enabler').remove();
             }
 
             // Incase any settings change while we have this open, update them
@@ -140,7 +140,7 @@
 
             notifications.requestPermission().always(_.bind(function () {
                 if (notifications.allowed() !== null) {
-                    this.$('.notification_enabler').remove();
+                    this.$('.notification-enabler').remove();
                 }
             }, this));
         },

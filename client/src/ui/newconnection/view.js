@@ -6,11 +6,11 @@ define('ui/newconnection/view', function(require, exports, module) {
     module.exports = Backbone.View.extend({
         events: {
             'submit form': 'submitForm',
-            'click .show_more': 'showMore',
-            'change .have_pass input': 'showPass',
-            'change .have_key input': 'showKey',
+            'click .show-more': 'showMore',
+            'change .have-pass input': 'showPass',
+            'change .have-key input': 'showKey',
             'click .fa-key': 'channelKeyIconClick',
-            'click .show_server': 'showServer'
+            'click .show-server': 'showServer'
         },
 
         initialize: function () {
@@ -93,7 +93,7 @@ define('ui/newconnection/view', function(require, exports, module) {
                 ssl: $('input.ssl', this.$el).prop('checked'),
                 password: $('input.password', this.$el).val(),
                 channel: $('input.channel', this.$el).val(),
-                channel_key: $('input.channel_key', this.$el).val(),
+                channel_key: $('input.channel-key', this.$el).val(),
                 options: this.server_options
             };
 
@@ -106,7 +106,7 @@ define('ui/newconnection/view', function(require, exports, module) {
         },
 
         showPass: function (event) {
-            if (this.$el.find('tr.have_pass input').is(':checked')) {
+            if (this.$el.find('tr.have-pass input').is(':checked')) {
                 this.$el.find('tr.pass').show().find('input').focus();
             } else {
                 this.$el.find('tr.pass').hide().find('input').val('');
@@ -114,11 +114,11 @@ define('ui/newconnection/view', function(require, exports, module) {
         },
 
         channelKeyIconClick: function (event) {
-            this.$el.find('tr.have_key input').click();
+            this.$el.find('tr.have-key input').click();
         },
 
         showKey: function (event) {
-            if (this.$el.find('tr.have_key input').is(':checked')) {
+            if (this.$el.find('tr.have-key input').is(':checked')) {
                 this.$el.find('tr.key').show().find('input').focus();
             } else {
                 this.$el.find('tr.key').hide().find('input').val('');
@@ -162,14 +162,14 @@ define('ui/newconnection/view', function(require, exports, module) {
             $('input.server', this.$el).val(server);
             $('input.port', this.$el).val(port);
             $('input.ssl', this.$el).prop('checked', ssl);
-            $('input#server_select_show_pass', this.$el).prop('checked', !(!password));
+            $('input.has_server_pass', this.$el).prop('checked', !(!password));
             $('input.password', this.$el).val(password);
             if (!(!password)) {
                 $('tr.pass', this.$el).show();
             }
             $('input.channel', this.$el).val(channel);
-            $('input#server_select_show_channel_key', this.$el).prop('checked', !(!channel_key));
-            $('input.channel_key', this.$el).val(channel_key);
+            $('input.has-channel-key', this.$el).prop('checked', !(!channel_key));
+            $('input.channel-key', this.$el).val(channel_key);
             if (!(!channel_key)) {
                 $('tr.key', this.$el).show();
             }
@@ -273,7 +273,7 @@ define('ui/newconnection/view', function(require, exports, module) {
             this.model.trigger('connecting');
             this.setStatus(utils.translateText('client_views_serverselect_connection_trying'), 'ok');
 
-            this.$('.status').append('<a class="show_server"><i class="fa fa-info-circle"></i></a>');
+            this.$('.status').append('<a class="show-server"><i class="fa fa-info-circle"></i></a>');
         },
 
         showServer: function() {

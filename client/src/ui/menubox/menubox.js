@@ -4,13 +4,13 @@ define('ui/menubox/menubox', function(require, exports, module) {
 
     module.exports = Backbone.View.extend({
         events: {
-            'click .ui_menu_foot .close, a.close_menu': 'dispose'
+            'click .ui-menu-foot .close, a.close-menu': 'dispose'
         },
 
         initialize: function(title) {
             var that = this;
 
-            this.$el = $('<div class="ui_menu"><div class="items"></div></div>');
+            this.$el = $('<div class="ui-menu"><div class="items"></div></div>');
 
             this._title = title || '';
             this._items = {};
@@ -27,21 +27,21 @@ define('ui/menubox/menubox', function(require, exports, module) {
             $items.find('*').remove();
 
             if (this._title) {
-                $title = $('<div class="ui_menu_title"></div>')
+                $title = $('<div class="ui-menu-title"></div>')
                     .text(this._title);
 
                 this.$el.prepend($title);
             }
 
             _.each(this._items, function(item) {
-                var $item = $('<div class="ui_menu_content hover"></div>')
+                var $item = $('<div class="ui-menu-content hover"></div>')
                     .append(item);
 
                 $items.append($item);
             });
 
             if (this._display_footer)
-                this.$el.append('<div class="ui_menu_foot"><a class="close" onclick="">Close <i class="fa fa-times"></i></a></div>');
+                this.$el.append('<div class="ui-menu-foot"><a class="close" onclick="">Close <i class="fa fa-times"></i></a></div>');
 
         },
 
@@ -52,7 +52,7 @@ define('ui/menubox/menubox', function(require, exports, module) {
             if (!this._title)
                 return;
 
-            this.$el.find('.ui_menu_title').text(this._title);
+            this.$el.find('.ui-menu-title').text(this._title);
         },
 
 

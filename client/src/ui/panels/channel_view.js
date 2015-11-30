@@ -38,7 +38,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
                 // When we join the memberlist, we have officially joined the channel
                 this.model.get('members').bind('add', function (member) {
                     if (member.get('nick') === this.model.collection.network.get('nick')) {
-                        this.$el.find('.initial_loader').slideUp(function () {
+                        this.$el.find('.initial-loader').slideUp(function () {
                             $(this).remove();
                         });
                     }
@@ -47,7 +47,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
                 // Memberlist reset with a new nicklist? Consider we have joined
                 this.model.get('members').bind('reset', function(members) {
                     if (members.getByNick(this.model.collection.network.get('nick'))) {
-                        this.$el.find('.initial_loader').slideUp(function () {
+                        this.$el.find('.initial-loader').slideUp(function () {
                             $(this).remove();
                         });
                     }
@@ -56,7 +56,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
 
             // Only show the loader if this is a channel (ie. not a query)
             if (this.model.isChannel()) {
-                this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + utils.translateText('client_views_channel_joining') + ' <span class="loader"></span></div>');
+                this.$el.append('<div class="initial-loader" style="margin:1em;text-align:center;"> ' + utils.translateText('client_views_channel_joining') + ' <span class="loader"></span></div>');
             }
 
             this.model.bind('msg', this.newMsg, this);
@@ -245,7 +245,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
                 extra_html = require('ui/mediamessage/mediamessage').buildHtml(url);
 
                 // Make the link clickable
-                return '<a class="link_ext" target="_blank" rel="nofollow" href="' + url.replace(/"/g, '%22') + '">' + _.escape(nice) + '</a>' + extra_html;
+                return '<a class="link-ext" target="_blank" rel="nofollow" href="' + url.replace(/"/g, '%22') + '">' + _.escape(nice) + '</a>' + extra_html;
             });
 
             return found_a_url ? parsed_url : false;
@@ -455,7 +455,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
         updateLastSeenMarker: function() {
             if (this.model.isActive()) {
                 // Remove the previous last seen classes
-                this.$(".last_seen").removeClass("last_seen");
+                this.$(".last-seen").removeClass("last_seen");
 
                 // Mark the last message the user saw
                 this.$messages.children().last().addClass("last_seen");
