@@ -583,11 +583,12 @@
                 if (opts.themes) {
                     $.each(opts.themes, function (theme_idx, theme) {
                         var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase());
-
-                        var link = $.parseHTML('<link rel="stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
-                        link.disabled = disabled;
-
+                        var link = $.parseHTML('<link rel="stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" />');
+                        
                         $(link).appendTo($('head'));
+                        if (disabled) {
+                            $(link).attr('disabled', true)[0].disabled = disabled;
+                        }
                     });
                 }
             });
