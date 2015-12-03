@@ -11,34 +11,48 @@ var handlers = {
     NOTICE: function (command) {
         var namespace,
             time,
-            msg;
+            msg,
+            target, target_group;
 
         // Check if we have a server-time
         time = command.getServerTime();
 
+        target = command.params[0];
+
         msg = command.params[command.params.length - 1];
         if ((msg.charAt(0) === String.fromCharCode(1)) && (msg.charAt(msg.length - 1) === String.fromCharCode(1))) {
             // It's a CTCP response
-            namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase()) ? 'user' : 'channel';
-            this.emit(namespace + ' ' + command.params[0] + ' ctcp_response', {
+            namespace = (target.toLowerCase() === this.irc_connection.nick.toLowerCase()) ? 'user' : 'channel';
+            this.emit(namespace + ' ' + target + ' ctcp_response', {
                 nick: command.nick,
                 ident: command.ident,
                 hostname: command.hostname,
-                target: command.params[0],
+                target: target,
                 msg: msg.substring(1, msg.length - 1),
                 time: time
             });
         } else {
-            namespace = (command.params[0].toLowerCase() === this.irc_connection.nick.toLowerCase() || command.params[0] === '*') ?
+            namespace = (target.toLowerCase() === this.irc_connection.nick.toLowerCase() || target === '*') ?
                 'user' :
                 'channel';
 
-            this.emit(namespace + ' ' + command.params[0] + ' notice', {
+            // Support '@#channel' formats
+            _.find(this.irc_connection.options.PREFIX, function(prefix) {
+                if (prefix.symbol === target[0]) {
+                    target_group = target[0];
+                    target = target.substring(1);
+                }
+
+                return true;
+            });
+
+            this.emit(namespace + ' ' + target + ' notice', {
                 from_server: command.prefix === this.irc_connection.server_name ? true : false,
                 nick: command.nick || undefined,
                 ident: command.ident,
                 hostname: command.hostname,
-                target: command.params[0],
+                target: target,
+                group: target_group,
                 msg: msg,
                 time: time
             });
