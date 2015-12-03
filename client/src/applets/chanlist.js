@@ -74,6 +74,14 @@
         },
 
 
+        reset: function() {
+            this.$('tbody').empty();
+            this.channels = [];
+            this.order = '';
+            this.waiting = false;
+        },
+
+
         chanClick: function (event) {
             if (event.target) {
                 _kiwi.gateway.join(null, $(event.target).data('channel'));
@@ -159,7 +167,7 @@
 
         // A new, fresh channel list starting
         onListStart: function (event) {
-            // TODO: clear out our existing list
+            this.view.reset();
         },
 
         addChannel: function (channels) {
