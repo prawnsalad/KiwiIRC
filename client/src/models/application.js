@@ -255,6 +255,9 @@
                                 if (!panel.isChannel())
                                     return;
 
+                                // The memberlist will reset itself and be updated with NAMES output
+                                panel.get('members').reset();
+                                
                                 panel.addMsg('', styleText('rejoin', {text: msg}), 'action join');
                             });
                         });
