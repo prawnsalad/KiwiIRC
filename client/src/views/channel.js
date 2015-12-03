@@ -54,6 +54,13 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             this.$el.append('<div class="initial_loader" style="margin:1em;text-align:center;"> ' + _kiwi.global.i18n.translate('client_views_channel_joining').fetch() + ' <span class="loader"></span></div>');
         }
 
+        // Move our lastSeenMarker to the bottom if moving away from this tab
+        this.listenTo(_kiwi.app.panels, 'active', function(new_panel, previous_panel) {
+            if (previous_panel === this.model) {
+                this.updateLastSeenMarker();
+            }
+        });
+
         this.model.bind('msg', this.newMsg, this);
         this.msg_count = 0;
     },
@@ -449,13 +456,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
 
 
     updateLastSeenMarker: function() {
-        if (this.model.isActive()) {
-            // Remove the previous last seen classes
-            this.$(".last_seen").removeClass("last_seen");
+        // Remove the previous last seen classes
+        this.$(".last_seen").removeClass("last_seen");
 
-            // Mark the last message the user saw
-            this.$messages.children().last().addClass("last_seen");
-        }
+        // Mark the last message the user saw
+        this.$messages.children().last().addClass("last_seen");
     },
 
 
