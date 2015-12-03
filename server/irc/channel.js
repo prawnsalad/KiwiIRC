@@ -191,6 +191,7 @@ function onNotice(event) {
             ident: event.ident,
             hostname: event.hostname,
             target: event.target,
+            group: event.group,
             msg: event.msg,
             time: event.time
         });
