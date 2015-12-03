@@ -544,22 +544,20 @@
     function appletCommand (ev) {
         if (!ev.params[0]) return;
 
-        var panel = new _kiwi.model.Applet();
+        var panel;
 
         if (ev.params[1]) {
             // Url and name given
-            panel.load(ev.params[0], ev.params[1]);
+            panel = panel.loadFromUrl(ev.params[0], ev.params[1]);
         } else {
             // Load a pre-loaded applet
-            if (this.applets[ev.params[0]]) {
-                panel.load(new this.applets[ev.params[0]]());
-            } else {
+            panel = _kiwi.model.Applet.loadOnce('kiwi_settings');
+            if (!panel) {
                 this.app.panels().server.addMsg('', styleText('applet_notfound', {text: translateText('client_models_application_applet_notfound', [ev.params[0]])}));
                 return;
             }
         }
 
-        this.app.connections.active_connection.panels.add(panel);
         panel.view.show();
     }
 
