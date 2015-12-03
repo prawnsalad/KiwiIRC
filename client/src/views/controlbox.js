@@ -229,7 +229,11 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
             if (inp_val) {
                 $.each(inp_val.split('\n'), function (idx, line) {
-                    that.processInput(line);
+                    try {
+                        that.processInput(line);
+                    } catch (err) {
+                        window.console && console.error(err);
+                    }
                 });
 
                 this.buffer.push(inp_val);
