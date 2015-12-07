@@ -66,14 +66,9 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         imgur: function () {
             var that = this;
-
-            $.getJSON('https://api.imgur.com/oembed?url=' + this.url, function (data) {
-                var url = 'https' + data.url.substr(4);
-                var img_html = '<a href="' + url + '" target="_blank"><img height="100" src="' + url + '" /></a>';
-                that.$content.find('.content').html(img_html);
-            });
-
-            return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_image').fetch() + '...</div>');
+            var matches = (/(imgur\.com)\/([\w]*\/)*(\w*)((\.jpg|\.png|\.bmp)*$)/ig).exec(this.url);
+ 
+            return $('<blockquote class="imgur-embed-pub" lang="en" data-id="'+matches[3]+'"><a href="//imgur.com/'+matches[3]+'">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>');
         },
 
 
