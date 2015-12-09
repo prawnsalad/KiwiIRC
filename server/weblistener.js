@@ -8,7 +8,7 @@ var engine       = require('engine.io'),
     dns          = require('dns'),
     url          = require('url'),
     _            = require('lodash'),
-    spdy         = require('spdy'),
+    spdy         = require('https'),
     ipaddr       = require('ipaddr.js'),
     winston      = require('winston'),
     Client       = require('./client.js').Client,
@@ -58,6 +58,15 @@ var WebListener = module.exports = function (web_config) {
 
         hs.listen(web_config.port, web_config.address, function () {
             that.emit('listening');
+            
+            //Redirect from http port to https
+            if (web_config.http_redirect) {
+                var http = require('http');
+                http.createServer(function (req, res) {
+                    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+                    res.end();
+                }).listen(web_config.http_redirect_port);
+            }
         });
     } else {
 
