@@ -547,22 +547,21 @@ define('misc/clientuicommands', function(require, exports, module) {
     function appletCommand (ev) {
         if (!ev.params[0]) return;
 
+        var Applet = require('ui/panels/applet');
         var panel = new (require('ui/panels/applet'))();
 
         if (ev.params[1]) {
             // Url and name given
-            panel.load(ev.params[0], ev.params[1]);
+            panel = Applet.loadFromurl(ev.params[0], ev.params[1]);
         } else {
             // Load a pre-loaded applet
-            if (this.applets[ev.params[0]]) {
-                panel.load(new this.applets[ev.params[0]]());
-            } else {
+            panel = Applet.loadOnce(ev.params[0]);
+            if (!panel) {
                 this.app.panels().server.addMsg('', utils.styleText('applet_notfound', {text: utils.translateText('client_models_application_applet_notfound', [ev.params[0]])}));
                 return;
             }
         }
 
-        this.app.connections.active_connection.panels.add(panel);
         panel.view.show();
     }
 
