@@ -222,9 +222,9 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         }
 
         // Is this an imgur link not picked up by the images regex? Only need the image ID.
-        matches = (/imgur\.com(?:.*)?\/([0-9a-zA-Z]+)/ig).exec(url);
+        matches = (/imgur.com\/((?:.[^\/]+)|(?:a\/.+)|(?:.*\/(.+)))/gi).exec(url);
         if (matches && !url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media imgur" data-type="imgur" data-id="' + matches[1] + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
+            html += '<span class="media imgur" data-type="imgur" data-id="' + matches[(matches[2]?2:1)] + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is it a tweet?
