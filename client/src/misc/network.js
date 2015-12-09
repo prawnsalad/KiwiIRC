@@ -186,7 +186,7 @@ define('misc/network', function(require, exports, module) {
                 // Check if we have the panel already. If not, create it
                 channel = that.panels.getByName(channel_name);
                 if (!channel) {
-                    channel = new (require('ui/panels/channel'))({name: channel_name, network: that});
+                    channel = new (require('ui/panels/channel'))({name: channel_name, network: that, key: channel_key||undefined});
                     that.panels.add(channel);
                 }
 
@@ -211,7 +211,7 @@ define('misc/network', function(require, exports, module) {
                 if (!panel.isChannel())
                     return;
 
-                that.gateway.join(panel.get('name'));
+                that.gateway.join(panel.get('name'), panel.get('key') || undefined);
             });
         },
 
@@ -748,6 +748,15 @@ define('misc/network', function(require, exports, module) {
                 // TODO: Be smart, remove this specific ban from the banlist rather than request a whole banlist
                 if (event.modes[i].mode[1] == 'b')
                     request_updated_banlist = true;
+
+                // Remember the key being set
+                if (event.modes[i].mode[1] == 'k') {
+                    if (event.modes[i].mode[0] === '+') {
+                        channel.set('key', event.modes[i].param);
+                    } else if (event.modes[i].mode[0] === '-') {
+                        channel.set('key', undefined);
+                    }
+                }
             }
 
             channel.addMsg('', utils.styleText('mode', {nick: event.nick, text: utils.translateText('client_models_network_mode', [friendlyModeString()]), channel: event.target}), 'action mode', {time: event.time});
