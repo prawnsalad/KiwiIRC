@@ -99,6 +99,7 @@ define('misc/clientuicommands', function(require, exports, module) {
             'command:quote':       {fn: quoteCommand, description: utils.translateText('command_description_quote'), aliases: ['raw']},
             'command:kick':        {fn: kickCommand, description: utils.translateText('command_description_kick')},
             'command:names':       {fn: namesCommand, description: ''},
+            'command:mode':        {fn: modeCommand, description: ''},
             'command:clear':       {fn: clearCommand, description: utils.translateText('command_description_clear')},
             'command:ctcp':        {fn: ctcpCommand, description: utils.translateText('command_description_ctcp')},
             'command:quit':        {fn: quitCommand, description: utils.translateText('command_description_quit'), aliases: ['q']},
@@ -444,6 +445,60 @@ define('misc/clientuicommands', function(require, exports, module) {
             ev.params[0];
 
         this.app.connections.active_connection.gateway.raw('NAMES ' + channel);
+    }
+
+
+    function modeCommand (ev) {
+        var params, for_channel, network,
+            panel = this.app.panels().active;
+
+        network = panel.get('network');
+        if (!network) {
+            return;
+        }
+
+        // Use the specified channel is one is given..
+        if (network.isChannelName(ev.params[0])) {
+            for_channel = ev.params[0];
+            params = ev.params.join(' ');
+
+        // Use the current channel..
+        } else if(panel.isChannel()) {
+            for_channel = panel.get('name');
+            params = for_channel;
+
+        // Nothing to get a mode for..
+        } else {
+            return;
+        }
+
+        // Due to a flaw on the server-side we can't actually get modes for channels
+        // that we are not joined. 
+        network.gateway.on('channel_info', function onChanInfo(event) {
+            if (event.channel.toLowerCase() !== for_channel.toLowerCase() || typeof event.modes === 'undefined') {
+                return;
+            }
+
+            // No need to listen any more
+            network.gateway.off('channel_info', onChanInfo);
+
+            // Convert the modes into human readable format (+nt -xyz)
+            var mode_string = _.chain(event.modes)
+                .reduce(function(res, mode) {
+                    var type = mode.mode[0]==='-'?'-':'+';
+                    res[type].push(mode.mode.substr(1));
+                    return res;
+                }, {'+':[], '-':[]})
+                .reduce(function(res, modes, type) {
+                    if (modes.length > 0) res += type + modes.join('') + ' ';
+                    return res;
+                }, '')
+                .value();
+                
+            panel.addMsg('', event.channel + ' ' + mode_string);
+        });
+
+        this.app.connections.active_connection.gateway.raw('MODE ' + params);
     }
 
 
