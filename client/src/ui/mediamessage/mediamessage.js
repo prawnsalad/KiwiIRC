@@ -32,7 +32,7 @@ define('ui/mediamessage/mediamessage', function(require, exports, module) {
         open: function () {
             // Create the content div if we haven't already
             if (!this.$content) {
-                this.$content = $('<div class="media_content"><a class="media_close"><i class="fa fa-chevron-up"></i> ' + utils.translateText('client_views_mediamessage_close') + '</a><br /><div class="content"></div></div>');
+                this.$content = $('<div class="media-content"><a class="media-close"><i class="fa fa-chevron-up"></i> ' + utils.translateText('client_views_mediamessage_close') + '</a><br /><div class="content"></div></div>');
                 this.$content.find('.content').append(this.mediaTypes[this.$el.data('type')].apply(this, []) || utils.translateText('client_views_mediamessage_notfound') + ' :(');
             }
 
