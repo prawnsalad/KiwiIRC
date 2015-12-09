@@ -263,6 +263,9 @@ define('ui/application/application', function(require, exports, module) {
                                 if (!panel.isChannel())
                                     return;
 
+                                // The memberlist will reset itself and be updated with NAMES output
+                                panel.get('members').reset();
+
                                 panel.addMsg('', utils.styleText('rejoin', {text: msg}), 'action join');
                             });
                         });
