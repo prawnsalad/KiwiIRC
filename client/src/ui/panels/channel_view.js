@@ -59,6 +59,13 @@ define('ui/panels/channel_view', function(require, exports, module) {
                 this.$el.append('<div class="initial-loader" style="margin:1em;text-align:center;"> ' + utils.translateText('client_views_channel_joining') + ' <span class="loader"></span></div>');
             }
 
+            // Move our lastSeenMarker to the bottom if moving away from this tab
+            this.listenTo(Application.instance().panels, 'active', function(new_panel, previous_panel) {
+                if (previous_panel === this.model) {
+                    this.updateLastSeenMarker();
+                }
+            });
+
             this.model.bind('msg', this.newMsg, this);
             this.msg_count = 0;
         },
@@ -453,13 +460,11 @@ define('ui/panels/channel_view', function(require, exports, module) {
 
 
         updateLastSeenMarker: function() {
-            if (this.model.isActive()) {
-                // Remove the previous last seen classes
-                this.$(".last-seen").removeClass("last_seen");
+            // Remove the previous last seen classes
+            this.$(".last-seen").removeClass("last_seen");
 
-                // Mark the last message the user saw
-                this.$messages.children().last().addClass("last_seen");
-            }
+            // Mark the last message the user saw
+            this.$messages.children().last().addClass("last_seen");
         },
 
 
