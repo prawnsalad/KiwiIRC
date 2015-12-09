@@ -149,7 +149,12 @@ define('ui/application/view', function(require, exports, module) {
             }
 
             // If we're typing into an input box somewhere, ignore
-            if ((ev.target.tagName.toLowerCase() === 'input') || (ev.target.tagName.toLowerCase() === 'textarea') || $(ev.target).attr('contenteditable')) {
+            var elements = ['input', 'select', 'textarea', 'button', 'datalist', 'keygen'];
+            var do_not_refocus =
+                elements.indexOf(ev.target.tagName.toLowerCase()) > -1 ||
+                $(ev.target).attr('contenteditable');
+    
+            if (do_not_refocus) {
                 return;
             }
 
