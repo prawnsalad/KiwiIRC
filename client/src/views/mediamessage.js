@@ -66,13 +66,11 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
         imgur: function () {
             var that = this;
-
-            $.getJSON('https://api.imgur.com/oembed?url=' + this.url, function (data) {
-                var url = 'https' + data.url.substr(4);
-                var img_html = '<a href="' + url + '" target="_blank"><img height="100" src="' + url + '" /></a>';
-                that.$content.find('.content').html(img_html);
+            $.getJSON('https://api.imgur.com/oembed?url=' + this.$el.data('id') + '&maxheight=100&maxwidth=100', function (data) {
+                that.$content.find('.content').html(data.html);
+            }).fail(function () {
+                that.$content.find('.content').html('<i class="fa fa-exclamation-triangle"></i> No content.');
             });
-
             return $('<div>' + _kiwi.global.i18n.translate('client_views_mediamessage_load_image').fetch() + '...</div>');
         },
 
@@ -223,10 +221,10 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             html += '<span class="media image" data-type="image" data-url="' + url + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
-        // Is this an imgur link not picked up by the images regex?
-        matches = (/imgur\.com\/[^/]*(?!=\.[^!.]+($|\?))/ig).exec(url);
+        // Is this an imgur link not picked up by the images regex? Only need the image ID.
+        matches = (/imgur\.com(?:.*)?\/([0-9a-zA-Z]+)/ig).exec(url);
         if (matches && !url.match(/(\.jpe?g|\.gif|\.bmp|\.png)\??$/i)) {
-            html += '<span class="media imgur" data-type="imgur" data-url="' + url + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
+            html += '<span class="media imgur" data-type="imgur" data-id="' + matches[1] + '" title="Open Image"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         // Is it a tweet?
