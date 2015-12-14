@@ -29,7 +29,8 @@ module.exports.HttpHandler = HttpHandler;
 HttpHandler.prototype.serve = function (request, response) {
     // The incoming requests base path (ie. /kiwiclient)
     var base_path, base_check,
-        whitelisted_folders = ['/assets', '/src'],
+	    // .well-known/acme-challenge for LetsEncrypt.org webroot
+        whitelisted_folders = ['/assets', '/src', '/.well-known/acme-challenge'],
         is_whitelisted_folder = false;
 
     // Trim off any trailing slashes from the base_path
