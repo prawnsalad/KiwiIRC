@@ -107,7 +107,7 @@ define('ui/panels/panel_view', function(require, exports, module) {
 
             // Add the new level if there is one
             if (level !== 'none') {
-                this.model.tab.addClass('alert_' + level);
+                this.model.tab.addClass('alert-' + level);
             }
 
             this.alert_level = type_idx;

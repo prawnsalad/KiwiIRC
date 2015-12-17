@@ -85,77 +85,19 @@ define('ui/panels/channel_view', function(require, exports, module) {
 
 
         newMsg: function(message) {
-            _kiwi.global.events.emit('message:display', {panel: this.model, message: message})
-            .then(_.bind(function() {
-                var msg = message.attributes;
+            var messagePanelAlerts = require('./message_panel_alerts');
+            var event_obj = {
+                panel: this.model,
+                message: message
+            };
 
-                // Activity/alerts based on the type of new message. We only do this if we have
-                // an associated network (think: could be a broadcasted channel so alerts are not needed)
-                if (this.model.get('network')) {
-                    if (msg.type.match(/^action /)) {
-                        this.alert('action');
-
-                    } else if (msg.is_highlight) {
-                        Application.instance().view.alertWindow('* ' + utils.translateText('client_views_panel_activity'));
-                        Application.instance().view.favicon.newHighlight();
-                        Application.instance().view.playSound('highlight');
-                        Application.instance().view.showNotification(this.model.get('name'), msg.unparsed_msg);
-                        this.alert('highlight');
-
-                    } else {
-                        // If this is the active panel, send an alert out
-                        if (this.model.isActive()) {
-                            Application.instance().view.alertWindow('* ' + utils.translateText('client_views_panel_activity'));
-                        }
-                        this.alert('activity');
-                    }
-
-                    if (this.model.isQuery() && !this.model.isActive()) {
-                        Application.instance().view.alertWindow('* ' + utils.translateText('client_views_panel_activity'));
-
-                        // Highlights have already been dealt with above
-                        if (!msg.is_highlight) {
-                            Application.instance().view.favicon.newHighlight();
-                        }
-
-                        Application.instance().view.showNotification(this.model.get('name'), msg.unparsed_msg);
-                        Application.instance().view.playSound('highlight');
-                    }
-
-                    // Update the activity counters
-                    (function () {
-                        // Only inrement the counters if we're not the active panel
-                        if (this.model.isActive()) return;
-
-                        var count_all_activity = _kiwi.global.settings.get('count_all_activity'),
-                            exclude_message_types, new_count;
-
-                        // Set the default config value
-                        if (typeof count_all_activity === 'undefined') {
-                            count_all_activity = false;
-                        }
-
-                        // Do not increment the counter for these message types
-                        exclude_message_types = [
-                            'action join',
-                            'action quit',
-                            'action part',
-                            'action kick',
-                            'action nick',
-                            'action mode'
-                        ];
-
-                        if (count_all_activity || _.indexOf(exclude_message_types, msg.type) === -1) {
-                            new_count = this.model.get('activity_counter') || 0;
-                            new_count++;
-                            this.model.set('activity_counter', new_count);
-                        }
-
-                    }).apply(this);
-
-                    if(this.model.isActive()) this.messages.scrollToBottom();
-                }
-            }, this));
+            // TODO: This plugin trigger should be in the MessageList so that .preventDefault actually
+            //       stops it in time
+            _kiwi.global.events.emit('message:display', event_obj)
+            .then(function() {
+                messagePanelAlerts(event_obj.panel, event_obj.message);
+                if(event_obj.panel.isActive()) event_obj.panel.view.messages.scrollToBottom();
+            });
         },
 
 

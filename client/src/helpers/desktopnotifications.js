@@ -10,7 +10,7 @@ define('utils/notifications', function(require, exports, module) {
     }
 
 
-    module.exports = {
+    var notifications = module.exports = {
         /**
          * Check if desktop notifications have been allowed by the user.
          *

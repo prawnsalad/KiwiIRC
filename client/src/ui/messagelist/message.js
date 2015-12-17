@@ -16,12 +16,12 @@ define('ui/messagelist/message', function(require, exports, module) {
 		template: _.template('<div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div>'),
 		
 		render: function() {
-			var display_obj = this.generateMessageDisplayObj(this.model.attributes);
-            display_obj.nick = utils.styleText('message_nick', {nick: display_obj.nick, prefix: display_obj.nick_prefix || ''});
+			this.display = this.generateMessageDisplayObj(this.model.attributes);
+            this.display.nick = utils.styleText('message_nick', {nick: this.display.nick, prefix: this.display.nick_prefix || ''});
 
-            this.$el.addClass(display_obj.type)
-            	.addClass(display_obj.css_classes);
-			this.$el.html(this.template(display_obj));
+            this.$el.addClass(this.display.type)
+            	.addClass(this.display.css_classes);
+			this.$el.html(this.template(this.display));
 
 			this.$el.data('message', this.model);
 			return this;
