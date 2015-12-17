@@ -63,7 +63,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
 
             // Only show the loader if this is a channel (ie. not a query)
             if (this.model.isChannel()) {
-                this.$el.append('<div class="initial-loader" style="margin:1em;text-align:center;"> ' + utils.translateText('client_views_channel_joining') + ' <span class="loader"></span></div>');
+                this.$el.append('<div class="initial-loader" style="top:40%;text-align:center;position: absolute;z-index: 1;width: 100%;"> ' + utils.translateText('client_views_channel_joining') + ' <span class="loader"></span></div>');
             }
 
             // Move our lastSeenMarker to the bottom if moving away from this tab
