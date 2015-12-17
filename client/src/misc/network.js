@@ -502,7 +502,7 @@ define('misc/network', function(require, exports, module) {
                 // If a panel isn't found for this PM and we allow new queries, create one
                 panel = this.panels.getByName(event.nick);
                 if (!panel && !_kiwi.global.settings.get('ignore_new_queries')) {
-                    panel = new new (require('ui/panels/query'))({name: event.nick, network: this});
+                    panel = new (require('ui/panels/query'))({name: event.nick, network: this});
                     this.panels.add(panel);
                 } else if(!panel) {
                     // We have not allowed new queries and we have not opened the panel ourselves, don't process the message

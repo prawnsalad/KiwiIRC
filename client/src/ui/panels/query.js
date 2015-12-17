@@ -2,13 +2,18 @@ define('ui/panels/query', function(require, exports, module) {
     module.exports = require('./channel').extend({
         initialize: function (attributes) {
             var name = this.get("name") || "",
-                members;
+                members, messages;
 
-            this.view = new (require('./channel_view'))({"model": this, "name": name});
+            messages = new (require('ui/messagelist/messagelist'))({
+                network: this.get('network')   // Enables clicking on channels
+            });
+
             this.set({
                 "name": name,
-                "scrollback": []
+                "messages": messages
             }, {"silent": true});
+
+            this.view = new (require('./channel_view'))({"model": this, "name": name});
 
             _kiwi.global.events.emit('panel:created', {panel: this});
         },

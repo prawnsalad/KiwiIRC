@@ -100,12 +100,18 @@ html, body { height:100%; }
     cursor: pointer;
 }
 
-#kiwi .panel-container { overflow-y:auto; height:100%; }
+#kiwi .panel-container { overflow-y:auto; height:100%; position:relative; }
 #kiwi .panel {
     overflow-x:wrap;
-    border:none; display: none;
+    border:none;
+    display: none;
+    height: 100%;
+    position: relative;
 }
 
+#kiwi .messages {
+    overflow-y: auto;
+}
 #kiwi .messages a {}
 #kiwi .messages.active { display:block; }
 

@@ -112,7 +112,7 @@
     color: #88C56A;
 }
 
-#kiwi .messages { color: #333333; background-color: #fff; padding-bottom: 10px;}
+#kiwi .messages { color: #333333; background-color: #fff; }
 #kiwi .messages.active { }
 #kiwi .messages a { text-decoration:none; }
 

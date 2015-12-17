@@ -7,18 +7,23 @@ define('ui/panels/channel', function(require, exports, module) {
     module.exports = require('./panel').extend({
         initialize: function (attributes) {
             var name = this.get("name") || "",
-                members;
+                members, messages;
+
+            members = new (require('ui/members/memberlist'))();
+            messages = new (require('ui/messagelist/messagelist'))({
+                memberlist: members,           // Enables clicking on nicks
+                network: this.get('network')   // Enables clicking on channels
+            });
 
             this.set({
-                "members": new (require('ui/members/memberlist'))(),
+                "members": members,
                 "name": name,
-                "scrollback": [],
+                "messages": messages,
                 "topic": ""
             }, {"silent": true});
 
             this.view = new (require('./channel_view'))({"model": this, "name": name});
 
-            members = this.get("members");
             members.channel = this;
             members.bind("add", function (member, members, options) {
                 var show_message = _kiwi.global.settings.get('show_joins_parts');
@@ -96,24 +101,12 @@ define('ui/panels/channel', function(require, exports, module) {
                 message_obj.msg = '';
             }
 
-            // Update the scrollback
-            bs = this.get("scrollback");
-            if (bs) {
-                bs.push(message_obj);
-
-                // Keep the scrolback limited
-                if (bs.length > scrollback) {
-                    bs = _.takeRight(bs, scrollback);
-                }
-                this.set({"scrollback": bs}, {silent: true});
-            }
-
-            this.trigger("msg", message_obj);
+            this.get('messages').messages.add(message_obj);
         },
 
 
         clearMessages: function () {
-            this.set({'scrollback': []}, {silent: true});
+            this.get('messages').reset();
             this.addMsg('', 'Window cleared');
 
             this.view.render();
