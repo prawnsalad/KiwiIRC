@@ -33,6 +33,11 @@ define('ui/messagelist/messagelist', function(require, exports, module) {
 	var MessageList = Backbone.View.extend({
 		className: 'messages',
 
+		events: {
+            'mouseenter .msg .nick': 'msgEnter',
+            'mouseleave .msg .nick': 'msgLeave'
+		},
+
 		initialize: function(opts) {
 			var options = opts || {};
 
@@ -80,6 +85,40 @@ define('ui/messagelist/messagelist', function(require, exports, module) {
             if (force_down || this.$el.scrollTop() + this.$el.height() > ($last.position().top + $last.outerHeight()) - 150) {
                 this.el.scrollTop = this.el.scrollHeight;
             }
+        },
+
+        // Cursor hovers over a message
+        msgEnter: function (event) {
+            var nick_class;
+
+            // Find a valid class that this element has
+            _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
+                if (css_class.match(/^nick_[a-z0-9]+/i)) {
+                    nick_class = css_class;
+                }
+            });
+
+            // If no class was found..
+            if (!nick_class) return;
+
+            $('.'+nick_class).addClass('global-nick-highlight');
+        },
+
+        // Cursor leaves message
+        msgLeave: function (event) {
+            var nick_class;
+
+            // Find a valid class that this element has
+            _.each($(event.currentTarget).parent('.msg').attr('class').split(' '), function (css_class) {
+                if (css_class.match(/^nick_[a-z0-9]+/i)) {
+                    nick_class = css_class;
+                }
+            });
+
+            // If no class was found..
+            if (!nick_class) return;
+
+            $('.'+nick_class).removeClass('global-nick-highlight');
         }
 	});
 
