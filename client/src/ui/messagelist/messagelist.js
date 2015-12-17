@@ -35,7 +35,8 @@ define('ui/messagelist/messagelist', function(require, exports, module) {
 
 		events: {
             'mouseenter .msg .nick': 'msgEnter',
-            'mouseleave .msg .nick': 'msgLeave'
+            'mouseleave .msg .nick': 'msgLeave',
+            'click .media .open': 'mediaClick'
 		},
 
 		initialize: function(opts) {
@@ -119,6 +120,22 @@ define('ui/messagelist/messagelist', function(require, exports, module) {
             if (!nick_class) return;
 
             $('.'+nick_class).removeClass('global-nick-highlight');
+        },
+
+        mediaClick: function (event) {
+            var $media = $(event.target).parents('.media');
+            var media_message;
+
+            if ($media.data('media')) {
+                media_message = $media.data('media');
+            } else {
+                media_message = new (require('ui/mediamessage/mediamessage'))({el: $media[0]});
+
+                // Cache this MediaMessage instance for when it's opened again
+                $media.data('media', media_message);
+            }
+
+            media_message.toggle();
         }
 	});
 

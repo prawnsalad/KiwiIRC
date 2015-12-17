@@ -17,8 +17,7 @@ define('ui/panels/channel_view', function(require, exports, module) {
                 'contextmenu .msg .inline-nick' : 'nickClick',
                 'dblclick .msg .nick' : 'nickClick',
                 'dblclick .msg .inline-nick' : 'nickClick',
-                'click .chan': 'chanClick',
-                'click .media .open': 'mediaClick'
+                'click .chan': 'chanClick'
             });
         },
 
@@ -269,23 +268,6 @@ define('ui/panels/channel_view', function(require, exports, module) {
             var target = (event.target) ? $(event.target).data('channel') : $(event.srcElement).data('channel');
 
             this.model.get('network').gateway.join(target);
-        },
-
-
-        mediaClick: function (event) {
-            var $media = $(event.target).parents('.media');
-            var media_message;
-
-            if ($media.data('media')) {
-                media_message = $media.data('media');
-            } else {
-                media_message = new (require('ui/mediamessage/mediamessage'))({el: $media[0]});
-
-                // Cache this MediaMessage instance for when it's opened again
-                $media.data('media', media_message);
-            }
-
-            media_message.toggle();
         }
     });
 });
