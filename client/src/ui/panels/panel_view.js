@@ -75,9 +75,6 @@ define('ui/panels/panel_view', function(require, exports, module) {
             this.model.trigger('active', this.model);
 
             Application.instance().view.doLayout();
-
-            if (!this.model.isApplet())
-                this.scrollToBottom(true);
         },
 
 
@@ -114,18 +111,6 @@ define('ui/panels/panel_view', function(require, exports, module) {
             }
 
             this.alert_level = type_idx;
-        },
-
-
-        // Scroll to the bottom of the panel
-        scrollToBottom: function (force_down) {
-            // If this isn't the active panel, don't scroll
-            if (this.model !== Application.instance().panels().active) return;
-
-            // Don't scroll down if we're scrolled up the panel a little
-            if (force_down || this.$container.scrollTop() + this.$container.height() > this.$el.outerHeight() - 150) {
-                this.$container[0].scrollTop = this.$container[0].scrollHeight;
-            }
         }
     });
 });
