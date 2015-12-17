@@ -72,7 +72,7 @@ define('ui/messagelist/messagelist', function(require, exports, module) {
             this.$('.last-seen').removeClass('last_seen');
 
             // Mark the last message the user saw
-            this.messages.at(this.messages.length-1).view.$el.addClass('last_seen');
+            this.messages.at(this.messages.length-1).view.$el.addClass('last-seen');
 		},
 
         // Scroll to the bottom of the panel

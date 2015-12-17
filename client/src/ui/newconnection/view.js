@@ -37,7 +37,7 @@ define('ui/newconnection/view', function(require, exports, module) {
             if (Application.instance().server_settings && Application.instance().server_settings.connection) {
                 if (!Application.instance().server_settings.connection.allow_change) {
                     this.$el.find('.show_more').remove();
-                    this.$el.addClass('single_server');
+                    this.$el.addClass('single-server');
                 }
             }
 

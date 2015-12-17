@@ -118,9 +118,9 @@ define('ui/application/view', function(require, exports, module) {
             }
 
             if (layout_style == 'list') {
-                this.$el.addClass('chanlist_treeview');
+                this.$el.addClass('chanlist-treeview');
             } else {
-                this.$el.removeClass('chanlist_treeview');
+                this.$el.removeClass('chanlist-treeview');
             }
 
             this.doLayout();
@@ -195,7 +195,7 @@ define('ui/application/view', function(require, exports, module) {
             $resize_handle.css(css_heights);
 
             // If we have channel tabs on the side, adjust the height
-            if ($kiwi.hasClass('chanlist_treeview')) {
+            if ($kiwi.hasClass('chanlist-treeview')) {
                 this.$el.find('.tabs', $kiwi).css(css_heights);
             }
 
