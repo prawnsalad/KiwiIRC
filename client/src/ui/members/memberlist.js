@@ -79,7 +79,7 @@ define('ui/members/memberlist', function(require, exports, module) {
 
             function getNick (member) {
                 return member.get('nick').toLowerCase();
-            };
+            }
 
             this.nick_cache = Object.create(null);
             this.nick_regex = null;

@@ -30,7 +30,7 @@ define('utils/formatdate', function(require, exports, module) {
             n: function() { return this.getMonth() + 1; },
             t: function() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 0).getDate(); }, // Fixed now, gets #days of date
             // Year
-            L: function() { var year = this.getFullYear(); return (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)); },   // Fixed now
+            L: function() { var year = this.getFullYear(); return (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)); },   // Fixed now
             o: function() { var d  = new Date(this.valueOf());  d.setDate(d.getDate() - ((this.getDay() + 6) % 7) + 3); return d.getFullYear();}, //Fixed now
             Y: function() { return this.getFullYear(); },
             y: function() { return ('' + this.getFullYear()).substr(2); },

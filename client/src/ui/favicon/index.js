@@ -68,7 +68,8 @@ define('ui/favicon/', function(require, exports, module) {
             var letter_spacing,
                 bubble_width = 0, bubble_height = 0,
                 canvas = this.canvas,
-                context = test_context = canvas.getContext('2d'),
+                context = canvas.getContext('2d'),
+                test_context = context,
                 canvas_width = canvas.width,
                 canvas_height = canvas.height;
 

@@ -44,11 +44,11 @@ define('ui/messagelist/message', function(require, exports, module) {
             }
             nick_re = new RegExp('(.*)(' + _.escapeRegExp(nick) + ')(.*)', 'i');
             return word.replace(nick_re, function (__, before, nick_in_orig_case, after) {
-                return _.escape(before)
-                    + '<span class="inline-nick" style="' + style + '; cursor:pointer" data-nick="' + _.escape(nick) + '">'
-                    + _.escape(nick_in_orig_case)
-                    + '</span>'
-                    + _.escape(after);
+                return _.escape(before) +
+                    '<span class="inline-nick" style="' + style + '; cursor:pointer" data-nick="' + _.escape(nick) + '">' +
+                    _.escape(nick_in_orig_case) +
+                    '</span>' +
+                    _.escape(after);
             });
         },
 

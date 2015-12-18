@@ -213,7 +213,8 @@ define('ui/controlbox/', function(require, exports, module) {
             var that = this,
                 inp = $(ev.currentTarget),
                 inp_val = inp.val(),
-                meta;
+                meta,
+                $tabs, cur_tab_ind;
 
             if (navigator.appVersion.indexOf("Mac") !== -1) {
                 meta = ev.metaKey;
@@ -274,8 +275,8 @@ define('ui/controlbox/', function(require, exports, module) {
 
             case (ev.keyCode === 219 && meta):            // [ + meta
                 // Find all the tab elements and get the index of the active tab
-                var $tabs = $('#kiwi .tabs').find('li[class!=connection]');
-                var cur_tab_ind = (function() {
+                $tabs = $('#kiwi .tabs').find('li[class!=connection]');
+                cur_tab_ind = (function() {
                     for (var idx=0; idx<$tabs.length; idx++){
                         if ($($tabs[idx]).hasClass('active'))
                             return idx;
@@ -294,8 +295,8 @@ define('ui/controlbox/', function(require, exports, module) {
 
             case (ev.keyCode === 221 && meta):            // ] + meta
                 // Find all the tab elements and get the index of the active tab
-                var $tabs = $('#kiwi .tabs').find('li[class!=connection]');
-                var cur_tab_ind = (function() {
+                $tabs = $('#kiwi .tabs').find('li[class!=connection]');
+                cur_tab_ind = (function() {
                     for (var idx=0; idx<$tabs.length; idx++){
                         if ($($tabs[idx]).hasClass('active'))
                             return idx;
@@ -312,11 +313,11 @@ define('ui/controlbox/', function(require, exports, module) {
                 $next_tab.click();
                 return false;
 
-            case (ev.keyCode === 9     //Check if ONLY tab is pressed
-                && !ev.shiftKey        //(user could be using some browser
-                && !ev.altKey          //keyboard shortcut)
-                && !ev.metaKey
-                && !ev.ctrlKey):
+            case (ev.keyCode === 9 &&  //Check if ONLY tab is pressed
+                !ev.shiftKey &&        //(user could be using some browser
+                !ev.altKey &&          //keyboard shortcut)
+                !ev.metaKey &&
+                !ev.ctrlKey):
 
                 ev.preventDefault();
 

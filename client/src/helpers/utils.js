@@ -21,7 +21,7 @@ define('helpers/utils', function(require, exports, module) {
             randomstring += chars.substring(rnum, rnum + 1);
         }
         return randomstring;
-    }
+    };
 
     /**
     *   String.trim shim
@@ -71,7 +71,7 @@ define('helpers/utils', function(require, exports, module) {
             "s": seconds
         };
         return obj;
-    }
+    };
 
 
     /* Set or get the caret position or selection range of inputs and textareas */
@@ -215,7 +215,7 @@ define('helpers/utils', function(require, exports, module) {
             depth--;
             return words.join(' ');
         };
-    }
+    };
 
 
     /**
@@ -223,30 +223,32 @@ define('helpers/utils', function(require, exports, module) {
      */
     exports.hsl2rgb = function hsl2rgb(h, s, l) {
         var m1, m2, hue;
-        var r, g, b
+        var r, g, b;
+
+        function HueToRgb(m1, m2, hue) {
+            var v;
+            if (hue < 0)
+                hue += 1;
+            else if (hue > 1)
+                hue -= 1;
+
+            if (6 * hue < 1)
+                v = m1 + (m2 - m1) * hue * 6;
+            else if (2 * hue < 1)
+                v = m2;
+            else if (3 * hue < 2)
+                v = m1 + (m2 - m1) * (2/3 - hue) * 6;
+            else
+                v = m1;
+
+            return 255 * v;
+        }
+        
         s /=100;
         l /= 100;
-        if (s == 0)
+        if (s === 0)
             r = g = b = (l * 255);
         else {
-            function HueToRgb(m1, m2, hue) {
-                var v;
-                if (hue < 0)
-                    hue += 1;
-                else if (hue > 1)
-                    hue -= 1;
-
-                if (6 * hue < 1)
-                    v = m1 + (m2 - m1) * hue * 6;
-                else if (2 * hue < 1)
-                    v = m2;
-                else if (3 * hue < 2)
-                    v = m1 + (m2 - m1) * (2/3 - hue) * 6;
-                else
-                    v = m1;
-
-                return 255 * v;
-            }
             if (l <= 0.5)
                 m2 = l * (s + 1);
             else
@@ -258,7 +260,7 @@ define('helpers/utils', function(require, exports, module) {
             b = HueToRgb(m1, m2, hue - 1/3);
         }
         return [r,g,b];
-    }
+    };
 
 
     /**
@@ -282,7 +284,7 @@ define('helpers/utils', function(require, exports, module) {
         });
 
         return message;
-    }
+    };
 
 
     /**
@@ -422,11 +424,11 @@ define('helpers/utils', function(require, exports, module) {
             out += currentTag + '</span>';
         }
         return out;
-    }
+    };
 
     exports.escapeRegex = function escapeRegex (str) {
         return str.replace(/[\[\]\\\^\$\.\|\?\*\+\-\(\)]/g, '\\$&');
-    }
+    };
 
     exports.emoticonFromText = function emoticonFromText(str) {
         var words_in = str.split(' '),
@@ -514,7 +516,7 @@ define('helpers/utils', function(require, exports, module) {
         }
 
         return words_out.join(' ');
-    }
+    };
 
     // Code based on http://anentropic.wordpress.com/2009/06/25/javascript-iso8601-parser-and-pretty-dates/#comment-154
     exports.parseISO8601 = function parseISO8601(str) {
@@ -542,14 +544,14 @@ define('helpers/utils', function(require, exports, module) {
 
             return _date;
         }
-    }
+    };
 
     // Simplyfy the translation syntax
     exports.translateText = function translateText(string_id, params) {
         params = params || '';
 
         return _kiwi.global.i18n.translate(string_id).fetch(params);
-    }
+    };
 
     /**
      * Simplyfy the text styling syntax
@@ -590,7 +592,7 @@ define('helpers/utils', function(require, exports, module) {
         });
 
         return text;
-    }
+    };
 
 
     /*
@@ -610,5 +612,5 @@ define('helpers/utils', function(require, exports, module) {
            // Return an array with the full user mask and RegEx.
            return [res, new RegExp('^'+res.toLowerCase().replace(/\./g,'\\.').replace(/\*/g,'(.[^!@]*?)')+'$','i')];
         }
-    }
+    };
 });

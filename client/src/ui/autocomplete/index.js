@@ -87,7 +87,7 @@ define('ui/autocomplete/', function(require, exports, module) {
                 command: 'Commands'
             };
 
-            this.$('.autocomplete-header-label').text(texts[type] || texts['nicks']);
+            this.$('.autocomplete-header-label').text(texts[type] || texts.nicks);
         },
 
         // Update the list with a word to search for

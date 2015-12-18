@@ -232,47 +232,47 @@ define('ui/application/view', function(require, exports, module) {
             var app = this.model;
 
             if (!this.alertWindowTimer) {
-                this.alertWindowTimer = new (function () {
-                    var that = this;
+                this.alertWindowTimer = (function () {
+                    var that = {};
                     var tmr;
                     var has_focus = true;
                     var state = 0;
                     var default_title = app.server_settings.client.window_title || 'Kiwi IRC';
                     var title = 'Kiwi IRC';
 
-                    this.setTitle = function (new_title) {
+                    that.setTitle = function (new_title) {
                         new_title = new_title || default_title;
                         window.document.title = new_title;
                         return new_title;
                     };
 
-                    this.start = function (new_title) {
+                    that.start = function (new_title) {
                         // Don't alert if we already have focus
                         if (has_focus) return;
 
                         title = new_title;
                         if (tmr) return;
-                        tmr = setInterval(this.update, 1000);
+                        tmr = setInterval(that.update, 1000);
                     };
 
-                    this.stop = function () {
+                    that.stop = function () {
                         // Stop the timer and clear the title
                         if (tmr) clearInterval(tmr);
                         tmr = null;
-                        this.setTitle();
+                        that.setTitle();
 
                         // Some browsers don't always update the last title correctly
                         // Wait a few seconds and then reset
-                        setTimeout(this.reset, 2000);
+                        setTimeout(that.reset, 2000);
                     };
 
-                    this.reset = function () {
+                    that.reset = function () {
                         if (tmr) return;
                         that.setTitle();
                     };
 
 
-                    this.update = function () {
+                    that.update = function () {
                         if (state === 0) {
                             that.setTitle(title);
                             state = 1;
@@ -294,6 +294,8 @@ define('ui/application/view', function(require, exports, module) {
                     $(window).blur(function (event) {
                         has_focus = false;
                     });
+
+                    return that;
                 })();
             }
 
