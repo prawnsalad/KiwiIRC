@@ -5,6 +5,11 @@ function DefineNRequire() {
     function require(name) {
         var mod_id = normalisePath(name);
 
+        // If this module doesn't exist try it as a path name (/index is auto appended as needed)
+        if (!definitions[mod_id]) {
+            mod_id = normalisePath(name + '/');
+        }
+
         // If this mod_id has been defined but not yet executed, execute it now
         if (!modules[mod_id] && definitions[mod_id]) {
             initModule(mod_id);
@@ -39,6 +44,7 @@ function DefineNRequire() {
 
     // Normalise '.' and '..' from paths
     function normalisePath(path) {
+        var append_index = (path[path.length-1] === '/');
         var parts = path.splice ? path : path.split('/');
         var normalised = [];
         for (var i=0; i<parts.length; i++) {
@@ -51,7 +57,10 @@ function DefineNRequire() {
             }
         }
 
-        return normalised.join('/');
+        var full_path = normalised.join('/');
+        if (append_index) full_path += 'index';
+
+        return full_path;
     }
 
     return {

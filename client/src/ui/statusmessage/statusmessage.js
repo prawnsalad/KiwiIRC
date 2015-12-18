@@ -1,6 +1,6 @@
 define('ui/statusmessage/statusmessage', function(require, exports, module) {
 
-    var Application = require('ui/application/application');
+    var Application = require('ui/application/');
 
     module.exports = Backbone.View.extend({
         initialize: function () {

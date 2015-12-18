@@ -1,6 +1,6 @@
 define('ui/panels/message_panel_alerts', function(require, exports, module) {
 
-    var Application = require('ui/application/application');
+    var Application = require('ui/application/');
     var utils = require('helpers/utils');
 
     module.exports = function messagePanelAlerts(panel, message) {

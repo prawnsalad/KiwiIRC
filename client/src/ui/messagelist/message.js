@@ -1,7 +1,7 @@
 define('ui/messagelist/message', function(require, exports, module) {
 
 	var utils = require('helpers/utils');
-	var Application = require('ui/application/application');
+	var Application = require('ui/application/');
 
 	module.exports = Backbone.Model.extend({
 		initialize: function() {

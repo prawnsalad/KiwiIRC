@@ -1,6 +1,6 @@
 define('ui/panels/channel_view', function(require, exports, module) {
 
-    var Application = require('ui/application/application');
+    var Application = require('ui/application/');
     var utils = require('helpers/utils');
 
     module.exports = require('./panel_view').extend({

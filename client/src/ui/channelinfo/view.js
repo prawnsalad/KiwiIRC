@@ -1,7 +1,7 @@
 // var f = new (require('ui/channelinfo/channelinfo'))({channel: Application.instance().panels().active});
 define('ui/channelinfo/view', function(require, exports, module) {
 
-    var Application = require('ui/application/application');
+    var Application = require('ui/application/');
     var utils = require('helpers/utils');
 
     module.exports = Backbone.View.extend({

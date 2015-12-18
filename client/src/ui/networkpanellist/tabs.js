@@ -1,7 +1,7 @@
 // Model for this = require('./networkpanellist')
 define('ui/networkpanellist/tabs', function(require, exports, module) {
 
-    var Application = require('ui/application/application');
+    var Application = require('ui/application/');
 
     module.exports = Backbone.View.extend({
         tagName: 'ul',

@@ -8,7 +8,7 @@
 
             initialize: function (options) {
                 var that = this,
-                    app = require('ui/application/application').instance(),
+                    app = require('ui/application/').instance(),
                     text = {
                         save: utils.translateText('client_applets_scripteditor_save')
                     };

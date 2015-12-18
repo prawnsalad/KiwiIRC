@@ -1,5 +1,7 @@
-// models/application
-define('ui/application/application', function(require, exports, module) {
+/**
+ * @module ui/application/application
+ */
+define('ui/application/', function(require, exports, module) {
 
     var utils = require('helpers/utils');
 
@@ -161,7 +163,7 @@ define('ui/application/application', function(require, exports, module) {
             var active_panel;
 
             var fn = function(panel_type) {
-                var application = require('./application').instance(),
+                var application = require('./index').instance(),
                     panels;
 
                 // Default panel type
