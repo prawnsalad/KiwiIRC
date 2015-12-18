@@ -1,4 +1,4 @@
-define('ui/controlbox/controlbox', function(require, exports, module) {
+define('ui/controlbox/', function(require, exports, module) {
 
     var Application = require('ui/application/');
     var utils = require('helpers/utils');
@@ -20,7 +20,7 @@ define('ui/controlbox/controlbox', function(require, exports, module) {
             this.preprocessor = new utils.InputPreProcessor();
             this.preprocessor.recursive_depth = 5;
 
-            this.autocomplete = new (require('ui/autocomplete/autocomplete'))({el: this.$('.autocomplete')[0]});
+            this.autocomplete = new (require('ui/autocomplete/'))({el: this.$('.autocomplete')[0]});
             this.autocomplete_command_list = [];
             this.bindAutocomplete();
 
@@ -116,11 +116,11 @@ define('ui/controlbox/controlbox', function(require, exports, module) {
                     userbox,
                     are_we_an_op = !!members.getByNick(_kiwi.app.connections.active_connection.get('nick')).get('is_op');
 
-                userbox = new (require('ui/userbox/userbox'))();
+                userbox = new (require('ui/userbox/'))();
                 userbox.setTargets(member, active_panel);
                 userbox.displayOpItems(are_we_an_op);
 
-                var menu = new (require('ui/menubox/menubox'))(member.get('nick') || 'User');
+                var menu = new (require('ui/menubox/'))(member.get('nick') || 'User');
                 menu.addItem('userbox', userbox.$el);
                 menu.showFooter(false);
 
@@ -192,7 +192,7 @@ define('ui/controlbox/controlbox', function(require, exports, module) {
             if (this.nick_change)
                 return;
 
-            this.nick_change = new (require('ui/nickchange/nickchange'))();
+            this.nick_change = new (require('ui/nickchange/'))();
             this.nick_change.render();
 
             this.listenTo(this.nick_change, 'close', function() {

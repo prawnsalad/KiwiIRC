@@ -1,4 +1,4 @@
-define('ui/networkpanellist/networkpanellist', function(require, exports, module) {
+define('ui/networkpanellist/', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
         model: require('misc/network'),
 

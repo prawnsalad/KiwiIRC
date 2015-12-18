@@ -1,4 +1,4 @@
-define('ui/channeltools/channeltools', function(require, exports, module) {
+define('ui/channeltools/', function(require, exports, module) {
 
     var Application = require('ui/application/');
 
@@ -11,7 +11,7 @@ define('ui/channeltools/channeltools', function(require, exports, module) {
         initialize: function () {},
 
         infoClick: function (event) {
-            new (require('ui/channelinfo/channelinfo'))({channel: Application.instance().panels().active});
+            new (require('ui/channelinfo/'))({channel: Application.instance().panels().active});
         },
 
         partClick: function (event) {

@@ -168,11 +168,11 @@ define('ui/panels/channel_view', function(require, exports, module) {
                 return;
             }
 
-            userbox = new (require('ui/userbox/userbox'))();
+            userbox = new (require('ui/userbox/'))();
             userbox.setTargets(member, this.model);
             userbox.displayOpItems(are_we_an_op);
 
-            menubox = new (require('ui/menubox/menubox'))(member.get('nick') || 'User');
+            menubox = new (require('ui/menubox/'))(member.get('nick') || 'User');
             menubox.addItem('userbox', userbox.$el);
             menubox.showFooter(false);
 

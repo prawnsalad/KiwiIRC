@@ -1,4 +1,4 @@
-define('ui/notification/notification', function(require, exports, module) {
+define('ui/notification/', function(require, exports, module) {
 
     var Application = require('ui/application/');
 

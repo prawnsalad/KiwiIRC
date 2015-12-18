@@ -1,4 +1,4 @@
-define('ui/favicon/favicon', function(require, exports, module) {
+define('ui/favicon/', function(require, exports, module) {
     module.exports = Backbone.View.extend({
         initialize: function () {
             var that = this,

@@ -1,4 +1,4 @@
-define('ui/userbox/userbox', function(require, exports, module) {
+define('ui/userbox/', function(require, exports, module) {
 
     var Application = require('ui/application/');
     var utils = require('helpers/utils');

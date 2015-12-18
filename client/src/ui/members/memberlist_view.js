@@ -65,11 +65,11 @@ define('ui/members/memberlist_view', function(require, exports, module) {
                 userbox,
                 are_we_an_op = !!this.model.getByNick(Application.instance().connections.active_connection.get('nick')).get('is_op');
 
-            userbox = new (require('ui/userbox/userbox'))();
+            userbox = new (require('ui/userbox/'))();
             userbox.setTargets(member, this.model.channel);
             userbox.displayOpItems(are_we_an_op);
 
-            var menu = new (require('ui/menubox/menubox'))(member.get('nick') || 'User');
+            var menu = new (require('ui/menubox/'))(member.get('nick') || 'User');
             menu.addItem('userbox', userbox.$el);
             menu.showFooter(false);
 
@@ -117,7 +117,7 @@ define('ui/members/memberlist_view', function(require, exports, module) {
 
 
         channelInfoClick: function(event) {
-            new (require('ui/channelinfo/channelinfo'))({channel: this.model.channel});
+            new (require('ui/channelinfo/'))({channel: this.model.channel});
         },
 
 

@@ -1,4 +1,4 @@
-define('ui/menubox/menubox', function(require, exports, module) {
+define('ui/menubox/', function(require, exports, module) {
 
     var Application = require('ui/application/');
 

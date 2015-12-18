@@ -1,4 +1,4 @@
-define('ui/paneltabs/paneltabs', function(require, exports, module) {
+define('ui/paneltabs/', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
         model: require('ui/panels/panel'),
 

@@ -35,7 +35,7 @@ _kiwi.global = {
     },
 
     addMediaMessageType: function(match, buildHtml) {
-        require('ui/mediamessage/mediamessage').addType(match, buildHtml);
+        require('ui/mediamessage/').addType(match, buildHtml);
     },
 
     // Event managers for plugins

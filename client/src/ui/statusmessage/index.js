@@ -1,4 +1,4 @@
-define('ui/statusmessage/statusmessage', function(require, exports, module) {
+define('ui/statusmessage/', function(require, exports, module) {
 
     var Application = require('ui/application/');
 

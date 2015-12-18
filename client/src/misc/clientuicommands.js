@@ -643,7 +643,7 @@ define('misc/clientuicommands', function(require, exports, module) {
         if (!active_panel.isChannel())
             return;
 
-        new (require('ui/channelinfo/channelinfo'))({channel: this.app.panels().active});
+        new (require('ui/channelinfo/'))({channel: this.app.panels().active});
     }
 
 
@@ -664,8 +664,8 @@ define('misc/clientuicommands', function(require, exports, module) {
 
         // If no server address given, show the new connection dialog
         if (!ev.params[0]) {
-            tmp = new (require('ui/menubox/menubox'))(utils.translateText('client_models_application_connection_create'));
-            tmp.addItem('new_connection', new (require('ui/newconnection/newconnection'))().view.$el);
+            tmp = new (require('ui/menubox/'))(utils.translateText('client_models_application_connection_create'));
+            tmp.addItem('new_connection', new (require('ui/newconnection/'))().view.$el);
             tmp.show();
 
             // Center screen the dialog

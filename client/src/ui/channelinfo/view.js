@@ -1,4 +1,4 @@
-// var f = new (require('ui/channelinfo/channelinfo'))({channel: Application.instance().panels().active});
+// var f = new (require('ui/channelinfo/'))({channel: Application.instance().panels().active});
 define('ui/channelinfo/view', function(require, exports, module) {
 
     var Application = require('ui/application/');
@@ -30,7 +30,7 @@ define('ui/channelinfo/view', function(require, exports, module) {
             this.$el = $(_.template($('#tmpl_channel_info').html().trim())(text));
 
             // Create the menu box this view will sit inside
-            this.menu = new (require('ui/menubox/menubox'))(channel.get('name'));
+            this.menu = new (require('ui/menubox/'))(channel.get('name'));
             this.menu.addItem('channel_info', this.$el);
             this.menu.$el.appendTo(channel.view.$container);
             this.menu.show();

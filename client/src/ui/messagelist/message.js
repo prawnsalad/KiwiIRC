@@ -103,7 +103,7 @@ define('ui/messagelist/message', function(require, exports, module) {
                 }
 
                 // Get any media HTML if supported
-                extra_html = require('ui/mediamessage/mediamessage').buildHtml(url);
+                extra_html = require('ui/mediamessage/').buildHtml(url);
 
                 // Make the link clickable
                 return '<a class="link-ext" target="_blank" rel="nofollow" href="' + url.replace(/"/g, '%22') + '">' + _.escape(nice) + '</a>' + extra_html;

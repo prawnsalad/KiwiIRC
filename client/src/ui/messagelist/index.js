@@ -1,4 +1,4 @@
-define('ui/messagelist/messagelist', function(require, exports, module) {
+define('ui/messagelist/', function(require, exports, module) {
 
 	var Message = require('./message');
 
@@ -129,7 +129,7 @@ define('ui/messagelist/messagelist', function(require, exports, module) {
             if ($media.data('media')) {
                 media_message = $media.data('media');
             } else {
-                media_message = new (require('ui/mediamessage/mediamessage'))({el: $media[0]});
+                media_message = new (require('ui/mediamessage/'))({el: $media[0]});
 
                 // Cache this MediaMessage instance for when it's opened again
                 $media.data('media', media_message);

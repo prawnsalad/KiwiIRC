@@ -4,7 +4,7 @@ define('ui/panels/query', function(require, exports, module) {
             var name = this.get("name") || "",
                 members, messages;
 
-            messages = new (require('ui/messagelist/messagelist'))({
+            messages = new (require('ui/messagelist/'))({
                 network: this.get('network')   // Enables clicking on channels
             });
 

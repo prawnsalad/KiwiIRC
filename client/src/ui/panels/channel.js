@@ -10,7 +10,7 @@ define('ui/panels/channel', function(require, exports, module) {
                 members, messages;
 
             members = new (require('ui/members/memberlist'))();
-            messages = new (require('ui/messagelist/messagelist'))({
+            messages = new (require('ui/messagelist/'))({
                 memberlist: members,           // Enables clicking on nicks
                 network: this.get('network')   // Enables clicking on channels
             });

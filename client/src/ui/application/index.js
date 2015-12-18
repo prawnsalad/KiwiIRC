@@ -98,7 +98,7 @@ define('ui/application/', function(require, exports, module) {
             this.view = new (require('./view'))({model: this, el: this.get('container')});
 
             // Takes instances of model_network
-            this.connections = new (require('ui/networkpanellist/networkpanellist'))();
+            this.connections = new (require('ui/networkpanellist/'))();
 
             // If all connections are removed at some point, hide the bars
             this.connections.on('remove', _.bind(function() {
@@ -108,25 +108,25 @@ define('ui/application/', function(require, exports, module) {
             }, this));
 
             // Applets panel list
-            this.applet_panels = new (require('ui/paneltabs/paneltabs'))();
+            this.applet_panels = new (require('ui/paneltabs/'))();
             this.applet_panels.view.$el.addClass('panellist applets');
             this.view.$el.find('.tabs').append(this.applet_panels.view.$el);
 
             /**
              * Set the UI components up
              */
-            this.controlbox = (new (require('ui/controlbox/controlbox'))({el: $('#kiwi .controlbox')[0]})).render();
+            this.controlbox = (new (require('ui/controlbox/'))({el: $('#kiwi .controlbox')[0]})).render();
             this.client_ui_commands = new (require('misc/clientuicommands'))(this, this.controlbox);
 
-            this.rightbar = new (require('ui/rightbar/rightbar'))({el: this.view.$('.right-bar')[0]});
-            this.topicbar = new (require('ui/topicbar/topicbar'))({el: this.view.$el.find('.topic')[0]});
+            this.rightbar = new (require('ui/rightbar/'))({el: this.view.$('.right-bar')[0]});
+            this.topicbar = new (require('ui/topicbar/'))({el: this.view.$el.find('.topic')[0]});
 
-            new (require('ui/apptoolbar/apptoolbar'))({el: this.view.$el.find('.toolbar .app-tools')[0]});
-            new (require('ui/channeltools/channeltools'))({el: this.view.$el.find('.channel-tools')[0]});
+            new (require('ui/apptoolbar/'))({el: this.view.$el.find('.toolbar .app-tools')[0]});
+            new (require('ui/channeltools/'))({el: this.view.$el.find('.channel-tools')[0]});
 
-            this.message = new (require('ui/statusmessage/statusmessage'))({el: this.view.$el.find('.status-message')[0]});
+            this.message = new (require('ui/statusmessage/'))({el: this.view.$el.find('.status-message')[0]});
 
-            this.resize_handle = new (require('ui/resizehandler/resizehandler'))({el: this.view.$el.find('.memberlists-resize-handle')[0]});
+            this.resize_handle = new (require('ui/resizehandler/'))({el: this.view.$el.find('.memberlists-resize-handle')[0]});
 
             // Rejigg the UI sizes
             this.view.doLayout();
@@ -141,9 +141,9 @@ define('ui/application/', function(require, exports, module) {
 
             _kiwi.global.components.Applet = require('ui/panels/applet');
             _kiwi.global.components.Panel =require('ui/panels/panel');
-            _kiwi.global.components.MenuBox = require('ui/menubox/menubox');
+            _kiwi.global.components.MenuBox = require('ui/menubox/');
             _kiwi.global.components.DataStore = require('misc/datastore');
-            _kiwi.global.components.Notification = require('ui/notification/notification');
+            _kiwi.global.components.Notification = require('ui/notification/');
             _kiwi.global.components.Events = function() {
                 return kiwi.events.createProxy();
             };

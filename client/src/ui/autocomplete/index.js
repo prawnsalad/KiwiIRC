@@ -1,4 +1,4 @@
-define('ui/autocomplete/autocomplete', function(require, exports, module) {
+define('ui/autocomplete/', function(require, exports, module) {
 
     var Application = require('ui/application/');
 

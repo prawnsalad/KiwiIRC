@@ -1,4 +1,4 @@
-define('ui/rightbar/rightbar', function(require, exports, module) {
+define('ui/rightbar/', function(require, exports, module) {
 
     var Application = require('ui/application/');
 

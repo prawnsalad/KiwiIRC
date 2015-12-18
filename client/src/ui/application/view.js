@@ -68,7 +68,7 @@ define('ui/application/view', function(require, exports, module) {
             });
 
 
-            this.favicon = new (require('ui/favicon/favicon'))();
+            this.favicon = new (require('ui/favicon/'))();
             this.initSound();
 
             this.monitorPanelFallback();

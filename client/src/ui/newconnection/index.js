@@ -1,4 +1,4 @@
-define('ui/newconnection/newconnection', function(require, exports, module) {
+define('ui/newconnection/', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
         initialize: function() {
             this.view = new (require('./view'))({model: this});
