@@ -1,34 +1,34 @@
 define('ui/messagelist/message', function(require, exports, module) {
 
-	var utils = require('helpers/utils');
-	var Application = require('ui/application/');
+    var utils = require('helpers/utils');
+    var Application = require('ui/application/');
 
-	module.exports = Backbone.Model.extend({
-		initialize: function() {
-			this.view = new View({model: this});
-		}
-	});
+    module.exports = Backbone.Model.extend({
+        initialize: function() {
+            this.view = new View({model: this});
+        }
+    });
 
 
 
-	var View = Backbone.View.extend({
-		className: 'msg',
-		template: _.template('<div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div>'),
-		
-		render: function() {
-			this.display = this.generateMessageDisplayObj(this.model.attributes);
+    var View = Backbone.View.extend({
+        className: 'msg',
+        template: _.template('<div class="time"><%- time_string %></div><div class="nick" style="<%= nick_style %>"><%- nick %></div><div class="text" style="<%= style %>"><%= msg %> </div>'),
+        
+        render: function() {
+            this.display = this.generateMessageDisplayObj(this.model.attributes);
             this.display.nick = utils.styleText('message_nick', {nick: this.display.nick, prefix: this.display.nick_prefix || ''});
 
             this.$el.addClass(this.display.type)
-            	.addClass(this.display.css_classes);
-			this.$el.html(this.template(this.display));
+                .addClass(this.display.css_classes);
+            this.$el.html(this.template(this.display));
 
-			this.$el.data('message', this.model);
-			return this;
-		},
+            this.$el.data('message', this.model);
+            return this;
+        },
 
 
-		// Let nicks be clickable + colourise within messages
+        // Let nicks be clickable + colourise within messages
         parseMessageNicks: function(word, colourise) {
             var memberlist, member, nick, nick_re, style = '';
 
@@ -258,5 +258,5 @@ define('ui/messagelist/message', function(require, exports, module) {
 
             return msg;
         },
-	});
+    });
 });

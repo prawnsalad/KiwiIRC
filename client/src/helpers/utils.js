@@ -607,10 +607,10 @@ define('helpers/utils', function(require, exports, module) {
 
         // Return the generated user mask only if no_array is true.
         if (!return_regex) {
-           return res;
+            return res;
         } else {
-           // Return an array with the full user mask and RegEx.
-           return [res, new RegExp('^'+res.toLowerCase().replace(/\./g,'\\.').replace(/\*/g,'(.[^!@]*?)')+'$','i')];
+            // Return an array with the full user mask and RegEx.
+            return [res, new RegExp('^'+res.toLowerCase().replace(/\./g,'\\.').replace(/\*/g,'(.[^!@]*?)')+'$','i')];
         }
     };
 });
