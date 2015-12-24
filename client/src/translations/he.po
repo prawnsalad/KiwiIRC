@@ -6,7 +6,6 @@
 # mailing list mentioned above and we will upload it to our translation manager -
 # http://poeditor.com/. An account will be set up for you to make any further changes
 # as the Kiwi project progresses.
-
 msgid ""
 msgstr ""
 "MIME-Version: 1.0\n"
@@ -15,10 +14,13 @@ msgstr ""
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
 "Language: he\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: he\n"
+"X-Source-Language: en\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "שם הערוץ"
+msgstr "שם ערוץ"
 
 #: 
 msgid "client_applets_chanlist_users"
@@ -34,19 +36,19 @@ msgstr "רשימת ערוצים"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "שמירה"
+msgstr "שמור"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "שגיאת סקריפט. %s"
+msgstr "שגיאת תסריט. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "הסקריפט שלך נשמר והופעל"
+msgstr "התסריט שלך נשמר והופעל"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "עורך סקריפטים"
+msgstr "עורך תסריטים"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
@@ -62,7 +64,7 @@ msgstr "עקב כמות גדולה של ערוצים"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "התראות הצטרפות \ עזיבה"
+msgstr "התראות הצטרפות/עזיבה"
 
 #: 
 msgid "client_applets_settings_timestamp"
@@ -76,13 +78,13 @@ msgstr "השתק צלילים"
 msgid "client_applets_settings_history_length"
 msgstr "אורך היסטוריה"
 
-#: 
+# לקוח IRC שגרתי
 msgid "client_applets_settings_default_client"
-msgstr "קליינט IRC ברירת מחדל"
+msgstr "לקוח IRC ברירת מחדל"
 
-#: 
+# הפוך את Kiwi ללקוח IRC שגרתי
 msgid "client_applets_settings_default_client_enable"
-msgstr "הפוך את קיווי לקליינט ברירת מחדל"
+msgstr "הפוך את Kiwi ללקוח IRC ברירת מחדל"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
@@ -90,19 +92,22 @@ msgstr "שים לב: השינויים יכנסו לתוקפם לאחר רענו�
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "שים לב: ייתכן ומשתמשי Chrome או Chromium יידרשו לבדוק את ההגדרות שלהם בעזרת %s אם כלום לא קורה"
+msgstr ""
+"שים לב: ייתכן ומשתמשי Chrome או Chromium יידרשו לבדוק את ההגדרות שלהם בעזרת "
+"%s אם כלום לא קורה"
 
 #: 
 msgid "client_applets_settings_title"
 msgstr "הגדרות"
 
+# יישום לא מוכר
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
 msgstr "יישום לא ידוע"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "טוען"
+msgstr "כעת טוען.."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -110,7 +115,7 @@ msgstr "לא נמצא"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "נותקת מהשרת. מנסה לחדש את החיבור"
+msgstr "נותקת מהשרת. כעת מנסה להתחבר מחדש עבורך"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
@@ -118,7 +123,7 @@ msgstr "נותקת מהשרת. מנסה לחדש את החיבור בעוד %d �
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "הכל בסדר, אתה שוב מחובר לשרת"
+msgstr "הכל בסדר, אנחנו שוב מחוברים לשרת"
 
 #: 
 msgid "client_models_application_settings_saved"
@@ -134,7 +139,7 @@ msgstr "אין כינויים ברשימת ההתעלמות"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "מתעלם מ %s"
+msgstr "מתעלם מן %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
@@ -150,7 +155,7 @@ msgstr "יישום \"%s\" לא קיים"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "קידוד עודכן ל %s"
+msgstr "קידוד עודכן %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
@@ -170,7 +175,7 @@ msgstr "חיבור חדש"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "מתחבר אל %s: %s ..."
+msgstr "כעת מתחבר אל %s: %s ..."
 
 #: 
 msgid "client_models_application_connection_error"
@@ -178,11 +183,11 @@ msgstr "שגיאת התחברות אל %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "הצטרף"
+msgstr "נכנס(ה)"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "יצא"
+msgstr "%s עזב(ה)"
 
 #: 
 msgid "client_models_channel_kicked"
@@ -214,7 +219,7 @@ msgstr "הכותרת עודכנה על ידי %s בשעה %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "הגדיר מצב %s"
+msgstr "מגדיר מצב %s"
 
 #: 
 msgid "client_models_network_mode"
@@ -270,11 +275,12 @@ msgstr "סיסמה לא נכונה"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "פעולה זו תסגור את כל החלונות של קיווי, האם אתה בטוח שברצונך לסגור חלון זה?"
+msgstr ""
+"פעולה זו תסגור את כל החלונות של קיווי, האם אתה בטוח שברצונך לסגור חלון זה?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "מצטרף לערוץ..."
+msgstr "כעת מצטרף לערוץ..."
 
 #: 
 msgid "client_views_channel_topic"
@@ -370,11 +376,11 @@ msgstr "פורט"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "פועל בעזרת Kiwi IRC"
+msgstr "מופעל בעזרת Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "בחר כינוי תחילה!"
+msgstr "עליך לבחור כינוי תחילה!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
@@ -382,11 +388,11 @@ msgstr "מחובר"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "מתחבר..."
+msgstr "כעת מתחבר..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "הכינוי שנבחר בשימוש"
+msgstr "הכינוי שנבחר כבר מצוי בשימוש"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
@@ -410,27 +416,27 @@ msgstr "סירוב התחברות"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "מנהל"
+msgstr "הפוך למפעיל ערוץ"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "הורדה מניהול"
+msgstr "איין מפעיל ערוץ"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "קול"
+msgstr "הענק ביטוי"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "הסרת קול"
+msgstr "איין ביטוי"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "בעיטה"
+msgstr "בעט"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "חסימה"
+msgstr "חסום"
 
 #: 
 msgid "client_views_userbox_query"
@@ -454,7 +460,7 @@ msgstr "בעוד 5 דקות תחובר בשנית ותצורף אוטומטית 
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "מחבר אותך שנית בבטחה... "
+msgstr "כעת מחבר אותך שנית בבטחה.."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
@@ -464,7 +470,7 @@ msgstr "התראות שולחן עבודה"
 msgid "client_applets_settings_enable_notifications"
 msgstr "הפעל התראות"
 
-#: 
+# הצג רגשונים
 msgid "client_applets_settings_emoticons"
 msgstr "הצג סמיילים"
 
@@ -478,7 +484,7 @@ msgstr "עמוד הבית של הפרויקט"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "קישור לערוץ זה"
+msgstr "קשר לערוץ זה"
 
 #: 
 msgid "client_applet_about_share_channel"
@@ -494,227 +500,227 @@ msgstr "רשתות מועדפות"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "הוספת רשת"
+msgstr "הוסף רשת"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "שמירת רשת"
+msgstr "שמור רשת"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "מחיקת רשת"
+msgstr "מחק רשת"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Include join/part messages as activity"
+msgstr "הכלל הודעות הצטרפות/עזיבה בתור פעילות"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "להתעלם"
+msgstr "התעלם"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "השתמש בחתימות זמן של 24-שעות"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "%s לפנה״צ"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "%s אחה״צ"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "has been invited to %s"
+msgstr "הוזמן לערוץ %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "is already on this channel"
+msgstr "כבר נמצא בערוץ זה"
 
 #: Date format
 msgid "client_date_format"
-msgstr "m/d/Y"
+msgstr "d/m/Y"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Jan"
+msgstr "ינו׳"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
-msgstr "Feb"
+msgstr "פבר׳"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "Mar"
+msgstr "מרץ"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
-msgstr "Apr"
+msgstr "אפר׳"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "May"
+msgstr "מאי"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
-msgstr "Jun"
+msgstr "יונ׳"
 
 #: client.libs.date_format.shortMonths.july
 msgid "client.libs.date_format.short_months.july"
-msgstr "Jul"
+msgstr "יול׳"
 
 #: client.libs.date_format.shortMonths.august
 msgid "client.libs.date_format.short_months.august"
-msgstr "Aug"
+msgstr "אוג׳"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Sep"
+msgstr "ספט׳"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
-msgstr "Oct"
+msgstr "אוק׳"
 
 #: client.libs.date_format.shortMonths.november
 msgid "client.libs.date_format.short_months.november"
-msgstr "Nov"
+msgstr "נוב׳"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Dec"
+msgstr "דצמ׳"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "January"
+msgstr "ינואר"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "February"
+msgstr "פברואר"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "March"
+msgstr "מרץ"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
-msgstr "April"
+msgstr "אפריל"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "May"
+msgstr "מאי"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "June"
+msgstr "יוני"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "July"
+msgstr "יולי"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "August"
+msgstr "אוגוסט"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "September"
+msgstr "ספטמבר"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
-msgstr "October"
+msgstr "אוקטובר"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "November"
+msgstr "נובמבר"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "December"
+msgstr "דצמבר"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Mon"
+msgstr "ב׳"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Tue"
+msgstr "ג׳"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Wed"
+msgstr "ד׳"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Thu"
+msgstr "ה׳"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Fri"
+msgstr "ו׳"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Sat"
+msgstr "ש׳"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Sun"
+msgstr "א׳"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Monday"
+msgstr "שני"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Tueday"
+msgstr "שלישי"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Wednesday"
+msgstr "רביעי"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Thursday"
+msgstr "יום חמישי"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Friday"
+msgstr "יום שישי"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Saturday"
+msgstr "יום שבת"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Sunday"
+msgstr "יום ראשון"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Moderated Chat"
+msgstr "צ׳אט מפוקח"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Invite Only"
+msgstr "הזמנה בלבד"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Only operators can change the topic"
+msgstr "רק מפעילים יכולים לשנות את הנושא"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Block messages from outside this channel"
+msgstr "חסום הודעות מחוץ לערוץ זה"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Toggle Banlist"
+msgstr "אפשר/נטרל רשימת חסימה"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Send message..."
+msgstr "שלח הודעה..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "זה יגרום לניתוק מתוך רשת IRC. האם אתה בטוח?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
@@ -871,4 +877,4 @@ msgstr "Stop ignoring somebody"
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
 msgstr "Show the autocomplete box"
-
+ 
