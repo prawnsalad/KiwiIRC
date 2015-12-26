@@ -21,7 +21,7 @@ function generateConnectionId() {
     return next_connection_id++;
 }
 
-var IrcConnection = function (hostname, port, ssl, nick, user, options, state, con_num) {
+var IrcConnection = function (hostname, port, ssl, nick, user, options, session, con_num) {
     EE.call(this,{
         wildcard: true,
         delimiter: ' '
@@ -82,10 +82,10 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
         this.setEncoding(global.config.default_encoding);
     }
 
-    // State object
-    this.state = state;
+    // Session object
+    this.session = session;
 
-    // Connection ID in the state
+    // Connection ID in the session
     this.con_num = con_num;
 
     // IRC protocol handling
@@ -278,6 +278,8 @@ IrcConnection.prototype.connect = function () {
         } else {
             // No socks connection, connect directly to the IRCd
 
+            winston.debug('(connection ' + that.id + ') Connecting directly to ' + host + ':' + (that.ssl?'+':'') + that.irc_host.port);
+
             if (that.ssl) {
                 that.socket = tls.connect({
                     host: host,
@@ -394,7 +396,7 @@ IrcConnection.prototype.connect = function () {
  */
 IrcConnection.prototype.clientEvent = function (event_name, data, callback) {
     data.connection_id = this.con_num;
-    this.state.sendIrcCommand(event_name, data, callback);
+    this.session.sendIrcCommand(event_name, data, callback);
 };
 
 /**

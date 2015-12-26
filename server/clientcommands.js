@@ -31,12 +31,12 @@ ClientCommands.prototype.addRpcEvents = function(client, rpc) {
         if (!connection_id && connection_id !== 0) {
             return callback('server not specified');
 
-        } else if (!client.state.irc_connections[connection_id]) {
+        } else if (!client.session.irc_connections[connection_id]) {
             return callback('not connected to server');
         }
 
         // The server this command is directed to
-        connection = client.state.irc_connections[connection_id];
+        connection = client.session.irc_connections[connection_id];
 
         // Get the arguments for the RPC call only (starts at 4)
         rpc_args = Array.prototype.slice.call(arguments, 4);

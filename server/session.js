@@ -2,20 +2,20 @@ var util            = require('util'),
     events          = require('events'),
     _               = require('lodash'),
     winston         = require('winston'),
-    IrcConnection   = require('./connection.js').IrcConnection;
+    IrcConnection   = require('./irc/connection.js').IrcConnection;
 
-var State = function (client, save_state) {
+var Session = function (client, save_session) {
     var that = this;
 
     events.EventEmitter.call(this);
     this.client = client;
-    this.save_state = save_state || false;
+    this.save_session = save_session || false;
 
     this.irc_connections = [];
     this.next_connection = 0;
 
     this.client.on('dispose', function () {
-        if (!that.save_state) {
+        if (!that.save_session) {
             _.each(that.irc_connections, function (irc_connection, i, cons) {
                 if (irc_connection) {
                     irc_connection.end('QUIT :' + (irc_connection.quit_message || global.config.quit_message || ''));
@@ -29,11 +29,11 @@ var State = function (client, save_state) {
     });
 };
 
-util.inherits(State, events.EventEmitter);
+util.inherits(Session, events.EventEmitter);
 
-module.exports = State;
+module.exports = Session;
 
-State.prototype.connect = function (hostname, port, ssl, nick, user, options, callback) {
+Session.prototype.connect = function (hostname, port, ssl, nick, user, options, callback) {
     var that = this;
     var con, con_num;
 
@@ -90,21 +90,21 @@ State.prototype.connect = function (hostname, port, ssl, nick, user, options, ca
     });
 
     // Call any modules before making the connection
-    global.modules.emit('irc connecting', {state: this, connection: con})
+    global.modules.emit('irc connecting', {session: this, connection: con})
         .then(function () {
             con.connect();
         });
 };
 
-State.prototype.sendIrcCommand = function () {
+Session.prototype.sendIrcCommand = function () {
     this.client.sendIrcCommand.apply(this.client, arguments);
 };
 
-State.prototype.sendKiwiCommand = function () {
+Session.prototype.sendKiwiCommand = function () {
     this.client.sendKiwicommand.apply(this.client, arguments);
 };
 
-State.prototype.dispose = function () {
+Session.prototype.dispose = function () {
     this.emit('dispose');
     this.removeAllListeners();
 };

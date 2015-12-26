@@ -3,7 +3,7 @@ var util             = require('util'),
     crypto           = require('crypto'),
     _                = require('lodash'),
     winston          = require('winston'),
-    State            = require('./irc/state.js'),
+    Session          = require('./session.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
     ClientCommands   = require('./clientcommands.js'),
     WebsocketRpc     = require('./websocketrpc.js'),
@@ -41,7 +41,7 @@ var Client = function (websocket, opts) {
     // Clients address
     this.real_address = this.websocket.meta.real_address;
 
-    this.state = new State(this);
+    this.session = new Session(this);
 
     this.buffer = {
         list: [],
@@ -148,7 +148,7 @@ Client.prototype.attachKiwiCommands = function() {
             options.password = global.config.restrict_server_password || command.password;
 
             if (global.config.restricted_server) {
-                that.state.connect(
+                that.session.connect(
                     global.config.client.server,
                     global.config.client.port,
                     global.config.client.ssl,
@@ -159,7 +159,7 @@ Client.prototype.attachKiwiCommands = function() {
                 );
                 
             } else {
-                that.state.connect(
+                that.session.connect(
                     command.hostname,
                     command.port,
                     command.ssl,
