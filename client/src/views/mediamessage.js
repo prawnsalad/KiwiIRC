@@ -276,7 +276,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         }
 
         // Is this a streamable link?
-        matches = (/https?:\/\/streamable.com\/.+/i).exec(url);
+        matches = (/https?:\/\/streamable.com\/[a-z0-9]+$/i).exec(url);
         if (matches) {
             html += '<span class="media streamable" data-type="streamable" data-url="' + url +'" title="Streamable"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
