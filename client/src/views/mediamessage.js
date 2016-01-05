@@ -178,6 +178,16 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
             return $content;
         },
 
+        streamable: function () {
+            var that = this;
+            $.getJSON('http://api.streamable.com/oembed.json?url=' + this.$el.data('url') + '&maxwidth=300', function (data) {
+                that.$content.find('.content').html(data.html);
+            }).fail(function () {
+                that.$content.find('.content').text(_kiwi.global.i18n.translate('client_views_mediamessage_notfound').fetch());
+            });
+            return $('<div>' + _kiwi.global.i18n.translate('client_models_applet_loading').fetch() + '</div>');
+        },
+
         custom: function() {
             var type = this.constructor.types[this.$el.data('index')];
 
@@ -263,6 +273,12 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         matches = (/(?:m\.)?(soundcloud\.com(?:\/.+))/i).exec(url);
         if (matches) {
             html += '<span class="media soundcloud" data-type="soundcloud" data-url="http://' + matches[1] + '" title="SoundCloud player"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
+        }
+
+        // Is this a streamable link?
+        matches = (/https?:\/\/streamable.com\/[a-z0-9]+$/i).exec(url);
+        if (matches) {
+            html += '<span class="media streamable" data-type="streamable" data-url="' + url +'" title="Streamable"><a class="open"><i class="fa fa-chevron-right"></i></a></span>';
         }
 
         return html;
