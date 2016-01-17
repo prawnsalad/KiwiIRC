@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+kiwi_dir=$(cd `dirname $0`; pwd)
+
+cd ${kiwi_dir}
+if [ -x ${kiwi_dir}/kiwi ] ; then
+    ./kiwi status >/dev/null 2>&1
+    rc=$?
+
+    if [ ${rc} -eq 1 ] ; then
+        ./kiwi start
+        exit $?
+    else
+        exit 0
+    fi
+fi
