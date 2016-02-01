@@ -550,7 +550,8 @@
 #kiwi .notification .close {
     font-size:16px;
     border:1px solid #1b1b1b;
-    border-left, border-bottom: none;
+    border-left: none;
+    border-bottom: none;
     border-radius: 0 8px 0 0;
     line-height: 20px;
     text-align: center;
