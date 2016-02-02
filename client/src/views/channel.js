@@ -205,7 +205,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return;
         }
 
-        re = new RegExp('(^|\\s)([' + _.escapeRegExp(network.get('channel_prefix')) + '][^ ,\\007]+)', 'g');
+        re = new RegExp('(^|\\s)([' + _.escapeRegExp(network.get('channel_prefix')) + '][^ .,\\007]+)', 'g');
 
         if (!word.match(re)) {
             return parsed;
