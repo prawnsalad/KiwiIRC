@@ -878,7 +878,7 @@
             _kiwi.app.message.text(event.reason + ' (' + event.channel + ')');
             break;
         case 'cannot_send_to_channel':
-            panel.addMsg(' ', '== ' + _kiwi.global.i18n.translate('Cannot send message to channel, you are not voiced').fetch(event.channel, event.reason), 'status');
+            panel.addMsg(' ', '== ' + event.reason, 'status');
             break;
         case 'no_such_nick':
             tmp = this.panels.getByName(event.nick);
