@@ -76,6 +76,10 @@ _kiwi.view.Tabs = Backbone.View.extend({
             panel.tab.addClass('server');
             panel.tab.addClass('fa');
             panel.tab.addClass('fa-nonexistant');
+        } else if (panel.isChannel()) {
+            panel.tab.addClass('channel');
+        } else if (panel.isQuery()) {
+            panel.tab.addClass('query');
         }
 
         panel.tab.data('panel', panel);
