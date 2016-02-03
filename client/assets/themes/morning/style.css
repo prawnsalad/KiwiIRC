@@ -353,6 +353,115 @@
 #kiwi .memberlists ul li.mode.a .prefix { display: inline-block; background: #b54747; }
 #kiwi .memberlists ul li.mode.q .prefix { display: inline-block; background: #8547b5; }
 
+/**
+ * SERVER SELECTION DIALOG
+ */
+#kiwi .server_select .basic {
+	border: 0;
+}
+#kiwi .server_select table {
+	width: 100%;
+}
+#kiwi .server_select label {
+	color: #CCC;
+	font-size: 14px;
+	width: 100px;
+	display: block;
+	line-height: 36px;
+}
+#kiwi .server_select .have_pass label {
+	display: inline;
+	cursor: pointer;
+}
+#kiwi .server_select input[type="checkbox"] {
+	height: 14px;
+	width: 14px;
+	vertical-align: text-bottom;
+}
+#kiwi .server_select input[type="text"],
+#kiwi .server_select input[type="password"] {
+	border: 2px solid #63936E;
+	border-radius: 2px;
+	background: none;
+	color: #FFF;
+	font-size: 14px;
+	outline: 0;
+	padding: 8px 10px;
+	transition: border-color .2s, box-shadow .2s;
+	-webkit-appearance: none;
+	width: 100%;
+}
+#kiwi .server_select input[type="text"]:focus,
+#kiwi .server_select input[type="password"]:focus {
+	border-color: #469408;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 6px #7aba7b;
+}
+#kiwi .server_select button {
+	margin-top: 10px;
+	border: 2px solid #84ce88;
+	border-radius: 3px;
+	color: #84ce88;
+	display: block;
+	width: 100%;
+	font-weight: bold;
+	margin-bottom: 10px;
+	padding: 9px 17px;
+	text-transform: uppercase;
+	transition: background .2s, border-color .2s, color .2s;
+	cursor: pointer;
+	background: none;
+	outline: none;
+}
+#kiwi .server_select button:hover {
+	background: #84ce88;
+	color: #fff;
+}
+#kiwi .server_select button:active {
+	box-shadow: none;
+	opacity: .8;
+}
+#kiwi .server_select .basic tr.channel .fa-key {
+	top: 9px;
+	color: #aaa;
+	transition: color .2s;
+}
+#kiwi .server_select .basic tr.channel .fa-key:hover {
+	color: #fff;
+}
+#kiwi .server_select .basic .show_more {
+	line-height: 24px;
+	border-bottom: 1px solid #428bca;
+	display: block;
+}
+#kiwi .server_select .kiwi_logo {
+	margin-top: 60px;
+}
+#kiwi .server_select .kiwi_logo h1 span {
+	font-size: 14px;
+	vertical-align: middle;
+	color: #CCC;
+}
+#kiwi .server_select .kiwi_logo img {
+	width: 24px;
+}
+#kiwi .server_select .status {
+	border: 2px solid #84ce88;
+	background: #FEEFB3;
+	color: #9F6000;
+	border-bottom: 2px solid #d7bb71;
+	padding: 16px;
+	margin-bottom: 32px;
+	transition: background .2s, border-color .2s, color .2s;
+}
+#kiwi .server_select .status.error {
+	color: #FFF;
+	background: #EF5350;
+	border-color: #F44336;
+}
+
+/**
+ * AUTOCOMPLETION POPUP
+ */
 #kiwi .autocomplete {
 	box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
 	border: 1px solid #242a33;
@@ -543,52 +652,6 @@
 #kiwi .messages .last_seen {
     border-bottom-color: #B0CF82;
 }
-
-
-
-
-
-
-/* The server select dialog */
-#kiwi .server_select { margin-left:auto; margin-right:auto; }
-#kiwi .server_select .more { display: none; width:270px; margin:0 auto; }
-#kiwi .server_select table tr td { padding:5px; }
-#kiwi .server_select button {
-    /*padding: 10px 25px;*/
-    padding: 0.5em 1em;
-    font-size: 1.1em;
-    width: 196px;
-    margin: 20px auto;
-    display: block;
-}
-#kiwi .server_select input { padding:3px 7px; width:150px; }
-#kiwi .server_select label { }
-#kiwi .server_select br { clear:both; }
-#kiwi .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
-#kiwi .server_select .basic input { width:170px; }
-#kiwi .server_select .basic label { font-size:1.3em; margin-top:4px; }
-#kiwi .server_select .basic tr.have_pass { font-size:0.8em; }
-#kiwi .server_select .basic tr.have_key { font-size:0.8em; }
-#kiwi .server_select .basic tr.channel td { padding-top:1em; }
-#kiwi .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
-#kiwi .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
-#kiwi .server_select.single_server .basic { border:none; }
-#kiwi .server_select .status { text-align: center; font-weight: bold; padding:1em; }
-#kiwi .server_select .status.ok { }
-#kiwi .server_select .status.error {
-    border:1px solid #A33F3F; background-color:#D28A8A;
-    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
-}
-#kiwi .server_select .show_server { margin-left: 1em; font-size:0.9em; color: #555555; }
-
-
-#kiwi .server_select .kiwi_logo { margin-top:30px; }
-#kiwi .server_select .kiwi_logo h1 span {
-    font-size:14px;
-    line-height:24px; vertical-align: middle;
-    color: #555555;
-}
-#kiwi .server_select .kiwi_logo img { display:inline; width:24px; }
 
 #kiwi .applet_chanlist {
     margin: 0.5em 1em;
