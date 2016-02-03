@@ -248,11 +248,12 @@
     /* text-indent: -1000px; */
 }
 /* Most important modes towards the bottom - they override the top ones! */
-#kiwi .memberlists ul li.mode.v .prefix { display:inline-block; background:#b3b3b3; }
-#kiwi .memberlists ul li.mode.h .prefix { display:inline-block; background:#b5b447; }
-#kiwi .memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
-#kiwi .memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
-#kiwi .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
+#kiwi .memberlists .member .prefix { display: inline-block; }
+#kiwi .memberlists .member .prefix-v { background:#b3b3b3; }
+#kiwi .memberlists .member .prefix-h { background:#b5b447; }
+#kiwi .memberlists .member .prefix-o { background:#47b547; }
+#kiwi .memberlists .member .prefix-a { background:#b54747; }
+#kiwi .memberlists .member .prefix-q { background:#8547b5; }
 
 #kiwi .autocomplete {
     box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);

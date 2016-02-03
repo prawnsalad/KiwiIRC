@@ -7,10 +7,10 @@ define('ui/members/member_view', function(require, exports, module) {
         },
         render: function () {
             var $this = this.$el,
-                prefix_css_class = (this.model.get('modes') || []).join(' ');
+                prefix_css_class = (this.model.get('modes') || [])[0];
 
-            $this.attr('class', 'mode ' + prefix_css_class);
-            $this.html('<a class="nick"><span class="prefix">' + this.model.get("prefix") + '</span>' + this.model.get("nick") + '</a>');
+            $this.attr('class', 'member mode-' + prefix_css_class);
+            $this.html('<a class="nick"><span class="prefix prefix-' + prefix_css_class + '">' + this.model.get("prefix") + '</span>' + this.model.get("nick") + '</a>');
 
             return this;
         }
