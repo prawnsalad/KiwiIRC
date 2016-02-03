@@ -77,7 +77,7 @@
 	-webkit-appearance: none;
 	width: 100%;
 	color: #CCC;
-	
+	font-size: 14px;
 	margin-left: 106px;
 }
 #kiwi .controlbox .nickchange {
@@ -460,6 +460,7 @@
 }
 #kiwi .status_message.err { color:#D8000C; background:#FFBABA; }
 
+#kiwi .controlbox .input .inp,
 #kiwi .messages {
 	font-family: Consolas, monaco, monospace;
 }
