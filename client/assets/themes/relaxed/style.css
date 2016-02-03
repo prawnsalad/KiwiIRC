@@ -68,7 +68,7 @@
 
 #kiwi .toolbar .panellist li.server span { padding-left: 5px; font-weight: bold; font-family: Arial,Helvetica,sans-serif; }
 #kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
-#kiwi .toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
+#kiwi .toolbar .panellist li.server:before { font-family: FontAwesome; content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
 
 /* Tab texts are within a span */
 #kiwi .toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }

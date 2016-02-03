@@ -78,8 +78,6 @@ define('ui/paneltabs/tabs', function(require, exports, module) {
 
             if (panel.isServer()) {
                 panel.tab.addClass('server');
-                panel.tab.addClass('fa');
-                panel.tab.addClass('fa-nonexistant');
             }
 
             panel.tab.data('panel', panel);

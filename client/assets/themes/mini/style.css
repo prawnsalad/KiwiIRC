@@ -60,7 +60,7 @@
 #kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
 
 #kiwi .toolbar .panellist li.server span { padding-left:5px; }
-#kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi.connected .toolbar .panellist li.server:before { font-family: FontAwesome; content: "\f0ec"; color:#3F9532; }
 #kiwi .toolbar .panellist li.server:before { content: "\f06a"; color:#900; }
 
 /* Tab texts are within a span */
