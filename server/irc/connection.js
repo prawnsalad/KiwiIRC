@@ -334,8 +334,11 @@ IrcConnection.prototype.connect = function () {
         that.socket.on('close', function socketCloseCb(had_error) {
             // If that.connected is false, we never actually managed to connect
             var was_connected = that.connected,
-                safely_registered = (new Date()) - that.server.registered > 10000, // Safely = registered + 10secs after.
+                safely_registered = true,
                 should_reconnect = false;
+
+            // Safely registered = was registered on IRC network for at least 10secs
+            safely_registered = that.server.registered !== false && (Date.now()) - that.server.registered > 10000;
 
             winston.debug('(connection ' + that.id + ') Socket closed');
             that.connected = false;
@@ -349,7 +352,7 @@ IrcConnection.prototype.connect = function () {
             // Close the whole socket down
             that.disposeSocket();
 
-            if (!global.config.ircd_reconnect) {
+            if (!global.config.ircd_reconnect || that.requested_disconnect) {
                 Stats.incr('irc.connection.closed');
                 that.emit('close', had_error);
 
@@ -358,8 +361,8 @@ IrcConnection.prototype.connect = function () {
                 if (that.reconnect_attempts && that.reconnect_attempts < 3) {
                     should_reconnect = true;
 
-                // If this was an unplanned disconnect and we were originally connected OK, reconnect
-                } else if (!that.requested_disconnect  && was_connected && safely_registered) {
+                // If we were originally connected OK, reconnect
+                } else if (was_connected && safely_registered) {
                     should_reconnect = true;
 
                 } else {
