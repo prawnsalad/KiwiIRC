@@ -1,6 +1,6 @@
 define('ui/networkpanellist/', function(require, exports, module) {
     module.exports = Backbone.Collection.extend({
-        model: require('misc/network'),
+        model: require('libs/network'),
 
         initialize: function() {
             this.view = new (require('./tabs'))({model: this});

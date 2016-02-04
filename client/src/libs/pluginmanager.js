@@ -1,4 +1,4 @@
-define('misc/pluginmanager', function(require, exports, module) {
+define('libs/pluginmanager', function(require, exports, module) {
 
     var Application = require('ui/application/');
 

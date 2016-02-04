@@ -1,4 +1,4 @@
-define('misc/network', function(require, exports, module) {
+define('libs/network', function(require, exports, module) {
 
     var Application = require('ui/application/');
     var utils = require('helpers/utils');
@@ -78,7 +78,7 @@ define('misc/network', function(require, exports, module) {
             this.panels.add(server_panel);
             this.panels.server = this.panels.active = server_panel;
 
-            this.ignore_list = new (require('misc/ignorelist'))();
+            this.ignore_list = new (require('libs/ignorelist'))();
         },
 
 

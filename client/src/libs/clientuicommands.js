@@ -1,9 +1,16 @@
-define('misc/clientuicommands', function(require, exports, module) {
+/** @module misc/clientuicommands */
+define('libs/clientuicommands', function(require, exports, module) {
 
     var utils = require('helpers/utils');
 
     module.exports = ClientUiCommands;
 
+    /**
+     * User /command and aliases manager
+     * @constructor
+     * @param {ui/application/application} app
+     * @param {ui/controlbox/controlbox} controlbox
+     */
     function ClientUiCommands(app, controlbox) {
         this.app = app;
         this.controlbox = controlbox;
@@ -12,7 +19,9 @@ define('misc/clientuicommands', function(require, exports, module) {
         this.bindCommand(buildCommandFunctions());
     }
 
-    // Add the default user command aliases
+    /**
+     * Add the default user command aliases
+     */
     ClientUiCommands.prototype.addDefaultAliases = function() {
         $.extend(this.controlbox.preprocessor.aliases, {
             // General aliases
@@ -44,7 +53,7 @@ define('misc/clientuicommands', function(require, exports, module) {
 
     /**
      * Add a new command action
-     * @var command Object {'command:the_command': fn}
+     * @param {Object} command Object of 'command:the_command'=>fn pairs
      */
     ClientUiCommands.prototype.bindCommand = function(command) {
         var that = this,
@@ -81,7 +90,6 @@ define('misc/clientuicommands', function(require, exports, module) {
     /**
      * Default functions to bind to controlbox events
      **/
-
     function buildCommandFunctions() {
         var fn_to_bind = {
             'unknown_command':     unknownCommand,

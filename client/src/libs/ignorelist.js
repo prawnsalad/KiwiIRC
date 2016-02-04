@@ -1,11 +1,11 @@
-define('misc/ignorelist', function(require, exports, module) {
+define('libs/ignorelist', function(require, exports, module) {
 
     var utils = require('helpers/utils');
 
     module.exports = Backbone.Collection.extend({
         initialize: function() {
             this.network_address = '';
-            this.ignore_data = require('misc/datastore').instance('kiwi.ignore_list');
+            this.ignore_data = require('libs/datastore').instance('kiwi.ignore_list');
             this.ignore_data.load();
 
             this.on('add', _.bind(this.onAdd, this));

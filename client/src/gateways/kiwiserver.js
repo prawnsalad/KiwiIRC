@@ -154,7 +154,7 @@ define('gateways/kiwiserver', function(require, exports, module) {
                             ssl: connection_info.ssl,
                             password: connection_info.password
                         };
-                        connection = new (require('misc/network'))(inf);
+                        connection = new (require('libs/network'))(inf);
                         application.connections.add(connection);
                     }
 

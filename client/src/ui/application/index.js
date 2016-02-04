@@ -117,7 +117,7 @@ define('ui/application/', function(require, exports, module) {
              * Set the UI components up
              */
             this.controlbox = (new (require('ui/controlbox/'))({el: $('#kiwi .controlbox')[0]})).render();
-            this.client_ui_commands = new (require('misc/clientuicommands'))(this, this.controlbox);
+            this.client_ui_commands = new (require('libs/clientuicommands'))(this, this.controlbox);
 
             this.rightbar = new (require('ui/rightbar/'))({el: this.view.$('.right-bar')[0]});
             this.topicbar = new (require('ui/topicbar/'))({el: this.view.$el.find('.topic')[0]});
@@ -143,7 +143,7 @@ define('ui/application/', function(require, exports, module) {
             _kiwi.global.components.Applet = require('ui/panels/applet');
             _kiwi.global.components.Panel =require('ui/panels/panel');
             _kiwi.global.components.MenuBox = require('ui/menubox/');
-            _kiwi.global.components.DataStore = require('misc/datastore');
+            _kiwi.global.components.DataStore = require('libs/datastore');
             _kiwi.global.components.Notification = require('ui/notification/');
             _kiwi.global.components.Events = function() {
                 return kiwi.events.createProxy();

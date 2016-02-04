@@ -226,7 +226,7 @@ _kiwi.global = {
         this.initUtils();
 
         // Set up the settings datastore
-        _kiwi.global.settings = require('misc/datastore').instance('kiwi.settings');
+        _kiwi.global.settings = require('libs/datastore').instance('kiwi.settings');
         _kiwi.global.settings.load();
 
         // Set the window title
@@ -264,7 +264,7 @@ _kiwi.global = {
             _kiwi.global.events  = new (require('helpers/plugininterface'))();
 
             // Now everything has started up, load the plugin manager for third party plugins
-            _kiwi.global.plugins = new (require('misc/pluginmanager'))();
+            _kiwi.global.plugins = new (require('libs/pluginmanager'))();
 
             callback();
 

@@ -1,4 +1,4 @@
-define('misc/datastore', function(require, exports, module) {
+define('libs/datastore', function(require, exports, module) {
 	module.exports = Backbone.Model.extend({
 		initialize: function () {
 			this._namespace = '';
