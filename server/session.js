@@ -17,11 +17,19 @@ var Session = function (client, save_session) {
     this.client.on('dispose', function () {
         if (!that.save_session) {
             _.each(that.irc_connections, function (irc_connection, i, cons) {
-                if (irc_connection) {
-                    irc_connection.end('QUIT :' + (irc_connection.quit_message || global.config.quit_message || ''));
-                    global.servers.removeConnection(irc_connection);
-                    cons[i] = null;
+                if (!irc_connection) {
+                    return;
                 }
+
+                if (irc_connection.connected) {
+                    irc_connection.once('close', irc_connection.dispose.bind(irc_connection));
+                    irc_connection.end('QUIT :' + (irc_connection.quit_message || global.config.quit_message || ''));
+                } else {
+                    irc_connection.dispose();
+                }
+
+                global.servers.removeConnection(irc_connection);
+                cons[i] = null;
             });
 
             that.dispose();
