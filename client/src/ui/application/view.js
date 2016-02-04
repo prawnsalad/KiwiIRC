@@ -88,15 +88,14 @@ define('ui/application/view', function(require, exports, module) {
             theme_name = theme_name.toLowerCase();
 
             // Clear any current theme
-            $('[data-theme]:not([disabled])').each(function (idx, link) {
-                var $link = $(link);
-                $link.attr('disabled', true)[0].disabled = true;
+            $('[data-theme]').each(function (idx, link) {
+                link.disabled = true;
             });
 
             // Apply the new theme
             var link = $('[data-theme][title=' + theme_name + ']');
             if (link.length > 0) {
-                link.attr('disabled', false)[0].disabled = false;
+                link[0].disabled = false;
             }
 
             this.doLayout();

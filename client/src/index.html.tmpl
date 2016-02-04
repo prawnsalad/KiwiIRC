@@ -587,7 +587,7 @@
                         
                         $(link).appendTo($('head'));
                         if (disabled) {
-                            $(link).attr('disabled', true)[0].disabled = disabled;
+                            link.disabled = disabled;
                         }
                     });
                 }
