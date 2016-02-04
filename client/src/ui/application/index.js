@@ -50,6 +50,7 @@ define('ui/application/', function(require, exports, module) {
 
 
         initializeInterfaces: function () {
+            var KiwiServerGateway = require('gateways/kiwiserver');
             var kiwi_server = '';
 
             // The kiwi server to connect to may be a string for a single option,
@@ -64,7 +65,7 @@ define('ui/application/', function(require, exports, module) {
             }
 
             // Set the gateway up
-            _kiwi.gateway = new (require('misc/gateway'))({kiwi_server: kiwi_server});
+            _kiwi.gateway = new KiwiServerGateway({kiwi_server: kiwi_server});
             this.bindGatewayCommands(_kiwi.gateway);
 
             this.initializeClient();

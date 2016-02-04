@@ -1,5 +1,6 @@
-define('misc/gateway', function(require, exports, module) {
+define('gateways/kiwiserver', function(require, exports, module) {
 
+    // TODO: Try get rid of this application dependancy. Transports should be entirely independant
     var Application = require('ui/application/');
 
     module.exports = Backbone.Model.extend({
