@@ -65,6 +65,8 @@
 
 #kiwi .toolbar .panellist .active { padding-right:23px; padding-top:7px; border-top:1px solid #CB0000; border-bottom:none; background-color: #F7F7F7; color: #333}
 #kiwi .toolbar .panellist li .part:before { font-family: FontAwesome; content:"\f00d"; }
+#kiwi .toolbar .panellist li .part { display: none; }
+#kiwi .toolbar .panellist li.active .part { display: inline-block; }
 
 #kiwi .toolbar .panellist li.server span { padding-left: 5px; font-weight: bold; font-family: Arial,Helvetica,sans-serif; }
 #kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }

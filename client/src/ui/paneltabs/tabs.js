@@ -73,7 +73,7 @@ define('ui/paneltabs/tabs', function(require, exports, module) {
 
         panelAdded: function (panel) {
             // Add a tab to the panel
-            panel.tab = $('<li><span></span><div class="activity"></div></li>');
+            panel.tab = $('<li><span></span><div class="activity zero"></div><i class="part fa fa-nonexistant"></i></li>');
             panel.tab.find('span').text(panel.get('title') || panel.get('name'));
 
             if (panel.isServer()) {
@@ -104,13 +104,10 @@ define('ui/paneltabs/tabs', function(require, exports, module) {
         },
 
         panelActive: function (panel, previously_active_panel) {
-            // Remove any existing tabs or part images
-            Application.instance().view.$el.find('.panellist .part').remove();
+            // Remove any existing active tabs
             Application.instance().view.$el.find('.panellist .active').removeClass('active');
 
             panel.tab.addClass('active');
-
-            panel.tab.append('<span class="part fa fa-nonexistant"></span>');
         },
 
         tabClick: function (e) {
