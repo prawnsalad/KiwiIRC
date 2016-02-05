@@ -469,7 +469,10 @@
     color: #6d6d6d;
 }
 
-#kiwi ::-webkit-scrollbar { width: 9px; }
+#kiwi ::-webkit-scrollbar {
+    height: 9px;
+    width: 9px;
+}
 #kiwi ::-webkit-scrollbar-track { background-color:rgba(70,70,70,1); }
 #kiwi ::-webkit-scrollbar-thumb { background-color: rgba(215,215,215,0.4); }
 #kiwi ::-webkit-scrollbar-thumb:hover { background-color: rgba(215,215,215,0.5); }
