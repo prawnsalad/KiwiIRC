@@ -14,11 +14,11 @@ var cached_available_locales = null;
 
 
 var HttpHandler = function (config) {
-    var public_http = config.public_http || global.config.public_http  || 'client/';
-    this.file_server = new node_static.Server(public_http);
+    this.config = config;
+    this.file_server = new node_static.Server(config.public_http);
 
     if (!cached_available_locales) {
-        updateLocalesCache();
+        updateLocalesCache.call(this);
     }
 };
 
@@ -102,7 +102,7 @@ HttpHandler.prototype.serve = function (request, response) {
 function updateLocalesCache() {
     cached_available_locales = [];
 
-    fs.readdir(global.config.public_http + '/assets/locales', function (err, files) {
+    fs.readdir(this.config.public_http + '/assets/locales', function (err, files) {
         if (err) {
             if (err.code === 'ENOENT') {
                 winston.error('No locale files could be found at ' + err.path);

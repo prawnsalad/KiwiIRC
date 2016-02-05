@@ -35,7 +35,9 @@ var WebListener = module.exports = function (web_config) {
 
     events.EventEmitter.call(this);
 
-    http_handler = new HttpHandler(web_config);
+    http_handler = new HttpHandler({
+        public_http: global.config.resolvePath(global.config.public_http  || 'client/')
+    });
 
     if (web_config.ssl) {
         opts = {

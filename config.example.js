@@ -122,7 +122,7 @@ conf.client_plugins = [
 
 
 // Directory to find the server modules
-conf.module_dir = "../server_modules/";
+conf.module_dir = "server_modules/";
 
 // Which modules to load
 conf.modules = [

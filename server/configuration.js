@@ -16,6 +16,7 @@ util.inherits(Config, events.EventEmitter);
 
 Config.prototype.loadConfig = function (manual_config_file) {
     var new_config,
+        new_config_filename,
         conf_filepath,
         i;
 
@@ -29,9 +30,10 @@ Config.prototype.loadConfig = function (manual_config_file) {
 
                     // Try load the new config file
                     new_config = require(manual_config_file);
+                    new_config_filename = manual_config_file;
 
                     // Save location of configuration file so that we can re-load it later
-                    this.manual_config_file = manual_config_file;
+                    this.manual_config_file = require.resolve(manual_config_file);
                 }
             } catch (e) {
                 winston.error('An error occured parsing the config file %s: %s', manual_config_file, e.message);
@@ -53,6 +55,8 @@ Config.prototype.loadConfig = function (manual_config_file) {
 
                     // Try load the new config file
                     new_config = require(conf_filepath);
+                    new_config_filename = conf_filepath;
+
                     break;
                 }
             } catch (e) {
@@ -71,6 +75,7 @@ Config.prototype.loadConfig = function (manual_config_file) {
     if (new_config) {
         loaded_config = new_config;
         global.config = new_config[environment] || {};
+        global.config.resolvePath = resolvePathFn(new_config_filename);
         this.emit('loaded');
         return loaded_config;
     } else {
@@ -92,3 +97,13 @@ Config.prototype.get = function (specific_environment) {
 };
 
 module.exports = new Config();
+
+
+
+function resolvePathFn(config_path) {
+    var config_dir = path.dirname(config_path);
+
+    return function(resolve_path) {
+        return path.resolve(config_dir, resolve_path);
+    };
+}

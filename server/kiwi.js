@@ -17,16 +17,11 @@ global.build_version = require('../package.json').version;
 // Load the configuration
 require('./helpers/configloader.js')();
 
-
 // If we're not running in the forground and we have a log file.. switch
 // console.log to output to a file
 if (process.argv.indexOf('-f') === -1 && global.config && global.config.log) {
     (function () {
-        var log_file_name = global.config.log;
-
-        if (log_file_name[0] !== '/') {
-            log_file_name = __dirname + '/../' + log_file_name;
-        }
+        var log_file_name = global.config.resolvePath(global.config.log);
 
         winston.add(winston.transports.File, {
             filename: log_file_name,
@@ -248,7 +243,22 @@ if (global.config.identd && global.config.identd.enabled) {
 
 
 // Start up a weblistener for each found in the config
-_.each(global.config.servers, function (server) {
+_.each(global.config.servers, function (server_config) {
+    var server = _.extend({}, server_config);
+
+    // Make sure any paths are relative to the config file
+    ['ssl_key', 'ssl_cert', 'ssl_ca'].forEach(function(key) {
+        if (!server[key]) return;
+
+        if (typeof server[key] === 'string') {
+            server[key] = global.config.resolvePath(server[key]);
+        } else if (_.isArray(server[key])) {
+            server[key] = server[key].map(function(item) {
+                return global.config.resolvePath(item);
+            });
+        }
+    });
+
     if (server.type == 'proxy') {
         // Start up a kiwi proxy server
         var serv = new Proxy.ProxyServer();

@@ -2,6 +2,7 @@ var events = require('events'),
     util = require('util'),
     path = require('path'),
     _ = require('lodash'),
+    winston = require('winston'),
     EventPublisher = require('./plugininterface.js');
 
 
@@ -40,23 +41,41 @@ var registered_modules = [];
 
 function loadModule (module_file) {
     var module,
-        full_module_filename = path.join(global.config.module_dir, module_file);
+        modules_dir = global.config.resolvePath(global.config.module_dir),
+        full_module_filename = path.resolve(modules_dir, module_file);
 
     // Make sure that the module is contained in the proper module directory
-    if (full_module_filename.lastIndexOf(global.config.module_dir, 0) !== 0) {
+    if (full_module_filename.indexOf(modules_dir) !== 0) {
+        winston.error('Attempted to load module outside the module folder, ' + full_module_filename);
         return false;
     }
 
-    // Get an instance of the module and remove it from the cache
     try {
+        // Get an instance of the module and remove it from the cache
         module = require(full_module_filename);
         delete require.cache[require.resolve(full_module_filename)];
+
+        if (typeof module !== 'function') {
+            winston.error('Invalid module, ' + full_module_filename);
+            return false;
+        }
+
+        module(Module, __dirname);
+
+        winston.info('Loaded module ' + full_module_filename);
+
     } catch (err) {
         // Module was not found
+        if (err.code === 'MODULE_NOT_FOUND') {
+            winston.error('Could not find module ' + full_module_filename);
+        } else {
+            winston.error(err.stack);
+        }
+
         return false;
     }
 
-    return module(Module, __dirname);
+    return true;
 }
 
 

@@ -111,7 +111,7 @@ function addThemes() {
     return (config.get().client_themes || ['relaxed']).reduce(function (prom, theme) {
         return prom.then(function (themes) {
             return new Promise(function readThemeInfo(resolve, reject) {
-                fs.readFile(global.config.public_http + '/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
+                fs.readFile(global.config.resolvePath(global.config.public_http) + '/assets/themes/' + theme.toLowerCase() + '/theme.json', function (err, theme_json) {
                     var theme;
                     if (err) {
                         return reject(err);
@@ -133,7 +133,7 @@ function addThemes() {
 
 function addTranslations() {
     return new Promise(function (resolve, reject) {
-        fs.readFile(global.config.public_http + '/src/translations/translations.json', function readTranslations(err, translations) {
+        fs.readFile(global.config.resolvePath(global.config.public_http) + '/src/translations/translations.json', function readTranslations(err, translations) {
             if (err) {
                 return reject(err);
             }
@@ -144,7 +144,7 @@ function addTranslations() {
                 return reject(e);
             }
 
-            fs.readdir(global.config.public_http + '/src/translations/', function readTranslationFile(err, pofiles) {
+            fs.readdir(global.config.resolvePath(global.config.public_http) + '/src/translations/', function readTranslationFile(err, pofiles) {
                 var trans = [];
 
                 if (err) {
@@ -183,10 +183,11 @@ function addScripts(vars, debug) {
         ]
     ]);
 
-    var sources = sourceListing(global.config.public_http + '/src/').map(function(file) {
+    var public_http = global.config.resolvePath(global.config.public_http);
+    var sources = sourceListing(public_http + '/src/').map(function(file) {
         // Strip the public_http path from the name as the http_base_path will be
         // appended by the client
-        return file.replace(global.config.public_http + 'src/', 'src/');
+        return file.replace(public_http + '/src/', 'src/');
     });
 
     vars.scripts = vars.scripts.concat(sources);

@@ -6,7 +6,9 @@ var fs            = require('fs'),
     package_json  = require('../../package.json');
 
 var FILE_ENCODING = 'utf-8',
-    EOL = '\n';
+    EOL = '\n',
+    public_http = null,
+    source_files = null;
 
 
 function concat(file_list, callback) {
@@ -42,8 +44,8 @@ if (!require('./configloader.js')()) {
 }
 
 
-
-var source_files = sourceListing(global.config.public_http + '/src/');
+public_http = global.config.resolvePath(global.config.public_http);
+source_files = sourceListing(public_http + '/src/');
 
 /**
  * Build the kiwi.js/kiwi.min.js files
@@ -52,7 +54,7 @@ concat(source_files, function (err, src) {
     if (!err) {
         src = '(function (global, undefined) {\n\n' + src + '\n\n})(window);';
 
-        fs.writeFile(global.config.public_http + '/assets/kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(public_http + '/assets/kiwi.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built kiwi.js');
             } else {
@@ -72,7 +74,7 @@ concat(source_files, function (err, src) {
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(global.config.public_http + '/assets/kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(public_http + '/assets/kiwi.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built kiwi.min.js');
             } else {
@@ -92,9 +94,9 @@ concat(source_files, function (err, src) {
 /**
  * Build the engineio client + tools libs
  */
-concat([global.config.public_http + '/assets/libs/engine.io.js', global.config.public_http + '/assets/libs/engine.io.tools.js'], function (err, src) {
+concat([public_http + '/assets/libs/engine.io.js', public_http + '/assets/libs/engine.io.tools.js'], function (err, src) {
     if (!err) {
-        fs.writeFile(global.config.public_http + '/assets/libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(public_http + '/assets/libs/engine.io.bundle.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built engine.io.bundle.js');
             } else {
@@ -110,7 +112,7 @@ concat([global.config.public_http + '/assets/libs/engine.io.js', global.config.p
         ast.mangle_names();
         src = ast.print_to_string();
 
-        fs.writeFile(global.config.public_http + '/assets/libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
+        fs.writeFile(public_http + '/assets/libs/engine.io.bundle.min.js', src, { encoding: FILE_ENCODING }, function (err) {
             if (!err) {
                 console.log('Built engine.io.bundle.min.js');
             } else {
@@ -130,19 +132,19 @@ concat([global.config.public_http + '/assets/libs/engine.io.js', global.config.p
 /**
 *   Convert translations from .po to .json
 */
-if (!fs.existsSync(global.config.public_http + '/assets/locales')) {
-    fs.mkdirSync(global.config.public_http + '/assets/locales');
+if (!fs.existsSync(public_http + '/assets/locales')) {
+    fs.mkdirSync(public_http + '/assets/locales');
 }
-fs.readdir(global.config.public_http + '/src/translations', function (err, translation_files) {
+fs.readdir(public_http + '/src/translations', function (err, translation_files) {
     if (!err) {
         translation_files.forEach(function (file) {
             var locale = file.slice(0, -3);
 
             if ((file.slice(-3) === '.po') && (locale !== 'template')) {
-                po2json.parseFile(global.config.public_http + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
+                po2json.parseFile(public_http + '/src/translations/' + file, {format: 'jed', domain: locale}, function (err, json) {
                     if (!err) {
 
-                        fs.writeFile(global.config.public_http + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
+                        fs.writeFile(public_http + '/assets/locales/' + locale + '.json', JSON.stringify(json), function (err) {
                             if (!err) {
                                 console.log('Built translation file %s.json', locale);
                             } else {
@@ -176,12 +178,12 @@ if (base_path.substr(base_path.length - 1) === '/') {
     base_path = base_path.substr(0, base_path.length - 1);
 }
 
-var index_src = fs.readFileSync(global.config.public_http + '/src/index.html.tmpl', FILE_ENCODING)
+var index_src = fs.readFileSync(public_http + '/src/index.html.tmpl', FILE_ENCODING)
     .replace(new RegExp('<%base_path%>', 'g'), base_path)
     .replace(new RegExp('<%build_version%>', 'g'), package_json.version)
     .replace(new RegExp('<%build_time%>', 'g'), build_time);
 
-fs.writeFile(global.config.public_http + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
+fs.writeFile(public_http + '/index.html', index_src, { encoding: FILE_ENCODING }, function (err) {
     if (!err) {
         console.log('Built index.html');
     } else {
