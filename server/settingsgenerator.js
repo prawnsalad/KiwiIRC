@@ -71,7 +71,7 @@ function generateSettings(debug) {
                 server: config.get().client.server,
                 port: config.get().client.port || 6667,
                 ssl: config.get().client.ssl,
-                allow_change: false
+                restricted: true
             }
         };
     }
