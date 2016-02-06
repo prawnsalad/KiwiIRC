@@ -10,7 +10,7 @@ define('ui/apptoolbar/', function(require, exports, module) {
 
         initialize: function () {
             // Remove the new connection/startup link if the server has disabled server changing
-            if (Application.instance().server_settings.connection && !Application.instance().server_settings.connection.allow_change) {
+            if (Application.instance().server_settings.connection && Application.instance().server_settings.connection.restricted) {
                 this.$('.startup').css('display', 'none');
             }
         },

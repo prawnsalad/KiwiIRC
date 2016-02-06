@@ -35,8 +35,8 @@ define('ui/newconnection/view', function(require, exports, module) {
 
             // Remove the 'more' link if the server has disabled server changing
             if (Application.instance().server_settings && Application.instance().server_settings.connection) {
-                if (!Application.instance().server_settings.connection.allow_change) {
-                    this.$el.find('.show_more').remove();
+                if (Application.instance().server_settings.connection.restricted) {
+                    this.$el.find('.show-more').remove();
                     this.$el.addClass('single-server');
                 }
             }
