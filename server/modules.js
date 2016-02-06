@@ -16,7 +16,6 @@ var active_publisher;
 
 // Create a publisher to allow event subscribing
 function Publisher (obj) {
-    var EventPublisher = require('./plugininterface.js');
     return new EventPublisher();
 }
 
@@ -120,26 +119,34 @@ Module.prototype.once = function (event_name, fn) {
 
 // Remove any events by this module only
 Module.prototype.off = function (event_name, fn) {
-    var idx;
-
     if (typeof event_name === 'undefined') {
         // Remove all events
-        this._events = [];
+        _.each(this._events, function(events, event_name) {
+            _.each(events, function(event_fn) {
+                active_publisher.off(event_name, event_fn);
+            });
+        });
+
+        this._events = {};
 
     } else if (typeof fn === 'undefined') {
         // Remove all of 1 event type
+        _.each(this._events[event_name], function(event_fn) {
+            active_publisher.off(event_name, event_fn);
+        });
+
         delete this._events[event_name];
 
     } else {
         // Remove a single event + callback
-        for (idx in (this._events[event_name] || [])) {
-            if (this._events[event_name][idx] === fn) {
-                delete this._events[event_name][idx];
-            }
+        if (this._events[event_name]) {
+            this._events[event_name] = _.filter(this._events[event_name], function(event_fn) {
+                return event_fn !== fn;
+            });
         }
-    }
 
-    active_publisher.off(event_name, fn);
+        active_publisher.off(event_name, fn);
+    }
 };
 
 
