@@ -65,7 +65,7 @@ html, body { height:100%; }
 #kiwi .toolbar .panellist .alert-action { font-weight: bold; }
 
 #kiwi .toolbar .panellist li { width: auto; text-align: left; }
-#kiwi .toolbar .panellist li .part { position: absolute; top: 7px; right: 5px; }
+#kiwi .toolbar .panellist li .part { position: absolute; top: 10px; right: 5px; }
 #kiwi .toolbar .panellist li .part:before { content:"[x]"; }
 #kiwi .toolbar .panellist li .part:hover { color: #900; }
 #kiwi .toolbar .panellist li img.icon { left:5px; top:2px; height:auto; width:auto; }
