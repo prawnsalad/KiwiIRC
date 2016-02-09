@@ -429,7 +429,8 @@
 #kiwi .notification .close {
     font-size:16px;
     border:1px solid #1b1b1b;
-    border-left, border-bottom: none;
+    border-left: none;
+    border-bottom: none;
     border-radius: 0 8px 0 0;
     line-height: 20px;
     text-align: center;
@@ -467,3 +468,12 @@
     border-left: solid 4px #df6b26;
     color: #6d6d6d;
 }
+
+#kiwi ::-webkit-scrollbar {
+    height: 9px;
+    width: 9px;
+}
+#kiwi ::-webkit-scrollbar-track { background-color:rgba(70,70,70,1); }
+#kiwi ::-webkit-scrollbar-thumb { background-color: rgba(215,215,215,0.4); }
+#kiwi ::-webkit-scrollbar-thumb:hover { background-color: rgba(215,215,215,0.5); }
+#kiwi ::-webkit-scrollbar-thumb:active { background-color: rgba(215,215,215,0.6); }
