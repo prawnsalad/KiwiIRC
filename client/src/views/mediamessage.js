@@ -252,7 +252,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
         }
 
         // Is this a spotify link?
-        matches = (/http:\/\/(?:play|open\.)?spotify.com\/(album|track|artist)\/([a-zA-Z0-9]+)\/?/i).exec(url);
+        matches = (/https?:\/\/(?:play|open\.)?spotify.com\/(album|track|artist)\/([a-zA-Z0-9]+)\/?/i).exec(url);
         if (matches) {
             // Make it a Spotify URI! (spotify:<type>:<id>)
             var method = matches[1],
