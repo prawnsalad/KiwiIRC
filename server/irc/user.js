@@ -206,7 +206,7 @@ function onWhoisEnd(event) {
 function onWhoWas(event) {
     this.irc_connection.clientEvent('whowas', {
         nick: event.nick,
-        ident: event.user,
+        ident: event.ident,
         hostname: event.host,
         real_name: event.real_name,
         end: false
