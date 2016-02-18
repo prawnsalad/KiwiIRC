@@ -382,7 +382,11 @@ _kiwi.global = {
                             defaults.port = uricheck[3];
                         }
                         if (typeof uricheck[4] !== 'undefined') {
-                            defaults.channel = '#' + uricheck[4];
+                            // Only prepend # if it doesn't already start with it
+                            defaults.channel = (uricheck[4][0] === '#') ?
+                                uricheck[4] :
+                                '#' + uricheck[4];
+
                             if (typeof uricheck[5] !== 'undefined') {
                                 defaults.channel_key = uricheck[5];
                             }
