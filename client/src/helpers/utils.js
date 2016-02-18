@@ -129,7 +129,7 @@ function InputPreProcessor () {
     // Takes an array of words to process!
     this.processInput = function (input) {
         var words = input || [],
-            alias = this.aliases[words[0]],
+            alias = this.aliases[words[0].toLowerCase()],
             alias_len,
             current_alias_word = '',
             compiled = [];
@@ -193,6 +193,7 @@ function InputPreProcessor () {
         input = input || '';
 
         var words = input.split(' ');
+        var first_word = (words[0] || '').toLowerCase();
 
         depth++;
         if (depth >= this.recursive_depth) {
@@ -200,10 +201,11 @@ function InputPreProcessor () {
             return input;
         }
 
-        if (this.aliases[words[0]]) {
+        if (this.aliases[first_word]) {
             words = this.processInput(words);
+            first_word = (words[0] || '').toLowerCase();
 
-            if (this.aliases[words[0]]) {
+            if (this.aliases[first_word]) {
                 words = this.process(words.join(' ')).split(' ');
             }
 
