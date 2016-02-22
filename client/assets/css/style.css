@@ -279,10 +279,6 @@ html, body { height:100%; }
 /* Wrapper div around the text area input */
 #kiwi .controlbox .input .input_wrap { display:inline; }
 
-/* The textarea input */
-#kiwi .controlbox .input .inp { white-space: nowrap; }
-
-
 /* Nick change dialog showed when clicking the nick label */
 #kiwi .controlbox .nickchange {
     position: absolute;
