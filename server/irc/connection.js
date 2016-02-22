@@ -72,7 +72,7 @@ var IrcConnection = function (hostname, port, ssl, nick, user, options, state, c
     // User information
     this.nick = nick;
     this.user = user;  // Contains users real hostname and address
-    this.username = '';
+    this.username = ''; // Uses default from config if empty
     this.gecos = ''; // Users real-name. Uses default from config if empty
     this.password = options.password || '';
     this.quit_message = ''; // Uses default from config if empty
@@ -212,6 +212,9 @@ IrcConnection.prototype.connect = function () {
 
     this.requested_disconnect = false;
 
+    // Make sure we have the username and gecos configured
+    this.setDefaultUserDetails();
+
     // Get the IP family for the dest_addr (either socks or IRCd destination)
     getConnectionFamily(dest_addr, function getConnectionFamilyCb(err, family, host) {
         var outgoing;
@@ -334,8 +337,11 @@ IrcConnection.prototype.connect = function () {
         that.socket.on('close', function socketCloseCb(had_error) {
             // If that.connected is false, we never actually managed to connect
             var was_connected = that.connected,
-                safely_registered = (new Date()) - that.server.registered > 10000, // Safely = registered + 10secs after.
+                safely_registered = true,
                 should_reconnect = false;
+
+            // Safely registered = was registered on IRC network for at least 10secs
+            safely_registered = that.server.registered !== false && (Date.now()) - that.server.registered > 10000;
 
             winston.debug('(connection ' + that.id + ') Socket closed');
             that.connected = false;
@@ -349,7 +355,7 @@ IrcConnection.prototype.connect = function () {
             // Close the whole socket down
             that.disposeSocket();
 
-            if (!global.config.ircd_reconnect) {
+            if (!global.config.ircd_reconnect || that.requested_disconnect) {
                 Stats.incr('irc.connection.closed');
                 that.emit('close', had_error);
 
@@ -358,8 +364,8 @@ IrcConnection.prototype.connect = function () {
                 if (that.reconnect_attempts && that.reconnect_attempts < 3) {
                     should_reconnect = true;
 
-                // If this was an unplanned disconnect and we were originally connected OK, reconnect
-                } else if (!that.requested_disconnect  && was_connected && safely_registered) {
+                // If we were originally connected OK, reconnect
+                } else if (was_connected && safely_registered) {
                     should_reconnect = true;
 
                 } else {
@@ -560,11 +566,12 @@ IrcConnection.prototype.disposeSocket = function () {
     }
 };
 
+
+
 /**
  * Set a new encoding for this connection
  * Return true in case of success
  */
-
 IrcConnection.prototype.setEncoding = function (encoding) {
     var encoded_test;
 
@@ -582,6 +589,25 @@ IrcConnection.prototype.setEncoding = function (encoding) {
         return false;
     }
 };
+
+
+
+/**
+ * Set the defeault username and gecos values if we don't have them already
+ */
+IrcConnection.prototype.setDefaultUserDetails = function () {
+    this.username = (this.username || global.config.default_ident || '%n')
+        .replace('%n', (this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '') || 'nick'))
+        .replace('%h', this.user.hostname)
+        .replace('%i', ip2Hex(this.user.address) || '00000000');
+
+    this.gecos = (this.gecos || global.config.default_gecos || '%n')
+        .replace('%n', this.nick)
+        .replace('%h', this.user.hostname);
+};
+
+
+
 
 function getConnectionFamily(host, callback) {
     if (net.isIP(host)) {
@@ -719,17 +745,6 @@ var socketConnectHandler = function () {
     connect_data = findWebIrc.call(this, connect_data);
 
     global.modules.emit('irc authorize', connect_data).then(function ircAuthorizeCb() {
-        var gecos = ident = '';
-
-        gecos = (that.gecos || global.config.default_gecos || '%n')
-            .replace('%n', that.nick)
-            .replace('%h', that.user.hostname);
-
-        ident = (that.username || global.config.default_ident || '%n')
-            .replace('%n', (that.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '') || 'nick'))
-            .replace('%h', that.user.hostname)
-            .replace('%i', ip2Hex(that.user.address) || '00000000');
-
         // Send any initial data for webirc/etc
         if (connect_data.prepend_data) {
             _.each(connect_data.prepend_data, function(data) {
@@ -744,7 +759,7 @@ var socketConnectHandler = function () {
         }
 
         that.write('NICK ' + that.nick);
-        that.write('USER ' + ident + ' 0 0 :' + gecos);
+        that.write('USER ' + that.username + ' 0 0 :' + that.gecos);
 
         that.emit('connected');
     });

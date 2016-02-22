@@ -197,12 +197,16 @@ commands.module = function(args, raw) {
 
         case 'list':
         case 'ls':
-        default:
             var module_names = [];
             kiwiModules.getRegisteredModules().forEach(function(module) {
                 module_names.push(module.module_name);
             });
             this.write('Loaded modules: ' + module_names.join(', '));
+
+            break;
+
+        default:
+            this.write('Unknown command "' + (args[0] || '') + '"');
     }
 };
 

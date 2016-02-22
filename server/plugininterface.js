@@ -42,16 +42,20 @@ PluginInterface.prototype.off = function (event_name, fn, scope) {
 
     } else if (typeof scope === 'undefined') {
         // Remove a single event type + callback
-        for (idx in (this._listeners[event_name] || [])) {
+        for (idx=0; idx<(this._listeners[event_name] || []).length; idx++) {
             if (this._listeners[event_name][idx][1] === fn) {
-                delete this._listeners[event_name][idx];
+                //delete this._listeners[event_name][idx];
+                this._listeners[event_name].splice(idx, 1);
+                idx--;
             }
         }
     } else {
         // Remove a single event type + callback + scope
-        for (idx in (this._listeners[event_name] || [])) {
+        for (idx=0; idx<(this._listeners[event_name] || []).length; idx++) {
             if (this._listeners[event_name][idx][1] === fn && this._listeners[event_name][idx][2] === scope) {
-                delete this._listeners[event_name][idx];
+                //delete this._listeners[event_name][idx];
+                this._listeners[event_name].splice(idx, 1);
+                idx--;
             }
         }
     }

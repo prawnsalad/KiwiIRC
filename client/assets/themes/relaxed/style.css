@@ -253,6 +253,8 @@
 #kiwi .memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
 #kiwi .memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
 #kiwi .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
+#kiwi .memberlists ul li.mode.Y .prefix { display:inline-block; background:#8547b5; }
+#kiwi .memberlists ul li.mode.y .prefix { display:inline-block; background:#8547b5; }
 
 #kiwi .autocomplete {
     box-shadow: 0 1px 15px rgba(64, 54, 63, 0.25);
