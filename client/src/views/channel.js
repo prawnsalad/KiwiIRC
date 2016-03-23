@@ -228,14 +228,14 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                 extra_html = '';
 
             // Don't allow javascript execution
-            if (url.match(/^javascript:/)) {
+            if (url.match(/^javascript:/i)) {
                 return url;
             }
 
             found_a_url = true;
 
             // Add the http if no protoocol was found
-            if (url.match(/^www\./)) {
+            if (url.match(/^www\./i)) {
                 url = 'http://' + url;
             }
 
