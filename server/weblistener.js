@@ -76,9 +76,10 @@ var WebListener = module.exports = function (web_config) {
     this.ws = new engine.Server();
 
     hs.on('upgrade', function(req, socket, head){
-        // engine.io can sometimes "loose" the clients remote address. Keep note of it
+        // engine.io can sometimes "lose" the clients remote address and headers. Keep note of it
         req.meta = {
-            remote_address: req.connection.remoteAddress
+            remote_address: req.connection.remoteAddress,
+            headers: req.headers
         };
 
         that.ws.handleUpgrade(req, socket, head);
@@ -98,9 +99,10 @@ var WebListener = module.exports = function (web_config) {
 
             Stats.incr('http.request');
 
-            // engine.io can sometimes "loose" the clients remote address. Keep note of it
+            // engine.io can sometimes "lose" the clients remote address and headers. Keep note of it
             req.meta = {
-                remote_address: req.connection.remoteAddress
+                remote_address: req.connection.remoteAddress,
+                headers: req.headers
             };
 
             // If the request is for our transport, pass it onto engine.io
