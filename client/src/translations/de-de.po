@@ -534,7 +534,7 @@ msgstr "befindet sich bereits im Raum"
 
 #: Date format
 msgid "client_date_format"
-msgstr "d/m/Y"
+msgstr "d.m.Y"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
@@ -758,7 +758,7 @@ msgstr "Sende eine Nachricht"
 
 #: 
 msgid "command_description_action"
-msgstr "Mache etwas physisches"
+msgstr "Mache etwas Physisches"
 
 #: 
 msgid "command_description_join"

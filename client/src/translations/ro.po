@@ -714,161 +714,161 @@ msgstr "Trimite mesajul..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Aceasta va deconecta rețeaua IRC. Sigur vrei asta?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Cuvinte evidențiate (separate cu spațiu)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Messages"
+msgstr "Mesaje"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Mesaje din chat"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Alerte / Notificări"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Appearance"
+msgstr "Aspectul"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Theme"
+msgstr "Tematica"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Canale"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Limba"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
+msgstr "Blocare noi mesaje private"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Trimite un mesaj"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Execută o comandă"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Intră într-un canal"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Iese dintr-un canal"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Iese, apoi reintră într-un canal"
 
 #: 
 msgid "command_description_nick"
-msgstr "Change your nickname"
+msgstr "Modifică numele"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private conversation with someone"
+msgstr "Pornește o conversație privată cu cineva"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Invită pe cineva în canal"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Stabileșe topica acestui canal"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Trimite o notificare"
 
 #: 
 msgid "command_description_quote"
-msgstr "Send a raw command to the IRC server"
+msgstr "Trimite o comandă serverului IRC"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick somebody from the channel"
+msgstr "Expulzează pe cineva din canal"
 
 #: 
 msgid "command_description_clear"
-msgstr "Clear all messages from this window"
+msgstr "Curăță toate mesajele din fereastră"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Send a CTCP command to somebody"
+msgstr "Trimite cuiva o comandă CTCP"
 
 #: 
 msgid "command_description_quit"
-msgstr "Disconnect from the IRC server"
+msgstr "Deconectare de la serverul IRC"
 
 #: 
 msgid "command_description_server"
-msgstr "Connect to a new IRC network"
+msgstr "Conectare la o nouă rețea IRC"
 
 #: 
 msgid "command_description_whois"
-msgstr "Request information on somebody"
+msgstr "Solicită informații despre cineva"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Solicită informații despre cineva care s-a deconectat recent"
 
 #: 
 msgid "command_description_away"
-msgstr "Mark yourself as away"
+msgstr "Marchează-te ca inactiv"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Schimbă codificarea conexiunii"
 
 #: 
 msgid "command_description_settings"
-msgstr "Show the settings window"
+msgstr "Arată fereastra de setări"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Modifică scripturile-utilizator kiwi"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Reîncarcă stilurile paginii"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Încarcă un fișier JavaScript dintr-un URL"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Modifică o setare kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Save the current kiwi settings"
+msgstr "Salvează setările curente"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Creează un alias unei /comenzi "
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ignore messages from somebody"
+msgstr "Ignoră mesajele cuiva"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop ignoring somebody"
+msgstr "Nu mai ignora mesajele cuiva"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete box"
+msgstr "Arată căsuța de auto-completare"
 

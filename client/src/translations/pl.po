@@ -318,7 +318,7 @@ msgstr "Anuluj"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "Ludziska rozmawiają!"
+msgstr "Nowe wiadomości!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"

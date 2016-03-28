@@ -22,7 +22,7 @@ msgstr "Ім’я каналу"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Користувачі"
+msgstr "Користувачів"
 
 #: 
 msgid "client_applets_chanlist_topic"
@@ -86,11 +86,11 @@ msgstr "Призначити Kiwi типовим IRC-клієнтом"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Увага: зміни вступають в силу тільки після того, як Ви оновите сторінку"
+msgstr "Примітка: Зміни набудуть чинності лише після того, як ви оновите сторінку"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Примітка: користувачам браузера Chrome чи Chromium, можливо, потрібно перевірити їх налаштування через %s, якщо нічого не стається"
+msgstr "Примітка: користувачам браузера Chrome чи Chromium, можливо, потрібно перевірити їх налаштування через %s, якщо нічого не відбувається"
 
 #: 
 msgid "client_applets_settings_title"
@@ -118,7 +118,7 @@ msgstr "Ви були від'єднані. Спроба відновити з'є
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Все добре. Ви знову на зв’язку"
+msgstr "Все добре. ви знову на зв’язку"
 
 #: 
 msgid "client_models_application_settings_saved"
