@@ -41,6 +41,23 @@ You can also run kiwi in the foreground to see any output by using the `-f` flag
 Open your new Kiwi instance in your browser. By default: http://localhost:7778/
 
 
+### Running on Docker
+Download latest example configuration and copy it to `config.js`
+
+    $ curl -O https://github.com/prawnsalad/KiwiIRC/blob/master/config.example.js && \
+    $ cp config.example.js config.js
+
+Update `config.js` to match your required settings.
+
+    $ nano config.js
+
+Start Docker Container.
+
+    $ docker run -d --name=kiwiirc -p 7778:7778 \
+        -v $(pwd)/config.json:/src/config.json jmervine/kiwiirc:latest
+
+> Note: Adjust port to match your chosen ports -- 7778 is the `config.example.js` default.
+
 ### Bugs
 Report bugs using the issue tracker on github: https://github.com/prawnsalad/KiwiIRC/issues
 
