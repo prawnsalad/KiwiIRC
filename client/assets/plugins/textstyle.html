@@ -198,17 +198,17 @@
 
 
         // Changing styles...
-        $list.on('click', '.style-format-bold', function() {
+        $list.on('click', '.style-format-bold', function(event) {
             event.stopPropagation();
             styles.bold = !styles.bold;
             updateStyles();
         });
-        $list.on('click', '.style-format-italic', function() {
+        $list.on('click', '.style-format-italic', function(event) {
             event.stopPropagation();
             styles.italic = !styles.italic;
             updateStyles();
         });
-        $list.on('click', '.style-format-underline', function() {
+        $list.on('click', '.style-format-underline', function(event) {
             event.stopPropagation();
             styles.underline = !styles.underline;
             updateStyles();
