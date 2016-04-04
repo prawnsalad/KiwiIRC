@@ -142,9 +142,9 @@
                 style_codes += '\x1F';
             }
 
-            // Add the styles to the emssage
+            // Add the styles to the message
             if (style_codes && data.params[1]) {
-                data.params[1] = style_codes + ' ' + data.params[1];
+                data.params[1] = style_codes + data.params[1];
             }
         });
 
