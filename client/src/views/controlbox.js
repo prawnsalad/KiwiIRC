@@ -208,7 +208,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         var that = this,
             inp = $(ev.currentTarget),
             inp_val = inp.val(),
-            meta;
+            meta, last_spoke;
 
         if (navigator.appVersion.indexOf("Mac") !== -1) {
             meta = ev.metaKey;
@@ -329,20 +329,20 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             // Add this channels name into the auto complete list
             autocomplete_list.push(_kiwi.app.panels().active.get('name'));
 
-            // Sort what we have alphabetically
-            autocomplete_list = _.sortBy(autocomplete_list, function (entry) {
-                  if (entry.type === 'nick' ) {
-                    if ( _kiwi.global.settings.get('use_lastspoke_ordering') ) {
-                      lastSpoke = _kiwi.app.panels().active.get('members').getByNick(entry.match[0]).get("lastSpoke");
-                      // sort first by lastspoke in reverse order, then by nick
-                      return [-lastSpoke, entry.match[0].toLowerCase()].join("_");
-                    } else {
-                      return entry.match[0].toLowerCase();
+            // Sort first by last_spoke if appropriate, then by nick
+            autocomplete_list = _.sortByOrder(autocomplete_list,
+                [function (entry) {
+                    if (entry.type === 'nick' && _kiwi.global.settings.get('use_last_spoke_ordering')) {
+                            last_spoke = _kiwi.app.panels().active.get('members').getByNick(entry.match[0]).get("last_spoke");
+                            return last_spoke;
                     }
-                  } else {
-                    return entry.toLowerCase();
-                  }
-            });
+                    return -1;
+                },
+                function (entry) {
+                    return entry.type === 'nick' ? entry.match[0].toLowerCase() : entry.toLowerCase();
+                }],
+                ['desc','asc']
+            );
 
             this.showAutocomplete(autocomplete_list, 'nicks');
 

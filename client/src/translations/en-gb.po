@@ -873,5 +873,5 @@ msgid "client_applets_settings_autocomplete_slideout"
 msgstr "Show the autocomplete box"
 
 #: 
-msgid "client_applets_settings_lastspoke_ordering"
+msgid "client_applets_settings_last_spoke_ordering"
 msgstr "Use 'last spoke' ordering for autocompletion"
