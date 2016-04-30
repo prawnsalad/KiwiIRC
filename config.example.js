@@ -218,6 +218,7 @@ conf.client = {
         ignore_new_queries: false,
         count_all_activity: false,
         show_autocomplete_slideout: true,
+        use_last_spoke_ordering: false,
         locale: null // null = use the browser locale settings
     },
     window_title: 'Kiwi IRC'
@@ -242,7 +243,7 @@ conf.client_themes = [
 /*
  * If running multiple kiwi servers you may specify them here.
  * Note: All kiwi servers must have the same conf.http_base_path config option.
- * 
+ *
  * To force the client to connect to one other kiwi server, use:
  *     conf.client.kiwi_server = 'https://kiwi-server2.com';
  *
