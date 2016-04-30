@@ -368,8 +368,8 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         if (msg.nick) {
             // we're in a channel and this nick is, too
             if (this.model.get("members") && this.model.get("members").getByNick(msg.nick)) {
-              // set last_spoke time
-              this.model.get("members").getByNick(msg.nick).set("last_spoke", msg.time.getTime());
+                // set last_spoke time
+                this.model.get("members").getByNick(msg.nick).set("last_spoke", msg.time.getTime());
             }
 
             _.map(msg.nick.split(''), function (char) {
