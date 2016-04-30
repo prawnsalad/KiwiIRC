@@ -872,3 +872,6 @@ msgstr "Stop ignoring somebody"
 msgid "client_applets_settings_autocomplete_slideout"
 msgstr "Show the autocomplete box"
 
+#: 
+msgid "client_applets_settings_lastspoke_ordering"
+msgstr "Use 'last spoke' ordering for autocompletion"

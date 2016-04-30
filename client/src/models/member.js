@@ -10,7 +10,7 @@ _kiwi.model.Member = Backbone.Model.extend({
         modes = modes || [];
         this.sortModes(modes);
 
-        this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes)}, {silent: true});
+        this.set({"nick": nick, "modes": modes, "prefix": this.getPrefix(modes), "lastSpoke": -1}, {silent: true});
 
         this.updateOpStatus();
 

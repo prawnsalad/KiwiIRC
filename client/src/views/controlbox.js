@@ -331,10 +331,17 @@ _kiwi.view.ControlBox = Backbone.View.extend({
 
             // Sort what we have alphabetically
             autocomplete_list = _.sortBy(autocomplete_list, function (entry) {
-                // Nicks have a .type property of 'nick'
-                return entry.type === 'nick' ?
-                    entry.match[0].toLowerCase() :
-                    entry.toLowerCase();
+                  if (entry.type === 'nick' ) {
+                    if ( _kiwi.global.settings.get('use_lastspoke_ordering') ) {
+                      lastSpoke = _kiwi.app.panels().active.get('members').getByNick(entry.match[0]).get("lastSpoke");
+                      // sort first by lastspoke in reverse order, then by nick
+                      return [-lastSpoke, entry.match[0].toLowerCase()].join("_");
+                    } else {
+                      return entry.match[0].toLowerCase();
+                    }
+                  } else {
+                    return entry.toLowerCase();
+                  }
             });
 
             this.showAutocomplete(autocomplete_list, 'nicks');

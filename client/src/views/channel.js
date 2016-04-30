@@ -366,6 +366,12 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
         // Generate a hex string from the nick to be used as a CSS class name
         nick_hex = '';
         if (msg.nick) {
+            // we're in a channel and this nick is, too
+            if (this.model.get("members") && this.model.get("members").getByNick(msg.nick)) {
+              // set lastSpoke time
+              this.model.get("members").getByNick(msg.nick).set("lastSpoke",msg.time.getTime());
+            }
+
             _.map(msg.nick.split(''), function (char) {
                 nick_hex += char.charCodeAt(0).toString(16);
             });

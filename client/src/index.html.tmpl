@@ -290,6 +290,12 @@
                                 <%= autocomplete_slideout %>
                             </label>
                         </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="use_lastspoke_ordering" type="checkbox">
+                                <%= lastspoke_ordering %>
+                            </label>
+                        </div>
                         <div>
                             <label>
                                 <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
@@ -584,7 +590,7 @@
                     $.each(opts.themes, function (theme_idx, theme) {
                         var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase());
                         var link = $.parseHTML('<link rel="stylesheet" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" />');
-                        
+
                         $(link).appendTo($('head'));
                         if (disabled) {
                             link.disabled = disabled;
