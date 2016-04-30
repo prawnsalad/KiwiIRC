@@ -208,7 +208,7 @@ _kiwi.view.ControlBox = Backbone.View.extend({
         var that = this,
             inp = $(ev.currentTarget),
             inp_val = inp.val(),
-            meta, last_spoke;
+            meta;
 
         if (navigator.appVersion.indexOf("Mac") !== -1) {
             meta = ev.metaKey;
@@ -332,9 +332,8 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             // Sort first by last_spoke if appropriate, then by nick
             autocomplete_list = _.sortByOrder(autocomplete_list,
                 [function (entry) {
-                    if (entry.type === 'nick' && _kiwi.global.settings.get('use_last_spoke_ordering')) {
-                            last_spoke = _kiwi.app.panels().active.get('members').getByNick(entry.match[0]).get("last_spoke");
-                            return last_spoke;
+                    if (entry.type === 'nick' && _kiwi.global.settings.get('use_last_spoke_ordering') !== false ) {
+                            return _kiwi.app.panels().active.get('members').getByNick(entry.match[0]).get("last_spoke");
                     }
                     return -1;
                 },
