@@ -354,7 +354,7 @@ msgstr "Contraseña"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Conectando..."
+msgstr "Conectar"
 
 #: 
 msgid "client_views_serverselect_server_and_network"
