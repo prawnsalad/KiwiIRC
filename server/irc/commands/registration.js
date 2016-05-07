@@ -74,8 +74,7 @@ var handlers = {
                     this.irc_connection.cap.requested = request;
                     this.irc_connection.write('CAP REQ :' + request.join(' '));
                 } else {
-                    this.irc_connection.write('CAP END');
-                    this.irc_connection.cap_negotiation = false;
+                    this.irc_connection.capEnd();
                 }
                 break;
             case 'ACK':
@@ -90,8 +89,7 @@ var handlers = {
                         this.irc_connection.sasl = true;
                         this.irc_connection.write('AUTHENTICATE PLAIN');
                     } else {
-                        this.irc_connection.write('CAP END');
-                        this.irc_connection.cap_negotiation = false;
+                        this.irc_connection.capEnd();
                     }
                 }
                 break;
@@ -100,8 +98,7 @@ var handlers = {
                     this.irc_connection.cap.requested = _.difference(this.irc_connection.cap.requested, capabilities);
                 }
                 if (this.irc_connection.cap.requested.length > 0) {
-                    this.irc_connection.write('CAP END');
-                    this.irc_connection.cap_negotiation = false;
+                    this.irc_connection.capEnd();
                 }
                 break;
             case 'LIST':
@@ -125,35 +122,28 @@ var handlers = {
                 this.irc_connection.write('AUTHENTICATE +');
             }
         } else {
-            this.irc_connection.write('CAP END');
-            this.irc_connection.cap_negotiation = false;
+            this.irc_connection.capEnd();
         }
     },
 
 
     RPL_SASLAUTHENTICATED: function (command) {
-        this.irc_connection.write('CAP END');
-        this.irc_connection.cap_negotiation = false;
+        this.irc_connection.capEnd();
         this.irc_connection.sasl = true;
     },
 
 
     RPL_SASLLOGGEDIN: function (command) {
-        if (this.irc_connection.cap_negotiation === true) {
-            this.irc_connection.write('CAP END');
-            this.irc_connection.cap_negotiation = false;
-        }
+        this.irc_connection.capEnd();
     },
 
     ERR_SASLNOTAUTHORISED: function (command) {
-        this.irc_connection.write('CAP END');
-        this.irc_connection.cap_negotiation = false;
+        this.irc_connection.capEnd();
     },
 
 
     ERR_SASLABORTED: function (command) {
-        this.irc_connection.write('CAP END');
-        this.irc_connection.cap_negotiation = false;
+        this.irc_connection.capEnd();
     },
 
 

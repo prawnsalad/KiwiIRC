@@ -517,6 +517,16 @@ IrcConnection.prototype.capContainsAny = function (caps) {
 };
 
 
+/**
+ * Sends "CAP END" to end capability negotiation if it's still there
+ */
+IrcConnection.prototype.capEnd = function () {
+    if (this.cap_negotiation === true) {
+        this.write('CAP END');
+    }
+    this.cap_negotiation = false;
+};
+
 
 /**
  * Clean up this IrcConnection instance and any sockets
