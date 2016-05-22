@@ -368,21 +368,36 @@
 
 
 #kiwi.chanlist_treeview .panels { left:160px; }
-#kiwi.chanlist_treeview .toolbar { position:static; }
-#kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
-#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
-#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .toolbar, #kiwi.narrow .toolbar { position:static; }
+#kiwi.chanlist_treeview .toolbar .app_tools, #kiwi.narrow .toolbar .app_tools { float:none; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:0; }
+#kiwi.chanlist_treeview .toolbar .tabs, #kiwi.narrow .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
 #kiwi.chanlist_treeview .toolbar .panellist { float: none; display: block; margin-right: 5px; }
-#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.chanlist_treeview .tabs ul li, #kiwi.narrow .tabs ul li { display:block; float:none; }
 #kiwi.chanlist_treeview .tabs ul li .activity { float:right; }
-#kiwi.chanlist_treeview .toolbar .panellist li {
-    padding: 4px 8px;
-}
+#kiwi.chanlist_treeview .toolbar .panellist li { padding: 4px 8px; }
 #kiwi.chanlist_treeview .toolbar .panellist .active { padding-left: 6px; padding-right:23px; border:none; border-left:2px solid #df6b26; border-bottom:none; }
-#kiwi.chanlist_treeview .tabs ul li.active {
-    margin-right:0;
-    border-right-width:0;
-}
+#kiwi.chanlist_treeview .tabs ul li.active { margin-right:0; border-right-width:0; }
+#kiwi.chanlist_treeview .toolbar .topic { margin-left: 160px;}
+
+#kiwi.narrow .panels, #kiwi.narrow .controlbox, #kiwi.narrow .toolbar .tabs, #kiwi.narrow .toolbar_overlay { -moz-transition-duration:0.3s; -o-transition-duration:0.3s; -webkit-transition-duration:0.3s; transition-duration:0.3s;  }
+#kiwi.narrow.with_sidebar .panels, #kiwi.narrow.with_sidebar .controlbox, #kiwi.narrow.with_sidebar .toolbar_overlay { -moz-transform:translateX(160px); -ms-transform:translateX(160px); -webkit-transform:translateX(160px); transform:translateX(160px); }
+#kiwi.narrow .panels, #kiwi.narrow .controlbox, #kiwi.narrow.with_sidebar .toolbar .tabs { -moz-transform:translateX(0); -ms-transform:translateX(0); -webkit-transform:translateX(0); transform:translateX(0); }
+#kiwi.narrow .panels, #kiwi.narrow .controlbox { left:0; }
+#kiwi.narrow .toolbar .tabs { top:0 !important; }
+#kiwi.narrow .toolbar .tabs { -moz-transform:translateX(-160px); -ms-transform:translateX(-160px); -webkit-transform:translateX(-160px); transform:translateX(-160px); }
+#kiwi.narrow.with_sidebar .toolbar .tabs { height: 100% }
+#kiwi .toolbar_overlay, #kiwi.narrow .toolbar .topic, #kiwi .toolbar .app_tools ul li.tabs_menu { display: none; }
+#kiwi.narrow .toolbar_overlay { position: absolute; top: 0; left:0; height: 100%; width: 100%; z-index: 2; background-color: rgba(0,0,0,0.4); }
+#kiwi.narrow.with_sidebar .toolbar_overlay { display: block; }
+#kiwi.narrow.with_sidebar .controlbox { border-top: none; }
+#kiwi.narrow.with_sidebar .panels { bottom: 0; }
+#kiwi.narrow .toolbar .main { text-align: right; }
+#kiwi.narrow .toolbar .main .tabs_menu { position: absolute; left: 0; margin-top: 10px; }
+#kiwi.narrow .tabs ul li .activity { float:right; }
+#kiwi.narrow .tabs ul li.active { padding-left:1em; }
+#kiwi.narrow .toolbar .app_tools ul li.tabs_menu { display: inline; }
+
 #kiwi .applet_chanlist {
     margin: 0.5em 1em;
 }
