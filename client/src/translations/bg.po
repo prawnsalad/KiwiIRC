@@ -1,0 +1,722 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"Project-Id-Version: Kiwi\n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Любомир Василев <lyubomirv@abv.bg>\n"
+"Language-Team: \n"
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Име на канала"
+
+msgid "client_applets_chanlist_users"
+msgstr "Потребители"
+
+msgid "client_applets_chanlist_topic"
+msgstr "Тема"
+
+msgid "client_applets_chanlist_channellist"
+msgstr "Списък от канали"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Запазване"
+
+msgid "client_applets_scripteditor_error"
+msgstr "Грешка в скрипта. %s"
+
+msgid "client_applets_scripteditor_saved"
+msgstr "Скриптът Ви беше запазен и вече работи"
+
+msgid "client_applets_scripteditor_title"
+msgstr "Редактор на скриптове"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "Раздели"
+
+msgid "client_applets_settings_channelview_list"
+msgstr "Списък"
+
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "за голям брой канали"
+
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Известия за влизане/излизане от канал"
+
+msgid "client_applets_settings_timestamp"
+msgstr "Време към съобщенията"
+
+msgid "client_applets_settings_notification_sound"
+msgstr "Заглушаване на звуковите известия"
+
+msgid "client_applets_settings_history_length"
+msgstr "съобщения в историята"
+
+msgid "client_applets_settings_default_client"
+msgstr "Клиент за IRC по подразбиране"
+
+msgid "client_applets_settings_default_client_enable"
+msgstr "Нека Kiwi бъде моят клиент за IRC по подразбиране"
+
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Забележка: Промените ще влязат в сила след като опресните страницата"
+
+msgid "client_applets_settings_default_client_notice"
+msgstr "Забележка: Потребителите на браузъра Chrome или Chromium може да трябва да проверят настройките си в %s , ако няма промяна"
+
+msgid "client_applets_settings_title"
+msgstr "Настройки"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Непознат приложен елемент"
+
+msgid "client_models_applet_loading"
+msgstr "Зареждане…"
+
+msgid "client_models_applet_notfound"
+msgstr "Не е намерено"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Връзката се разпадна. Опитваме се да Ви свържем отново"
+
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "Връзката се разпадна. Опитваме се да Ви свържем отново след %d секунди"
+
+msgid "client_models_application_reconnect_successfully"
+msgstr "Всичко е наред, отново имате връзка"
+
+msgid "client_models_application_settings_saved"
+msgstr "Настройките бяха запазени"
+
+msgid "client_models_application_ignore_title"
+msgstr "Игнорирани псевдоними"
+
+msgid "client_models_application_ignore_none"
+msgstr "Вие не игнорирате никого"
+
+msgid "client_models_application_ignore_nick"
+msgstr "Игнориране на %s"
+
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Посочете кой псевдоним искате да спрете да игнорирате"
+
+msgid "client_models_application_ignore_stopped"
+msgstr "Спряхте да игнорирате %s"
+
+msgid "client_models_application_applet_notfound"
+msgstr "Приложният елемент „%s“ не съществува"
+
+msgid "client_models_application_encoding_changed"
+msgstr "Кодировката е променена на %s"
+
+msgid "client_models_application_encoding_invalid"
+msgstr "%s не е правилна кодировка"
+
+msgid "client_models_application_encoding_notspecified"
+msgstr "Не е посочена кодировка"
+
+msgid "client_models_application_encoding_usage"
+msgstr "Начин на употреба: /encoding [НОВА-КОДИРОВКА]"
+
+msgid "client_models_application_connection_create"
+msgstr "Нова връзка"
+
+msgid "client_models_application_connection_connecting"
+msgstr "Свързване към %s:%s…"
+
+msgid "client_models_application_connection_error"
+msgstr "Грешка при свързването към %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "се присъедини"
+
+msgid "client_models_channel_quit"
+msgstr "напусна %s"
+
+msgid "client_models_channel_kicked"
+msgstr "беше изритан от %s %s"
+
+msgid "client_models_channel_selfkick"
+msgstr "Вие бяхте изритан(а) от %s %s"
+
+msgid "client_models_channel_part"
+msgstr "напусна %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "не е правилно име на канал"
+
+msgid "client_models_network_disconnected"
+msgstr "Вече нямате връзка към мрежата на IRC"
+
+msgid "client_models_network_nickname_changed"
+msgstr "вече е познат(а) като %s"
+
+msgid "client_models_network_topic"
+msgstr "Темата е зададена от %s на %s"
+
+msgid "client_models_network_selfmode"
+msgstr "задава режима %s"
+
+msgid "client_models_network_mode"
+msgstr "зададе режима %s"
+
+msgid "client_models_network_channels"
+msgstr "Канали: %s"
+
+msgid "client_models_network_server"
+msgstr "Свързан(а) сте към сървъра: %s %s"
+
+msgid "client_models_network_idle_and_signon"
+msgstr "Бездеен от %s, вписан(а) на %s"
+
+msgid "client_models_network_away"
+msgstr "Отсъстващ: %s"
+
+msgid "client_models_network_idle"
+msgstr "Бездеен от %s"
+
+msgid "client_models_network_nickname_notfound"
+msgstr "Няма такъв псевдоним"
+
+msgid "client_models_network_banned"
+msgstr "Получихте забрана за %s. %s"
+
+msgid "client_models_network_channel_badkey"
+msgstr "Грешен ключ за канала %s"
+
+msgid "client_models_network_channel_inviteonly"
+msgstr "е само за поканени."
+
+msgid "client_models_network_channel_limitreached"
+msgstr "е пълен."
+
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "Псевдонимът „%s“ вече е зает. Моля, изберете друг псевдоним"
+
+msgid "client_models_network_badpassword"
+msgstr "Грешна парола"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Това ще затвори всички разговори в KiwiIRC. Наистина ли искате да затворите този прозорец?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Присъединяване към канала…"
+
+msgid "client_views_channel_topic"
+msgstr "Темата на %s е: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Затваряне"
+
+msgid "client_views_mediamessage_notfound"
+msgstr "Не е намерено"
+
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Зареждане на туит"
+
+msgid "client_views_mediamessage_load_image"
+msgstr "Зареждане на изображение"
+
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Зареждане на тема в Reddit"
+
+msgid "client_views_mediamessage_load_gist"
+msgstr "Зареждане на gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Нов псевдоним"
+
+msgid "client_views_nickchangebox_change"
+msgstr "Промяна"
+
+msgid "client_views_nickchangebox_cancel"
+msgstr "Отказ"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Хората говорят!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Измислете псевдоним…"
+
+msgid "client_views_serverselect_nickname"
+msgstr "Псевдоним"
+
+msgid "client_views_serverselect_enable_password"
+msgstr "Имам парола"
+
+msgid "client_views_serverselect_password"
+msgstr "Парола"
+
+msgid "client_views_serverselect_channel"
+msgstr "Канал"
+
+msgid "client_views_serverselect_channelkey"
+msgstr "Ключ за канала"
+
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Каналът изисква ключ"
+
+msgid "client_views_serverselect_key"
+msgstr "Ключ"
+
+msgid "client_views_serverselect_connection_start"
+msgstr "Влизане…"
+
+msgid "client_views_serverselect_server_and_network"
+msgstr "Сървър и мрежа"
+
+msgid "client_views_serverselect_server"
+msgstr "Сървър"
+
+msgid "client_views_serverselect_port"
+msgstr "Порт"
+
+msgid "client_views_serverselect_poweredby"
+msgstr "Задвижвано от Kiwi IRC"
+
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Първо изберете псевдоним!"
+
+msgid "client_views_serverselect_connection_successfully"
+msgstr "Връзката е успешна"
+
+msgid "client_views_serverselect_connection_trying"
+msgstr "Свързване…"
+
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Псевдонимът е зает"
+
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Грешен псевдоним"
+
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Грешна парола"
+
+msgid "client_views_serverselect_connection_error"
+msgstr "Грешка при свързване"
+
+msgid "client_views_serverselect_server_notfound"
+msgstr "Сървърът не е намерен"
+
+msgid "client_views_serverselect_connection_refused"
+msgstr "Връзката е отказана"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Даване на Оп"
+
+msgid "client_views_userbox_deop"
+msgstr "Премахване на Оп"
+
+msgid "client_views_userbox_voice"
+msgstr "Даване на глас"
+
+msgid "client_views_userbox_devoice"
+msgstr "Премахване на глас"
+
+msgid "client_views_userbox_kick"
+msgstr "Изритване"
+
+msgid "client_views_userbox_ban"
+msgstr "Забрана"
+
+msgid "client_views_userbox_query"
+msgstr "Съобщение"
+
+msgid "client_views_userbox_whois"
+msgstr "Информация"
+
+msgid "client_views_userbox_slap"
+msgstr "Шамар!"
+
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+
+msgid "client_models_application_jumpserver_prepare"
+msgstr "След 5 минути ще бъдете свързани отново и включени отново в каналите си. Пригответе се!"
+
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Безопасно повторно свързване…"
+
+msgid "client_applets_settings_html5_notifications"
+msgstr "Известия на работния плот"
+
+msgid "client_applets_settings_enable_notifications"
+msgstr "Включване на известията"
+
+msgid "client_applets_settings_emoticons"
+msgstr "Показване на емотиконки"
+
+msgid "client_applet_about"
+msgstr "Относно Kiwi"
+
+msgid "client_applet_about_homepage"
+msgstr "Страница на проекта"
+
+msgid "client_applet_about_link_channel"
+msgstr "Връзка към този канал"
+
+msgid "client_applet_about_share_channel"
+msgstr "Споделяне на този канал"
+
+msgid "client_applet_fav_my_networks"
+msgstr "Моите мрежи"
+
+msgid "client_applet_fav_networks"
+msgstr "Любими мрежи"
+
+msgid "client_applet_fav_add"
+msgstr "Добавяне на мрежа"
+
+msgid "client_applet_fav_save"
+msgstr "Запазване на мрежа"
+
+msgid "client_applet_fav_delete"
+msgstr "Изтриване на мрежа"
+
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Включване на съобщенията за присъединяване/напускане към дейностите"
+
+msgid "client_views_userbox_ignore"
+msgstr "Игнориране"
+
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Времето да е в 24-часов формат"
+
+msgid "client_views_panel_timestamp_am"
+msgstr "%s сутринта"
+
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s следобед"
+
+msgid "client_models_application_has_been_invited"
+msgstr "беше поканен(а) в %s"
+
+msgid "client_models_network_channel_alreadyin"
+msgstr "вече е в този канал"
+
+#: Date format
+msgid "client_date_format"
+msgstr "d/m/Y"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "ян"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "фев"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "март"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "апр"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "май"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "юни"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "юли"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "авг"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "сеп"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "окт"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "ноем"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "дек"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "януари"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "февруари"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "март"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "април"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "май"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "юни"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "юли"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "август"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "септември"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "октомври"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "ноември"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "декември"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "пон"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "вт"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "ср"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "чет"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "пет"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "съб"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "нед"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "понеделник"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "вторник"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "сряда"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "четвъртък"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "петък"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "събота"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "неделя"
+
+msgid "client_views_channelinfo_moderated"
+msgstr "Модериран"
+
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Само с покани"
+
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Само операторите могат да променят темата"
+
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Съобщенията, идващи извън канала, са забранени"
+
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Списък със забрани"
+
+msgid "client_views_controlbox_message"
+msgstr "Изпратете съобщение…"
+
+msgid "disconnect_from_server"
+msgstr "Това ще разкачи връзката Ви с мрежата на IRC. Наистина ли искате това?"
+
+msgid "client_applets_settings_custom_highlights"
+msgstr "Персонализирано осветяване (разделяйте с интервал)"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_messages"
+msgstr "Съобщения"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_chat_messages"
+msgstr "Съобщения"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_alerts_notifications"
+msgstr "Предупреждения/известия"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_appearance"
+msgstr "Външен вид"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_theme"
+msgstr "Тема"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channels"
+msgstr "Канали"
+
+msgid "client_applets_settings_language"
+msgstr "Език"
+
+msgid "client_applets_settings_ignore_new_queries"
+msgstr "Забраняване на новите частни съобщения"
+
+msgid "command_description_msg"
+msgstr "Изпращане на съобщение"
+
+msgid "command_description_action"
+msgstr "Извършване на действие"
+
+msgid "command_description_join"
+msgstr "Присъединяване към канал"
+
+msgid "command_description_part"
+msgstr "Напускане на канал"
+
+msgid "command_description_cycle"
+msgstr "Напускане е повторно присъединяване към канал"
+
+msgid "command_description_nick"
+msgstr "Промяна на псевдонима"
+
+msgid "command_description_query"
+msgstr "Започване на частен разговор с някого"
+
+msgid "command_description_invite"
+msgstr "Покана към някого за присъединяване към канала"
+
+msgid "command_description_topic"
+msgstr "Задаване на темата на този канал"
+
+msgid "command_description_notice"
+msgstr "Изпращане на бележка"
+
+msgid "command_description_quote"
+msgstr "Изпращане на необработена команда към сървъра"
+
+msgid "command_description_kick"
+msgstr "Изритване на някого от канала"
+
+msgid "command_description_clear"
+msgstr "Изчистване на всички съобщения от този прозорец"
+
+msgid "command_description_ctcp"
+msgstr "Изпращане на команда клиент-до-клиент до някого"
+
+msgid "command_description_quit"
+msgstr "Разкачане от сървъра"
+
+msgid "command_description_server"
+msgstr "Свързване към нова мрежа за IRC"
+
+msgid "command_description_whois"
+msgstr "Запитване за информация за някого"
+
+msgid "command_description_whowas"
+msgstr "Запитване за информация за някого, който се е разкачил скоро"
+
+msgid "command_description_away"
+msgstr "Отбелязване на себе си като „отсъстващ“"
+
+msgid "command_description_encoding"
+msgstr "Промяна на кодировката на връзката"
+
+msgid "command_description_settings"
+msgstr "Показване на прозореца с настройките"
+
+msgid "command_description_script"
+msgstr "Промяна на потребителските скриптове на kiwi"
+
+msgid "command_description_css"
+msgstr "Презареждане на стиловите файлове на страницата"
+
+msgid "command_description_js"
+msgstr "Зареждане на файл с код на javascript от адрес"
+
+msgid "command_description_set"
+msgstr "Задаване на стойност за настройка на kiwi"
+
+msgid "command_description_save"
+msgstr "Запазване на текущите настройки на kiwi"
+
+msgid "command_description_alias"
+msgstr "Създаване на друго име за съществуваща команда"
+
+msgid "command_description_ignore"
+msgstr "Игнориране на съобщенията от някого"
+
+msgid "command_description_unignore"
+msgstr "Спиране на игнорирането на някого"
+
+msgid "client_applets_settings_autocomplete_slideout"
+msgstr "Показване на кутийката с подсказките"
