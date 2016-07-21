@@ -22,11 +22,11 @@ msgstr "Kanaalnaam"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Gebruikers"
+msgstr "gebruikers"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Topic"
+msgstr "Onderwerp"
 
 #: 
 msgid "client_applets_chanlist_channellist"
@@ -38,15 +38,15 @@ msgstr "Opslaan"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Script fout. %s"
+msgstr "Scriptfout. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Je script is opgeslagen en geactiveerd"
+msgstr "Je script is opgeslagen en nu actief"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Script Editor"
+msgstr "Scripteditor"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
@@ -62,35 +62,35 @@ msgstr "voor veel kanalen"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Kanaal binnenkomst/vertrek notificaties"
+msgstr "Meldingen bij binnenkomen/verlaten van kanaal"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Tijdsaanduidingen"
+msgstr "Tijdstempels"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Geluidsnotificaties dempen"
+msgstr "Geluidsmeldingen dempen"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "berichten in scroll geschiedenis"
+msgstr "berichten in scrollgeschiedenis"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Standaard IRC client"
+msgstr "Standaard IRC-client"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Maak Kiwi mijn standaard IRC client"
+msgstr "Kiwi mijn standaard IRC-client maken"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Mededeling: Wijzigingen worden toegepast nadat je de pagina vernieuwd"
+msgstr "Opmerking: wijzigingen worden pas van kracht na vernieuwen van de pagina"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Mededeling: Het kan nodig zijn om je instellingen te controlleren via %s als je Chrome of Chromium gebruikt, en er niks gebeurt"
+msgstr "Opmerking: als je Chrome of Chromium gebruikt en er niets gebeurt, kan het nodig zijn om je instellingen te controleren via %s"
 
 #: 
 msgid "client_applets_settings_title"
@@ -98,11 +98,11 @@ msgstr "Instellingen"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Onbekende Applet"
+msgstr "Onbekende applet"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Laden.."
+msgstr "Laden..."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -110,11 +110,11 @@ msgstr "Niet gevonden"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Je verbinding werd verbroken. Er wordt geprobeerd opnieuw te verbinden"
+msgstr "Je verbinding is verbroken. Er wordt geprobeerd opnieuw te verbinden"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Je verbinding werd verbroken. Er wordt geprobeerd opnieuw te verbinden in %d seconden"
+msgstr "Je verbinding is verbroken. Er wordt geprobeerd opnieuw te verbinden over %d seconden"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
@@ -126,31 +126,31 @@ msgstr "Instellingen zijn opgeslagen"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Genegeerde nicknames"
+msgstr "Genegeerde bijnamen"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Je negeert niemand"
+msgstr "Er wordt niemand genegeerd"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "Je negeert %s nu"
+msgstr "%s wordt genegeerd"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Geef op welke nickname je niet langer wil negeren"
+msgstr "Geef op welke bijnaam je niet meer wilt negeren"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "%s wordt niet langer genegeerd"
+msgstr "%s wordt niet meer genegeerd"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" bestaat niet"
+msgstr "Applet '%s' bestaat niet"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Codering veranderd naar %s"
+msgstr "Codering aangepast naar %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
@@ -158,7 +158,7 @@ msgstr "%s is geen geldige codering"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Codering niet gespecificeerd"
+msgstr "Codering niet opgegeven"
 
 #: 
 msgid "client_models_application_encoding_usage"
@@ -198,11 +198,11 @@ msgstr "heeft het kanaal verlaten %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "is geen geldige naam voor een kanaal"
+msgstr "is geen geldige kanaalnaam"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "Verbinding met het IRC netwerk verbroken"
+msgstr "Verbinding met het IRC-netwerk verbroken"
 
 #: 
 msgid "client_models_network_nickname_changed"
@@ -210,15 +210,15 @@ msgstr "heet nu %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Topic gezet door %s op %s"
+msgstr "Onderwerp ingesteld door %s op %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "zet modus %s"
+msgstr "stelt modus %s in"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "zet modus %s"
+msgstr "stelt modus %s in"
 
 #: 
 msgid "client_models_network_channels"
@@ -226,11 +226,11 @@ msgstr "Kanalen: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Verbonden met server: %s %s"
+msgstr "Verbonden met server %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Afwezig: %s, online sinds %s"
+msgstr "Niet actief sinds %s, online sinds %s"
 
 #: 
 msgid "client_models_network_away"
@@ -238,15 +238,15 @@ msgstr "Afwezig: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Afwezig: %s"
+msgstr "Niet actief sinds %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Deze nickname bestaat niet"
+msgstr "Bijnaam bestaat niet"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "Je bent verbannen van %s. %s"
+msgstr "Je bent van %s verbannen. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
@@ -254,35 +254,35 @@ msgstr "Verkeerde kanaalsleutel voor %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "is alleen op uitnodiging."
+msgstr "vereist een uitnodiging."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s is vol."
+msgstr "is vol."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "Nickname \"%s\" wordt al gebruikt. Probeer een andere nickname"
+msgstr "De bijnaam '%s' wordt al gebruikt. Kies een nieuwe bijnaam"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Foutief wachtwoord opgegeven"
+msgstr "Onjuist wachtwoord opgegeven"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Weet je zeker dat je dit scherm wil sluiten? Hierdoor worden alle gesprekken gesloten"
+msgstr "Hierdoor worden alle gesprekken afgesloten. Weet je zeker dat je dit venster wilt sluiten?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Binnentreden van kanaal.."
+msgstr "Kanaal binnengaan..."
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "Topic van %s is: %s"
+msgstr "Onderwerp van %s is: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Sluit media"
+msgstr "Medium sluiten"
 
 #: 
 msgid "client_views_mediamessage_notfound"
@@ -290,31 +290,31 @@ msgstr "Niet gevonden"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Tweet laadt"
+msgstr "Tweet laden"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Afbeelding laadt"
+msgstr "Afbeelding laden"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Reddit draad laadt"
+msgstr "Reddit-thread laden"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Gist laadt"
+msgstr "Gist laden"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Nieuwe nickname"
+msgstr "Nieuwe bijnaam"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "Annuleer"
+msgstr "Annuleren"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
@@ -322,11 +322,11 @@ msgstr "Mensen zeggen iets!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Verzin een nickname..."
+msgstr "Verzin een bijnaam..."
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Nickname"
+msgstr "Bijnaam"
 
 #: 
 msgid "client_views_serverselect_enable_password"
@@ -346,7 +346,7 @@ msgstr "Kanaalsleutel"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Kanaal heeft een sleutel nodig"
+msgstr "Kanaal vereist een sleutel"
 
 #: 
 msgid "client_views_serverselect_key"
@@ -354,7 +354,7 @@ msgstr "Sleutel"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Start..."
+msgstr "Starten..."
 
 #: 
 msgid "client_views_serverselect_server_and_network"
@@ -370,11 +370,11 @@ msgstr "Poort"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Medemogelijk gemaakt door Kiwi IRC"
+msgstr "Mogelijk gemaakt door Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "Kies eerst een nickname!"
+msgstr "Kies eerst een bijnaam!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
@@ -382,23 +382,23 @@ msgstr "Verbonden"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Verbinden.."
+msgstr "Verbinden..."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Nickname wordt al gebruikt"
+msgstr "Bijnaam wordt al gebruikt"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Ongeldige nickname"
+msgstr "Ongeldige bijnaam"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Foutief wachtwoord"
+msgstr "Onjuist wachtwoord"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Fout bij het verbinden"
+msgstr "Fout bij verbinden"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
@@ -450,23 +450,23 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Let op! Over 5 minuten wordt je opnieuw verbonden en je kanalen worden opnieuw gejoined."
+msgstr "Let op! Over 5 minuten word je opnieuw verbonden en worden je kanalen weer hersteld."
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Opnieuw aan het verbinden.."
+msgstr "Opnieuw verbinden..."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Bureaublad notificaties"
+msgstr "Bureaubladmeldingen"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Zet notificaties aan"
+msgstr "Meldingen inschakelen"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Laat emoticons zien"
+msgstr "Emoticons tonen"
 
 #: 
 msgid "client_applet_about"
@@ -474,7 +474,7 @@ msgstr "Over Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Project homepagina"
+msgstr "Projecthomepage"
 
 #: 
 msgid "client_applet_about_link_channel"
@@ -482,7 +482,7 @@ msgstr "Link naar dit kanaal"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Deel dit kanaal"
+msgstr "Dit kanaal delen"
 
 #: 
 msgid "client_applet_fav_my_networks"
@@ -494,19 +494,19 @@ msgstr "Favoriete netwerken"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Voeg netwerk toe"
+msgstr "Netwerk toevoegen"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Sla netwerk op"
+msgstr "Netwerk opslaan"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Verwijder netwerk"
+msgstr "Netwerk verwijderen"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Zie binnenkomst/vertrek berichten als activiteit"
+msgstr "Berichten bij binnenkomst/vertrek als activiteit beschouwen"
 
 #: 
 msgid "client_views_userbox_ignore"
@@ -514,7 +514,7 @@ msgstr "Negeren"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Gebruik 24-uurs tijdsaanduiding"
+msgstr "24-uurs tijdstempels gebruiken"
 
 #: 
 msgid "client_views_panel_timestamp_am"
@@ -526,7 +526,7 @@ msgstr "%s PM"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "is uitgenodigd naar %s"
+msgstr "is uitgenodigd voor %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
@@ -546,7 +546,7 @@ msgstr "feb"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "mar"
+msgstr "mrt"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
@@ -634,59 +634,59 @@ msgstr "december"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Ma"
+msgstr "ma"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Di"
+msgstr "di"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Wo"
+msgstr "wo"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Do"
+msgstr "do"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Vri"
+msgstr "vr"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Zat"
+msgstr "za"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Zon"
+msgstr "zo"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Maandag"
+msgstr "maandag"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Dinsdag"
+msgstr "dinsdag"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Woensdag"
+msgstr "woensdag"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Donderdag"
+msgstr "donderdag"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Vrijdag"
+msgstr "vrijdag"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Zaterdag"
+msgstr "zaterdag"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Zondag"
+msgstr "zondag"
 
 #: 
 msgid "client_views_channelinfo_moderated"
@@ -698,27 +698,27 @@ msgstr "Alleen op uitnodiging"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Alleen operators mogen de topic veranderen"
+msgstr "Alleen operators kunnen het onderwerp wijzigen"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Blokkeer berichten van buiten dit kanaal"
+msgstr "Berichten van buiten dit kanaal blokkeren"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Toon/verberg banlijst"
+msgstr "Banlijst in-/uitschakelen"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Stuur bericht..."
+msgstr "Bericht sturen..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "Dit zal de verbinding verbreken met het IRC netwerk. Ben je zeker?"
+msgstr "Hierdoor wordt de verbinding met het IRC-netwerk verbroken. Weet je het zeker?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Aangepaste highlights (gescheiden door spaties)"
+msgstr "Aangepaste markeringen (gescheiden door spaties)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
@@ -726,15 +726,15 @@ msgstr "Berichten"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat berichten"
+msgstr "Chatberichten"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Signaal / Notificaties"
+msgstr "Waarschuwingen / Meldingen"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Uiterlijk"
+msgstr "Vormgeving"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
@@ -750,125 +750,125 @@ msgstr "Taal"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Blokkeer nieuwe privé-berichten"
+msgstr "Nieuwe privéberichten blokkeren"
 
 #: 
 msgid "command_description_msg"
-msgstr "Stuur een bericht"
+msgstr "Een bericht sturen"
 
 #: 
 msgid "command_description_action"
-msgstr "Doe iets fysieks"
+msgstr "Iets fysieks doen"
 
 #: 
 msgid "command_description_join"
-msgstr "Ga een kanaal binnen"
+msgstr "Een kanaal binnengaan"
 
 #: 
 msgid "command_description_part"
-msgstr "Verlaat een kanaal"
+msgstr "Een kanaal verlaten"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Verlaat en ga een kanaal opnieuw binnen"
+msgstr "Een kanaal verlaten en weer binnengaan"
 
 #: 
 msgid "command_description_nick"
-msgstr "Wijzig je nickname"
+msgstr "Je bijnaam wijzigen"
 
 #: 
 msgid "command_description_query"
-msgstr "Begin een privé-gesprek met iemand"
+msgstr "Een privégesprek met iemand beginnen"
 
 #: 
 msgid "command_description_invite"
-msgstr "Nodig iemand uit op het kanaal"
+msgstr "Iemand uitnodigen voor het kanaal"
 
 #: 
 msgid "command_description_topic"
-msgstr "Zet de topic van dit kanaal"
+msgstr "Het onderwerp van dit kanaal instellen"
 
 #: 
 msgid "command_description_notice"
-msgstr "Stuur een notice"
+msgstr "Een melding sturen"
 
 #: 
 msgid "command_description_quote"
-msgstr "Stuur een rauwe commando naar de IRC server"
+msgstr "Een harde opdracht naar de IRC-server sturen"
 
 #: 
 msgid "command_description_kick"
-msgstr "Zet iemand uit het kanaal"
+msgstr "Iemand uit het kanaal zetten"
 
 #: 
 msgid "command_description_clear"
-msgstr "Verwijder alle berichten in dit venster"
+msgstr "Alle berichten in dit venster wissen"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Stuur een CTCP commando naar iemand"
+msgstr "Een CTCP-opdracht naar iemand sturen"
 
 #: 
 msgid "command_description_quit"
-msgstr "Verbreek de verbinding met de IRC server"
+msgstr "Verbinding met de IRC-server verbreken"
 
 #: 
 msgid "command_description_server"
-msgstr "Verbinding maken met een nieuw IRC netwerk"
+msgstr "Verbinding maken met een nieuw IRC-netwerk"
 
 #: 
 msgid "command_description_whois"
-msgstr "Vraag informatie op van iemand"
+msgstr "Informatie over iemand opvragen"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Vraag informatie op van iemand die recent de chat verlaten heeft"
+msgstr "Informatie over iemand die onlangs de chat heeft verlaten opvragen"
 
 #: 
 msgid "command_description_away"
-msgstr "Zet jezelf als afwezig"
+msgstr "Jezelf als afwezig instellen"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Verander de codering van de verbinding"
+msgstr "Codering van je verbinding wijzigen"
 
 #: 
 msgid "command_description_settings"
-msgstr "Toon het instellingen venster"
+msgstr "Het instellingenvenster tonen"
 
 #: 
 msgid "command_description_script"
-msgstr "Aanpassen van kiwi gebruiker scripts"
+msgstr "Kiwi-gebruikersscripts aanpassen"
 
 #: 
 msgid "command_description_css"
-msgstr "Pagina stylesheets herladen"
+msgstr "De paginastijlbladen opnieuw laden"
 
 #: 
 msgid "command_description_js"
-msgstr "Laad een javascript bestand vanaf een URL"
+msgstr "Een JavaScript-bestand laden vanaf een URL"
 
 #: 
 msgid "command_description_set"
-msgstr "Stel een kiwi configuratie instelling in"
+msgstr "Een Kiwi-configuratie-instelling maken"
 
 #: 
 msgid "command_description_save"
-msgstr "Bewaar de huidige kiwi instellingen"
+msgstr "De huidige Kiwi-instellingen opslaan"
 
 #: 
 msgid "command_description_alias"
-msgstr "Maak een alias naar een bestaand /commando"
+msgstr "Een alias voor een bestaande opdracht (/command) maken"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Negeer berichten van iemand"
+msgstr "Berichten van iemand negeren"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop met het negeren van iemand"
+msgstr "Negeren van iemand stoppen"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Toon het auto-aanvullen vakje"
+msgstr "Het vakje voor automatisch aanvullen tonen"
 

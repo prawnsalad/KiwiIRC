@@ -22,7 +22,7 @@ msgstr "Jméno kanálu"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Uživatelé"
+msgstr "uživatelů"
 
 #: 
 msgid "client_applets_chanlist_topic"
@@ -62,15 +62,15 @@ msgstr "pro velké množství kanálů"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Oznámení o vstoupení/odejítí"
+msgstr "Oznámení o příchodech/odchodech"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Časové značky"
+msgstr "Časová razítka"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Ztlumit zvukové oznámení"
+msgstr "Ztlumit zvuková oznámení"
 
 #: 
 msgid "client_applets_settings_history_length"
@@ -86,11 +86,11 @@ msgstr "Nastavit Kiwi jako můj výchozí IRC klient"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Poznámka: Změny se projeví po obnovení stránky"
+msgstr "Poznámka: Změny se projeví pouze po obnovení stránky"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Poznámka: Uživatelé Chrome nebo Chromia budou muset zkontrolovat nastavení na %s, pokud se nic nestane"
+msgstr "Poznámka: Uživatelé prohlížečů Chrome nebo Chromium by měli zkontrolovat svá nastavení na stránce %s, pokud se nic nestane"
 
 #: 
 msgid "client_applets_settings_title"
@@ -102,7 +102,7 @@ msgstr "Neznámý applet"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Načítám..."
+msgstr "Načítám.."
 
 #: 
 msgid "client_models_applet_notfound"
@@ -110,15 +110,15 @@ msgstr "Nenalezen"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Byl jste odpojen. Pokouším se o znovupřipojení"
+msgstr "Byl jste odpojen. Pokouším se o vaše znovupřipojení"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Byl jste odpojen. Pokouším se o znovupřipojení za %d sekund"
+msgstr "Byl jste odpojen. Pokouším se o vaše znovupřipojení za %d sekund"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Vše je v pořádku, znovu jste připojen"
+msgstr "Vše v pořádku, jste znovu připojen"
 
 #: 
 msgid "client_models_application_settings_saved"
@@ -138,11 +138,11 @@ msgstr "Ignoruji %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Zadejte nick, který chcete ignorovat"
+msgstr "Zadejte přezdívku, kterou chcete přestat ignorovat"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "Přestávám ignorovat %s"
+msgstr "Neignoruji %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
@@ -154,7 +154,7 @@ msgstr "Kódování změněno na %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s není platným kódováním"
+msgstr "%s není platné kódování"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
@@ -162,7 +162,7 @@ msgstr "Kódování nebylo zadáno"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Použití: /encoding [NEW-ENCODING]"
+msgstr "Použití: /encoding [NOVÉ-KÓDOVÁNÍ]"
 
 #: 
 msgid "client_models_application_connection_create"
@@ -178,7 +178,7 @@ msgstr "Chyba připojení k %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "přišel do místnosti"
+msgstr "se připojil"
 
 #: 
 msgid "client_models_channel_quit"
@@ -186,11 +186,11 @@ msgstr "se odpojil %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "byl vyhozen %s %s"
+msgstr "byl vyhozen uživatelem %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Byl jste vyhozen %s %s"
+msgstr "Vyhodil vás %s %s"
 
 #: 
 msgid "client_models_channel_part"
@@ -198,7 +198,7 @@ msgstr "odešel %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "není platným názvem kanálu"
+msgstr "není platné jméno kanálu"
 
 #: 
 msgid "client_models_network_disconnected"
@@ -206,7 +206,7 @@ msgstr "Odpojen od sítě IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "%s je nyní znám jako %s"
+msgstr "je nyní znám jako %s"
 
 #: 
 msgid "client_models_network_topic"
@@ -242,11 +242,11 @@ msgstr "Neaktivní již %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Takový nick neexistuje"
+msgstr "Taková přezdívka neexistuje"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "V %s jste zabanován. %s"
+msgstr "Jste zabanován na %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
@@ -258,7 +258,7 @@ msgstr "je pouze na pozvání."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "%s je plný."
+msgstr "je plný."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
@@ -270,7 +270,7 @@ msgstr "Zadáno nesprávné heslo"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Tímto ukončíte veškeré konverzace. Skutečně chcete zavřít toto okno?"
+msgstr "Tímto ukončíte veškeré konverzace na KiwiIRC. Skutečně chcete zavřít toto okno?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
@@ -298,7 +298,7 @@ msgstr "Načítám obrázek"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Načítám thread Redditu"
+msgstr "Načítám příspěvek z Redditu"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
@@ -386,7 +386,7 @@ msgstr "Připojuji.."
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Přezdívka už je obsazena"
+msgstr "Přezdívka je již obsazena"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
@@ -406,27 +406,27 @@ msgstr "Server nenalezen"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Připojení bylo odmítnuto"
+msgstr "Připojení odmítnuto"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Op"
+msgstr "+op"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "Odeber Op"
+msgstr "-op"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voice"
+msgstr "+voice"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "Odeber Voice"
+msgstr "-voice"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Kick"
+msgstr "Vyhazov"
 
 #: 
 msgid "client_views_userbox_ban"
@@ -450,11 +450,11 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "Za 5 minut budete znovu připojeni a přihlášeni ke kanálu. Připravte se!"
+msgstr "Za 5 minut budete znovu připojeni k vašim kanálům. Připavte se!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Znovu provádím bezpečné připojení.."
+msgstr "Právě bezpečně znovupřipojuji.."
 
 #: 
 msgid "client_applets_settings_html5_notifications"
@@ -482,15 +482,15 @@ msgstr "Odkaz na tento kanál"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Sdílejte tento kanál"
+msgstr "Sdílet tento kanál"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "Mé sítě"
+msgstr "Moje sítě"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favourite networks"
+msgstr "Oblíbené sítě"
 
 #: 
 msgid "client_applet_fav_add"
@@ -506,7 +506,7 @@ msgstr "Smazat síť"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Zobrazovat zprávy "
+msgstr "Zahrnout zprávy o příchodech/odchodech do aktivity"
 
 #: 
 msgid "client_views_userbox_ignore"
@@ -514,361 +514,361 @@ msgstr "Ignorovat"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Use 24-hour timestamps"
+msgstr "Použít 24hodinová časová razítka"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "%s dopoledne"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "%s odpoledne"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "has been invited to %s"
+msgstr "byl pozván do %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "is already on this channel"
+msgstr "již je na tomto kanálu"
 
 #: Date format
 msgid "client_date_format"
-msgstr "m/d/Y"
+msgstr "d. m. Y"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Jan"
+msgstr "led"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
-msgstr "Feb"
+msgstr "ún"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "Mar"
+msgstr "bře"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
-msgstr "Apr"
+msgstr "dub"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "May"
+msgstr "kvě"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
-msgstr "Jun"
+msgstr "čvn"
 
 #: client.libs.date_format.shortMonths.july
 msgid "client.libs.date_format.short_months.july"
-msgstr "Jul"
+msgstr "čvc"
 
 #: client.libs.date_format.shortMonths.august
 msgid "client.libs.date_format.short_months.august"
-msgstr "Aug"
+msgstr "srp"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Sep"
+msgstr "zář"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
-msgstr "Oct"
+msgstr "říj"
 
 #: client.libs.date_format.shortMonths.november
 msgid "client.libs.date_format.short_months.november"
-msgstr "Nov"
+msgstr "lis"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Dec"
+msgstr "pro"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "January"
+msgstr "leden"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "February"
+msgstr "únor"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "March"
+msgstr "březen"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
-msgstr "April"
+msgstr "duben"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "May"
+msgstr "květen"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "June"
+msgstr "červen"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "July"
+msgstr "červenec"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "August"
+msgstr "srpen"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "September"
+msgstr "září"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
-msgstr "October"
+msgstr "říjen"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "November"
+msgstr "listopad"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "December"
+msgstr "prosinec"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Mon"
+msgstr "po"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Tue"
+msgstr "út"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Wed"
+msgstr "st"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Thu"
+msgstr "čt"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Fri"
+msgstr "pá"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Sat"
+msgstr "so"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Sun"
+msgstr "ne"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Monday"
+msgstr "pondělí"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Tueday"
+msgstr "úterý"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Wednesday"
+msgstr "středa"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Thursday"
+msgstr "čtvrtek"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Friday"
+msgstr "pátek"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Saturday"
+msgstr "sobota"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Sunday"
+msgstr "neděle"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Moderated Chat"
+msgstr "Moderovaný chat"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Invite Only"
+msgstr "Pouze na pozvání"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Only operators can change the topic"
+msgstr "Pouze op mohou měnit téma"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Block messages from outside this channel"
+msgstr "Blokovat zprávy mimo tento kanál"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Toggle Banlist"
+msgstr "Změň seznam zabanovaných"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Send message..."
+msgstr "Mluv..."
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Toto vás odpojí od sítě IRC. Skutečně chcete odejít?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Custom highlights (space separated)"
+msgstr "Vybrané příspěvky (oddělené mezerou)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Messages"
+msgstr "Zprávy"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Chat messages"
+msgstr "Zprávy chatu"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Alerts / Notifications"
+msgstr "Upozornění / Oznámení"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Appearance"
+msgstr "Vzhled"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Theme"
+msgstr "Motiv"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Channels"
+msgstr "Kanály"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Language"
+msgstr "Jazyk"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Block new private messages"
+msgstr "Blokovan nové soukromé zprávy"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Poslat zprávu"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Udělat něco fyzicky"
 
 #: 
 msgid "command_description_join"
-msgstr "Join a channel"
+msgstr "Připojit se ke kanálu"
 
 #: 
 msgid "command_description_part"
-msgstr "Leave a channel"
+msgstr "Odpojit se od kanálu"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Leave, then re-join a channel"
+msgstr "Odpojit se a poté se znovu připojit"
 
 #: 
 msgid "command_description_nick"
-msgstr "Change your nickname"
+msgstr "Změňte si přezdívku"
 
 #: 
 msgid "command_description_query"
-msgstr "Start a private conversation with someone"
+msgstr "Začít s někým soukromou konverzaci"
 
 #: 
 msgid "command_description_invite"
-msgstr "Invite somebody into the channel"
+msgstr "Pozvat někoho na kanál"
 
 #: 
 msgid "command_description_topic"
-msgstr "Set the topic for this channel"
+msgstr "Nastavit téma pro tento kanál"
 
 #: 
 msgid "command_description_notice"
-msgstr "Send a notice"
+msgstr "Poslat upozornění"
 
 #: 
 msgid "command_description_quote"
-msgstr "Send a raw command to the IRC server"
+msgstr "Poslat otevřený příkaz na server IRC"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kick somebody from the channel"
+msgstr "Vyhodit někoho z kanálu"
 
 #: 
 msgid "command_description_clear"
-msgstr "Clear all messages from this window"
+msgstr "Vyčistit všechny zprávy z tohoto okna"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Send a CTCP command to somebody"
+msgstr "Poslat někomu příkaz CTCP"
 
 #: 
 msgid "command_description_quit"
-msgstr "Disconnect from the IRC server"
+msgstr "Odpojit se od serveru IRC"
 
 #: 
 msgid "command_description_server"
-msgstr "Connect to a new IRC network"
+msgstr "Připojit se do nové sítě IRC"
 
 #: 
 msgid "command_description_whois"
-msgstr "Request information on somebody"
+msgstr "Vyžádat o někom informaci"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Vyžádat informaci o někom, kdo se nedávno odpojil"
 
 #: 
 msgid "command_description_away"
-msgstr "Mark yourself as away"
+msgstr "Označit se, že jste pryč"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Změnit kódování připojení"
 
 #: 
 msgid "command_description_settings"
-msgstr "Show the settings window"
+msgstr "Zobrazit okno nastavení"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Upravit uživatelské skripty kiwi"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Znovunačíst kaskádové styly"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Načíst javascriptový soubor z URL"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Nastavit nastavení konfigurace kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Save the current kiwi settings"
+msgstr "Uložit aktuální nastavení kiwi"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Vytvořit alias k existujícímu /příkazu"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Ignore messages from somebody"
+msgstr "Ignorovat zprávy od někoho"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Stop ignoring somebody"
+msgstr "Přestat někoho ignorovat"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Show the autocomplete box"
+msgstr "Zobrazit nabídku automatického dokončování"
 

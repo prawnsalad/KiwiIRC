@@ -90,7 +90,7 @@ msgstr "Uwaga: Ustawienia zaczną działać dopiero po odświeżeniu strony"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Uwaga: Dla użytkowników Chrome lub Chromium może być konieczne sprawdzenie ustawień przez %s jeśli nic się nie stanie po kliknięciu."
+msgstr "Uwaga: Dla użytkowników Chrome lub Chromium może być konieczne sprawdzenie ustawień przez %s, jeśli nic się nie stanie po kliknięciu."
 
 #: 
 msgid "client_applets_settings_title"
@@ -146,7 +146,7 @@ msgstr "Przestałeś ignorować %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "Applet \"%s\" nie istnieje"
+msgstr "Aplet „%s” nie istnieje"
 
 #: 
 msgid "client_models_application_encoding_changed"
@@ -170,7 +170,7 @@ msgstr "Nowe połączenie"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "Łączenie do %s:%s..."
+msgstr "Łączenie z %s:%s…"
 
 #: 
 msgid "client_models_application_connection_error"
@@ -322,7 +322,7 @@ msgstr "Nowe wiadomości!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Wymyśl sobie pseudonim..."
+msgstr "Wymyśl sobie pseudonim…"
 
 #: 
 msgid "client_views_serverselect_nickname"
@@ -354,7 +354,7 @@ msgstr "Klucz"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Start..."
+msgstr "Start…"
 
 #: 
 msgid "client_views_serverselect_server_and_network"
@@ -410,19 +410,19 @@ msgstr "Połączenie zabronione."
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Daj Op"
+msgstr "Daj opa"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "Zabierz Op"
+msgstr "Zabierz opa"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Daj Głos"
+msgstr "Daj voice'a"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "Zabierz Głos"
+msgstr "Zabierz voice'a"
 
 #: 
 msgid "client_views_userbox_kick"
@@ -430,7 +430,7 @@ msgstr "Wykop"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Ban"
+msgstr "Zablokuj"
 
 #: 
 msgid "client_views_userbox_query"
@@ -438,7 +438,7 @@ msgstr "Wiadomość"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Info"
+msgstr "Informacje"
 
 #: 
 msgid "client_views_userbox_slap"
@@ -703,15 +703,15 @@ msgstr "Tylko operatorzy mogą zmieniać temat"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Blokuj wiadomości z poza tego kanału"
+msgstr "Blokuj wiadomości spoza tego kanału"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Przełącz Banlistę"
+msgstr "Przełącz listę blokad"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Wyślij wiadomość..."
+msgstr "Wyślij wiadomość…"
 
 #: 
 msgid "disconnect_from_server"

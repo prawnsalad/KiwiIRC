@@ -14,435 +14,435 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: Kiwi\n"
-"Language: tr\n"
+"Language: bg\n"
 
 #: client/assets/src/applets/chanlist.js
 msgid "client_applets_chanlist_channelname"
-msgstr "Kanal Adı"
+msgstr "Име на канала"
 
 #: 
 msgid "client_applets_chanlist_users"
-msgstr "Kullanıcı"
+msgstr "Потребители"
 
 #: 
 msgid "client_applets_chanlist_topic"
-msgstr "Başlık"
+msgstr "Тема"
 
 #: 
 msgid "client_applets_chanlist_channellist"
-msgstr "Kanal Listesi"
+msgstr "Списък от канали"
 
 #: client/assets/src/applets/scripteditor.js
 msgid "client_applets_scripteditor_save"
-msgstr "Kaydet"
+msgstr "Запазване"
 
 #: 
 msgid "client_applets_scripteditor_error"
-msgstr "Script hatası. %s"
+msgstr "Грешка в скрипта. %s"
 
 #: 
 msgid "client_applets_scripteditor_saved"
-msgstr "Script kaydedildi ve şu anda aktif"
+msgstr "Скриптът Ви беше запазен и вече работи"
 
 #: 
 msgid "client_applets_scripteditor_title"
-msgstr "Script Editörü"
+msgstr "Редактор на скриптове"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channelview_tabs"
-msgstr "Sekmeler"
+msgstr "Раздели"
 
 #: 
 msgid "client_applets_settings_channelview_list"
-msgstr "Liste"
+msgstr "Списък"
 
 #: 
 msgid "client_applets_settings_channelview_list_notice"
-msgstr "çok sayıda kanal için"
+msgstr "за голям брой канали"
 
 #: 
 msgid "client_applets_settings_notification_joinpart"
-msgstr "Giriş/çıkış kanal uyarıları"
+msgstr "Известия за влизане/излизане от канал"
 
 #: 
 msgid "client_applets_settings_timestamp"
-msgstr "Zaman damgaları"
+msgstr "Време към съобщенията"
 
 #: 
 msgid "client_applets_settings_notification_sound"
-msgstr "Ses uyarılarını kapat"
+msgstr "Заглушаване на звуковите известия"
 
 #: 
 msgid "client_applets_settings_history_length"
-msgstr "Konuşma geçmişinde gösterilecek mesaj sayısı"
+msgstr "съобщения в историята"
 
 #: 
 msgid "client_applets_settings_default_client"
-msgstr "Varsayılan IRC istemcisi"
+msgstr "Клиент за IRC по подразбиране"
 
 #: 
 msgid "client_applets_settings_default_client_enable"
-msgstr "Kiwi'yi varsayılan IRC istemcim yap"
+msgstr "Нека Kiwi бъде моят клиент за IRC по подразбиране"
 
 #: 
 msgid "client_applets_settings_locale_restart_needed"
-msgstr "Not: Değişiklikler sayfayı yenilediğinizde gerçekleşecektir"
+msgstr "Забележка: Промените ще влязат в сила след като опресните страницата"
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Not: Eğer bir şey olmazsa Chrome veya benzeri tarayıcı kullanıcılarının %s üzerinden ayarlarını kontrol etmeleri gerekebilir"
+msgstr "Забележка: Потребителите на браузъра Chrome или Chromium може да трябва да проверят настройките си в %s , ако няма промяна"
 
 #: 
 msgid "client_applets_settings_title"
-msgstr "Ayarlar"
+msgstr "Настройки"
 
 #: client/assets/src/models/applet.js
 msgid "client_models_applet_unknown"
-msgstr "Bilinmeyen Applet"
+msgstr "Непознат приложен елемент"
 
 #: 
 msgid "client_models_applet_loading"
-msgstr "Yükleniyor..."
+msgstr "Зареждане…"
 
 #: 
 msgid "client_models_applet_notfound"
-msgstr "Bulunamadı"
+msgstr "Не е намерено"
 
 #: client/assets/src/models/application.js
 msgid "client_models_application_reconnecting"
-msgstr "Bağlantınız koptu. Yeniden bağlanılıyor"
+msgstr "Връзката се разпадна. Опитваме се да Ви свържем отново"
 
 #: 
 msgid "client_models_application_reconnect_in_x_seconds"
-msgstr "Bağlantınız koptu. %d saniye içinde tekrar bağlanılacak"
+msgstr "Връзката се разпадна. Опитваме се да Ви свържем отново след %d секунди"
 
 #: 
 msgid "client_models_application_reconnect_successfully"
-msgstr "Tekrar bağlandınız"
+msgstr "Всичко е наред, отново имате връзка"
 
 #: 
 msgid "client_models_application_settings_saved"
-msgstr "Ayarlar kaydedildi"
+msgstr "Настройките бяха запазени"
 
 #: 
 msgid "client_models_application_ignore_title"
-msgstr "Engellenen rumuzlar"
+msgstr "Игнорирани псевдоними"
 
 #: 
 msgid "client_models_application_ignore_none"
-msgstr "Hiç kimse engellenmiyor"
+msgstr "Вие не игнорирате никого"
 
 #: 
 msgid "client_models_application_ignore_nick"
-msgstr "%s engelleniyor"
+msgstr "Игнориране на %s"
 
 #: 
 msgid "client_models_application_ignore_stop_notice"
-msgstr "Engelini kaldırmak istediğiniz rumuzu belirtin"
+msgstr "Посочете кой псевдоним искате да спрете да игнорирате"
 
 #: 
 msgid "client_models_application_ignore_stopped"
-msgstr "%s rumuzunun engeli kaldırıldı"
+msgstr "Спряхте да игнорирате %s"
 
 #: 
 msgid "client_models_application_applet_notfound"
-msgstr "\"%s\" diye bir Applet yok"
+msgstr "Приложният елемент „%s“ не съществува"
 
 #: 
 msgid "client_models_application_encoding_changed"
-msgstr "Kodlama %s olarak değiştirildi"
+msgstr "Кодировката е променена на %s"
 
 #: 
 msgid "client_models_application_encoding_invalid"
-msgstr "%s geçerli bir kodlama türü değil"
+msgstr "%s не е правилна кодировка"
 
 #: 
 msgid "client_models_application_encoding_notspecified"
-msgstr "Kodlama türü belirtilmedi"
+msgstr "Не е посочена кодировка"
 
 #: 
 msgid "client_models_application_encoding_usage"
-msgstr "Kullanımı: /encoding [YENİ-KODLAMA]"
+msgstr "Начин на употреба: /encoding [НОВА-КОДИРОВКА]"
 
 #: 
 msgid "client_models_application_connection_create"
-msgstr "Yeni Bağlantı"
+msgstr "Нова връзка"
 
 #: 
 msgid "client_models_application_connection_connecting"
-msgstr "%s:%s adresine bağlanılıyor..."
+msgstr "Свързване към %s:%s…"
 
 #: 
 msgid "client_models_application_connection_error"
-msgstr "%s:%s (%s) adresine bağlanırken hata oluştu"
+msgstr "Грешка при свързването към %s:%s (%s)"
 
 #: client/assets/src/models/channel.js
 msgid "client_models_channel_join"
-msgstr "kanala girdi"
+msgstr "се присъедини"
 
 #: 
 msgid "client_models_channel_quit"
-msgstr "sunucudan ayrıldı %s"
+msgstr "напусна %s"
 
 #: 
 msgid "client_models_channel_kicked"
-msgstr "kanaldan %s tarafından atıldı %s"
+msgstr "беше изритан от %s %s"
 
 #: 
 msgid "client_models_channel_selfkick"
-msgstr "Kanaldan %s tarafından atıldınız %s"
+msgstr "Вие бяхте изритан(а) от %s %s"
 
 #: 
 msgid "client_models_channel_part"
-msgstr "kanaldan ayrıldı %s"
+msgstr "напусна %s"
 
 #: client/assets/src/models/network.js
 msgid "client_models_network_channel_invalid_name"
-msgstr "geçerli bir kanal adı değil"
+msgstr "не е правилно име на канал"
 
 #: 
 msgid "client_models_network_disconnected"
-msgstr "IRC ağı ile bağlantınız kesildi"
+msgstr "Вече нямате връзка към мрежата на IRC"
 
 #: 
 msgid "client_models_network_nickname_changed"
-msgstr "rumuzunu %s olarak değiştirdi"
+msgstr "вече е познат(а) като %s"
 
 #: 
 msgid "client_models_network_topic"
-msgstr "Başlık %s tarafından %s tarihinde ayarlandı"
+msgstr "Темата е зададена от %s на %s"
 
 #: 
 msgid "client_models_network_selfmode"
-msgstr "mod ayarladı: %s"
+msgstr "задава режима %s"
 
 #: 
 msgid "client_models_network_mode"
-msgstr "mod ayarladı: %s"
+msgstr "зададе режима %s"
 
 #: 
 msgid "client_models_network_channels"
-msgstr "Kanallar: %s"
+msgstr "Канали: %s"
 
 #: 
 msgid "client_models_network_server"
-msgstr "Bağlanılan sunucu: %s %s"
+msgstr "Свързан(а) сте към сървъра: %s %s"
 
 #: 
 msgid "client_models_network_idle_and_signon"
-msgstr "Boşta olma süresi %s, giriş zamanı %s "
+msgstr "Бездеен от %s, вписан(а) на %s"
 
 #: 
 msgid "client_models_network_away"
-msgstr "Dışarda: %s"
+msgstr "Отсъстващ: %s"
 
 #: 
 msgid "client_models_network_idle"
-msgstr "Boşta olma süresi %s"
+msgstr "Бездеен от %s"
 
 #: 
 msgid "client_models_network_nickname_notfound"
-msgstr "Öyle bir rumuz yok"
+msgstr "Няма такъв псевдоним"
 
 #: 
 msgid "client_models_network_banned"
-msgstr "%s kanalından banlandınız. %s"
+msgstr "Получихте забрана за %s. %s"
 
 #: 
 msgid "client_models_network_channel_badkey"
-msgstr "%s için yanlış kanal şifresi girdiniz"
+msgstr "Грешен ключ за канала %s"
 
 #: 
 msgid "client_models_network_channel_inviteonly"
-msgstr "kanalına sadece davet edilenler girebilir"
+msgstr "е само за поканени."
 
 #: 
 msgid "client_models_network_channel_limitreached"
-msgstr "kanalı dolu."
+msgstr "е пълен."
 
 #: 
 msgid "client_models_network_nickname_alreadyinuse"
-msgstr "\"%s\" zaten kullanımda. Lütfen yeni bir rumuz seçin"
+msgstr "Псевдонимът „%s“ вече е зает. Моля, изберете друг псевдоним"
 
 #: 
 msgid "client_models_network_badpassword"
-msgstr "Yanlış şifre girdiniz"
+msgstr "Грешна парола"
 
 #: client/assets/src/views/application.js
 msgid "client_views_application_close_notice"
-msgstr "Bu bütün KiwiIRC konuşmalarını kapatacak. Bu pencereyi kapatmak istediğinize emin misiniz ?"
+msgstr "Това ще затвори всички разговори в KiwiIRC. Наистина ли искате да затворите този прозорец?"
 
 #: client/assets/src/views/channel.js
 msgid "client_views_channel_joining"
-msgstr "Kanala giriliyor..."
+msgstr "Присъединяване към канала…"
 
 #: 
 msgid "client_views_channel_topic"
-msgstr "%s kanalının başlığı: %s"
+msgstr "Темата на %s е: %s"
 
 #: client/assets/src/views/mediamessage.js
 msgid "client_views_mediamessage_close"
-msgstr "Görseli kapat"
+msgstr "Затваряне"
 
 #: 
 msgid "client_views_mediamessage_notfound"
-msgstr "Bulunamadı"
+msgstr "Не е намерено"
 
 #: 
 msgid "client_views_mediamessage_load_tweet"
-msgstr "Tweet yükleniyor"
+msgstr "Зареждане на туит"
 
 #: 
 msgid "client_views_mediamessage_load_image"
-msgstr "Görüntü yükleniyor"
+msgstr "Зареждане на изображение"
 
 #: 
 msgid "client_views_mediamessage_load_reddit"
-msgstr "Reddit konusu yükleniyor"
+msgstr "Зареждане на тема в Reddit"
 
 #: 
 msgid "client_views_mediamessage_load_gist"
-msgstr "Gist yükleniyor"
+msgstr "Зареждане на gist"
 
 #: client/assets/src/views/nickchangegbox.js
 msgid "client_views_nickchangebox_new"
-msgstr "Yeni rumuz"
+msgstr "Нов псевдоним"
 
 #: 
 msgid "client_views_nickchangebox_change"
-msgstr "Değiştir"
+msgstr "Промяна"
 
 #: 
 msgid "client_views_nickchangebox_cancel"
-msgstr "İptal"
+msgstr "Отказ"
 
 #: client/assets/src/views/panel.js
 msgid "client_views_panel_activity"
-msgstr "İnsanlar konuşuyor!"
+msgstr "Хората говорят!"
 
 #: client/assets/src/views/serverselect.js
 msgid "client_views_serverselect_form_title"
-msgstr "Bir rumuz düşünün..."
+msgstr "Измислете псевдоним…"
 
 #: 
 msgid "client_views_serverselect_nickname"
-msgstr "Rumuz"
+msgstr "Псевдоним"
 
 #: 
 msgid "client_views_serverselect_enable_password"
-msgstr "Şifrem var"
+msgstr "Имам парола"
 
 #: 
 msgid "client_views_serverselect_password"
-msgstr "Şifre"
+msgstr "Парола"
 
 #: 
 msgid "client_views_serverselect_channel"
-msgstr "Kanal"
+msgstr "Канал"
 
 #: 
 msgid "client_views_serverselect_channelkey"
-msgstr "Kanal şifresi"
+msgstr "Ключ за канала"
 
 #: 
 msgid "client_views_serverselect_channelkey_required"
-msgstr "Kanal şifreli"
+msgstr "Каналът изисква ключ"
 
 #: 
 msgid "client_views_serverselect_key"
-msgstr "Şifre"
+msgstr "Ключ"
 
 #: 
 msgid "client_views_serverselect_connection_start"
-msgstr "Başlat..."
+msgstr "Влизане…"
 
 #: 
 msgid "client_views_serverselect_server_and_network"
-msgstr "Sunucu ve ağ"
+msgstr "Сървър и мрежа"
 
 #: 
 msgid "client_views_serverselect_server"
-msgstr "Sunucu"
+msgstr "Сървър"
 
 #: 
 msgid "client_views_serverselect_port"
-msgstr "Port"
+msgstr "Порт"
 
 #: 
 msgid "client_views_serverselect_poweredby"
-msgstr "Kiwi IRC tarafından desteklenmektedir"
+msgstr "Задвижвано от Kiwi IRC"
 
 #: 
 msgid "client_views_serverselect_nickname_error_empty"
-msgstr "İlk önce bir rumuz seçin!"
+msgstr "Първо изберете псевдоним!"
 
 #: 
 msgid "client_views_serverselect_connection_successfully"
-msgstr "Bağlandı"
+msgstr "Връзката е успешна"
 
 #: 
 msgid "client_views_serverselect_connection_trying"
-msgstr "Bağlanıyor..."
+msgstr "Свързване…"
 
 #: 
 msgid "client_views_serverselect_nickname_error_alreadyinuse"
-msgstr "Rumuz kullanımda"
+msgstr "Псевдонимът е зает"
 
 #: 
 msgid "client_views_serverselect_nickname_invalid"
-msgstr "Hatalı rumuz"
+msgstr "Грешен псевдоним"
 
 #: 
 msgid "client_views_serverselect_password_incorrect"
-msgstr "Yanlış şifre"
+msgstr "Грешна парола"
 
 #: 
 msgid "client_views_serverselect_connection_error"
-msgstr "Bağlantı hatası"
+msgstr "Грешка при свързване"
 
 #: 
 msgid "client_views_serverselect_server_notfound"
-msgstr "Sunucu bulunamadı"
+msgstr "Сървърът не е намерен"
 
 #: 
 msgid "client_views_serverselect_connection_refused"
-msgstr "Bağlantı reddedildi"
+msgstr "Връзката е отказана"
 
 #: client/assets/src/views/userbox.js
 msgid "client_views_userbox_op"
-msgstr "Op"
+msgstr "Даване на Оп"
 
 #: 
 msgid "client_views_userbox_deop"
-msgstr "De-op"
+msgstr "Премахване на Оп"
 
 #: 
 msgid "client_views_userbox_voice"
-msgstr "Voice"
+msgstr "Даване на глас"
 
 #: 
 msgid "client_views_userbox_devoice"
-msgstr "De-voice"
+msgstr "Премахване на глас"
 
 #: 
 msgid "client_views_userbox_kick"
-msgstr "Kick"
+msgstr "Изритване"
 
 #: 
 msgid "client_views_userbox_ban"
-msgstr "Ban"
+msgstr "Забрана"
 
 #: 
 msgid "client_views_userbox_query"
-msgstr "Mesaj"
+msgstr "Съобщение"
 
 #: 
 msgid "client_views_userbox_whois"
-msgstr "Bilgi"
+msgstr "Информация"
 
 #: 
 msgid "client_views_userbox_slap"
-msgstr "Tokatla!"
+msgstr "Шамар!"
 
 #: 
 msgid "client_views_serverselect_ssl"
@@ -450,425 +450,425 @@ msgstr "SSL"
 
 #: 
 msgid "client_models_application_jumpserver_prepare"
-msgstr "5 dakika içerisinde yeniden bağlanmış olacaksınız. Hazır olun!"
+msgstr "След 5 минути ще бъдете свързани отново и включени отново в каналите си. Пригответе се!"
 
 #: 
 msgid "client_models_application_jumpserver_reconnect"
-msgstr "Güvenli şekilde yeniden bağlanılıyor..."
+msgstr "Безопасно повторно свързване…"
 
 #: 
 msgid "client_applets_settings_html5_notifications"
-msgstr "Masaüstü uyarıları"
+msgstr "Известия на работния плот"
 
 #: 
 msgid "client_applets_settings_enable_notifications"
-msgstr "Uyarıları etkinleştir"
+msgstr "Включване на известията"
 
 #: 
 msgid "client_applets_settings_emoticons"
-msgstr "Ifadeleri resim olarak göster"
+msgstr "Показване на емотиконки"
 
 #: 
 msgid "client_applet_about"
-msgstr "Kiwi Hakkında"
+msgstr "Относно Kiwi"
 
 #: 
 msgid "client_applet_about_homepage"
-msgstr "Proje sayfası"
+msgstr "Страница на проекта"
 
 #: 
 msgid "client_applet_about_link_channel"
-msgstr "Link to this channel"
+msgstr "Връзка към този канал"
 
 #: 
 msgid "client_applet_about_share_channel"
-msgstr "Bu kanalı paylaş"
+msgstr "Споделяне на този канал"
 
 #: 
 msgid "client_applet_fav_my_networks"
-msgstr "Sunucularım"
+msgstr "Моите мрежи"
 
 #: 
 msgid "client_applet_fav_networks"
-msgstr "Favori sunucular"
+msgstr "Любими мрежи"
 
 #: 
 msgid "client_applet_fav_add"
-msgstr "Sunucu ekle"
+msgstr "Добавяне на мрежа"
 
 #: 
 msgid "client_applet_fav_save"
-msgstr "Sunucuyu kaydet"
+msgstr "Запазване на мрежа"
 
 #: 
 msgid "client_applet_fav_delete"
-msgstr "Sunucuyu sil"
+msgstr "Изтриване на мрежа"
 
 #: 
 msgid "client_applets_settings_notification_count_all_activity"
-msgstr "Giriş ve çıkış mesajlarını göster"
+msgstr "Включване на съобщенията за присъединяване/напускане към дейностите"
 
 #: 
 msgid "client_views_userbox_ignore"
-msgstr "Aldırmamak"
+msgstr "Игнориране"
 
 #: 
 msgid "client_applets_settings_timestamp_24_hour"
-msgstr "Saat göstergesini 24 saat olarak kullan"
+msgstr "Времето да е в 24-часов формат"
 
 #: 
 msgid "client_views_panel_timestamp_am"
-msgstr "%s AM"
+msgstr "%s сутринта"
 
 #: 
 msgid "client_views_panel_timestamp_pm"
-msgstr "%s PM"
+msgstr "%s следобед"
 
 #: 
 msgid "client_models_application_has_been_invited"
-msgstr "%s kanalına davet edildi"
+msgstr "беше поканен(а) в %s"
 
 #: 
 msgid "client_models_network_channel_alreadyin"
-msgstr "zaten bu kanalda"
+msgstr "вече е в този канал"
 
 #: Date format
 msgid "client_date_format"
-msgstr "m/d/Y"
+msgstr "d/m/Y"
 
 #: client.libs.date_format.shortMonths.January
 msgid "client.libs.date_format.short_months.january"
-msgstr "Jan"
+msgstr "ян"
 
 #: client.libs.date_format.shortMonths.february
 msgid "client.libs.date_format.short_months.february"
-msgstr "Feb"
+msgstr "фев"
 
 #: client.libs.date_format.shortMonths.march
 msgid "client.libs.date_format.short_months.march"
-msgstr "Mar"
+msgstr "март"
 
 #: client.libs.date_format.shortMonths.april
 msgid "client.libs.date_format.short_months.april"
-msgstr "Apr"
+msgstr "апр"
 
 #: client.libs.date_format.shortMonths.may
 msgid "client.libs.date_format.short_months.may"
-msgstr "May"
+msgstr "май"
 
 #: client.libs.date_format.shortMonths.june
 msgid "client.libs.date_format.short_months.june"
-msgstr "Jun"
+msgstr "юни"
 
 #: client.libs.date_format.shortMonths.july
 msgid "client.libs.date_format.short_months.july"
-msgstr "Jul"
+msgstr "юли"
 
 #: client.libs.date_format.shortMonths.august
 msgid "client.libs.date_format.short_months.august"
-msgstr "Aug"
+msgstr "авг"
 
 #: client.libs.date_format.shortMonths.september
 msgid "client.libs.date_format.short_months.september"
-msgstr "Sep"
+msgstr "сеп"
 
 #: client.libs.date_format.shortMonths.october
 msgid "client.libs.date_format.short_months.october"
-msgstr "Oct"
+msgstr "окт"
 
 #: client.libs.date_format.shortMonths.november
 msgid "client.libs.date_format.short_months.november"
-msgstr "Nov"
+msgstr "ноем"
 
 #: client.libs.date_format.shortMonths.december
 msgid "client.libs.date_format.short_months.december"
-msgstr "Dec"
+msgstr "дек"
 
 #: client.libs.date_format.longMonts.January
 msgid "client.libs.date_format.long_months.january"
-msgstr "Ocak"
+msgstr "януари"
 
 #: client.libs.date_format.longMonts.february
 msgid "client.libs.date_format.long_months.february"
-msgstr "Şubat"
+msgstr "февруари"
 
 #: client.libs.date_format.longMonts.march
 msgid "client.libs.date_format.long_months.march"
-msgstr "Mart"
+msgstr "март"
 
 #: client.libs.date_format.longMonts.april
 msgid "client.libs.date_format.long_months.april"
-msgstr "Nisan"
+msgstr "април"
 
 #: client.libs.date_format.longMonts.may
 msgid "client.libs.date_format.long_months.may"
-msgstr "Mayıs"
+msgstr "май"
 
 #: client.libs.date_format.longMonts.june
 msgid "client.libs.date_format.long_months.june"
-msgstr "Haziran"
+msgstr "юни"
 
 #: client.libs.date_format.longMonts.july
 msgid "client.libs.date_format.long_months.july"
-msgstr "Temmuz"
+msgstr "юли"
 
 #: client.libs.date_format.longMonts.august
 msgid "client.libs.date_format.long_months.august"
-msgstr "Ağustos"
+msgstr "август"
 
 #: client.libs.date_format.longMonts.september
 msgid "client.libs.date_format.long_months.september"
-msgstr "Eylül"
+msgstr "септември"
 
 #: client.libs.date_format.longMonths.october
 msgid "client.libs.date_format.long_months.october"
-msgstr "Ekim"
+msgstr "октомври"
 
 #: client.libs.date_format.longMonths.november
 msgid "client.libs.date_format.long_months.november"
-msgstr "Kasım"
+msgstr "ноември"
 
 #: client.libs.date_format.longMonths.december
 msgid "client.libs.date_format.long_months.december"
-msgstr "Aralık"
+msgstr "декември"
 
 #: client.libs.date_format.shortDays.monday
 msgid "client.libs.date_format.short_days.monday"
-msgstr "Mon"
+msgstr "пон"
 
 #: client.libs.date_format.shortDays.tuesday
 msgid "client.libs.date_format.short_days.tuesday"
-msgstr "Tue"
+msgstr "вт"
 
 #: client.libs.date_format.shortDays.wednesday
 msgid "client.libs.date_format.short_days.wednesday"
-msgstr "Wed"
+msgstr "ср"
 
 #: client.libs.date_format.shortDays.thursday
 msgid "client.libs.date_format.short_days.thursday"
-msgstr "Thu"
+msgstr "чет"
 
 #: client.libs.date_format.shortDays.friday
 msgid "client.libs.date_format.short_days.friday"
-msgstr "Fri"
+msgstr "пет"
 
 #: client.libs.date_format.shortDays.saturday
 msgid "client.libs.date_format.short_days.saturday"
-msgstr "Sat"
+msgstr "съб"
 
 #: client.libs.date_format.shortDays.sunday
 msgid "client.libs.date_format.short_days.sunday"
-msgstr "Sun"
+msgstr "нед"
 
 #: client.libs.date_format.longDays.monday
 msgid "client.libs.date_format.long_days.monday"
-msgstr "Pazartesi"
+msgstr "понеделник"
 
 #: client.libs.date_format.longDays.tuesday
 msgid "client.libs.date_format.long_days.tuesday"
-msgstr "Salı"
+msgstr "вторник"
 
 #: client.libs.date_format.longDays.wednesday
 msgid "client.libs.date_format.long_days.wednesday"
-msgstr "Çarşamba"
+msgstr "сряда"
 
 #: client.libs.date_format.longDays.thursday
 msgid "client.libs.date_format.long_days.thursday"
-msgstr "Perşembe"
+msgstr "четвъртък"
 
 #: client.libs.date_format.longDays.friday
 msgid "client.libs.date_format.long_days.friday"
-msgstr "Cuma"
+msgstr "петък"
 
 #: client.libs.date_format.longDays.saturday
 msgid "client.libs.date_format.long_days.saturday"
-msgstr "Cumartesi"
+msgstr "събота"
 
 #: client.libs.date_format.longDays.sunday
 msgid "client.libs.date_format.long_days.sunday"
-msgstr "Pazar"
+msgstr "неделя"
 
 #: 
 msgid "client_views_channelinfo_moderated"
-msgstr "Kanal sadece yetkililere açık"
+msgstr "Модериран"
 
 #: 
 msgid "client_views_channelinfo_inviteonly"
-msgstr "Sadece davetliler"
+msgstr "Само с покани"
 
 #: 
 msgid "client_views_channelinfo_opschangechannel"
-msgstr "Kanal başlığını sadece yetkililer değiştirebilir"
+msgstr "Само операторите могат да променят темата"
 
 #: 
 msgid "client_views_channelinfo_externalmessages"
-msgstr "Kanal dışından gelecek mesajları engelle"
+msgstr "Съобщенията, идващи извън канала, са забранени"
 
 #: 
 msgid "client_views_channelinfo_togglebanlist"
-msgstr "Toggle Banlist"
+msgstr "Списък със забрани"
 
 #: 
 msgid "client_views_controlbox_message"
-msgstr "Mesaj gönder..."
+msgstr "Изпратете съобщение…"
 
 #: 
 msgid "disconnect_from_server"
-msgstr "This will disconnect from the IRC network. Are you sure?"
+msgstr "Това ще разкачи връзката Ви с мрежата на IRC. Наистина ли искате това?"
 
 #: 
 msgid "client_applets_settings_custom_highlights"
-msgstr "Özel uyarılar (farklı sözler için boşluk kullanınız)"
+msgstr "Персонализирано осветяване (разделяйте с интервал)"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_messages"
-msgstr "Mesajlar"
+msgstr "Съобщения"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_chat_messages"
-msgstr "Sohbet mesajları"
+msgstr "Съобщения"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_alerts_notifications"
-msgstr "Uyarılar"
+msgstr "Предупреждения/известия"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_appearance"
-msgstr "Görünüm"
+msgstr "Външен вид"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_theme"
-msgstr "Tema"
+msgstr "Тема"
 
 #: client/assets/src/applets/settings.js
 msgid "client_applets_settings_channels"
-msgstr "Kanallar"
+msgstr "Канали"
 
 #: 
 msgid "client_applets_settings_language"
-msgstr "Dil"
+msgstr "Език"
 
 #: 
 msgid "client_applets_settings_ignore_new_queries"
-msgstr "Yeni özel mesajları engelle"
+msgstr "Забраняване на новите частни съобщения"
 
 #: 
 msgid "command_description_msg"
-msgstr "Send a message"
+msgstr "Изпращане на съобщение"
 
 #: 
 msgid "command_description_action"
-msgstr "Do something physical"
+msgstr "Извършване на действие"
 
 #: 
 msgid "command_description_join"
-msgstr "Kanala gir"
+msgstr "Присъединяване към канал"
 
 #: 
 msgid "command_description_part"
-msgstr "Kanaldan çık"
+msgstr "Напускане на канал"
 
 #: 
 msgid "command_description_cycle"
-msgstr "Bir kanaldan ve tekrar gir"
+msgstr "Напускане е повторно присъединяване към канал"
 
 #: 
 msgid "command_description_nick"
-msgstr "Rumuz değiştir"
+msgstr "Промяна на псевдонима"
 
 #: 
 msgid "command_description_query"
-msgstr "Birisiyle özel sohbet başlat"
+msgstr "Започване на частен разговор с някого"
 
 #: 
 msgid "command_description_invite"
-msgstr "Başka bir kullanıcıyı kanala davet et"
+msgstr "Покана към някого за присъединяване към канала"
 
 #: 
 msgid "command_description_topic"
-msgstr "Kanal başlığı ayarla"
+msgstr "Задаване на темата на този канал"
 
 #: 
 msgid "command_description_notice"
-msgstr "Bir uyarı gönder"
+msgstr "Изпращане на бележка"
 
 #: 
 msgid "command_description_quote"
-msgstr "IRC sunucusuna raw olarak komut gönder"
+msgstr "Изпращане на необработена команда към сървъра"
 
 #: 
 msgid "command_description_kick"
-msgstr "Kanaldan birisini uzaklaştır"
+msgstr "Изритване на някого от канала"
 
 #: 
 msgid "command_description_clear"
-msgstr "Bu penceredeki tüm mesajları temizle"
+msgstr "Изчистване на всички съобщения от този прозорец"
 
 #: 
 msgid "command_description_ctcp"
-msgstr "Kullanıcıya CTCP gönder"
+msgstr "Изпращане на команда клиент-до-клиент до някого"
 
 #: 
 msgid "command_description_quit"
-msgstr "IRC sunucusundaki bağlantıyı kapat"
+msgstr "Разкачане от сървъра"
 
 #: 
 msgid "command_description_server"
-msgstr "IRC sunucusuna bağlantı kur"
+msgstr "Свързване към нова мрежа за IRC"
 
 #: 
 msgid "command_description_whois"
-msgstr "Kullanıcı hakkında bilgi"
+msgstr "Запитване за информация за някого"
 
 #: 
 msgid "command_description_whowas"
-msgstr "Request information on somebody that disconnected recently"
+msgstr "Запитване за информация за някого, който се е разкачил скоро"
 
 #: 
 msgid "command_description_away"
-msgstr "Meşgul durumuna geçiş yap"
+msgstr "Отбелязване на себе си като „отсъстващ“"
 
 #: 
 msgid "command_description_encoding"
-msgstr "Change your connection encoding"
+msgstr "Промяна на кодировката на връзката"
 
 #: 
 msgid "command_description_settings"
-msgstr "Ayarlar penceresini göster"
+msgstr "Показване на прозореца с настройките"
 
 #: 
 msgid "command_description_script"
-msgstr "Modify kiwi user scripts"
+msgstr "Промяна на потребителските скриптове на kiwi"
 
 #: 
 msgid "command_description_css"
-msgstr "Reload the page stylesheets"
+msgstr "Презареждане на стиловите файлове на страницата"
 
 #: 
 msgid "command_description_js"
-msgstr "Load a javascript file from a URL"
+msgstr "Зареждане на файл с код на javascript от адрес"
 
 #: 
 msgid "command_description_set"
-msgstr "Set a kiwi config setting"
+msgstr "Задаване на стойност за настройка на kiwi"
 
 #: 
 msgid "command_description_save"
-msgstr "Kiwinin şuanki ayarlarını kaydet"
+msgstr "Запазване на текущите настройки на kiwi"
 
 #: 
 msgid "command_description_alias"
-msgstr "Create an alias to an existing /command"
+msgstr "Създаване на друго име за съществуваща команда"
 
 #: 
 msgid "command_description_ignore"
-msgstr "Kullanıcının mesajlarını engelle"
+msgstr "Игнориране на съобщенията от някого"
 
 #: 
 msgid "command_description_unignore"
-msgstr "Kullanıcını üzerindeki engellemeyi kaldır"
+msgstr "Спиране на игнорирането на някого"
 
 #: 
 msgid "client_applets_settings_autocomplete_slideout"
-msgstr "Otomatik tamamlama kutusunu göster"
+msgstr "Показване на кутийката с подсказките"
 
