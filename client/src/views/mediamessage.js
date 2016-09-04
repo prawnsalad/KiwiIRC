@@ -113,9 +113,30 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
 
         youtube: function () {
-            var ytid = this.$el.data('ytid');
-            var that = this;
-            var yt_html = '<iframe width="480" height="270" src="https://www.youtube.com/embed/'+ ytid +'?feature=oembed" frameborder="0" allowfullscreen=""></iframe>';
+            var ytid = this.$el.data('ytid'),
+                that = this;
+
+            // Find the right size for the video depending on available space
+            var yt_available_width = _kiwi.app.view.$el.find('.panel_container').width() - _kiwi.app.view.$el.find('.messages .msg .nick').width() - 60,
+                yt_available_height = _kiwi.app.view.$el.find('.panel_container').height() - 60,
+                yt_width,
+                yt_height;
+
+            if(yt_available_width > 640 && yt_available_height > 360) {
+                yt_width = 640;
+                yt_height = 360;
+            } else if (yt_available_width > 480 && yt_available_height > 270) {
+                yt_width = 480;
+                yt_height = 270;
+            } else if (yt_available_width > 320 && yt_available_height > 180) {
+                yt_width = 320;
+                yt_height = 180;
+            } else {
+                yt_width = 260;
+                yt_height = 146;
+            }
+
+            var yt_html = '<iframe width="' + yt_width + '" height="' + yt_height + '" src="https://www.youtube.com/embed/'+ ytid +'?feature=oembed" frameborder="0" allowfullscreen=""></iframe>';
             that.$content.find('.content').html(yt_html);
 
             return $('');
