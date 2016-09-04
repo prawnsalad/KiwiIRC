@@ -103,6 +103,13 @@ var handlers = {
         });
     },
 
+    ERR_NOSUCHSERVER: function (command) {
+        this.emit('server ' + this.irc_connection.irc_host.hostname + ' no_such_server', {
+            server: command.params[1],
+            reason: command.params[command.params.length - 1]
+        });
+    },
+
     ERR_CANNOTSENDTOCHAN: function (command) {
         this.emit('server ' + this.irc_connection.irc_host.hostname + ' cannot_send_to_channel', {
             channel: command.params[1],
@@ -176,6 +183,27 @@ var handlers = {
 
     ERR_NICKNAMEINUSE: function (command) {
         this.emit('server ' + this.irc_connection.irc_host.hostname + ' nickname_in_use', {
+            nick: command.params[1],
+            reason: command.params[command.params.length - 1]
+        });
+    },
+
+    ERR_NICKCOLLISION: function (command) {
+        this.emit('server ' + this.irc_connection.irc_host.hostname + ' nickname_collision', {
+            nick: command.params[1],
+            reason: command.params[command.params.length - 1]
+        });
+    },
+
+    ERR_BANNICKCHANGE: function (command) {
+        this.emit('server ' + this.irc_connection.irc_host.hostname + ' banned_nickname_change', {
+            channel: command.params[1],
+            reason: command.params[command.params.length - 1]
+        });
+    },
+
+    ERR_NICKTOOFAST: function (command) {
+        this.emit('server ' + this.irc_connection.irc_host.hostname + ' nick_change_too_fast', {
             nick: command.params[1],
             reason: command.params[command.params.length - 1]
         });
@@ -629,12 +657,6 @@ var handlers = {
         this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
     },
 
-    RPL_NOSUCHSERVER: function (command) {
-        var params = _.clone(command.params);
-        params.shift();
-        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
-    },
-
     ERR_NOADMININFO: function (command) {
         var params = _.clone(command.params);
         params.shift();
@@ -648,6 +670,12 @@ var handlers = {
     },
 
     ERR_NOOPERHOST: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    ERR_CANTJOINOPERSONLY: function (command) {
         var params = _.clone(command.params);
         params.shift();
         this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);

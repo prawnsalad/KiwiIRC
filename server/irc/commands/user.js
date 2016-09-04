@@ -52,6 +52,30 @@ var handlers = {
         });
     },
 
+    RPL_USERHOST: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_ISON: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_UNAWAY: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
+    RPL_NOWAWAY: function (command) {
+        var params = _.clone(command.params);
+        params.shift();
+        this.emitGenericNotice(command, params.slice(0, -1).join(', ') + ' ' + command.params[command.params.length - 1]);
+    },
+
     RPL_WHOISUSER: function (command) {
         this.emit('user ' + command.params[1] + ' whoisuser', {
             nick: command.params[1],

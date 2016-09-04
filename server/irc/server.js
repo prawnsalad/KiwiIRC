@@ -25,6 +25,7 @@ var IrcServer = function (irc_connection) {
         password_mismatch:      onPasswordMismatch,
         channel_redirect:       onChannelRedirect,
         no_such_nick:           onNoSuchNick,
+        no_such_server:         onNoSuchServer,
         cannot_send_to_channel: onCannotSendToChan,
         too_many_channels:      onTooManyChannels,
         user_not_in_channel:    onUserNotInChannel,
@@ -36,6 +37,8 @@ var IrcServer = function (irc_connection) {
         bad_channel_key:        onBadChannelKey,
         chanop_privs_needed:    onChanopPrivsNeeded,
         nickname_in_use:        onNicknameInUse,
+        banned_nickname_change: onBannedFromChannel,
+        nick_change_too_fast:   onNickChangeTooFast,
         erroneus_nickname:      onErroneusNickname,
         unknown_command:        onUnknownCommand
     };
@@ -164,6 +167,14 @@ function onNoSuchNick(event) {
     });
 }
 
+function onNoSuchServer(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'no_such_server',
+        server: event.server,
+        reason: event.reason
+    });
+}
+
 function onCannotSendToChan(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'cannot_send_to_channel',
@@ -248,6 +259,14 @@ function onChanopPrivsNeeded(event) {
 function onNicknameInUse(event) {
     this.irc_connection.clientEvent('irc_error', {
         error: 'nickname_in_use',
+        nick: event.nick,
+        reason: event.reason
+    });
+}
+
+function onNickChangeTooFast(event) {
+    this.irc_connection.clientEvent('irc_error', {
+        error: 'nick_change_too_fast',
         nick: event.nick,
         reason: event.reason
     });
