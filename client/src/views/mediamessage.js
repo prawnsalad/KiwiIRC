@@ -118,7 +118,7 @@ _kiwi.view.MediaMessage = Backbone.View.extend({
 
             // Find the right size for the video depending on available space
             // Add 60 pixels to leave space for margins
-            var yt_available_width = _kiwi.app.view.$el.find('.messages .msg .text:last').width() - _kiwi.app.view.$el.find('.messages .msg .nick').width() - 60,
+            var yt_available_width = _kiwi.app.view.$el.find('.messages .msg .text:last').width() - 60,
                 yt_available_height = _kiwi.app.view.$el.find('.panel_container').height() - 60,
                 yt_width,
                 yt_height;
