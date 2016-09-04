@@ -26,6 +26,7 @@ _kiwi.view.AppToolbar = Backbone.View.extend({
         event.preventDefault();
         _kiwi.app.view.$el.toggleClass('with_sidebar');
         _kiwi.app.rightbar.$el.addClass('disabled');
+        _kiwi.app.view.$el.find('.tabs_activity').hide();
         _kiwi.app.view.doLayout();
         _kiwi.app.view.$el.find('.toolbar_overlay').click(function() {
             _kiwi.app.view.$el.removeClass('with_sidebar');

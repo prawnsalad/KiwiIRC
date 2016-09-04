@@ -125,6 +125,11 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
                     _kiwi.app.view.playSound('highlight');
                 }
 
+                // Tabbar highlight when in mobile view
+                if((msg.is_highlight || this.model.isQuery()) && !this.model.isActive() && _kiwi.app.view.$el.hasClass('narrow') === true && !_kiwi.app.view.$el.hasClass('with_sidebar')) {
+                    _kiwi.app.view.$el.find('.tabs_activity').show();
+                }
+
                 // Update the activity counters
                 (function () {
                     // Only inrement the counters if we're not the active panel
