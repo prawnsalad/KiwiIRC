@@ -329,13 +329,19 @@ _kiwi.view.ControlBox = Backbone.View.extend({
             // Add this channels name into the auto complete list
             autocomplete_list.push(_kiwi.app.panels().active.get('name'));
 
-            // Sort what we have alphabetically
-            autocomplete_list = _.sortBy(autocomplete_list, function (entry) {
-                // Nicks have a .type property of 'nick'
-                return entry.type === 'nick' ?
-                    entry.match[0].toLowerCase() :
-                    entry.toLowerCase();
-            });
+            // Sort first by last_spoke if appropriate, then by nick
+            autocomplete_list = _.sortByOrder(autocomplete_list,
+                [function (entry) {
+                    if (entry.type === 'nick' && _kiwi.global.settings.get('use_last_spoke_ordering') !== false ) {
+                            return _kiwi.app.panels().active.get('members').getByNick(entry.match[0]).get("last_spoke");
+                    }
+                    return -1;
+                },
+                function (entry) {
+                    return entry.type === 'nick' ? entry.match[0].toLowerCase() : entry.toLowerCase();
+                }],
+                ['desc','asc']
+            );
 
             this.showAutocomplete(autocomplete_list, 'nicks');
 
