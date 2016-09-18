@@ -169,6 +169,25 @@ _kiwi.view.Application = Backbone.View.extend({
             return;
         }
 
+        // Fix application height on Safari ipad IOS 7 
+        if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) {
+            $('html, body').height(window.innerHeight);
+            $(el_kiwi).height(window.innerHeight);
+            window.scrollTo(0, 0);
+
+            $('input, textarea').bind('focus', function(e) {
+            $('html, body').height('100%');
+            $(el_kiwi).height('100%');
+                window.scrollTo(0, 0);
+            });
+
+            $('input, textarea').bind('focusout', function(e) {
+            $('html, body').height(window.innerHeight);
+            $(el_kiwi).height(window.innerHeight);
+                window.scrollTo(0, 0);
+            });
+        }
+
         var css_heights = {
             top: $toolbar.outerHeight(true),
             bottom: $controlbox.outerHeight(true)
