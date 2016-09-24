@@ -29,7 +29,9 @@ var IrcChannel = function(irc_connection, name) {
         banlist_end:    onBanListEnd,
         topicsetby:     onTopicSetBy,
         mode:           onMode,
-        info:           onChannelInfo
+        info:           onChannelInfo,
+        who_channel:    onChannelWho,
+        who_channel_end: onChannelWhoEnd,
     };
     EventBinder.bindIrcEvents('channel ' + this.name, this.irc_events, this, irc_connection);
 };
@@ -243,6 +245,21 @@ function onNicklistEnd(event) {
     });
     // TODO: uncomment when using an IrcUser per nick
     //updateUsersList.call(this, event.users);
+}
+
+function onChannelWho(event) {
+    this.irc_connection.clientEvent('who_channel', {
+        users: event.users,
+        channel: this.name
+    });
+}
+
+
+function onChannelWhoEnd(event) {
+    this.irc_connection.clientEvent('who_channel_end', {
+        users: event.users,
+        channel: this.name
+    });
 }
 
 function updateUsersList(users) {
