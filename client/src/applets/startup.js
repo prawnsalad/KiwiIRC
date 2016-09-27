@@ -41,6 +41,10 @@
         newConnectionConnected: function(network) {
             // Once connected, reset the connection form to be used again in future
             this.connection_dialog.view.reset();
+
+            // Also repopulate the default server settings to prevent connection
+            // errors on Kiwi instances which restrict the server.
+            this.connection_dialog.populateDefaultServerSettings();
         }
     });
 
