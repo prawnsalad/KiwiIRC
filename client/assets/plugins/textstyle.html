@@ -142,9 +142,9 @@
                 style_codes += '\x1F';
             }
 
-            // Add the styles to the emssage
+            // Add the styles to the message
             if (style_codes && data.params[1]) {
-                data.params[1] = style_codes + ' ' + data.params[1];
+                data.params[1] = style_codes + data.params[1];
             }
         });
 
@@ -198,17 +198,17 @@
 
 
         // Changing styles...
-        $list.on('click', '.style-format-bold', function() {
+        $list.on('click', '.style-format-bold', function(event) {
             event.stopPropagation();
             styles.bold = !styles.bold;
             updateStyles();
         });
-        $list.on('click', '.style-format-italic', function() {
+        $list.on('click', '.style-format-italic', function(event) {
             event.stopPropagation();
             styles.italic = !styles.italic;
             updateStyles();
         });
-        $list.on('click', '.style-format-underline', function() {
+        $list.on('click', '.style-format-underline', function(event) {
             event.stopPropagation();
             styles.underline = !styles.underline;
             updateStyles();
