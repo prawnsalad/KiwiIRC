@@ -48,10 +48,12 @@ switch (process.argv[2]) {
 
     case 'status':
         var pid = daemon.status();
-        if (pid)
+        if (pid) {
             console.log('Daemon running. PID: ' + pid);
-        else
+        } else {
             console.log('Daemon is not running.');
+            process.exit(1);
+        }
         break;
 
     case 'reconfig':
