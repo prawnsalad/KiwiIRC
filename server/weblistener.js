@@ -172,6 +172,9 @@ function initialiseSocket(socket, callback) {
     // If a forwarded-for header is found, switch the source address
     if (request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for']) {
         // Check we're connecting from a whitelisted proxy
+        if (address === 'undefined') {
+            address = request.headers[global.config.http_proxy_ip_header || 'x-forwarded-for'];
+        }
         if (!global.config.http_proxies || !rangeCheck(address, global.config.http_proxies)) {
             winston.info('Unlisted proxy: %s', address);
             callback(null, false);
