@@ -9,7 +9,9 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
     populateDefaultServerSettings: function() {
         var defaults = _kiwi.global.defaultServerSettings();
-        this.view.populateFields(defaults);
+        var previous = _kiwi.global.settings.get('connection_details') || {};
+
+        this.view.populateFields(defaults, previous);
     },
 
 
@@ -30,6 +32,17 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
         }, function(err, network) {
             that.onNewNetwork(err, network);
         });
+
+        _kiwi.global.settings.set('connection_details', {
+            nick: new_connection_event.nick,
+            server: new_connection_event.server,
+            port: new_connection_event.port,
+            ssl: new_connection_event.ssl,
+            channel: new_connection_event.channel,
+            channel_key: new_connection_event.channel_key,
+            options: new_connection_event.options
+        });
+        _kiwi.global.settings.save();
     },
 
 
