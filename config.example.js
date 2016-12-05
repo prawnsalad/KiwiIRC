@@ -228,7 +228,8 @@ conf.client_themes = [
     'relaxed',
     'mini',
     'cli',
-    'basic'
+    'basic',
+    'clean'
 ];
 
 

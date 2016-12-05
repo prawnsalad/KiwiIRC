@@ -1,0 +1,454 @@
+#kiwi {
+    /*background: url(background-light.png) left top repeat-x #E3E3E3;*/
+    color: #666666;
+}
+#kiwi,
+#kiwi input,
+#kiwi button,
+#kiwi textarea {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px; /*line-height:1.4em*/;
+}
+#kiwi button {
+    border-radius: 2px;
+    border: none;
+    background: #8ab746;
+    cursor: pointer;
+    color: #1b1b1b;
+}
+#kiwi button:disabled { color: #464646; background:#9cc164; }
+#kiwi button, #kiwi input { padding: 3px 7px; }
+#kiwi input, #kiwi textarea {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5),0 1px 0px rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 3px;
+}
+#kiwi .toolbar {
+    background-color:#383838;
+    font-size:0.9em;
+    /*box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.8);*/
+    z-index: 1;
+}
+#kiwi .controlbox {
+    background-color:#eee;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top: 1px solid #ccc;
+}
+#kiwi .memberlists_resize_handle {
+    /*background:url('../img/resize_handle.png') no-repeat; background-position:center;*/
+}
+#kiwi .toolbar .panellist li {
+    line-height: 1.4em;
+    vertical-align: middle;
+    /*border: 1px solid #333;*/
+    background-color: #E5E5E5;
+    /*border-top: 2px solid #494949;*/
+    font-family: FontAwesome;
+    color: #616161;
+}
+
+#kiwi .toolbar .panellist .alert_highlight { /*background: #990000;*/ }
+#kiwi .toolbar .panellist .alert_activity { font-weight:normal; }
+#kiwi .toolbar .panellist .alert_action { font-weight:normal; }
+
+#kiwi .toolbar .panellist .active { padding-right:23px; background-color: #AFD3A5;}
+#kiwi .toolbar .panellist li .part:before { content:"\f00d"; }
+
+#kiwi .toolbar .panellist li.server span { padding-left: 5px; }
+#kiwi.connected .toolbar .panellist li.server:before { content: "\f0ec"; color:#3F9532; }
+#kiwi .toolbar .panellist li.server:before { content: "\f06a"; color:#900; font-size:1.5em; line-height:1em; vertical-align:middle; }
+
+/* Tab texts are within a span */
+#kiwi .toolbar .panellist li span  { line-height:20px; vertical-align:middle; display:inline-block; }
+
+#kiwi .toolbar .panellist li.active .activity { display:none; }
+#kiwi .toolbar .panellist li .activity.zero { visibility:hidden; }
+#kiwi .toolbar .panellist li .activity {
+    padding: 1px 3px;
+    margin-left:1em;
+    border-radius: 4px;
+    background: #3F9532;
+    color:#000;
+    text-align: center;
+    font-size: 10px;
+    display:inline-block;
+    width:2.5em;
+}
+#kiwi .toolbar .panellist li.alert_highlight .activity {
+    color: #fff; background: #a60400;
+}
+
+#kiwi .status_message {
+    background: #FEEFB3; color: #9F6000;
+    border-bottom: 1px solid;
+    padding: 0.9em;
+    text-align: center; font-size:1.1em;
+}
+#kiwi .status_message.err { color:#D8000C; background:#FFBABA; }
+
+#kiwi .channel_tools {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 0 5%;
+}
+#kiwi .channel_tools i {
+    width: 30%;
+    font-size: 1.6em;
+    line-height: 1.6em;
+}
+#kiwi .channel_tools i:hover {
+    transition: color 0.3s;
+    color: #88C56A;
+}
+
+#kiwi .messages { color: #333333; padding-bottom: 10px;}
+#kiwi .messages.active { }
+#kiwi .messages a { text-decoration:none; }
+
+#kiwi .messages .msg { border-bottom: 0px solid #f7f5f5; padding: 0px; font-family:arial; /*font-size:0.9em;*/ min-height: 20px; }
+#kiwi .messages .msg .time { float:right; margin-top: 5px; color:#999; padding:1px; display:none; font-size: 11px; padding-left: 0.6em; width: 5em;}
+#kiwi .messages .msg .nick { float:left; font-size:12px; font-family:Arial; text-align:right; padding: 1px; overflow:hidden; font-weight: bold; width: 8em; white-space: nowrap; line-height: 20px;}
+#kiwi .messages .msg .text { min-height: 20px; display:block; margin-left:8em; border-left: 0px solid #DEDEDE; white-space:pre-wrap; word-wrap:break-word; font-family:arial; padding:1px; padding-left: 10px; border-left: 1px solid #dedede; line-height: 20px;}
+
+#kiwi.narrow .messages .msg .nick { width: auto; }
+#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
+
+#kiwi .messages .msg.action .nick { }
+#kiwi .messages .msg.action .text { color:#009900; font-style:italic; }
+#kiwi .messages .msg.action.join { color:#009900; }
+#kiwi .messages .msg.action.part .text { color:#900; }
+#kiwi .messages .msg.action.quit .text { color:#900; }
+#kiwi .messages .msg.action.kick .text { color:#900; }
+#kiwi .messages .msg.status .nick { }
+#kiwi .messages .msg.status .text { color:#990000; margin-left:9em; border-left:none; font-weight:bold; }
+#kiwi .messages .msg.topic .nick { display:none; }
+#kiwi .messages .msg.topic .text { color:#009900; font-style: italic; border-left: 1px solid #ddd; }
+#kiwi .messages .msg.motd { border:none; }
+/*#kiwi .messages .msg.motd .nick { display:none; }*/
+#kiwi .messages .msg.motd .text { color:#666; font-family:monospace; }
+#kiwi .messages .msg.whois .nick { font-weight:normal; }
+#kiwi .messages .msg.whois .text { margin-left:18em; padding-left:1em; border-left:1px dashed #999; }
+#kiwi .messages .msg.error .text {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}
+
+#kiwi.timestamps .messages .msg .time { display:block;}
+#kiwi.timestamps .messages .msg .text { margin-left: 8em; margin-right: 5em;}
+
+#kiwi .messages .msg.global_nick_highlight,
+#kiwi .messages .msg.highlight { transition: background 0.3s; background:#A2DB99; }
+#kiwi .messages .msg.repeated_nick .nick { visibility:hidden; }
+
+/* Narrow styling (window width < 400px) */
+#kiwi.narrow .messages .msg .nick { width: auto; }
+#kiwi.narrow .messages .msg .text { margin-left: 1em; border:none; }
+#kiwi.narrow .messages .msg.action .text { margin-left: 1em; }
+
+
+#kiwi .messages .msg .media { margin-left:0.5em; }
+#kiwi .messages .msg .media .media_close { font-size:0.9em; }
+#kiwi .messages .msg .media .media_content { margin:10px 0 0 10px; overflow:hidden; }
+#kiwi .messages .msg .media .media_content img { padding:3px; border:1px solid gray; }
+#kiwi .messages .msg .media .media_content > .content {
+    background: white;
+    overflow: hidden;
+    padding: 10px;
+    border: #DDD 1px solid;
+    border-top-color: #EEE;
+    border-bottom-color: #BBB;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    float: left;
+}
+
+#kiwi .messages .msg .media.twitter .media_content > .content {
+    background: transparent;
+    border:none;
+    overflow: hidden;
+    box-shadow: none;
+    padding: 0;
+}
+#kiwi .messages .msg .media.reddit .thumbnail_nsfw {
+    display: inline-block;
+    float: left;
+}
+#kiwi .messages .msg .media.reddit .thumbnail { float:left; margin-right: 0.5em; }
+
+
+#kiwi .right_bar {
+    background-color: #f6f6f6;
+    border-left: 1px solid #ddd;
+}
+#kiwi.narrow .right_bar { display:none; }
+#kiwi .memberlists {
+    margin-top: 36px;
+    padding-top: 14px;
+}
+#kiwi .memberlists ul { list-style: none; }
+#kiwi .memberlists ul.active { }
+#kiwi .memberlists ul li { padding: 0.2em 1em; }
+#kiwi .memberlists ul li:hover {
+    border-left: 5px solid #88C56A;
+    -webkit-transition: 0.2s ease;
+    -moz-transition: 0.2s ease;
+    -ms-transition: 0.2s ease;
+    -o-transition: 0.2s ease;
+    transition: 0.2s ease;
+}
+#kiwi .memberlists ul li a.nick { display:block; color:black; }
+
+#kiwi .userbox { margin:4px 1em 5px 1em; padding-bottom:0.7em; font-size:.9em; }
+#kiwi .userbox a { display:block; text-decoration:none; margin-bottom:2px; }
+#kiwi .userbox a i { font-size:1.1em; margin-right:5px; }
+
+/* User mode styles */
+#kiwi .memberlists ul li .prefix {
+    display:none;
+    width:20px; height:20px;
+    border-radius: 5px;
+    margin: 0 7px 0 0;
+    font-size:12px; text-align: center;
+    color: #E3E3E3;
+    /* text-indent: -1000px; */
+}
+/* Most important modes towards the bottom - they override the top ones! */
+#kiwi .memberlists ul li.mode.v .prefix { display:inline-block; background:#b3b3b3; }
+#kiwi .memberlists ul li.mode.h .prefix { display:inline-block; background:#b5b447; }
+#kiwi .memberlists ul li.mode.o .prefix { display:inline-block; background:#47b547; }
+#kiwi .memberlists ul li.mode.a .prefix { display:inline-block; background:#b54747; }
+#kiwi .memberlists ul li.mode.q .prefix { display:inline-block; background:#8547b5; }
+
+#kiwi .memberlists .meta {
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+#kiwi .controlbox .input {
+    background:#fff;
+    margin:3px;
+    margin-top: 0px;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    height:1.7em;
+    padding: 3px;
+    border: 1px solid #ccc;
+}
+#kiwi .controlbox .input .nick a { text-decoration:none; color:black; }
+#kiwi .controlbox .input .nick {
+    overflow: hidden;
+    padding-right: 5px;
+    padding-left: 5px;
+    display: block;
+    font-size: 12px;
+    line-height: 24px;
+    font-weight: bold;
+    margin-right: 5px;
+    height: 100%;
+    float: left;
+    width: 10.4em;
+    text-align: center;
+    background: #f6f6f6;
+}
+
+#kiwi.narrow .controlbox .input .nick { display:none; }
+#kiwi.narrow .controlbox .input .input_wrap { left:7px; }
+
+#kiwi .controlbox .input .input_wrap {
+    height:1.7em;
+    float: left;
+    left: 10.4em;
+    position: absolute;
+}
+#kiwi .controlbox .input .inp {
+    border: medium none;
+    box-shadow: none;
+    border-radius: 0;
+    outline:none;
+    resize:none;
+    overflow:hidden;
+    position:relative;
+    height:17px;
+    width:100%;
+    margin-top: 4px;
+    display: block;
+}
+
+
+#kiwi .controlbox .nickchange {
+    padding:10px; left: 0px;
+    background: #1B1B1B; color:#eeeeee;
+}
+#kiwi .controlbox .nickchange input { padding:0.3em 0.5em; margin-left: 0.5em; width: 165px; }
+#kiwi .controlbox .nickchange button { padding:0.5em; margin: 0 0.5em 0 1em; }
+
+
+
+#kiwi .toolbar .topic { background-color:#ddd; padding-bottom:2px; border-top: 1px solid #ddd}
+#kiwi .toolbar .topic div {
+    padding: 0.2em 1em;
+    text-align: center;
+    box-shadow: none;
+    border-radius: 0;
+    background-color:#f7f7f7;
+    overflow: hidden;
+    outline: none;
+    white-space: nowrap;
+    margin-bottom: 1px;
+    padding-top: 0.55em;
+    color: #7b7b7b;
+}
+#kiwi .toolbar .topic:hover div {
+    min-height:1.5em;
+    white-space:pre-wrap; word-wrap:break-word;
+    overflow:visible;
+    background-color:#FFF;
+    z-index: 1;
+    height:auto; bottom:auto;
+    border-bottom: 2px solid #1B1B1B;
+}
+
+
+#kiwi .toolbar .app_tools { width:200px; text-align: center; color: #dddddd}
+#kiwi.narrow .toolbar .tabs { margin-right:0; }
+#kiwi.narrow .toolbar .app_tools { width:auto; }
+#kiwi .toolbar .app_tools ul li {
+    font-size:26px;
+    -webkit-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    transition: all .3s ease;
+    margin-left:10px;
+}
+#kiwi .toolbar .app_tools ul li:hover { color:#88C56A; }
+#kiwi .toolbar .app_tools img { }
+
+
+/* The server select dialog */
+#kiwi .server_select { margin-left:auto; margin-right:auto; }
+#kiwi .server_select .more { display: none; width:270px; margin:0 auto; }
+#kiwi .server_select table tr td { padding:5px; }
+#kiwi .server_select button {
+    /*padding: 10px 25px;*/
+    padding: 0.5em 1em;
+    font-size: 1.1em;
+    width: 196px;
+    margin: 20px auto;
+    display: block;
+}
+#kiwi .server_select input { padding:3px 7px; width:150px; }
+#kiwi .server_select label { }
+#kiwi .server_select br { clear:both; }
+#kiwi .server_select .basic input, .server_select .basic button { font-size:1em; padding:0.5em 1em; }
+#kiwi .server_select .basic input { width:170px; }
+#kiwi .server_select .basic label { font-size:1.3em; margin-top:4px; }
+#kiwi .server_select .basic tr.have_pass { font-size:0.8em; }
+#kiwi .server_select .basic tr.have_key { font-size:0.8em; }
+#kiwi .server_select .basic tr.channel td { padding-top:1em; }
+#kiwi .server_select .basic { border-bottom: 1px dashed gray; margin-bottom:1em; }
+#kiwi .server_select .basic .show_more { display: block; width:110px; margin:10px 0 0 0; font-size:0.8em; }
+#kiwi .server_select.single_server .basic { border:none; }
+#kiwi .server_select .status { text-align: center; font-weight: bold; padding:1em; }
+#kiwi .server_select .status.ok { }
+#kiwi .server_select .status.error {
+    border:1px solid #A33F3F; background-color:#D28A8A;
+    padding:0.5em; margin-top:1em; margin-bottom:1em; margin-right:2em;
+}
+#kiwi .server_select .show_server { margin-left: 1em; font-size:0.9em; color: #555555; }
+
+
+#kiwi .server_select .kiwi_logo { margin-top:30px; }
+#kiwi .server_select .kiwi_logo h1 span {
+    font-size:14px;
+    line-height:24px; vertical-align: middle;
+    color: #555555;
+}
+#kiwi .server_select .kiwi_logo img { display:inline; width:24px; }
+
+
+#kiwi.chanlist_treeview .panels { left:160px; }
+#kiwi.chanlist_treeview .toolbar { position:static; }
+#kiwi.chanlist_treeview .toolbar .app_tools { float:none; }
+#kiwi.chanlist_treeview .toolbar > div { margin-left:160px; }
+#kiwi.chanlist_treeview .toolbar .tabs { position:absolute; left:0px; bottom:0px; top:0px; margin:0; width:160px; background:#1B1B1B; overflow-y:auto; }
+#kiwi.chanlist_treeview .tabs ul li { display:block; float:none; }
+#kiwi.chanlist_treeview .tabs ul li .activity { position:absolute; right:5px; }
+#kiwi.chanlist_treeview .tabs ul li.active {
+    margin-right:0;
+    border-right-width:0;
+    border-bottom-right-radius:0;
+    border-top-right-radius:0;
+}
+#kiwi .applet_chanlist {
+    margin: 0.5em 1em;
+}
+#kiwi .applet_chanlist table {
+    border-collapse: collapse;
+    width: 100%;
+}
+#kiwi .applet_chanlist thead {
+    text-align: center;
+}
+#kiwi .applet_chanlist tbody td {
+    border: 1px solid #C4C4C4;
+    padding: 0.3em 1em;
+}
+#kiwi .applet_chanlist .chanlist_name, #kiwi .applet_chanlist .chanlist_num_users {
+    border-width: 0 1px 0 0;
+}
+#kiwi .applet_chanlist .chanlist_topic {
+    border-width: 0;
+}
+#kiwi .applet_chanlist tr:nth-child(even) {
+    background: none repeat scroll 0 0 #DBDBDB;
+}
+
+
+#kiwi .applet > div.settings button.save {
+    padding:1em 2em;
+    border:1px solid gray; border-radius:3px;
+}
+#kiwi .applet > div.settings tr {
+    border-bottom: 1px dashed black;
+}
+
+#kiwi .applet > div.settings td.label {
+    font-weight: bold;
+}
+#kiwi .applet > div.settings tr.save {
+    text-align: right;
+}
+
+
+#kiwi .ui_menu {
+    border-radius: 3px;
+    color: #333;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+}
+#kiwi .ui_menu .ui_menu_title {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+#kiwi .ui_menu .ui_menu_content { }
+#kiwi .ui_menu .ui_menu_content.hover:hover { background:#f7f7f7; }
+#kiwi .ui_menu .ui_menu_foot {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+#kiwi .ui_menu .ui_menu_foot .close { float:right; font-size:0.9em; margin-right:1em; color: #999; }
+#kiwi .ui_menu .ui_menu_foot .close:hover { color: #222; }
+
+
+#kiwi .channel_info .channel_url {
+    display: block;
+    margin: 5px 1em;
+    font-style: italic;
+}
+#kiwi .channel_info .channel-banlist table { margin-top: 10px; border-spacing: 10px 3px; }
+#kiwi .channel_info .channel-banlist thead { font-style: italic; }
+#kiwi .channel_info .remove-ban:hover { color: #900; }
