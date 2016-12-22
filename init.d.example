@@ -1,0 +1,40 @@
+#!/bin/sh
+# /etc/init.d/kiwi
+#
+
+PATH="/dir/to/KiwiIRC:/sbin:/bin:/usr/sbin:/usr/bin"
+RUNDIR="/dir/to/KiwiIRC"
+DAEMON="/dir/to/KiwiIRC/kiwi"
+USER="irc"
+NAME="kiwiirc"
+DESC="KiwiIRC Web Client"
+
+. /lib/lsb/init-functions
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+    echo "Starting KiWiIRC "
+    start-stop-daemon --start --quiet --oknodo --chuid "$USER" --pidfile "$RUNDIR/KIWIIRC.PID" \
+                      --exec "$DAEMON" -- start 2> /dev/null
+    ;;
+  stop)
+    echo -n "Stopping $DESC: $NAME "
+    if [ -f "$RUNDIR/kiwiirc.pid" ]; then
+      start-stop-daemon --stop --quiet --pidfile "$RUNDIR/kiwiirc.pid" 2> /dev/null 2> /dev/null
+      rm -f "$RUNDIR/kiwiirc.pid"
+    else
+      echo "not running."
+    fi
+    echo "."
+    ;;
+  *)
+    echo "Usage: /etc/init.d/kiwi {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
