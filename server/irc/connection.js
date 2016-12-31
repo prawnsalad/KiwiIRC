@@ -4,6 +4,7 @@ var net             = require('net'),
     dns             = require('dns'),
     _               = require('lodash'),
     winston         = require('winston'),
+    crypto          = require('crypto'),
     Socks           = require('socksjs'),
     EventBinder     = require('./eventbinder.js'),
     IrcServer       = require('./server.js'),
@@ -599,7 +600,7 @@ IrcConnection.prototype.setDefaultUserDetails = function () {
     this.username = (this.username || global.config.default_ident || '%n')
         .replace('%n', (this.nick.replace(/[^0-9a-zA-Z\-_.\/]/, '') || 'nick'))
         .replace('%h', this.user.hostname)
-        .replace('%i', ip2Hex(this.user.address) || '00000000');
+        .replace('%i', getIpIdent(this.user.address));
 
     this.gecos = (this.gecos || global.config.default_gecos || '%n')
         .replace('%n', this.nick)
@@ -766,6 +767,14 @@ var socketConnectHandler = function () {
 };
 
 
+// Convert a IPv4-mapped IPv6 addresses to a regular IPv4 address
+function unmapIPv4(address) {
+    if (address.toLowerCase().indexOf('::ffff:') == 0) {
+        address = address.substring(7);
+    }
+    return address
+}
+
 
 /**
  * Load any WEBIRC or alternative settings for this connection
@@ -773,8 +782,8 @@ var socketConnectHandler = function () {
  */
 function findWebIrc(connect_data) {
     var webirc_pass = global.config.webirc_pass,
+        address = unmapIPv4(this.user.address),
         found_webirc_pass, tmp;
-
 
     // Do we have a single WEBIRC password?
     if (typeof webirc_pass === 'string' && webirc_pass) {
@@ -788,7 +797,13 @@ function findWebIrc(connect_data) {
     if (found_webirc_pass) {
         // Build the WEBIRC line to be sent before IRC registration
         tmp = 'WEBIRC ' + found_webirc_pass + ' KiwiIRC ';
-        tmp += this.user.hostname + ' ' + this.user.address;
+        var hostname = this.user.hostname;
+        // Add a 0 in front of IP(v6) addresses starting with a colon
+        // (otherwise the colon will be interpreted as meaning that the
+        // rest of the line is a single argument).
+        if (hostname[0] == ':') hostname = '0' + hostname;
+        if (address[0] == ':') address = '0' + address;
+        tmp += hostname + ' ' + address;
 
         connect_data.prepend_data = [tmp];
     }
@@ -865,25 +880,63 @@ function socketOnData(data) {
 }
 
 
+// Encodes a Buffer of bytes into an RFC 4648 base32 encoded string.
+// Does not include padding.
+// From https://github.com/agnoster/base32-js
+function base32Encode(input) {
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    var skip = 0;  // How many bits we will skip from the first byte
+    var bits = 0;  // 5 high bits, carry from one byte to the next
+    var output = '';
 
-function ip2Hex(ip) {
-    // We can only deal with IPv4 addresses for now
-    if (!ip.match(/^[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}$/)) {
-        return;
-    }
-
-    var hexed = ip.split('.').map(function ipSplitMapCb(i){
-        var hex = parseInt(i, 10).toString(16);
-
-        // Pad out the hex value if it's a single char
-        if (hex.length === 1) {
-            hex = '0' + hex;
+    for (var i = 0; i < input.length; ) {
+        var byte = input[i];
+        if (skip < 0) {  // We have a carry from the previous byte
+            bits |= byte >> (-skip);
+        } else {  // No carry
+            bits = (byte << skip) & 0xF8;  // 0b11111000
         }
 
-        return hex;
-    }).join('');
+        if (skip > 3) {
+            // Not enough data to produce a character, get us another one
+            skip -= 8;
+            ++i;
+            continue;
+        }
 
-    return hexed;
+        if (skip < 4) {
+            // Produce a character
+            output += alphabet[bits >> 3];
+            skip += 5;
+        }
+    }
+
+    return output + (skip < 0 ? alphabet[bits >> 3] : '');
+}
+
+
+function getIpIdent(ip) {
+    ip = unmapIPv4(ip);
+    if (ip.indexOf('.') != -1) {  // IPv4
+        // With IPv4 addresses we can just encode the address in hex
+        return ip.split('.').map(function ipSplitMapCb(i, idx) {
+            var hex = parseInt(i, 10).toString(16);
+
+            // Pad out the hex value if it's a single char
+            if (hex.length === 1)
+                hex = '0' + hex;
+
+            return hex;
+        }).join('');
+    } else {  // IPv6
+        // Generate a hash of the IP address and encode it in base-32.  This
+        // can have collisions, but the probability should be very low (about
+        // 1 / 32^x, where x is the max ident length).  Why base32?  Because
+        // the ident is compared case-insensitively in hostmasks and is used by
+        // humans who may confuse similar characters.
+        return base32Encode(crypto.createHash('sha1')
+                .update(ip).digest()).substr(0, 10);
+    }
 }
 
 
