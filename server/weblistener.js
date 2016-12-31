@@ -185,8 +185,8 @@ function initialiseSocket(socket, callback) {
         address = address.split(',')[0].trim();
 
         // Some reverse proxies (IIS) may include the port, so lets remove that (if ipv4)
-        if (address.indexOf('.') > -1) {
-            address = (address || '').split(':')[0];
+        if (address.match(/^[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}:[0-9]+$/)) {
+            address = address.split(':')[0];
         }
     }
 

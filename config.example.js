@@ -88,7 +88,8 @@ conf.default_gecos = '%n is using a Web IRC client';
 * Default ident / username for IRC connections
 * %n will be replaced with the users nick
 * %h will be replaced with the users hostname
-* %i will be replaced with a hexed value of the users IP
+* %i will be replaced with a hexed value of the user's IP (for IPv4) or
+*    a base32-encoded hash of the user's IP (for IPv6).
 */
 conf.default_ident = '%i';
 
