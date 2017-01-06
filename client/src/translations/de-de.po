@@ -873,3 +873,6 @@ msgstr "Ignoriere jemanden nicht mehr"
 msgid "client_applets_settings_autocomplete_slideout"
 msgstr "Zeige die Autocomplete Box"
 
+#: 
+msgid "client_applets_settings_custom_highlights"
+msgstr "Highlights (getrennt durch Leerzeichen)"
