@@ -571,7 +571,6 @@ function styleText(string_id, params) {
 
     //style = formatToIrcMsg(_kiwi.app.text_theme[string_id]);
     style = _kiwi.app.text_theme[string_id];
-    style = formatToIrcMsg(style);
 
     // Expand a member mask into its individual parts (nick, ident, hostname)
     if (params.member) {
@@ -586,6 +585,9 @@ function styleText(string_id, params) {
         if (typeof params[key] !== 'undefined')
             return params[key];
     });
+
+    // Apply styling to text
+    text = formatToIrcMsg(text);
 
     return text;
 }
