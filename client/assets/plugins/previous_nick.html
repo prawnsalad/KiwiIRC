@@ -11,6 +11,11 @@
         kiwi.settings.save()
       })
 
+      gateway.on('nick', function (details) {
+        kiwi.settings.set('previous_nick', details.newnick)
+        kiwi.settings.save()
+      })
+
       if (previous_nick) {
         elm.val(previous_nick)
         btn.submit()
