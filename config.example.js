@@ -205,7 +205,6 @@ conf.client = {
     channel: '#kiwiirc',
     channel_key: '',
     nick:    'kiwi_?',
-    remember: false,
     settings: {
         theme: 'relaxed',
         text_theme: 'default',
