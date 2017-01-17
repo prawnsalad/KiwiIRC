@@ -143,7 +143,7 @@ _kiwi.view.ServerSelect = Backbone.View.extend({
     populateFields: function (defaults) {
         var nick, server, port, channel, channel_key, ssl, password;
 
-        defaults = defaults || {};
+        defaults = this.model.last_settings || defaults || {};
 
         nick = defaults.nick || '';
         server = defaults.server || '';
