@@ -1,11 +1,43 @@
 _kiwi.model.NewConnection = Backbone.Collection.extend({
     initialize: function() {
+        this.last_settings = this.restoreSession();
+
         this.view = new _kiwi.view.ServerSelect({model: this});
 
         this.view.bind('server_connect', this.onMakeConnection, this);
 
+        if (this.last_settings !== null) {
+            this.onMakeConnection(this.last_settings)
+        }
+
     },
 
+    restoreSession: function () {
+        if (_kiwi.app.server_settings.client.remember === true) {
+            _kiwi.global.components.Network().on('disconnect', this.deleteSession, this);
+            var last_settings = _kiwi.model.DataStore.instance('kiwi.last_settings');
+            last_settings.load();
+            return last_settings.get('last_settings');
+        }
+
+        return null
+    },
+
+    saveSession: function (new_connection_event) {
+        if (_kiwi.app.server_settings.client.remember === true) {
+            var last_settings = _kiwi.model.DataStore.instance('kiwi.last_settings');
+            last_settings.set('last_settings', new_connection_event);
+            last_settings.save();
+        }
+    },
+
+    deleteSession: function () {
+        if (_kiwi.app.server_settings.client.remember === true) {
+            var last_settings = _kiwi.model.DataStore.instance('kiwi.last_settings');
+            last_settings.set('last_settings', null);
+            last_settings.save();
+        } 
+    },
 
     populateDefaultServerSettings: function() {
         var defaults = _kiwi.global.defaultServerSettings();
@@ -14,6 +46,8 @@ _kiwi.model.NewConnection = Backbone.Collection.extend({
 
 
     onMakeConnection: function(new_connection_event) {
+        this.saveSession(new_connection_event);
+
         var that = this;
 
         this.connect_details = new_connection_event;
