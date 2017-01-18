@@ -1,0 +1,23 @@
+<script>
+    (function () {
+        kiwi.plugins.on('loaded', function () {
+            var gateway = kiwi.components.Network();
+            var elm = $('#kiwi .server_details input.nick');
+            var previous_nick = kiwi.settings.get('previous_nick');
+
+            gateway.on('connect', function (details) {
+                kiwi.settings.set('previous_nick', details.nick);
+                kiwi.settings.save();
+            });
+
+            gateway.on('nick', function (details) {
+                kiwi.settings.set('previous_nick', details.newnick);
+                kiwi.settings.save();
+            });
+
+            if (previous_nick) {
+                elm.val(previous_nick);
+            }
+        });
+    })();
+</script>

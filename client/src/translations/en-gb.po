@@ -872,3 +872,7 @@ msgstr "Stop ignoring somebody"
 msgid "client_applets_settings_autocomplete_slideout"
 msgstr "Show the autocomplete box"
 
+#:
+msgid "client_assets_plugins_auto_submit_text"
+msgstr "Auto-submit"
+

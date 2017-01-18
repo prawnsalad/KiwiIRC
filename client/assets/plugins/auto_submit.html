@@ -1,0 +1,45 @@
+<script>
+    (function () {
+        kiwi.plugins.on('loaded', function () {
+            var btn = $('.start button');
+            var table = $('.basic table');
+            var auto_submit = kiwi.settings.get('auto_submit');
+
+            var tr = document.createElement('tr');
+            tr.style = 'font-size: 0.8em;';
+
+            var td = document.createElement('td');
+            td.colSpan = 2;
+
+            var label = document.createElement('label');
+            label.htmlFor = 'server_select_auto_submit';
+            label.innerText = kiwi.i18n.translate('client_assets_plugins_auto_submit_text').fetch();
+
+            var space = document.createTextNode(' ');
+
+            var checkbox = document.createElement('input');
+            checkbox.id = 'server_select_auto_submit';
+            checkbox.type = 'checkbox';
+            checkbox.style = 'width: auto;';
+            checkbox.checked = auto_submit;
+
+            td.appendChild(label);
+            td.appendChild(space);
+            td.appendChild(checkbox);
+
+            tr.appendChild(td);
+            
+            table.append(tr);
+
+            $('#server_select_auto_submit').change(function () {
+                var checked = $(this).prop('checked');
+                kiwi.settings.set('auto_submit', checked);
+                kiwi.settings.save();
+            });
+
+            if (auto_submit) {
+                btn.submit();
+            }
+        });
+    })();
+</script>
