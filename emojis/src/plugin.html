@@ -1,0 +1,145 @@
+<style>
+    #kiwi .emojiPreview {
+        position: absolute;
+        background: #3c3b37;
+        margin-right: 460px;
+        padding: 5px;
+        width: 67px;
+        height: 67px;
+        z-index: 1000;
+        border-bottom-left-radius: 1em;
+        border-top-left-radius: 1em;
+    }
+    #kiwi .emojiMenu {
+        position: absolute;
+        background: #3c3b37;
+        padding: 5px;
+        padding-bottom: 0px;
+        margin-right: 260px;
+        width: 200px;
+        border-top-right-radius: 1em;
+        border-top-left-radius: 1em;
+        text-align: center;
+        z-index: 1000;
+    }
+    #kiwi .emojiMenu .emojiToggle {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+    #kiwi .emojiList {
+        position: absolute;
+        background: #3c3b37;
+        padding: 5px;
+        width: 460px;
+        overflow-y: scroll;
+        max-height: 40%;
+        z-index: 1000;
+    }
+    #kiwi .emojiList .emoji {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        margin-right: 3px;
+        margin-left: 3px;
+    }
+</style>
+<script type="text/html" id="tmpl_emojilist">
+ <div class="emojiPreview">
+   <img class="emojiPreImg" src="/assets/img/emojis/smile.png" />
+ </div>
+ <div class="emojiMenu">
+    <img class="emojiToggle emojiInit" target="people" src="/assets/img/emojis/smile.png" alt="People" title="People" />
+    <img class="emojiToggle" target="nature"  src="/assets/img/emojis/sunny.png" alt="Nature" title="Nature" />
+    <img class="emojiToggle" target="objects"  src="/assets/img/emojis/dvd.png" alt="Objects" title="Objects" />
+    <img class="emojiToggle" target="places"  src="/assets/img/emojis/house.png" alt="Places" title="Places" />
+    <img class="emojiToggle" target="symbols" src="/assets/img/emojis/hash.png" alt="Symbols" title="Symbols" />
+ </div>
+ <div class="emojiList">
+    <div class="emojiTab" id="people"></div>
+    <div class="emojiTab" id="nature" style="display:none;"></div>
+    <div class="emojiTab" id="objects" style="display:none;"></div>
+    <div class="emojiTab" id="places" style="display:none;"></div>
+    <div class="emojiTab" id="symbols" style="display:none;"></div>
+ </div>
+</script>
+<script>
+/*
+  Plugin updated {{:date|UNKNOWN}} with {{:count|0}} emojis.
+*/
+var emojis = {
+    alts: {{:alts|{'+1':'plus1','black_large_square':'black_square'}}},
+    people: {{:people|[]}},
+    nature: {{:nature|[]}},
+    objects: {{:objects|[]}},
+    places: {{:places|[]}},
+    symbols: {{:symbols|[]}}
+};
+(function() {
+        var $list = $($('#tmpl_emojilist').html()),
+            $base_path = $('meta[property="kiwi-base-path"]').attr('content'),
+            $icon = $('<a><img src="'+$base_path+'/assets/img/emojis/smile.png" alt="smile" style="width:23px;height:23px;" /></a>');
+        $icon.on('click', function(event) {
+            event.stopPropagation();
+            $list.appendTo($('#kiwi')).show().css({bottom: ($('.controlbox').outerHeight())+'px', right: 0});
+            function positionEmoji () {
+                     $height = $('.controlbox').outerHeight()+$('.emojiList').outerHeight();
+                     $('.emojiMenu').css({bottom: ($height-4)+'px', right: 0});
+                     $('.emojiPreview').css({bottom: ($height-77)+'px', right: 0});
+            };
+            positionEmoji();
+            if (!$list.attr('shown')) {
+               $list.attr('shown','true');
+               $(window).resize(function() {
+                   positionEmoji();
+               });
+               $epreimg = $('.emojiPreImg');
+               $epreimg.attr('src',$base_path+$epreimg.attr('src')).attr('defimg',$epreimg.attr('src'));
+               $('.emojiList').on('click',function (event) {
+                   event.stopPropagation();
+               });
+               $('.emojiToggle').each(function () {
+                   $(this).attr('src',$base_path+$(this).attr('src'));
+               }).click(function (event) {
+                   event.stopPropagation();
+                   var $elm = (typeof elm === "string"?'#'+elm:this),
+                       $target = $($elm).attr('target'),
+                       $sel = $('#'+$target);
+                   $('.emojiTab').hide();
+                   $sel.show();
+                   if (!$sel.attr('shown')) {
+                      $sel.attr('shown','true');
+                      _.each(emojis[$target],function (emoji) {
+                          var file = emoji;
+                          if (emojis['alts'].hasOwnProperty(file)) { file = emojis['alts'][file]; }
+                          $sel.append('<img src="'+$base_path+'/assets/img/emojis/'+file+'.png" alt="'+emoji+'" data-text=":'+emoji+':" class="emoji" title=":'+emoji+':" />');
+                      });
+                      $('.emoji').hover(function () {
+                          $('.emojiPreImg').attr('src',$(this).attr('src'));
+                      },function(){
+                          $('.emojiPreImg').attr('src',$('.emojiPreImg').attr('defimg'));
+                      });
+                   }
+                   positionEmoji();
+               });
+               $('.emojiInit').trigger('click');
+            }
+        });
+        $list.on('click', '.emoji', function(event) {
+            event.stopPropagation();
+            var text = $(this).data('text');
+            var $inp = $('.controlbox .inp');
+            $inp.val($inp.val() + text + ' ');
+        });
+
+        $(document).on('click', function() {
+            $list.hide();
+        });
+
+        var control = kiwi.components.ControlInput();
+        control.addPluginIcon($icon);
+})();
+</script>
