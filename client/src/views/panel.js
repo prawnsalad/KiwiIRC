@@ -74,6 +74,8 @@ _kiwi.view.Panel = Backbone.View.extend({
 
         if (!this.model.isApplet())
             this.scrollToBottom(true);
+        
+        _kiwi.global.events.emit('panel:change', {panel: this});
     },
 
 
