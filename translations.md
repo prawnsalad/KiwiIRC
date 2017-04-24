@@ -26,7 +26,7 @@ Kiwi IRC has been translated to 26 different languages:
 * Türkçe
 * Українська
 * Tiếng Việt
-* 中文 (繁體) (Simplified chinese)
+* 中文 (繁體) (Traditional Chinese)
 
 
 Current translations are handled by the following (only listing translators willing to be publically mentioned):
