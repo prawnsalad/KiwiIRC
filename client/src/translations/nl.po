@@ -1,0 +1,714 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: nl\n"
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Kanaal naam"
+
+#: 
+msgid "client_applets_chanlist_users"
+msgstr "Gebruikers"
+
+#: 
+msgid "client_applets_chanlist_topic"
+msgstr "Topic"
+
+#: 
+msgid "client_applets_chanlist_channellist"
+msgstr "Kanaal lijst"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Opslaan"
+
+#: 
+msgid "client_applets_scripteditor_error"
+msgstr "Script fout. %s"
+
+#: 
+msgid "client_applets_scripteditor_saved"
+msgstr "Je script is opgeslagen en geactiveerd"
+
+#: 
+msgid "client_applets_scripteditor_title"
+msgstr "Script Editor"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "Tabs"
+
+#: 
+msgid "client_applets_settings_channelview_list"
+msgstr "Lijst"
+
+#: 
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "voor veel kanalen"
+
+#: 
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Kanaal binnenkomst/vertrek meldingen"
+
+#: 
+msgid "client_applets_settings_timestamp"
+msgstr "Tijdstempels"
+
+#: 
+msgid "client_applets_settings_notification_sound"
+msgstr "Geluidsmeldingen dempen"
+
+#: 
+msgid "client_applets_settings_history_length"
+msgstr "berichten in scroll historie"
+
+#: 
+msgid "client_applets_settings_default_client"
+msgstr "Standaard IRC client"
+
+#: 
+msgid "client_applets_settings_default_client_enable"
+msgstr "Maak Kiwi mijn standaard IRC client"
+
+#: 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Mededeling: Wijzigingen worden toegepast nadat je de pagina vernieuwd"
+
+#: 
+msgid "client_applets_settings_default_client_notice"
+msgstr "Mededeling: Het kan nodig zijn om je instellingen te controlleren via %s als je Chrome of Chromium gebruikt, en er niks gebeurt"
+
+#: 
+msgid "client_applets_settings_title"
+msgstr "Instellingen"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Unknown Applet"
+
+#: 
+msgid "client_models_applet_loading"
+msgstr "Laden.."
+
+#: 
+msgid "client_models_applet_notfound"
+msgstr "Niet gevonden"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Je verbinding is verbroken. Je wordt opnieuw verbonden"
+
+#: 
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "Je verbinding is verbroken. Je wordt opnieuw verbonden in %d seconden"
+
+#: 
+msgid "client_models_application_reconnect_successfully"
+msgstr "Niks aan de hand, je bent weer verbonden"
+
+#: 
+msgid "client_models_application_settings_saved"
+msgstr "Je instellingen zijn opgeslagen"
+
+#: 
+msgid "client_models_application_ignore_title"
+msgstr "Genegeerde nicks"
+
+#: 
+msgid "client_models_application_ignore_none"
+msgstr "Je negeert niemand"
+
+#: 
+msgid "client_models_application_ignore_nick"
+msgstr "Je negeert %s nu"
+
+#: 
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Geef op welke nicknaam je niet langer wil negeren"
+
+#: 
+msgid "client_models_application_ignore_stopped"
+msgstr "%s is niet langer genegeert"
+
+#: 
+msgid "client_models_application_applet_notfound"
+msgstr "Applet \"%s\" bestaat niet"
+
+#: 
+msgid "client_models_application_encoding_changed"
+msgstr "Codering veranderd naar %s"
+
+#: 
+msgid "client_models_application_encoding_invalid"
+msgstr "%s is geen geldige codering"
+
+#: 
+msgid "client_models_application_encoding_notspecified"
+msgstr "Codering niet gespecificeerd"
+
+#: 
+msgid "client_models_application_encoding_usage"
+msgstr "Gebruik /encoding [NIEUWE-CODERING]"
+
+#: 
+msgid "client_models_application_connection_create"
+msgstr "Nieuwe verbinding"
+
+#: 
+msgid "client_models_application_connection_connecting"
+msgstr "Verbinden met %s:%s..."
+
+#: 
+msgid "client_models_application_connection_error"
+msgstr "Fout bij verbinden met %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "is het kanaal binnen gekomen"
+
+#: 
+msgid "client_models_channel_quit"
+msgstr "heeft de chat verlaten %s"
+
+#: 
+msgid "client_models_channel_kicked"
+msgstr "is uit het kanaal gezet door %s %s"
+
+#: 
+msgid "client_models_channel_selfkick"
+msgstr "Je bent uit het kanaal gezet door %s %s"
+
+#: 
+msgid "client_models_channel_part"
+msgstr "heeft het kanaal verlaten %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "is geen geldige naam voor een kanaal"
+
+#: 
+msgid "client_models_network_disconnected"
+msgstr "Verbinding met het IRC netwerk verbroken"
+
+#: 
+msgid "client_models_network_nickname_changed"
+msgstr "heet nu %s"
+
+#: 
+msgid "client_models_network_topic"
+msgstr "Topic gezet door %s op %s"
+
+#: 
+msgid "client_models_network_selfmode"
+msgstr "zet modus %s"
+
+#: 
+msgid "client_models_network_mode"
+msgstr "zet modus %s"
+
+#: 
+msgid "client_models_network_channels"
+msgstr "Kanalen: %s"
+
+#: 
+msgid "client_models_network_server"
+msgstr "Verbonden met server: %s %s"
+
+#: 
+msgid "client_models_network_idle_and_signon"
+msgstr "Afwezig: %s, online sinds %s"
+
+#: 
+msgid "client_models_network_away"
+msgstr "Afwezig: %s"
+
+#: 
+msgid "client_models_network_idle"
+msgstr "Afwezig: %s"
+
+#: 
+msgid "client_models_network_nickname_notfound"
+msgstr "Deze nicknaam bestaat niet"
+
+#: 
+msgid "client_models_network_banned"
+msgstr "Je bent verbannen van %s. %s"
+
+#: 
+msgid "client_models_network_channel_badkey"
+msgstr "Verkeerde kanaal sleutel voor %s"
+
+#: 
+msgid "client_models_network_channel_inviteonly"
+msgstr "is alleen op uitnodiging."
+
+#: 
+msgid "client_models_network_channel_limitreached"
+msgstr "%s is vol."
+
+#: 
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "De nicknaam \"%s\" wordt al gebruikt. Probeer een andere nicknaam"
+
+#: 
+msgid "client_models_network_badpassword"
+msgstr "Verkeerd wachtwoord opgegeven"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Weet je zeker dat je dit scherm wil sluiten? Hierdoor worden alle gesprekken gesloten"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Je treedt het kanaal binnen.."
+
+#: 
+msgid "client_views_channel_topic"
+msgstr "Onderwerp van %s is: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Sluit media"
+
+#: 
+msgid "client_views_mediamessage_notfound"
+msgstr "Niet gevonden"
+
+#: 
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Tweet laadt"
+
+#: 
+msgid "client_views_mediamessage_load_image"
+msgstr "Afbeelding laadt"
+
+#: 
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Reddit thread laadt"
+
+#: 
+msgid "client_views_mediamessage_load_gist"
+msgstr "Gist laadt"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Nieuwe nicknaam"
+
+#: 
+msgid "client_views_nickchangebox_change"
+msgstr "Wijzig"
+
+#: 
+msgid "client_views_nickchangebox_cancel"
+msgstr "Annuleer"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Mensen zeggen iets!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Verzin een nicknaam..."
+
+#: 
+msgid "client_views_serverselect_nickname"
+msgstr "Nicknaam"
+
+#: 
+msgid "client_views_serverselect_enable_password"
+msgstr "Ik heb een wachtwoord"
+
+#: 
+msgid "client_views_serverselect_password"
+msgstr "Wachtwoord"
+
+#: 
+msgid "client_views_serverselect_channel"
+msgstr "Kanaal"
+
+#: 
+msgid "client_views_serverselect_channelkey"
+msgstr "Kanaal sleutel"
+
+#: 
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Kanaal heeft een sleutel nodig"
+
+#: 
+msgid "client_views_serverselect_key"
+msgstr "Sleutel"
+
+#: 
+msgid "client_views_serverselect_connection_start"
+msgstr "Begin..."
+
+#: 
+msgid "client_views_serverselect_server_and_network"
+msgstr "Server en netwerk"
+
+#: 
+msgid "client_views_serverselect_server"
+msgstr "Server"
+
+#: 
+msgid "client_views_serverselect_port"
+msgstr "Poort"
+
+#: 
+msgid "client_views_serverselect_poweredby"
+msgstr "Medemogelijk gemaakt door Kiwi IRC"
+
+#: 
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Kies eerst een nicknaam!"
+
+#: 
+msgid "client_views_serverselect_connection_successfully"
+msgstr "Verbonden"
+
+#: 
+msgid "client_views_serverselect_connection_trying"
+msgstr "Verbinden.."
+
+#: 
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Nicknaam wordt al gebruikt"
+
+#: 
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Foutieve nicknaam"
+
+#: 
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Incorrect wachtwoord"
+
+#: 
+msgid "client_views_serverselect_connection_error"
+msgstr "Fout bij het verbinden"
+
+#: 
+msgid "client_views_serverselect_server_notfound"
+msgstr "Server niet gevonden"
+
+#: 
+msgid "client_views_serverselect_connection_refused"
+msgstr "Verbinding geweigerd"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Op"
+
+#: 
+msgid "client_views_userbox_deop"
+msgstr "De-op"
+
+#: 
+msgid "client_views_userbox_voice"
+msgstr "Voice"
+
+#: 
+msgid "client_views_userbox_devoice"
+msgstr "De-voice"
+
+#: 
+msgid "client_views_userbox_kick"
+msgstr "Kick"
+
+#: 
+msgid "client_views_userbox_ban"
+msgstr "Ban"
+
+#: 
+msgid "client_views_userbox_query"
+msgstr "Bericht"
+
+#: 
+msgid "client_views_userbox_whois"
+msgstr "Info"
+
+#: 
+msgid "client_views_userbox_slap"
+msgstr "Slap!"
+
+#: 
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "Let op! Over 5 minuten wordt je opnieuw verbonden en je kanalen worden gejoined"
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Opnieuw aan het verbinden.."
+
+#: 
+msgid "client_applets_settings_html5_notifications"
+msgstr "Bureaublad notificaties"
+
+#: 
+msgid "client_applets_settings_enable_notifications"
+msgstr "Zet notificaties aan"
+
+#: 
+msgid "client_applets_settings_emoticons"
+msgstr "Laat emoticons zien"
+
+#: 
+msgid "client_applet_about"
+msgstr "Over Kiwi"
+
+#: 
+msgid "client_applet_about_homepage"
+msgstr "Project homepagina"
+
+#: 
+msgid "client_applet_about_link_channel"
+msgstr "Link naar dit kanaal"
+
+#: 
+msgid "client_applet_about_share_channel"
+msgstr "Deel dit kanaal"
+
+#: 
+msgid "client_applet_fav_my_networks"
+msgstr "Mijn netwerken"
+
+#: 
+msgid "client_applet_fav_networks"
+msgstr "Favoriete netwerken"
+
+#: 
+msgid "client_applet_fav_add"
+msgstr "Voeg netwerk toe"
+
+#: 
+msgid "client_applet_fav_save"
+msgstr "Sla netwerk op"
+
+#: 
+msgid "client_applet_fav_delete"
+msgstr "Verwijder netwerk"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Zie join/part berichten als activiteit"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Negeren"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Gebruik 24-uurs tijdstempel"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
+
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "is uitgenodigd naar %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "is al in dit kanaal"
+
+#: Date format
+msgid "client_date_format"
+msgstr "d-m-Y"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "jan"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "feb"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "mar"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "apr"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "mei"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "jun"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "jul"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "aug"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "sep"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "okt"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "nov"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "dec"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "januari"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "februari"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "maart"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "april"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "mei"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "juni"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "juli"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "augustus"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "september"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "oktober"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "november"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "december"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "Ma"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "Di"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "Wo"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "Do"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "Vri"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "Zat"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "Zon"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "Maandag"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "Dinsdag"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "Woensdag"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "Donderdag"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "Vrijdag"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "Zaterdag"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "Zondag"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Gemodereerde chat"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Alleen op uitnodiging"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Alleen ops mogen het topic veranderen"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Blokkeer berichten van buiten dit kanaal"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Schakel banlijst"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Verstuur"
+

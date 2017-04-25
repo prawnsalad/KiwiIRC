@@ -1,0 +1,27 @@
+<script type="text/javascript">
+    // File picker plugin
+    // Author: https://github.com/pepijndevos/
+    
+    $script("//api.filepicker.io/v1/filepicker.js", function () {
+        var network = kiwi.components.Network();
+        var control = kiwi.components.ControlInput();
+
+        filepicker.setKey("YOUR_API_KEY");
+
+        function uploaded(files) {
+            var area = $("#kiwi .controlbox textarea");
+
+            for (var i = 0; files.length>i; i++) {
+                var f = files[i];
+                area.val(area.val() + " " + f.url + "+" + encodeURIComponent(f.filename));
+            }
+        }
+
+        filepicker.makeDropPane($("#kiwi .panels")[0], { onSuccess: uploaded });
+
+        var $icon = $("<a class=\"upload\" title=\"Send File\"><i class=\"fa fa-upload\"></i></a>");
+        $icon.click(function () { filepicker.pickMultiple(uploaded); });
+
+        control.addPluginIcon($icon);
+    });
+</script>

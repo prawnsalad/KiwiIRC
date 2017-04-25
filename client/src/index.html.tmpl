@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base target="_blank">
+
+<title> Kiwi IRC </title>
+
+<link rel="shortcut icon" href="<%base_path%>/assets/img/favicon.ico">
+
+<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/style.css?t=<%build_time%>" />
+<link rel="stylesheet" type="text/css" href="<%base_path%>/assets/css/font-awesome.min.css" />
+</head>
+<body>
+
+    <script type="text/html" id="tmpl_application">
+        <div id="kiwi" class="theme_relaxed">
+            <div class="toolbar">
+                <div class="app_tools">
+                    <ul class="main">
+                        <li class="settings"><i class="fa fa-cogs" title="Settings"></i></li>
+                        <li class="startup"><i class="fa fa-home" title="Home"></i></li>
+                        <li><a href="https://kiwiirc.com/" target="_blank"><img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC" title="KiwiIRC" /></a></li>
+                    </ul>
+                </div>
+
+                <div class="tabs"></div>
+
+                <div class="topic">
+                    <div contenteditable="true"></div>
+                </div>
+
+                <div class="status_message"></div>
+            </div>
+
+            <div class="memberlists_resize_handle"></div>
+
+            <div class="panels">
+                <div class="panel_container container1"></div>
+            </div>
+
+            <div class="right_bar disabled">
+                <div class="right-bar-toggle"><i class=""></i></div>
+                <div class="right-bar-content">
+                    <div class="channel_tools">
+                        <i class="fa fa-info-circle channel_info" title="Channel Info"></i>
+                        <i class="fa fa-sign-out channel_part" title="Leave Channel"></i>
+                        <i class="fa fa-angle-double-right right-bar-toggle-inner" title="Hide"></i>
+                    </div>
+                    <div class="memberlists"></div>
+                </div>
+            </div>
+
+            <div class="controlbox">
+                <div class="input">
+                    <span class="nick"> </span>
+                    <div class="input_wrap"><textarea class="inp"></textarea></div>
+                    <div class="input_tools"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="tmpl_channel_info">
+        <div class="channel_info">
+            <b class="channel_url"><a href=""></a></b>
+
+            <form>
+                <div class="control-group channel_info_modes">
+                    <label>
+                        <input type="checkbox" name="channel_mute" class="channel-mode" data-mode="m" />
+                        Moderated chat
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_invite" class="channel-mode" data-mode="i" />
+                        Invite only
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_topic" class="channel-mode" data-mode="t" />
+                        Only operators can change the topic
+                    </label>
+                    <label>
+                        <input type="checkbox" name="channel_external_messages" class="channel-mode" data-mode="n" />
+                        Block messages from outside this channel
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label>
+                        Password
+                        <input type="text" name="channel_key" class="channel-mode" data-mode="k" />
+                    </label>
+                </div>
+
+
+                <div class="control-group channel-banlist">
+                    <button class="toggle_banlist">Toggle banlist</button> <span class="banlist-status"></span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Ban Mask</td>
+                                <td>Added By</td>
+                                <td>Date Added</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="tmpl_userbox">
+        <div class="userbox">
+            <a class="close_menu if_op op"><i class="fa fa-star"></i><%= op %></a>
+            <a class="close_menu if_op deop"><i class="fa fa-star-o"></i><%= de_op %></a>
+            <a class="close_menu if_op voice"><i class="fa fa-volume-up"></i><%= voice %></a>
+            <a class="close_menu if_op devoice"><i class="fa fa-volume-off"></i><%= de_voice %></a>
+            <a class="close_menu if_op kick"><i class="fa fa-times"></i><%= kick %></a>
+            <a class="close_menu if_op ban"><i class="fa fa-ban"></i><%= ban %></a>
+
+            <a class="close_menu query"><i class="fa fa-comment"></i><%= message %></a>
+            <a class="close_menu info"><i class="fa fa-info-circle"></i><%= info %></a>
+            <a class="close_menu ignore"><label><i><input type="checkbox" /></i><%= ignore %></label></a>
+        </div>
+    </script>
+
+    <script type="text/html" id="tmpl_nickchange">
+        <form class="nickchange">
+            <label for="nickchange"><%= new_nick %>:</label> <input type="text" mozactionhint="done" autocomplete="off" spellcheck="false"/> <button><%= change %></button> <a class="cancel"><%= cancel %></a>
+        </form>
+    </script>
+
+    <script type="text/html" id="tmpl_new_connection_info">
+        <div style="margin:1em 20px;">
+            <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" style="display:block; margin:0 auto;"/> <br />
+            <p style="font-style:italic;">A <strong>hand-crafted IRC client</strong> that you can enjoy. Designed to be used <strong>easily</strong> and <strong>freely</strong>.</p>
+
+            <p style="font-size:0.9em;margin-top:2em;">Peek at the <a href="https://www.kiwiirc.com/">Kiwi IRC homepage</a> for more information or to find out how to embed it on your own website. Looking for source code? Try the <a href="http://github.com/prawnsalad/KiwiIRC/">GitHub</a> page. This network of people may not be associated with Kiwi IRC itself.</p>
+        </div>
+    </script>
+
+    <script type="text/html" id="tmpl_server_select">
+        <div class="server_select">
+
+            <div class="side_panel" style="position:absolute;top:0px;left:320px;">
+                <div class="content" style="position:relative;width:300px;">
+                </div>
+            </div>
+
+            <div class="server_details" style="position:relative;width:320px;">
+                <div class="status"><%= think_nick %></div>
+
+                <form>
+                    <div class="basic">
+                        <table>
+                            <tr class="nick">
+                                <td><label for="server_select_nick"><%= nickname %></label></td>
+                                <td><input type="text" class="nick" id="server_select_nick"></td>
+                            </tr>
+
+                            <tr class="have_pass">
+                                <td colspan="2">
+                                    <label for="server_select_show_pass"><%= have_password %></label> <input type="checkbox" id="server_select_show_pass" style="width:auto;" />
+                                </td>
+                            </tr>
+
+                            <tr class="pass">
+                                <td><label for="server_select_password"><%= password %></label></td>
+                                <td><input type="password" class="password" id="server_select_password"></td>
+                            </tr>
+
+                            <tr class="channel">
+                                <td><label for="server_select_channel"><%= channel %></label></td>
+                                <td>
+                                    <div style="position:relative;">
+                                        <input type="text" class="channel" id="server_select_channel">
+                                        <i class="fa fa-key" title="<%= channel_key %>"></i>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="have_key">
+                                <td colspan="2">
+                                    <label for="server_select_show_channel_key"><%= require_key %></label> <input type="checkbox" id="server_select_show_channel_key" style="width:auto;" />
+                                </td>
+                            </tr>
+
+                            <tr class="key">
+                                <td><label for="server_select_channel_key"><%= key %></label></td>
+                                <td><input type="password" class="channel_key" id="server_select_channel_key"></td>
+                            </tr>
+
+                            <tr class="start">
+                                <td></td>
+                                <td><button type="submit"><%= start %></button></td>
+                            </tr>
+                        </table>
+
+                        <a href="" onclick="return false;" class="show_more"><%= server_network %> <i class="fa fa-caret-down"></i></a>
+                    </div>
+
+
+                    <div class="more">
+                        <table>
+                            <tr class="server">
+                                <td><label for="server_select_server"><%= server %></label></td>
+                                <td><input type="text" class="server" id="server_select_server"></td>
+                            <tr>
+
+                            <tr class="port">
+                                <td><label for="server_select_port"><%= port %></label></td>
+                                <td><input type="text" class="port" id="server_select_port"></td>
+                            </tr>
+
+                            <tr class="ssl">
+                                <td><label for="server_select_ssl">SSL</label></td>
+                                <td><input type="checkbox" class="ssl" id="server_select_ssl"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+
+                <a class="kiwi_logo" href="https://kiwiirc.com/" target="_blank">
+                    <h1><span><%= powered_by %></span> <img src="<%base_path%>/assets/img/ico.png" alt="KiwiIRC Logo" title="Kiwi IRC" /></h1>
+                </a>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="tmpl_theme_thumbnail">
+        <a class="thumbnail" data-setting="theme" data-value="<%= name.toLowerCase() %>" href="#">
+            <div class="thumbnail_wrapper"><div class="theme_color" style="background-color: <%= thumbnail_colour %>;"></div></div>
+            <div class="caption"><u><%= name %></u></div>
+        </a>
+    </script>
+
+    <script type="text/html" id="tmpl_applet_settings">
+        <div class="settings_container">
+            <form>
+                <section>
+                    <h6>Theme</h6>
+                    <div class="control-group">
+                        <div class="thumbnails">
+                            <% _.forEach(theme_thumbnails, function(thumbnail) { %>
+                                <%= thumbnail %>
+                            <% }); %>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h6>Channels</h6>
+                    <div class="control-group">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="tabs">
+                                <%= tabs %>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="channel_list_style" data-setting="channel_list_style" value="list">
+                                <%= list %><small class="text-muted">(<%= large_amounts_of_chans %>)</small>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h6>Chat window</h6>
+                    <div class="control-group">
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_joins_parts" type="checkbox">
+                                <%= join_part %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="count_all_activity" type="checkbox">
+                                <%= count_all_activity %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_timestamps" type="checkbox">
+                                <%= timestamps %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="use_24_hour_timestamps" type="checkbox">
+                                <%= timestamp_24 %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="mute_sounds" type="checkbox">
+                                <%= mute %>
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-setting="show_emoticons" type="checkbox">
+                                <%= emoticons %>
+                            </label>
+                        </div>
+                        <label>
+                            <input data-setting="scrollback" class="input-small" type="text" size="4" pattern="\d*">
+                            <span><%= scroll_history %></span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="language">
+                    <h6>Language</h6>
+                    <div class="control-group">
+                        <select data-setting="locale">
+                            <option value=""></li>
+                            <% _.forEach(languages, function(lang) { %>
+                                <option value="<%= lang.tag %>"><%= lang.language %></li>
+                            <% }); %>
+                        </select>
+                        <br>
+                        <small><%= locale_restart_needed %></small>
+                    </div>
+                </section>
+
+                <section class="protocol_handler">
+                    <h6><%= default_client %></h6>
+                    <div class="control-group">
+                        <button class="register_protocol"><%= make_default %></button>
+                        <br>
+                        <small><%= default_note %></small>
+                    </div>
+                </section>
+
+                <section class="notification_enabler">
+                    <h6><%= html5_notifications %></h6>
+                    <div class="control-group">
+                        <button class="enable_notifications"><%= enable_notifications %></button>
+                    </div>
+                </section>
+            </form>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="tmpl_channel_list">
+        <div class="applet_chanlist">
+            <table>
+                <thead style="font-weight: bold;">
+                    <tr>
+                        <td><a class="channel_name_title"><%= channel_name %></a></td>
+                        <td><a class="users_title"><%= users %></a></td>
+                        <td style="padding-left: 2em;"><%= topic %></td>
+                    </tr>
+                </thead>
+                <tbody style="vertical-align: top;">
+                </tbody>
+            </table>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="tmpl_script_editor">
+        <div style="height:100%;">
+            <style>
+                #kiwi .script_editor .se_toolbar { padding: 10px 20px; }
+                #kiwi .script_editor .se_toolbar span.status { margin-left:2em; font-style:italic; }
+                #kiwi .script_editor .se_toolbar button { height:30px; padding:0 1em; }
+                #kiwi .script_editor .se_toolbar button i { font-size:1.2em; margin-left:3px; }
+            </style>
+            <div class="script_editor" style="height:100%; position:relative;">
+                <div class="se_toolbar"><button class="btn_save"><%= save %><i class="fa fa-floppy-o"></i></button><span class="status"></span></div>
+                <div class="editor" style="position:absolute;top:50px;bottom:0px;left:0px;right:0px;"></div>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/html" id="tmpl_notifications">
+        <div class="notification-inner">
+            <i class="fa fa-times close"></i>
+            <h6></h6>
+            <div class="content"></div>
+        </div>
+    </script>
+
+
+<script src="<%base_path%>/assets/libs/jquery-1.11.1.min.js"></script>
+<script>
+/* Script loader (https://github.com/ded/script.js) */
+(function(a,b,c){typeof c["module"]!="undefined"&&c.module.exports?c.module.exports=b():typeof c["define"]!="undefined"&&c["define"]=="function"&&c.define.amd?define(a,b):c[a]=b()})("$script",function(){function p(a,b){for(var c=0,d=a.length;c<d;++c)if(!b(a[c]))return j;return 1}function q(a,b){p(a,function(a){return!b(a)})}function r(a,b,i){function o(a){return a.call?a():d[a]}function t(){if(!--n){d[m]=1,l&&l();for(var a in f)p(a.split("|"),o)&&!q(f[a],o)&&(f[a]=[])}}a=a[k]?a:[a];var j=b&&b.call,l=j?b:i,m=j?a.join(""):b,n=a.length;return setTimeout(function(){q(a,function(a){if(h[a])return m&&(e[m]=1),h[a]==2&&t();h[a]=1,m&&(e[m]=1),s(!c.test(a)&&g?g+a+".js":a,t)})},0),r}function s(c,d){var e=a.createElement("script"),f=j;e.onload=e.onerror=e[o]=function(){if(e[m]&&!/^c|loade/.test(e[m])||f)return;e.onload=e[o]=null,f=1,h[c]=2,d()},e.async=1,e.src=c,b.insertBefore(e,b.firstChild)}var a=document,b=a.getElementsByTagName("head")[0],c=/^https?:\/\//,d={},e={},f={},g,h={},i="string",j=!1,k="push",l="DOMContentLoaded",m="readyState",n="addEventListener",o="onreadystatechange";return!a[m]&&a[n]&&(a[n](l,function t(){a.removeEventListener(l,t,j),a[m]="complete"},j),a[m]="loading"),r.get=s,r.order=function(a,b,c){(function d(e){e=a.shift(),a.length?r(e,d):r(e,b,c)})()},r.path=function(a){g=a},r.ready=function(a,b,c){a=a[k]?a:[a];var e=[];return!q(a,function(a){d[a]||e[k](a)})&&p(a,function(a){return d[a]})?b():!function(a){f[a]=f[a]||[],f[a][k](b),c&&c(e)}(a.join("|")),r},r},this)
+
+
+    // Avoid `console` errors in browsers that lack a console. (https://github.com/h5bp/html5-boilerplate)
+    function normalizeConsole() {
+        var method;
+        var noop = function () {};
+        var methods = [
+            'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+            'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+            'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+            'timeStamp', 'trace', 'warn'
+        ];
+        var length = methods.length;
+        var console = (window.console = window.console || {});
+
+        while (length--) {
+            method = methods[length];
+
+            // Only stub undefined methods.
+            if (!console[method]) {
+                console[method] = noop;
+            }
+        }
+    }
+
+    normalizeConsole();
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].replace(/\+/g, '%20').split('=');
+            if (decodeURIComponent(pair[0]) == variable) {
+                return decodeURIComponent(pair[1]);
+            }
+        }
+    }
+
+    (function afterPromiseAvailable() {
+        var base_path = '<%base_path%>', // Entry path for the kiwi application
+            scripts = [],
+            opts = {
+                container: $('body'),
+                base_path: base_path,
+                settings_path: base_path + '/assets/settings.json'
+            },
+            script_promise, script_promise_resolve,
+            onload_promise,
+            settings_promise;
+
+        // If the browser doesn't natively support promises load up the polyfill and try again.
+        if (!window.Promise) {
+            $script(base_path + "/assets/libs/promise.min.js", afterPromiseAvailable);
+            return;
+        }
+
+        function loadScripts(scripts) {
+            return new Promise(function (resolve, reject) {
+                var to_load, idx,
+                    base = base_path + '/';
+                if (typeof scripts === 'string') {
+                    to_load = base + scripts;
+                } else {
+                    to_load = [];
+                    for (idx in scripts) {
+                        to_load.push(base + scripts[idx]);
+                    }
+                }
+                $script(to_load, resolve, reject);
+            });
+        }
+
+        onload_promise = new Promise(function (resolve) {
+            // Document may already be loaded if we had to load the Promise shim seperately
+            if (document.readyState === 'complete') {
+                resolve();
+                return;
+            }
+
+            window.onload = resolve;
+        });
+
+        // Get a resolve function for the script loading promises
+        script_promise = new Promise(function (resolve) {
+            script_promise_resolve = resolve;
+        });
+
+        // Chain each script loading promise
+        script_promise = script_promise.then(function () {
+            var idx;
+            for (idx = 0; idx < scripts.length; idx++) {
+                (function (idx) {
+                    script_promise = script_promise.then(function () {
+                        return loadScripts(scripts[idx]);
+                    });
+                })(idx);
+            }
+        });
+
+        // Debugging will get a list of debugging scripts from settings.json (below)
+        if (!getQueryVariable('debug')) {
+            scripts.push(['assets/libs/lodash.min.js?t=<%build_time%>']);
+            scripts.push([
+                'assets/libs/backbone.min.js?t=<%build_time%>',
+                'assets/libs/jed.js?t=<%build_time%>'
+            ]);
+            scripts.push([
+                'assets/kiwi.min.js?t=<%build_time%>',
+                'assets/libs/engine.io.bundle.min.js?t=<%build_time%>'
+            ]);
+
+            script_promise_resolve();
+        }
+
+        settings_promise = new Promise(function (resolve) {
+            $.getJSON(opts.settings_path, function (data) {
+                opts.server_settings = data.server_settings;
+                opts.client_plugins = data.client_plugins;
+                opts.translations = data.translations;
+                opts.locale = data.locale;
+                opts.themes = data.themes;
+
+                if (typeof data.kiwi_server !== 'undefined') {
+                    opts.kiwi_server = data.kiwi_server;
+                }
+
+                resolve();
+
+                // If debugging, grab the debug scripts and load them
+                if (getQueryVariable('debug')) {
+                    scripts = scripts.concat(data.scripts);
+                    script_promise_resolve();
+                }
+
+                // Load themes
+                if (opts.themes) {
+                    $.each(opts.themes, function (theme_idx, theme) {
+                        var disabled = (opts.server_settings.client.settings.theme.toLowerCase() !== theme.name.toLowerCase()),
+                            rel = (disabled?'alternate ':'') + 'stylesheet';
+
+                        var link = $.parseHTML('<link rel="' + rel + '" type="text/css" data-theme href="'+ opts.base_path + '/assets/themes/' + theme.name.toLowerCase() + '/style.css" title="' + theme.name.toLowerCase() + '" ' + (disabled?'disabled':'') + '/>');
+                        link.disabled = disabled;
+
+                        $(link).appendTo($('head'));
+                    });
+                }
+            });
+        });
+
+        // prawnsalad: Why is the below script_promise in its own .then()?
+        // M2Ys4U: prawnsalad: either of the first two promises can resolve the
+        // third one, but the third one has a then() on it already, so the
+        // then() on the all() makes it wait for the then() on the script promise
+        // to resolve.
+        //
+        // Promises - simple.
+        Promise.all([onload_promise, settings_promise])
+        .then(function(){return script_promise})
+        .then(function startApp() {
+            // Kiwi IRC version this is built from
+            kiwi.build_version = '<%build_version%>';
+
+            // Start the app after loading plugins
+            kiwi.init(opts, function() {
+                if (opts.client_plugins && opts.client_plugins.length > 0) {
+
+                    // Wait until all plugins are loaded before starting the app
+                    kiwi.plugins.once('loaded', function() {
+                        kiwi.start();
+                    });
+
+                    _.each(opts.client_plugins, function (plugin_url) {
+                        kiwi.plugins.load(plugin_url);
+                    });
+
+                } else {
+
+                    // No plugins were needed so start the app
+                    kiwi.start();
+                }
+            });
+        });
+    })();
+</script>
+</body>
+</html>

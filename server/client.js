@@ -2,19 +2,34 @@ var util             = require('util'),
     events           = require('events'),
     crypto           = require('crypto'),
     _                = require('lodash'),
+    State            = require('./irc/state.js'),
     IrcConnection    = require('./irc/connection.js').IrcConnection,
-    IrcCommands      = require('./irc/commands.js'),
-    ClientCommands   = require('./clientcommands.js');
+    ClientCommands   = require('./clientcommands.js'),
+    WebsocketRpc     = require('./websocketrpc.js'),
+    Stats            = require('./stats.js');
 
 
-var Client = function (websocket) {
+var Client = function (websocket, opts) {
     var that = this;
-    
+
+    Stats.incr('client.created');
+
     events.EventEmitter.call(this);
     this.websocket = websocket;
 
+    // Keep a record of how this client connected
+    this.server_config = opts.server_config;
+
+    this.rpc = new WebsocketRpc(this.websocket);
+    this.rpc.on('all', function(func_name, return_fn) {
+        if (typeof func_name === 'string' && typeof return_fn === 'function') {
+            Stats.incr('client.command');
+            Stats.incr('client.command.' + func_name);
+        }
+    });
+
     // Clients address
-    this.real_address = this.websocket.handshake.real_address;
+    this.real_address = this.websocket.meta.real_address;
 
     // A hash to identify this client instance
     this.hash = crypto.createHash('sha256')
@@ -22,32 +37,37 @@ var Client = function (websocket) {
         .update('' + Date.now())
         .update(Math.floor(Math.random() * 100000).toString())
         .digest('hex');
-    
-    this.irc_connections = [];
-    this.next_connection = 0;
-    
+
+    this.state = new State(this);
+
     this.buffer = {
         list: [],
         motd: ''
     };
-    
+
     // Handler for any commands sent from the client
     this.client_commands = new ClientCommands(this);
+    this.client_commands.addRpcEvents(this, this.rpc);
 
-    websocket.on('irc', function () {
-        handleClientMessage.apply(that, arguments);
+    // Handles the kiwi.* RPC functions
+    this.attachKiwiCommands();
+
+    websocket.on('message', function() {
+        // A message from the client is a sure sign the client is still alive, so consider it a heartbeat
+        that.heartbeat();
     });
-    websocket.on('kiwi', function () {
-        kiwiCommand.apply(that, arguments);
-    });
-    websocket.on('disconnect', function () {
+
+    websocket.on('close', function () {
         websocketDisconnect.apply(that, arguments);
     });
     websocket.on('error', function () {
         websocketError.apply(that, arguments);
     });
 
-    global.modules.emit('client:connected', {client:this});
+    this.disposed = false;
+
+    // Let the client know it's finished connecting
+    this.sendKiwiCommand('connected');
 };
 util.inherits(Client, events.EventEmitter);
 
@@ -61,120 +81,98 @@ module.exports.Client = Client;
 
 Client.prototype.sendIrcCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.websocket.emit('irc', c, callback);
+    this.rpc('irc', c, callback);
 };
 
 Client.prototype.sendKiwiCommand = function (command, data, callback) {
     var c = {command: command, data: data};
-    this.websocket.emit('kiwi', c, callback);
+    this.rpc('kiwi', c, callback);
 };
 
 Client.prototype.dispose = function () {
-    this.emit('destroy');
+    Stats.incr('client.disposed');
+
+    if (this._heartbeat_tmr) {
+        clearTimeout(this._heartbeat_tmr);
+    }
+
+    this.rpc.dispose();
+    this.websocket.removeAllListeners();
+
+    this.disposed = true;
+    this.emit('dispose');
+
     this.removeAllListeners();
 };
 
-function handleClientMessage(msg, callback) {
-    var server, args, obj, channels, keys;
 
-    // Make sure we have a server number specified
-    if ((msg.server === null) || (typeof msg.server !== 'number')) {
-        return (typeof callback === 'function') ? callback('server not specified') : undefined;
-    } else if (!this.irc_connections[msg.server]) {
-        return (typeof callback === 'function') ? callback('not connected to server') : undefined;
+
+Client.prototype.heartbeat = function() {
+    if (this._heartbeat_tmr) {
+        clearTimeout(this._heartbeat_tmr);
     }
 
-    // The server this command is directed to
-    server = this.irc_connections[msg.server];
+    // After 2 minutes of this heartbeat not being called again, assume the client has disconnected
+    this._heartbeat_tmr = setTimeout(_.bind(this._heartbeat_timeout, this), 120000);
+};
 
-    if (typeof callback !== 'function') {
-        callback = null;
-    }
 
-    try {
-        msg.data = JSON.parse(msg.data);
-    } catch (e) {
-        kiwi.log('[handleClientMessage] JSON parsing error ' + msg.data);
-        return;
-    }
-
-    // Run the client command
-    this.client_commands.run(msg.data.method, msg.data.args, server, callback);
-}
+Client.prototype._heartbeat_timeout = function() {
+    Stats.incr('client.timeout');
+    this.dispose();
+};
 
 
 
-
-function kiwiCommand(command, callback) {
+Client.prototype.attachKiwiCommands = function() {
     var that = this;
-    
-    if (typeof callback !== 'function') {
-        callback = function () {};
-    }
-    switch (command.command) {
-        case 'connect':
-            if (command.hostname && command.port && command.nick) {
-                var con;
 
-                if (global.config.restrict_server) {
-                    con = new IrcConnection(
-                        global.config.restrict_server,
-                        global.config.restrict_server_port,
-                        global.config.restrict_server_ssl,
-                        command.nick,
-                        {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
-                        global.config.restrict_server_password);
+    this.rpc.on('kiwi.connect_irc', function(callback, command) {
+        if (command.hostname && command.port && command.nick) {
+            var options = {};
 
-                } else {
-                    con = new IrcConnection(
-                        command.hostname,
-                        command.port,
-                        command.ssl,
-                        command.nick,
-                        {hostname: this.websocket.handshake.revdns, address: this.websocket.handshake.real_address},
-                        command.password);
-                }
+            // Get any optional parameters that may have been passed
+            if (command.encoding)
+                options.encoding = command.encoding;
 
-                var con_num = this.next_connection++;
-                this.irc_connections[con_num] = con;
+            options.password = global.config.restrict_server_password || command.password;
 
-                var irc_commands = new IrcCommands(con, con_num, this);
-                irc_commands.bindEvents();
-                
-                con.on('connected', function () {
-                    return callback(null, con_num);
-                });
-                
-                con.on('error', function (err) {
-                    console.log('irc_connection error (' + command.hostname + '):', err);
-                    // TODO: Once multiple servers implemented, specify which server failed
-                    //that.sendKiwiCommand('error', {server: con_num, error: err});
-                    return callback(err.code, null);
-                });
-                
-                con.on('close', function () {
-                    that.irc_connections[con_num] = null;
-                });
-            } else {
-                return callback('Hostname, port and nickname must be specified');
-            }
-        break;
-        default:
-            callback();
-    }
-}
+            that.state.connect(
+                (global.config.restrict_server || command.hostname),
+                (global.config.restrict_server_port || command.port),
+                (typeof global.config.restrict_server_ssl !== 'undefined' ?
+                    global.config.restrict_server_ssl :
+                    command.ssl),
+                command.nick,
+                {hostname: that.websocket.meta.revdns, address: that.websocket.meta.real_address},
+                options,
+                callback);
+        } else {
+            return callback('Hostname, port and nickname must be specified');
+        }
+    });
+
+
+    this.rpc.on('kiwi.client_info', function(callback, args) {
+        // keep hold of selected parts of the client_info
+        that.client_info = {
+            build_version: args.build_version.toString() || undefined
+        };
+    });
+
+
+    // Just to let us know the client is still there
+    this.rpc.on('kiwi.heartbeat', function(callback, args) {
+        that.heartbeat();
+    });
+};
+
 
 
 // Websocket has disconnected, so quit all the IRC connections
 function websocketDisconnect() {
-    _.each(this.irc_connections, function (irc_connection, i, cons) {
-        if (irc_connection) {
-            irc_connection.end('QUIT :' + (global.config.quit_message || ''));
-            irc_connection.dispose();
-            cons[i] = null;
-        }
-    });
-    
+    this.emit('disconnect');
+
     this.dispose();
 }
 

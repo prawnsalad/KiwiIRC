@@ -2,8 +2,10 @@
 node/node_modules/
 node_modules/
 doc/
+client/assets/libs/engine.io.bundle.*
 client/assets/kiwi.js
 client/assets/kiwi.min.js
+client/assets/locales/*.json
 client/index.html
 kiwi.log
 kiwiirc.pid

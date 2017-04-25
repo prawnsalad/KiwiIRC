@@ -1,0 +1,714 @@
+# Please report any translation errors on one of the following:
+#     Mailing list: https://groups.google.com/d/forum/kiwiirc
+#     IRC: irc.freenode.net #kiwiirc
+#
+# Want to translate into your own language? Please send your translated file to the
+# mailing list mentioned above and we will upload it to our translation manager -
+# http://poeditor.com/. An account will be set up for you to make any further changes
+# as the Kiwi project progresses.
+
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Kiwi\n"
+"Language: no\n"
+
+#: client/assets/src/applets/chanlist.js
+msgid "client_applets_chanlist_channelname"
+msgstr "Kanalnavn"
+
+#: 
+msgid "client_applets_chanlist_users"
+msgstr "Brukere"
+
+#: 
+msgid "client_applets_chanlist_topic"
+msgstr "Emne"
+
+#: 
+msgid "client_applets_chanlist_channellist"
+msgstr "Kanalliste"
+
+#: client/assets/src/applets/scripteditor.js
+msgid "client_applets_scripteditor_save"
+msgstr "Lagre"
+
+#: 
+msgid "client_applets_scripteditor_error"
+msgstr "Skriptfeil. %s"
+
+#: 
+msgid "client_applets_scripteditor_saved"
+msgstr "Ditt skript har blitt lagret og er nå aktivert."
+
+#: 
+msgid "client_applets_scripteditor_title"
+msgstr "Skriptbehandler"
+
+#: client/assets/src/applets/settings.js
+msgid "client_applets_settings_channelview_tabs"
+msgstr "Faner"
+
+#: 
+msgid "client_applets_settings_channelview_list"
+msgstr "List"
+
+#: 
+msgid "client_applets_settings_channelview_list_notice"
+msgstr "for mange kanaler"
+
+#: 
+msgid "client_applets_settings_notification_joinpart"
+msgstr "Beskjeder når personer går inn eller ut av kanaler"
+
+#: 
+msgid "client_applets_settings_timestamp"
+msgstr "Tidspunkt"
+
+#: 
+msgid "client_applets_settings_notification_sound"
+msgstr "Demp lyd"
+
+#: 
+msgid "client_applets_settings_history_length"
+msgstr "Meldinger i historikk"
+
+#: 
+msgid "client_applets_settings_default_client"
+msgstr "Standard IRC-klient"
+
+#: 
+msgid "client_applets_settings_default_client_enable"
+msgstr "Gjør Kiwi din standard IRC-klient"
+
+#: 
+msgid "client_applets_settings_locale_restart_needed"
+msgstr "Merk: Forandringer vil ta effekt når du laster siden inn på nytt"
+
+#: 
+msgid "client_applets_settings_default_client_notice"
+msgstr "Merk: Dersom du bruker Chrome- eller Chromium som nettleser, kan det hende du må sjekke innstillinger via %s om ingenting skjer"
+
+#: 
+msgid "client_applets_settings_title"
+msgstr "Innstillinger"
+
+#: client/assets/src/models/applet.js
+msgid "client_models_applet_unknown"
+msgstr "Ukjent applet"
+
+#: 
+msgid "client_models_applet_loading"
+msgstr "Laster.."
+
+#: 
+msgid "client_models_applet_notfound"
+msgstr "Ikke funnet"
+
+#: client/assets/src/models/application.js
+msgid "client_models_application_reconnecting"
+msgstr "Du har blitt frakoblet. Forsøker å koble til på nytt"
+
+#: 
+msgid "client_models_application_reconnect_in_x_seconds"
+msgstr "DU har blitt frakoblet. Forsøker en oppkobling om %d sekunder"
+
+#: 
+msgid "client_models_application_reconnect_successfully"
+msgstr "Faren over; du er nå tilkoblet igjen"
+
+#: 
+msgid "client_models_application_settings_saved"
+msgstr "Innstillingene har blitt lagret"
+
+#: 
+msgid "client_models_application_ignore_title"
+msgstr "Ignorerte kallenavn"
+
+#: 
+msgid "client_models_application_ignore_none"
+msgstr "Ignorerer ikke noen"
+
+#: 
+msgid "client_models_application_ignore_nick"
+msgstr "Ignorerer %s"
+
+#: 
+msgid "client_models_application_ignore_stop_notice"
+msgstr "Spesifiser hvilket kallenavn du vil stoppe å ignorere"
+
+#: 
+msgid "client_models_application_ignore_stopped"
+msgstr "Stoppet å ignorere %s"
+
+#: 
+msgid "client_models_application_applet_notfound"
+msgstr "Applet \"%s\" finnes ikke"
+
+#: 
+msgid "client_models_application_encoding_changed"
+msgstr "Tegnsett endret til %s"
+
+#: 
+msgid "client_models_application_encoding_invalid"
+msgstr "%s er ikke et gyldig tegnsett"
+
+#: 
+msgid "client_models_application_encoding_notspecified"
+msgstr "Tegnsett ikke oppgitt"
+
+#: 
+msgid "client_models_application_encoding_usage"
+msgstr "Hjelp: /encoding [NYTT-TEGNSETT]"
+
+#: 
+msgid "client_models_application_connection_create"
+msgstr "Ny tilkobling"
+
+#: 
+msgid "client_models_application_connection_connecting"
+msgstr "Kobler til %s:%s..."
+
+#: 
+msgid "client_models_application_connection_error"
+msgstr "Problemer med å koble til %s:%s (%s)"
+
+#: client/assets/src/models/channel.js
+msgid "client_models_channel_join"
+msgstr "har blitt med i kanalen"
+
+#: 
+msgid "client_models_channel_quit"
+msgstr "har avsluttet %s"
+
+#: 
+msgid "client_models_channel_kicked"
+msgstr "ble sparket ut av %s %s"
+
+#: 
+msgid "client_models_channel_selfkick"
+msgstr "Du har blitt sparket ut av %s %s"
+
+#: 
+msgid "client_models_channel_part"
+msgstr "har forlatt %s"
+
+#: client/assets/src/models/network.js
+msgid "client_models_network_channel_invalid_name"
+msgstr "er ikke et gyldig kanalnavn"
+
+#: 
+msgid "client_models_network_disconnected"
+msgstr "Frakoblet IRC-nettverket"
+
+#: 
+msgid "client_models_network_nickname_changed"
+msgstr "er nå kjent som %s"
+
+#: 
+msgid "client_models_network_topic"
+msgstr "Emne satt av %s den %s"
+
+#: 
+msgid "client_models_network_selfmode"
+msgstr "setter modus %s"
+
+#: 
+msgid "client_models_network_mode"
+msgstr "setter modus %s"
+
+#: 
+msgid "client_models_network_channels"
+msgstr "Kanaler: %s"
+
+#: 
+msgid "client_models_network_server"
+msgstr "Tilkoblet server: %s %s"
+
+#: 
+msgid "client_models_network_idle_and_signon"
+msgstr "Inaktiv i %s, logget seg på %s"
+
+#: 
+msgid "client_models_network_away"
+msgstr "Borte: %s"
+
+#: 
+msgid "client_models_network_idle"
+msgstr "Inaktiv i %s"
+
+#: 
+msgid "client_models_network_nickname_notfound"
+msgstr "Kallenavnet finnes ikke"
+
+#: 
+msgid "client_models_network_banned"
+msgstr "Du er bannlyst fra %s. %s"
+
+#: 
+msgid "client_models_network_channel_badkey"
+msgstr "Feil passord for %s"
+
+#: 
+msgid "client_models_network_channel_inviteonly"
+msgstr "er bare for inviterte brukere."
+
+#: 
+msgid "client_models_network_channel_limitreached"
+msgstr "er fullstappet."
+
+#: 
+msgid "client_models_network_nickname_alreadyinuse"
+msgstr "Kallenavnet \"%s\" er allerede i bruk. Vennligst velg et nytt kallenavn"
+
+#: 
+msgid "client_models_network_badpassword"
+msgstr "Feil passord gitt"
+
+#: client/assets/src/views/application.js
+msgid "client_views_application_close_notice"
+msgstr "Dette vil lukke alle KiwiIRC-samtaler. Er du sikker på at du vil lukke vinduet?"
+
+#: client/assets/src/views/channel.js
+msgid "client_views_channel_joining"
+msgstr "Blir med i kanal.."
+
+#: 
+msgid "client_views_channel_topic"
+msgstr "Emne for %s er: %s"
+
+#: client/assets/src/views/mediamessage.js
+msgid "client_views_mediamessage_close"
+msgstr "Lukk media"
+
+#: 
+msgid "client_views_mediamessage_notfound"
+msgstr "Ikke funnet"
+
+#: 
+msgid "client_views_mediamessage_load_tweet"
+msgstr "Laster tweet"
+
+#: 
+msgid "client_views_mediamessage_load_image"
+msgstr "Laster bilde"
+
+#: 
+msgid "client_views_mediamessage_load_reddit"
+msgstr "Laster Reddit-diskusjon"
+
+#: 
+msgid "client_views_mediamessage_load_gist"
+msgstr "Laster gist"
+
+#: client/assets/src/views/nickchangegbox.js
+msgid "client_views_nickchangebox_new"
+msgstr "Nytt nick"
+
+#: 
+msgid "client_views_nickchangebox_change"
+msgstr "Endre"
+
+#: 
+msgid "client_views_nickchangebox_cancel"
+msgstr "Avbryt"
+
+#: client/assets/src/views/panel.js
+msgid "client_views_panel_activity"
+msgstr "Noen snakker!"
+
+#: client/assets/src/views/serverselect.js
+msgid "client_views_serverselect_form_title"
+msgstr "Finn på et kallenavn..."
+
+#: 
+msgid "client_views_serverselect_nickname"
+msgstr "Kallenavn"
+
+#: 
+msgid "client_views_serverselect_enable_password"
+msgstr "Jeg har et passord"
+
+#: 
+msgid "client_views_serverselect_password"
+msgstr "Passord"
+
+#: 
+msgid "client_views_serverselect_channel"
+msgstr "Kanal"
+
+#: 
+msgid "client_views_serverselect_channelkey"
+msgstr "Kanalpassord"
+
+#: 
+msgid "client_views_serverselect_channelkey_required"
+msgstr "Kanalen krever et passord"
+
+#: 
+msgid "client_views_serverselect_key"
+msgstr "Passord"
+
+#: 
+msgid "client_views_serverselect_connection_start"
+msgstr "Start..."
+
+#: 
+msgid "client_views_serverselect_server_and_network"
+msgstr "Server eller nettverk"
+
+#: 
+msgid "client_views_serverselect_server"
+msgstr "Server"
+
+#: 
+msgid "client_views_serverselect_port"
+msgstr "Port"
+
+#: 
+msgid "client_views_serverselect_poweredby"
+msgstr "Drevet av Kiwi IRC"
+
+#: 
+msgid "client_views_serverselect_nickname_error_empty"
+msgstr "Først må du velge et kallenavn!"
+
+#: 
+msgid "client_views_serverselect_connection_successfully"
+msgstr "Tilkoblet"
+
+#: 
+msgid "client_views_serverselect_connection_trying"
+msgstr "Kobler til.."
+
+#: 
+msgid "client_views_serverselect_nickname_error_alreadyinuse"
+msgstr "Kallenavn allerede i bruk"
+
+#: 
+msgid "client_views_serverselect_nickname_invalid"
+msgstr "Ugyldig kallenavn"
+
+#: 
+msgid "client_views_serverselect_password_incorrect"
+msgstr "Feil passord"
+
+#: 
+msgid "client_views_serverselect_connection_error"
+msgstr "En feil oppstod under tilkoblingen"
+
+#: 
+msgid "client_views_serverselect_server_notfound"
+msgstr "Server ikke funnet"
+
+#: 
+msgid "client_views_serverselect_connection_refused"
+msgstr "Tilkobling nektet"
+
+#: client/assets/src/views/userbox.js
+msgid "client_views_userbox_op"
+msgstr "Op"
+
+#: 
+msgid "client_views_userbox_deop"
+msgstr "Frata op"
+
+#: 
+msgid "client_views_userbox_voice"
+msgstr "Stemme"
+
+#: 
+msgid "client_views_userbox_devoice"
+msgstr "Frata stemme"
+
+#: 
+msgid "client_views_userbox_kick"
+msgstr "Spark ut"
+
+#: 
+msgid "client_views_userbox_ban"
+msgstr "Bannlys"
+
+#: 
+msgid "client_views_userbox_query"
+msgstr "Melding"
+
+#: 
+msgid "client_views_userbox_whois"
+msgstr "Info"
+
+#: 
+msgid "client_views_userbox_slap"
+msgstr "Dask!"
+
+#: 
+msgid "client_views_serverselect_ssl"
+msgstr "SSL"
+
+#: 
+msgid "client_models_application_jumpserver_prepare"
+msgstr "I løpet av 5 minutter vil du bli frakoblet et lite sekund og kanalene dine blir lukket. Disse kommer tilbake igjen etter få strakser. Vær klar!"
+
+#: 
+msgid "client_models_application_jumpserver_reconnect"
+msgstr "Gjenåpner tilkobling. Null stress."
+
+#: 
+msgid "client_applets_settings_html5_notifications"
+msgstr "Skrivebordsvarsling"
+
+#: 
+msgid "client_applets_settings_enable_notifications"
+msgstr "Aktiver varslinger"
+
+#: 
+msgid "client_applets_settings_emoticons"
+msgstr "Vis smilefjes"
+
+#: 
+msgid "client_applet_about"
+msgstr "Om Kiwi"
+
+#: 
+msgid "client_applet_about_homepage"
+msgstr "Prosjektets hjemmeside"
+
+#: 
+msgid "client_applet_about_link_channel"
+msgstr "Link til denne kanalen"
+
+#: 
+msgid "client_applet_about_share_channel"
+msgstr "Del denne kanalen"
+
+#: 
+msgid "client_applet_fav_my_networks"
+msgstr "Mine nettverk"
+
+#: 
+msgid "client_applet_fav_networks"
+msgstr "Favorittnettverk"
+
+#: 
+msgid "client_applet_fav_add"
+msgstr "Legg til nettverk"
+
+#: 
+msgid "client_applet_fav_save"
+msgstr "Lagre nettverk"
+
+#: 
+msgid "client_applet_fav_delete"
+msgstr "Slett nettverk"
+
+#: 
+msgid "client_applets_settings_notification_count_all_activity"
+msgstr "Inluder personer som kommer inn og ut av kanalen som aktivitet"
+
+#: 
+msgid "client_views_userbox_ignore"
+msgstr "Ignorer"
+
+#: 
+msgid "client_applets_settings_timestamp_24_hour"
+msgstr "Bruk 24-timers klokkeslett"
+
+#: 
+msgid "client_views_panel_timestamp_am"
+msgstr "%s AM"
+
+#: 
+msgid "client_views_panel_timestamp_pm"
+msgstr "%s PM"
+
+#: 
+msgid "client_models_application_has_been_invited"
+msgstr "har blitt invitert til %s"
+
+#: 
+msgid "client_models_network_channel_alreadyin"
+msgstr "er allerede i denne kanalen"
+
+#: Date format
+msgid "client_date_format"
+msgstr "m/d/å"
+
+#: client.libs.date_format.shortMonths.January
+msgid "client.libs.date_format.short_months.january"
+msgstr "Jan"
+
+#: client.libs.date_format.shortMonths.february
+msgid "client.libs.date_format.short_months.february"
+msgstr "Feb"
+
+#: client.libs.date_format.shortMonths.march
+msgid "client.libs.date_format.short_months.march"
+msgstr "Mar"
+
+#: client.libs.date_format.shortMonths.april
+msgid "client.libs.date_format.short_months.april"
+msgstr "Apr"
+
+#: client.libs.date_format.shortMonths.may
+msgid "client.libs.date_format.short_months.may"
+msgstr "Mai"
+
+#: client.libs.date_format.shortMonths.june
+msgid "client.libs.date_format.short_months.june"
+msgstr "Jun"
+
+#: client.libs.date_format.shortMonths.july
+msgid "client.libs.date_format.short_months.july"
+msgstr "Jul"
+
+#: client.libs.date_format.shortMonths.august
+msgid "client.libs.date_format.short_months.august"
+msgstr "Aug"
+
+#: client.libs.date_format.shortMonths.september
+msgid "client.libs.date_format.short_months.september"
+msgstr "Sep"
+
+#: client.libs.date_format.shortMonths.october
+msgid "client.libs.date_format.short_months.october"
+msgstr "Okt"
+
+#: client.libs.date_format.shortMonths.november
+msgid "client.libs.date_format.short_months.november"
+msgstr "Nov"
+
+#: client.libs.date_format.shortMonths.december
+msgid "client.libs.date_format.short_months.december"
+msgstr "Des"
+
+#: client.libs.date_format.longMonts.January
+msgid "client.libs.date_format.long_months.january"
+msgstr "Januar"
+
+#: client.libs.date_format.longMonts.february
+msgid "client.libs.date_format.long_months.february"
+msgstr "Februar"
+
+#: client.libs.date_format.longMonts.march
+msgid "client.libs.date_format.long_months.march"
+msgstr "Mars"
+
+#: client.libs.date_format.longMonts.april
+msgid "client.libs.date_format.long_months.april"
+msgstr "April"
+
+#: client.libs.date_format.longMonts.may
+msgid "client.libs.date_format.long_months.may"
+msgstr "Mai"
+
+#: client.libs.date_format.longMonts.june
+msgid "client.libs.date_format.long_months.june"
+msgstr "Juni"
+
+#: client.libs.date_format.longMonts.july
+msgid "client.libs.date_format.long_months.july"
+msgstr "Juli"
+
+#: client.libs.date_format.longMonts.august
+msgid "client.libs.date_format.long_months.august"
+msgstr "August"
+
+#: client.libs.date_format.longMonts.september
+msgid "client.libs.date_format.long_months.september"
+msgstr "September"
+
+#: client.libs.date_format.longMonths.october
+msgid "client.libs.date_format.long_months.october"
+msgstr "Oktober"
+
+#: client.libs.date_format.longMonths.november
+msgid "client.libs.date_format.long_months.november"
+msgstr "November"
+
+#: client.libs.date_format.longMonths.december
+msgid "client.libs.date_format.long_months.december"
+msgstr "Desember"
+
+#: client.libs.date_format.shortDays.monday
+msgid "client.libs.date_format.short_days.monday"
+msgstr "Man"
+
+#: client.libs.date_format.shortDays.tuesday
+msgid "client.libs.date_format.short_days.tuesday"
+msgstr "Tir"
+
+#: client.libs.date_format.shortDays.wednesday
+msgid "client.libs.date_format.short_days.wednesday"
+msgstr "Ons"
+
+#: client.libs.date_format.shortDays.thursday
+msgid "client.libs.date_format.short_days.thursday"
+msgstr "Tor"
+
+#: client.libs.date_format.shortDays.friday
+msgid "client.libs.date_format.short_days.friday"
+msgstr "Fre"
+
+#: client.libs.date_format.shortDays.saturday
+msgid "client.libs.date_format.short_days.saturday"
+msgstr "Lør"
+
+#: client.libs.date_format.shortDays.sunday
+msgid "client.libs.date_format.short_days.sunday"
+msgstr "Søn"
+
+#: client.libs.date_format.longDays.monday
+msgid "client.libs.date_format.long_days.monday"
+msgstr "Mandag"
+
+#: client.libs.date_format.longDays.tuesday
+msgid "client.libs.date_format.long_days.tuesday"
+msgstr "Tirsdag"
+
+#: client.libs.date_format.longDays.wednesday
+msgid "client.libs.date_format.long_days.wednesday"
+msgstr "Onsdag"
+
+#: client.libs.date_format.longDays.thursday
+msgid "client.libs.date_format.long_days.thursday"
+msgstr "Torsdag"
+
+#: client.libs.date_format.longDays.friday
+msgid "client.libs.date_format.long_days.friday"
+msgstr "Fredag"
+
+#: client.libs.date_format.longDays.saturday
+msgid "client.libs.date_format.long_days.saturday"
+msgstr "Lørdag"
+
+#: client.libs.date_format.longDays.sunday
+msgid "client.libs.date_format.long_days.sunday"
+msgstr "Søndag"
+
+#: 
+msgid "client_views_channelinfo_moderated"
+msgstr "Moderert chat"
+
+#: 
+msgid "client_views_channelinfo_inviteonly"
+msgstr "Bare inviterte"
+
+#: 
+msgid "client_views_channelinfo_opschangechannel"
+msgstr "Bare operatører kan forandre emne"
+
+#: 
+msgid "client_views_channelinfo_externalmessages"
+msgstr "Blokkér meldinger fra utsiden av kanalen"
+
+#: 
+msgid "client_views_channelinfo_togglebanlist"
+msgstr "Se/skjul banliste"
+
+#: 
+msgid "client_views_controlbox_message"
+msgstr "Send melding..."
+
