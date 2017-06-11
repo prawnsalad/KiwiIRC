@@ -1,3 +1,8 @@
+## Note - This version of Kiwi IRC is only receiving bug and security updates!
+### New development is now going into the next verison of Kiwi IRC - https://github.com/kiwiirc/kiwiirc
+
+This is a complete re-write and is now using much more modern development tools and includes over 5 years worth of knowledge on how people use web IRC clients. If you are looking for the latest and greatest IRC features then this new version is the way to go!
+
 ### Kiwi IRC - A hand-crafted IRC client
 Kiwi IRC is a fully featured IRC client that can be extended to suit almost any needs.
 Using the web application is extremly simple even without any IRC knowledge as all the common needs are built directly into the UI.
