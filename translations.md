@@ -39,4 +39,4 @@ Current translations are handled by the following (only listing translators will
 * **Polish** - Piotr Doroszewski (piotrekd at vivaldi dot net)
 * **Serbian** - Stefan C. (admin@xshellz.com)
 * **Galicia** - Chema Casanova (https://github.com/txenoo)
-* **Greek** - Nikos Papakonstantinou (url@mirc.com.gr)
+* **Greek** - Nikos Papakonstantinou (https://github.com/NikosPapakonstantinou)
