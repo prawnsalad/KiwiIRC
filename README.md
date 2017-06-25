@@ -14,8 +14,26 @@ Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiir
 
 [![Visit our IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/kiwiirc.png)](https://kiwiirc.com/client/irc.freenode.net/#kiwiirc)
 
+### Installation(Vagrant)
+*Note: This requires Vagrant and Virtualbox to run. Make sure you have installed Vagrant(https://www.vagrantup.com/downloads.html) and Virtualbox(https://www.virtualbox.org/wiki/Downloads). If you don't want to use Virtualbox as a provider, please check Vagrant documentation on how to change to another provider you desire: https://www.vagrantup.com/docs/providers/*
 
-### Installation
+1. Start the machine:
+
+    `$ vagrant up`
+
+2. Log into the machine:
+
+    `$ vagrant ssh`
+
+3. Enter KiwiIRC source folder into the virtual machine:
+
+    `$ cd /vagrant`
+
+4. If you want to edit the configuration file, edit this file:
+
+    `$ nano config.js`
+
+### Installation(local)
 
 *Note: This requires Node.js to run. Make sure you have installed Node.js first! http://nodejs.org/download/*
 
