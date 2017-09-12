@@ -33,7 +33,7 @@ Current translations are handled by the following (only listing translators will
 
 * **Norwegian** - Olav Lindekleiv (https://github.com/oal)
 * **Albanian** - Besnik Bleta (besnik@programeshqip.org)
-* **Ukrainian** - Artem Polivanchuk (polivanchuk@outlook.com)
+* **Ukrainian** - Artem Polivanchuk (a.polivanchuk@outlook.com)
 * **Catalan** - NeoMahler (https://github.com/NeoMahler)
 * **Bosnian** - Predsjednik (predsjednik@live.com)
 * **Polish** - Piotr Doroszewski (piotrekd at vivaldi dot net)
