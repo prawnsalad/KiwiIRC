@@ -90,7 +90,7 @@ msgstr "Внимание: изменения вступят в силу толь
 
 #: 
 msgid "client_applets_settings_default_client_notice"
-msgstr "Внимание: пользователи Chrome или Chromium Browser возможно потребуется проверить их значений с помощью %s, если ничего не происходит"
+msgstr "Внимание: пользователям Chrome или Chromium возможно потребуется проверить их значения с помощью %s, если ничего не происходит"
 
 #: 
 msgid "client_applets_settings_title"
