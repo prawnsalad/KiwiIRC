@@ -7,7 +7,7 @@ This is a complete re-write and is now using much more modern development tools 
 
 ### Kiwi IRC - A hand-crafted IRC client
 Kiwi IRC is a fully featured IRC client that can be extended to suit almost any needs.
-Using the web application is extremly simple even without any IRC knowledge as all the common needs are built directly into the UI.
+Using the web application is extremely simple even without any IRC knowledge as all the common needs are built directly into the UI.
 
 For more information see https://kiwiirc.com or live instance of the application can be found at https://kiwiirc.com/client/.
 Our development IRC channel is on the Freenode network, irc.freenode.net #kiwiirc.
