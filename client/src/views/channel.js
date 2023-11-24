@@ -211,7 +211,7 @@ _kiwi.view.Channel = _kiwi.view.Panel.extend({
             return parsed;
         }
 
-        parsed = word.replace(re, function (m1, m2) {
+        parsed = _.escape(word).replace(re, function (m1, m2) {
             return m2 + '<a class="chan" data-channel="' + _.escape(m1.trim()) + '">' + _.escape(m1.trim()) + '</a>';
         });
 
